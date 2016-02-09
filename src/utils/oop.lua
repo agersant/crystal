@@ -1,5 +1,3 @@
-local OOP = {};
-
 local makeClass = function( name, baseClass )
 	local classMeta = {};
 	classMeta.__index = baseClass;
@@ -9,7 +7,7 @@ local makeClass = function( name, baseClass )
 	return setmetatable( {}, classMeta );
 end
 
-OOP.class = function( name, baseClass )
+Class = function( name, baseClass )
 	
 	local class = makeClass( name, baseClass );
 	
@@ -32,5 +30,3 @@ OOP.class = function( name, baseClass )
 	
 	return class;
 end
-
-return OOP;
