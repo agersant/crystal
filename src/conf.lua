@@ -1,4 +1,4 @@
-local release = false;
+local release = love.filesystem.isFused();
 
 gConf = {};
 gConf.features = {};
