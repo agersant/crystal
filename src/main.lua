@@ -1,5 +1,6 @@
 require( "utils/OOP" );
 require( "utils/Log" );
+require( "utils/StringUtils" );
 local CLI = require( "utils/CLI" );
 
 

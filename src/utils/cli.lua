@@ -13,6 +13,8 @@ local lineBuffer = "";
 local undoBuffer = { { line = "", cursor = 0 } };
 local cursor = 0; 		-- lineBuffer[cursor] is the letter left of the caret
 local undoCursor = 1; 	-- undoBuffer[undoCursor] duplicates our lineBuffer and cursor
+local commands = {};
+local autoComplete = {};
 
 
 
@@ -60,7 +62,7 @@ local delete = function( numDelete )
 	lineBuffer = pre .. post;
 end
 
-local didInput = function()
+local pushUndoState = function()
 	if undoBuffer[undoCursor].line == lineBuffer then
 		undoBuffer[undoCursor].cursor = cursor;
 	else
@@ -86,6 +88,29 @@ local redo = function()
 	undoCursor = math.min( #undoBuffer, undoCursor + 1 );
 	lineBuffer = undoBuffer[undoCursor].line;
 	cursor = undoBuffer[undoCursor].cursor;
+end
+
+local updateAutoComplete = function()
+	autoComplete = {};
+	if #lineBuffer == 0 then
+		return;
+	end
+	local hasStrongMatch = false;
+	for name, command in pairs( commands ) do
+		local matchStart, matchEnd = name:lower():find( lineBuffer:lower() );
+		if matchStart then
+			hasStrongMatch = matchStart == 1;
+			local suggestion = { command = command, matchStart = matchStart, matchEnd = matchEnd };
+			table.insert( autoComplete, suggestion );
+		end
+	end
+	if hasStrongMatch then
+		for i = #autoComplete, 1, -1 do
+			if autoComplete[i].matchStart ~= 1 then
+				table.remove( autoComplete, i );
+			end
+		end
+	end
 end
 
 
@@ -114,11 +139,15 @@ CLI.draw = function()
 	local post = lineBuffer:sub( cursor + 1 );
 	local display = pre .. "|" .. post;
 	love.graphics.print( "> " .. display, 10, 10 );
+	for i, suggestion in ipairs( autoComplete ) do
+		love.graphics.print( "> " .. suggestion.command.name, 10, 20 + 20*i );
+	end
 end
 
 CLI.textInput = function( self, text )
 	insert( text );
-	didInput();
+	pushUndoState();
+	updateAutoComplete();
 end
 
 CLI.keyPressed = function( self, key, scanCode )
@@ -127,10 +156,12 @@ CLI.keyPressed = function( self, key, scanCode )
 
 	if ctrl and key == "z" then
 		undo();
+		updateAutoComplete();
 		return;
 	elseif ctrl and key == "y" then
 		redo();
-		didUndoOrRedo = true;
+		updateAutoComplete();
+		return;
 	end
 	
 	if key == "home" then
@@ -174,9 +205,26 @@ CLI.keyPressed = function( self, key, scanCode )
 		insert( clipboard );
 	end
 	
-	didInput();
+	pushUndoState();
+	updateAutoComplete();
 end
 
-
+CLI.addCommand = function( description, func )
+	description = trim( description );
+	
+	local command = {};
+	command.name = description:match( "[^%s]+" );
+	command.args = {};
+	
+	local args = trim( description:sub( #command.name + 1 ) );
+	for argDescription in string.gmatch( args, "%a+[%d%a]-:%a+") do
+		local arg = {};
+		arg.argName, arg.argType = argDescription:match( "(.*):(.*)" );
+		table.insert( command.args, arg );
+	end
+	
+	assert( not commands[command.name] );
+	commands[command.name] = command;
+end
 
 return CLI;
