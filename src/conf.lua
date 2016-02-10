@@ -3,6 +3,7 @@ local release = love.filesystem.isFused();
 gConf = {};
 gConf.features = {};
 gConf.features.logging = not release;
+gConf.features.cli = not release;
 
 love.conf = function( options )
 	options.console = true;
@@ -20,11 +21,28 @@ love.conf = function( options )
 	options.modules.mouse = true;
 	options.modules.physics = true;
 	options.modules.sound = true;
+	options.modules.system = true;
 	options.modules.timer = true;
 	options.modules.window = true;
 
-	options.modules.system = false;
 	options.modules.touch = false;
 	options.modules.video = false;
-	options.modules.thread = false;
+	options.modules.thread = false;	
+end
+
+
+
+-- DISABLE A FEATURE
+
+local doNothing = function() end;
+local disableFeatureMetaTable = {
+	__newindex = function( t, k, v )
+		if type( v ) == "function" then
+			rawset( t, k, doNothing );
+		end
+	end,
+};
+
+disableFeature = function( t )
+	setmetatable( t, disableFeatureMetaTable );
 end
