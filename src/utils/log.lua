@@ -1,21 +1,10 @@
-Log = {};
-
-
-
--- MOCK
+Log = {}; -- global
 
 if not gConf.features.logging then
-	Log.init = function() end;
-	Log.debug = function() end;
-	Log.info = function() end;
-	Log.warning = function() end;
-	Log.error = function() end;
-	Log.fatal = function() end;
+	disableFeature( Log );
 end
 
 
-
--- IMPLEMENTATION
 
 local bufferSize = 1024; -- in bytes
 local logDir = "logs";
@@ -81,3 +70,4 @@ Log.fatal = function( text )
 end
 
 
+return Log;
