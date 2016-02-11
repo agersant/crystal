@@ -25,7 +25,9 @@ local autoComplete = {};
 local autoCompleteCursor = 0;
 local unguidedInput = "";
 
-local inputCommand = "";
+local parsedCommand = "";
+local parsedCommandUntrimmed = "";
+local parsedArguments = {};
 
 local fontSize = 20;
 local marginX = 20;
@@ -105,7 +107,10 @@ local redo = function()
 end
 
 local updateAutoComplete = function()
+	
 	autoComplete = {};
+	parsedCommand = "";
+	parsedArguments = {};
 	
 	local input = trim( lineBuffer );
 	if #input == 0 then
@@ -113,10 +118,11 @@ local updateAutoComplete = function()
 		return;
 	end
 	
-	inputCommand = lineBuffer:match( "([^%s]+)%s+" );
-	local ref = inputCommand and inputCommand:lower();
+	parsedCommandUntrimmed = lineBuffer:match( "^(%s*[^%s]+)%s+" );
+	parsedCommand = parsedCommandUntrimmed and trim( parsedCommandUntrimmed );
+	local ref = parsedCommand and parsedCommand:lower();
 	
-	if not inputCommand then
+	if not parsedCommand then
 	
 		autoCompleteState = "command";
 		local hasStrongMatch = false;
@@ -142,7 +148,23 @@ local updateAutoComplete = function()
 	else
 		autoCompleteState = "args";
 		autoComplete.command = commands[ref];
+
+		local args = lineBuffer:sub( #parsedCommand + 1 );
+		for arg in args:gmatch( "%s+[^%s]+" ) do 
+			table.insert( parsedArguments, trim( arg ) );
+		end
 	end
+	
+end
+
+local typeCheckArgument = function( argument, requiredType )
+	if requiredType == "number" then
+		return tonumber( argument ) ~= nil;
+	end
+	if requiredType == "boolean" then
+		return argument == "0" or argument == "1" or argument == "true" or argument == "false";
+	end
+	return true;
 end
 
 
@@ -173,6 +195,7 @@ CLI.draw = function()
 	
 	local font = Fonts.get( "dev", fontSize );
 	love.graphics.setFont( font );
+	love.graphics.setColor( 255, 255, 255, 255 );
 	
 	-- Draw chevron
 	local chevronX = marginX;
@@ -194,9 +217,9 @@ CLI.draw = function()
 	caretAlpha = caretAlpha * caretAlpha * caretAlpha;
 	love.graphics.setColor( 255, 255, 255, 255 * caretAlpha );
 	love.graphics.rectangle( "fill", caretX, caretY, 1, font:getHeight() );
-	love.graphics.setColor( 255, 255, 255, 255 );
 	
 	-- Draw autocomplete
+	love.graphics.setColor( 255, 255, 255, 255 );
 	if autoCompleteState == "command" then
 		for i, suggestion in ipairs( autoComplete ) do
 			local suggestionText = suggestion.command.name;
@@ -204,19 +227,34 @@ CLI.draw = function()
 			local suggestionY = inputY + i * font:getHeight();
 			love.graphics.print( suggestionText, suggestionX, suggestionY );
 		end
+	
 	elseif autoCompleteState == "badcommand" then
 		local suggestionX = inputX;
 		local suggestionY = inputY + font:getHeight();
-		love.graphics.print( inputCommand .. " is not a valid command", suggestionX, suggestionY );
+		love.graphics.print( parsedCommand .. " is not a valid command", suggestionX, suggestionY );
+	
 	elseif autoCompleteState == "args" then
-		local suggestionText = "";
-		local suggestionX = inputX + font:getWidth( inputCommand .. " " );
+		local suggestionText = {};
+		local suggestionX = inputX + font:getWidth( parsedCommandUntrimmed .. " " );
 		local suggestionY = inputY + font:getHeight();
+		
 		for i, arg in ipairs( autoComplete.command.args ) do
+			local argString = "";
 			if i > 1 then
-				suggestionText = suggestionText .. " ";
+				argString = " ";
 			end
-			suggestionText = suggestionText .. arg.name;
+			argString = argString .. arg.name;
+			
+			local argColor = { 255, 255, 255 };
+			if i <= #parsedArguments then
+				if typeCheckArgument( parsedArguments[i], arg.type ) then
+					argColor = { 0, 255, 0, 255 };
+				else
+					argColor = { 255, 0, 0, 255 };
+				end
+			end
+			table.insert( suggestionText, argColor );
+			table.insert( suggestionText, argString );
 		end
 		love.graphics.print( suggestionText, suggestionX, suggestionY );
 	end
@@ -310,6 +348,7 @@ CLI.keyPressed = function( self, key, scanCode )
 	if key ~= "tab" then
 		unguidedInput = lineBuffer;
 		if textChanged then
+			autoCompleteCursor = 0;
 			updateAutoComplete();
 		end
 	end
