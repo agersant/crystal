@@ -171,7 +171,7 @@ local updateAutoComplete = function()
 		for name, command in pairs( commands ) do
 			local matchStart, matchEnd = name:lower():find( input:lower() );
 			if matchStart then
-				hasStrongMatch = matchStart == 1;
+				hasStrongMatch = hasStrongMatch or matchStart == 1;
 				local suggestion = { command = command, matchStart = matchStart, matchEnd = matchEnd };
 				table.insert( autoComplete, suggestion );
 			end
@@ -183,7 +183,6 @@ local updateAutoComplete = function()
 				end
 			end
 		end
-		-- TODO color match portion differently from suggestion portion
 		
 	elseif not commands[ref] then
 		autoCompleteState = "badcommand";
@@ -310,14 +309,26 @@ CLI.draw = function()
 	-- Compute autocomplete content
 	local suggestionX;
 	local suggestionsWidth = 0;
-	local suggestions = {};
+	local suggestions = {}; -- TODO This should be computed in updateAutoComplete()
 	
 	if autoCompleteState == "command" then
 		suggestionX = inputX;
 		for i, suggestion in ipairs( autoComplete ) do
 			local suggestionText = suggestion.command.name;
 			suggestionsWidth = font:getWidth( suggestionText );
-			table.insert( suggestions, { Colors.white, suggestionText } );
+			local chunks = {};
+			local preMatch = suggestion.matchStart > 1 and suggestion.command.name:sub( 1, suggestion.matchStart - 1 ) or "";
+			local matchText = suggestion.command.name:sub( suggestion.matchStart, suggestion.matchEnd );
+			local postMatch = suggestion.command.name:sub( suggestion.matchEnd + 1 );
+			if #preMatch > 0 then
+				table.insert( chunks, Colors.rainCloudGrey );
+				table.insert( chunks, preMatch );
+			end
+			table.insert( chunks, Colors.white );
+			table.insert( chunks, matchText );
+			table.insert( chunks, Colors.rainCloudGrey );
+			table.insert( chunks, postMatch );
+			table.insert( suggestions, chunks );
 		end
 	
 	elseif autoCompleteState == "badcommand" then
