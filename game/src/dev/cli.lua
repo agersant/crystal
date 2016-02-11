@@ -19,9 +19,12 @@ local cursor = 0; 		-- lineBuffer[cursor] is the letter left of the caret
 local undoCursor = 1; 	-- undoBuffer[undoCursor] duplicates our lineBuffer and cursor
 local commands = {};
 
+local autoCompleteState = "command";
 local autoComplete = {};
 local autoCompleteCursor = 0;
 local unguidedInput = "";
+
+local inputCommand = "";
 
 local fontSize = 20;
 local marginX = 20;
@@ -102,24 +105,42 @@ end
 
 local updateAutoComplete = function()
 	autoComplete = {};
-	if #lineBuffer == 0 then
+	
+	local input = trim( lineBuffer );
+	if #input == 0 then
+		autoCompleteState = "command";
 		return;
 	end
-	local hasStrongMatch = false;
-	for name, command in pairs( commands ) do
-		local matchStart, matchEnd = name:lower():find( lineBuffer:lower() );
-		if matchStart then
-			hasStrongMatch = matchStart == 1;
-			local suggestion = { command = command, matchStart = matchStart, matchEnd = matchEnd };
-			table.insert( autoComplete, suggestion );
-		end
-	end
-	if hasStrongMatch then
-		for i = #autoComplete, 1, -1 do
-			if autoComplete[i].matchStart ~= 1 then
-				table.remove( autoComplete, i );
+	
+	inputCommand = lineBuffer:match( "([^%s]+)%s+" );
+	local ref = inputCommand and inputCommand:lower();
+	
+	if not inputCommand then
+	
+		autoCompleteState = "command";
+		local hasStrongMatch = false;
+		for name, command in pairs( commands ) do
+			local matchStart, matchEnd = name:lower():find( input:lower() );
+			if matchStart then
+				hasStrongMatch = matchStart == 1;
+				local suggestion = { command = command, matchStart = matchStart, matchEnd = matchEnd };
+				table.insert( autoComplete, suggestion );
 			end
 		end
+		if hasStrongMatch then
+			for i = #autoComplete, 1, -1 do
+				if autoComplete[i].matchStart ~= 1 then
+					table.remove( autoComplete, i );
+				end
+			end
+		end
+		
+	elseif not commands[ref] then
+		autoCompleteState = "badcommand";
+	
+	else
+		autoCompleteState = "args";
+		autoComplete.command = commands[ref];
 	end
 end
 
@@ -172,10 +193,27 @@ CLI.draw = function()
 	love.graphics.setColor( 255, 255, 255, 255 );
 	
 	-- Draw autocomplete
-	for i, suggestion in ipairs( autoComplete ) do
-		local suggestionText = suggestion.command.name;
+	if autoCompleteState == "command" then
+		for i, suggestion in ipairs( autoComplete ) do
+			local suggestionText = suggestion.command.name;
+			local suggestionX = inputX;
+			local suggestionY = inputY + i * font:getHeight();
+			love.graphics.print( suggestionText, suggestionX, suggestionY );
+		end
+	elseif autoCompleteState == "badcommand" then
 		local suggestionX = inputX;
-		local suggestionY = inputY + i * font:getHeight();
+		local suggestionY = inputY + font:getHeight();
+		love.graphics.print( inputCommand .. " is not a valid command", suggestionX, suggestionY );
+	elseif autoCompleteState == "args" then
+		local suggestionText = "";
+		local suggestionX = inputX + font:getWidth( inputCommand .. " " );
+		local suggestionY = inputY + font:getHeight();
+		for i, arg in ipairs( autoComplete.command.args ) do
+			if i > 1 then
+				suggestionText = suggestionText .. " ";
+			end
+			suggestionText = suggestionText .. arg.name;
+		end
 		love.graphics.print( suggestionText, suggestionX, suggestionY );
 	end
 end
@@ -199,6 +237,9 @@ CLI.keyPressed = function( self, key, scanCode )
 		updateAutoComplete();
 		return;
 	end
+	
+	local oldLineBuffer = lineBuffer;
+	local oldCursor = cursor;
 	
 	if key == "home" then
 		cursor = 0;
@@ -255,10 +296,18 @@ CLI.keyPressed = function( self, key, scanCode )
 		end
 	end
 	
-	pushUndoState();
+	local textChanged = lineBuffer ~= oldLineBuffer;
+	local cursorMoved = cursor ~= oldCursor;
+	
+	if textChanged or cursorMoved then
+		pushUndoState();
+	end
+	
 	if key ~= "tab" then
 		unguidedInput = lineBuffer;
-		updateAutoComplete();
+		if textChanged then
+			updateAutoComplete();
+		end
 	end
 end
 
@@ -277,8 +326,9 @@ CLI.addCommand = function( description, func )
 		table.insert( command.args, arg );
 	end
 	
-	assert( not commands[command.name] );
-	commands[command.name] = command;
+	local ref = command.name:lower();
+	assert( not commands[ref] );
+	commands[ref] = command;
 end
 
 CLI.addCommand( "loadImage name:string" );
