@@ -13,6 +13,7 @@ end
 local maxUndo = 20;
 local isActive = false;
 local textInputWasOn;
+local keyRepeatWasOn;
 local lineBuffer = "";
 local undoBuffer = { { line = "", cursor = 0 } };
 local cursor = 0; 		-- lineBuffer[cursor] is the letter left of the caret
@@ -152,9 +153,12 @@ CLI.toggle = function()
 	isActive = not isActive;
 	if isActive then
 		textInputWasOn = love.keyboard.hasTextInput();
+		keyRepeatWasOn = love.keyboard.hasKeyRepeat();
 		love.keyboard.setTextInput( true );
+		love.keyboard.setKeyRepeat( true );
 	else
 		love.keyboard.setTextInput( textInputWasOn );
+		love.keyboard.setKeyRepeat( keyRepeatWasOn );
 	end
 end
 
