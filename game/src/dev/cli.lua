@@ -14,20 +14,21 @@ local maxUndo = 20;
 local isActive = false;
 local textInputWasOn;
 local keyRepeatWasOn;
-local lineBuffer = "";
-local undoBuffer = { { line = "", cursor = 0 } };
-local cursor = 0; 		-- lineBuffer[cursor] is the letter left of the caret
-local undoCursor = 1; 	-- undoBuffer[undoCursor] duplicates our lineBuffer and cursor
+local lineBuffer;
+local undoBuffer;
+local cursor;
+local undoCursor;
 local commands = {};
 
-local autoCompleteState = "command";
-local autoComplete = {};
-local autoCompleteCursor = 0;
-local unguidedInput = "";
+local autoCompleteState;
+local autoComplete;
+local autoCompleteCursor;
+local unguidedInput;
 
-local parsedCommand = "";
-local parsedCommandUntrimmed = "";
-local parsedArguments = {};
+local parsedCommand;
+local parsedCommandUntrimmed;
+local parsedCommandIsComplete;
+local parsedArguments;
 
 local fontSize = 20;
 local marginX = 20;
@@ -106,11 +107,44 @@ local redo = function()
 	cursor = undoBuffer[undoCursor].cursor;
 end
 
-local updateAutoComplete = function()
-	
-	autoComplete = {};
+local parseCommand = function()
 	parsedCommand = "";
 	parsedArguments = {};
+	parsedCommandUntrimmed = lineBuffer:match( "^(%s*[^%s]+)" ) or "";
+	parsedCommand = parsedCommandUntrimmed and trim( parsedCommandUntrimmed );
+	parsedCommandIsComplete = lineBuffer:match( "[^%s]+%s" ) ~= nil;
+	
+	local args = lineBuffer:sub( #parsedCommand + 1 );
+	for arg in args:gmatch( "%s+[^%s]+" ) do 
+		table.insert( parsedArguments, trim( arg ) );
+	end
+end
+
+local typeCheckArgument = function( argument, requiredType )
+	if requiredType == "number" then
+		return tonumber( argument ) ~= nil;
+	end
+	if requiredType == "boolean" then
+		return argument == "0" or argument == "1" or argument == "true" or argument == "false";
+	end
+	return true;
+end
+
+local castArgument = function( argument, requiredType )
+	assert( typeCheckArgument( argument, requiredType ) );
+	if requiredType == "number" then
+		return tonumber( argument );
+	end
+	if requiredType == "boolean" then
+		return argument == "1" or argument == "true";
+	end
+	return argument;
+end
+
+local updateAutoComplete = function()
+	
+	parseCommand();
+	autoComplete = {};
 	
 	local input = trim( lineBuffer );
 	if #input == 0 then
@@ -118,11 +152,8 @@ local updateAutoComplete = function()
 		return;
 	end
 	
-	parsedCommandUntrimmed = lineBuffer:match( "^(%s*[^%s]+)%s+" );
-	parsedCommand = parsedCommandUntrimmed and trim( parsedCommandUntrimmed );
-	local ref = parsedCommand and parsedCommand:lower();
-	
-	if not parsedCommand then
+	local ref = parsedCommand:lower();
+	if not parsedCommandIsComplete then
 	
 		autoCompleteState = "command";
 		local hasStrongMatch = false;
@@ -148,25 +179,60 @@ local updateAutoComplete = function()
 	else
 		autoCompleteState = "args";
 		autoComplete.command = commands[ref];
-
-		local args = lineBuffer:sub( #parsedCommand + 1 );
-		for arg in args:gmatch( "%s+[^%s]+" ) do 
-			table.insert( parsedArguments, trim( arg ) );
+		autoComplete.typeChecks = {};
+		for i, arg in ipairs( parsedArguments ) do
+			local correctType = false;
+			if i <= #autoComplete.command.args then
+				correctType = typeCheckArgument( parsedArguments[i], autoComplete.command.args[i].type );
+			end
+			autoComplete.typeChecks[i] = correctType;
 		end
 	end
 	
 end
 
-local typeCheckArgument = function( argument, requiredType )
-	if requiredType == "number" then
-		return tonumber( argument ) ~= nil;
+local runCommand = function()
+	parseCommand();
+	CLI.toggle();
+	local ref = parsedCommand:lower();
+	local command = commands[ref];
+	if not command then
+		if #ref > 0 then
+			Log.error( parsedCommand .. " is not a valid command" );
+		end
+		return;
 	end
-	if requiredType == "boolean" then
-		return argument == "0" or argument == "1" or argument == "true" or argument == "false";
+	local useArgs = {};
+	for i, arg in ipairs( parsedArguments ) do
+		if i > #command.args then
+			Log.error( "Too many arguments for calling " .. command.name );
+			return;
+		end
+		local requiredType = command.args[i].type;
+		if not typeCheckArgument( arg, requiredType ) then
+			Log.error( "Argument #" .. i .. " (" .. command.args[i].name .. ") of command " .. command.name .. " must be a " .. requiredType );
+			return;
+		end
+		table.insert( useArgs, castArgument( arg, requiredType ) );
 	end
-	return true;
+	if #useArgs < #command.args then
+		Log.error( command.name .. " requires " .. #command.args .. " arguments" );
+		return;
+	end
+	command.func( unpack( useArgs ) );
 end
 
+local wipeInput = function()
+	lineBuffer = "";
+	cursor = 0; -- lineBuffer[cursor] is the letter left of the caret
+	
+	updateAutoComplete();
+	autoCompleteCursor = 0;
+	unguidedInput = "";
+	
+	undoBuffer = { { line = "", cursor = 0 } };
+	undoCursor = 1; -- undoBuffer[undoCursor] duplicates our lineBuffer and cursor
+end
 
 
 -- PUBLIC API
@@ -178,6 +244,7 @@ CLI.toggle = function()
 		keyRepeatWasOn = love.keyboard.hasKeyRepeat();
 		love.keyboard.setTextInput( true );
 		love.keyboard.setKeyRepeat( true );
+		wipeInput();
 	else
 		love.keyboard.setTextInput( textInputWasOn );
 		love.keyboard.setKeyRepeat( keyRepeatWasOn );
@@ -244,14 +311,13 @@ CLI.draw = function()
 				argString = " ";
 			end
 			argString = argString .. arg.name;
-			
-			local argColor = { 255, 255, 255 };
-			if i <= #parsedArguments then
-				if typeCheckArgument( parsedArguments[i], arg.type ) then
-					argColor = { 0, 255, 0, 255 };
-				else
-					argColor = { 255, 0, 0, 255 };
-				end
+			local argColor;
+			if autoComplete.typeChecks[i] == true then
+				argColor = { 0, 255, 0, 255 };
+			elseif autoComplete.typeChecks[i] == false then
+				argColor = { 255, 0, 0, 255 };
+			else
+				argColor = { 255, 255, 255 };
 			end
 			table.insert( suggestionText, argColor );
 			table.insert( suggestionText, argString );
@@ -336,6 +402,9 @@ CLI.keyPressed = function( self, key, scanCode )
 			end
 			cursor = #lineBuffer;
 		end
+	elseif key == "return" or key == "kpenter" then
+		runCommand();
+		return;
 	end
 	
 	local textChanged = lineBuffer ~= oldLineBuffer;
@@ -355,6 +424,8 @@ CLI.keyPressed = function( self, key, scanCode )
 end
 
 CLI.addCommand = function( description, func )
+	assert( type( description ) == "string" );
+	assert( type( func ) == "function" );
 	description = trim( description );
 	
 	local command = {};
@@ -374,10 +445,27 @@ CLI.addCommand = function( description, func )
 	commands[ref] = command;
 end
 
-CLI.addCommand( "loadImage name:string" );
-CLI.addCommand( "loadMap mapName:string startX:number startY:number" );
-CLI.addCommand( "reloadMap" );
-CLI.addCommand( "playMusic" );
-CLI.addCommand( "stopMusic" );
+
+
+-- TEST
+
+local loadImage = function( name )
+	Log.debug( "loading image " .. name );
+end
+
+local loadMap = function( name, x, y )
+	Log.debug( "loading map " .. name .. " " .. tostring( x ).. " " .. tostring( y ) );
+end
+
+local reloadMap = function( reset )
+	Log.debug( "reloading map " .. tostring( reset ) );
+end
+
+CLI.addCommand( "loadImage name:string", loadImage );
+CLI.addCommand( "loadMap mapName:string startX:number startY:number", loadMap );
+CLI.addCommand( "reloadMap reset:boolean", reloadMap );
+CLI.addCommand( "playMusic", function()end );
+CLI.addCommand( "stopMusic", function()end );
+
 
 return CLI;
