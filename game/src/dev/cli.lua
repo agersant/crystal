@@ -10,7 +10,7 @@ end
 
 
 
-local maxUndo = 4;
+local maxUndo = 20;
 local isActive = false;
 local textInputWasOn;
 local lineBuffer = "";
@@ -18,7 +18,10 @@ local undoBuffer = { { line = "", cursor = 0 } };
 local cursor = 0; 		-- lineBuffer[cursor] is the letter left of the caret
 local undoCursor = 1; 	-- undoBuffer[undoCursor] duplicates our lineBuffer and cursor
 local commands = {};
+
 local autoComplete = {};
+local autoCompleteCursor = 0;
+local unguidedInput = "";
 
 local fontSize = 20;
 local marginX = 20;
@@ -236,10 +239,27 @@ CLI.keyPressed = function( self, key, scanCode )
 	elseif ctrl and key == "v" then
 		local clipboard = love.system.getClipboardText();
 		insert( clipboard );
+	elseif key == "tab" then
+		if #autoComplete > 0 then
+			if autoCompleteCursor == 0 then
+				autoCompleteCursor = 1;
+			else
+				autoCompleteCursor = ( autoCompleteCursor + 1 ) % ( #autoComplete + 1 );
+			end
+			if autoCompleteCursor == 0 then
+				lineBuffer = unguidedInput;
+			else
+				lineBuffer = autoComplete[autoCompleteCursor].command.name;
+			end
+			cursor = #lineBuffer;
+		end
 	end
 	
 	pushUndoState();
-	updateAutoComplete();
+	if key ~= "tab" then
+		unguidedInput = lineBuffer;
+		updateAutoComplete();
+	end
 end
 
 CLI.addCommand = function( description, func )
