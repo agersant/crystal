@@ -1,4 +1,5 @@
 local Fonts = require( "src/resources/fonts" );
+local Colors = require( "src/resources/colors" );
 
 
 
@@ -33,6 +34,16 @@ local parsedArguments;
 local fontSize = 20;
 local marginX = 20;
 local marginY = 20;
+local inputBoxPaddingX = 10;
+local inputBoxPaddingY = 4;
+local autoCompleteMargin = 16;
+local autoCompletePaddingX = 10;
+local autoCompletePaddingY = 8;
+local autoCompleteCursorWidth = 2;
+local autoCompleteArrowMargin = 8;
+local autoCompleteArrowWidth = 16;
+local autoCompleteArrowHeight = 8;
+
 
 
 local insert = function( text )
@@ -262,12 +273,21 @@ CLI.draw = function()
 	
 	local font = Fonts.get( "dev", fontSize );
 	love.graphics.setFont( font );
-	love.graphics.setColor( 255, 255, 255, 255 );
+	
+	-- Draw input box
+	local inputBoxX = marginX;
+	local inputBoxY = marginX;
+	local inputBoxWidth = love.graphics.getWidth() - 2 * marginX;
+	local inputBoxHeight = font:getHeight() + 2 * inputBoxPaddingY;
+	local rounding = 8;
+	love.graphics.setColor( Colors.nightSkyBlue );	
+	love.graphics.rectangle( "fill", inputBoxX, inputBoxY, inputBoxWidth, inputBoxHeight, rounding, rounding );
 	
 	-- Draw chevron
-	local chevronX = marginX;
-	local chevronY = marginY;
+	local chevronX = inputBoxX + inputBoxPaddingX;
+	local chevronY = inputBoxY + inputBoxPaddingY;
 	local chevron = "> ";
+	love.graphics.setColor( Colors.white );
 	love.graphics.print( chevron, chevronX, chevronY );
 	
 	-- Draw input text
@@ -275,6 +295,7 @@ CLI.draw = function()
 	local inputY = chevronY;
 	local pre = lineBuffer:sub( 1, cursor );
 	local post = lineBuffer:sub( cursor + 1 );
+	love.graphics.setColor( Colors.white );
 	love.graphics.print( pre .. post, inputX, inputY );
 	
 	-- Draw caret
@@ -282,29 +303,31 @@ CLI.draw = function()
 	local caretY = inputY;
 	local caretAlpha = .5 * ( 1 + math.sin( love.timer.getTime() * 1000 / 100 ) );
 	caretAlpha = caretAlpha * caretAlpha * caretAlpha;
-	love.graphics.setColor( 255, 255, 255, 255 * caretAlpha );
+	love.graphics.setColor( Colors.white:alpha( 255 * caretAlpha ) );
 	love.graphics.rectangle( "fill", caretX, caretY, 1, font:getHeight() );
 	
-	-- Draw autocomplete
-	love.graphics.setColor( 255, 255, 255, 255 );
+	-- Compute autocomplete content
+	local suggestionX;
+	local suggestionsWidth = 0;
+	local suggestions = {};
+	
 	if autoCompleteState == "command" then
+		suggestionX = inputX;
 		for i, suggestion in ipairs( autoComplete ) do
 			local suggestionText = suggestion.command.name;
-			local suggestionX = inputX;
-			local suggestionY = inputY + i * font:getHeight();
-			love.graphics.print( suggestionText, suggestionX, suggestionY );
+			suggestionsWidth = font:getWidth( suggestionText );
+			table.insert( suggestions, { Colors.white, suggestionText } );
 		end
 	
 	elseif autoCompleteState == "badcommand" then
-		local suggestionX = inputX;
-		local suggestionY = inputY + font:getHeight();
-		love.graphics.print( parsedCommand .. " is not a valid command", suggestionX, suggestionY );
+		suggestionX = inputX;
+		local suggestionText = parsedCommand .. " is not a valid command";
+		suggestionsWidth = font:getWidth( suggestionText );
+		table.insert( suggestions, { Colors.strawberry, suggestionText } );
 	
 	elseif autoCompleteState == "args" then
+		suggestionX = inputX + font:getWidth( parsedCommandUntrimmed .. " " );
 		local suggestionText = {};
-		local suggestionX = inputX + font:getWidth( parsedCommandUntrimmed .. " " );
-		local suggestionY = inputY + font:getHeight();
-		
 		for i, arg in ipairs( autoComplete.command.args ) do
 			local argString = "";
 			if i > 1 then
@@ -313,17 +336,54 @@ CLI.draw = function()
 			argString = argString .. arg.name;
 			local argColor;
 			if autoComplete.typeChecks[i] == true then
-				argColor = { 0, 255, 0, 255 };
+				argColor = Colors.ecoGreen;
 			elseif autoComplete.typeChecks[i] == false then
-				argColor = { 255, 0, 0, 255 };
+				argColor = Colors.strawberry;
 			else
-				argColor = { 255, 255, 255 };
+				argColor = Colors.rainCloudGrey:alpha( 255 );
 			end
 			table.insert( suggestionText, argColor );
 			table.insert( suggestionText, argString );
+			suggestionsWidth = suggestionsWidth + font:getWidth( argString );
 		end
-		love.graphics.print( suggestionText, suggestionX, suggestionY );
+		if #suggestionText > 0 then
+			table.insert( suggestions, suggestionText );
+		end
+	else
+		error( "Unexpected autocomplete state" );
 	end
+	
+	if #suggestions > 0 then
+		-- Draw autocomplete box
+		local autoCompleteBoxX = suggestionX - autoCompletePaddingX;
+		local autoCompleteBoxY = inputBoxY + inputBoxHeight + autoCompleteMargin;
+		local autoCompleteBoxWidth = suggestionsWidth + 2 * autoCompletePaddingX;
+		local autoCompleteBoxHeight = #suggestions * font:getHeight() + 2 * autoCompletePaddingY;
+		love.graphics.setColor( Colors.nightSkyBlue );	
+		love.graphics.rectangle( "fill", autoCompleteBoxX, autoCompleteBoxY, autoCompleteBoxWidth, autoCompleteBoxHeight, 0, 0 );
+		
+		-- Draw autocomplete arrow
+		love.graphics.polygon	( "fill", 	autoCompleteBoxX + autoCompleteArrowMargin, autoCompleteBoxY,
+											autoCompleteBoxX + autoCompleteArrowMargin + autoCompleteArrowWidth, autoCompleteBoxY,
+											autoCompleteBoxX + autoCompleteArrowMargin + autoCompleteArrowWidth / 2, autoCompleteBoxY - autoCompleteArrowHeight
+								);
+		
+		-- Draw autocomplete content
+		love.graphics.setColor( Colors.white );
+		local suggestionY = autoCompleteBoxY + autoCompletePaddingY;
+		for i, suggestion in ipairs( suggestions ) do
+			local suggestionY = suggestionY + ( i - 1 ) * font:getHeight();
+			if autoCompleteState == "command" and i == autoCompleteCursor then
+				love.graphics.setColor( Colors.oxfordBlue );
+				love.graphics.rectangle( "fill", autoCompleteBoxX, suggestionY, autoCompleteBoxWidth, font:getHeight() );
+				love.graphics.setColor( Colors.cyan );
+				love.graphics.rectangle( "fill", autoCompleteBoxX, suggestionY, autoCompleteCursorWidth, font:getHeight() );
+			end
+			love.graphics.setColor( Colors.white );
+			love.graphics.print( suggestion, suggestionX, suggestionY );
+		end
+	end
+	
 end
 
 CLI.textInput = function( self, text )
