@@ -202,9 +202,20 @@ local updateAutoComplete = function()
 	
 end
 
+local wipeInput = function()
+	lineBuffer = "";
+	cursor = 0; -- lineBuffer[cursor] is the letter left of the caret
+	
+	updateAutoComplete();
+	autoCompleteCursor = 0;
+	unguidedInput = "";
+	
+	undoBuffer = { { line = "", cursor = 0 } };
+	undoCursor = 1; -- undoBuffer[undoCursor] duplicates our lineBuffer and cursor
+end
+
 local runCommand = function()
 	parseCommand();
-	CLI.toggle();
 	local ref = parsedCommand:lower();
 	local command = commands[ref];
 	if not command then
@@ -231,19 +242,9 @@ local runCommand = function()
 		return;
 	end
 	command.func( unpack( useArgs ) );
+	wipeInput();
 end
 
-local wipeInput = function()
-	lineBuffer = "";
-	cursor = 0; -- lineBuffer[cursor] is the letter left of the caret
-	
-	updateAutoComplete();
-	autoCompleteCursor = 0;
-	unguidedInput = "";
-	
-	undoBuffer = { { line = "", cursor = 0 } };
-	undoCursor = 1; -- undoBuffer[undoCursor] duplicates our lineBuffer and cursor
-end
 
 
 -- PUBLIC API
@@ -505,27 +506,6 @@ CLI.addCommand = function( description, func )
 	commands[ref] = command;
 end
 
-
-
--- TEST
-
-local loadImage = function( name )
-	Log.debug( "loading image " .. name );
-end
-
-local loadMap = function( name, x, y )
-	Log.debug( "loading map " .. name .. " " .. tostring( x ).. " " .. tostring( y ) );
-end
-
-local reloadMap = function( reset )
-	Log.debug( "reloading map " .. tostring( reset ) );
-end
-
-CLI.addCommand( "loadImage name:string", loadImage );
-CLI.addCommand( "loadMap mapName:string startX:number startY:number", loadMap );
-CLI.addCommand( "reloadMap reset:boolean", reloadMap );
-CLI.addCommand( "playMusic", function()end );
-CLI.addCommand( "stopMusic", function()end );
 
 
 return CLI;
