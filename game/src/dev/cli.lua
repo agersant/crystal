@@ -1,3 +1,7 @@
+local Fonts = require( "src/resources/fonts" );
+
+
+
 local CLI = {};
 
 if not gConf.features.cli then
@@ -7,6 +11,7 @@ end
 
 
 local maxUndo = 4;
+local fontSize = 20;
 local isActive = false;
 local textInputWasOn;
 local lineBuffer = "";
@@ -135,12 +140,28 @@ CLI.draw = function()
 	if not isActive then
 		return;
 	end
-	local pre = lineBuffer:sub( 1, cursor );
+	
+	local font = Fonts.get( "dev", fontSize );
+	love.graphics.setFont( font );
+	
+	-- Draw input text
+	local inputX = 10;
+	local inputY = 10;
+	local pre = "> " .. lineBuffer:sub( 1, cursor );
 	local post = lineBuffer:sub( cursor + 1 );
-	local display = pre .. "|" .. post;
-	love.graphics.print( "> " .. display, 10, 10 );
+	love.graphics.print( pre .. post, inputX, inputY );
+	
+	-- Draw caret
+	local caretX = inputX + font:getWidth( pre );
+	local caretAlpha = .5 * ( 1 + math.sin( love.timer.getTime() * 1000 / 100 ) );
+	caretAlpha = caretAlpha * caretAlpha * caretAlpha;
+	love.graphics.setColor( 255, 255, 255, 255 * caretAlpha );
+	love.graphics.rectangle( "fill", caretX, inputY, 1, font:getHeight() );
+	love.graphics.setColor( 255, 255, 255, 255 );
+	
+	-- Draw autocomplete
 	for i, suggestion in ipairs( autoComplete ) do
-		love.graphics.print( "> " .. suggestion.command.name, 10, 20 + 20*i );
+		love.graphics.print( "> " .. suggestion.command.name, 10, inputY + i * font:getHeight() );
 	end
 end
 
@@ -215,6 +236,7 @@ CLI.addCommand = function( description, func )
 	local command = {};
 	command.name = description:match( "[^%s]+" );
 	command.args = {};
+	command.func = func;
 	
 	local args = trim( description:sub( #command.name + 1 ) );
 	for argDescription in string.gmatch( args, "%a+[%d%a]-:%a+") do
@@ -226,5 +248,11 @@ CLI.addCommand = function( description, func )
 	assert( not commands[command.name] );
 	commands[command.name] = command;
 end
+
+CLI.addCommand( "loadImage" );
+CLI.addCommand( "loadMap" );
+CLI.addCommand( "reloadMap" );
+CLI.addCommand( "playMusic" );
+CLI.addCommand( "stopMusic" );
 
 return CLI;

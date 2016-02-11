@@ -1,7 +1,6 @@
-require( "utils/OOP" );
-require( "utils/Log" );
-require( "utils/StringUtils" );
-local CLI = require( "utils/CLI" );
+require( "src/dev/Log" );
+require( "src/utils/StringUtils" );
+local CLI = require( "src/dev/CLI" );
 
 
 
