@@ -183,6 +183,7 @@ local updateAutoComplete = function()
 				end
 			end
 		end
+		-- TODO color match portion differently from suggestion portion
 		
 	elseif not commands[ref] then
 		autoCompleteState = "badcommand";
@@ -294,12 +295,11 @@ CLI.draw = function()
 	-- Draw input text
 	local inputX = chevronX + font:getWidth( chevron );
 	local inputY = chevronY;
-	local pre = lineBuffer:sub( 1, cursor );
-	local post = lineBuffer:sub( cursor + 1 );
 	love.graphics.setColor( Colors.white );
-	love.graphics.print( pre .. post, inputX, inputY );
+	love.graphics.print( lineBuffer, inputX, inputY );
 	
 	-- Draw caret
+	local pre = lineBuffer:sub( 1, cursor );
 	local caretX = inputX + font:getWidth( pre );
 	local caretY = inputY;
 	local caretAlpha = .5 * ( 1 + math.sin( love.timer.getTime() * 1000 / 100 ) );
