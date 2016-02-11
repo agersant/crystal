@@ -314,6 +314,7 @@ CLI.draw = function()
 	if autoCompleteState == "command" then
 		suggestionX = inputX;
 		for i, suggestion in ipairs( autoComplete ) do
+			local isTabbedOn = i == autoCompleteCursor;
 			local suggestionText = suggestion.command.name;
 			suggestionsWidth = font:getWidth( suggestionText );
 			local chunks = {};
@@ -321,12 +322,12 @@ CLI.draw = function()
 			local matchText = suggestion.command.name:sub( suggestion.matchStart, suggestion.matchEnd );
 			local postMatch = suggestion.command.name:sub( suggestion.matchEnd + 1 );
 			if #preMatch > 0 then
-				table.insert( chunks, Colors.rainCloudGrey );
+				table.insert( chunks, isTabbedOn and Colors.cyan or Colors.rainCloudGrey );
 				table.insert( chunks, preMatch );
 			end
-			table.insert( chunks, Colors.white );
+			table.insert( chunks, isTabbedOn and Colors.cyan or Colors.white );
 			table.insert( chunks, matchText );
-			table.insert( chunks, Colors.rainCloudGrey );
+			table.insert( chunks, isTabbedOn and Colors.cyan or Colors.rainCloudGrey );
 			table.insert( chunks, postMatch );
 			table.insert( suggestions, chunks );
 		end
