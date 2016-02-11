@@ -11,7 +11,6 @@ end
 
 
 local maxUndo = 4;
-local fontSize = 20;
 local isActive = false;
 local textInputWasOn;
 local lineBuffer = "";
@@ -21,6 +20,9 @@ local undoCursor = 1; 	-- undoBuffer[undoCursor] duplicates our lineBuffer and c
 local commands = {};
 local autoComplete = {};
 
+local fontSize = 20;
+local marginX = 20;
+local marginY = 20;
 
 
 local insert = function( text )
@@ -144,24 +146,34 @@ CLI.draw = function()
 	local font = Fonts.get( "dev", fontSize );
 	love.graphics.setFont( font );
 	
+	-- Draw chevron
+	local chevronX = marginX;
+	local chevronY = marginY;
+	local chevron = "> ";
+	love.graphics.print( chevron, chevronX, chevronY );
+	
 	-- Draw input text
-	local inputX = 10;
-	local inputY = 10;
-	local pre = "> " .. lineBuffer:sub( 1, cursor );
+	local inputX = chevronX + font:getWidth( chevron );
+	local inputY = chevronY;
+	local pre = lineBuffer:sub( 1, cursor );
 	local post = lineBuffer:sub( cursor + 1 );
 	love.graphics.print( pre .. post, inputX, inputY );
 	
 	-- Draw caret
 	local caretX = inputX + font:getWidth( pre );
+	local caretY = inputY;
 	local caretAlpha = .5 * ( 1 + math.sin( love.timer.getTime() * 1000 / 100 ) );
 	caretAlpha = caretAlpha * caretAlpha * caretAlpha;
 	love.graphics.setColor( 255, 255, 255, 255 * caretAlpha );
-	love.graphics.rectangle( "fill", caretX, inputY, 1, font:getHeight() );
+	love.graphics.rectangle( "fill", caretX, caretY, 1, font:getHeight() );
 	love.graphics.setColor( 255, 255, 255, 255 );
 	
 	-- Draw autocomplete
 	for i, suggestion in ipairs( autoComplete ) do
-		love.graphics.print( "> " .. suggestion.command.name, 10, inputY + i * font:getHeight() );
+		local suggestionText = suggestion.command.name;
+		local suggestionX = inputX;
+		local suggestionY = inputY + i * font:getHeight();
+		love.graphics.print( suggestionText, suggestionX, suggestionY );
 	end
 end
 
@@ -241,7 +253,7 @@ CLI.addCommand = function( description, func )
 	local args = trim( description:sub( #command.name + 1 ) );
 	for argDescription in string.gmatch( args, "%a+[%d%a]-:%a+") do
 		local arg = {};
-		arg.argName, arg.argType = argDescription:match( "(.*):(.*)" );
+		arg.name, arg.type = argDescription:match( "(.*):(.*)" );
 		table.insert( command.args, arg );
 	end
 	
@@ -249,8 +261,8 @@ CLI.addCommand = function( description, func )
 	commands[command.name] = command;
 end
 
-CLI.addCommand( "loadImage" );
-CLI.addCommand( "loadMap" );
+CLI.addCommand( "loadImage name:string" );
+CLI.addCommand( "loadMap mapName:string startX:number startY:number" );
 CLI.addCommand( "reloadMap" );
 CLI.addCommand( "playMusic" );
 CLI.addCommand( "stopMusic" );
