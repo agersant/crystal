@@ -193,6 +193,10 @@ CLI.draw = function( self )
 	local font = Fonts:get( "dev", fontSize );
 	love.graphics.setFont( font );
 	
+	-- Draw background
+	love.graphics.setColor( Colors.darkViridian:alpha( 255 * 0.7 ) );
+	love.graphics.rectangle( "fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight() );
+	
 	-- Draw input box
 	local inputBoxX = marginX;
 	local inputBoxY = marginX;
