@@ -11,7 +11,6 @@ end
 
 love.draw = function()
 	love.graphics.reset();
-	love.graphics.print( "Oink oink!", 40, 200 );
 	CLI:draw();
 end 
 
