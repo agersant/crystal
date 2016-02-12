@@ -1,3 +1,4 @@
+local Log = require( "src/dev/Log" );
 local Fonts = {};
 
 local fonts = {};
@@ -18,7 +19,7 @@ Fonts.get = function( name, size )
 	
 	local fontFile = pickFont( name );
 	fonts[name][size] = love.graphics.newFont( fontFile, size );
-	Log.info( "Registered font " .. fontFile .. " at size " .. size );
+	Log:info( "Registered font " .. fontFile .. " at size " .. size );
 	return fonts[name][size];
 end
 

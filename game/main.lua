@@ -1,13 +1,12 @@
-require( "src/dev/Log" );
 require( "src/utils/StringUtils" );
+local Log = require( "src/dev/Log" );
 local CLI = require( "src/dev/cli/CLI" );
 
 
 
 love.load = function()
-	Log.init();
 	love.keyboard.setTextInput( false );
-	Log.info( "Completed startup" );
+	Log:info( "Completed startup" );
 end
 
 love.draw = function()
@@ -40,15 +39,15 @@ end
 -- TEST
 
 local loadImage = function( name )
-	Log.debug( "loading image " .. name );
+	Log:debug( "loading image " .. name );
 end
 
 local loadMap = function( name, x, y )
-	Log.debug( "loading map " .. name .. " " .. tostring( x ).. " " .. tostring( y ) );
+	Log:debug( "loading map " .. name .. " " .. tostring( x ).. " " .. tostring( y ) );
 end
 
 local reloadMap = function( reset )
-	Log.debug( "reloading map " .. tostring( reset ) );
+	Log:debug( "reloading map " .. tostring( reset ) );
 end
 
 CLI:addCommand( "loadImage name:string", loadImage );
