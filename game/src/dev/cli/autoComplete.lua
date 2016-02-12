@@ -30,7 +30,7 @@ local getSuggestionsForCommand = function( self, input )
 		end
 	end
 	
-	-- TODO sort
+	table.sort( matches, function( a, b ) return a.command.name < b.command.name; end );
 	
 	-- Colorize!
 	local lines = {};
