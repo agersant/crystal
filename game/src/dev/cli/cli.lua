@@ -1,6 +1,7 @@
 require( "src/utils/oop" );
 local Fonts = require( "src/resources/Fonts" );
 local Colors = require( "src/resources/Colors" );
+local Log = require( "src/dev/Log" );
 local AutoComplete = require( "src/dev/cli/AutoComplete" );
 local UndoStack = require( "src/dev/cli/UndoStack" );
 
@@ -127,25 +128,25 @@ local runCommand = function( self )
 	local command = self._commands[ref];
 	if not command then
 		if #ref > 0 then
-			Log.error( self._parsedInput.command .. " is not a valid command" );
+			Log:error( self._parsedInput.command .. " is not a valid command" );
 		end
 		return;
 	end
 	local useArgs = {};
 	for i, arg in ipairs( self._parsedInput.arguments ) do
 		if i > #command.args then
-			Log.error( "Too many arguments for calling " .. command.name );
+			Log:error( "Too many arguments for calling " .. command.name );
 			return;
 		end
 		local requiredType = command.args[i].type;
 		if not self._autoComplete:typeCheckArgument( command, i, arg ) then
-			Log.error( "Argument #" .. i .. " (" .. command.args[i].name .. ") of command " .. command.name .. " must be a " .. requiredType );
+			Log:error( "Argument #" .. i .. " (" .. command.args[i].name .. ") of command " .. command.name .. " must be a " .. requiredType );
 			return;
 		end
 		table.insert( useArgs, castArgument( self, arg, requiredType ) );
 	end
 	if #useArgs < #command.args then
-		Log.error( command.name .. " requires " .. #command.args .. " arguments" );
+		Log:error( command.name .. " requires " .. #command.args .. " arguments" );
 		return;
 	end
 	command.func( unpack( useArgs ) );
