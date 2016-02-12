@@ -3,6 +3,7 @@ local Fonts = require( "src/resources/Fonts" );
 local Colors = require( "src/resources/Colors" );
 local Log = require( "src/dev/Log" );
 local AutoComplete = require( "src/dev/cli/AutoComplete" );
+local CommandStore = require( "src/dev/cli/CommandStore" );
 local UndoStack = require( "src/dev/cli/UndoStack" );
 
 local maxUndo = 20;
@@ -97,16 +98,6 @@ local parseInput = function( self )
 	return parse;
 end
 
-local castArgument = function( self, argument, requiredType )
-	if requiredType == "number" then
-		return tonumber( argument );
-	end
-	if requiredType == "boolean" then
-		return argument == "1" or argument == "true";
-	end
-	return argument;
-end
-
 local updateAutoComplete = function( self )
 	self._parsedInput = parseInput( self );
 	self._autoComplete:feedInput( self._parsedInput );
@@ -124,32 +115,31 @@ end
 
 local runCommand = function( self )
 	self._parsedInput = parseInput( self );
-	local ref = self._parsedInput.command:lower();
-	local command = self._commands[ref];
+	local command = self._commandStore:getCommand( self._parsedInput.command );
 	if not command then
-		if #ref > 0 then
+		if #self._parsedInput.command > 0 then
 			Log:error( self._parsedInput.command .. " is not a valid command" );
 		end
 		return;
 	end
 	local useArgs = {};
 	for i, arg in ipairs( self._parsedInput.arguments ) do
-		if i > #command.args then
-			Log:error( "Too many arguments for calling " .. command.name );
+		if i > command:getNumArgs() then
+			Log:error( "Too many arguments for calling " .. command:getName() );
 			return;
 		end
-		local requiredType = command.args[i].type;
-		if not self._autoComplete:typeCheckArgument( command, i, arg ) then
-			Log:error( "Argument #" .. i .. " (" .. command.args[i].name .. ") of command " .. command.name .. " must be a " .. requiredType );
+		local requiredType = command:getArg( i ).type;
+		if not command:typeCheckArgument( i, arg ) then
+			Log:error( "Argument #" .. i .. " (" .. command:getArg( i ).name .. ") of command " .. command:getName() .. " must be a " .. requiredType );
 			return;
 		end
-		table.insert( useArgs, castArgument( self, arg, requiredType ) );
+		table.insert( useArgs, command:castArgument( i, arg ) );
 	end
-	if #useArgs < #command.args then
-		Log:error( command.name .. " requires " .. #command.args .. " arguments" );
+	if #useArgs < command:getNumArgs() then
+		Log:error( command:getName() .. " requires " .. command:getNumArgs() .. " arguments" );
 		return;
 	end
-	command.func( unpack( useArgs ) );
+	command:getFunc()( unpack( useArgs ) );
 	wipeInput( self );
 end
 
@@ -158,8 +148,8 @@ end
 -- PUBLIC API
 
 CLI.init = function( self )
-	self._commands = {};
-	self._autoComplete = AutoComplete:new( self._commands );
+	self._commandStore = CommandStore:new();
+	self._autoComplete = AutoComplete:new( self._commandStore );
 	self._undoStack = UndoStack:new( maxUndo );
 	self._isActive = false;
 	self._textInputWasOn = false;
@@ -354,9 +344,9 @@ CLI.keyPressed = function( self, key, scanCode )
 				self._autoCompleteCursor = ( self._autoCompleteCursor + 1 ) % ( numSuggestions + 1 );
 			end
 			if self._autoCompleteCursor == 0 then
-				self._lineBuffer = unguidedInput;
+				self._lineBuffer = self._unguidedInput;
 			else
-				self._lineBuffer = self._autoCompleteOutput.lines[self._autoCompleteCursor].command.name;
+				self._lineBuffer = self._autoCompleteOutput.lines[self._autoCompleteCursor].command:getName();
 			end
 			self._cursor = #self._lineBuffer;
 		end
@@ -373,7 +363,7 @@ CLI.keyPressed = function( self, key, scanCode )
 	end
 	
 	if key ~= "tab" then
-		unguidedInput = self._lineBuffer;
+		self._unguidedInput = self._lineBuffer;
 		if textChanged then
 			self._autoCompleteCursor = 0;
 			updateAutoComplete( self );
@@ -382,27 +372,8 @@ CLI.keyPressed = function( self, key, scanCode )
 end
 
 CLI.addCommand = function( self, description, func )
-	assert( type( description ) == "string" );
-	assert( type( func ) == "function" );
-	description = trim( description );
-	
-	local command = {};
-	command.name = description:match( "[^%s]+" );
-	command.args = {};
-	command.func = func;
-	
-	local args = trim( description:sub( #command.name + 1 ) );
-	for argDescription in string.gmatch( args, "%a+[%d%a]-:%a+") do
-		local arg = {};
-		arg.name, arg.type = argDescription:match( "(.*):(.*)" );
-		table.insert( command.args, arg );
-	end
-	
-	local ref = command.name:lower();
-	assert( not self._commands[ref] );
-	self._commands[ref] = command;
+	self._commandStore:addCommand( description, func );
 end
-
 
 
 instance = CLI:new();
