@@ -155,48 +155,82 @@ end
 local updateAutoComplete = function()
 	
 	parseCommand();
-	autoComplete = {};
+	autoComplete = { lines = {}, state = "command" };
 	
 	local input = trim( lineBuffer );
 	if #input == 0 then
-		autoCompleteState = "command";
 		return;
 	end
 	
 	local ref = parsedCommand:lower();
 	if not parsedCommandIsComplete then
 	
-		autoCompleteState = "command";
+		local suggestions = {};
 		local hasStrongMatch = false;
 		for name, command in pairs( commands ) do
 			local matchStart, matchEnd = name:lower():find( input:lower() );
 			if matchStart then
 				hasStrongMatch = hasStrongMatch or matchStart == 1;
 				local suggestion = { command = command, matchStart = matchStart, matchEnd = matchEnd };
-				table.insert( autoComplete, suggestion );
+				table.insert( suggestions, suggestion );
 			end
 		end
 		if hasStrongMatch then
-			for i = #autoComplete, 1, -1 do
-				if autoComplete[i].matchStart ~= 1 then
-					table.remove( autoComplete, i );
+			for i = #suggestions, 1, -1 do
+				if suggestions[i].matchStart ~= 1 then
+					table.remove( suggestions, i );
 				end
 			end
 		end
 		
+		for i, suggestion in ipairs( suggestions ) do
+			local isTabbedOn = i == autoCompleteCursor;
+			local suggestionText = suggestion.command.name;
+			local chunks = {};
+			local preMatch = suggestion.matchStart > 1 and suggestion.command.name:sub( 1, suggestion.matchStart - 1 ) or "";
+			local matchText = suggestion.command.name:sub( suggestion.matchStart, suggestion.matchEnd );
+			local postMatch = suggestion.command.name:sub( suggestion.matchEnd + 1 );
+			if #preMatch > 0 then
+				table.insert( chunks, isTabbedOn and Colors.cyan or Colors.rainCloudGrey );
+				table.insert( chunks, preMatch );
+			end
+			table.insert( chunks, isTabbedOn and Colors.cyan or Colors.white );
+			table.insert( chunks, matchText );
+			table.insert( chunks, isTabbedOn and Colors.cyan or Colors.rainCloudGrey );
+			table.insert( chunks, postMatch );
+			table.insert( autoComplete.lines, chunks );
+		end
+		
 	elseif not commands[ref] then
-		autoCompleteState = "badcommand";
+		autoComplete.state = "badcommand";
+		table.insert( autoComplete.lines, { Colors.strawberry, parsedCommand .. " is not a valid command" } );
 	
 	else
-		autoCompleteState = "args";
-		autoComplete.command = commands[ref];
-		autoComplete.typeChecks = {};
-		for i, arg in ipairs( parsedArguments ) do
-			local correctType = false;
-			if i <= #autoComplete.command.args then
-				correctType = typeCheckArgument( parsedArguments[i], autoComplete.command.args[i].type );
+		autoComplete.state = "args";
+		local args = {};
+		for i, arg in ipairs( commands[ref].args ) do
+			local correctType;
+			if i <= #parsedArguments then
+				correctType = typeCheckArgument( parsedArguments[i], commands[ref].args[i].type );
 			end
-			autoComplete.typeChecks[i] = correctType;
+			local argString = "";
+			if i > 1 then
+				argString = " ";
+			end
+			argString = argString .. arg.name;
+			local argColor;
+			if correctType == true then
+				argColor = Colors.ecoGreen;
+			elseif correctType == false then
+				argColor = Colors.strawberry;
+			else
+				argColor = Colors.rainCloudGrey:alpha( 255 );
+			end
+			table.insert( args, argColor );
+			table.insert( args, argString );
+		end
+		if #args > 0 then
+			table.insert( autoComplete.lines, args );
 		end
 	end
 	
@@ -309,69 +343,31 @@ CLI.draw = function()
 	-- Compute autocomplete content
 	local suggestionX;
 	local suggestionsWidth = 0;
-	local suggestions = {}; -- TODO This should be computed in updateAutoComplete()
 	
-	if autoCompleteState == "command" then
-		suggestionX = inputX;
-		for i, suggestion in ipairs( autoComplete ) do
-			local isTabbedOn = i == autoCompleteCursor;
-			local suggestionText = suggestion.command.name;
-			suggestionsWidth = font:getWidth( suggestionText );
-			local chunks = {};
-			local preMatch = suggestion.matchStart > 1 and suggestion.command.name:sub( 1, suggestion.matchStart - 1 ) or "";
-			local matchText = suggestion.command.name:sub( suggestion.matchStart, suggestion.matchEnd );
-			local postMatch = suggestion.command.name:sub( suggestion.matchEnd + 1 );
-			if #preMatch > 0 then
-				table.insert( chunks, isTabbedOn and Colors.cyan or Colors.rainCloudGrey );
-				table.insert( chunks, preMatch );
-			end
-			table.insert( chunks, isTabbedOn and Colors.cyan or Colors.white );
-			table.insert( chunks, matchText );
-			table.insert( chunks, isTabbedOn and Colors.cyan or Colors.rainCloudGrey );
-			table.insert( chunks, postMatch );
-			table.insert( suggestions, chunks );
+	for i, suggestion in ipairs( autoComplete.lines ) do
+		local suggestionWidth = 0;
+		for j = 2, #suggestion, 2 do
+			suggestionWidth = suggestionWidth + font:getWidth( suggestion[j] );
 		end
+		suggestionsWidth = math.max( suggestionWidth, suggestionsWidth );
+	end
 	
-	elseif autoCompleteState == "badcommand" then
+	if autoComplete.state == "command" then
 		suggestionX = inputX;
-		local suggestionText = parsedCommand .. " is not a valid command";
-		suggestionsWidth = font:getWidth( suggestionText );
-		table.insert( suggestions, { Colors.strawberry, suggestionText } );
-	
-	elseif autoCompleteState == "args" then
+	elseif autoComplete.state == "badcommand" then
+		suggestionX = inputX;
+	elseif autoComplete.state == "args" then
 		suggestionX = inputX + font:getWidth( parsedCommandUntrimmed .. " " );
-		local suggestionText = {};
-		for i, arg in ipairs( autoComplete.command.args ) do
-			local argString = "";
-			if i > 1 then
-				argString = " ";
-			end
-			argString = argString .. arg.name;
-			local argColor;
-			if autoComplete.typeChecks[i] == true then
-				argColor = Colors.ecoGreen;
-			elseif autoComplete.typeChecks[i] == false then
-				argColor = Colors.strawberry;
-			else
-				argColor = Colors.rainCloudGrey:alpha( 255 );
-			end
-			table.insert( suggestionText, argColor );
-			table.insert( suggestionText, argString );
-			suggestionsWidth = suggestionsWidth + font:getWidth( argString );
-		end
-		if #suggestionText > 0 then
-			table.insert( suggestions, suggestionText );
-		end
 	else
 		error( "Unexpected autocomplete state" );
 	end
 	
-	if #suggestions > 0 then
+	if #autoComplete.lines > 0 then
 		-- Draw autocomplete box
 		local autoCompleteBoxX = suggestionX - autoCompletePaddingX;
 		local autoCompleteBoxY = inputBoxY + inputBoxHeight + autoCompleteMargin;
 		local autoCompleteBoxWidth = suggestionsWidth + 2 * autoCompletePaddingX;
-		local autoCompleteBoxHeight = #suggestions * font:getHeight() + 2 * autoCompletePaddingY;
+		local autoCompleteBoxHeight = #autoComplete.lines * font:getHeight() + 2 * autoCompletePaddingY;
 		love.graphics.setColor( Colors.nightSkyBlue );	
 		love.graphics.rectangle( "fill", autoCompleteBoxX, autoCompleteBoxY, autoCompleteBoxWidth, autoCompleteBoxHeight, 0, 0 );
 		
@@ -384,7 +380,7 @@ CLI.draw = function()
 		-- Draw autocomplete content
 		love.graphics.setColor( Colors.white );
 		local suggestionY = autoCompleteBoxY + autoCompletePaddingY;
-		for i, suggestion in ipairs( suggestions ) do
+		for i, suggestion in ipairs( autoComplete.lines ) do
 			local suggestionY = suggestionY + ( i - 1 ) * font:getHeight();
 			if autoCompleteState == "command" and i == autoCompleteCursor then
 				love.graphics.setColor( Colors.oxfordBlue );

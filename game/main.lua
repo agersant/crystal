@@ -32,3 +32,27 @@ love.textinput = function( text )
 		return;
 	end
 end
+
+
+
+
+
+-- TEST
+
+local loadImage = function( name )
+	Log.debug( "loading image " .. name );
+end
+
+local loadMap = function( name, x, y )
+	Log.debug( "loading map " .. name .. " " .. tostring( x ).. " " .. tostring( y ) );
+end
+
+local reloadMap = function( reset )
+	Log.debug( "reloading map " .. tostring( reset ) );
+end
+
+CLI.addCommand( "loadImage name:string", loadImage );
+CLI.addCommand( "loadMap mapName:string startX:number startY:number", loadMap );
+CLI.addCommand( "reloadMap reset:boolean", reloadMap );
+CLI.addCommand( "playMusic", function()end );
+CLI.addCommand( "stopMusic", function()end );
