@@ -4,7 +4,19 @@ local Colors = require( "src/resources/Colors" );
 local Log = require( "src/dev/Log" );
 local AutoComplete = require( "src/dev/cli/AutoComplete" );
 local CommandStore = require( "src/dev/cli/CommandStore" );
-local UndoStack = require( "src/dev/cli/UndoStack" );
+local TextInput = require( "src/ui/TextInput" );
+
+
+
+local CLI = Class( "CLI" );
+
+if not gConf.features.cli then
+	disableFeature( CLI );
+end
+
+
+
+-- IMPLEMENTATION
 
 local maxUndo = 20;
 local fontSize = 20;
@@ -20,78 +32,14 @@ local autoCompleteArrowMargin = 8;
 local autoCompleteArrowWidth = 16;
 local autoCompleteArrowHeight = 8;
 
-local CLI = Class( "CLI" );
-local instance;
-
-if not gConf.features.cli then
-	disableFeature( CLI );
-end
-
-local insert = function( self, text )
-	local firstNonPrintable = text:find( "[%c]" );
-	if firstNonPrintable then
-		text = text:sub( 1, firstNonPrintable - 1 );
-	end
-	local pre = self._lineBuffer:sub( 1, self._cursor );
-	local post = self._lineBuffer:sub( self._cursor + 1 );
-	self._lineBuffer = pre .. text .. post;
-	self._cursor = self._cursor + #text;
-end
-
-local findLeftWord = function( self )
-	local out = self._cursor - 1;
-	while out > 0 do
-		local spaceLeft = self._lineBuffer:sub( out, out ):find( "%s" );
-		local spaceRight = self._lineBuffer:sub( out + 1, out + 1 ):find( "%s" );
-		if spaceLeft and not spaceRight then
-			break;
-		end
-		out = out - 1;
-	end
-	return out;
-end
-
-local findRightWord = function( self )
-	local matchStart, matchEnd = self._lineBuffer:find( "%s+", self._cursor + 1 );
-	return matchEnd or #self._lineBuffer;
-end
-
-local backspace = function( self, numDelete )
-	assert( numDelete > 0 );
-	local pre = self._lineBuffer:sub( 1, self._cursor - numDelete );
-	local post = self._lineBuffer:sub( self._cursor + 1 );
-	self._lineBuffer = pre .. post;
-	self._cursor = self._cursor - numDelete;
-	assert( self._cursor >= 0 );
-end
-
-local delete = function( self, numDelete )
-	assert( numDelete > 0 );
-	local pre = self._lineBuffer:sub( 1, self._cursor );
-	local post = self._lineBuffer:sub( self._cursor + 1 + numDelete );
-	self._lineBuffer = pre .. post;
-end
-
-local pushUndoState = function( self )
-	self._undoStack:push( self._lineBuffer, self._cursor );
-end
-
-local undo = function( self )
-	self._lineBuffer, self._cursor = self._undoStack:undo();
-end
-
-local redo = function( self )
-	self._lineBuffer, self._cursor = self._undoStack:redo();
-end
-
 local parseInput = function( self )
 	local parse = {};
 	parse.arguments = {};
-	parse.fullText = self._lineBuffer;
-	parse.commandUntrimmed = self._lineBuffer:match( "^(%s*[^%s]+)" ) or "";
+	parse.fullText = self._textInput:getText();
+	parse.commandUntrimmed = parse.fullText:match( "^(%s*[^%s]+)" ) or "";
 	parse.command = parse.commandUntrimmed and trim( parse.commandUntrimmed );
-	parse.commandIsComplete = self._lineBuffer:match( "[^%s]+%s" ) ~= nil;
-	local args = self._lineBuffer:sub( #parse.command + 1 );
+	parse.commandIsComplete = parse.fullText:match( "[^%s]+%s" ) ~= nil;
+	local args = parse.fullText:sub( #parse.command + 1 );
 	for arg in args:gmatch( "%s+[^%s]+" ) do 
 		table.insert( parse.arguments, trim( arg ) );
 	end
@@ -105,12 +53,10 @@ local updateAutoComplete = function( self )
 end
 
 local wipeInput = function( self )
-	self._lineBuffer = "";
-	self._cursor = 0; -- lineBuffer[cursor] is the letter left of the caret
+	self._textInput:clear();
 	self._autoCompleteCursor = 0;
 	self._unguidedInput = "";
 	updateAutoComplete( self );
-	self._undoStack:reset();
 end
 
 local runCommand = function( self )
@@ -150,7 +96,7 @@ end
 CLI.init = function( self )
 	self._commandStore = CommandStore:new();
 	self._autoComplete = AutoComplete:new( self._commandStore );
-	self._undoStack = UndoStack:new( maxUndo );
+	self._textInput = TextInput:new( maxUndo );
 	self._isActive = false;
 	self._textInputWasOn = false;
 	self._keyRepeatWasOn = false;
@@ -207,10 +153,10 @@ CLI.draw = function( self )
 	local inputX = chevronX + font:getWidth( chevron );
 	local inputY = chevronY;
 	love.graphics.setColor( Colors.white );
-	love.graphics.print( self._lineBuffer, inputX, inputY );
+	love.graphics.print( self._textInput:getText(), inputX, inputY );
 	
 	-- Draw caret
-	local pre = self._lineBuffer:sub( 1, self._cursor );
+	local pre = self._textInput:getTextLeftOfCursor();
 	local caretX = inputX + font:getWidth( pre );
 	local caretY = inputY;
 	local caretAlpha = .5 * ( 1 + math.sin( love.timer.getTime() * 1000 / 100 ) );
@@ -274,68 +220,20 @@ CLI.draw = function( self )
 end
 
 CLI.textInput = function( self, text )
-	insert( self, text );
-	pushUndoState( self );
+	self._textInput:textInput( text );
 	updateAutoComplete( self );
 end
 
 CLI.keyPressed = function( self, key, scanCode )
 	
-	local ctrl = love.keyboard.isDown( "lctrl" ) or love.keyboard.isDown( "rctrl" );
-
-	if ctrl and key == "z" then
-		undo( self );
-		updateAutoComplete( self );
-		return;
-	elseif ctrl and key == "y" then
-		redo( self );
-		updateAutoComplete( self );
+	if key == "return" or key == "kpenter" then
+		runCommand( self );
 		return;
 	end
 	
-	local oldLineBuffer = self._lineBuffer;
-	local oldCursor = self._cursor;
-	
-	if key == "home" then
-		self._cursor = 0;
-	elseif key == "end" then
-		self._cursor = #self._lineBuffer;
-	elseif key == "left" then
-		if ctrl then
-			self._cursor = findLeftWord( self );
-		else
-			self._cursor = math.max( 0, self._cursor - 1 );
-		end
-	elseif key == "right" then
-		if ctrl then
-			self._cursor = findRightWord( self );
-		else
-			self._cursor = math.min( #self._lineBuffer, self._cursor + 1 );
-		end
-	elseif key == "backspace" then
-		if self._cursor > 0 then
-			local numDelete;
-			if ctrl then
-				numDelete = self._cursor - findLeftWord( self );
-			else
-				numDelete = 1;
-			end
-			backspace( self, numDelete );
-		end
-	elseif key == "delete" then
-		if self._cursor < #self._lineBuffer then
-			local numDelete;
-			if ctrl then
-				numDelete = findRightWord( self ) - self._cursor;
-			else
-				numDelete = 1;
-			end
-			delete( self, numDelete );
-		end
-	elseif ctrl and key == "v" then
-		local clipboard = love.system.getClipboardText();
-		insert( self, clipboard );
-	elseif key == "tab" and self._autoCompleteOutput.state == "command" then
+	if key == "tab" and self._autoCompleteOutput.state == "command" then
+		local oldText = self._textInput:getText();
+		local oldCursor = self._textInput:getCursor();
 		local numSuggestions = #self._autoCompleteOutput.lines;
 		if numSuggestions > 0 then
 			if self._autoCompleteCursor == 0 then
@@ -344,31 +242,21 @@ CLI.keyPressed = function( self, key, scanCode )
 				self._autoCompleteCursor = ( self._autoCompleteCursor + 1 ) % ( numSuggestions + 1 );
 			end
 			if self._autoCompleteCursor == 0 then
-				self._lineBuffer = self._unguidedInput;
+				self._textInput:setText( self._unguidedInput );
 			else
-				self._lineBuffer = self._autoCompleteOutput.lines[self._autoCompleteCursor].command:getName();
+				self._textInput:setText( self._autoCompleteOutput.lines[self._autoCompleteCursor].command:getName() );
 			end
-			self._cursor = #self._lineBuffer;
 		end
-	elseif key == "return" or key == "kpenter" then
-		runCommand( self );
 		return;
 	end
 	
-	local textChanged = self._lineBuffer ~= oldLineBuffer;
-	local cursorMoved = self._cursor ~= oldCursor;
-	
-	if textChanged or cursorMoved then
-		pushUndoState( self );
+	local textChanged, cursorMoved = self._textInput:keyPressed( key, scanCode );
+	self._unguidedInput = self._textInput:getText();
+	if textChanged then
+		self._autoCompleteCursor = 0;
+		updateAutoComplete( self );
 	end
 	
-	if key ~= "tab" then
-		self._unguidedInput = self._lineBuffer;
-		if textChanged then
-			self._autoCompleteCursor = 0;
-			updateAutoComplete( self );
-		end
-	end
 end
 
 CLI.addCommand = function( self, description, func )
@@ -376,5 +264,6 @@ CLI.addCommand = function( self, description, func )
 end
 
 
-instance = CLI:new();
+
+local instance = CLI:new();
 return instance;

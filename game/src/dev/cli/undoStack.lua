@@ -1,13 +1,18 @@
 require( "src/utils/oop" );
 
 local UndoStack = Class( "UndoStack" );
+
 if not gConf.features.cli then
 	disableFeature( UndoStack );
 end
 
+
+
+-- PUBLIC API
+
 UndoStack.init = function( self, maxUndo )
 	self._maxUndo = maxUndo or 20;
-	self:reset();
+	self:clear();
 end
 
 UndoStack.push = function( self, text, caretPosition )
@@ -39,9 +44,11 @@ UndoStack.redo = function( self )
 	return self._stack[self._cursor].text, self._stack[self._cursor].caretPosition;
 end
 
-UndoStack.reset = function( self )
+UndoStack.clear = function( self )
 	self._stack = {{ text = "", caretPosition = 0 }};
 	self._cursor = 1;
 end
+
+
 
 return UndoStack;
