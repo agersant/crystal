@@ -189,7 +189,7 @@ CLI.draw = function( self )
 		return;
 	end
 	
-	local font = Fonts.get( "dev", fontSize );
+	local font = Fonts:get( "dev", fontSize );
 	love.graphics.setFont( font );
 	
 	-- Draw input box
