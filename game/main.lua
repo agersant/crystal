@@ -18,16 +18,16 @@ end
 
 love.keypressed = function( key, scanCode )
    if scanCode == "`" then
-      CLI.toggle();
+      CLI:toggle();
    end
-   if CLI.isActive() then
+   if CLI:isActive() then
 		CLI:keyPressed( key, scanCode );
 		return;
    end
 end
 
 love.textinput = function( text )
-	if CLI.isActive() then
+	if CLI:isActive() then
 		CLI:textInput( text );
 		return;
 	end
@@ -51,8 +51,8 @@ local reloadMap = function( reset )
 	Log.debug( "reloading map " .. tostring( reset ) );
 end
 
-CLI.addCommand( "loadImage name:string", loadImage );
-CLI.addCommand( "loadMap mapName:string startX:number startY:number", loadMap );
-CLI.addCommand( "reloadMap reset:boolean", reloadMap );
-CLI.addCommand( "playMusic", function()end );
-CLI.addCommand( "stopMusic", function()end );
+CLI:addCommand( "loadImage name:string", loadImage );
+CLI:addCommand( "loadMap mapName:string startX:number startY:number", loadMap );
+CLI:addCommand( "reloadMap reset:boolean", reloadMap );
+CLI:addCommand( "playMusic", function()end );
+CLI:addCommand( "stopMusic", function()end );

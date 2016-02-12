@@ -11,6 +11,8 @@ UndoStack.init = function( self, maxUndo )
 end
 
 UndoStack.push = function( self, text, caretPosition )
+	assert( type( text ) == "string" );
+	assert( type( caretPosition ) == "number" );
 	assert( self._stack[self._cursor] );
 	if self._stack[self._cursor].text == text then
 		self._stack[self._cursor].caretPosition = caretPosition;
