@@ -1,6 +1,6 @@
 require( "src/dev/Log" );
 require( "src/utils/StringUtils" );
-local CLI = require( "src/dev/CLI" );
+local CLI = require( "src/dev/cli/CLI" );
 
 
 

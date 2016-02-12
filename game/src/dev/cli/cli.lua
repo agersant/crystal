@@ -1,6 +1,7 @@
-local Fonts = require( "src/resources/fonts" );
-local Colors = require( "src/resources/colors" );
-
+local Fonts = require( "src/resources/Fonts" );
+local Colors = require( "src/resources/Colors" );
+local AutoComplete = require( "src/dev/cli/AutoComplete" );
+local UndoStack = require( "src/dev/cli/UndoStack" );
 
 
 local CLI = {};
@@ -10,26 +11,19 @@ if not gConf.features.cli then
 end
 
 
+CLI._commands = {};
+CLI._autoComplete = AutoComplete:new( CLI._commands );
+CLI._undoStack = UndoStack:new( 20 );
+CLI._parsedInput = {};
 
-local maxUndo = 20;
 local isActive = false;
 local textInputWasOn;
 local keyRepeatWasOn;
 local lineBuffer;
-local undoBuffer;
 local cursor;
-local undoCursor;
-local commands = {};
 
-local autoCompleteState;
-local autoComplete;
 local autoCompleteCursor;
 local unguidedInput;
-
-local parsedCommand;
-local parsedCommandUntrimmed;
-local parsedCommandIsComplete;
-local parsedArguments;
 
 local fontSize = 20;
 local marginX = 20;
@@ -91,58 +85,32 @@ local delete = function( numDelete )
 end
 
 local pushUndoState = function()
-	if undoBuffer[undoCursor].line == lineBuffer then
-		undoBuffer[undoCursor].cursor = cursor;
-	else
-		while #undoBuffer > undoCursor do
-			table.remove( undoBuffer, #undoBuffer );
-		end
-		table.insert( undoBuffer, { line = lineBuffer, cursor = cursor } );
-		undoCursor = #undoBuffer;
-		while #undoBuffer > maxUndo + 1 do
-			table.remove( undoBuffer, 1 );
-			undoCursor = undoCursor - 1;
-		end
-	end
+	CLI._undoStack:push( lineBuffer, cursor );
 end
 
 local undo = function()
-	undoCursor = math.max( 1, undoCursor - 1 );
-	lineBuffer = undoBuffer[undoCursor].line;
-	cursor = undoBuffer[undoCursor].cursor;
+	lineBuffer, cursor = CLI._undoStack:undo();
 end
 
 local redo = function()
-	undoCursor = math.min( #undoBuffer, undoCursor + 1 );
-	lineBuffer = undoBuffer[undoCursor].line;
-	cursor = undoBuffer[undoCursor].cursor;
+	lineBuffer, cursor = CLI._undoStack:redo();
 end
 
-local parseCommand = function()
-	parsedCommand = "";
-	parsedArguments = {};
-	parsedCommandUntrimmed = lineBuffer:match( "^(%s*[^%s]+)" ) or "";
-	parsedCommand = parsedCommandUntrimmed and trim( parsedCommandUntrimmed );
-	parsedCommandIsComplete = lineBuffer:match( "[^%s]+%s" ) ~= nil;
-	
-	local args = lineBuffer:sub( #parsedCommand + 1 );
+local parseInput = function()
+	local parse = {};
+	parse.arguments = {};
+	parse.fullText = lineBuffer;
+	parse.commandUntrimmed = lineBuffer:match( "^(%s*[^%s]+)" ) or "";
+	parse.command = parse.commandUntrimmed and trim( parse.commandUntrimmed );
+	parse.commandIsComplete = lineBuffer:match( "[^%s]+%s" ) ~= nil;
+	local args = lineBuffer:sub( #parse.command + 1 );
 	for arg in args:gmatch( "%s+[^%s]+" ) do 
-		table.insert( parsedArguments, trim( arg ) );
+		table.insert( parse.arguments, trim( arg ) );
 	end
-end
-
-local typeCheckArgument = function( argument, requiredType )
-	if requiredType == "number" then
-		return tonumber( argument ) ~= nil;
-	end
-	if requiredType == "boolean" then
-		return argument == "0" or argument == "1" or argument == "true" or argument == "false";
-	end
-	return true;
+	return parse;
 end
 
 local castArgument = function( argument, requiredType )
-	assert( typeCheckArgument( argument, requiredType ) );
 	if requiredType == "number" then
 		return tonumber( argument );
 	end
@@ -153,87 +121,9 @@ local castArgument = function( argument, requiredType )
 end
 
 local updateAutoComplete = function()
-	
-	parseCommand();
-	autoComplete = { lines = {}, state = "command" };
-	
-	local input = trim( lineBuffer );
-	if #input == 0 then
-		return;
-	end
-	
-	local ref = parsedCommand:lower();
-	if not parsedCommandIsComplete then
-	
-		local suggestions = {};
-		local hasStrongMatch = false;
-		for name, command in pairs( commands ) do
-			local matchStart, matchEnd = name:lower():find( input:lower() );
-			if matchStart then
-				hasStrongMatch = hasStrongMatch or matchStart == 1;
-				local suggestion = { command = command, matchStart = matchStart, matchEnd = matchEnd };
-				table.insert( suggestions, suggestion );
-			end
-		end
-		if hasStrongMatch then
-			for i = #suggestions, 1, -1 do
-				if suggestions[i].matchStart ~= 1 then
-					table.remove( suggestions, i );
-				end
-			end
-		end
-		
-		for i, suggestion in ipairs( suggestions ) do
-			local isTabbedOn = i == autoCompleteCursor;
-			local suggestionText = suggestion.command.name;
-			local chunks = {};
-			local preMatch = suggestion.matchStart > 1 and suggestion.command.name:sub( 1, suggestion.matchStart - 1 ) or "";
-			local matchText = suggestion.command.name:sub( suggestion.matchStart, suggestion.matchEnd );
-			local postMatch = suggestion.command.name:sub( suggestion.matchEnd + 1 );
-			if #preMatch > 0 then
-				table.insert( chunks, isTabbedOn and Colors.cyan or Colors.rainCloudGrey );
-				table.insert( chunks, preMatch );
-			end
-			table.insert( chunks, isTabbedOn and Colors.cyan or Colors.white );
-			table.insert( chunks, matchText );
-			table.insert( chunks, isTabbedOn and Colors.cyan or Colors.rainCloudGrey );
-			table.insert( chunks, postMatch );
-			table.insert( autoComplete.lines, chunks );
-		end
-		
-	elseif not commands[ref] then
-		autoComplete.state = "badcommand";
-		table.insert( autoComplete.lines, { Colors.strawberry, parsedCommand .. " is not a valid command" } );
-	
-	else
-		autoComplete.state = "args";
-		local args = {};
-		for i, arg in ipairs( commands[ref].args ) do
-			local correctType;
-			if i <= #parsedArguments then
-				correctType = typeCheckArgument( parsedArguments[i], commands[ref].args[i].type );
-			end
-			local argString = "";
-			if i > 1 then
-				argString = " ";
-			end
-			argString = argString .. arg.name;
-			local argColor;
-			if correctType == true then
-				argColor = Colors.ecoGreen;
-			elseif correctType == false then
-				argColor = Colors.strawberry;
-			else
-				argColor = Colors.rainCloudGrey:alpha( 255 );
-			end
-			table.insert( args, argColor );
-			table.insert( args, argString );
-		end
-		if #args > 0 then
-			table.insert( autoComplete.lines, args );
-		end
-	end
-	
+	CLI._parsedInput = parseInput();
+	CLI._autoComplete:feedInput( CLI._parsedInput );
+	CLI._autoCompleteOutput = CLI._autoComplete:getSuggestions();
 end
 
 local wipeInput = function()
@@ -244,28 +134,27 @@ local wipeInput = function()
 	autoCompleteCursor = 0;
 	unguidedInput = "";
 	
-	undoBuffer = { { line = "", cursor = 0 } };
-	undoCursor = 1; -- undoBuffer[undoCursor] duplicates our lineBuffer and cursor
+	CLI._undoStack:reset();
 end
 
 local runCommand = function()
-	parseCommand();
-	local ref = parsedCommand:lower();
-	local command = commands[ref];
+	parseInput();
+	local ref = CLI._parsedInput.command:lower();
+	local command = CLI._commands[ref];
 	if not command then
 		if #ref > 0 then
-			Log.error( parsedCommand .. " is not a valid command" );
+			Log.error( CLI._parsedInput.command .. " is not a valid command" );
 		end
 		return;
 	end
 	local useArgs = {};
-	for i, arg in ipairs( parsedArguments ) do
+	for i, arg in ipairs( CLI._parsedInput.arguments ) do
 		if i > #command.args then
 			Log.error( "Too many arguments for calling " .. command.name );
 			return;
 		end
 		local requiredType = command.args[i].type;
-		if not typeCheckArgument( arg, requiredType ) then
+		if not CLI._autoComplete:typeCheckArgument( command, i, arg ) then
 			Log.error( "Argument #" .. i .. " (" .. command.args[i].name .. ") of command " .. command.name .. " must be a " .. requiredType );
 			return;
 		end
@@ -344,30 +233,30 @@ CLI.draw = function()
 	local suggestionX;
 	local suggestionsWidth = 0;
 	
-	for i, suggestion in ipairs( autoComplete.lines ) do
+	for i, suggestion in ipairs( CLI._autoCompleteOutput.lines ) do
 		local suggestionWidth = 0;
-		for j = 2, #suggestion, 2 do
-			suggestionWidth = suggestionWidth + font:getWidth( suggestion[j] );
+		for j = 2, #suggestion.text, 2 do
+			suggestionWidth = suggestionWidth + font:getWidth( suggestion.text[j] );
 		end
 		suggestionsWidth = math.max( suggestionWidth, suggestionsWidth );
 	end
 	
-	if autoComplete.state == "command" then
+	if CLI._autoCompleteOutput.state == "command" then
 		suggestionX = inputX;
-	elseif autoComplete.state == "badcommand" then
+	elseif CLI._autoCompleteOutput.state == "badcommand" then
 		suggestionX = inputX;
-	elseif autoComplete.state == "args" then
-		suggestionX = inputX + font:getWidth( parsedCommandUntrimmed .. " " );
+	elseif CLI._autoCompleteOutput.state == "args" then
+		suggestionX = inputX + font:getWidth( CLI._parsedInput.commandUntrimmed .. " " );
 	else
 		error( "Unexpected autocomplete state" );
 	end
 	
-	if #autoComplete.lines > 0 then
+	if #CLI._autoCompleteOutput.lines > 0 then
 		-- Draw autocomplete box
 		local autoCompleteBoxX = suggestionX - autoCompletePaddingX;
 		local autoCompleteBoxY = inputBoxY + inputBoxHeight + autoCompleteMargin;
 		local autoCompleteBoxWidth = suggestionsWidth + 2 * autoCompletePaddingX;
-		local autoCompleteBoxHeight = #autoComplete.lines * font:getHeight() + 2 * autoCompletePaddingY;
+		local autoCompleteBoxHeight = #CLI._autoCompleteOutput.lines * font:getHeight() + 2 * autoCompletePaddingY;
 		love.graphics.setColor( Colors.nightSkyBlue );	
 		love.graphics.rectangle( "fill", autoCompleteBoxX, autoCompleteBoxY, autoCompleteBoxWidth, autoCompleteBoxHeight, 0, 0 );
 		
@@ -380,7 +269,7 @@ CLI.draw = function()
 		-- Draw autocomplete content
 		love.graphics.setColor( Colors.white );
 		local suggestionY = autoCompleteBoxY + autoCompletePaddingY;
-		for i, suggestion in ipairs( autoComplete.lines ) do
+		for i, suggestion in ipairs( CLI._autoCompleteOutput.lines ) do
 			local suggestionY = suggestionY + ( i - 1 ) * font:getHeight();
 			if autoCompleteState == "command" and i == autoCompleteCursor then
 				love.graphics.setColor( Colors.oxfordBlue );
@@ -389,7 +278,7 @@ CLI.draw = function()
 				love.graphics.rectangle( "fill", autoCompleteBoxX, suggestionY, autoCompleteCursorWidth, font:getHeight() );
 			end
 			love.graphics.setColor( Colors.white );
-			love.graphics.print( suggestion, suggestionX, suggestionY );
+			love.graphics.print( suggestion.text, suggestionX, suggestionY );
 		end
 	end
 	
@@ -457,17 +346,18 @@ CLI.keyPressed = function( self, key, scanCode )
 	elseif ctrl and key == "v" then
 		local clipboard = love.system.getClipboardText();
 		insert( clipboard );
-	elseif key == "tab" then
-		if #autoComplete > 0 then
+	elseif key == "tab" and CLI._autoCompleteOutput.state == "command" then
+		local numSuggestions = #CLI._autoCompleteOutput.lines;
+		if numSuggestions > 0 then
 			if autoCompleteCursor == 0 then
 				autoCompleteCursor = 1;
 			else
-				autoCompleteCursor = ( autoCompleteCursor + 1 ) % ( #autoComplete + 1 );
+				autoCompleteCursor = ( autoCompleteCursor + 1 ) % ( numSuggestions + 1 );
 			end
 			if autoCompleteCursor == 0 then
 				lineBuffer = unguidedInput;
 			else
-				lineBuffer = autoComplete[autoCompleteCursor].command.name;
+				lineBuffer = CLI._autoCompleteOutput.lines[autoCompleteCursor].command.name;
 			end
 			cursor = #lineBuffer;
 		end
@@ -510,8 +400,8 @@ CLI.addCommand = function( description, func )
 	end
 	
 	local ref = command.name:lower();
-	assert( not commands[ref] );
-	commands[ref] = command;
+	assert( not CLI._commands[ref] );
+	CLI._commands[ref] = command;
 end
 
 
