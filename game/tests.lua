@@ -55,5 +55,4 @@ end
 
 
 runTestSuite();
-io.stdin:read( '*l' );
 os.exit( numSuccess == numTest and 0 or 1 );
