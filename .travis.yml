@@ -8,4 +8,4 @@ addons:
     packages:
       - luajit
 
-script: ./usr/local/bin/luajit
+script: find . -iname luajit
