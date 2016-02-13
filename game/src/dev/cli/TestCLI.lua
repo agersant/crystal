@@ -11,11 +11,11 @@ end
 
 tests[#tests + 1] = { name = "Toggling" };
 tests[#tests].body = function()
-	assert( not CLI:isActive() );
+	local wasActive = CLI:isActive();
 	CLI:toggle();
-	assert( CLI:isActive() );
+	assert( CLI:isActive() ~= wasActive );
 	CLI:toggle();
-	assert( not CLI:isActive() );
+	assert( CLI:isActive() == wasActive );
 end
 
 tests[#tests + 1] = { name = "Run command" };
