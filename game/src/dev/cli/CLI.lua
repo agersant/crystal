@@ -5,6 +5,7 @@ local Log = require( "src/dev/Log" );
 local AutoComplete = require( "src/dev/cli/AutoComplete" );
 local CommandStore = require( "src/dev/cli/CommandStore" );
 local TextInput = require( "src/ui/TextInput" );
+local StringUtils = require( "src/utils/StringUtils" );
 
 
 
@@ -37,11 +38,11 @@ local parseInput = function( self )
 	parse.arguments = {};
 	parse.fullText = self._textInput:getText();
 	parse.commandUntrimmed = parse.fullText:match( "^(%s*[^%s]+)" ) or "";
-	parse.command = parse.commandUntrimmed and trim( parse.commandUntrimmed );
+	parse.command = parse.commandUntrimmed and StringUtils.trim( parse.commandUntrimmed );
 	parse.commandIsComplete = parse.fullText:match( "[^%s]+%s" ) ~= nil;
 	local args = parse.fullText:sub( #parse.command + 1 );
 	for arg in args:gmatch( "%s+[^%s]+" ) do 
-		table.insert( parse.arguments, trim( arg ) );
+		table.insert( parse.arguments, StringUtils.trim( arg ) );
 	end
 	return parse;
 end
@@ -226,6 +227,8 @@ end
 
 CLI.keyPressed = function( self, key, scanCode, ctrl )
 	
+	assert( self:isActive() );
+	
 	if key == "return" or key == "kpenter" then
 		runCommand( self );
 		return;
@@ -261,6 +264,10 @@ end
 
 CLI.addCommand = function( self, description, func )
 	self._commandStore:addCommand( description, func );
+end
+
+CLI.removeCommand = function( self, name )
+	self._commandStore:removeCommand( name );
 end
 
 

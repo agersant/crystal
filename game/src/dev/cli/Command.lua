@@ -1,4 +1,5 @@
 require( "src/utils/OOP" );
+local StringUtils = require( "src/utils/StringUtils" );
 
 local Command = Class( "Command" );
 
@@ -13,14 +14,14 @@ end
 Command.init = function( self, description, func )
 	assert( type( description ) == "string" );
 	assert( type( func ) == "function" );
-	description = trim( description );
+	description = StringUtils.trim( description );
 	
 	self._name = description:match( "[^%s]+" );
 	self._ref = self._name:lower();
 	self._args = {};
 	self._func = func;
 	
-	local args = trim( description:sub( #self._name + 1 ) );
+	local args = StringUtils.trim( description:sub( #self._name + 1 ) );
 	for argDescription in string.gmatch( args, "%a+[%d%a]-:%a+") do
 		local arg = {};
 		arg.name, arg.type = argDescription:match( "(.*):(.*)" );
@@ -69,6 +70,7 @@ end
 
 Command.castArgument = function( self, argIndex, value )
 	assert( self:typeCheckArgument( argIndex, value ) );
+	local requiredType = self:getArg( argIndex ).type;
 	if requiredType == "number" then
 		return tonumber( value );
 	end

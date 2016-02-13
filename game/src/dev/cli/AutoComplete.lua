@@ -1,5 +1,6 @@
 require( "src/utils/OOP" );
 local Colors = require( "src/resources/Colors" );
+local StringUtils = require( "src/utils/StringUtils" );
 
 local AutoComplete = Class( "AutoComplete" );
 
@@ -57,7 +58,7 @@ local getSuggestionsForArguments = function( self, input )
 end
 
 local updateSuggestions = function( self, input )
-	local trimmedInput = trim( input.fullText );
+	local trimmedInput = StringUtils.trim( input.fullText );
 	if #trimmedInput == 0 then
 		self._suggestions = { lines = {}, state = "command" };
 	elseif not input.commandIsComplete then

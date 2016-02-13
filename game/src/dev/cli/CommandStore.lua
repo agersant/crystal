@@ -1,5 +1,6 @@
 require( "src/utils/OOP" );
 local Command = require( "src/dev/cli/Command" );
+local StringUtils = require( "src/utils/StringUtils" );
 
 local CommandStore = Class( "CommandStore" );
 
@@ -22,6 +23,11 @@ CommandStore.addCommand = function( self, description, func )
 	self._commands[ref] = command;
 end
 
+CommandStore.removeCommand = function( self, name )
+	local ref = StringUtils.trim( name:lower() );
+	self._commands[ref] = nil;
+end
+
 CommandStore.listCommandNames = function( self )
 	local commandNames = {};
 	for k, command in pairs( self._commands ) do
@@ -34,7 +40,7 @@ CommandStore.search = function( self, query )
 	local matches = {};
 	local hasStrongMatch = false;
 	for i, command in pairs( self._commands ) do
-		local matchStart, matchEnd = command:getRef():find( trim( query:lower() ) );
+		local matchStart, matchEnd = command:getRef():find( StringUtils.trim( query:lower() ) );
 		if matchStart then
 			hasStrongMatch = hasStrongMatch or matchStart == 1;
 			local match = { command = command, matchStart = matchStart, matchEnd = matchEnd };
@@ -53,7 +59,7 @@ end
 
 CommandStore.getCommand = function( self, name )
 	assert( type( name ) == "string" );
-	local ref = trim( name:lower() );
+	local ref = StringUtils.trim( name:lower() );
 	local command = self._commands[ref];
 	assert( command == nil or command:getRef() == ref );
 	return command;
