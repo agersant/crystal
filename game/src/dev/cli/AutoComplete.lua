@@ -1,4 +1,4 @@
-require( "src/utils/oop" );
+require( "src/utils/OOP" );
 local Colors = require( "src/resources/Colors" );
 
 local AutoComplete = Class( "AutoComplete" );

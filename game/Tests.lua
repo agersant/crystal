@@ -1,6 +1,6 @@
 love = {};
 gUnitTesting = true;
-require( "conf" );
+require( "Conf" );
 
 
 

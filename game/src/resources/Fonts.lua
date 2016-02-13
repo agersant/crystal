@@ -1,4 +1,4 @@
-require( "src/utils/oop" );
+require( "src/utils/OOP" );
 local Log = require( "src/dev/Log" );
 
 local Fonts = Class( "Fonts" );

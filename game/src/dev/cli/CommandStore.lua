@@ -1,4 +1,4 @@
-require( "src/utils/oop" );
+require( "src/utils/OOP" );
 local Command = require( "src/dev/cli/Command" );
 
 local CommandStore = Class( "CommandStore" );

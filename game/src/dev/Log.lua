@@ -1,4 +1,4 @@
-require( "src/utils/oop" );
+require( "src/utils/OOP" );
 
 local bufferSize = 1024; -- in bytes
 local logDir = "logs";
