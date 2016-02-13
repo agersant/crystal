@@ -2,7 +2,10 @@ language: c
 
 addons:
   apt:
+    sources:
+      - deadsnakes
+      - ubuntu-toolchain-r-test
     packages:
-    - luajit
-	
+      - luajit
+
 script: "luajit"
