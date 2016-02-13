@@ -8,4 +8,4 @@ addons:
     packages:
       - luajit
 
-script: find / -lname '*lua*'
+script: luajit-2.0.0-beta9
