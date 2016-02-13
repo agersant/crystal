@@ -128,8 +128,7 @@ TextInput.textInput = function( self, text )
 	pushUndoState( self );
 end
 
-TextInput.keyPressed = function( self, key, scanCode )
-	local ctrl = love.keyboard.isDown( "lctrl" ) or love.keyboard.isDown( "rctrl" );
+TextInput.keyPressed = function( self, key, scanCode, ctrl )
 
 	local oldText = self._text;
 	local oldCursor = self._cursor;

@@ -18,8 +18,9 @@ love.keypressed = function( key, scanCode )
    if scanCode == "`" then
       CLI:toggle();
    end
+   local ctrl = love.keyboard.isDown( "lctrl" ) or love.keyboard.isDown( "rctrl" );
    if CLI:isActive() then
-		CLI:keyPressed( key, scanCode );
+		CLI:keyPressed( key, scanCode, ctrl );
 		return;
    end
 end

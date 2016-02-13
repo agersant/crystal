@@ -224,7 +224,7 @@ CLI.textInput = function( self, text )
 	updateAutoComplete( self );
 end
 
-CLI.keyPressed = function( self, key, scanCode )
+CLI.keyPressed = function( self, key, scanCode, ctrl )
 	
 	if key == "return" or key == "kpenter" then
 		runCommand( self );
@@ -250,7 +250,7 @@ CLI.keyPressed = function( self, key, scanCode )
 		return;
 	end
 	
-	local textChanged, cursorMoved = self._textInput:keyPressed( key, scanCode );
+	local textChanged, cursorMoved = self._textInput:keyPressed( key, scanCode, ctrl );
 	self._unguidedInput = self._textInput:getText();
 	if textChanged then
 		self._autoCompleteCursor = 0;
