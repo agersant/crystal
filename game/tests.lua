@@ -50,9 +50,10 @@ local runTestSuite = function()
 		totalNumTests = totalNumTests + numTests;
 	end
 	printResults( totalNumSuccess, totalNumTests );
+	return totalNumSuccess == totalNumTests;
 end
 
 
 
-runTestSuite();
-os.exit( numSuccess == numTest, true );
+local sucess = runTestSuite();
+os.exit( sucess, true );
