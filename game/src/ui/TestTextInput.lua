@@ -6,6 +6,7 @@ local tests = {};
 
 tests[#tests + 1] = { name = "Setting and clearing text" };
 tests[#tests].body = function()
+	assert( false );
 	local textInput = TextInput:new();
 	assert( textInput:getText() == "" );
 	textInput:setText( "oink" );
