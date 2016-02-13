@@ -92,6 +92,15 @@ tests[#tests].body = function()
 	assert( textInput:getText() == "oink" );
 end
 
+tests[#tests + 1] = { name = "Paste" };
+tests[#tests].body = function()
+	local textInput = TextInput:new();
+	love.system.setClipboardText( "oink" );
+	textInput:keyPressed( "v", nil, true );
+	assert( textInput:getText() == "oink" );
+	love.system.setClipboardText( "" );
+end
+
 
 
 return tests;

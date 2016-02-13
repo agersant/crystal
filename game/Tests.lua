@@ -1,5 +1,6 @@
-love = {};
 gUnitTesting = true;
+love = require( "src/dev/mock/Love" );
+
 require( "Conf" );
 
 
