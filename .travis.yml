@@ -8,4 +8,4 @@ addons:
     packages:
       - luajit
 
-script: luajit-2.0.0-beta9
+script: luajit-2.0.0-beta9 $TRAVIS_BUILD_DIR/games/tests.lua
