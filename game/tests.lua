@@ -56,4 +56,4 @@ end
 
 
 local success = runTestSuite();
-os.exit( sucess, true );
+os.exit( success, true );
