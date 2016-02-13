@@ -3,6 +3,31 @@ assert( gUnitTesting );
 local love = {};
 
 
+
+--KEYBOARD
+
+love.keyboard = {};
+love.keyboard._hasTextInput = false;
+love.keyboard._hasKeyRepeat = false;
+
+love.keyboard.hasTextInput = function()
+	return love.keyboard._hasTextInput;
+end
+
+love.keyboard.hasKeyRepeat = function()
+	return love.keyboard._hasKeyRepeat;
+end
+
+love.keyboard.setTextInput = function( enabled )
+	love.keyboard._hasTextInput = enabled;
+end
+
+love.keyboard.setKeyRepeat = function( enabled )
+	love.keyboard._hasKeyRepeat = enabled;
+end
+
+
+
 -- FILESYSTEM
 
 love.filesystem = {};
