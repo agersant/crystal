@@ -6,6 +6,7 @@ require( "Conf" );
 
 
 local testFiles = {
+	"src/dev/cli/TestCLI",
 	"src/ui/TestTextInput",
 };
 
