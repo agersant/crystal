@@ -7,4 +7,4 @@ addons:
 
 script:
   - cd $TRAVIS_BUILD_DIR/game
-  - luajit-2.0.0-beta9 tests.lua
+  - luajit-2.0.0-beta9 Tests.lua

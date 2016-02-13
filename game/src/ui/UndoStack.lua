@@ -1,4 +1,4 @@
-require( "src/utils/oop" );
+require( "src/utils/OOP" );
 
 local UndoStack = Class( "UndoStack" );
 
