@@ -2,7 +2,7 @@ local release = not gUnitTesting and love.filesystem.isFused();
 
 gConf = {};
 gConf.features = {};
-gConf.features.logging = not release;
+gConf.features.logging = not release and not gUnitTesting;
 gConf.features.cli = not release;
 
 love.conf = function( options )
