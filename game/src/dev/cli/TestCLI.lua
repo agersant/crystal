@@ -3,7 +3,6 @@ local CLI = require( "src/dev/cli/CLI" );
 
 local tests = {};
 
-local sentinel = 0;
 local enableCLI = function()
 	if not CLI:isActive() then
 		CLI:toggle();
