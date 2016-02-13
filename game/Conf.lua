@@ -1,4 +1,4 @@
-local release = not gUnitTesting and love.filesystem.isFused();
+local release = love.filesystem.isFused();
 
 gConf = {};
 gConf.features = {};

@@ -1,16 +1,31 @@
 assert( gUnitTesting );
 
 local love = {};
-love.system = {};
 
-local _clipboardText = "";
+
+-- FILESYSTEM
+
+love.filesystem = {};
+
+love.filesystem.isFused = function()
+	return false;
+end
+
+
+
+-- SYSTEM
+
+love.system = {};
+love.system._clipboardText = "";
 
 love.system.getClipboardText = function()
-	return _clipboardText;
+	return love.system._clipboardText;
 end
 
 love.system.setClipboardText = function( text )
-	_clipboardText = text;
+	love.system._clipboardText = text;
 end
+
+
 
 return love;
