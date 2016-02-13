@@ -55,4 +55,4 @@ end
 
 
 runTestSuite();
-os.exit( numSuccess == numTest and 0 or 1 );
+os.exit( numSuccess == numTest, true );
