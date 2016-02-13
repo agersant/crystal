@@ -2,10 +2,6 @@ require( "src/utils/oop" );
 
 local UndoStack = Class( "UndoStack" );
 
-if not gConf.features.cli then
-	disableFeature( UndoStack );
-end
-
 
 
 -- PUBLIC API
