@@ -15,19 +15,10 @@ love.draw = function()
 end 
 
 love.keypressed = function( key, scanCode )
-   if scanCode == "`" then
-      CLI:toggle();
-   end
    local ctrl = love.keyboard.isDown( "lctrl" ) or love.keyboard.isDown( "rctrl" );
-   if CLI:isActive() then
-		CLI:keyPressed( key, scanCode, ctrl );
-		return;
-   end
+	CLI:keyPressed( key, scanCode, ctrl );
 end
 
 love.textinput = function( text )
-	if CLI:isActive() then
-		CLI:textInput( text );
-		return;
-	end
+	CLI:textInput( text );
 end

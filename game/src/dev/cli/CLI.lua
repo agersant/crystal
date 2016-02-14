@@ -123,7 +123,7 @@ CLI.isActive = function( self )
 end
 
 CLI.draw = function( self )
-	if not self._isActive then
+	if not self:isActive() then
 		return;
 	end
 	
@@ -221,13 +221,23 @@ CLI.draw = function( self )
 end
 
 CLI.textInput = function( self, text )
+	if not self:isActive() then
+		return;
+	end
 	self._textInput:textInput( text );
 	updateAutoComplete( self );
 end
 
 CLI.keyPressed = function( self, key, scanCode, ctrl )
 	
-	assert( self:isActive() );
+	if scanCode == "`" then
+		self:toggle();
+		return;
+	end
+	
+	if not self:isActive() then
+		return;
+	end
 	
 	if key == "return" or key == "kpenter" then
 		runCommand( self );
