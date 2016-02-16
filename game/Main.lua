@@ -7,9 +7,6 @@ local Assets = require( "src/resources/Assets" );
 love.load = function()
 	love.keyboard.setTextInput( false );
 	Log:info( "Completed startup" );
-	Assets:load( "assets/package/testA.lua" );
-	Assets:load( "assets/package/testA.lua" );
-	Assets:unload( "assets/package/testA.lua" );
 end
 
 love.draw = function()
