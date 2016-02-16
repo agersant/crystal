@@ -3,7 +3,7 @@ require( "src/utils/OOP" );
 local bufferSize = 1024; -- in bytes
 local logDir = "logs";
 
-Log = Class( "Log" );
+local Log = Class( "Log" );
 
 if not gConf.features.logging then
 	disableFeature( Log );
