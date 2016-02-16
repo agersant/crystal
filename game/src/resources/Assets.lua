@@ -127,24 +127,26 @@ unloadAsset = function( self, path, origin )
 	
 	assert( type( path ) == "string" );
 	assert( type( origin ) == "string" );
-	local extension = StringUtils.fileExtension( path );
-	if not extension or #extension == 0 then
-		error( "Asset " .. path .. " has no file extension" );
-	end
-	
-	if extension == "png" then
-		unloadImage( self, path, origin );
-	elseif extension == "lua" then
-		assetData = unloadLuaFile( self, path, origin );
-	else
-		error( "Unsupported asset file extension: " .. tostring( extension ) );
-	end
 	
 	if self._loadedAssets[path].sources[origin] then
 		self._loadedAssets[path].sources[origin] = nil;
 		self._loadedAssets[path].numSources = self._loadedAssets[path].numSources - 1;
 	end
+	
 	if self._loadedAssets[path].numSources == 0 then
+		local extension = StringUtils.fileExtension( path );
+		if not extension or #extension == 0 then
+			error( "Asset " .. path .. " has no file extension" );
+		end
+	
+		if extension == "png" then
+			unloadImage( self, path, origin );
+		elseif extension == "lua" then
+			unloadLuaFile( self, path, origin );
+		else
+			error( "Unsupported asset file extension: " .. tostring( extension ) );
+		end
+		
 		self._loadedAssets[path] = nil;
 		Log:info( "Unloaded asset: " .. path );
 	end
