@@ -41,29 +41,36 @@ end
 
 
 
+-- MAP
+
+local loadMap = function( self, path, origin, mapData )
+	assert( mapData.type == "map" );
+	assert( mapData.content.orientation == "orthogonal" );
+	return "map", mapData;
+end
+
+local unloadMap = function( self, path, origin, mapData )
+	assert( mapData.type == "map" );
+end
+
+
+
 -- PACKAGE
 
-loadPackage = function( self, path, origin )
-	if self:isLoaded( path ) then
-		return;
-	end
-	assert( package.loaded[path] );
-	local packageData = require( path );
+loadPackage = function( self, path, origin, packageData )
 	assert( type( packageData ) == "table" );
-	assert( type( packageData.content ) == "table" );
 	assert( packageData.type == "package" );
+	assert( type( packageData.content ) == "table" );
 	for i, assetPath in ipairs( packageData.content ) do
 		loadAsset( self, assetPath, path );
 	end
 	return "package", nil;
 end
 
-unloadPackage = function( self, path, origin )
-	assert( package.loaded[path] );
-	local packageData = require( path );
+unloadPackage = function( self, path, origin, packageData )
 	assert( type( packageData ) == "table" );
-	assert( type( packageData.content ) == "table" );
 	assert( packageData.type == "package" );
+	assert( type( packageData.content ) == "table" );
 	for i, assetPath in ipairs( packageData.content ) do
 		unloadAsset( self, assetPath, path );
 	end
@@ -73,29 +80,40 @@ end
 
 -- LUA FILE
 
+local requireLuaAsset = function( path )
+	assert( not package.loaded[path] );
+	local rawData = require( path );
+	assert( type( rawData ) == "table" );
+	if rawData.type and rawData.content then
+		return rawData;
+	else
+		assert( rawData.tiledversion );
+		return { type = "map", content = rawData };
+	end
+end
 
 local loadLuaFile = function( self, path, origin )
-	assert( not package.loaded[path] );
-	local packageData = require( path );
+	local luaFile = requireLuaAsset( path );
 	local assetType, assetData;
-	assert( type( packageData ) == "table" );
-	assert( type( packageData.content ) == "table" );
-	assert( type( packageData.type ) == "string" );
-	if packageData.type == "package" then
-		assetType, assetData = loadPackage( self, path, origin );
+	assert( type( luaFile.content ) == "table" );
+	assert( type( luaFile.type ) == "string" );
+	if luaFile.type == "package" then
+		assetType, assetData = loadPackage( self, path, origin, luaFile );
+	elseif luaFile.type == "map" then
+		assetType, assetData = loadMap( self, path, origin, luaFile );
+	else
+		error( "Unsupported Lua asset type '" .. luaFile.type .. "'" );
 	end
 	package.loaded[path] = false;
 	return assetType, assetData;
 end
 
 local unloadLuaFile = function( self, path, origin )
-	assert( not package.loaded[path] );
-	local packageData = require( path ); -- TODO make this less ugly?
-	assert( type( packageData ) == "table" );
-	assert( type( packageData.content ) == "table" );
-	assert( type( packageData.type ) == "string" );
-	if packageData.type == "package" then
-		unloadPackage( self, path, origin );
+	local luaFile = requireLuaAsset( path );
+	assert( type( luaFile.content ) == "table" );
+	assert( type( luaFile.type ) == "string" );
+	if luaFile.type == "package" then
+		unloadPackage( self, path, origin, luaFile );
 	end
 	package.loaded[path] = false;
 end
@@ -105,6 +123,7 @@ end
 -- ASSET
 
 loadAsset = function( self, path, origin )
+	assert( type( origin ) == "string" );
 	local path, extension = getPathAndExtension( path );
 	
 	if not self:isLoaded( path ) then
