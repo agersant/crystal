@@ -1,5 +1,6 @@
 require( "src/utils/OOP" );
 local Log = require( "src/dev/Log" );
+local Map = require( "src/resources/Map" );
 local StringUtils = require( "src/utils/StringUtils" );
 
 local Assets = Class( "Assets" );
@@ -46,11 +47,18 @@ end
 local loadMap = function( self, path, origin, mapData )
 	assert( mapData.type == "map" );
 	assert( mapData.content.orientation == "orthogonal" );
-	return "map", mapData;
+	local tilesetPath = mapData.content.tilesets[1].image;
+	tilesetPath = StringUtils.mergePaths( StringUtils.stripFileFromPath( path ), tilesetPath );
+	local tileset = loadAsset( self, tilesetPath, path );
+	local map = Map:new( mapData, tileset );
+	return "map", map;
 end
 
 local unloadMap = function( self, path, origin, mapData )
 	assert( mapData.type == "map" );
+	local tilesetPath = mapData.content.tilesets[1].image;
+	tilesetPath = StringUtils.mergePaths( StringUtils.stripFileFromPath( path ), tilesetPath );
+	unloadAsset( self, tilesetPath, path );
 end
 
 
@@ -114,6 +122,10 @@ local unloadLuaFile = function( self, path, origin )
 	assert( type( luaFile.type ) == "string" );
 	if luaFile.type == "package" then
 		unloadPackage( self, path, origin, luaFile );
+	elseif luaFile.type == "map" then
+		assetType, assetData = unloadMap( self, path, origin, luaFile );
+	else
+		error( "Unsupported Lua asset type '" .. luaFile.type .. "'" );
 	end
 	package.loaded[path] = false;
 end
@@ -153,6 +165,9 @@ loadAsset = function( self, path, origin )
 		self._loadedAssets[path].sources[origin] = true;
 		self._loadedAssets[path].numSources = self._loadedAssets[path].numSources + 1;
 	end
+	
+	assert( self:isLoaded( path ) );
+	return self._loadedAssets[path].raw;
 end
 
 unloadAsset = function( self, path, origin )
@@ -180,6 +195,17 @@ unloadAsset = function( self, path, origin )
 	end
 end
 
+local get = function( self, type, rawPath )
+	local path, extension = getPathAndExtension( rawPath );
+	if not self:isLoaded( path ) then
+		Log:warning( "Requested missing asset, loading at runtime: '" .. path .. "'" );
+		loadAsset( self, rawPath, "emergency" );
+	end
+	assert( self:isLoaded( path ) );
+	assert( self._loadedAssets[path].type == type );
+	return self._loadedAssets[path].raw;
+end
+
 
 
 -- PUBLIC API
@@ -188,7 +214,7 @@ Assets.init = function( self )
 	self._loadedAssets = {};
 end
 
-Assets.isLoaded = function( self, path )
+Assets.isLoaded = function( self, path ) -- TODO make private
 	return self._loadedAssets[path] ~= nil;
 end
 
@@ -200,7 +226,9 @@ Assets.unload = function( self, path )
 	unloadAsset( self, path, "user" );
 end
 
-
+Assets.getMap = function( self, path )
+	return get( self, "map", path );
+end
 
 local instance = Assets:new();
 return instance;

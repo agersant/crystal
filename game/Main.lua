@@ -1,8 +1,7 @@
-require( "src/utils/StringUtils" );
 local Log = require( "src/dev/Log" );
 local CLI = require( "src/dev/cli/CLI" );
-local Assets = require( "src/resources/Assets" );
-
+local Scene = require( "src/scene/Scene" );
+local MapScene = require( "src/scene/MapScene" );
 
 love.load = function()
 	love.keyboard.setTextInput( false );
@@ -11,6 +10,7 @@ end
 
 love.draw = function()
 	love.graphics.reset();
+	Scene:getCurrent():draw();
 	CLI:draw();
 end 
 
