@@ -5,7 +5,7 @@ local StringUtils = require( "src/utils/StringUtils" );
 
 local Assets = Class( "Assets" );
 
-local loadAsset, unloadAsset;
+local loadAsset, unloadAsset, isAssetLoaded, getAsset;
 local loadPackage, unloadPackage;
 
 
@@ -138,7 +138,7 @@ loadAsset = function( self, path, origin )
 	assert( type( origin ) == "string" );
 	local path, extension = getPathAndExtension( path );
 	
-	if not self:isLoaded( path ) then
+	if not isAssetLoaded( self, path ) then
 		local assetData, assetType;
 		if extension == "png" then
 			assetType, assetData = loadImage( self, path, origin );
@@ -166,13 +166,13 @@ loadAsset = function( self, path, origin )
 		self._loadedAssets[path].numSources = self._loadedAssets[path].numSources + 1;
 	end
 	
-	assert( self:isLoaded( path ) );
+	assert( isAssetLoaded( self, path ) );
 	return self._loadedAssets[path].raw;
 end
 
 unloadAsset = function( self, path, origin )
 	local path, extension = getPathAndExtension( path );
-	if not self:isLoaded( path ) then
+	if not isAssetLoaded( self, path ) then
 		return;
 	end
 	
@@ -195,13 +195,17 @@ unloadAsset = function( self, path, origin )
 	end
 end
 
-local get = function( self, type, rawPath )
+isAssetLoaded = function( self, path )
+	return self._loadedAssets[path] ~= nil;
+end
+
+getAsset = function( self, type, rawPath )
 	local path, extension = getPathAndExtension( rawPath );
-	if not self:isLoaded( path ) then
+	if not isAssetLoaded( self, path ) then
 		Log:warning( "Requested missing asset, loading at runtime: '" .. path .. "'" );
 		loadAsset( self, rawPath, "emergency" );
 	end
-	assert( self:isLoaded( path ) );
+	assert( isAssetLoaded( self, path ) );
 	assert( self._loadedAssets[path].type == type );
 	return self._loadedAssets[path].raw;
 end
@@ -214,10 +218,6 @@ Assets.init = function( self )
 	self._loadedAssets = {};
 end
 
-Assets.isLoaded = function( self, path ) -- TODO make private
-	return self._loadedAssets[path] ~= nil;
-end
-
 Assets.load = function( self, path )
 	loadAsset( self, path, "user" );
 end
@@ -227,8 +227,10 @@ Assets.unload = function( self, path )
 end
 
 Assets.getMap = function( self, path )
-	return get( self, "map", path );
+	return getAsset( self, "map", path );
 end
+
+
 
 local instance = Assets:new();
 return instance;
