@@ -5,7 +5,7 @@ local Fonts = Class( "Fonts" );
 
 local pickFont = function( name )
 	if name == "dev" then
-		return "assets/font/SourceCodePro-Medium.otf";
+		return "assets/font/source_code_pro_medium.otf";
 	end
 	error( "Unknown font: " .. tostring( name ) );
 end
