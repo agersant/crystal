@@ -86,7 +86,10 @@ local runCommand = function( self )
 		Log:error( command:getName() .. " requires " .. command:getNumArgs() .. " arguments" );
 		return;
 	end
-	command:getFunc()( unpack( useArgs ) );
+	local success, errorMessage = pcall( command:getFunc(), unpack( useArgs ) );
+	if not success then
+		Log:error( "Error while running command '" .. self._parsedInput.fullText .. "':\n" .. errorMessage );
+	end
 	wipeInput( self );
 end
 
