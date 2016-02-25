@@ -8,6 +8,27 @@ local loadAsset, unloadAsset;
 local loadPackage, unloadPackage;
 
 
+
+local getPathAndExtension = function( rawPath )
+	assert( type( rawPath ) == "string" );
+	assert( #rawPath > 0 );
+		
+	local extension = StringUtils.fileExtension( rawPath );
+	if not extension or #extension == 0 then
+		error( "Asset " .. rawPath .. " has no file extension" );
+	end
+	
+	local path = rawPath;
+	if extension == "lua" then
+		path = StringUtils.stripFileExtension( rawPath );
+	end
+	assert( path and #path > 0 );
+	
+	return path, extension;
+end
+
+
+
 -- IMAGE
 
 local loadImage = function( self, path, origin )
@@ -26,22 +47,23 @@ loadPackage = function( self, path, origin )
 	if self:isLoaded( path ) then
 		return;
 	end
-	local restoreVMLoad = package.loaded[path];
-	local packageData = require( StringUtils.stripFileExtension( path ) );
+	assert( package.loaded[path] );
+	local packageData = require( path );
 	assert( type( packageData ) == "table" );
 	assert( type( packageData.content ) == "table" );
 	assert( packageData.type == "package" );
 	for i, assetPath in ipairs( packageData.content ) do
 		loadAsset( self, assetPath, path );
 	end
-	package.loaded[path] = restoreVMLoad;
 	return "package", nil;
 end
 
 unloadPackage = function( self, path, origin )
-	local packageData = require( StringUtils.stripFileExtension( path ) );
+	assert( package.loaded[path] );
+	local packageData = require( path );
 	assert( type( packageData ) == "table" );
 	assert( type( packageData.content ) == "table" );
+	assert( packageData.type == "package" );
 	for i, assetPath in ipairs( packageData.content ) do
 		unloadAsset( self, assetPath, path );
 	end
@@ -53,8 +75,8 @@ end
 
 
 local loadLuaFile = function( self, path, origin )
-	local restoreVMLoad = package.loaded[path];
-	local packageData = require( StringUtils.stripFileExtension( path ) );
+	assert( not package.loaded[path] );
+	local packageData = require( path );
 	local assetType, assetData;
 	assert( type( packageData ) == "table" );
 	assert( type( packageData.content ) == "table" );
@@ -62,20 +84,20 @@ local loadLuaFile = function( self, path, origin )
 	if packageData.type == "package" then
 		assetType, assetData = loadPackage( self, path, origin );
 	end
-	package.loaded[path] = restoreVMLoad;
+	package.loaded[path] = false;
 	return assetType, assetData;
 end
 
 local unloadLuaFile = function( self, path, origin )
-	local restoreVMLoad = package.loaded[path];
-	local packageData = require( StringUtils.stripFileExtension( path ) ); -- TODO make this less ugly?
+	assert( not package.loaded[path] );
+	local packageData = require( path ); -- TODO make this less ugly?
 	assert( type( packageData ) == "table" );
 	assert( type( packageData.content ) == "table" );
 	assert( type( packageData.type ) == "string" );
 	if packageData.type == "package" then
 		unloadPackage( self, path, origin );
 	end
-	package.loaded[path] = restoreVMLoad;
+	package.loaded[path] = false;
 end
 
 
@@ -83,16 +105,10 @@ end
 -- ASSET
 
 loadAsset = function( self, path, origin )
+	local path, extension = getPathAndExtension( path );
+	
 	if not self:isLoaded( path ) then
-		assert( type( path ) == "string" );
-		assert( type( origin ) == "string" );
-		local extension = StringUtils.fileExtension( path );
-		if not extension or #extension == 0 then
-			error( "Asset " .. path .. " has no file extension" );
-		end
-		
 		local assetData, assetType;
-		
 		if extension == "png" then
 			assetType, assetData = loadImage( self, path, origin );
 		elseif extension == "lua" then
@@ -121,12 +137,10 @@ loadAsset = function( self, path, origin )
 end
 
 unloadAsset = function( self, path, origin )
+	local path, extension = getPathAndExtension( path );
 	if not self:isLoaded( path ) then
 		return;
 	end
-	
-	assert( type( path ) == "string" );
-	assert( type( origin ) == "string" );
 	
 	if self._loadedAssets[path].sources[origin] then
 		self._loadedAssets[path].sources[origin] = nil;
@@ -134,11 +148,6 @@ unloadAsset = function( self, path, origin )
 	end
 	
 	if self._loadedAssets[path].numSources == 0 then
-		local extension = StringUtils.fileExtension( path );
-		if not extension or #extension == 0 then
-			error( "Asset " .. path .. " has no file extension" );
-		end
-	
 		if extension == "png" then
 			unloadImage( self, path, origin );
 		elseif extension == "lua" then
