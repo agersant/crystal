@@ -22,14 +22,14 @@ CLI:addCommand( "loadMap mapName:string", loadMap );
 -- PUBLIC API
 
 MapScene.init = function( self, mapName )
-	Log:info( "Instancing scene for map: '" .. mapName .. "'" );
+	Log:info( "Instancing scene for map: " .. mapName );
 	MapScene.super.init( self );
-	self.map = Assets:getMap( mapName );
+	self._map = Assets:getMap( mapName );
 end
 
 MapScene.draw = function( self )
 	MapScene.super.draw( self );
-	self.map:draw();
+	self._map:draw();
 end
 
 
