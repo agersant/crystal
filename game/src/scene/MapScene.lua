@@ -66,7 +66,8 @@ MapScene.spawn = function( self, class, ... )
 	return entity;
 end
 
-MapScene.despawn = function()
+MapScene.despawn = function( self, entity )
+	-- TODO
 end
 
 return MapScene;
