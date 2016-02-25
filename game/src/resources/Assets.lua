@@ -1,6 +1,6 @@
 require( "src/utils/OOP" );
 local Log = require( "src/dev/Log" );
-local Map = require( "src/resources/Map" );
+local Map = require( "src/resources/map/Map" );
 local StringUtils = require( "src/utils/StringUtils" );
 
 local Assets = Class( "Assets" );
@@ -110,7 +110,7 @@ local loadLuaFile = function( self, path, origin )
 	elseif luaFile.type == "map" then
 		assetType, assetData = loadMap( self, path, origin, luaFile );
 	else
-		error( "Unsupported Lua asset type '" .. luaFile.type .. "'" );
+		error( "Unsupported Lua asset type: " .. luaFile.type );
 	end
 	package.loaded[path] = false;
 	return assetType, assetData;
@@ -125,7 +125,7 @@ local unloadLuaFile = function( self, path, origin )
 	elseif luaFile.type == "map" then
 		assetType, assetData = unloadMap( self, path, origin, luaFile );
 	else
-		error( "Unsupported Lua asset type '" .. luaFile.type .. "'" );
+		error( "Unsupported Lua asset type: " .. luaFile.type );
 	end
 	package.loaded[path] = false;
 end
@@ -202,7 +202,7 @@ end
 getAsset = function( self, type, rawPath )
 	local path, extension = getPathAndExtension( rawPath );
 	if not isAssetLoaded( self, path ) then
-		Log:warning( "Requested missing asset, loading at runtime: '" .. path .. "'" );
+		Log:warning( "Requested missing asset, loading at runtime: " .. path );
 		loadAsset( self, rawPath, "emergency" );
 	end
 	assert( isAssetLoaded( self, path ) );
