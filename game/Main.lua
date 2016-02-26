@@ -8,11 +8,15 @@ love.load = function()
 	Log:info( "Completed startup" );
 end
 
+love.update = function( dt )
+	Scene:getCurrent():update( dt );
+end
+
 love.draw = function()
 	love.graphics.reset();
 	Scene:getCurrent():draw();
 	CLI:draw();
-end 
+end
 
 love.keypressed = function( key, scanCode )
    local ctrl = love.keyboard.isDown( "lctrl" ) or love.keyboard.isDown( "rctrl" );
