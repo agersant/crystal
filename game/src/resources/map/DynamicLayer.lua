@@ -1,7 +1,7 @@
 require( "src/utils/OOP" );
 local Log = require( "src/dev/Log" );
 local MapUtils = require( "src/utils/MapUtils" );
-local Tile = require( "src/scene/Tile" );
+local Tile = require( "src/scene/entity/Tile" );
 
 local DynamicLayer = Class( "DynamicLayer" );
 
