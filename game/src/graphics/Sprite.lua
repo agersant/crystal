@@ -24,11 +24,11 @@ Sprite.update = function( self, dt )
 	assert( self._frame );
 end
 
-Sprite.draw = function( self )
+Sprite.draw = function( self, x, y )
 	local quad = self._frame:getQuad();
 	local image = self._sheet:getImage();
 	local ox, oy = self._frame:getOrigin();
-	love.graphics.draw( image, quad, 0, 0, 0, 1, 1, ox, oy );
+	love.graphics.draw( image, quad, x, y, 0, 1, 1, ox, oy );
 end
 
 
