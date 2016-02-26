@@ -79,7 +79,7 @@ Entity.addSprite = function( self, sprite )
 	assert( self._sprite );
 end
 
-Entity.setSpriteAnimation = function( self, animationName )
+Entity.setAnimation = function( self, animationName )
 	assert( self._sprite );
 	self._sprite:setAnimation( animationName );
 end

@@ -22,11 +22,11 @@ PlayerController.run = function( self, entity )
 			local xDir = left and -1 or right and 1 or 0;
 			entity:setDirection( xDir, yDir );
 			local animName = "walk_" .. entity:getDirection4();
-			entity:setSpriteAnimation( animName );
+			entity:setAnimation( animName );
 			entity:setSpeed( 144 );
 		else
 			local animName = "idle_" .. entity:getDirection4();
-			entity:setSpriteAnimation( animName );
+			entity:setAnimation( animName );
 			entity:setSpeed( 0 );
 		end
 		
