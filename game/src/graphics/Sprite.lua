@@ -12,7 +12,11 @@ Sprite.init = function( self, sheet )
 end
 
 Sprite.setAnimation = function( self, animationName )
-	self._animation = self._sheet:getAnimation( animationName );
+	local animation = self._sheet:getAnimation( animationName );
+	if self._animation == animation then
+		return;
+	end
+	self._animation = animation;
 	assert( self._animation );
 	self._time = 0;
 	self:update( 0 );
