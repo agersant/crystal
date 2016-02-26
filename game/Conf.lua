@@ -5,6 +5,8 @@ gConf.features = {};
 gConf.features.logging = not release and not gUnitTesting;
 gConf.features.cli = not release;
 
+gConf.maxLocalPlayers = 8;
+
 love.conf = function( options )
 	options.console = true;
 	options.window.title = "Crystal";
