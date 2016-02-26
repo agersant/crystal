@@ -15,29 +15,49 @@ end
 
 Entity.addPhysicsBody = function( self, bodyType )
 	self._body = love.physics.newBody( self._scene:getPhysicsWorld(), 0, 0, bodyType );
-	self._direction4 = "right";
+	self:setDirection( 0, 1 );
 end
 
 Entity.getZ = function( self )
-	if self._body then
-		return self._body:getY();
-	end
+	assert( self._body );
+	return self._body:getY();
 end
 
-Entity.setDirection = function( self, xDir, yDir )
+Entity.setDirection = function( self, xDir8, yDir8 )
 	assert( self._body );
-	assert( xDir == 0 or xDir == 1 or xDir == -1 );
-	assert( yDir == 0 or yDir == 1 or yDir == -1 );
-	if xDir == 1 then
-		self._direction4 = "right";
-	elseif xDir == -1 then
-		self._direction4 = "left";
-	elseif yDir == 1 then
-		self._direction4 = "down";
-	elseif yDir == -1 then
-		self._direction4 = "up";
+	assert( xDir8 == 0 or xDir8 == 1 or xDir8 == -1 );
+	assert( yDir8 == 0 or yDir8 == 1 or yDir8 == -1 );
+	assert( xDir8 ~= 0 or yDir8 ~= 0 );
+	
+	if xDir8 == self._xDir8 and yDir8 == self._yDir8 then
+		return;
 	end
-	local angle = math.atan2( yDir, xDir );
+	
+	if xDir8 * yDir8 == 0 then
+		if xDir8 == 1 then
+			self._dir4 = "right";
+		elseif xDir8 == -1 then
+			self._dir4 = "left";
+		elseif yDir8 == 1 then
+			self._dir4 = "down";
+		elseif yDir8 == -1 then
+			self._dir4 = "up";
+		end
+	else
+		if xDir8 ~= self._xDir8 then
+			self._dir4 = yDir8 == 1 and "down" or "up";
+		end
+		if yDir8 ~= self._yDir8 then
+			self._dir4 = xDir8 == 1 and "right" or "left";
+		end
+	end
+	
+	self._xDir8 = xDir8;
+	self._yDir8 = yDir8;
+	self._xDir4 = self._dir4 == "left" and -1 or self._dir4 == "right" and 1 or 0;
+	self._yDir4 = self._dir4 == "up" and -1 or self._dir4 == "down" and 1 or 0;
+	
+	local angle = math.atan2( yDir8, xDir8 );
 	self._body:setAngle( angle );
 end
 
