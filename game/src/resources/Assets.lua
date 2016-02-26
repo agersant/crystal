@@ -1,6 +1,7 @@
 require( "src/utils/OOP" );
 local Log = require( "src/dev/Log" );
 local Map = require( "src/resources/map/Map" );
+local Spritesheet = require( "src/resources/spritesheet/Spritesheet" );
 local StringUtils = require( "src/utils/StringUtils" );
 
 local Assets = Class( "Assets" );
@@ -63,6 +64,24 @@ end
 
 
 
+-- SPRITESHEET
+
+local loadSpritesheet = function( self, path, origin, sheetData )
+	assert( sheetData.type == "spritesheet" );
+	local texturePath = sheetData.content.texture;
+	local textureImage = loadAsset( self, texturePath, path );
+	local spritesheet = Spritesheet:new( sheetData, textureImage );
+	return "spritesheet", spritesheet;
+end
+
+local unloadSpritesheet = function( self, path, origin, sheetData )
+	assert( sheetData.type == "spritesheet" );
+	local texturePath = sheetData.content.texture;
+	unloadAsset( self, texturePath, path );
+end
+
+
+
 -- PACKAGE
 
 loadPackage = function( self, path, origin, packageData )
@@ -109,6 +128,8 @@ local loadLuaFile = function( self, path, origin )
 		assetType, assetData = loadPackage( self, path, origin, luaFile );
 	elseif luaFile.type == "map" then
 		assetType, assetData = loadMap( self, path, origin, luaFile );
+	elseif luaFile.type == "spritesheet" then
+		assetType, assetData = loadSpritesheet( self, path, origin, luaFile );
 	else
 		error( "Unsupported Lua asset type: " .. luaFile.type );
 	end
@@ -123,7 +144,9 @@ local unloadLuaFile = function( self, path, origin )
 	if luaFile.type == "package" then
 		unloadPackage( self, path, origin, luaFile );
 	elseif luaFile.type == "map" then
-		assetType, assetData = unloadMap( self, path, origin, luaFile );
+		unloadMap( self, path, origin, luaFile );
+	elseif luaFile.type == "spritesheet" then
+		unloadSpritesheet( self, path, origin, luaFile );
 	else
 		error( "Unsupported Lua asset type: " .. luaFile.type );
 	end
@@ -199,14 +222,15 @@ isAssetLoaded = function( self, path )
 	return self._loadedAssets[path] ~= nil;
 end
 
-getAsset = function( self, type, rawPath )
+getAsset = function( self, assetType, rawPath )
+	assert( type( rawPath ) == "string" );
 	local path, extension = getPathAndExtension( rawPath );
 	if not isAssetLoaded( self, path ) then
 		Log:warning( "Requested missing asset, loading at runtime: " .. path );
 		loadAsset( self, rawPath, "emergency" );
 	end
 	assert( isAssetLoaded( self, path ) );
-	assert( self._loadedAssets[path].type == type );
+	assert( self._loadedAssets[path].type == assetType );
 	return self._loadedAssets[path].raw;
 end
 
@@ -228,6 +252,10 @@ end
 
 Assets.getMap = function( self, path )
 	return getAsset( self, "map", path );
+end
+
+Assets.getSpritesheet = function( self, path )
+	return getAsset( self, "spritesheet", path );
 end
 
 
