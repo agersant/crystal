@@ -16,6 +16,7 @@ end
 Entity.addPhysicsBody = function( self, bodyType )
 	self._body = love.physics.newBody( self._scene:getPhysicsWorld(), 0, 0, bodyType );
 	self:setDirection( 0, 1 );
+	self:setSpeed( 0 );
 end
 
 Entity.getZ = function( self )
@@ -61,6 +62,14 @@ Entity.setDirection = function( self, xDir8, yDir8 )
 	self._body:setAngle( angle );
 end
 
+Entity.setSpeed = function( self, speed )
+	self._baseSpeed = speed;
+end
+
+Entity.getDirection4 = function( self )
+	return self._dir4;
+end
+
 
 
 -- SPRITE COMPONENT
@@ -79,9 +88,9 @@ end
 
 -- CONTROLLER COMPONENT
 
-Entity.setController = function( self, controller )
-	self._controller = controller;
-	controller:setEntity( self );
+Entity.addController = function( self, controllerClass )
+	self._controller = controllerClass:new( self );
+	assert( self._controller );
 end
 
 
@@ -102,6 +111,13 @@ Entity.update = function( self, dt )
 	end
 	if self._sprite then
 		self._sprite:update( dt );
+	end
+	if self._body then
+		local speed = self._baseSpeed;
+		local angle = self._body:getAngle();
+		local dx = math.cos( angle );
+		local dy = math.sin( angle );
+		self._body:setLinearVelocity( speed * dx, speed * dy );
 	end
 end
 
