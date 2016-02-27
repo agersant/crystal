@@ -1,6 +1,7 @@
 require( "src/utils/OOP" );
 local Log = require( "src/dev/Log" );
 local Map = require( "src/resources/map/Map" );
+local Tileset = require( "src/resources/map/Tileset" );
 local Spritesheet = require( "src/resources/spritesheet/Spritesheet" );
 local StringUtils = require( "src/utils/StringUtils" );
 
@@ -43,23 +44,37 @@ end
 
 
 
+-- TILESET
+
+local loadTileset = function( self, mapPath, tilesetData )
+	local tilesetPath = tilesetData.image;
+	tilesetPath = StringUtils.mergePaths( StringUtils.stripFileFromPath( mapPath ), tilesetPath );
+	local tilesetImage = loadAsset( self, tilesetPath, mapPath );
+	local tileset = Tileset:new( tilesetData, tilesetImage );
+	return tileset;
+end
+
+local unloadTileset = function( self, mapPath, tilesetData )
+	local tilesetPath = tilesetData.image;
+	tilesetPath = StringUtils.mergePaths( StringUtils.stripFileFromPath( mapPath ), tilesetPath );
+	unloadAsset( self, tilesetPath, mapPath );
+end
+
+
+
 -- MAP
 
 local loadMap = function( self, path, origin, mapData )
 	assert( mapData.type == "map" );
 	assert( mapData.content.orientation == "orthogonal" );
-	local tilesetPath = mapData.content.tilesets[1].image;
-	tilesetPath = StringUtils.mergePaths( StringUtils.stripFileFromPath( path ), tilesetPath );
-	local tileset = loadAsset( self, tilesetPath, path );
+	local tileset = loadTileset( self, path, mapData.content.tilesets[1] );
 	local map = Map:new( mapData, tileset );
 	return "map", map;
 end
 
 local unloadMap = function( self, path, origin, mapData )
 	assert( mapData.type == "map" );
-	local tilesetPath = mapData.content.tilesets[1].image;
-	tilesetPath = StringUtils.mergePaths( StringUtils.stripFileFromPath( path ), tilesetPath );
-	unloadAsset( self, tilesetPath, path );
+	unloadTileset( self, path, mapData.content.tilesets[1] );
 end
 
 

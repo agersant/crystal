@@ -20,7 +20,7 @@ Map.init = function( self, mapData, tileset )
 	self._constants.numTiles = self._constants.mapWidth * self._constants.mapHeight;
 	self._constants.tileWidth = mapData.content.tilewidth;
 	self._constants.tileHeight = mapData.content.tileheight;
-	self._constants.tilesetPixelWidth = tileset:getDimensions();
+	self._constants.tilesetPixelWidth = tileset:getImage():getDimensions();
 	self._constants.tilesetWidth = math.floor( self._constants.tilesetPixelWidth / self._constants.tileWidth );
 	self._constants.firstGID = mapData.content.tilesets[1].firstgid;
 	
@@ -30,10 +30,10 @@ Map.init = function( self, mapData, tileset )
 		if layerData.type == "tilelayer" then
 			local sort = layerData.properties.sort;
 			if sort == "below" or sort == "above" then
-				local layer = StaticLayer:new( self._constants, tileset, layerData, sort );
+				local layer = StaticLayer:new( self._constants, tileset:getImage(), layerData, sort );
 				table.insert( self._staticLayers, layer );
 			elseif sort == "dynamic" then
-				local layer = DynamicLayer:new( self._constants, tileset, layerData );
+				local layer = DynamicLayer:new( self._constants, tileset:getImage(), layerData );
 				table.insert( self._dynamicLayers, layer );
 			else
 				Log:warning( "Unexpected map layer sorting: " .. tostring( sort ) );
