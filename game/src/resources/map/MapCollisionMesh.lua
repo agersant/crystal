@@ -1,7 +1,7 @@
 require( "src/utils/OOP" );
 local Log = require( "src/dev/Log" );
 local MapCollisionChainData = require( "src/resources/map/MapCollisionChainData" );
-local MapUtils = require( "src/utils/MapUtils" );
+local MathUtils = require( "src/utils/MathUtils" );
 
 local MapCollisionMesh = Class( "MapCollisionMesh" );
 
@@ -28,7 +28,7 @@ MapCollisionMesh.processLayer = function( self, layerData )
 	for tileNum, tileID in ipairs( layerData.data ) do
 		local tileInfo = self._map:getTileset():getTileData( tileID );
 		if tileInfo then
-			local x, y = MapUtils.indexToXY( tileNum - 1, self._map:getWidthInTiles() );
+			local x, y = MathUtils.indexToXY( tileNum - 1, self._map:getWidthInTiles() );
 			x = x * self._map:getTileWidth();
 			y = y * self._map:getTileHeight();
 			for polygonIndex, polygon in ipairs( tileInfo.collisionPolygons ) do

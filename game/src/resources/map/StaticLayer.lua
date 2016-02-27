@@ -1,6 +1,6 @@
 require( "src/utils/OOP" );
 local Log = require( "src/dev/Log" );
-local MapUtils = require( "src/utils/MapUtils" );
+local MathUtils = require( "src/utils/MathUtils" );
 
 local StaticLayer = Class( "StaticLayer" );
 
@@ -18,9 +18,9 @@ StaticLayer.init = function( self, map, layerData, sort )
 
 	for tileNum, tileID in ipairs( layerData.data ) do
 		if tileID >= tileset:getFirstGID() then
-			local tx, ty = MapUtils.indexToXY( tileID - tileset:getFirstGID(), tileset:getWidthInTiles() );
+			local tx, ty = MathUtils.indexToXY( tileID - tileset:getFirstGID(), tileset:getWidthInTiles() );
 			quad:setViewport( tx * tileset:getTileWidth(), ty * tileset:getTileHeight(), tileset:getTileWidth(), tileset:getTileHeight() );
-			local x, y = MapUtils.indexToXY( tileNum - 1, map:getWidthInTiles() );
+			local x, y = MathUtils.indexToXY( tileNum - 1, map:getWidthInTiles() );
 			x = x * tileset:getTileWidth();
 			y = y * tileset:getTileHeight();
 			self._batch:add( quad, x, y );

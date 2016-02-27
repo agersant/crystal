@@ -10,7 +10,7 @@ local testFiles = {
 	"src/input/TestInputDevice",
 	"src/scene/TestController",
 	"src/ui/TestTextInput",
-	"src/utils/TestMapUtils",
+	"src/utils/TestMathUtils",
 	"src/utils/TestStringUtils",
 };
 
