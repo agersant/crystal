@@ -100,7 +100,9 @@ MapScene.spawn = function( self, class, ... )
 end
 
 MapScene.despawn = function( self, entity )
-	-- TODO
+	-- TODO free entity body
+	-- TODO remove from all entity lists
+	-- TODO mark as destroyed
 end
 
 MapScene.getPhysicsWorld = function( self )
