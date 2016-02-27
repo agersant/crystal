@@ -15,37 +15,26 @@ Map.init = function( self, mapData, tileset )
 	self._staticLayers = {};
 	self._dynamicLayers = {};
 	
-	self._constants = {};
-	self._constants.mapWidth = mapData.content.width;
-	self._constants.mapHeight = mapData.content.height;
-	self._constants.numTiles = self._constants.mapWidth * self._constants.mapHeight;
-	self._constants.tileWidth = mapData.content.tilewidth;
-	self._constants.tileHeight = mapData.content.tileheight;
-	self._constants.tilesetPixelWidth = tileset:getImage():getDimensions();
-	self._constants.tilesetWidth = math.floor( self._constants.tilesetPixelWidth / self._constants.tileWidth );
-	self._constants.firstGID = mapData.content.tilesets[1].firstgid;
-	
-	self._collisionMesh = MapCollisionMesh:new( self._constants, self._tileset );
+	self._width = mapData.content.width;
+	self._height = mapData.content.height;
+	self._numTiles = self._width * self._height;
+	self._collisionMesh = MapCollisionMesh:new( self );
 	
 	for i, layerData in ipairs( mapData.content.layers ) do
 		if layerData.type == "tilelayer" then
 			local sort = layerData.properties.sort;
 			self._collisionMesh:processLayer( layerData );
 			if sort == "below" or sort == "above" then
-				local layer = StaticLayer:new( self._constants, tileset:getImage(), layerData, sort );
+				local layer = StaticLayer:new( self, layerData, sort );
 				table.insert( self._staticLayers, layer );
 			elseif sort == "dynamic" then
-				local layer = DynamicLayer:new( self._constants, tileset:getImage(), layerData );
+				local layer = DynamicLayer:new( self, layerData );
 				table.insert( self._dynamicLayers, layer );
 			else
 				Log:warning( "Unexpected map layer sorting: " .. tostring( sort ) );
 			end
 		end
 	end
-end
-
-Map.getConstants = function( self )
-	return self._constants;
 end
 
 Map.spawnCollisionMeshBody = function( self, scene )
@@ -82,6 +71,32 @@ Map.drawDebug = function( self )
 	end
 end
 
+Map.getTileset = function( self )
+	return self._tileset;
+end
 
+Map.getWidthInPixels = function( self )
+	return self._width * self._tileset:getTileWidth();
+end
+
+Map.getHeightInPixels = function( self )
+	return self._height * self._tileset:getTileHeight();
+end
+
+Map.getWidthInTiles = function( self )
+	return self._width;
+end
+
+Map.getHeightInTiles = function( self )
+	return self._height;
+end
+
+Map.getTileWidth = function( self )
+	return self._tileset:getTileWidth();
+end
+
+Map.getTileHeight = function( self )
+	return self._tileset:getTileHeight();
+end
 
 return Map;

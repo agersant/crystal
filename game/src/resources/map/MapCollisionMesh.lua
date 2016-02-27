@@ -9,13 +9,12 @@ local MapCollisionMesh = Class( "MapCollisionMesh" );
 
 -- PUBLIC API
 
-MapCollisionMesh.init = function( self, constants, tileset )
+MapCollisionMesh.init = function( self, map )
 	self._chains = {};
-	self._constants = constants;
-	self._tileset = tileset;
+	self._map = map;
 	
-	local w = self._constants.mapWidth * self._constants.tileWidth;
-	local h = self._constants.mapHeight * self._constants.tileHeight;
+	local w = self._map:getWidthInPixels();
+	local h = self._map:getHeightInPixels();
 	local mapEdges = MapCollisionChainData:new( true );
 	mapEdges:addVertex( 0, 0 );
 	mapEdges:addVertex( w, 0 );
@@ -27,11 +26,11 @@ end
 MapCollisionMesh.processLayer = function( self, layerData )
 	-- TODO ATM this creates one shape per tile. Adjacent polygons should be merged into longer chains.
 	for tileNum, tileID in ipairs( layerData.data ) do
-		local tileInfo = self._tileset:getTileData( tileID );
+		local tileInfo = self._map:getTileset():getTileData( tileID );
 		if tileInfo then
-			local x, y = MapUtils.indexToXY( tileNum - 1, self._constants.mapWidth );
-			x = x * self._constants.tileWidth;
-			y = y * self._constants.tileHeight;
+			local x, y = MapUtils.indexToXY( tileNum - 1, self._map:getWidthInTiles() );
+			x = x * self._map:getTileWidth();
+			y = y * self._map:getTileHeight();
 			for polygonIndex, polygon in ipairs( tileInfo.collisionPolygons ) do
 				local chain = MapCollisionChainData:new( true );
 				for vertIndex, vert in ipairs( polygon ) do

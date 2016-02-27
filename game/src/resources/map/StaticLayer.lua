@@ -8,18 +8,21 @@ local StaticLayer = Class( "StaticLayer" );
 
 -- PUBLIC API
 
-StaticLayer.init = function( self, constants, tileset, layerData, sort )
+StaticLayer.init = function( self, map, layerData, sort )
 	
-	self._batch = love.graphics.newSpriteBatch( tileset, numTiles, "static" );
-	local quad = love.graphics.newQuad( 0, 0, 0, 0, tileset:getDimensions() );
+	local tileset = map:getTileset();
+	local tilesetImage = tileset:getImage();
+	
+	self._batch = love.graphics.newSpriteBatch( tilesetImage, numTiles, "static" );
+	local quad = love.graphics.newQuad( 0, 0, 0, 0, tilesetImage:getDimensions() );
 
 	for tileNum, tileID in ipairs( layerData.data ) do
-		if tileID >= constants.firstGID then
-			local tx, ty = MapUtils.indexToXY( tileID - constants.firstGID, constants.tilesetWidth );
-			quad:setViewport( tx * constants.tileWidth, ty * constants.tileHeight, constants.tileWidth, constants.tileHeight );
-			local x, y = MapUtils.indexToXY( tileNum - 1, constants.mapWidth );
-			x = x * constants.tileWidth;
-			y = y * constants.tileHeight;
+		if tileID >= tileset:getFirstGID() then
+			local tx, ty = MapUtils.indexToXY( tileID - tileset:getFirstGID(), tileset:getWidthInTiles() );
+			quad:setViewport( tx * tileset:getTileWidth(), ty * tileset:getTileHeight(), tileset:getTileWidth(), tileset:getTileHeight() );
+			local x, y = MapUtils.indexToXY( tileNum - 1, map:getWidthInTiles() );
+			x = x * tileset:getTileWidth();
+			y = y * tileset:getTileHeight();
 			self._batch:add( quad, x, y );
 		end
 	end
