@@ -11,7 +11,7 @@ local pumpThread;
 
 local blockThread = function( self, thread, signals )
 	thread.isBlocked = true;
-	thread.markedForUnblock = false;
+	thread.isMarkedForUnblock = false;
 	thread.blockedBy = signals;
 	for _, signal in ipairs( signals ) do
 		assert( type( signal ) == "string" );

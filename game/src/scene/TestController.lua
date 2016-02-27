@@ -56,6 +56,25 @@ tests[#tests].body = function()
 	assert( a == 1 );
 end
 
+tests[#tests + 1] = { name = "Successive wait for" };
+tests[#tests].body = function()
+	local a = 0;
+	local controller = Controller:new( {}, function( self )
+		self:waitFor( "test1" );
+		a = 1;
+		self:waitFor( "test2" );
+		a = 2;
+	end	);
+	controller:update( 0 );
+	assert( a == 0 );
+	controller:signal( "test1" );
+	assert( a == 1 );
+	controller:update( 0 );
+	assert( a == 1 );
+	controller:signal( "test2" );
+	assert( a == 2 );
+end
+
 tests[#tests + 1] = { name = "Wait for any" };
 tests[#tests].body = function()
 	local a = 0;
