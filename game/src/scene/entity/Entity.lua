@@ -107,11 +107,30 @@ Entity.addHitboxPhysics = function( self, shape )
 	self._hitboxFixture:setSensor( true );
 end
 
-Entity.removeHitboxPhysics = function( self, x, y, width, height )
+Entity.removeHitboxPhysics = function( self )
 	if self._hitboxFixture then
 		self._hitboxFixture:destroy();
 	end
 	self._hitboxFixture = nil;
+end
+
+
+
+
+-- WEAKBOX COMPONENT
+
+Entity.addWeakboxPhysics = function( self, shape )
+	assert( self._body );
+	self:removeWeakboxPhysics();
+	self._weakboxFixture = love.physics.newFixture( self._body, shape );
+	self._weakboxFixture:setSensor( true );
+end
+
+Entity.removeWeakboxPhysics = function( self )
+	if self._weakboxFixture then
+		self._weakboxFixture:destroy();
+	end
+	self._weakboxFixture = nil;
 end
 
 
@@ -183,6 +202,14 @@ Entity.draw = function( self )
 			love.graphics.translate( self._body:getX(), self._body:getY() );
 			love.graphics.setColor( Colors.strawberry:alpha( alpha ) );
 			love.graphics.polygon( "fill", self._hitboxFixture:getShape():getPoints() );
+			love.graphics.pop();
+		end
+		if self._weakboxFixture then
+			assert( self._weakboxFixture:getShape():getType() == "polygon" );
+			love.graphics.push();
+			love.graphics.translate( self._body:getX(), self._body:getY() );
+			love.graphics.setColor( Colors.ecoGreen:alpha( alpha ) );
+			love.graphics.polygon( "fill", self._weakboxFixture:getShape():getPoints() );
 			love.graphics.pop();
 		end
 	end

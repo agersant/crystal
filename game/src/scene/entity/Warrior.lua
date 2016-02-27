@@ -19,6 +19,9 @@ Warrior.init = function( self, scene )
 	
 	local shape = love.physics.newRectangleShape( 20, -10, 16, 16 );
 	self:addHitboxPhysics( shape );
+	
+	local shape = love.physics.newRectangleShape( 0, -20, 8, 24 );
+	self:addWeakboxPhysics( shape );
 end
 
 
