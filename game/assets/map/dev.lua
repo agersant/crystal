@@ -29,7 +29,35 @@ return {
       properties = {},
       terrains = {},
       tilecount = 64,
-      tiles = {}
+      tiles = {
+        {
+          id = 2,
+          objectGroup = {
+            type = "objectgroup",
+            name = "",
+            visible = true,
+            opacity = 1,
+            offsetx = 0,
+            offsety = 0,
+            properties = {},
+            objects = {
+              {
+                id = 0,
+                name = "",
+                type = "",
+                shape = "rectangle",
+                x = 0,
+                y = 0,
+                width = 16,
+                height = 16,
+                rotation = 0,
+                visible = true,
+                properties = {}
+              }
+            }
+          }
+        }
+      }
     }
   },
   layers = {
