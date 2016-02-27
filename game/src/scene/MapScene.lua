@@ -63,6 +63,7 @@ MapScene.init = function( self, mapName )
 	
 	-- TODO TMP
 	local testWarrior = self:spawn( Warrior );
+	testWarrior:setPosition( 32, 32 );
 	testWarrior:addController( PlayerController, 1 );
 end
 

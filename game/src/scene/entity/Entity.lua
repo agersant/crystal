@@ -72,6 +72,10 @@ Entity.getDirection4 = function( self )
 	return self._dir4;
 end
 
+Entity.setPosition = function( self, x, y )
+	self._body:setPosition( x, y );
+end
+
 
 
 -- COLLISION COMPONENT
