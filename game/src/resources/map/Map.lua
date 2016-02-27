@@ -99,4 +99,8 @@ Map.getTileHeight = function( self )
 	return self._tileset:getTileHeight();
 end
 
+Map.getAreaInTiles = function( self )
+	return self._width * self._height;
+end
+
 return Map;

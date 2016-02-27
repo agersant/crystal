@@ -13,7 +13,7 @@ StaticLayer.init = function( self, map, layerData, sort )
 	local tileset = map:getTileset();
 	local tilesetImage = tileset:getImage();
 	
-	self._batch = love.graphics.newSpriteBatch( tilesetImage, numTiles, "static" );
+	self._batch = love.graphics.newSpriteBatch( tilesetImage, map:getAreaInTiles(), "static" );
 	local quad = love.graphics.newQuad( 0, 0, 0, 0, tilesetImage:getDimensions() );
 
 	for tileNum, tileID in ipairs( layerData.data ) do
