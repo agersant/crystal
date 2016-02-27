@@ -88,8 +88,8 @@ end
 
 -- CONTROLLER COMPONENT
 
-Entity.addController = function( self, controllerClass )
-	self._controller = controllerClass:new( self );
+Entity.addController = function( self, controllerClass, ... )
+	self._controller = controllerClass:new( self, ... );
 	assert( self._controller );
 end
 

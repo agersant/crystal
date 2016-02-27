@@ -19,7 +19,6 @@ Input.init = function( self )
 	player1Device:addBinding( "moveRight", "right" );
 	player1Device:addBinding( "moveUp", "up" );
 	player1Device:addBinding( "moveDown", "down" );
-	
 end
 
 Input.getDevice = function( self, index )
@@ -40,6 +39,11 @@ Input.keyReleased = function( self, key, scanCode )
 	end
 end
 
+Input.flushEvents = function( self )
+	for i, device in ipairs( self._devices ) do
+		device:flushEvents();
+	end
+end
 
 
 local instance = Input:new();

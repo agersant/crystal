@@ -24,6 +24,7 @@ end
 
 InputDevice.init = function( self )
 	self._bindings = {};
+	self._events = {};
 	buildReverseBindings( self );
 end
 
@@ -57,6 +58,9 @@ InputDevice.keyPressed = function( self, key, scanCode, isRepeat )
 	for i, command in ipairs( self._reverseBindings[key].commands ) do
 		assert( self._bindings[command] );
 		self._bindings[command].numInputsDown = self._bindings[command].numInputsDown + 1;
+		if self._bindings[command].numInputsDown == 1 then
+			table.insert( self._events, "+" .. command );
+		end
 	end
 end
 
@@ -69,6 +73,9 @@ InputDevice.keyReleased = function( self, key, scanCode )
 		assert( self._bindings[command].numInputsDown > 0 );
 		self._bindings[command].numInputsDown = self._bindings[command].numInputsDown - 1;
 		assert( self._bindings[command].numInputsDown >= 0 );
+		if self._bindings[command].numInputsDown == 0 then
+			table.insert( self._events, "-" .. command );
+		end
 	end
 end
 
@@ -79,6 +86,12 @@ InputDevice.isCommandActive = function( self, command )
 	return self._bindings[command].numInputsDown > 0;
 end
 
+InputDevice.pollEvents = function( self )
+	return ipairs( self._events );
+end
 
+InputDevice.flushEvents = function( self )
+	self._events = {};
+end
 
 return InputDevice;

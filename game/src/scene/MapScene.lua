@@ -49,7 +49,7 @@ MapScene.init = function( self, mapName )
 	
 	-- TODO TMP
 	local testWarrior = self:spawn( Warrior );
-	testWarrior:addController( PlayerController );
+	testWarrior:addController( PlayerController, 1 );
 end
 
 MapScene.update = function( self, dt )

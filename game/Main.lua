@@ -13,6 +13,7 @@ end
 
 love.update = function( dt )
 	Scene:getCurrent():update( dt );
+	Input:flushEvents();
 end
 
 love.draw = function()
