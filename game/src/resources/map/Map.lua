@@ -1,6 +1,8 @@
 require( "src/utils/OOP" );
 local Log = require( "src/dev/Log" );
+local Colors = require( "src/resources/Colors" );
 local DynamicLayer = require( "src/resources/map/DynamicLayer" );
+local MapCollisionMesh = require( "src/resources/map/MapCollisionMesh" );
 local StaticLayer = require( "src/resources/map/StaticLayer" );
 
 
@@ -22,6 +24,8 @@ Map.init = function( self, mapData, tileset )
 	self._constants.tilesetWidth = math.floor( self._constants.tilesetPixelWidth / self._constants.tileWidth );
 	self._constants.firstGID = mapData.content.tilesets[1].firstgid;
 	
+	self._collisionMesh = MapCollisionMesh:new( self._constants );
+	
 	for i, layerData in ipairs( mapData.content.layers ) do
 		if layerData.type == "tilelayer" then
 			local sort = layerData.properties.sort;
@@ -42,6 +46,10 @@ Map.getConstants = function( self )
 	return self._constants;
 end
 
+Map.spawnCollisionMeshBody = function( self, scene )
+	return self._collisionMesh:spawnBody( scene );	
+end
+
 Map.spawnEntities = function( self, scene )
 	for i, layer in ipairs( self._dynamicLayers ) do
 		layer:spawnEntities( scene );
@@ -49,6 +57,7 @@ Map.spawnEntities = function( self, scene )
 end
 
 Map.drawBelowEntities = function( self )
+	love.graphics.setColor( Colors.white );
 	for i, layer in ipairs( self._staticLayers ) do
 		if layer:isBelowEntities() then
 			layer:draw();
@@ -57,10 +66,17 @@ Map.drawBelowEntities = function( self )
 end
 
 Map.drawAboveEntities = function( self )
+	love.graphics.setColor( Colors.white );
 	for i, layer in ipairs( self._staticLayers ) do
 		if layer:isAboveEntities() then
 			layer:draw();
 		end
+	end
+end
+
+Map.drawDebug = function( self )
+	if gConf.drawPhysics then
+		self._collisionMesh:draw();
 	end
 end
 

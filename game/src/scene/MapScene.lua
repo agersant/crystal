@@ -2,6 +2,7 @@ require( "src/utils/OOP" );
 local CLI = require( "src/dev/cli/CLI" );
 local Log = require( "src/dev/Log" );
 local Assets = require( "src/resources/Assets" );
+local Colors = require( "src/resources/Colors" );
 local Warrior = require( "src/scene/entity/Warrior" );
 local PlayerController = require( "src/scene/PlayerController" );
 local Scene = require( "src/scene/Scene" );
@@ -25,6 +26,18 @@ end
 
 CLI:addCommand( "testMap", testMap );
 
+local showPhysicsOverlay = function()
+	gConf.drawPhysics = true;
+end
+
+CLI:addCommand( "showPhysicsOverlay", showPhysicsOverlay );
+
+local hidePhysicsOverlay = function()
+	gConf.drawPhysics = false;
+end
+
+CLI:addCommand( "hidePhysicsOverlay", hidePhysicsOverlay );
+
 
 
 -- IMPLEMENTATION
@@ -45,6 +58,7 @@ MapScene.init = function( self, mapName )
 	self._updatableEntities = {};
 	self._drawableEntities = {};
 	self._map = Assets:getMap( mapName );
+	self._map:spawnCollisionMeshBody( self );
 	self._map:spawnEntities( self );
 	
 	-- TODO TMP
@@ -65,9 +79,11 @@ MapScene.draw = function( self )
 	MapScene.super.draw( self );
 	self._map:drawBelowEntities();
 	for i, entity in ipairs( self._drawableEntities ) do
+		love.graphics.setColor( Colors.white );
 		entity:draw();
 	end
 	self._map:drawAboveEntities();
+	self._map:drawDebug();
 end
 
 MapScene.spawn = function( self, class, ... )
@@ -89,5 +105,7 @@ end
 MapScene.getPhysicsWorld = function( self )
 	return self._world;
 end
+
+
 
 return MapScene;

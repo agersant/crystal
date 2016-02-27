@@ -1,4 +1,5 @@
 require( "src/utils/OOP" );
+local Colors = require( "src/resources/Colors" );
 
 local Entity = Class( "Entity" );
 
@@ -11,10 +12,11 @@ end
 
 
 
--- PHYSICS COMPONENT
+-- PHYSICS BODY COMPONENT
 
 Entity.addPhysicsBody = function( self, bodyType )
 	self._body = love.physics.newBody( self._scene:getPhysicsWorld(), 0, 0, bodyType );
+	self._body:setFixedRotation( true );
 	self:setDirection( 0, 1 );
 	self:setSpeed( 0 );
 end
@@ -72,6 +74,26 @@ end
 
 
 
+-- COLLISION COMPONENT
+
+Entity.addCollisionPhysics = function( self, radius )
+	assert( self._body );
+	assert( radius > 0 );
+	if self._collisionFixture then
+		self._collisionFixture:destroy();
+	end
+	if self._collisionShape then
+		self._collisionShape:destroy();
+	end
+	self._collisionRadius = radius;
+	self._collisionShape = love.physics.newCircleShape( self._collisionRadius );
+	self._collisionFixture = love.physics.newFixture( self._body, self._collisionShape );
+	self._collisionFixture:setFriction( 0 );
+	self._collisionFixture:setRestitution( 0 );
+end
+
+
+
 -- SPRITE COMPONENT
 
 Entity.addSprite = function( self, sprite )
@@ -124,6 +146,10 @@ end
 Entity.draw = function( self )
 	if self._sprite and self._body then
 		self._sprite:draw( self._body:getX(), self._body:getY() );
+	end
+	if gConf.drawPhysics and self._collisionRadius then
+		love.graphics.setColor( Colors.cyan );
+		love.graphics.circle( "fill", self._body:getX(), self._body:getY(), self._collisionRadius, 16 );
 	end
 end
 
