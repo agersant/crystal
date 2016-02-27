@@ -56,6 +56,7 @@ local removeDespawnedEntitiesFrom = function( self, list )
 end
 
 
+
 -- PUBLIC API
 
 MapScene.init = function( self, mapName )
