@@ -14,7 +14,11 @@ Warrior.init = function( self, scene )
 	local sheet = Assets:getSpritesheet( "assets/spritesheet/duran.lua" );
 	self:addSprite( Sprite:new( sheet ) );
 	self:addPhysicsBody( "dynamic" );
-	self:addCollisionPhysics( 6 );
+	self:addCollisionPhysics();
+	self:setCollisionRadius( 6 );
+	
+	local shape = love.physics.newRectangleShape( 20, -10, 16, 16 );
+	self:addHitboxPhysics( shape );
 end
 
 

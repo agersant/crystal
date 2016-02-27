@@ -15,6 +15,7 @@ end
 -- PHYSICS BODY COMPONENT
 
 Entity.addPhysicsBody = function( self, bodyType )
+	assert( not self._body );
 	self._body = love.physics.newBody( self._scene:getPhysicsWorld(), 0, 0, bodyType );
 	self._body:setFixedRotation( true );
 	self:setDirection( 0, 1 );
@@ -80,20 +81,37 @@ end
 
 -- COLLISION COMPONENT
 
-Entity.addCollisionPhysics = function( self, radius )
+Entity.addCollisionPhysics = function( self )
 	assert( self._body );
-	assert( radius > 0 );
-	if self._collisionFixture then
-		self._collisionFixture:destroy();
-	end
-	if self._collisionShape then
-		self._collisionShape:destroy();
-	end
-	self._collisionRadius = radius;
-	self._collisionShape = love.physics.newCircleShape( self._collisionRadius );
-	self._collisionFixture = love.physics.newFixture( self._body, self._collisionShape );
+	assert( not self._collisionFixture );
+	local collisionShape = love.physics.newCircleShape( 1 );
+	self._collisionFixture = love.physics.newFixture( self._body, collisionShape );
 	self._collisionFixture:setFriction( 0 );
 	self._collisionFixture:setRestitution( 0 );
+end
+
+Entity.setCollisionRadius = function( self, radius )
+	assert( radius > 0 );
+	assert( self._collisionFixture );
+	self._collisionFixture:getShape():setRadius( radius );
+end
+
+
+
+-- HITBOX COMPONENT
+
+Entity.addHitboxPhysics = function( self, shape )
+	assert( self._body );
+	self:removeHitboxPhysics();
+	self._hitboxFixture = love.physics.newFixture( self._body, shape );
+	self._hitboxFixture:setSensor( true );
+end
+
+Entity.removeHitboxPhysics = function( self, x, y, width, height )
+	if self._hitboxFixture then
+		self._hitboxFixture:destroy();
+	end
+	self._hitboxFixture = nil;
 end
 
 
@@ -151,9 +169,22 @@ Entity.draw = function( self )
 	if self._sprite and self._body then
 		self._sprite:draw( self._body:getX(), self._body:getY() );
 	end
-	if gConf.drawPhysics and self._collisionRadius then
-		love.graphics.setColor( Colors.cyan );
-		love.graphics.circle( "fill", self._body:getX(), self._body:getY(), self._collisionRadius, 16 );
+	if gConf.drawPhysics then
+		local alpha = 255 * 0.6;
+		if self._collisionFixture then
+			assert( self._collisionFixture:getShape():getType() == "circle" );
+			local radius = self._collisionFixture:getShape():getRadius();
+			love.graphics.setColor( Colors.cyan:alpha( alpha ) );
+			love.graphics.circle( "fill", self._body:getX(), self._body:getY(), radius, 16 );
+		end
+		if self._hitboxFixture then
+			assert( self._hitboxFixture:getShape():getType() == "polygon" );
+			love.graphics.push();
+			love.graphics.translate( self._body:getX(), self._body:getY() );
+			love.graphics.setColor( Colors.strawberry:alpha( alpha ) );
+			love.graphics.polygon( "fill", self._hitboxFixture:getShape():getPoints() );
+			love.graphics.pop();
+		end
 	end
 end
 
