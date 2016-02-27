@@ -4,6 +4,7 @@ gConf = {};
 gConf.features = {};
 gConf.features.logging = not release and not gUnitTesting;
 gConf.features.cli = not release;
+gConf.features.fpsCounter = not release;
 
 gConf.maxLocalPlayers = 8;
 

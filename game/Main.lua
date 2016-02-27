@@ -1,3 +1,4 @@
+local FPSCounter = require( "src/dev/FPSCounter" );
 local Log = require( "src/dev/Log" );
 local CLI = require( "src/dev/cli/CLI" );
 local Input = require( "src/input/Input" );
@@ -12,6 +13,7 @@ love.load = function()
 end
 
 love.update = function( dt )
+	FPSCounter:update( dt );
 	Scene:getCurrent():update( dt );
 	Input:flushEvents();
 end
@@ -19,6 +21,7 @@ end
 love.draw = function()
 	love.graphics.reset();
 	Scene:getCurrent():draw();
+	FPSCounter:draw();
 	CLI:draw();
 end
 
