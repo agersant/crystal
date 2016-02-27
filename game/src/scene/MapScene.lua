@@ -46,6 +46,14 @@ local sortDrawableEntities = function( entityA, entityB )
 	return entityA:getZ() < entityB:getZ();
 end
 
+local removeDespawnedEntitiesFrom = function( self, list )
+	for i = #list, 1, -1 do
+		local entity = list[i];
+		if self._despawnedEntities[entity] then
+			table.remove( list, i );
+		end
+	end
+end
 
 
 -- PUBLIC API
@@ -57,6 +65,8 @@ MapScene.init = function( self, mapName )
 	self._entities = {};
 	self._updatableEntities = {};
 	self._drawableEntities = {};
+	self._spawnedEntities = {};
+	self._despawnedEntities = {};
 	self._map = Assets:getMap( mapName );
 	self._map:spawnCollisionMeshBody( self );
 	self._map:spawnEntities( self );
@@ -69,10 +79,38 @@ end
 
 MapScene.update = function( self, dt )
 	MapScene.super.update( self, dt );
+	
+	-- Pump physics simulation
 	self._world:update( dt );
-	for i, entity in ipairs( self._updatableEntities ) do
+	
+	-- Update entities
+	for _, entity in ipairs( self._updatableEntities ) do
 		entity:update( dt );
 	end
+	
+	-- Add new entities
+	for entity, _ in pairs( self._spawnedEntities ) do
+		table.insert( self._entities, entity );
+		if entity:isDrawable() then
+			table.insert( self._drawableEntities, entity );
+		end
+		if entity:isUpdatable() then
+			table.insert( self._updatableEntities, entity );
+			entity:update( 0 );
+		end
+	end
+	self._spawnedEntities = {};
+	
+	-- Remove old entities
+	removeDespawnedEntitiesFrom( self, self._entities );
+	removeDespawnedEntitiesFrom( self, self._updatableEntities );
+	removeDespawnedEntitiesFrom( self, self._drawableEntities );
+	for entity, _ in pairs( self._despawnedEntities ) do
+		entity:destroy();
+	end
+	self._despawnedEntities = {};
+	
+	-- Sort drawable entities
 	table.sort( self._drawableEntities, sortDrawableEntities );
 end
 
@@ -89,20 +127,12 @@ end
 
 MapScene.spawn = function( self, class, ... )
 	local entity = class:new( self, ... );
-	table.insert( self._entities, entity );
-	if entity:isDrawable() then
-		table.insert( self._drawableEntities, entity );
-	end
-	if entity:isUpdatable() then
-		table.insert( self._updatableEntities, entity );
-	end
+	self._spawnedEntities[entity] = true;
 	return entity;
 end
 
 MapScene.despawn = function( self, entity )
-	-- TODO free entity body
-	-- TODO remove from all entity lists
-	-- TODO mark as destroyed
+	self._despawnedEntities[entity] = true;
 end
 
 MapScene.getPhysicsWorld = function( self )

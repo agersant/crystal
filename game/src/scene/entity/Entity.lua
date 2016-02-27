@@ -188,6 +188,11 @@ Entity.draw = function( self )
 	end
 end
 
+Entity.destroy = function( self )
+	if self._body then
+		self._body:destroy();
+	end
+end
 
 
 return Entity;
