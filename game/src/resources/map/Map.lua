@@ -11,6 +11,7 @@ local Map = Class( "Map" );
 
 
 Map.init = function( self, mapData, tileset )
+	self._tileset = tileset;
 	self._staticLayers = {};
 	self._dynamicLayers = {};
 	
@@ -24,11 +25,12 @@ Map.init = function( self, mapData, tileset )
 	self._constants.tilesetWidth = math.floor( self._constants.tilesetPixelWidth / self._constants.tileWidth );
 	self._constants.firstGID = mapData.content.tilesets[1].firstgid;
 	
-	self._collisionMesh = MapCollisionMesh:new( self._constants );
+	self._collisionMesh = MapCollisionMesh:new( self._constants, self._tileset );
 	
 	for i, layerData in ipairs( mapData.content.layers ) do
 		if layerData.type == "tilelayer" then
 			local sort = layerData.properties.sort;
+			self._collisionMesh:processLayer( layerData );
 			if sort == "below" or sort == "above" then
 				local layer = StaticLayer:new( self._constants, tileset:getImage(), layerData, sort );
 				table.insert( self._staticLayers, layer );
