@@ -63,8 +63,15 @@ PlayerController.run = function( self, entity )
 		local right = self._inputDevice:isCommandActive( "moveRight" );
 		local up = self._inputDevice:isCommandActive( "moveUp" );
 		local down = self._inputDevice:isCommandActive( "moveDown" );
+		local attack = self._inputDevice:isCommandActive( "attack" );
 		
-		if left or right or up or down then
+		if attack then
+			entity:setSpeed( 0 );
+			entity:setAnimation( "attack_" .. entity:getDirection4() );
+			self:waitFor( "animationEnd" );
+			entity:setAnimation( "idle_" .. entity:getDirection4() );
+			
+		elseif left or right or up or down then
 			local xDir, yDir;
 			
 			if left and right then
