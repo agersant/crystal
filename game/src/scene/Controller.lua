@@ -64,10 +64,18 @@ Controller.init = function( self, entity, script )
 	self._threads = {};
 	self._newThreads = {};
 	self._blockedThreads = {};
+	self._queuedSignals = {};
 	self:thread( script, false );
 end
 
 Controller.update = function( self, dt )
+	
+	-- Process queued signals
+	for _, signalData in ipairs( self._queuedSignals ) do
+		self:signal( signalData.name, unpack( signalData.userData ) );
+	end
+	self._queuedSignals = {};
+	
 	self._time = self._time + dt;
 	
 	-- Add new threads
@@ -102,6 +110,10 @@ Controller.update = function( self, dt )
 end
 
 Controller.signal = function( self, signal, ... )
+	if not self._entity:getScene():canProcessSignals() then
+		table.insert( self._queuedSignals, { name = signal, userData = { ... } } );
+		return;
+	end
 	if not self._blockedThreads[signal] then
 		return;
 	end

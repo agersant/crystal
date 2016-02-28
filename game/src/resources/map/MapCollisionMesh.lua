@@ -1,6 +1,7 @@
 require( "src/utils/OOP" );
 local Log = require( "src/dev/Log" );
 local MapCollisionChainData = require( "src/resources/map/MapCollisionChainData" );
+local CollisionFilters = require( "src/scene/CollisionFilters" );
 local MathUtils = require( "src/utils/MathUtils" );
 
 local MapCollisionMesh = Class( "MapCollisionMesh" );
@@ -45,8 +46,10 @@ end
 MapCollisionMesh.spawnBody = function( self, scene )
 	local world = scene:getPhysicsWorld();
 	local body = love.physics.newBody( world, 0, 0, "static" );
+	body:setUserData( self._map );
 	for i, chain in ipairs( self._chains ) do
 		local fixture = love.physics.newFixture( body, chain:getShape() );
+		fixture:setFilterData( CollisionFilters.GEO, CollisionFilters.SOLID, 0 );
 	end
 	return body;
 end

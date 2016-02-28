@@ -3,6 +3,8 @@ local CLI = require( "src/dev/cli/CLI" );
 local Log = require( "src/dev/Log" );
 local Assets = require( "src/resources/Assets" );
 local Colors = require( "src/resources/Colors" );
+local CollisionFilters = require( "src/scene/CollisionFilters" );
+local Entity = require( "src/scene/entity/Entity" );
 local Warrior = require( "src/scene/entity/Warrior" );
 local PlayerController = require( "src/scene/PlayerController" );
 local Scene = require( "src/scene/Scene" );
@@ -55,6 +57,22 @@ local removeDespawnedEntitiesFrom = function( self, list )
 	end
 end
 
+local beginContact = function( self, fixtureA, fixtureB, contact )
+	local objectA = fixtureA:getBody():getUserData();
+	local objectB = fixtureB:getBody():getUserData();
+	assert( objectA );
+	assert( objectB );
+	if objectA:isInstanceOf( Entity ) and objectB:isInstanceOf( Entity ) then
+		local categoryA = fixtureA:getFilterData();
+		local categoryB = fixtureB:getFilterData();
+		if bit.band( categoryA, CollisionFilters.HITBOX ) ~= 0 and bit.band( categoryB, CollisionFilters.WEAKBOX ) ~= 0 then
+			objectA:signal( "+give_hit", objectB );
+		elseif bit.band( categoryA, CollisionFilters.WEAKBOX ) ~= 0 and bit.band( categoryB, CollisionFilters.HITBOX ) ~= 0 then
+			objectB:signal( "+give_hit", objectA );
+		end
+	end
+end
+
 
 
 -- PUBLIC API
@@ -62,7 +80,13 @@ end
 MapScene.init = function( self, mapName )
 	Log:info( "Instancing scene for map: " .. tostring( mapName ) );
 	MapScene.super.init( self );
+	self._canProcessSignals = false;
+	
 	self._world = love.physics.newWorld( 0, 0, false );
+	self._world:setCallbacks(
+		function( ... ) beginContact( self, ... ) end
+	);
+	
 	self._entities = {};
 	self._updatableEntities = {};
 	self._drawableEntities = {};
@@ -76,6 +100,9 @@ MapScene.init = function( self, mapName )
 	local testWarrior = self:spawn( Warrior );
 	testWarrior:setPosition( 32, 32 );
 	testWarrior:addController( PlayerController, 1 );
+	
+	local testWarrior = self:spawn( Warrior );
+	testWarrior:setPosition( 120, 32 );
 end
 
 MapScene.update = function( self, dt )
@@ -83,6 +110,8 @@ MapScene.update = function( self, dt )
 	
 	-- Pump physics simulation
 	self._world:update( dt );
+	
+	self._canProcessSignals = true;
 	
 	-- Update entities
 	for _, entity in ipairs( self._updatableEntities ) do
@@ -101,6 +130,8 @@ MapScene.update = function( self, dt )
 		end
 	end
 	self._spawnedEntities = {};
+	
+	self._canProcessSignals = false;
 	
 	-- Remove old entities
 	removeDespawnedEntitiesFrom( self, self._entities );

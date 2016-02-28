@@ -1,5 +1,6 @@
 require( "src/utils/OOP" );
 local Colors = require( "src/resources/Colors" );
+local CollisionFilters = require( "src/scene/CollisionFilters" );
 
 local Entity = Class( "Entity" );
 
@@ -18,6 +19,7 @@ Entity.addPhysicsBody = function( self, bodyType )
 	assert( not self._body );
 	self._body = love.physics.newBody( self._scene:getPhysicsWorld(), 0, 0, bodyType );
 	self._body:setFixedRotation( true );
+	self._body:setUserData( self );
 	self:setDirection( 0, 1 );
 	self:setSpeed( 0 );
 end
@@ -61,8 +63,7 @@ Entity.setDirection = function( self, xDir8, yDir8 )
 	self._xDir4 = self._dir4 == "left" and -1 or self._dir4 == "right" and 1 or 0;
 	self._yDir4 = self._dir4 == "up" and -1 or self._dir4 == "down" and 1 or 0;
 	
-	local angle = math.atan2( yDir8, xDir8 );
-	self._body:setAngle( angle );
+	self._angle = math.atan2( yDir8, xDir8 );
 end
 
 Entity.setSpeed = function( self, speed )
@@ -86,6 +87,7 @@ Entity.addCollisionPhysics = function( self )
 	assert( not self._collisionFixture );
 	local collisionShape = love.physics.newCircleShape( 1 );
 	self._collisionFixture = love.physics.newFixture( self._body, collisionShape );
+	self._collisionFixture:setFilterData( CollisionFilters.SOLID, CollisionFilters.GEO + CollisionFilters.SOLID, 0 );
 	self._collisionFixture:setFriction( 0 );
 	self._collisionFixture:setRestitution( 0 );
 end
@@ -104,6 +106,7 @@ Entity.addHitboxPhysics = function( self, shape )
 	assert( self._body );
 	self:removeHitboxPhysics();
 	self._hitboxFixture = love.physics.newFixture( self._body, shape );
+	self._hitboxFixture:setFilterData( CollisionFilters.HITBOX, CollisionFilters.WEAKBOX, 0 );
 	self._hitboxFixture:setSensor( true );
 end
 
@@ -123,6 +126,7 @@ Entity.addWeakboxPhysics = function( self, shape )
 	assert( self._body );
 	self:removeWeakboxPhysics();
 	self._weakboxFixture = love.physics.newFixture( self._body, shape );
+	self._weakboxFixture:setFilterData( CollisionFilters.WEAKBOX, CollisionFilters.HITBOX, 0 );
 	self._weakboxFixture:setSensor( true );
 end
 
@@ -156,6 +160,13 @@ Entity.addController = function( self, controllerClass, ... )
 	assert( self._controller );
 end
 
+Entity.signal = function( self, signal, ... )
+	if not self._controller then
+		return;
+	end
+	self._controller:signal( signal, ... );
+end
+
 
 
 -- CORE
@@ -177,7 +188,7 @@ Entity.update = function( self, dt )
 	end
 	if self._body then
 		local speed = self._baseSpeed;
-		local angle = self._body:getAngle();
+		local angle = self._angle;
 		local dx = math.cos( angle );
 		local dy = math.sin( angle );
 		self._body:setLinearVelocity( speed * dx, speed * dy );
@@ -191,28 +202,30 @@ Entity.draw = function( self )
 	if gConf.drawPhysics then
 		local alpha = 255 * 0.6;
 		if self._collisionFixture then
-			assert( self._collisionFixture:getShape():getType() == "circle" );
-			local radius = self._collisionFixture:getShape():getRadius();
 			love.graphics.setColor( Colors.cyan:alpha( alpha ) );
-			love.graphics.circle( "fill", self._body:getX(), self._body:getY(), radius, 16 );
+			self:drawShape( self._collisionFixture:getShape() );
 		end
 		if self._hitboxFixture then
-			assert( self._hitboxFixture:getShape():getType() == "polygon" );
-			love.graphics.push();
-			love.graphics.translate( self._body:getX(), self._body:getY() );
 			love.graphics.setColor( Colors.strawberry:alpha( alpha ) );
-			love.graphics.polygon( "fill", self._hitboxFixture:getShape():getPoints() );
-			love.graphics.pop();
+			self:drawShape( self._hitboxFixture:getShape() );
 		end
 		if self._weakboxFixture then
-			assert( self._weakboxFixture:getShape():getType() == "polygon" );
-			love.graphics.push();
-			love.graphics.translate( self._body:getX(), self._body:getY() );
 			love.graphics.setColor( Colors.ecoGreen:alpha( alpha ) );
-			love.graphics.polygon( "fill", self._weakboxFixture:getShape():getPoints() );
-			love.graphics.pop();
+			self:drawShape( self._weakboxFixture:getShape() );
 		end
 	end
+end
+
+Entity.drawShape = function( self, shape )
+	love.graphics.push();
+	love.graphics.translate( self._body:getX(), self._body:getY() );
+	if shape:getType() == "polygon" then
+		love.graphics.polygon( "fill", shape:getPoints() );
+	elseif shape:getType() == "circle" then
+		local x, y = shape:getPoint();
+		love.graphics.circle( "fill", x, y, shape:getRadius(), 16 );
+	end
+	love.graphics.pop();
 end
 
 Entity.destroy = function( self )
@@ -220,6 +233,11 @@ Entity.destroy = function( self )
 		self._body:destroy();
 	end
 end
+
+Entity.getScene = function( self )
+	return self._scene;
+end
+
 
 
 return Entity;
