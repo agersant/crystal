@@ -35,6 +35,9 @@ Sprite.draw = function( self, x, y )
 	love.graphics.draw( image, quad, math.floor( .5 + x ), math.floor( .5 + y ), 0, 1, 1, ox, oy );
 end
 
+Sprite.isAnimationOver = function( self )
+	return self._time >= self._animation:getDuration();
+end
 
 
 return Sprite;

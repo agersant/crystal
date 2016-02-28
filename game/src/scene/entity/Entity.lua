@@ -184,7 +184,11 @@ Entity.update = function( self, dt )
 		self._controller:update( dt );
 	end
 	if self._sprite then
+		local animationWasOver = self._sprite:isAnimationOver();
 		self._sprite:update( dt );
+		if not animationWasOver and self._sprite:isAnimationOver() then
+			self:signal( "animationEnd" );
+		end
 	end
 	if self._body then
 		local speed = self._baseSpeed;
