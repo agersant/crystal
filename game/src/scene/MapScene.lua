@@ -66,9 +66,9 @@ local beginContact = function( self, fixtureA, fixtureB, contact )
 		local categoryA = fixtureA:getFilterData();
 		local categoryB = fixtureB:getFilterData();
 		if bit.band( categoryA, CollisionFilters.HITBOX ) ~= 0 and bit.band( categoryB, CollisionFilters.WEAKBOX ) ~= 0 then
-			objectA:signal( "+give_hit", objectB );
+			objectA:signal( "+giveHit", objectB );
 		elseif bit.band( categoryA, CollisionFilters.WEAKBOX ) ~= 0 and bit.band( categoryB, CollisionFilters.HITBOX ) ~= 0 then
-			objectB:signal( "+give_hit", objectA );
+			objectB:signal( "+giveHit", objectA );
 		end
 	end
 end
