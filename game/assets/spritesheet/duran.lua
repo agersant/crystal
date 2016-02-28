@@ -35,6 +35,26 @@ return {
 			walk_left_3 = 	{ x = 320 + 3 * 64, y = 192 , w = 64, h = 64, ox = 30, oy = 52, },
 			walk_left_4 = 	{ x = 320 + 4 * 64, y = 192 , w = 64, h = 64, ox = 30, oy = 52, },
 			walk_left_5 = 	{ x = 320 + 5 * 64, y = 192 , w = 64, h = 64, ox = 30, oy = 52, },
+			
+			attack_down_0 = { x = 0 * 64, y = 512 , w = 64, h = 64, ox = 30, oy = 52, },
+			attack_down_1 = { x = 1 * 64, y = 512 , w = 64, h = 64, ox = 30, oy = 52, },
+			attack_down_2 = { x = 2 * 64, y = 512 , w = 64, h = 64, ox = 30, oy = 52, },
+			attack_down_3 = { x = 3 * 64, y = 512 , w = 64, h = 64, ox = 30, oy = 52, },
+			
+			attack_up_0 = 	{ x = 0 * 64, y = 576 , w = 64, h = 64, ox = 30, oy = 52, },
+			attack_up_1 = 	{ x = 1 * 64, y = 576 , w = 64, h = 64, ox = 30, oy = 52, },
+			attack_up_2 = 	{ x = 2 * 64, y = 576 , w = 64, h = 64, ox = 30, oy = 52, },
+			attack_up_3 = 	{ x = 3 * 64, y = 576 , w = 64, h = 64, ox = 30, oy = 52, },
+			
+			attack_right_0 = { x = 0 * 64, y = 640 , w = 64, h = 64, ox = 30, oy = 52, },
+			attack_right_1 = { x = 1 * 64, y = 640 , w = 64, h = 64, ox = 30, oy = 52, },
+			attack_right_2 = { x = 2 * 64, y = 640 , w = 64, h = 64, ox = 30, oy = 52, },
+			attack_right_3 = { x = 3 * 64, y = 640 , w = 64, h = 64, ox = 30, oy = 52, },
+			
+			attack_left_0 = { x = 0 * 64, y = 704 , w = 64, h = 64, ox = 30, oy = 52, },
+			attack_left_1 = { x = 1 * 64, y = 704 , w = 64, h = 64, ox = 30, oy = 52, },
+			attack_left_2 = { x = 2 * 64, y = 704 , w = 64, h = 64, ox = 30, oy = 52, },
+			attack_left_3 = { x = 3 * 64, y = 704 , w = 64, h = 64, ox = 30, oy = 52, },
 		},
 		animations = {
 			idle_down = { frames = { { id = "idle_down" } } },
@@ -72,6 +92,30 @@ return {
 				{ id = "walk_right_3", duration = 0.15 },
 				{ id = "walk_right_4", duration = 0.15 },
 				{ id = "walk_right_5", duration = 0.15 },
+			} },
+			attack_down = { loop = false, frames = {
+				{ id = "attack_down_0", duration = 0.08 },
+				{ id = "attack_down_1", duration = 0.08 },
+				{ id = "attack_down_2", duration = 0.08 },
+				{ id = "attack_down_3", duration = 0.15 },
+			} },
+			attack_up = { loop = false, frames = {
+				{ id = "attack_up_0", duration = 0.08 },
+				{ id = "attack_up_1", duration = 0.08 },
+				{ id = "attack_up_2", duration = 0.08 },
+				{ id = "attack_up_3", duration = 0.15 },
+			} },
+			attack_right = { loop = false, frames = {
+				{ id = "attack_right_0", duration = 0.08 },
+				{ id = "attack_right_1", duration = 0.08 },
+				{ id = "attack_right_2", duration = 0.08 },
+				{ id = "attack_right_3", duration = 0.15 },
+			} },
+			attack_left = { loop = false, frames = {
+				{ id = "attack_left_0", duration = 0.08 },
+				{ id = "attack_left_1", duration = 0.08 },
+				{ id = "attack_left_2", duration = 0.08 },
+				{ id = "attack_left_3", duration = 0.15 },
 			} },
 		},
 	},
