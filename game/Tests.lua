@@ -11,6 +11,7 @@ local testFiles = {
 	"src/scene/TestController",
 	"src/ui/TestTextInput",
 	"src/utils/TestMathUtils",
+	"src/utils/TestOOP",
 	"src/utils/TestStringUtils",
 };
 

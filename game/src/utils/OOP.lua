@@ -7,6 +7,7 @@ local makeClass = function( name, baseClass )
 	return setmetatable( {}, classMeta );
 end
 
+
 Class = function( name, baseClass )
 	
 	local class = makeClass( name, baseClass );
@@ -24,8 +25,20 @@ Class = function( name, baseClass )
 	
 	class.new = function( class, ... )
 		local obj = setmetatable( {}, class._objMetaTable );
-		obj:init( ... );
+		if obj.init then
+			obj:init( ... );
+		end
 		return obj;
+	end
+	
+	class.isInstanceOf = function( self, otherClass )
+		if class == otherClass then
+			return true;
+		end
+		if self.super then
+			return self.super.isInstanceOf( self, otherClass );
+		end
+		return false;
 	end
 	
 	return class;
