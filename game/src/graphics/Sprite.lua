@@ -39,5 +39,9 @@ Sprite.isAnimationOver = function( self )
 	return self._time >= self._animation:getDuration();
 end
 
+Sprite.getTagShape = function( self, tagName )
+	return self._frame:getTagShape( tagName );
+end
+
 
 return Sprite;

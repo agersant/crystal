@@ -16,9 +16,7 @@ Warrior.init = function( self, scene )
 	self:addPhysicsBody( "dynamic" );
 	self:addCollisionPhysics();
 	self:setCollisionRadius( 6 );
-	
-	local shape = love.physics.newRectangleShape( 20, -10, 16, 16 );
-	self:addHitboxPhysics( shape );
+	self:setUseSpriteHitboxData( true );
 	
 	local shape = love.physics.newRectangleShape( 0, -20, 8, 24 );
 	self:addWeakboxPhysics( shape );

@@ -151,6 +151,11 @@ Entity.setAnimation = function( self, animationName )
 	self._sprite:setAnimation( animationName );
 end
 
+Entity.setUseSpriteHitboxData = function( self, enabled )
+	assert( self._body );
+	self._useSpriteHitboxData = enabled;
+end
+
 
 
 -- CONTROLLER COMPONENT
@@ -188,6 +193,14 @@ Entity.update = function( self, dt )
 		self._sprite:update( dt );
 		if not animationWasOver and self._sprite:isAnimationOver() then
 			self:signal( "animationEnd" );
+		end
+		if self._useSpriteHitboxData then
+			local hitShape = self._sprite:getTagShape( "hit" );
+			if hitShape then
+				self:addHitboxPhysics( hitShape );
+			else
+				self:removeHitboxPhysics();
+			end
 		end
 	end
 	if self._body then

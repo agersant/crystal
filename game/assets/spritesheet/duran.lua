@@ -38,22 +38,22 @@ return {
 			
 			attack_down_0 = { x = 0 * 64, y = 512 , w = 64, h = 64, ox = 30, oy = 52, },
 			attack_down_1 = { x = 1 * 64, y = 512 , w = 64, h = 64, ox = 30, oy = 52, },
-			attack_down_2 = { x = 2 * 64, y = 512 , w = 64, h = 64, ox = 30, oy = 52, },
+			attack_down_2 = { x = 2 * 64, y = 512 , w = 64, h = 64, ox = 30, oy = 52, tags = { hit = { rect = { x = -12, y = -10, w = 32, h = 18 } } } },
 			attack_down_3 = { x = 3 * 64, y = 512 , w = 64, h = 64, ox = 30, oy = 52, },
 			
 			attack_up_0 = 	{ x = 0 * 64, y = 576 , w = 64, h = 64, ox = 30, oy = 52, },
 			attack_up_1 = 	{ x = 1 * 64, y = 576 , w = 64, h = 64, ox = 30, oy = 52, },
-			attack_up_2 = 	{ x = 2 * 64, y = 576 , w = 64, h = 64, ox = 30, oy = 52, },
+			attack_up_2 = 	{ x = 2 * 64, y = 576 , w = 64, h = 64, ox = 30, oy = 52, tags = { hit = { rect = { x = -12, y = -10, w = 32, h = -18 } } } },
 			attack_up_3 = 	{ x = 3 * 64, y = 576 , w = 64, h = 64, ox = 30, oy = 52, },
 			
 			attack_right_0 = { x = 0 * 64, y = 640 , w = 64, h = 64, ox = 30, oy = 52, },
 			attack_right_1 = { x = 1 * 64, y = 640 , w = 64, h = 64, ox = 30, oy = 52, },
-			attack_right_2 = { x = 2 * 64, y = 640 , w = 64, h = 64, ox = 30, oy = 52, },
+			attack_right_2 = { x = 2 * 64, y = 640 , w = 64, h = 64, ox = 30, oy = 52, tags = { hit = { rect = { x = 4, y = -32, w = 18, h = 32 } } } },
 			attack_right_3 = { x = 3 * 64, y = 640 , w = 64, h = 64, ox = 30, oy = 52, },
 			
 			attack_left_0 = { x = 0 * 64, y = 704 , w = 64, h = 64, ox = 30, oy = 52, },
 			attack_left_1 = { x = 1 * 64, y = 704 , w = 64, h = 64, ox = 30, oy = 52, },
-			attack_left_2 = { x = 2 * 64, y = 704 , w = 64, h = 64, ox = 30, oy = 52, },
+			attack_left_2 = { x = 2 * 64, y = 704 , w = 64, h = 64, ox = 30, oy = 52, tags = { hit = { rect = { x = 0, y = -32, w = -18, h = 32 } } } },
 			attack_left_3 = { x = 3 * 64, y = 704 , w = 64, h = 64, ox = 30, oy = 52, },
 		},
 		animations = {
