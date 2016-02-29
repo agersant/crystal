@@ -38,8 +38,9 @@ PlayerController.waitForCommandPress = function( self, command )
 	self:waitFor( "+" .. command );
 end
 
-PlayerController.run = function( self, entity )
+PlayerController.run = function( self )
 
+	local entity = self:getEntity();
 	self._playerDirectionControls = PlayerDirectionControls:new( self );
 
 	while true do

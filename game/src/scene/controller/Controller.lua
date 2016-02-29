@@ -43,7 +43,7 @@ pumpThread = function( self, thread, resumeArgs )
 		if resumeArgs then
 			success, a, b = coroutine.resume( thread.coroutine, resumeArgs );
 		else
-			success, a, b = coroutine.resume( thread.coroutine, self, self._entity );
+			success, a, b = coroutine.resume( thread.coroutine, self );
 		end
 		if not success then
 			Log:error( a );
