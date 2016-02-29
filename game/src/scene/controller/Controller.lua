@@ -1,5 +1,5 @@
 require( "src/utils/OOP" );
-local Log = require( "src/dev/Log" );
+local TableUtils = require( "src/utils/TableUtils" );
 
 local Controller = Class( "Controller" );
 
@@ -12,23 +12,26 @@ local pumpThread;
 local blockThread = function( self, thread, signals )
 	thread.isBlocked = true;
 	thread.isMarkedForUnblock = false;
-	thread.blockedBy = signals;
+	if not thread.blockedBy then
+		thread.blockedBy = {};
+	end
 	for _, signal in ipairs( signals ) do
 		assert( type( signal ) == "string" );
 		if not self._blockedThreads[signal] then
 			self._blockedThreads[signal] = {};
 		end
 		self._blockedThreads[signal][thread] = true;
+		thread.blockedBy[signal] = true;
 	end
 end
 
 local unblockThread = function( self, thread, signal, ... )
 	assert( thread.isBlocked );
-	for _, signal in ipairs( thread.blockedBy ) do
+	for signal, _ in pairs( thread.blockedBy ) do
 		self._blockedThreads[signal][thread] = nil;
 	end
 	local signalData = { ... };
-	if #thread.blockedBy > 1 then
+	if TableUtils.countKeys( thread.blockedBy ) > 1 then
 		table.insert( signalData, 1, signal );
 	end
 	thread.isMarkedForUnblock = true;
@@ -81,7 +84,7 @@ local cleanupThread = function( self, thread )
 		end
 	end
 	if thread.blockedBy then
-		for _, signal in ipairs( thread.blockedBy ) do
+		for signal, _ in pairs( thread.blockedBy ) do
 			self._blockedThreads[signal][thread] = nil;
 		end
 	end
