@@ -9,6 +9,7 @@ local Sprite = Class( "Sprite" );
 Sprite.init = function( self, sheet )
 	self._sheet = sheet;
 	self:setAnimation( sheet:getDefaultAnimationName() );
+	self._time = 0;
 end
 
 Sprite.setAnimation = function( self, animationName )
@@ -18,11 +19,13 @@ Sprite.setAnimation = function( self, animationName )
 	end
 	self._animation = animation;
 	assert( self._animation );
-	self._time = 0;
-	self:update( 0 );
 end
 
 Sprite.update = function( self, dt )
+	if self._previousAnimation ~= self._animation then
+		self._previousAnimation = self._animation;
+		self._time = 0;
+	end
 	self._time = self._time + dt;
 	self._frame = self._animation:getFrameAtTime( self._time );
 	assert( self._frame );
