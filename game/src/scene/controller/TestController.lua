@@ -141,6 +141,39 @@ tests[#tests].body = function()
 	assert( a == 1 );
 end
 
+tests[#tests + 1] = { name = "End on" };
+tests[#tests].body = function()
+	local a = 0;
+	local controller = Controller:new( Entity:new( Scene:new() ), function( self )
+		self:endOn( "end" );
+		self:waitFrame();
+		a = 1;
+	end	);
+	controller:update( 0 );
+	assert( a == 0 );
+	controller:signal( "end" );
+	controller:update( 0 );
+	assert( a == 0 );
+end
+
+tests[#tests + 1] = { name = "Unblock after end on" };
+tests[#tests].body = function()
+	local a = 0;
+	local s = "";
+	local controller = Controller:new( Entity:new( Scene:new() ), function( self )
+		self:endOn( "end" );
+		self:waitFor( "signal" );
+		a = 1;
+	end	);
+	controller:update( 0 );
+	assert( a == 0 );
+	controller:signal( "end" );
+	controller:signal( "signal" );
+	controller:update( 0 );
+	assert( a == 0 );
+end
+
+
 
 
 return tests;
