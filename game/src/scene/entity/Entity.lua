@@ -187,6 +187,11 @@ Entity.addCombatComponent = function( self )
 	self._combatComponent = CombatComponent:new( self );
 end
 
+Entity.inflictDamageTo = function( self, target )
+	assert( self._combatComponent );
+	self._combatComponent:inflictDamageTo( target );
+end
+
 Entity.receiveDamage = function( self, damage )
 	assert( self._combatComponent );
 	self._combatComponent:receiveDamage( damage );
@@ -269,6 +274,10 @@ Entity.drawShape = function( self, shape )
 		love.graphics.circle( "fill", x, y, shape:getRadius(), 16 );
 	end
 	love.graphics.pop();
+end
+
+Entity.despawn = function( self )
+	self._scene:despawn( self );
 end
 
 Entity.destroy = function( self )
