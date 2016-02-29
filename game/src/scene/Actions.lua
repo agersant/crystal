@@ -1,4 +1,7 @@
 require( "src/utils/OOP" );
+local MathUtils = require( "src/utils/MathUtils" );
+
+
 
 local Actions = Class( "Actions" );
 
@@ -19,10 +22,21 @@ Actions.walk = function( self )
 end
 
 Actions.attack = function( self )
+	self:endOn( "interruptByDamage" );
 	local entity = self:getEntity();
 	entity:setSpeed( 0 );
 	entity:setAnimation( "attack_" .. entity:getDirection4(), true );
 	self:waitFor( "animationEnd" );
+end
+
+Actions.knockback = function( angle )
+	return function( self )
+		local entity = self:getEntity();
+		entity:setSpeed( 160 );
+		entity:setDirection8( MathUtils.angleToDir8( angle ) );
+		entity:setAnimation( "knockback_" .. entity:getDirection4(), true );
+		self:wait( .25 );
+	end
 end
 
 

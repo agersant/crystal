@@ -43,7 +43,7 @@ PlayerDirectionControls.init = function( self, controller )
 	
 		while true do
 		
-			if self._enabled then
+			if self._enabled and controller:isIdle() then
 				local inputDevice = controller:getInputDevice();
 				local left = inputDevice:isCommandActive( "moveLeft" );
 				local right = inputDevice:isCommandActive( "moveRight" );
@@ -73,7 +73,7 @@ PlayerDirectionControls.init = function( self, controller )
 						yDir = 0;
 					end
 					
-					controller:getEntity():setDirection( xDir, yDir );
+					controller:getEntity():setDirection8( xDir, yDir );
 				end
 			end
 			
@@ -82,10 +82,6 @@ PlayerDirectionControls.init = function( self, controller )
 		
 	end );
 	
-end
-
-PlayerDirectionControls.setEnabled = function( self, enabled )
-	self._enabled = true;
 end
 
 

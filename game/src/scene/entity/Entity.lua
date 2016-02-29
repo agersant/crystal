@@ -1,6 +1,8 @@
 require( "src/utils/OOP" );
 local Colors = require( "src/resources/Colors" );
 local CollisionFilters = require( "src/scene/CollisionFilters" );
+local CombatComponent = require( "src/scene/combat/CombatComponent" );
+local MathUtils = require( "src/utils/MathUtils" );
 
 local Entity = Class( "Entity" );
 
@@ -20,7 +22,7 @@ Entity.addPhysicsBody = function( self, bodyType )
 	self._body = love.physics.newBody( self._scene:getPhysicsWorld(), 0, 0, bodyType );
 	self._body:setFixedRotation( true );
 	self._body:setUserData( self );
-	self:setDirection( 0, 1 );
+	self:setDirection8( 1, 0 );
 	self:setSpeed( 0 );
 end
 
@@ -29,7 +31,7 @@ Entity.getZ = function( self )
 	return self._body:getY();
 end
 
-Entity.setDirection = function( self, xDir8, yDir8 )
+Entity.setDirection8 = function( self, xDir8, yDir8 )
 	assert( self._body );
 	assert( xDir8 == 0 or xDir8 == 1 or xDir8 == -1 );
 	assert( yDir8 == 0 or yDir8 == 1 or yDir8 == -1 );
@@ -72,6 +74,10 @@ end
 
 Entity.getDirection4 = function( self )
 	return self._dir4;
+end
+
+Entity.getPosition = function( self )
+	return self._body:getX(), self._body:getY();
 end
 
 Entity.setPosition = function( self, x, y )
@@ -170,6 +176,20 @@ Entity.signal = function( self, signal, ... )
 		return;
 	end
 	self._controller:signal( signal, ... );
+end
+
+
+
+-- COMBAT COMPONENT
+
+Entity.addCombatComponent = function( self )
+	assert( not self._combatComponent );
+	self._combatComponent = CombatComponent:new( self );
+end
+
+Entity.receiveDamage = function( self, damage )
+	assert( self._combatComponent );
+	self._combatComponent:receiveDamage( damage );
 end
 
 

@@ -15,6 +15,7 @@ Warrior.init = function( self, scene )
 	self:addSprite( Sprite:new( sheet ) );
 	self:addPhysicsBody( "dynamic" );
 	self:addCollisionPhysics();
+	self:addCombatComponent();
 	self:setCollisionRadius( 6 );
 	self:setUseSpriteHitboxData( true );
 	

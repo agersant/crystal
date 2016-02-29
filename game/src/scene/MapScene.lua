@@ -67,9 +67,9 @@ local beginContact = function( self, fixtureA, fixtureB, contact )
 		local categoryA = fixtureA:getFilterData();
 		local categoryB = fixtureB:getFilterData();
 		if bit.band( categoryA, CollisionFilters.HITBOX ) ~= 0 and bit.band( categoryB, CollisionFilters.WEAKBOX ) ~= 0 then
-			objectA:signal( "+giveHit", objectB );
+			objectA:signal( "giveHit", objectB );
 		elseif bit.band( categoryA, CollisionFilters.WEAKBOX ) ~= 0 and bit.band( categoryB, CollisionFilters.HITBOX ) ~= 0 then
-			objectB:signal( "+giveHit", objectA );
+			objectB:signal( "giveHit", objectA );
 		end
 	end
 end
@@ -103,7 +103,7 @@ MapScene.init = function( self, mapName )
 	testWarrior:addController( PlayerController, 1 );
 	
 	local testBot = self:spawn( Warrior );
-	testBot:setPosition( 120, 32 );
+	testBot:setPosition( 180, 64 );
 	testBot:addController( DevBotController );
 end
 

@@ -2,6 +2,7 @@ require( "src/utils/OOP" );
 local Input = require( "src/input/Input" );
 local Actions = require( "src/scene/Actions" );
 local InputDrivenController = require( "src/scene/controller/InputDrivenController" );
+local CombatLogic = require( "src/scene/combat/CombatLogic" );
 local PlayerDirectionControls = require( "src/scene/controller/PlayerDirectionControls" );
 
 local PlayerController = Class( "PlayerController", InputDrivenController );
@@ -53,9 +54,8 @@ PlayerController.init = function( self, entity, playerIndex )
 end
 
 PlayerController.run = function( self )
-	local entity = self:getEntity();
+	self._combatLogic = CombatLogic:new( self );
 	self._playerDirectionControls = PlayerDirectionControls:new( self );
-
 	self:thread( idleControls );
 	self:thread( walkControls );
 	self:thread( attackControls );

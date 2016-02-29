@@ -1,6 +1,7 @@
 require( "src/utils/OOP" );
 local CLI = require( "src/dev/cli/CLI" );
 local Actions = require( "src/scene/Actions" );
+local CombatLogic = require( "src/scene/combat/CombatLogic" );
 local Controller = require( "src/scene/controller/Controller" );
 
 local DevBotController = Class( "DevBotController", Controller );
@@ -9,6 +10,7 @@ local DevBotController = Class( "DevBotController", Controller );
 
 -- COMMANDS
 
+DevBotController._behavior = "idle";
 local setDevBotBehavior = function( behavior )
 	DevBotController._behavior = behavior;
 end
@@ -24,6 +26,7 @@ DevBotController.init = function( self, entity )
 end
 
 DevBotController.run = function( self )
+	self._combatLogic = CombatLogic:new( self );
 	local entity = self:getEntity();
 	while true do
 		if self:isIdle() then
