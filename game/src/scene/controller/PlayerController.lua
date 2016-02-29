@@ -38,6 +38,28 @@ PlayerController.waitForCommandPress = function( self, command )
 	self:waitFor( "+" .. command );
 end
 
+local walkState = function( self )
+	local entity = self:getEntity();
+	local animName = "walk_" .. entity:getDirection4();
+	entity:setAnimation( animName );
+	entity:setSpeed( 144 );
+end
+
+local idleState = function( self )
+	local entity = self:getEntity();
+	local animName = "idle_" .. entity:getDirection4();
+	entity:setAnimation( animName );
+	entity:setSpeed( 0 );
+end
+
+local attackState = function( self )
+	local entity = self:getEntity();
+	entity:setSpeed( 0 );
+	entity:setAnimation( "attack_" .. entity:getDirection4() );
+	self:waitFor( "animationEnd" );
+	entity:setAnimation( "idle_" .. entity:getDirection4() );
+end
+
 PlayerController.run = function( self )
 
 	local entity = self:getEntity();
@@ -52,20 +74,11 @@ PlayerController.run = function( self )
 		local attack = self._inputDevice:isCommandActive( "attack" );
 		
 		if attack then
-			entity:setSpeed( 0 );
-			entity:setAnimation( "attack_" .. entity:getDirection4() );
-			self:waitFor( "animationEnd" );
-			entity:setAnimation( "idle_" .. entity:getDirection4() );
-			
+			attackState( self );
 		elseif left or right or up or down then
-			local animName = "walk_" .. entity:getDirection4();
-			entity:setAnimation( animName );
-			entity:setSpeed( 144 );
-			
+			walkState( self );
 		else
-			local animName = "idle_" .. entity:getDirection4();
-			entity:setAnimation( animName );
-			entity:setSpeed( 0 );
+			idleState( self );
 		end
 		
 		self:waitFrame();
