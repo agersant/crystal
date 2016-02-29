@@ -8,7 +8,7 @@ require( "Conf" );
 local testFiles = {
 	"src/dev/cli/TestCLI",
 	"src/input/TestInputDevice",
-	"src/scene/TestController",
+	"src/scene/controller/TestController",
 	"src/ui/TestTextInput",
 	"src/utils/TestMathUtils",
 	"src/utils/TestOOP",

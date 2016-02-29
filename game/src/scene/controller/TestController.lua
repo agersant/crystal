@@ -1,5 +1,5 @@
 assert( gUnitTesting );
-local Controller = require( "src/scene/Controller" );
+local Controller = require( "src/scene/controller/Controller" );
 local Entity = require( "src/scene/entity/Entity" );
 local Scene = require( "src/scene/Scene" );
 
