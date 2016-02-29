@@ -1,6 +1,6 @@
 require( "src/utils/OOP" );
 local Input = require( "src/input/Input" );
-local Controller = require( "src/scene/Controller" );
+local Controller = require( "src/scene/controller/Controller" );
 
 local PlayerController = Class( "PlayerController", Controller );
 

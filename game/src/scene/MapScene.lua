@@ -4,9 +4,9 @@ local Log = require( "src/dev/Log" );
 local Assets = require( "src/resources/Assets" );
 local Colors = require( "src/resources/Colors" );
 local CollisionFilters = require( "src/scene/CollisionFilters" );
+local PlayerController = require( "src/scene/controller/PlayerController" );
 local Entity = require( "src/scene/entity/Entity" );
 local Warrior = require( "src/scene/entity/Warrior" );
-local PlayerController = require( "src/scene/PlayerController" );
 local Scene = require( "src/scene/Scene" );
 
 local MapScene = Class( "MapScene", Scene );
