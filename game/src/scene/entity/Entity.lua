@@ -146,9 +146,9 @@ Entity.addSprite = function( self, sprite )
 	assert( self._sprite );
 end
 
-Entity.setAnimation = function( self, animationName )
+Entity.setAnimation = function( self, animationName, forceRestart )
 	assert( self._sprite );
-	self._sprite:setAnimation( animationName );
+	self._sprite:setAnimation( animationName, forceRestart );
 end
 
 Entity.setUseSpriteHitboxData = function( self, enabled )

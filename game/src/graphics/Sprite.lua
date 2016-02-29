@@ -12,13 +12,13 @@ Sprite.init = function( self, sheet )
 	self._time = 0;
 end
 
-Sprite.setAnimation = function( self, animationName )
+Sprite.setAnimation = function( self, animationName, forceRestart )
 	local animation = self._sheet:getAnimation( animationName );
-	if self._animation == animation then
-		return;
-	end
 	self._animation = animation;
 	assert( self._animation );
+	if forceRestart then
+		self._time = 0;
+	end
 end
 
 Sprite.update = function( self, dt )
