@@ -1,69 +1,17 @@
 require( "src/utils/OOP" );
 local Input = require( "src/input/Input" );
-local Controller = require( "src/scene/controller/Controller" );
+local InputDrivenController = require( "src/scene/controller/InputDrivenController" );
 local PlayerDirectionControls = require( "src/scene/controller/PlayerDirectionControls" );
 
-local PlayerController = Class( "PlayerController", Controller );
+local PlayerController = Class( "PlayerController", InputDrivenController );
 
 
 
--- IMPLEMENTATION
+-- STATES
 
-local sendCommandSignals = function( self )
-	for i, commandEvent in self._inputDevice:pollEvents() do
-		self:signal( commandEvent );
-	end
-end
-
-
-
--- PUBLIC API
-
-PlayerController.init = function( self, entity, playerIndex )
-	PlayerController.super.init( self, entity, self.run );
-	self._inputDevice = Input:getDevice( playerIndex );
-end
-
-PlayerController.getInputDevice = function( self )
-	return self._inputDevice;
-end
-
-PlayerController.update = function( self, dt )
-	sendCommandSignals( self );
-	PlayerController.super.update( self, dt );
-end
-
-PlayerController.waitForCommandPress = function( self, command )
-	while self:getInputDevice():isCommandActive( command ) do
-		self:waitFrame();
-	end
-	self:waitFor( "+" .. command );
-end
-
-local walkState = function( self )
-	local entity = self:getEntity();
-	local animName = "walk_" .. entity:getDirection4();
-	entity:setAnimation( animName );
-	entity:setSpeed( 144 );
-end
-
-local idleState = function( self )
-	local entity = self:getEntity();
-	local animName = "idle_" .. entity:getDirection4();
-	entity:setAnimation( animName );
-	entity:setSpeed( 0 );
-end
-
-local attackState = function( self )
-	local entity = self:getEntity();
-	entity:setSpeed( 0 );
-	entity:setAnimation( "attack_" .. entity:getDirection4() );
-	self:waitFor( "animationEnd" );
-end
-
-local enterState = function( self, stateFunc )
+local enterState = function( self, stateFunction )
 	local stateThread = self:thread( function( self )
-		stateFunc( self );
+		stateFunction( self );
 	end );
 	self._state = stateThread;
 end
@@ -72,14 +20,15 @@ local isIdle = function( self )
 	return not self._state or self._state:isDead();
 end
 
-local attackControls = function( self )
-	while true do
-		self:waitForCommandPress( "attack" );
-		if isIdle( self ) then
-			enterState( self, attackState );
-		end
-		self:waitFrame();
-	end
+
+
+-- IDLE
+
+local idleState = function( self )
+	local entity = self:getEntity();
+	local animName = "idle_" .. entity:getDirection4();
+	entity:setAnimation( animName );
+	entity:setSpeed( 0 );
 end
 
 local idleControls = function( self )
@@ -89,6 +38,17 @@ local idleControls = function( self )
 		end
 		self:waitFrame();
 	end
+end
+
+
+
+-- WALK
+
+local walkState = function( self )
+	local entity = self:getEntity();
+	local animName = "walk_" .. entity:getDirection4();
+	entity:setAnimation( animName );
+	entity:setSpeed( 144 );
 end
 
 local walkControls = function( self )
@@ -104,6 +64,35 @@ local walkControls = function( self )
 		end
 		self:waitFrame();
 	end
+end
+
+
+
+-- ATTACK
+
+local attackState = function( self )
+	local entity = self:getEntity();
+	entity:setSpeed( 0 );
+	entity:setAnimation( "attack_" .. entity:getDirection4() );
+	self:waitFor( "animationEnd" );
+end
+
+local attackControls = function( self )
+	while true do
+		self:waitForCommandPress( "attack" );
+		if isIdle( self ) then
+			enterState( self, attackState );
+		end
+		self:waitFrame();
+	end
+end
+
+
+
+-- PUBLIC API
+
+PlayerController.init = function( self, entity, playerIndex )
+	PlayerController.super.init( self, entity, playerIndex, self.run );
 end
 
 PlayerController.run = function( self )
