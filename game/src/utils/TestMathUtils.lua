@@ -13,6 +13,13 @@ tests[#tests].body = function()
 	assert( MathUtils.round( -2.8 ) == -3 );
 end
 
+tests[#tests + 1] = { name = "Clamp" };
+tests[#tests].body = function()
+	assert( 2 == MathUtils.clamp( 0, 2, 5 ) );
+	assert( 0 == MathUtils.clamp( 0, -2, 5 ) );
+	assert( 5 == MathUtils.clamp( 0, 12, 5 ) );
+end
+
 tests[#tests + 1] = { name = "Index to XY" };
 tests[#tests].body = function()
 	local x, y = MathUtils.indexToXY( 8, 5 );

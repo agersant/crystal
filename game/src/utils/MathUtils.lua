@@ -10,6 +10,11 @@ MathUtils.round = function( n )
 	return math.floor( n + 0.5 );
 end
 
+MathUtils.clamp = function( low, value, high )
+	assert( low <= high );
+	return math.min( high, math.max( low, value ) );
+end
+
 MathUtils.snapAngle = function( angle, numDirections )
 	local rad360 = 2 * math.pi;
 	angle = angle % rad360;
