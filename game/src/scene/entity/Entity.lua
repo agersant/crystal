@@ -110,10 +110,14 @@ end
 
 Entity.addHitboxPhysics = function( self, shape )
 	assert( self._body );
+	if self._hitboxShape == shape then
+		return;
+	end
 	self:removeHitboxPhysics();
 	self._hitboxFixture = love.physics.newFixture( self._body, shape );
 	self._hitboxFixture:setFilterData( CollisionFilters.HITBOX, CollisionFilters.WEAKBOX, 0 );
 	self._hitboxFixture:setSensor( true );
+	self._hitboxShape = shape;
 end
 
 Entity.removeHitboxPhysics = function( self )
@@ -121,6 +125,7 @@ Entity.removeHitboxPhysics = function( self )
 		self._hitboxFixture:destroy();
 	end
 	self._hitboxFixture = nil;
+	self._hitboxShape = nil;
 end
 
 
@@ -130,10 +135,14 @@ end
 
 Entity.addWeakboxPhysics = function( self, shape )
 	assert( self._body );
+	if self._weakboxShape == shape then
+		return;
+	end
 	self:removeWeakboxPhysics();
 	self._weakboxFixture = love.physics.newFixture( self._body, shape );
 	self._weakboxFixture:setFilterData( CollisionFilters.WEAKBOX, CollisionFilters.HITBOX, 0 );
 	self._weakboxFixture:setSensor( true );
+	self._weakboxShape = shape;
 end
 
 Entity.removeWeakboxPhysics = function( self )
@@ -141,6 +150,7 @@ Entity.removeWeakboxPhysics = function( self )
 		self._weakboxFixture:destroy();
 	end
 	self._weakboxFixture = nil;
+	self._weakboxShape = nil;
 end
 
 
