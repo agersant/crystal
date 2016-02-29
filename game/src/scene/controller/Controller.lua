@@ -203,13 +203,13 @@ Controller.endOnAny = function( self, signals )
 end
 
 Controller.isIdle = function( self )
-	return not self._stateThread or self._stateThread:isDead();
+	return not self._actionThread or self._actionThread:isDead();
 end
 
-Controller.enterState = function( self, stateFunction )
+Controller.doAction = function( self, actionFunction )
 	assert( self:isIdle() );
-	self._stateThread = self:thread( function( self )
-		stateFunction( self );
+	self._actionThread = self:thread( function( self )
+		actionFunction( self );
 	end );
 end
 

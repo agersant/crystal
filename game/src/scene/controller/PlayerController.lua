@@ -9,7 +9,7 @@ local PlayerController = Class( "PlayerController", InputDrivenController );
 
 -- IDLE
 
-local idleState = function( self )
+local idleAction = function( self )
 	local entity = self:getEntity();
 	local animName = "idle_" .. entity:getDirection4();
 	entity:setAnimation( animName );
@@ -19,7 +19,7 @@ end
 local idleControls = function( self )
 	while true do
 		if self:isIdle() then
-			self:enterState( idleState );
+			self:doAction( idleAction );
 		end
 		self:waitFrame();
 	end
@@ -29,7 +29,7 @@ end
 
 -- WALK
 
-local walkState = function( self )
+local walkAction = function( self )
 	local entity = self:getEntity();
 	local animName = "walk_" .. entity:getDirection4();
 	entity:setAnimation( animName );
@@ -44,7 +44,7 @@ local walkControls = function( self )
 			local up = self._inputDevice:isCommandActive( "moveUp" );
 			local down = self._inputDevice:isCommandActive( "moveDown" );
 			if left or right or up or down then
-				self:enterState( walkState );
+				self:doAction( walkAction );
 			end
 		end
 		self:waitFrame();
@@ -55,7 +55,7 @@ end
 
 -- ATTACK
 
-local attackState = function( self )
+local attackAction = function( self )
 	local entity = self:getEntity();
 	entity:setSpeed( 0 );
 	entity:setAnimation( "attack_" .. entity:getDirection4() );
@@ -66,7 +66,7 @@ local attackControls = function( self )
 	while true do
 		self:waitForCommandPress( "attack" );
 		if self:isIdle() then
-			self:enterState( attackState );
+			self:doAction( attackAction );
 		end
 		self:waitFrame();
 	end
