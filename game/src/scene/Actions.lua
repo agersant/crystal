@@ -32,7 +32,7 @@ end
 Actions.knockback = function( angle )
 	return function( self )
 		local entity = self:getEntity();
-		entity:setSpeed( 160 );
+		entity:setSpeed( 40 );
 		entity:setDirection8( MathUtils.angleToDir8( angle ) );
 		entity:setAnimation( "knockback_" .. entity:getDirection4(), true );
 		self:wait( .25 );
