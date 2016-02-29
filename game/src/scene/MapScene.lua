@@ -4,6 +4,7 @@ local Log = require( "src/dev/Log" );
 local Assets = require( "src/resources/Assets" );
 local Colors = require( "src/resources/Colors" );
 local CollisionFilters = require( "src/scene/CollisionFilters" );
+local DevBotController = require( "src/scene/controller/DevBotController" );
 local PlayerController = require( "src/scene/controller/PlayerController" );
 local Entity = require( "src/scene/entity/Entity" );
 local Warrior = require( "src/scene/entity/Warrior" );
@@ -101,8 +102,9 @@ MapScene.init = function( self, mapName )
 	testWarrior:setPosition( 32, 32 );
 	testWarrior:addController( PlayerController, 1 );
 	
-	local testWarrior = self:spawn( Warrior );
-	testWarrior:setPosition( 120, 32 );
+	local testBot = self:spawn( Warrior );
+	testBot:setPosition( 120, 32 );
+	testBot:addController( DevBotController );
 end
 
 MapScene.update = function( self, dt )
