@@ -68,6 +68,10 @@ Controller.init = function( self, entity, script )
 	self:thread( script, false );
 end
 
+Controller.getEntity = function( self )
+	return self._entity;
+end
+
 Controller.update = function( self, dt )
 	
 	-- Process queued signals
