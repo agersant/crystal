@@ -34,7 +34,9 @@ PlayerController.update = function( self, dt )
 end
 
 PlayerController.waitForCommandPress = function( self, command )
-	self:waitFor( "-" .. command );
+	while self:getInputDevice():isCommandActive( command ) do
+		self:waitFrame();
+	end
 	self:waitFor( "+" .. command );
 end
 
@@ -57,32 +59,60 @@ local attackState = function( self )
 	entity:setSpeed( 0 );
 	entity:setAnimation( "attack_" .. entity:getDirection4() );
 	self:waitFor( "animationEnd" );
-	entity:setAnimation( "idle_" .. entity:getDirection4() );
+end
+
+local enterState = function( self, stateFunc )
+	local stateThread = self:thread( function( self )
+		stateFunc( self );
+	end );
+	self._state = stateThread;
+end
+
+local isIdle = function( self )
+	return not self._state or self._state:isDead();
+end
+
+local attackControls = function( self )
+	while true do
+		self:waitForCommandPress( "attack" );
+		if isIdle( self ) then
+			enterState( self, attackState );
+		end
+		self:waitFrame();
+	end
+end
+
+local idleControls = function( self )
+	while true do
+		if isIdle( self ) then
+			enterState( self, idleState );
+		end
+		self:waitFrame();
+	end
+end
+
+local walkControls = function( self )
+	while true do
+		if isIdle( self ) then
+			local left = self._inputDevice:isCommandActive( "moveLeft" );
+			local right = self._inputDevice:isCommandActive( "moveRight" );
+			local up = self._inputDevice:isCommandActive( "moveUp" );
+			local down = self._inputDevice:isCommandActive( "moveDown" );
+			if left or right or up or down then
+				enterState( self, walkState );
+			end
+		end
+		self:waitFrame();
+	end
 end
 
 PlayerController.run = function( self )
-
 	local entity = self:getEntity();
 	self._playerDirectionControls = PlayerDirectionControls:new( self );
 
-	while true do
-		
-		local left = self._inputDevice:isCommandActive( "moveLeft" );
-		local right = self._inputDevice:isCommandActive( "moveRight" );
-		local up = self._inputDevice:isCommandActive( "moveUp" );
-		local down = self._inputDevice:isCommandActive( "moveDown" );
-		local attack = self._inputDevice:isCommandActive( "attack" );
-		
-		if attack then
-			attackState( self );
-		elseif left or right or up or down then
-			walkState( self );
-		else
-			idleState( self );
-		end
-		
-		self:waitFrame();
-	end
+	self:thread( idleControls );
+	self:thread( walkControls );
+	self:thread( attackControls );
 end
 
 
