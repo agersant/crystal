@@ -7,6 +7,18 @@ local PlayerController = Class( "PlayerController", Controller );
 
 
 
+-- IMPLEMENTATION
+
+local sendCommandSignals = function( self )
+	for i, commandEvent in self._inputDevice:pollEvents() do
+		self:signal( commandEvent );
+	end
+end
+
+
+
+-- PUBLIC API
+
 PlayerController.init = function( self, entity, playerIndex )
 	PlayerController.super.init( self, entity, self.run );
 	self._inputDevice = Input:getDevice( playerIndex );
@@ -17,14 +29,8 @@ PlayerController.getInputDevice = function( self )
 end
 
 PlayerController.update = function( self, dt )
-	self:sendCommandSignals();
+	sendCommandSignals( self );
 	PlayerController.super.update( self, dt );
-end
-
-PlayerController.sendCommandSignals = function( self )
-	for i, commandEvent in self._inputDevice:pollEvents() do
-		self:signal( commandEvent );
-	end
 end
 
 PlayerController.waitForCommandPress = function( self, command )
