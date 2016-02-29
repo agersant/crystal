@@ -221,6 +221,12 @@ Entity.update = function( self, dt )
 			else
 				self:removeHitboxPhysics();
 			end
+			local weakShape = self._sprite:getTagShape( "weak" );
+			if weakShape then
+				self:addWeakboxPhysics( weakShape );
+			else
+				self:removeWeakboxPhysics();
+			end
 		end
 	end
 	if self._body then
