@@ -34,7 +34,7 @@ end
 
 PlayerController.run = function( self, entity )
 
-	self._PlayerDirectionControls = PlayerDirectionControls:new( self );
+	self._playerDirectionControls = PlayerDirectionControls:new( self );
 
 	while true do
 		
