@@ -11,30 +11,29 @@ MathUtils.round = function( n )
 end
 
 MathUtils.snapAngle = function( angle, numDirections )
-	angle = angle % 360;
+	local rad360 = 2 * math.pi;
+	angle = angle % rad360;
 	assert( numDirections > 0 );
-	local angleStep = 360 / numDirections;
-	local stepCount = math.floor( .5 + angle / 360 * numDirections ) % numDirections;
-	return angleStep * stepCount;
+	return math.floor( .5 + angle / rad360 * numDirections ) % numDirections;
 end
 
 MathUtils.angleToDir8 = function( angle )
 	local snappedAngle = MathUtils.snapAngle( angle, 8 );
 	if snappedAngle == 0 then
 		return 1, 0;
-	elseif snappedAngle == 45 then
+	elseif snappedAngle == 1 then
 		return 1, 1;
-	elseif snappedAngle == 90 then
+	elseif snappedAngle == 2 then
 		return 0, 1;
-	elseif snappedAngle == 135 then
+	elseif snappedAngle == 3 then
 		return -1, 1;
-	elseif snappedAngle == 180 then
+	elseif snappedAngle == 4 then
 		return -1, 0;
-	elseif snappedAngle == 225 then
+	elseif snappedAngle == 5 then
 		return -1, -1;
-	elseif snappedAngle == 270 then
+	elseif snappedAngle == 6 then
 		return 0, -1;
-	elseif snappedAngle == 315 then
+	elseif snappedAngle == 7 then
 		return 1, -1;
 	end
 	error( "Unexpected angle: " .. tostring( snappedAngle ) );
