@@ -36,22 +36,21 @@ local unblockThread = function( self, thread, signal, ... )
 end
 
 local endThreadOn = function( self, thread, signals )
+	if not thread.endsOn then
+		thread.endsOn = {};
+	end
 	for _, signal in ipairs( signals ) do
 		assert( type( signal ) == "string" );
 		if not self._endableThreads[signal] then
 			self._endableThreads[signal] = {};
 		end
 		self._endableThreads[signal][thread] = true;
+		thread.endsOn[signal] = true;
 	end
 end
 
 local endThread = function( self, thread )
 	thread.isEnded = true;
-	if thread.blockedBy then
-		for _, signal in ipairs( thread.blockedBy ) do
-			self._blockedThreads[signal][thread] = nil;
-		end
-	end
 end
 
 pumpThread = function( self, thread, resumeArgs )
@@ -71,6 +70,19 @@ pumpThread = function( self, thread, resumeArgs )
 		elseif a == "endOnSignals" then
 			endThreadOn( self, thread, b );
 			pumpThread( self, thread );
+		end
+	end
+end
+
+local cleanupThread = function( self, thread )
+	if thread.endsOn then
+		for signal, _ in pairs( thread.endsOn ) do
+			self._endableThreads[signal][thread] = nil;
+		end
+	end
+	if thread.blockedBy then
+		for _, signal in ipairs( thread.blockedBy ) do
+			self._blockedThreads[signal][thread] = nil;
 		end
 	end
 end
@@ -122,6 +134,7 @@ Controller.update = function( self, dt )
 	for i = #self._threads, 1, -1 do
 		local thread = self._threads[i];
 		if thread.isEnded or coroutine.status( thread.coroutine ) == "dead" then
+			cleanupThread( self, thread );
 			table.remove( self._threads, i );
 		end
 	end
@@ -144,7 +157,6 @@ Controller.signal = function( self, signal, ... )
 	if self._endableThreads[signal] then
 		for thread, _ in pairs( self._endableThreads[signal] ) do
 			endThread( self, thread, signal );
-			self._endableThreads[signal][thread] = nil;
 		end
 	end
 	if self._blockedThreads[signal] then
@@ -211,6 +223,12 @@ Controller.doAction = function( self, actionFunction )
 	self._actionThread = self:thread( function( self )
 		actionFunction( self );
 	end );
+end
+
+Controller.interruptAction = function( self )
+	if self._actionThread then
+		endThread( self, self._actionThread );
+	end
 end
 
 
