@@ -202,5 +202,16 @@ Controller.endOnAny = function( self, signals )
 	coroutine.yield( "endOnSignals", signals );
 end
 
+Controller.isIdle = function( self )
+	return not self._stateThread or self._stateThread:isDead();
+end
+
+Controller.enterState = function( self, stateFunction )
+	assert( self:isIdle() );
+	self._stateThread = self:thread( function( self )
+		stateFunction( self );
+	end );
+end
+
 
 return Controller;

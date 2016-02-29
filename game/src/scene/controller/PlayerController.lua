@@ -7,21 +7,6 @@ local PlayerController = Class( "PlayerController", InputDrivenController );
 
 
 
--- STATES
-
-local enterState = function( self, stateFunction )
-	local stateThread = self:thread( function( self )
-		stateFunction( self );
-	end );
-	self._state = stateThread;
-end
-
-local isIdle = function( self )
-	return not self._state or self._state:isDead();
-end
-
-
-
 -- IDLE
 
 local idleState = function( self )
@@ -33,8 +18,8 @@ end
 
 local idleControls = function( self )
 	while true do
-		if isIdle( self ) then
-			enterState( self, idleState );
+		if self:isIdle() then
+			self:enterState( idleState );
 		end
 		self:waitFrame();
 	end
@@ -53,13 +38,13 @@ end
 
 local walkControls = function( self )
 	while true do
-		if isIdle( self ) then
+		if self:isIdle() then
 			local left = self._inputDevice:isCommandActive( "moveLeft" );
 			local right = self._inputDevice:isCommandActive( "moveRight" );
 			local up = self._inputDevice:isCommandActive( "moveUp" );
 			local down = self._inputDevice:isCommandActive( "moveDown" );
 			if left or right or up or down then
-				enterState( self, walkState );
+				self:enterState( walkState );
 			end
 		end
 		self:waitFrame();
@@ -80,8 +65,8 @@ end
 local attackControls = function( self )
 	while true do
 		self:waitForCommandPress( "attack" );
-		if isIdle( self ) then
-			enterState( self, attackState );
+		if self:isIdle() then
+			self:enterState( attackState );
 		end
 		self:waitFrame();
 	end
