@@ -26,21 +26,46 @@ end
 
 MapCollisionMesh.processLayer = function( self, layerData )
 	-- TODO ATM this creates one shape per tile. Adjacent polygons should be merged into longer chains.
+	local tileWidth = self._map:getTileWidth();
+	local tileHeight = self._map:getTileHeight();
 	for tileNum, tileID in ipairs( layerData.data ) do
 		local tileInfo = self._map:getTileset():getTileData( tileID );
 		if tileInfo then
 			local x, y = MathUtils.indexToXY( tileNum - 1, self._map:getWidthInTiles() );
-			x = x * self._map:getTileWidth();
-			y = y * self._map:getTileHeight();
+			x = x * tileWidth;
+			y = y * tileHeight;
 			for polygonIndex, polygon in ipairs( tileInfo.collisionPolygons ) do
-				local chain = MapCollisionChainData:new( true );
+				local chain = MapCollisionChainData:new( false );
 				for vertIndex, vert in ipairs( polygon ) do
-					chain:addVertex( x + vert.x, y + vert.y );
+					local vertX = x + MathUtils.clamp( 0, vert.x, tileWidth );
+					local vertY = y + MathUtils.clamp( 0, vert.y, tileHeight );
+					chain:addVertex( vertX, vertY );
 				end
-				table.insert( self._chains, chain );
+				self:addChain( chain );
 			end
 		end
 	end
+end
+
+-- TODO move merge logic to MapCollisionChainData
+MapCollisionMesh.addChain = function( self, newChain )
+	for iChain, oldChain in ipairs( self._chains ) do
+		if not oldChain:isOuter() then
+			for iOld, oldX1, oldY1, oldX2, oldY2 in oldChain:segments() do
+				for iNew, newX1, newY1, newX2, newY2 in newChain:segments() do
+					local segmentsLineUp = newX1 == oldX1 and newY1 == oldY1 and newX2 == oldX2 and newY2 == oldY2;
+					local segmentsLineUpFlipped = ( not segmentsLineUp ) and ( newX1 == oldX2 and newY1 == oldY2 and newX2 == oldX1 and newY2 == oldY1 );
+					if segmentsLineUp or segmentsLineUpFlipped then
+						oldChain:replaceSegmentByChain( iOld, iNew, newChain, segmentsLineUpFlipped );
+						return;
+					end
+					-- TODO deal with situations where one segment is included in the other
+					-- TODO deal with situations where more than one segment matches (?)
+				end
+			end
+		end
+	end
+	table.insert( self._chains, newChain );
 end
 
 MapCollisionMesh.spawnBody = function( self, scene )
