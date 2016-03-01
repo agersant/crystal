@@ -30,6 +30,7 @@ MapCollisionChainData.getShape = function( self )
 	if self._shape then
 		return self._shape;
 	end
+	-- TODO investigate using polygons rather than chainShapes for non-outer chains (and possibly rename this class)
 	self._shape = love.physics.newChainShape( true, self._verts );
 	return self._shape;
 end
