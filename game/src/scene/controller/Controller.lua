@@ -1,4 +1,5 @@
 require( "src/utils/OOP" );
+local Log = require( "src/dev/Log" );
 local TableUtils = require( "src/utils/TableUtils" );
 
 local Controller = Class( "Controller" );
