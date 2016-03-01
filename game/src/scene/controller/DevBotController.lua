@@ -3,6 +3,7 @@ local CLI = require( "src/dev/cli/CLI" );
 local Actions = require( "src/scene/Actions" );
 local CombatLogic = require( "src/scene/combat/CombatLogic" );
 local Controller = require( "src/scene/controller/Controller" );
+local MathUtils = require( "src/utils/MathUtils" );
 
 local DevBotController = Class( "DevBotController", Controller );
 
@@ -34,6 +35,13 @@ DevBotController.run = function( self )
 				self:doAction( Actions.idle );
 			end
 			if DevBotController._behavior == "walk" then
+				self:doAction( Actions.walk );
+			end
+			if DevBotController._behavior == "circle" then
+				local circleDuration = 4;
+				local t = ( self._time % circleDuration ) / circleDuration;
+				local angle = t * 2 * math.pi;
+				self:getEntity():setDirection8( MathUtils.angleToDir8( angle ) );
 				self:doAction( Actions.walk );
 			end
 			if DevBotController._behavior == "attack" then
