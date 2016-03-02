@@ -88,7 +88,7 @@ local runCommand = function( self )
 	end
 	local success, errorMessage = pcall( command:getFunc(), unpack( useArgs ) );
 	if not success then
-		Log:error( "Error while running command '" .. self._parsedInput.fullText .. "':\n" .. errorMessage );
+		Log:error( "Error while running command '" .. self._parsedInput.fullText .. "':\n" .. ( errorMessage or "" ) );
 	end
 	wipeInput( self );
 end
