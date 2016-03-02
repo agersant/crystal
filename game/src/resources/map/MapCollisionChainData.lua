@@ -8,6 +8,26 @@ local MapCollisionChainData = Class( "MapCollisionChainData" );
 
 -- IMPLEMENTATION
 
+local replaceSegmentByChain = function( self, iSegment, iSegmentNew, newChain, flipped )
+	local newChainNumSegments = newChain:getNumSegments();
+	if not flipped then
+		-- TODO
+		error( "TODO" );
+	else
+		for i = iSegmentNew - 1, 1, -1 do
+			if iSegmentNew ~= newChainNumSegments or i ~= 1 then
+				local x1, y1, x2, y2 = newChain:getSegment( i );
+				self:insertVertex( x1, y1, iSegment + 1 );
+			end
+		end
+		for i = newChainNumSegments - 1, iSegmentNew + 1, -1 do
+			local x1, y1, x2, y2 = newChain:getSegment( i );
+			self:insertVertex( x2, y2, iSegment + 1 );
+		end
+	end
+	self:removeMidPoints();
+end
+
 local segmentIter = function( self, i )
 	local numSegments = self:getNumSegments();
 	i = i + 1;
@@ -18,7 +38,58 @@ local segmentIter = function( self, i )
 	return i, x1, y1, x2, y2;
 end
 
-MapCollisionChainData.removeMidPoints = function( self ) -- Public for testing
+MapCollisionChainData.getSegment = function( self, i)
+	local numSegments = self:getNumSegments();
+	local x1, y1 = self:getVertex( i );
+	local x2, y2;
+	if i == numSegments then
+		x2, y2 = self:getVertex( 1 );
+	else
+		x2, y2 = self:getVertex( i + 1 );
+	end
+	return x1, y1, x2, y2;
+end
+
+MapCollisionChainData.segments = function( self )
+	return segmentIter, self, 0;
+end
+
+MapCollisionChainData.insertVertex = function( self, x, y, i )
+	local numVertices = self:getNumVertices();
+	assert( i >= 1 );
+	assert( i <= 1 + numVertices );
+	table.insert( self._verts, 2 * i - 1, y );
+	table.insert( self._verts, 2 * i - 1, x );
+	self._shape = nil;
+end
+
+MapCollisionChainData.removeVertex = function( self, i )
+	assert( i >= 1 );
+	assert( i <= self:getNumVertices() );
+	table.remove( self._verts, 2 * i - 1 );
+	table.remove( self._verts, 2 * i - 1 );
+end
+
+MapCollisionChainData.getVertex = function( self, i )
+	return self._verts[2 * i - 1], self._verts[2 * i];
+end
+
+MapCollisionChainData.getNumVertices = function( self )
+	return #self._verts / 2;
+end
+
+MapCollisionChainData.getNumSegments = function( self )
+	local numVerts = self:getNumVertices();
+	if numVerts < 2 then
+		return 0;
+	end
+	if numVerts == 2 then
+		return 1;
+	end
+	return 1 + math.max( 0, numVerts - 1 );
+end
+
+MapCollisionChainData.removeMidPoints = function( self )
 	
 	local numSegments = self:getNumSegments();
 	if numSegments < 2 then
@@ -50,26 +121,6 @@ MapCollisionChainData.removeMidPoints = function( self ) -- Public for testing
 	
 end
 
-replaceSegmentByChain = function( self, iSegment, iSegmentNew, newChain, flipped )
-	local newChainNumSegments = newChain:getNumSegments();
-	if not flipped then
-		-- TODO
-		error( "TODO" );
-	else
-		for i = iSegmentNew - 1, 1, -1 do
-			if iSegmentNew ~= newChainNumSegments or i ~= 1 then
-				local x1, y1, x2, y2 = newChain:getSegment( i );
-				self:insertVertex( x1, y1, iSegment + 1 );
-			end
-		end
-		for i = newChainNumSegments - 1, iSegmentNew + 1, -1 do
-			local x1, y1, x2, y2 = newChain:getSegment( i );
-			self:insertVertex( x2, y2, iSegment + 1 );
-		end
-	end
-	self:removeMidPoints();
-end
-
 
 
 -- PUBLIC API: BASICS
@@ -88,73 +139,9 @@ MapCollisionChainData.getShape = function( self )
 	return self._shape;
 end
 
-MapCollisionChainData.getNumVertices = function( self )
-	return #self._verts / 2;
-end
-
-MapCollisionChainData.getNumSegments = function( self )
-	local numVerts = self:getNumVertices();
-	if numVerts < 2 then
-		return 0;
-	end
-	if numVerts == 2 then
-		return 1;
-	end
-	return 1 + math.max( 0, numVerts - 1 );
-end
-
-
-
--- PUBLIC API: VERTEX OPERATIONS
-
 MapCollisionChainData.addVertex = function( self, x, y )
 	self:insertVertex( x, y, 1 + self:getNumVertices() );
 end
-
-MapCollisionChainData.insertVertex = function( self, x, y, i )
-	local numVertices = self:getNumVertices();
-	assert( i >= 1 );
-	assert( i <= 1 + numVertices );
-	table.insert( self._verts, 2 * i - 1, y );
-	table.insert( self._verts, 2 * i - 1, x );
-	self._shape = nil;
-end
-
-MapCollisionChainData.removeVertex = function( self, i )
-	assert( i >= 1 );
-	assert( i <= self:getNumVertices() );
-	table.remove( self._verts, 2 * i - 1 );
-	table.remove( self._verts, 2 * i - 1 );
-end
-
-MapCollisionChainData.getVertex = function( self, i )
-	return self._verts[2 * i - 1], self._verts[2 * i];
-end
-
-
-
--- PUBLIC API: SEGMENT OPERATIONS
-
--- TODO Make this internal
-MapCollisionChainData.getSegment = function( self, i )
-	local numSegments = self:getNumSegments();
-	local x1, y1 = self:getVertex( i );
-	local x2, y2;
-	if i == numSegments then
-		x2, y2 = self:getVertex( 1 );
-	else
-		x2, y2 = self:getVertex( i + 1 );
-	end
-	return x1, y1, x2, y2;
-end
-
-MapCollisionChainData.segments = function( self )
-	return segmentIter, self, 0;
-end
-
-
-
--- PUBLIC API: CHAIN OPERATIONS
 
 MapCollisionChainData.merge = function( self, otherChain )
 	if self._outer or otherChain._outer then
