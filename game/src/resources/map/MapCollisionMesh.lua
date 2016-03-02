@@ -47,22 +47,10 @@ MapCollisionMesh.processLayer = function( self, layerData )
 	end
 end
 
--- TODO move merge logic to MapCollisionChainData
 MapCollisionMesh.addChain = function( self, newChain )
 	for iChain, oldChain in ipairs( self._chains ) do
-		if not oldChain:isOuter() then
-			for iOld, oldX1, oldY1, oldX2, oldY2 in oldChain:segments() do
-				for iNew, newX1, newY1, newX2, newY2 in newChain:segments() do
-					local segmentsLineUp = newX1 == oldX1 and newY1 == oldY1 and newX2 == oldX2 and newY2 == oldY2;
-					local segmentsLineUpFlipped = ( not segmentsLineUp ) and ( newX1 == oldX2 and newY1 == oldY2 and newX2 == oldX1 and newY2 == oldY1 );
-					if segmentsLineUp or segmentsLineUpFlipped then
-						oldChain:replaceSegmentByChain( iOld, iNew, newChain, segmentsLineUpFlipped );
-						return;
-					end
-					-- TODO deal with situations where one segment is included in the other
-					-- TODO deal with situations where more than one segment matches (?)
-				end
-			end
+		if oldChain:merge( newChain ) then
+			return;
 		end
 	end
 	table.insert( self._chains, newChain );
