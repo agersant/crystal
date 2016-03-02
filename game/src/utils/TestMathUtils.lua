@@ -20,6 +20,13 @@ tests[#tests].body = function()
 	assert( 5 == MathUtils.clamp( 0, 12, 5 ) );
 end
 
+tests[#tests + 1] = { name = "Angle between vectors" };
+tests[#tests].body = function()
+	assert( 0 == math.deg( MathUtils.angleBetweenVectors( 0, 1, 0, 2 ) ) );
+	assert( 90 == math.deg( MathUtils.angleBetweenVectors( 0, 1, 2, 0 ) ) );
+	assert( 180 == math.deg( MathUtils.angleBetweenVectors( 0, 1, 0, -3 ) ) );
+end
+
 tests[#tests + 1] = { name = "Index to XY" };
 tests[#tests].body = function()
 	local x, y = MathUtils.indexToXY( 8, 5 );

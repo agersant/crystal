@@ -15,6 +15,27 @@ MathUtils.clamp = function( low, value, high )
 	return math.min( high, math.max( low, value ) );
 end
 
+MathUtils.dotProduct = function( x1, y1, x2, y2 )
+	return x1 * x2 + y1 * y2;
+end
+
+MathUtils.vectorLength2 = function( x, y )
+	return x * x + y * y;
+end
+
+MathUtils.vectorLength = function( x, y )
+	return math.sqrt( x * x + y * y );
+end
+
+MathUtils.angleBetweenVectors = function( x1, y1, x2, y2 )
+	local n1 = MathUtils.vectorLength( x1, y1 );
+	local n2 = MathUtils.vectorLength( x2, y2 );
+	assert( n1 > 0 );
+	assert( n2 > 0 );
+	local dp = MathUtils.dotProduct( x1, y1, x2, y2 );
+	return math.acos( dp / ( n1 * n2 ) );
+end
+
 MathUtils.snapAngle = function( angle, numDirections )
 	local rad360 = 2 * math.pi;
 	angle = angle % rad360;
