@@ -108,7 +108,7 @@ MapCollisionChainData.removeMidPoints = function( self )
 		local ux, uy = x2 - x1, y2 - y1;
 		local vx, vy = nx2 - x1, ny2 - y1;
 		local angle = math.deg( MathUtils.angleBetweenVectors( ux, uy, vx, vy ) );
-		if angle == 0 or angle == 180 then
+		if angle == 0 or angle == 180 then -- TODO epsilon
 			if i == numSegments then
 				self:removeVertex( 1 );
 				return self:removeMidPoints();
