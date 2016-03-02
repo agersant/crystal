@@ -35,7 +35,9 @@ end
 -- IMAGE
 
 local loadImage = function( self, path, origin )
-	return "image", love.graphics.newImage( path );
+	local image = love.graphics.newImage( path );
+	image:setFilter( "nearest" );
+	return "image", image;
 end
 
 local unloadImage = function( self, path )
