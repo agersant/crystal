@@ -21,11 +21,10 @@ MapCollisionMesh.init = function( self, map )
 	mapEdges:addVertex( w, 0 );
 	mapEdges:addVertex( w, h );
 	mapEdges:addVertex( 0, h );
-	table.insert( self._chains, mapEdges );
+	self._chains[mapEdges] = true;
 end
 
 MapCollisionMesh.processLayer = function( self, layerData )
-	-- TODO ATM this creates one shape per tile. Adjacent polygons should be merged into longer chains.
 	local tileWidth = self._map:getTileWidth();
 	local tileHeight = self._map:getTileHeight();
 	for tileNum, tileID in ipairs( layerData.data ) do
@@ -45,22 +44,36 @@ MapCollisionMesh.processLayer = function( self, layerData )
 			end
 		end
 	end
+	self:mergeChains();
 end
 
 MapCollisionMesh.addChain = function( self, newChain )
-	for iChain, oldChain in ipairs( self._chains ) do
+	for oldChain, _ in pairs( self._chains ) do
 		if oldChain:merge( newChain ) then
 			return;
 		end
 	end
-	table.insert( self._chains, newChain );
+	self._chains[newChain] = true;
+end
+
+MapCollisionMesh.mergeChains = function( self )
+	for chainA, _ in pairs( self._chains ) do
+		for chainB, _ in pairs( self._chains ) do
+			if chainA ~= chainB then
+				if chainA:merge( chainB ) then
+					self._chains[chainB] = nil;
+					return self:mergeChains();
+				end
+			end
+		end
+	end
 end
 
 MapCollisionMesh.spawnBody = function( self, scene )
 	local world = scene:getPhysicsWorld();
 	local body = love.physics.newBody( world, 0, 0, "static" );
 	body:setUserData( self._map );
-	for i, chain in ipairs( self._chains ) do
+	for chain, _ in pairs( self._chains ) do
 		local fixture = love.physics.newFixture( body, chain:getShape() );
 		fixture:setFilterData( CollisionFilters.GEO, CollisionFilters.SOLID, 0 );
 	end
@@ -68,8 +81,7 @@ MapCollisionMesh.spawnBody = function( self, scene )
 end
 
 MapCollisionMesh.draw = function( self )
-	love.graphics.setLineWidth( 1 );
-	for i, chain in ipairs( self._chains ) do
+	for chain, _ in pairs( self._chains ) do
 		chain:draw();
 	end
 end
