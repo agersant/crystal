@@ -2,7 +2,7 @@ local MathUtils = {};
 
 
 
-local epsilon = 0.000001;
+local epsilon = 0.0001;
 
 MathUtils.indexToXY = function( index, width )
 	return index % width, math.floor( index / width );

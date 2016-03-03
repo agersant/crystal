@@ -343,6 +343,33 @@ tests[#tests].body = function()
 	assert( 0, 32 == chainA:getVertex( 7 ) );
 end
 
+tests[#tests + 1] = { name = "Merge chains, large triangle" };
+tests[#tests].body = function()
+	local chainA = MapCollisionChainData:new( false );
+	chainA:addVertex( 1, 1 );
+	chainA:addVertex( 2, 0 );
+	chainA:addVertex( 2, 1 );
+	
+	local chainB = MapCollisionChainData:new( false );
+	chainB:addVertex( 0, 2 );
+	chainB:addVertex( 1, 1 );
+	chainB:addVertex( 1, 2 );
+	
+	local chainC = MapCollisionChainData:new( false );
+	chainC:addVertex( 1, 1 );
+	chainC:addVertex( 2, 1 );
+	chainC:addVertex( 2, 2 );
+	chainC:addVertex( 1, 2 );
+	assert( chainB:merge( chainC ) );
+	assert( 4 == chainB:getNumVertices() );
+
+	assert( chainA:merge( chainB ) );
+	assert( 3 == chainA:getNumVertices() );
+	assert( 2, 0 == chainA:getVertex( 1 ) );
+	assert( 2, 2 == chainA:getVertex( 2 ) );
+	assert( 0, 2 == chainA:getVertex( 3 ) );
+end
+
 tests[#tests + 1] = { name = "Merge chains, square shape (many partial segment matches)" };
 tests[#tests].body = function()
 	-- TL
