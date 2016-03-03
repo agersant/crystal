@@ -139,9 +139,25 @@ tests[#tests].body = function()
 	assert( 0, 0 == chain:getVertex( 3 ) );
 end
 
+tests[#tests + 1] = { name = "Remove midpoints with null vectors" };
+tests[#tests].body = function()
+	local chain = MapCollisionChainData:new( false );
+	chain:addVertex( 0, 0 );
+	chain:addVertex( 1, 0 );
+	chain:addVertex( 1, 0 );
+	chain:addVertex( 2, 0 );
+	chain:addVertex( 2, 0 );
+	chain:addVertex( 2, 0 );
+	chain:addVertex( 1, .5 );
+	chain:removeMidPoints();
+	assert( 3 == chain:getNumVertices() );
+	assert( 0, 0 == chain:getVertex( 1 ) );
+	assert( 2, 0 == chain:getVertex( 2 ) );
+	assert( 1, .5 == chain:getVertex( 3 ) );
+end
+
 tests[#tests + 1] = { name = "Merge chains, match on new chain last segment" };
 tests[#tests].body = function()
-
 	local chainA = MapCollisionChainData:new( false );
 	chainA:addVertex( 0, 0 );
 	chainA:addVertex( 1, 0 );
@@ -153,8 +169,7 @@ tests[#tests].body = function()
 	chainB:addVertex( 2, 0 );
 	chainB:addVertex( 2, 1 );
 	chainB:addVertex( 1, 1 );
-	
-	chainA:merge( chainB );
+	assert( chainA:merge( chainB ) );
 	
 	assert( 4 == chainA:getNumVertices() );
 	assert( 4 == chainA:getNumSegments() );
@@ -166,7 +181,6 @@ end
 
 tests[#tests + 1] = { name = "Merge chains, match on new chain first segment" };
 tests[#tests].body = function()
-
 	local chainA = MapCollisionChainData:new( false );
 	chainA:addVertex( 0, 0 );
 	chainA:addVertex( 1, 0 );
@@ -178,8 +192,7 @@ tests[#tests].body = function()
 	chainB:addVertex( 1, 0 );
 	chainB:addVertex( 2, 0 );
 	chainB:addVertex( 2, 1 );
-	
-	chainA:merge( chainB );
+	assert( chainA:merge( chainB ) );
 	
 	assert( 4 == chainA:getNumVertices() );
 	assert( 4 == chainA:getNumSegments() );
@@ -191,7 +204,6 @@ end
 
 tests[#tests + 1] = { name = "Merge chains, match on new chain misc segment" };
 tests[#tests].body = function()
-
 	local chainA = MapCollisionChainData:new( false );
 	chainA:addVertex( 0, 0 );
 	chainA:addVertex( 1, 0 );
@@ -203,8 +215,7 @@ tests[#tests].body = function()
 	chainB:addVertex( 1, 1 );
 	chainB:addVertex( 1, 0 );
 	chainB:addVertex( 2, 0 );
-	
-	chainA:merge( chainB );
+	assert( chainA:merge( chainB ) );
 	
 	assert( 4 == chainA:getNumVertices() );
 	assert( 4 == chainA:getNumSegments() );
@@ -212,6 +223,209 @@ tests[#tests].body = function()
 	assert( 2, 0 == chainA:getVertex( 2 ) );
 	assert( 2, 1 == chainA:getVertex( 3 ) );
 	assert( 0, 1 == chainA:getVertex( 4 ) );
+end
+
+tests[#tests + 1] = { name = "Merge chains reverse, match on new chain last segment" };
+tests[#tests].body = function()
+	local chainA = MapCollisionChainData:new( false );
+	chainA:addVertex( 0, 0 );
+	chainA:addVertex( 1, 0 );
+	chainA:addVertex( 1, 1 );
+	chainA:addVertex( 0, 1 );
+	
+	local chainB = MapCollisionChainData:new( false );
+	chainB:addVertex( 1, 1 );
+	chainB:addVertex( 2, 1 );
+	chainB:addVertex( 2, 0 );
+	chainB:addVertex( 1, 0 );
+	assert( chainA:merge( chainB ) );
+	
+	assert( 4 == chainA:getNumVertices() );
+	assert( 4 == chainA:getNumSegments() );
+	assert( 0, 0 == chainA:getVertex( 1 ) );
+	assert( 2, 0 == chainA:getVertex( 2 ) );
+	assert( 2, 1 == chainA:getVertex( 3 ) );
+	assert( 0, 1 == chainA:getVertex( 4 ) );
+end
+
+tests[#tests + 1] = { name = "Merge chains reverse, match on new chain first segment" };
+tests[#tests].body = function()
+	local chainA = MapCollisionChainData:new( false );
+	chainA:addVertex( 0, 0 );
+	chainA:addVertex( 1, 0 );
+	chainA:addVertex( 1, 1 );
+	chainA:addVertex( 0, 1 );
+	
+	local chainB = MapCollisionChainData:new( false );
+	chainB:addVertex( 2, 1 );
+	chainB:addVertex( 2, 0 );
+	chainB:addVertex( 1, 0 );
+	chainB:addVertex( 1, 1 );
+	assert( chainA:merge( chainB ) );
+	
+	assert( 4 == chainA:getNumVertices() );
+	assert( 4 == chainA:getNumSegments() );
+	assert( 0, 0 == chainA:getVertex( 1 ) );
+	assert( 2, 0 == chainA:getVertex( 2 ) );
+	assert( 2, 1 == chainA:getVertex( 3 ) );
+	assert( 0, 1 == chainA:getVertex( 4 ) );
+end
+
+tests[#tests + 1] = { name = "Merge chains reverse, match on new chain misc segment" };
+tests[#tests].body = function()
+	local chainA = MapCollisionChainData:new( false );
+	chainA:addVertex( 0, 0 );
+	chainA:addVertex( 1, 0 );
+	chainA:addVertex( 1, 1 );
+	chainA:addVertex( 0, 1 );
+	
+	local chainB = MapCollisionChainData:new( false );
+	chainB:addVertex( 2, 0 );
+	chainB:addVertex( 1, 0 );
+	chainB:addVertex( 1, 1 );
+	chainB:addVertex( 2, 1 );
+	assert( chainA:merge( chainB ) );
+	
+	assert( 4 == chainA:getNumVertices() );
+	assert( 4 == chainA:getNumSegments() );
+	assert( 0, 0 == chainA:getVertex( 1 ) );
+	assert( 2, 0 == chainA:getVertex( 2 ) );
+	assert( 2, 1 == chainA:getVertex( 3 ) );
+	assert( 0, 1 == chainA:getVertex( 4 ) );
+end
+
+tests[#tests + 1] = { name = "Merge chains, partial segment match" };
+tests[#tests].body = function()
+	local chainA = MapCollisionChainData:new( false );
+	chainA:addVertex( 0, 0 );
+	chainA:addVertex( 2, 0 );
+	chainA:addVertex( 2, 1 );
+	chainA:addVertex( 0, 1 );
+	
+	local chainB = MapCollisionChainData:new( false );
+	chainB:addVertex( 0, 1 );
+	chainB:addVertex( 1, 1 );
+	chainB:addVertex( 1, 2 );
+	chainB:addVertex( 0, 2 );
+	assert( chainA:merge( chainB ) );
+	
+	assert( 6 == chainA:getNumVertices() );
+	assert( 0, 0 == chainA:getVertex( 1 ) );
+	assert( 2, 0 == chainA:getVertex( 2 ) );
+	assert( 2, 1 == chainA:getVertex( 3 ) );
+	assert( 1, 1 == chainA:getVertex( 4 ) );
+	assert( 1, 2 == chainA:getVertex( 5 ) );
+	assert( 0, 2 == chainA:getVertex( 6 ) );
+end
+
+tests[#tests + 1] = { name = "Merge chains, partial segment match slanted" };
+tests[#tests].body = function()
+	local chainA = MapCollisionChainData:new( false );
+	chainA:addVertex( 0, 16 );
+	chainA:addVertex( 16, 0 );
+	chainA:addVertex( 32, 0 );
+	chainA:addVertex( 48, 16 );
+	
+	local chainB = MapCollisionChainData:new( false );
+	chainB:addVertex( 0, 16 );
+	chainB:addVertex( 16, 16 );
+	chainB:addVertex( 16, 32 );
+	chainB:addVertex( 0, 32 );
+	assert( chainA:merge( chainB ) );
+	
+	assert( 7 == chainA:getNumVertices() );
+	assert( 0, 16 == chainA:getVertex( 1 ) );
+	assert( 16, 0 == chainA:getVertex( 2 ) );
+	assert( 32, 0 == chainA:getVertex( 3 ) );
+	assert( 48, 16 == chainA:getVertex( 4 ) );
+	assert( 16, 16 == chainA:getVertex( 5 ) );
+	assert( 16, 32 == chainA:getVertex( 6 ) );
+	assert( 0, 32 == chainA:getVertex( 7 ) );
+end
+
+tests[#tests + 1] = { name = "Merge chains, square shape (many partial segment matches)" };
+tests[#tests].body = function()
+	-- TL
+	local chainA = MapCollisionChainData:new( false );
+	chainA:addVertex( 0, 0 );
+	chainA:addVertex( 1, 0 );
+	chainA:addVertex( 1, 1 );
+	chainA:addVertex( 0, 1 );
+	
+	-- T
+	local chainB = MapCollisionChainData:new( false );
+	chainB:addVertex( 1, 0 );
+	chainB:addVertex( 2, 0 );
+	chainB:addVertex( 2, 1 );
+	chainB:addVertex( 1, 1 );
+	assert( chainA:merge( chainB ) );
+	assert( 4 == chainA:getNumVertices() );
+	
+	-- TR
+	local chainB = MapCollisionChainData:new( false );
+	chainB:addVertex( 2, 0 );
+	chainB:addVertex( 3, 0 );
+	chainB:addVertex( 3, 1 );
+	chainB:addVertex( 2, 1 );
+	assert( chainA:merge( chainB ) );
+	assert( 4 == chainA:getNumVertices() );
+	
+	-- L
+	local chainB = MapCollisionChainData:new( false );
+	chainB:addVertex( 0, 1 );
+	chainB:addVertex( 1, 1 );
+	chainB:addVertex( 1, 2 );
+	chainB:addVertex( 0, 2 );
+	assert( chainA:merge( chainB ) );
+	assert( 6 == chainA:getNumVertices() );
+	
+	-- R
+	local chainB = MapCollisionChainData:new( false );
+	chainB:addVertex( 2, 1 );
+	chainB:addVertex( 3, 1 );
+	chainB:addVertex( 3, 2 );
+	chainB:addVertex( 2, 2 );
+	assert( chainA:merge( chainB ) );
+	assert( 8 == chainA:getNumVertices() );
+	
+	-- BL
+	local chainB = MapCollisionChainData:new( false );
+	chainB:addVertex( 0, 2 );
+	chainB:addVertex( 1, 2 );
+	chainB:addVertex( 1, 3 );
+	chainB:addVertex( 0, 3 );
+	assert( chainA:merge( chainB ) );
+	assert( 8 == chainA:getNumVertices() );
+	
+	-- B
+	local chainB = MapCollisionChainData:new( false );
+	chainB:addVertex( 1, 2 );
+	chainB:addVertex( 2, 2 );
+	chainB:addVertex( 2, 3 );
+	chainB:addVertex( 1, 3 );
+	assert( chainA:merge( chainB ) );
+	assert( 10 == chainA:getNumVertices() );
+	
+	-- BR
+	local chainB = MapCollisionChainData:new( false );
+	chainB:addVertex( 2, 2 );
+	chainB:addVertex( 3, 2 );
+	chainB:addVertex( 3, 3 );
+	chainB:addVertex( 2, 3 );
+	assert( chainA:merge( chainB ) );
+	assert( 10 == chainA:getNumVertices() );
+	
+	assert( 10 == chainA:getNumVertices() );
+	assert( 0, 0 == chainA:getVertex( 1 ) );
+	assert( 3, 0 == chainA:getVertex( 2 ) );
+	assert( 3, 3 == chainA:getVertex( 3 ) );
+	assert( 2, 3 == chainA:getVertex( 4 ) );
+	assert( 2, 1 == chainA:getVertex( 5 ) );
+	assert( 1, 1 == chainA:getVertex( 6 ) );
+	assert( 1, 2 == chainA:getVertex( 7 ) );
+	assert( 2, 2 == chainA:getVertex( 8 ) );
+	assert( 2, 3 == chainA:getVertex( 9 ) );
+	assert( 0, 3 == chainA:getVertex( 10 ) );
 end
 
 
