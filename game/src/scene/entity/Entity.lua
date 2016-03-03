@@ -258,30 +258,34 @@ Entity.draw = function( self )
 		self._sprite:draw( self._body:getX(), self._body:getY() );
 	end
 	if gConf.drawPhysics then
-		local alpha = 255 * 0.6;
 		if self._collisionFixture then
-			love.graphics.setColor( Colors.cyan:alpha( alpha ) );
-			self:drawShape( self._collisionFixture:getShape() );
+			self:drawShape( self._collisionFixture:getShape(), Colors.cyan );
 		end
 		if self._hitboxFixture then
-			love.graphics.setColor( Colors.strawberry:alpha( alpha ) );
-			self:drawShape( self._hitboxFixture:getShape() );
+			self:drawShape( self._hitboxFixture:getShape(), Colors.strawberry );
 		end
 		if self._weakboxFixture then
-			love.graphics.setColor( Colors.ecoGreen:alpha( alpha ) );
-			self:drawShape( self._weakboxFixture:getShape() );
+			self:drawShape( self._weakboxFixture:getShape(), Colors.ecoGreen );
 		end
 	end
 end
 
-Entity.drawShape = function( self, shape )
+Entity.drawShape = function( self, shape, color )
 	love.graphics.push();
 	love.graphics.translate( self._body:getX(), self._body:getY() );
+	love.graphics.setColor( color:alpha( 255 * .6 ) );
 	if shape:getType() == "polygon" then
 		love.graphics.polygon( "fill", shape:getPoints() );
 	elseif shape:getType() == "circle" then
 		local x, y = shape:getPoint();
 		love.graphics.circle( "fill", x, y, shape:getRadius(), 16 );
+	end
+	love.graphics.setColor( color );
+	if shape:getType() == "polygon" then
+		love.graphics.polygon( "line", shape:getPoints() );
+	elseif shape:getType() == "circle" then
+		local x, y = shape:getPoint();
+		love.graphics.circle( "line", x, y, shape:getRadius(), 16 );
 	end
 	love.graphics.pop();
 end
