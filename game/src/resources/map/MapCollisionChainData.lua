@@ -191,12 +191,9 @@ MapCollisionChainData.merge = function( self, otherChain )
 end
 
 MapCollisionChainData.draw = function( self )
-	love.graphics.setColor( Colors.cyan );
 	love.graphics.setLineWidth( 2 );
 	love.graphics.polygon( "line", self._verts );
-	
-	love.graphics.setColor( Colors.darkViridian );
-	love.graphics.setPointSize( 4 );
+	love.graphics.setPointSize( 6 );
 	love.graphics.points( self._verts );
 end
 
