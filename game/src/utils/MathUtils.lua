@@ -2,6 +2,8 @@ local MathUtils = {};
 
 
 
+local epsilon = 0.000001;
+
 MathUtils.indexToXY = function( index, width )
 	return index % width, math.floor( index / width );
 end
@@ -17,6 +19,10 @@ end
 
 MathUtils.dotProduct = function( x1, y1, x2, y2 )
 	return x1 * x2 + y1 * y2;
+end
+
+MathUtils.crossProduct = function( x1, y1, x2, y2 )
+	return x1 * y2 - y1 * x2;
 end
 
 MathUtils.vectorLength2 = function( x, y )
@@ -65,6 +71,12 @@ MathUtils.angleToDir8 = function( angle )
 	error( "Unexpected angle: " .. tostring( snappedAngle ) );
 end
 
+MathUtils.almostEqual = function( a, b )
+	return math.abs( a - b ) <= epsilon;
+end
 
+MathUtils.almostZero = function( a )
+	return math.abs( a ) <= epsilon;
+end
 
 return MathUtils;
