@@ -7,6 +7,7 @@ Colors.cyan = { 0, 234, 255 };
 Colors.rainCloudGrey = { 93, 101, 115 };
 Colors.ecoGreen = { 133, 217, 43 };
 Colors.strawberry = { 231, 38, 38 };
+Colors.coquelicot = { 255, 56, 0 };
 
 Colors.white = { 255, 255, 255 };
 

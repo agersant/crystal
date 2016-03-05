@@ -20,16 +20,18 @@ Map.init = function( self, mapData, tileset )
 	self._numTiles = self._width * self._height;
 	self._collisionMesh = MapCollisionMesh:new( self );
 	
-	for i, layerData in ipairs( mapData.content.layers ) do
+	local layers = mapData.content.layers;
+	for i = #layers, 1, -1 do
+		local layerData = layers[i];
 		if layerData.type == "tilelayer" then
 			local sort = layerData.properties.sort;
 			self._collisionMesh:processLayer( layerData );
 			if sort == "below" or sort == "above" then
 				local layer = StaticLayer:new( self, layerData, sort );
-				table.insert( self._staticLayers, layer );
+				table.insert( self._staticLayers, 1, layer );
 			elseif sort == "dynamic" then
 				local layer = DynamicLayer:new( self, layerData );
-				table.insert( self._dynamicLayers, layer );
+				table.insert( self._dynamicLayers, 1, layer );
 			else
 				Log:warning( "Unexpected map layer sorting: " .. tostring( sort ) );
 			end
@@ -102,5 +104,7 @@ end
 Map.getAreaInTiles = function( self )
 	return self._width * self._height;
 end
+
+
 
 return Map;
