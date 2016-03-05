@@ -9,11 +9,11 @@ local LayerCollisionMesh = Class( "LayerCollisionMesh" );
 
 local mergeChains;
 mergeChains = function( self )
-	for chainA, _ in pairs( self._chains ) do
-		for chainB, _ in pairs( self._chains ) do
-			if chainA ~= chainB then
+	for a, chainA in ipairs( self._chains ) do
+		for b, chainB in ipairs( self._chains ) do
+			if a < b then
 				if chainA:merge( chainB ) then
-					self._chains[chainB] = nil;
+					table.remove( self._chains, b );
 					return mergeChains( self );
 				end
 			end
@@ -54,23 +54,23 @@ LayerCollisionMesh.init = function( self, map, layerData )
 end
 
 LayerCollisionMesh.addChain = function( self, newChain )
-	for oldChain, _ in pairs( self._chains ) do
+	for _, oldChain in ipairs( self._chains ) do
 		if oldChain:merge( newChain ) then
 			return;
 		end
 	end
-	self._chains[newChain] = true;
+	table.insert( self._chains, newChain );
 end
 
 LayerCollisionMesh.spawnFixturesOnBody = function( self, body )
-	for chain, _ in pairs( self._chains ) do
+	for _, chain in ipairs( self._chains ) do
 		local fixture = love.physics.newFixture( body, chain:getShape() );
 		fixture:setFilterData( CollisionFilters.GEO, CollisionFilters.SOLID, 0 );
 	end
 end
 
 LayerCollisionMesh.draw = function( self )
-	for chain, _ in pairs( self._chains ) do
+	for _, chain in ipairs( self._chains ) do
 		chain:draw();
 	end
 end
