@@ -455,6 +455,23 @@ tests[#tests].body = function()
 	assert( 0, 3 == chainA:getVertex( 10 ) );
 end
 
+tests[#tests + 1] = { name = "Merge chains, shared point" };
+tests[#tests].body = function()
+	local chainA = MapCollisionChainData:new( false );
+	chainA:addVertex( 0, 0 );
+	chainA:addVertex( 1, 0 );
+	chainA:addVertex( 1, 1 );
+	chainA:addVertex( 0, 1 );
+	
+	local chainB = MapCollisionChainData:new( false );
+	chainB:addVertex( 1, 1 );
+	chainB:addVertex( 2, 1 );
+	chainB:addVertex( 2, 2 );
+	chainB:addVertex( 1, 2 );
+	
+	assert( not chainA:merge( chainB ) );
+end
+
 
 
 return tests;
