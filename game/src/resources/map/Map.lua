@@ -3,8 +3,8 @@ local Log = require( "src/dev/Log" );
 local Colors = require( "src/resources/Colors" );
 local DynamicLayer = require( "src/resources/map/DynamicLayer" );
 local MapCollisionMesh = require( "src/resources/map/MapCollisionMesh" );
+local Navmesh = require( "src/resources/map/Navmesh" );
 local StaticLayer = require( "src/resources/map/StaticLayer" );
-
 
 local Map = Class( "Map" );
 
@@ -37,6 +37,8 @@ Map.init = function( self, mapData, tileset )
 			end
 		end
 	end
+	
+	self._navmesh = Navmesh:new( self._collisionMesh );
 end
 
 Map.spawnCollisionMeshBody = function( self, scene )
@@ -70,6 +72,9 @@ end
 Map.drawDebug = function( self )
 	if gConf.drawPhysics then
 		self._collisionMesh:draw();
+	end
+	if gConf.drawNavmesh then
+		self._navmesh:draw();
 	end
 end
 

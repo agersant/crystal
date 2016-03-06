@@ -29,17 +29,20 @@ end
 
 CLI:addCommand( "testMap", testMap );
 
-local showPhysicsOverlay = function()
-	gConf.drawPhysics = true;
+local setDrawPhysicsOverlay = function( draw )
+	gConf.drawPhysics = draw;
 end
 
-CLI:addCommand( "showPhysicsOverlay", showPhysicsOverlay );
+CLI:addCommand( "showPhysicsOverlay", function() setDrawPhysicsOverlay( true ); end );
+CLI:addCommand( "hidePhysicsOverlay", function() setDrawPhysicsOverlay( false ); end );
 
-local hidePhysicsOverlay = function()
-	gConf.drawPhysics = false;
+local setDrawNavmeshOverlay = function( draw )
+	gConf.drawNavmesh = draw;
 end
 
-CLI:addCommand( "hidePhysicsOverlay", hidePhysicsOverlay );
+CLI:addCommand( "showNavmeshOverlay", function() setDrawNavmeshOverlay( true ); end );
+CLI:addCommand( "hideNavmeshOverlay", function() setDrawNavmeshOverlay( false ); end );
+
 
 
 
