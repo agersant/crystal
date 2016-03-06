@@ -103,6 +103,10 @@ MapCollisionMesh.draw = function( self )
 	end
 end
 
+MapCollisionMesh.chains = function( self )
+	return ipairs( self._chains );
+end
+
 
 
 return MapCollisionMesh;
