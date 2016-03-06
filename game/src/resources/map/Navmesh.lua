@@ -131,10 +131,12 @@ Navmesh.init = function( self, collisionMesh )
 end
 
 Navmesh.draw = function( self )
-	love.graphics.setColor( Colors.cyan );
 	love.graphics.setLineWidth( 1 );
 	love.graphics.setPointSize( 3 );
 	for _, triangle in ipairs( self._triangles ) do
+		love.graphics.setColor( Colors.cyan:alpha( 255 * .25 ) );
+		love.graphics.polygon( "fill", triangle.drawVerts );
+		love.graphics.setColor( Colors.cyan );
 		love.graphics.polygon( "line", triangle.drawVerts );
 		love.graphics.points( triangle.drawVerts );
 	end
