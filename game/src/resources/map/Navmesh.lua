@@ -51,35 +51,85 @@ local addInputVertex = function( self, vertices, x, y )
 	return #vertices / 2;
 end
 
-local generateCMesh = function( self, collisionMesh )
+local addInputSegment = function( self, vertices, segments, x1, y1, x2, y2 )
+	local startVertIndex = addInputVertex( self, vertices, x1, y1 );
+	local endVertIndex = addInputVertex( self, vertices, x2, y2 );
+	table.insert( segments, startVertIndex - 1 );
+	table.insert( segments, endVertIndex - 1 );
+end
+
+local addInputSegmentsForMapEdge = function( self, edgeSegments, edgeSize, vertices, segments, addSegmentFunction )
+	local current = 0;
+	for i = 1, #edgeSegments/2 do
+		local p1 = edgeSegments[2 * i - 1];
+		local p2 = edgeSegments[2 * i];
+		if p1 > current then
+			addSegmentFunction( self, vertices, segments, current, p1 );
+		end
+		current = p2;
+	end
+	if current < edgeSize then
+		addSegmentFunction( self, vertices, segments, current, edgeSize );
+	end
+end
+
+local addHorizontalSegment = function( y )
+	return function( self, vertices, segments, x1, x2 )
+		addInputSegment( self, vertices, segments, x1, y, x2, y );
+	end
+end
+
+local addVerticalSegment = function( x )
+	return function( self, vertices, segments, y1, y2 )
+		addInputSegment( self, vertices, segments, x, y1, x, y2 );
+	end
+end
+
+local generateCMesh = function( self, width, height, collisionMesh )
+	
+	assert( width > 0 );
+	assert( height > 0 );
+	
 	local vertices = {};
 	local segments = {};
 	local holes = {};
 	
+	local left = {};
+	local right = {};
+	local top = {};
+	local bottom = {};
+	
 	for _, chain in collisionMesh:chains() do
 		if not chain._outer then -- meh
-			-- TODO deal with map edges!
-		
-			local startVertIndex, endVertIndex;
-			for i, x1, y1, x2, y2 in chain:segments() do
-				if not startVertIndex then
-					startVertIndex = addInputVertex( self, vertices, x1, y1 );
-				end
-				endVertIndex = addInputVertex( self, vertices, x2, y2 );
-				table.insert( segments, startVertIndex - 1 );
-				table.insert( segments, endVertIndex - 1 );
-				startVertIndex = endVertIndex;
-			end
-			
 			local rx, ry = chain:getRepresentative();
 			if rx and ry then
 				table.insert( holes, rx );
 				table.insert( holes, ry );
+				for i, x1, y1, x2, y2 in chain:segments() do
+					if x1 == 0 and x2 == 0 then
+						table.insert( left, math.min( y1, y2 ) );
+						table.insert( left, math.max( y1, y2 ) );
+					elseif y1 == 0 and y2 == 0 then
+						table.insert( top, math.min( x1, x2 ) );
+						table.insert( top, math.max( x1, x2 ) );
+					elseif x1 == width and x2 == width then
+						table.insert( right, math.min( y1, y2 ) );
+						table.insert( right, math.max( y1, y2 ) );
+					elseif y1 == height and y2 == height then
+						table.insert( bottom, math.min( x1, x2 ) );
+						table.insert( bottom, math.max( x1, x2 ) );
+					end
+					addInputSegment( self, vertices, segments, x1, y1, x2, y2 );
+				end
 			end
-			
 		end
 	end
 
+	addInputSegmentsForMapEdge( self, left, height, vertices, segments, addVerticalSegment( 0 ) );
+	addInputSegmentsForMapEdge( self, right, height, vertices, segments, addVerticalSegment( width ) );
+	addInputSegmentsForMapEdge( self, top, width, vertices, segments, addHorizontalSegment( 0 ) );
+	addInputSegmentsForMapEdge( self, bottom, width, vertices, segments, addHorizontalSegment( height ) );
+	
 	local cVertices = FFI.new( "double[?]", #vertices, vertices );
 	local cSegments = FFI.new( "int[?]", #segments, segments );
 	local cHoles = FFI.new( "double[?]", #holes, holes );
@@ -125,8 +175,8 @@ end
 
 -- PUBLIC API
 
-Navmesh.init = function( self, collisionMesh )
-	local cMesh = generateCMesh( self, collisionMesh );
+Navmesh.init = function( self, width, height, collisionMesh )
+	local cMesh = generateCMesh( self, width, height, collisionMesh );
 	parseCMesh( self, cMesh );
 end
 

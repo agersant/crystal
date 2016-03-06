@@ -38,7 +38,7 @@ Map.init = function( self, mapData, tileset )
 		end
 	end
 	
-	self._navmesh = Navmesh:new( self._collisionMesh );
+	self._navmesh = Navmesh:new( self:getWidthInPixels(), self:getHeightInPixels(), self._collisionMesh );
 end
 
 Map.spawnCollisionMeshBody = function( self, scene )
