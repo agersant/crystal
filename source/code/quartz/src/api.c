@@ -49,65 +49,27 @@ void populateNavmesh( struct Navmesh *navmesh, struct triangulateio *triangleOut
 	return;
 }
 
-struct Navmesh generateNavmesh( double mapWidth, double mapHeight )
+struct Navmesh generateNavmesh( int numVertices, REAL vertices[], int numSegments, int segments[], int numHoles, REAL holes[] )
 {
-	printf( "Triangulating map of size: %f, %f\n", mapWidth, mapHeight );
-
 	struct triangulateio triangleInput;
 	struct triangulateio triangleOutput;
 	memset( &triangleInput, 0, sizeof( triangleInput ) );
 	memset( &triangleOutput, 0, sizeof( triangleOutput ) );
 	
-	const int numPoints = 4; // TODO
-	const int numSegments = 4; // TODO
-	const int numHoles = 0; // TODO
-
-	REAL *pointList = malloc( sizeof( REAL ) * 2 * numPoints ); // TODO populate
-	int *segmentList = malloc( sizeof( int ) * 2 * numSegments ); // TODO populate
-	REAL *holeList = malloc( sizeof( REAL ) * 2 * numHoles ); // TODO populate
-
-	pointList[0] = 0;
-	pointList[1] = 0;
-
-	pointList[2] = 1;
-	pointList[3] = 0;
-
-	pointList[4] = 1;
-	pointList[5] = 1;
-
-	pointList[6] = 0;
-	pointList[7] = 1;
-
-	segmentList[0] = 0;
-	segmentList[1] = 1;
-
-	segmentList[2] = 1;
-	segmentList[3] = 2;
-
-	segmentList[4] = 2;
-	segmentList[5] = 3;
-
-	segmentList[6] = 3;
-	segmentList[7] = 0;
-
-	triangleInput.numberofpoints = numPoints;
-	triangleInput.pointlist = pointList;
+	triangleInput.numberofpoints = numVertices;
+	triangleInput.pointlist = vertices;
 	triangleInput.numberofsegments = numSegments;
-	triangleInput.segmentlist = segmentList;
-	triangleInput.holelist = holeList;
+	triangleInput.segmentlist = segments;
+	triangleInput.holelist = holes;
 	triangleInput.numberofholes = numHoles;
 	
-	triangulate( "pjenzYYV", &triangleInput, &triangleOutput, NULL );
+	triangulate( "pjenzq5V", &triangleInput, &triangleOutput, NULL );
 
-	assert( holeList == triangleOutput.holelist );
+	assert( holes == triangleOutput.holelist );
 	assert( triangleOutput.numberofcorners == 3 );
 
 	struct Navmesh navmesh;
 	populateNavmesh( &navmesh, &triangleOutput );
-
-	free( pointList );
-	free( segmentList );
-	free( holeList );
 
 	trifree( triangleOutput.pointlist );
 	trifree( triangleOutput.pointmarkerlist );

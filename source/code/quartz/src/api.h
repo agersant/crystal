@@ -34,4 +34,4 @@ struct Navmesh
 
 __declspec (dllexport) void ping();
 
-__declspec ( dllexport ) struct Navmesh generateNavmesh( double mapWidth, double mapHeight );
+__declspec ( dllexport ) struct Navmesh generateNavmesh( int numVertices, REAL vertices[], int numSegments, int segments[], int numHoles, REAL holes[] );
