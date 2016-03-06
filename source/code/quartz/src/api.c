@@ -63,7 +63,7 @@ struct Navmesh generateNavmesh( int numVertices, REAL vertices[], int numSegment
 	triangleInput.holelist = holes;
 	triangleInput.numberofholes = numHoles;
 	
-	triangulate( "pjenzq5V", &triangleInput, &triangleOutput, NULL );
+	triangulate( "pjenzq10V", &triangleInput, &triangleOutput, NULL );
 
 	assert( holes == triangleOutput.holelist );
 	assert( triangleOutput.numberofcorners == 3 );
