@@ -32,6 +32,9 @@ end
 
 love.filesystem = {};
 
+love.filesystem.setIdentity = function()
+end
+
 love.filesystem.isFused = function()
 	return false;
 end
