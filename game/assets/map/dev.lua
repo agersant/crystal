@@ -297,7 +297,7 @@ return {
                 name = "",
                 type = "",
                 shape = "polygon",
-                x = 0.125,
+                x = 0,
                 y = 0,
                 width = 0,
                 height = 0,
@@ -305,8 +305,8 @@ return {
                 visible = true,
                 polygon = {
                   { x = 0, y = 0 },
-                  { x = 7.875, y = 0.125 },
-                  { x = -0.125, y = 8.5 }
+                  { x = 8, y = 0 },
+                  { x = 0, y = 8 }
                 },
                 properties = {}
               }
@@ -571,13 +571,19 @@ return {
                 id = 0,
                 name = "",
                 type = "",
-                shape = "rectangle",
+                shape = "polygon",
                 x = 0,
-                y = 0.125,
-                width = 16.125,
-                height = 8.125,
+                y = 0,
+                width = 0,
+                height = 0,
                 rotation = 0,
                 visible = true,
+                polygon = {
+                  { x = 0, y = 0 },
+                  { x = 16, y = 0 },
+                  { x = 16, y = 8 },
+                  { x = 0, y = 8 }
+                },
                 properties = {}
               }
             }
