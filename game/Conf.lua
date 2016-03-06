@@ -1,3 +1,4 @@
+love.filesystem.setIdentity( "crystal" );
 local release = love.filesystem.isFused();
 
 gConf = {};
