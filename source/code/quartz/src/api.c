@@ -127,11 +127,11 @@ void pushVertex( const struct triangulateio *triangleOutput, VertexLinks *vertic
 	// Ignore non boundary vertices
 	if ( vertexLinks->numBoundaryEdges == 0 )
 	{
-		assert( !triangleOutput->pointmarkerlist[vertexIndex] ); // TODO figure out why this hits
+		assert( !triangleOutput->pointmarkerlist[vertexIndex] );
 		return;
 	}
 
-	assert( vertexLinks->numBoundaryEdges % 2 == 0 ); // TODO figure out why this hits
+	assert( vertexLinks->numBoundaryEdges % 2 == 0 );
 
 	if ( vertexLinks->numBoundaryEdges == 2 )
 	{
