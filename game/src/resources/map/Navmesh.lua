@@ -135,7 +135,7 @@ local generateCMesh = function( self, width, height, collisionMesh, padding )
 	local cVertices = FFI.new( "double[?]", #vertices, vertices );
 	local cSegments = FFI.new( "int[?]", #segments, segments );
 	local cHoles = FFI.new( "double[?]", #holes, holes );
-	Quartz.generateNavmesh( #vertices/2, cVertices, #segments/2, cSegments, #holes/2, cHoles, 6, cMesh );
+	Quartz.generateNavmesh( #vertices/2, cVertices, #segments/2, cSegments, #holes/2, cHoles, padding, cMesh );
 	return cMesh;
 end
 
