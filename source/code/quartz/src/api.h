@@ -1,37 +1,26 @@
 #pragma once
+#include "vector_math.h"
 
 #define MAX_TRIANGLES 1000 // Update Lua FFI if changing this
 #define MAX_EDGES ( 3 * MAX_TRIANGLES )
 #define MAX_VERTICES ( 3 * MAX_TRIANGLES )
 
-#ifdef SINGLE // Update Lua FFI if changing this
-#define REAL float
-#else /* not SINGLE */
-#define REAL double
-#endif /* not SINGLE */
-
-struct Vertex
-{
-	REAL x;
-	REAL y;
-};
-
-struct Triangle
+typedef struct Triangle
 {
 	int vertices[3];
 	int neighbours[3];
-};
+} Triangle;
 
-struct Navmesh
+typedef struct Navmesh
 {
 	int valid;
 	int numTriangles;
 	int numEdges;
 	int numVertices;
-	struct Vertex vertices[MAX_VERTICES];
-	struct Triangle triangles[MAX_TRIANGLES];
-};
+	Vector vertices[MAX_VERTICES];
+	Triangle triangles[MAX_TRIANGLES];
+} Navmesh;
 
 __declspec (dllexport) void ping();
 
-__declspec ( dllexport ) struct Navmesh generateNavmesh( int numVertices, REAL vertices[], int numSegments, int segments[], int numHoles, REAL holes[] );
+__declspec ( dllexport ) void generateNavmesh( int numVertices, REAL vertices[], int numSegments, int segments[], int numHoles, REAL holes[], REAL padding, Navmesh *outNavmesh );

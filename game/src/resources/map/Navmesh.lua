@@ -10,30 +10,31 @@ local Navmesh = Class( "Navmesh" );
 -- FFI
 
 FFI.cdef[[
-	struct Vertex
+	typedef struct Vector
 	{
 		double x;
 		double y;
-	};
+	} Vector;
 
-	struct Triangle
+	typedef struct Triangle
 	{
 		int vertices[3];
 		int neighbours[3];
-	};
+	} Triangle;
 
-	struct Navmesh
+	typedef struct Navmesh
 	{
 		int valid;
 		int numTriangles;
 		int numEdges;
 		int numVertices;
-		struct Vertex vertices[3*1000];
+		struct Vector vertices[3*1000];
 		struct Triangle triangles[1000];
-	};
+	} Navmesh;
 
 	void ping();
-	struct Navmesh generateNavmesh( int numVertices, double vertices[], int numSegments, int segments[], int numHoles, double holes[] );
+	void free( void *ptr );
+	void generateNavmesh( int numVertices, double vertices[], int numSegments, int segments[], int numHoles, double holes[], double padding, Navmesh *outNavmesh );
 ]]
 
 
@@ -85,7 +86,7 @@ local addVerticalSegment = function( x )
 	end
 end
 
-local generateCMesh = function( self, width, height, collisionMesh )
+local generateCMesh = function( self, width, height, collisionMesh, padding )
 	
 	assert( width > 0 );
 	assert( height > 0 );
@@ -130,10 +131,12 @@ local generateCMesh = function( self, width, height, collisionMesh )
 	addInputSegmentsForMapEdge( self, top, width, vertices, segments, addHorizontalSegment( 0 ) );
 	addInputSegmentsForMapEdge( self, bottom, width, vertices, segments, addHorizontalSegment( height ) );
 	
+	local cMesh = FFI.gc( FFI.new( FFI.typeof( "Navmesh" ) ), FFI.C.free );
 	local cVertices = FFI.new( "double[?]", #vertices, vertices );
 	local cSegments = FFI.new( "int[?]", #segments, segments );
 	local cHoles = FFI.new( "double[?]", #holes, holes );
-	return Quartz.generateNavmesh( #vertices/2, cVertices, #segments/2, cSegments, #holes/2, cHoles );
+	Quartz.generateNavmesh( #vertices/2, cVertices, #segments/2, cSegments, #holes/2, cHoles, 6, cMesh );
+	return cMesh;
 end
 
 local parseCMesh = function( self, cMesh )
@@ -175,8 +178,8 @@ end
 
 -- PUBLIC API
 
-Navmesh.init = function( self, width, height, collisionMesh )
-	local cMesh = generateCMesh( self, width, height, collisionMesh );
+Navmesh.init = function( self, width, height, collisionMesh, padding )
+	local cMesh = generateCMesh( self, width, height, collisionMesh, padding );
 	parseCMesh( self, cMesh );
 end
 
