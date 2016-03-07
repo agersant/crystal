@@ -114,15 +114,60 @@ void populateVerticesLinks( const struct triangulateio *triangleOutput, VertexLi
 	}
 }
 
-void padNavmesh( const Navmesh *in, const struct triangulateio *triangleOutput, Navmesh *out, REAL padding )
+void pushVertex( const struct triangulateio *triangleOutput, VertexLinks *verticesLinks, int vertexIndex, REAL padding, Navmesh *outNavmesh )
 {
-	assert( in );
-	assert( out );
-	assert( in != out );
-	assert( padding >= 0 );
-	assert( in->valid );
+	Vector vertex;
+	VertexLinks *vertexLinks = &verticesLinks[vertexIndex];
+	getVertex( triangleOutput, vertexIndex, &vertex );
 
-	*out = *in;
+	assert( vertexLinks->curNumEdges == vertexLinks->numEdges );
+	assert( vertexLinks->curNumBoundaryEdges == vertexLinks->numBoundaryEdges );
+	assert( vertexLinks->curNumTriangles == vertexLinks->numTriangles );
+
+	// Ignore non boundary vertices
+	if ( vertexLinks->numBoundaryEdges == 0 )
+	{
+		assert( !triangleOutput->pointmarkerlist[vertexIndex] ); // TODO figure out why this hits
+		return;
+	}
+
+	assert( vertexLinks->numBoundaryEdges % 2 == 0 ); // TODO figure out why this hits
+
+	if ( vertexLinks->numBoundaryEdges == 2 )
+	{
+		Edge edgeA;
+		Edge edgeB;
+		getEdge( triangleOutput, vertexLinks->edges[vertexLinks->boundaryEdges[0]], &edgeA );
+		getEdge( triangleOutput, vertexLinks->edges[vertexLinks->boundaryEdges[1]], &edgeB );
+
+		if ( !vectorEquals( &edgeA.start, &vertex ) )
+		{
+			flipEdge( &edgeA );
+			assert( vectorEquals( &edgeA.start, &vertex ) );
+		}
+
+		if ( !vectorEquals( &edgeB.start, &vertex ) )
+		{
+			flipEdge( &edgeB );
+			assert( vectorEquals( &edgeB.start, &vertex ) );
+		}
+
+		Vector movedVertex;
+		getPushedVector( &edgeA, &edgeB, padding, &movedVertex );
+		outNavmesh->vertices[vertexIndex] = movedVertex;
+
+	} // else todo
+}
+
+void padNavmesh( const Navmesh *inNavmesh, const struct triangulateio *triangleOutput, Navmesh *outNavmesh, REAL padding )
+{
+	assert( inNavmesh );
+	assert( outNavmesh );
+	assert( inNavmesh != outNavmesh );
+	assert( padding >= 0 );
+	assert( inNavmesh->valid );
+
+	*outNavmesh = *inNavmesh;
 
 	if ( padding == 0 )
 	{
@@ -137,47 +182,7 @@ void padNavmesh( const Navmesh *in, const struct triangulateio *triangleOutput, 
 	// Move vertices!
 	for ( int i = 0; i < numVertices; i++ )
 	{
-		Vector vertex;
-		VertexLinks *vertexLinks = &verticesLinks[i];
-		getVertex( triangleOutput, i, &vertex );
-
-		assert( vertexLinks->curNumEdges == vertexLinks->numEdges );
-		assert( vertexLinks->curNumBoundaryEdges == vertexLinks->numBoundaryEdges );
-		assert( vertexLinks->curNumTriangles == vertexLinks->numTriangles );
-
-		// Ignore non boundary vertices
-		if ( vertexLinks->numBoundaryEdges == 0 )
-		{
-			assert( !triangleOutput->pointmarkerlist[i] ); // TODO figure out why this hits
-			continue;
-		}
-
-		assert( vertexLinks->numBoundaryEdges % 2 == 0 ); // TODO figure out why this hits
-
-		if ( vertexLinks->numBoundaryEdges == 2 )
-		{
-			Edge edgeA;
-			Edge edgeB;
-			getEdge( triangleOutput, vertexLinks->edges[vertexLinks->boundaryEdges[0]], &edgeA );
-			getEdge( triangleOutput, vertexLinks->edges[vertexLinks->boundaryEdges[1]], &edgeB );
-			
-			if ( !vectorEquals( &edgeA.start, &vertex ) )
-			{
-				flipEdge( &edgeA );
-				assert( vectorEquals( &edgeA.start, &vertex ) );
-			}
-
-			if ( !vectorEquals( &edgeB.start, &vertex ) )
-			{
-				flipEdge( &edgeB );
-				assert( vectorEquals( &edgeB.start, &vertex ) );
-			}
-
-			Vector movedVertex;
-			getPushedVector( &edgeA, &edgeB, padding, &movedVertex );
-			out->vertices[i] = movedVertex;
-
-		} // else todo
+		pushVertex( triangleOutput, verticesLinks, i, padding, outNavmesh );
 	}
 
 	// Cleanup
