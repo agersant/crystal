@@ -135,11 +135,13 @@ void pushVertex( const struct triangulateio *triangleOutput, VertexLinks *vertic
 
 	if ( vertexLinks->numBoundaryEdges == 2 )
 	{
+		// Get the two wall edges touch from this vertex
 		Edge edgeA;
 		Edge edgeB;
 		getEdge( triangleOutput, vertexLinks->edges[vertexLinks->boundaryEdges[0]], &edgeA );
 		getEdge( triangleOutput, vertexLinks->edges[vertexLinks->boundaryEdges[1]], &edgeB );
-
+		
+		// Flip them so they start on this vertex
 		if ( !vectorEquals( &edgeA.start, &vertex ) )
 		{
 			flipEdge( &edgeA );
@@ -152,8 +154,44 @@ void pushVertex( const struct triangulateio *triangleOutput, VertexLinks *vertic
 			assert( vectorEquals( &edgeB.start, &vertex ) );
 		}
 
+		// Get a point outside of this wall
+		assert( vertexLinks->numTriangles > 0 );
+		const int triangle = vertexLinks->triangles[0];
+		Vector triangleVertexA;
+		Vector triangleVertexB;
+		Vector triangleVertexC;
+		getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle], &triangleVertexA );
+		getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 1], &triangleVertexB );
+		getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 2], &triangleVertexC );
+		const int ignoreA = vectorEquals( &edgeA.start, &triangleVertexA );
+		const int ignoreB = vectorEquals( &edgeA.start, &triangleVertexB );
+		const int ignoreC = vectorEquals( &edgeA.start, &triangleVertexC );
+		assert( ( ignoreB ^ ignoreC ) || ignoreA );
+		assert( ( ignoreA ^ ignoreC ) || ignoreB );
+		assert( ( ignoreB ^ ignoreA ) || ignoreC );
+		
+		Edge outsideEdge;
+		if ( ignoreA )
+		{
+			outsideEdge.start = triangleVertexB;
+			outsideEdge.end = triangleVertexC;
+		}
+		else if( ignoreB )
+		{
+			outsideEdge.start = triangleVertexA;
+			outsideEdge.end = triangleVertexC;
+		}
+		else if ( ignoreC )
+		{
+			outsideEdge.start = triangleVertexA;
+			outsideEdge.end = triangleVertexB;
+		}
+
+		Vector outsidePoint;
+		edgeMiddle( &outsideEdge, &outsidePoint );
+
 		Vector movedVertex;
-		getPushedVector( &edgeA, &edgeB, padding, &movedVertex );
+		getPushedVector( &edgeA, &edgeB, &outsidePoint, padding, &movedVertex );
 		outNavmesh->vertices[vertexIndex] = movedVertex;
 
 	} // else todo

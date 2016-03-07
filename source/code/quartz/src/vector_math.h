@@ -16,6 +16,12 @@ typedef struct Edge
 int vectorEquals( const Vector *a, const Vector *b );
 REAL vectorLength( const Vector *vector );
 void vectorAdd( const Vector *a, const Vector *b, Vector *result );
+void vectorSubtract( const Vector *a, const Vector *b, Vector *result );
 void vectorNormalize( Vector *vector );
+void vectorScale( Vector *vector, REAL scale );
+REAL vectorCrossProduct( Vector *a, Vector *b );
+
 void flipEdge( Edge *edge );
-void getPushedVector( const Edge *edgeA, const Edge *edgeB, REAL padding, Vector *out );
+void edgeMiddle( const Edge *edge, Vector *result );
+
+void getPushedVector( const Edge *edgeA, const Edge *edgeB, const Vector *outsidePoint, REAL padding, Vector *out );

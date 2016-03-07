@@ -18,12 +18,29 @@ void vectorAdd( const Vector *a, const Vector *b, Vector *result )
 	result->y = a->y + b->y;
 }
 
+void vectorSubtract( const Vector *a, const Vector *b, Vector *result )
+{
+	result->x = a->x - b->x;
+	result->y = a->y - b->y;
+}
+
 void vectorNormalize( Vector *vector )
 {
 	REAL length = vectorLength( vector );
 	assert( length > 0 );
 	vector->x /= length;
 	vector->y /= length;
+}
+
+void vectorScale( Vector *vector, REAL scale )
+{
+	vector->x *= scale;
+	vector->y *= scale;
+}
+
+REAL vectorCrossProduct( Vector *a, Vector *b )
+{
+	return a->x * b->y - a->y * b->x;
 }
 
 void flipEdge( Edge *edge )
@@ -34,13 +51,19 @@ void flipEdge( Edge *edge )
 	edge->end = tmp;
 }
 
+void edgeMiddle( const Edge * edge, Vector * result )
+{
+	result->x = ( edge->start.x + edge->end.x ) / 2;
+	result->y = ( edge->start.y + edge->end.y ) / 2;
+}
+
 void edgeToVector( const Edge *edge, Vector *vector )
 {
 	vector->x = edge->end.x - edge->start.x;
 	vector->y = edge->end.y - edge->start.y;
 }
 
-void getPushedVector( const Edge *edgeA, const Edge *edgeB, REAL padding, Vector *out )
+void getPushedVector( const Edge *edgeA, const Edge *edgeB, const Vector *outsidePoint, REAL padding, Vector *out )
 {
 	assert( vectorEquals( &edgeA->start, &edgeB->start ) );
 	Vector vectorA;
@@ -49,14 +72,60 @@ void getPushedVector( const Edge *edgeA, const Edge *edgeB, REAL padding, Vector
 	edgeToVector( edgeB, &vectorB );
 	vectorNormalize( &vectorA );
 	vectorNormalize( &vectorB );
-	out->x = vectorA.x + vectorB.x;
-	out->y = vectorA.y + vectorB.y;
-	if ( vectorLength( out ) == 0 ) // TODO remove this and deal with colinear edges
+	vectorScale( &vectorA, padding );
+	vectorScale( &vectorB, padding );
+
+	Vector vectorOutside;
+	vectorSubtract( outsidePoint, &edgeA->start, &vectorOutside );
+
+	out->x = 0;
+	out->y = 0;
+
+	if ( vectorCrossProduct( &vectorA, &vectorB ) == 0 )
 	{
-		*out = edgeA->start;
+		const int isOutsidePointLeftOfA = vectorCrossProduct( &vectorA, &vectorOutside ) < 0;
+		if ( isOutsidePointLeftOfA )
+		{
+			out->x -= -vectorA.y;
+			out->y -= vectorA.x;
+		}
+		else
+		{
+			out->x += -vectorA.y;
+			out->y += vectorA.x;
+		}
 	}
-	vectorNormalize( out );
-	out->x *= padding;
-	out->y *= padding;
+	else
+	{
+		const int isOutsidePointWithinAB = ( vectorCrossProduct( &vectorA, &vectorOutside ) * vectorCrossProduct( &vectorB, &vectorOutside ) ) < 0;
+
+		const int isOutsidePointLeftOfA = vectorCrossProduct( &vectorA, &vectorOutside ) < 0;
+		if ( isOutsidePointLeftOfA && isOutsidePointWithinAB ) // TODO fix me
+		{
+			out->x -= -vectorA.y;
+			out->y -= vectorA.x;
+		}
+		else
+		{
+			out->x += -vectorA.y;
+			out->y += vectorA.x;
+		}
+
+		if ( vectorCrossProduct( &vectorA, &vectorB ) != 0 )
+		{
+			const int isOutsidePointLeftOfB = vectorCrossProduct( &vectorB, &vectorOutside ) < 0;
+			if ( isOutsidePointLeftOfB && isOutsidePointWithinAB ) // TODO fix me
+			{
+				out->x -= -vectorB.y;
+				out->y -= vectorB.x;
+			}
+			else
+			{
+				out->x += -vectorB.y;
+				out->y += vectorB.x;
+			}
+		}
+	}
+
 	vectorAdd( &edgeA->start, out, out );
 }
