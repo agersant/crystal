@@ -159,7 +159,48 @@ void populateVerticesLinks( const struct triangulateio *triangleOutput, VertexLi
 	}
 }
 
-void pushVertex( const struct triangulateio *triangleOutput, VertexLinks *verticesLinks, int vertexIndex, REAL padding, Navmesh *outNavmesh )
+void getPointsOutsideWall( const struct triangulateio *triangleOutput, const VertexLinks *vertexLinks, const Edge *edgeA, const Edge *edgeB, Vector *outPointA, Vector *outPointB )
+{
+	assert( vertexLinks->numTriangles > 0 );
+	if ( vertexLinks->numTriangles == 1 )
+	{
+		const int triangle = vertexLinks->triangles[0];
+		Edge outsideEdge;
+		getTriangleOppositeEdge( triangleOutput, triangle, &edgeA->start, &outsideEdge );
+		edgeMiddle( &outsideEdge, outPointA );
+		*outPointB = *outPointA;
+	}
+	else
+	{
+		int numOutsidePoints = 0;
+		for ( int t = 0; t < vertexLinks->numTriangles; t++ )
+		{
+			const int triangle = vertexLinks->triangles[t];
+			assert( isVertexFromTriangle( triangleOutput, triangle, &edgeA->start ) );
+			if ( isVertexFromTriangle( triangleOutput, triangle, &edgeA->end ) )
+			{
+				Edge outsideEdge;
+				getTriangleOppositeEdge( triangleOutput, triangle, &edgeA->start, &outsideEdge );
+				edgeMiddle( &outsideEdge, outPointA );
+				numOutsidePoints++;
+			}
+			if ( isVertexFromTriangle( triangleOutput, triangle, &edgeB->end ) )
+			{
+				Edge outsideEdge;
+				getTriangleOppositeEdge( triangleOutput, triangle, &edgeB->start, &outsideEdge );
+				edgeMiddle( &outsideEdge, outPointB );
+				numOutsidePoints++;
+			}
+			if ( numOutsidePoints == 2 )
+			{
+				break;
+			}
+		}
+		assert( numOutsidePoints == 2 );
+	}
+}
+
+void padVertex( const struct triangulateio *triangleOutput, VertexLinks *verticesLinks, int vertexIndex, REAL padding, Navmesh *outNavmesh )
 {
 	Vector vertex;
 	VertexLinks *vertexLinks = &verticesLinks[vertexIndex];
@@ -202,43 +243,7 @@ void pushVertex( const struct triangulateio *triangleOutput, VertexLinks *vertic
 		// Get points outside of this wall
 		Vector outsidePointA; // Guaranteed not to be aligned with edgeA
 		Vector outsidePointB; // Guaranteed not to be aligned with edgeB
-		assert( vertexLinks->numTriangles > 0 );
-		if ( vertexLinks->numTriangles == 1 )
-		{
-			const int triangle = vertexLinks->triangles[0];
-			Edge outsideEdge;
-			getTriangleOppositeEdge( triangleOutput, triangle, &edgeA.start, &outsideEdge );
-			edgeMiddle( &outsideEdge, &outsidePointA );
-			outsidePointB = outsidePointA;
-		}
-		else
-		{
-			int numOutsidePoints = 0;
-			for ( int t = 0; t < vertexLinks->numTriangles; t++ )
-			{
-				const int triangle = vertexLinks->triangles[t];
-				assert( isVertexFromTriangle( triangleOutput, triangle, &edgeA.start ) );
-				if ( isVertexFromTriangle( triangleOutput, triangle, &edgeA.end ) )
-				{
-					Edge outsideEdge;
-					getTriangleOppositeEdge( triangleOutput, triangle, &edgeA.start, &outsideEdge );
-					edgeMiddle( &outsideEdge, &outsidePointA );
-					numOutsidePoints++;
-				}
-				if ( isVertexFromTriangle( triangleOutput, triangle, &edgeB.end ) )
-				{
-					Edge outsideEdge;
-					getTriangleOppositeEdge( triangleOutput, triangle, &edgeB.start, &outsideEdge );
-					edgeMiddle( &outsideEdge, &outsidePointB );
-					numOutsidePoints++;
-				}
-				if ( numOutsidePoints == 2 )
-				{
-					break;
-				}
-			}
-			assert( numOutsidePoints == 2 );
-		}
+		getPointsOutsideWall( triangleOutput, vertexLinks, &edgeA, &edgeB, &outsidePointA, &outsidePointB );
 		
 		Vector movedVertex;
 		getPushedVector( &edgeA, &edgeB, &outsidePointA, &outsidePointB, padding, &movedVertex );
@@ -270,7 +275,7 @@ void padNavmesh( const Navmesh *inNavmesh, const struct triangulateio *triangleO
 	// Move vertices!
 	for ( int i = 0; i < numVertices; i++ )
 	{
-		pushVertex( triangleOutput, verticesLinks, i, padding, outNavmesh );
+		padVertex( triangleOutput, verticesLinks, i, padding, outNavmesh );
 	}
 
 	// Cleanup
