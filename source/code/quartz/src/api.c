@@ -27,14 +27,59 @@ typedef struct VertexLinks
 
 void getVertex( const struct triangulateio *triangleOutput, int vertex, Vector *out )
 {
-	out->x = triangleOutput->pointlist[2 * vertex];
+	out->x = triangleOutput->pointlist[2 * vertex + 0];
 	out->y = triangleOutput->pointlist[2 * vertex + 1];
 }
 
 void getEdge( const struct triangulateio *triangleOutput, int edge, Edge *out )
 {
-	getVertex( triangleOutput, triangleOutput->edgelist[2 * edge], &out->start );
+	getVertex( triangleOutput, triangleOutput->edgelist[2 * edge + 0], &out->start );
 	getVertex( triangleOutput, triangleOutput->edgelist[2 * edge + 1], &out->end );
+}
+
+int isVertexFromTriangle( const struct triangulateio *triangleOutput, int triangle, const Vector *vertex )
+{
+	Vector triangleVertexA;
+	Vector triangleVertexB;
+	Vector triangleVertexC;
+	getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 0], &triangleVertexA );
+	getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 1], &triangleVertexB );
+	getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 2], &triangleVertexC );
+	return		vectorEquals( &triangleVertexA, vertex )
+			||	vectorEquals( &triangleVertexB, vertex )
+			||	vectorEquals( &triangleVertexC, vertex );
+}
+
+void getTriangleOppositeEdge( const struct triangulateio *triangleOutput, int triangle, const Vector *vertex, Edge *outEdge )
+{
+	Vector triangleVertexA;
+	Vector triangleVertexB;
+	Vector triangleVertexC;
+	getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 0], &triangleVertexA );
+	getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 1], &triangleVertexB );
+	getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 2], &triangleVertexC );
+	const int ignoreA = vectorEquals( vertex, &triangleVertexA );
+	const int ignoreB = vectorEquals( vertex, &triangleVertexB );
+	const int ignoreC = vectorEquals( vertex, &triangleVertexC );
+	assert( ( ignoreB ^ ignoreC ) || ignoreA );
+	assert( ( ignoreA ^ ignoreC ) || ignoreB );
+	assert( ( ignoreB ^ ignoreA ) || ignoreC );
+
+	if ( ignoreA )
+	{
+		outEdge->start = triangleVertexB;
+		outEdge->end = triangleVertexC;
+	}
+	else if ( ignoreB )
+	{
+		outEdge->start = triangleVertexA;
+		outEdge->end = triangleVertexC;
+	}
+	else if ( ignoreC )
+	{
+		outEdge->start = triangleVertexA;
+		outEdge->end = triangleVertexB;
+	}
 }
 
 void populateVerticesLinks( const struct triangulateio *triangleOutput, VertexLinks verticesLinks[] )
@@ -44,7 +89,7 @@ void populateVerticesLinks( const struct triangulateio *triangleOutput, VertexLi
 	// Count edges touching each vertex
 	for ( int i = 0; i < triangleOutput->numberofedges; i++ )
 	{
-		const int startVertex = triangleOutput->edgelist[2 * i];
+		const int startVertex = triangleOutput->edgelist[2 * i + 0];
 		const int endVertex = triangleOutput->edgelist[2 * i + 1];
 		verticesLinks[startVertex].numEdges++;
 		verticesLinks[endVertex].numEdges++;
@@ -58,7 +103,7 @@ void populateVerticesLinks( const struct triangulateio *triangleOutput, VertexLi
 	// Count triangles touching each vertex
 	for ( int i = 0; i < triangleOutput->numberoftriangles; i++ )
 	{
-		const int vertexA = triangleOutput->trianglelist[3 * i];
+		const int vertexA = triangleOutput->trianglelist[3 * i + 0];
 		const int vertexB = triangleOutput->trianglelist[3 * i + 1];
 		const int vertexC = triangleOutput->trianglelist[3 * i + 2];
 		verticesLinks[vertexA].numTriangles++;
@@ -154,44 +199,49 @@ void pushVertex( const struct triangulateio *triangleOutput, VertexLinks *vertic
 			assert( vectorEquals( &edgeB.start, &vertex ) );
 		}
 
-		// Get a point outside of this wall
+		// Get points outside of this wall
+		Vector outsidePointA; // Guaranteed not to be aligned with edgeA
+		Vector outsidePointB; // Guaranteed not to be aligned with edgeB
 		assert( vertexLinks->numTriangles > 0 );
-		const int triangle = vertexLinks->triangles[0];
-		Vector triangleVertexA;
-		Vector triangleVertexB;
-		Vector triangleVertexC;
-		getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle], &triangleVertexA );
-		getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 1], &triangleVertexB );
-		getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 2], &triangleVertexC );
-		const int ignoreA = vectorEquals( &edgeA.start, &triangleVertexA );
-		const int ignoreB = vectorEquals( &edgeA.start, &triangleVertexB );
-		const int ignoreC = vectorEquals( &edgeA.start, &triangleVertexC );
-		assert( ( ignoreB ^ ignoreC ) || ignoreA );
-		assert( ( ignoreA ^ ignoreC ) || ignoreB );
-		assert( ( ignoreB ^ ignoreA ) || ignoreC );
+		if ( vertexLinks->numTriangles == 1 )
+		{
+			const int triangle = vertexLinks->triangles[0];
+			Edge outsideEdge;
+			getTriangleOppositeEdge( triangleOutput, triangle, &edgeA.start, &outsideEdge );
+			edgeMiddle( &outsideEdge, &outsidePointA );
+			outsidePointB = outsidePointA;
+		}
+		else
+		{
+			int numOutsidePoints = 0;
+			for ( int t = 0; t < vertexLinks->numTriangles; t++ )
+			{
+				const int triangle = vertexLinks->triangles[t];
+				assert( isVertexFromTriangle( triangleOutput, triangle, &edgeA.start ) );
+				if ( isVertexFromTriangle( triangleOutput, triangle, &edgeA.end ) )
+				{
+					Edge outsideEdge;
+					getTriangleOppositeEdge( triangleOutput, triangle, &edgeA.start, &outsideEdge );
+					edgeMiddle( &outsideEdge, &outsidePointA );
+					numOutsidePoints++;
+				}
+				if ( isVertexFromTriangle( triangleOutput, triangle, &edgeB.end ) )
+				{
+					Edge outsideEdge;
+					getTriangleOppositeEdge( triangleOutput, triangle, &edgeB.start, &outsideEdge );
+					edgeMiddle( &outsideEdge, &outsidePointB );
+					numOutsidePoints++;
+				}
+				if ( numOutsidePoints == 2 )
+				{
+					break;
+				}
+			}
+			assert( numOutsidePoints == 2 );
+		}
 		
-		Edge outsideEdge;
-		if ( ignoreA )
-		{
-			outsideEdge.start = triangleVertexB;
-			outsideEdge.end = triangleVertexC;
-		}
-		else if( ignoreB )
-		{
-			outsideEdge.start = triangleVertexA;
-			outsideEdge.end = triangleVertexC;
-		}
-		else if ( ignoreC )
-		{
-			outsideEdge.start = triangleVertexA;
-			outsideEdge.end = triangleVertexB;
-		}
-
-		Vector outsidePoint;
-		edgeMiddle( &outsideEdge, &outsidePoint );
-
 		Vector movedVertex;
-		getPushedVector( &edgeA, &edgeB, &outsidePoint, padding, &movedVertex );
+		getPushedVector( &edgeA, &edgeB, &outsidePointA, &outsidePointB, padding, &movedVertex );
 		outNavmesh->vertices[vertexIndex] = movedVertex;
 
 	} // else todo
@@ -265,16 +315,16 @@ void populateNavmesh( Navmesh *navmesh, const struct triangulateio *triangleOutp
 
 	for ( int i = 0; i < navmesh->numVertices; i++ )
 	{
-		navmesh->vertices[i].x = triangleOutput->pointlist[2 * i];
+		navmesh->vertices[i].x = triangleOutput->pointlist[2 * i + 0];
 		navmesh->vertices[i].y = triangleOutput->pointlist[2 * i + 1];
 	}
 
 	for ( int i = 0; i < navmesh->numTriangles; i++ )
 	{
-		navmesh->triangles[i].vertices[0] = triangleOutput->trianglelist[3 * i];
+		navmesh->triangles[i].vertices[0] = triangleOutput->trianglelist[3 * i + 0];
 		navmesh->triangles[i].vertices[1] = triangleOutput->trianglelist[3 * i + 1];
 		navmesh->triangles[i].vertices[2] = triangleOutput->trianglelist[3 * i + 2];
-		navmesh->triangles[i].neighbours[0] = triangleOutput->neighborlist[3 * i];
+		navmesh->triangles[i].neighbours[0] = triangleOutput->neighborlist[3 * i + 0];
 		navmesh->triangles[i].neighbours[1] = triangleOutput->neighborlist[3 * i + 1];
 		navmesh->triangles[i].neighbours[2] = triangleOutput->neighborlist[3 * i + 2];
 	}
