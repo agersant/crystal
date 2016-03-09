@@ -5,22 +5,22 @@
 #define MAX_EDGES ( 3 * MAX_TRIANGLES )
 #define MAX_VERTICES ( 3 * MAX_TRIANGLES )
 
-typedef struct Triangle
+typedef struct QTriangle
 {
 	int vertices[3];
 	int neighbours[3];
-} Triangle;
+} QTriangle;
 
-typedef struct Navmesh
+typedef struct QNavmesh
 {
 	int valid;
 	int numTriangles;
 	int numEdges;
 	int numVertices;
-	Vector vertices[MAX_VERTICES];
-	Triangle triangles[MAX_TRIANGLES];
-} Navmesh;
+	QVector vertices[MAX_VERTICES];
+	QTriangle triangles[MAX_TRIANGLES];
+} QNavmesh;
 
 __declspec (dllexport) void ping();
 
-__declspec ( dllexport ) void generateNavmesh( int numVertices, REAL vertices[], int numSegments, int segments[], int numHoles, REAL holes[], REAL padding, Navmesh *outNavmesh );
+__declspec ( dllexport ) void generateNavmesh( int numVertices, REAL vertices[], int numSegments, int segments[], int numHoles, REAL holes[], REAL padding, QNavmesh *outNavmesh );

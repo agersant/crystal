@@ -2,29 +2,29 @@
 #include <math.h>
 #include "vector_math.h"
 
-int vectorEquals( const Vector *a, const Vector *b )
+int vectorEquals( const QVector *a, const QVector *b )
 {
 	return a->x == b->x && a->y == b->y;
 }
 
-REAL vectorLength( const Vector *vector )
+REAL vectorLength( const QVector *vector )
 {
 	return sqrt( ( vector->x *vector->x ) + ( vector->y * vector->y ) );
 }
 
-void vectorAdd( const Vector *a, const Vector *b, Vector *result )
+void vectorAdd( const QVector *a, const QVector *b, QVector *result )
 {
 	result->x = a->x + b->x;
 	result->y = a->y + b->y;
 }
 
-void vectorSubtract( const Vector *a, const Vector *b, Vector *result )
+void vectorSubtract( const QVector *a, const QVector *b, QVector *result )
 {
 	result->x = a->x - b->x;
 	result->y = a->y - b->y;
 }
 
-void vectorNormalize( Vector *vector )
+void vectorNormalize( QVector *vector )
 {
 	REAL length = vectorLength( vector );
 	assert( length > 0 );
@@ -32,59 +32,59 @@ void vectorNormalize( Vector *vector )
 	vector->y /= length;
 }
 
-void vectorScale( Vector *vector, REAL scale )
+void vectorScale( QVector *vector, REAL scale )
 {
 	vector->x *= scale;
 	vector->y *= scale;
 }
 
-REAL vectorCrossProduct( const Vector *a, const Vector *b )
+REAL vectorCrossProduct( const QVector *a, const QVector *b )
 {
 	return a->x * b->y - a->y * b->x;
 }
 
-int areVectorsColinear( const Vector *a, const Vector *b )
+int areVectorsColinear( const QVector *a, const QVector *b )
 {
 	return vectorCrossProduct( a, b ) == 0;
 }
 
-int isPointRightOfVector( const Vector *point, const Vector *vector )
+int isPointRightOfVector( const QVector *point, const QVector *vector )
 {
 	return vectorCrossProduct( vector, point ) > 0;
 }
 
-void flipEdge( Edge *edge )
+void flipEdge( QEdge *edge )
 {
-	Vector tmp;
+	QVector tmp;
 	tmp = edge->start;
 	edge->start = edge->end;
 	edge->end = tmp;
 }
 
-void edgeMiddle( const Edge *edge, Vector *result )
+void edgeMiddle( const QEdge *edge, QVector *result )
 {
 	result->x = ( edge->start.x + edge->end.x ) / 2;
 	result->y = ( edge->start.y + edge->end.y ) / 2;
 }
 
-void edgeOffset( const Edge *edge, const Vector *offset, Edge *result )
+void edgeOffset( const QEdge *edge, const QVector *offset, QEdge *result )
 {
 	vectorAdd( &edge->start, offset, &result->start );
 	vectorAdd( &edge->end, offset, &result->end );
 }
 
-void edgeToVector( const Edge *edge, Vector *vector )
+void edgeToVector( const QEdge *edge, QVector *vector )
 {
 	vector->x = edge->end.x - edge->start.x;
 	vector->y = edge->end.y - edge->start.y;
 }
 
-void getPushedVector( const Edge *inEdgeA, const Edge *inEdgeB, const Vector *outsidePointA, const Vector *outsidePointB, REAL padding, Vector *out )
+void getPushedVector( const QEdge *inEdgeA, const QEdge *inEdgeB, const QVector *outsidePointA, const QVector *outsidePointB, REAL padding, QVector *out )
 {
 	assert( vectorEquals( &inEdgeA->start, &inEdgeB->start ) );
 	
-	Vector vectorA;
-	Vector vectorB;
+	QVector vectorA;
+	QVector vectorB;
 	edgeToVector( inEdgeA, &vectorA );
 	edgeToVector( inEdgeB, &vectorB );
 	vectorNormalize( &vectorA );
@@ -92,8 +92,8 @@ void getPushedVector( const Edge *inEdgeA, const Edge *inEdgeB, const Vector *ou
 	vectorScale( &vectorA, padding );
 	vectorScale( &vectorB, padding );
 
-	Vector outsideVectorA;
-	Vector outsideVectorB;
+	QVector outsideVectorA;
+	QVector outsideVectorB;
 	vectorSubtract( outsidePointA, &inEdgeA->start, &outsideVectorA );
 	vectorSubtract( outsidePointB, &inEdgeB->start, &outsideVectorB );
 
@@ -123,9 +123,9 @@ void getPushedVector( const Edge *inEdgeA, const Edge *inEdgeB, const Vector *ou
 	else
 	{
 
-		Edge edgeA = *inEdgeA;
-		Edge edgeB = *inEdgeB;
-		Vector edgeNormal;
+		QEdge edgeA = *inEdgeA;
+		QEdge edgeB = *inEdgeB;
+		QVector edgeNormal;
 
 		if ( isOutsidePointRightOfA )
 		{
@@ -160,7 +160,7 @@ void getPushedVector( const Edge *inEdgeA, const Edge *inEdgeB, const Vector *ou
 	}
 }
 
-int lineIntersection( const Edge *edgeA, const Edge *edgeB, Vector *outResult )
+int lineIntersection( const QEdge *edgeA, const QEdge *edgeB, QVector *outResult )
 {
 	const REAL x1 = edgeA->start.x;
 	const REAL y1 = edgeA->start.y;

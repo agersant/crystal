@@ -1,32 +1,32 @@
 #pragma once
 #include "types.h"
 
-typedef struct Vector
+typedef struct QVector
 {
 	REAL x;
 	REAL y;
-} Vector;
+} QVector;
 
-typedef struct Edge
+typedef struct QEdge
 {
-	Vector start;
-	Vector end;
-} Edge;
+	QVector start;
+	QVector end;
+} QEdge;
 
-int vectorEquals( const Vector *a, const Vector *b );
-REAL vectorLength( const Vector *vector );
-void vectorAdd( const Vector *a, const Vector *b, Vector *result );
-void vectorSubtract( const Vector *a, const Vector *b, Vector *result );
-void vectorNormalize( Vector *vector );
-void vectorScale( Vector *vector, REAL scale );
-REAL vectorCrossProduct( const Vector *a, const Vector *b );
-int areVectorsColinear( const Vector *a, const Vector *b );
-int isPointRightOfVector( const Vector *point, const Vector *vector );
+int vectorEquals( const QVector *a, const QVector *b );
+REAL vectorLength( const QVector *vector );
+void vectorAdd( const QVector *a, const QVector *b, QVector *result );
+void vectorSubtract( const QVector *a, const QVector *b, QVector *result );
+void vectorNormalize( QVector *vector );
+void vectorScale( QVector *vector, REAL scale );
+REAL vectorCrossProduct( const QVector *a, const QVector *b );
+int areVectorsColinear( const QVector *a, const QVector *b );
+int isPointRightOfVector( const QVector *point, const QVector *vector );
 
-void flipEdge( Edge *edge );
-void edgeMiddle( const Edge *edge, Vector *result );
-void edgeOffset( const Edge *edge, const Vector *offset, Edge *result );
+void flipEdge( QEdge *edge );
+void edgeMiddle( const QEdge *edge, QVector *result );
+void edgeOffset( const QEdge *edge, const QVector *offset, QEdge *result );
 
-void getPushedVector( const Edge *edgeA, const Edge *edgeB, const Vector *outsidePointA, const Vector *outsidePointB, REAL padding, Vector *out );
+void getPushedVector( const QEdge *edgeA, const QEdge *edgeB, const QVector *outsidePointA, const QVector *outsidePointB, REAL padding, QVector *out );
 
-int lineIntersection( const Edge *edgeA, const Edge *edgeB, Vector *outResult );
+int lineIntersection( const QEdge *edgeA, const QEdge *edgeB, QVector *outResult );

@@ -10,31 +10,31 @@ local Navmesh = Class( "Navmesh" );
 -- FFI
 
 FFI.cdef[[
-	typedef struct Vector
+	typedef struct QVector
 	{
 		double x;
 		double y;
-	} Vector;
+	} QVector;
 
-	typedef struct Triangle
+	typedef struct QTriangle
 	{
 		int vertices[3];
 		int neighbours[3];
-	} Triangle;
+	} QTriangle;
 
-	typedef struct Navmesh
+	typedef struct QNavmesh
 	{
 		int valid;
 		int numTriangles;
 		int numEdges;
 		int numVertices;
-		struct Vector vertices[3*1000];
-		struct Triangle triangles[1000];
-	} Navmesh;
+		struct QVector vertices[3*1000];
+		struct QTriangle triangles[1000];
+	} QNavmesh;
 
 	void ping();
 	void free( void *ptr );
-	void generateNavmesh( int numVertices, double vertices[], int numSegments, int segments[], int numHoles, double holes[], double padding, Navmesh *outNavmesh );
+	void generateNavmesh( int numVertices, double vertices[], int numSegments, int segments[], int numHoles, double holes[], double padding, QNavmesh *outNavmesh );
 ]]
 
 
@@ -131,7 +131,7 @@ local generateCMesh = function( self, width, height, collisionMesh, padding )
 	addInputSegmentsForMapEdge( self, top, width, vertices, segments, addHorizontalSegment( 0 ) );
 	addInputSegmentsForMapEdge( self, bottom, width, vertices, segments, addHorizontalSegment( height ) );
 	
-	local cMesh = FFI.gc( FFI.new( FFI.typeof( "Navmesh" ) ), FFI.C.free );
+	local cMesh = FFI.gc( FFI.new( FFI.typeof( "QNavmesh" ) ), FFI.C.free );
 	local cVertices = FFI.new( "double[?]", #vertices, vertices );
 	local cSegments = FFI.new( "int[?]", #segments, segments );
 	local cHoles = FFI.new( "double[?]", #holes, holes );
@@ -184,7 +184,7 @@ Navmesh.init = function( self, width, height, collisionMesh, padding )
 end
 
 Navmesh.draw = function( self )
-	love.graphics.setLineWidth( 1 );
+	love.graphics.setLineWidth( 0.2 );
 	love.graphics.setPointSize( 3 );
 	for _, triangle in ipairs( self._triangles ) do
 		love.graphics.setColor( Colors.cyan:alpha( 255 * .25 ) );

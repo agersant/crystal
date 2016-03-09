@@ -25,23 +25,23 @@ typedef struct VertexLinks
 } VertexLinks;
 
 
-void getVertex( const struct triangulateio *triangleOutput, int vertex, Vector *out )
+void getVertex( const struct triangulateio *triangleOutput, int vertex, QVector *out )
 {
 	out->x = triangleOutput->pointlist[2 * vertex + 0];
 	out->y = triangleOutput->pointlist[2 * vertex + 1];
 }
 
-void getEdge( const struct triangulateio *triangleOutput, int edge, Edge *out )
+void getEdge( const struct triangulateio *triangleOutput, int edge, QEdge *out )
 {
 	getVertex( triangleOutput, triangleOutput->edgelist[2 * edge + 0], &out->start );
 	getVertex( triangleOutput, triangleOutput->edgelist[2 * edge + 1], &out->end );
 }
 
-int isVertexFromTriangle( const struct triangulateio *triangleOutput, int triangle, const Vector *vertex )
+int isVertexFromTriangle( const struct triangulateio *triangleOutput, int triangle, const QVector *vertex )
 {
-	Vector triangleVertexA;
-	Vector triangleVertexB;
-	Vector triangleVertexC;
+	QVector triangleVertexA;
+	QVector triangleVertexB;
+	QVector triangleVertexC;
 	getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 0], &triangleVertexA );
 	getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 1], &triangleVertexB );
 	getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 2], &triangleVertexC );
@@ -50,11 +50,11 @@ int isVertexFromTriangle( const struct triangulateio *triangleOutput, int triang
 			||	vectorEquals( &triangleVertexC, vertex );
 }
 
-void getTriangleOppositeEdge( const struct triangulateio *triangleOutput, int triangle, const Vector *vertex, Edge *outEdge )
+void getTriangleOppositeEdge( const struct triangulateio *triangleOutput, int triangle, const QVector *vertex, QEdge *outEdge )
 {
-	Vector triangleVertexA;
-	Vector triangleVertexB;
-	Vector triangleVertexC;
+	QVector triangleVertexA;
+	QVector triangleVertexB;
+	QVector triangleVertexC;
 	getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 0], &triangleVertexA );
 	getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 1], &triangleVertexB );
 	getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 2], &triangleVertexC );
@@ -159,13 +159,13 @@ void populateVerticesLinks( const struct triangulateio *triangleOutput, VertexLi
 	}
 }
 
-void getPointsOutsideWall( const struct triangulateio *triangleOutput, const VertexLinks *vertexLinks, const Edge *edgeA, const Edge *edgeB, Vector *outPointA, Vector *outPointB )
+void getPointsOutsideWall( const struct triangulateio *triangleOutput, const VertexLinks *vertexLinks, const QEdge *edgeA, const QEdge *edgeB, QVector *outPointA, QVector *outPointB )
 {
 	assert( vertexLinks->numTriangles > 0 );
 	if ( vertexLinks->numTriangles == 1 )
 	{
 		const int triangle = vertexLinks->triangles[0];
-		Edge outsideEdge;
+		QEdge outsideEdge;
 		getTriangleOppositeEdge( triangleOutput, triangle, &edgeA->start, &outsideEdge );
 		edgeMiddle( &outsideEdge, outPointA );
 		*outPointB = *outPointA;
@@ -179,14 +179,14 @@ void getPointsOutsideWall( const struct triangulateio *triangleOutput, const Ver
 			assert( isVertexFromTriangle( triangleOutput, triangle, &edgeA->start ) );
 			if ( isVertexFromTriangle( triangleOutput, triangle, &edgeA->end ) )
 			{
-				Edge outsideEdge;
+				QEdge outsideEdge;
 				getTriangleOppositeEdge( triangleOutput, triangle, &edgeA->start, &outsideEdge );
 				edgeMiddle( &outsideEdge, outPointA );
 				numOutsidePoints++;
 			}
 			if ( isVertexFromTriangle( triangleOutput, triangle, &edgeB->end ) )
 			{
-				Edge outsideEdge;
+				QEdge outsideEdge;
 				getTriangleOppositeEdge( triangleOutput, triangle, &edgeB->start, &outsideEdge );
 				edgeMiddle( &outsideEdge, outPointB );
 				numOutsidePoints++;
@@ -200,9 +200,9 @@ void getPointsOutsideWall( const struct triangulateio *triangleOutput, const Ver
 	}
 }
 
-void padVertex( const struct triangulateio *triangleOutput, VertexLinks *verticesLinks, int vertexIndex, REAL padding, Navmesh *outNavmesh )
+void padVertex( const struct triangulateio *triangleOutput, VertexLinks *verticesLinks, int vertexIndex, REAL padding, QNavmesh *outNavmesh )
 {
-	Vector vertex;
+	QVector vertex;
 	VertexLinks *vertexLinks = &verticesLinks[vertexIndex];
 	getVertex( triangleOutput, vertexIndex, &vertex );
 
@@ -222,8 +222,8 @@ void padVertex( const struct triangulateio *triangleOutput, VertexLinks *vertice
 	if ( vertexLinks->numBoundaryEdges == 2 )
 	{
 		// Get the two wall edges touch from this vertex
-		Edge edgeA;
-		Edge edgeB;
+		QEdge edgeA;
+		QEdge edgeB;
 		getEdge( triangleOutput, vertexLinks->edges[vertexLinks->boundaryEdges[0]], &edgeA );
 		getEdge( triangleOutput, vertexLinks->edges[vertexLinks->boundaryEdges[1]], &edgeB );
 		
@@ -241,18 +241,18 @@ void padVertex( const struct triangulateio *triangleOutput, VertexLinks *vertice
 		}
 
 		// Get points outside of this wall
-		Vector outsidePointA; // Guaranteed not to be aligned with edgeA
-		Vector outsidePointB; // Guaranteed not to be aligned with edgeB
+		QVector outsidePointA; // Guaranteed not to be aligned with edgeA
+		QVector outsidePointB; // Guaranteed not to be aligned with edgeB
 		getPointsOutsideWall( triangleOutput, vertexLinks, &edgeA, &edgeB, &outsidePointA, &outsidePointB );
 		
-		Vector movedVertex;
+		QVector movedVertex;
 		getPushedVector( &edgeA, &edgeB, &outsidePointA, &outsidePointB, padding, &movedVertex );
 		outNavmesh->vertices[vertexIndex] = movedVertex;
 
 	} // else todo
 }
 
-void padNavmesh( const Navmesh *inNavmesh, const struct triangulateio *triangleOutput, Navmesh *outNavmesh, REAL padding )
+void padNavmesh( const QNavmesh *inNavmesh, const struct triangulateio *triangleOutput, QNavmesh *outNavmesh, REAL padding )
 {
 	assert( inNavmesh );
 	assert( outNavmesh );
@@ -294,7 +294,7 @@ void padNavmesh( const Navmesh *inNavmesh, const struct triangulateio *triangleO
 
 }
 
-void populateNavmesh( Navmesh *navmesh, const struct triangulateio *triangleOutput )
+void populateNavmesh( QNavmesh *navmesh, const struct triangulateio *triangleOutput )
 {
 	assert( navmesh );
 	assert( triangleOutput );
@@ -337,7 +337,7 @@ void populateNavmesh( Navmesh *navmesh, const struct triangulateio *triangleOutp
 	return;
 }
 
-void generateNavmesh( int numVertices, REAL vertices[], int numSegments, int segments[], int numHoles, REAL holes[], REAL padding, Navmesh *outNavmesh )
+void generateNavmesh( int numVertices, REAL vertices[], int numSegments, int segments[], int numHoles, REAL holes[], REAL padding, QNavmesh *outNavmesh )
 {
 	assert( numVertices >= 0 );
 	assert( numSegments >= 0 );
@@ -358,13 +358,13 @@ void generateNavmesh( int numVertices, REAL vertices[], int numSegments, int seg
 	triangleInput.holelist = holes;
 	triangleInput.numberofholes = numHoles;
 	
-	triangulate( "pjenzq10V", &triangleInput, &triangleOutput, NULL );
+	triangulate( "pjenzq0V", &triangleInput, &triangleOutput, NULL );
 
 	assert( holes == triangleOutput.holelist );
 	assert( triangleOutput.numberofcorners == 3 );
 	// TODO. Investigate why test map output as 5 points more than input while only 2 extra-points are visible in the navmesh
 
-	Navmesh *navmesh = malloc( sizeof( Navmesh ) );
+	QNavmesh *navmesh = malloc( sizeof( QNavmesh ) );
 	populateNavmesh( navmesh, &triangleOutput );
 
 	padNavmesh( navmesh, &triangleOutput, outNavmesh, padding );
