@@ -46,6 +46,16 @@ local segmentIter = function( self, i )
 	return i, x1, y1, x2, y2;
 end
 
+local vertexIter = function( self, i )
+	local numVertices = self:getNumVertices();
+	i = i + 1;
+	if i > numVertices then
+		return nil;
+	end
+	local x, y = self:getVertex( i );
+	return i, x, y;
+end
+
 MapCollisionChainData.getSegment = function( self, i)
 	local numSegments = self:getNumSegments();
 	local x1, y1 = self:getVertex( i );
@@ -76,10 +86,6 @@ end
 
 MapCollisionChainData.getVertex = function( self, i )
 	return self._verts[2 * i - 1], self._verts[2 * i];
-end
-
-MapCollisionChainData.getNumVertices = function( self )
-	return #self._verts / 2;
 end
 
 MapCollisionChainData.getNumSegments = function( self )
@@ -156,6 +162,14 @@ MapCollisionChainData.getRepresentative = function( self )
 	x = x / n;
 	y = y / n;
 	return x2 + 0.5 * x, y2 + 0.5 * y;
+end
+
+MapCollisionChainData.getNumVertices = function( self )
+	return #self._verts / 2;
+end
+
+MapCollisionChainData.vertices = function( self )
+	return vertexIter, self, 0;
 end
 
 MapCollisionChainData.segments = function( self )

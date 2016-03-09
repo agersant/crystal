@@ -15,6 +15,22 @@ FFI.cdef[[
 		double x;
 		double y;
 	} QVector;
+	
+	typedef struct QObstacle
+	{
+		int numVertices;
+		QVector *vertices;
+	} QObstacle;
+
+	typedef struct QMap
+	{
+		int x;
+		int y;
+		int width;
+		int height;
+		QObstacle *obstacles;
+		int numObstacles;
+	} QMap;
 
 	typedef struct QTriangle
 	{
@@ -24,124 +40,55 @@ FFI.cdef[[
 
 	typedef struct QNavmesh
 	{
-		int valid;
 		int numTriangles;
 		int numEdges;
 		int numVertices;
-		struct QVector vertices[3*1000];
-		struct QTriangle triangles[1000];
+		QVector vertices[3 * 1000];
+		QTriangle triangles[1000];
 	} QNavmesh;
 
-	void ping();
+	void generateNavmesh( QMap *map, int padding, QNavmesh *outNavmesh );
 	void free( void *ptr );
-	void generateNavmesh( int numVertices, double vertices[], int numSegments, int segments[], int numHoles, double holes[], double padding, QNavmesh *outNavmesh );
 ]]
 
 
 
 -- IMPLEMENTATION
 
-local addInputVertex = function( self, vertices, x, y )
-	for i = 1, #vertices/2 do
-		if x == vertices[2 * i - 1] and y == vertices[2 * i] then
-			return i;
-		end
-	end
-	table.insert( vertices, x );
-	table.insert( vertices, y );
-	return #vertices / 2;
-end
-
-local addInputSegment = function( self, vertices, segments, x1, y1, x2, y2 )
-	local startVertIndex = addInputVertex( self, vertices, x1, y1 );
-	local endVertIndex = addInputVertex( self, vertices, x2, y2 );
-	table.insert( segments, startVertIndex - 1 );
-	table.insert( segments, endVertIndex - 1 );
-end
-
-local addInputSegmentsForMapEdge = function( self, edgeSegments, edgeSize, vertices, segments, addSegmentFunction )
-	local current = 0;
-	for i = 1, #edgeSegments/2 do
-		local p1 = edgeSegments[2 * i - 1];
-		local p2 = edgeSegments[2 * i];
-		if p1 > current then
-			addSegmentFunction( self, vertices, segments, current, p1 );
-		end
-		current = p2;
-	end
-	if current < edgeSize then
-		addSegmentFunction( self, vertices, segments, current, edgeSize );
-	end
-end
-
-local addHorizontalSegment = function( y )
-	return function( self, vertices, segments, x1, x2 )
-		addInputSegment( self, vertices, segments, x1, y, x2, y );
-	end
-end
-
-local addVerticalSegment = function( x )
-	return function( self, vertices, segments, y1, y2 )
-		addInputSegment( self, vertices, segments, x, y1, x, y2 );
-	end
-end
-
 local generateCMesh = function( self, width, height, collisionMesh, padding )
 	
 	assert( width > 0 );
 	assert( height > 0 );
+
+	local cMap = FFI.gc( FFI.new( FFI.typeof( "QMap" ) ), FFI.C.free );
+	cMap.width = width;
+	cMap.height = height;
 	
-	local vertices = {};
-	local segments = {};
-	local holes = {};
-	
-	local left = {};
-	local right = {};
-	local top = {};
-	local bottom = {};
-	
+	local obstacles = {};
 	for _, chain in collisionMesh:chains() do
-		if not chain._outer then -- meh
-			local rx, ry = chain:getRepresentative();
-			if rx and ry then
-				table.insert( holes, rx );
-				table.insert( holes, ry );
-				for i, x1, y1, x2, y2 in chain:segments() do
-					if x1 == 0 and x2 == 0 then
-						table.insert( left, math.min( y1, y2 ) );
-						table.insert( left, math.max( y1, y2 ) );
-					elseif y1 == 0 and y2 == 0 then
-						table.insert( top, math.min( x1, x2 ) );
-						table.insert( top, math.max( x1, x2 ) );
-					elseif x1 == width and x2 == width then
-						table.insert( right, math.min( y1, y2 ) );
-						table.insert( right, math.max( y1, y2 ) );
-					elseif y1 == height and y2 == height then
-						table.insert( bottom, math.min( x1, x2 ) );
-						table.insert( bottom, math.max( x1, x2 ) );
-					end
-					addInputSegment( self, vertices, segments, x1, y1, x2, y2 );
-				end
+		if not chain._outer then -- TODO dont use private stuff
+			local obstacle = FFI.gc( FFI.new( FFI.typeof( "QObstacle" ) ), FFI.C.free );
+			local vertices = {};
+			for i, x, y in chain:vertices() do
+				local vertex = FFI.gc( FFI.new( FFI.typeof( "QVector" ), { x = x, y = y } ), FFI.C.free );
+				table.insert( vertices, vertex );
 			end
+			obstacle.numVertices = #vertices;
+			obstacle.vertices = FFI.gc( FFI.new( FFI.typeof( "QVector[?]" ), #vertices, vertices ), FFI.C.free );
+			table.insert( obstacles, obstacle );
 		end
 	end
-
-	addInputSegmentsForMapEdge( self, left, height, vertices, segments, addVerticalSegment( 0 ) );
-	addInputSegmentsForMapEdge( self, right, height, vertices, segments, addVerticalSegment( width ) );
-	addInputSegmentsForMapEdge( self, top, width, vertices, segments, addHorizontalSegment( 0 ) );
-	addInputSegmentsForMapEdge( self, bottom, width, vertices, segments, addHorizontalSegment( height ) );
+	cMap.numObstacles = #obstacles;
+	cMap.obstacles = FFI.gc( FFI.new( FFI.typeof( "QObstacle[?]" ), #obstacles, obstacles ), FFI.C.free );
 	
 	local cMesh = FFI.gc( FFI.new( FFI.typeof( "QNavmesh" ) ), FFI.C.free );
-	local cVertices = FFI.new( "double[?]", #vertices, vertices );
-	local cSegments = FFI.new( "int[?]", #segments, segments );
-	local cHoles = FFI.new( "double[?]", #holes, holes );
-	Quartz.generateNavmesh( #vertices/2, cVertices, #segments/2, cSegments, #holes/2, cHoles, padding, cMesh );
+	Quartz.generateNavmesh( cMap, padding, cMesh );
+	
 	return cMesh;
 end
 
 local parseCMesh = function( self, cMesh )
 	assert( cMesh );
-	assert( cMesh.valid );
 	
 	self._vertices = {};
 	for i = 0, cMesh.numVertices - 1 do

@@ -4,378 +4,293 @@
 #include <stdlib.h>
 #include <string.h>
 #include "api.h"
+#include "../../../../lib/gpc/gpc.h"
 #include "../../../../lib/triangle/triangle.h"
+
+typedef struct triangulateio QTriangulation;
 
 void ping()
 {
 	printf( "Pong!\n" );
 }
 
-typedef struct VertexLinks
+static int isObstacleClockwise( const QObstacle *obstacle )
 {
-	int numEdges;
-	int numBoundaryEdges;
-	int numTriangles;
-	int *edges;			// Indices into triangleOutput->edgelist
-	int *boundaryEdges; // Indices into *edges
-	int *triangles;		// Indices into triangleOutput->trianglelist
-	int curNumEdges;
-	int curNumBoundaryEdges;
-	int curNumTriangles;
-} VertexLinks;
-
-
-void getVertex( const struct triangulateio *triangleOutput, int vertex, QVector *out )
-{
-	out->x = triangleOutput->pointlist[2 * vertex + 0];
-	out->y = triangleOutput->pointlist[2 * vertex + 1];
+	REAL sum = 0;
+	for ( int vertexIndex = 0; vertexIndex < obstacle->numVertices; vertexIndex++ )
+	{
+		QVector *vertexA = &obstacle->vertices[vertexIndex];
+		QVector *vertexB = &obstacle->vertices[( vertexIndex + 1 ) % obstacle->numVertices];
+		sum += ( vertexB->x - vertexA->x ) * ( vertexB->y + vertexA->y );
+	}
+	return sum > 0;
 }
 
-void getEdge( const struct triangulateio *triangleOutput, int edge, QEdge *out )
+static void padMap( int padding, const QMap *inMap, QMap *outMap )
 {
-	getVertex( triangleOutput, triangleOutput->edgelist[2 * edge + 0], &out->start );
-	getVertex( triangleOutput, triangleOutput->edgelist[2 * edge + 1], &out->end );
-}
+	*outMap = *inMap;
 
-int isVertexFromTriangle( const struct triangulateio *triangleOutput, int triangle, const QVector *vertex )
-{
-	QVector triangleVertexA;
-	QVector triangleVertexB;
-	QVector triangleVertexC;
-	getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 0], &triangleVertexA );
-	getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 1], &triangleVertexB );
-	getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 2], &triangleVertexC );
-	return		vectorEquals( &triangleVertexA, vertex )
-			||	vectorEquals( &triangleVertexB, vertex )
-			||	vectorEquals( &triangleVertexC, vertex );
-}
+	outMap->x += padding;
+	outMap->y += padding;
+	outMap->width -= 2 * padding;
+	outMap->height -= 2 * padding;
+	outMap->obstacles = malloc( inMap->numObstacles * sizeof( QObstacle ) );
 
-void getTriangleOppositeEdge( const struct triangulateio *triangleOutput, int triangle, const QVector *vertex, QEdge *outEdge )
-{
-	QVector triangleVertexA;
-	QVector triangleVertexB;
-	QVector triangleVertexC;
-	getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 0], &triangleVertexA );
-	getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 1], &triangleVertexB );
-	getVertex( triangleOutput, triangleOutput->trianglelist[3 * triangle + 2], &triangleVertexC );
-	const int ignoreA = vectorEquals( vertex, &triangleVertexA );
-	const int ignoreB = vectorEquals( vertex, &triangleVertexB );
-	const int ignoreC = vectorEquals( vertex, &triangleVertexC );
-	assert( ( ignoreB ^ ignoreC ) || ignoreA );
-	assert( ( ignoreA ^ ignoreC ) || ignoreB );
-	assert( ( ignoreB ^ ignoreA ) || ignoreC );
-
-	if ( ignoreA )
+	for ( int obstacleIndex = 0; obstacleIndex < inMap->numObstacles; obstacleIndex++ )
 	{
-		outEdge->start = triangleVertexB;
-		outEdge->end = triangleVertexC;
-	}
-	else if ( ignoreB )
-	{
-		outEdge->start = triangleVertexA;
-		outEdge->end = triangleVertexC;
-	}
-	else if ( ignoreC )
-	{
-		outEdge->start = triangleVertexA;
-		outEdge->end = triangleVertexB;
-	}
-}
+		const QObstacle *const inObstacle = &inMap->obstacles[obstacleIndex];
+		const int numVertices = inObstacle->numVertices;
+		assert( numVertices > 2 );
+		const int isClockwise = isObstacleClockwise( inObstacle );
 
-void populateVerticesLinks( const struct triangulateio *triangleOutput, VertexLinks verticesLinks[] )
-{
-	memset( verticesLinks, 0, sizeof( VertexLinks ) * triangleOutput->numberofpoints );
+		QObstacle *const outObstacle = &outMap->obstacles[obstacleIndex];
+		outObstacle->numVertices = inObstacle->numVertices;
+		outObstacle->vertices = malloc( numVertices * sizeof( QVector ) );
 
-	// Count edges touching each vertex
-	for ( int i = 0; i < triangleOutput->numberofedges; i++ )
-	{
-		const int startVertex = triangleOutput->edgelist[2 * i + 0];
-		const int endVertex = triangleOutput->edgelist[2 * i + 1];
-		verticesLinks[startVertex].numEdges++;
-		verticesLinks[endVertex].numEdges++;
-		if ( triangleOutput->edgemarkerlist[i] )
+		for ( int vertexIndex = 0; vertexIndex < numVertices; vertexIndex++ )
 		{
-			verticesLinks[startVertex].numBoundaryEdges++;
-			verticesLinks[endVertex].numBoundaryEdges++;
-		}
-	}
+			QVector *const targetVertex = &outObstacle->vertices[vertexIndex];
 
-	// Count triangles touching each vertex
-	for ( int i = 0; i < triangleOutput->numberoftriangles; i++ )
-	{
-		const int vertexA = triangleOutput->trianglelist[3 * i + 0];
-		const int vertexB = triangleOutput->trianglelist[3 * i + 1];
-		const int vertexC = triangleOutput->trianglelist[3 * i + 2];
-		verticesLinks[vertexA].numTriangles++;
-		verticesLinks[vertexB].numTriangles++;
-		verticesLinks[vertexC].numTriangles++;
-	}
+			QEdge edgeA;
+			QEdge edgeB;
+			edgeA.start = inObstacle->vertices[( numVertices + vertexIndex - 1 ) % numVertices];
+			edgeA.end = inObstacle->vertices[vertexIndex];
+			edgeB.start = inObstacle->vertices[vertexIndex];
+			edgeB.end = inObstacle->vertices[( vertexIndex + 1 ) % numVertices];
 
-	// Allocate memory to store which edges touch which vertex
-	for ( int i = 0; i < triangleOutput->numberofpoints; i++ )
-	{
-		if ( verticesLinks[i].numEdges > 0 )
-		{
-			verticesLinks[i].edges = malloc( sizeof( int ) * verticesLinks[i].numEdges );
-		}
-		if ( verticesLinks[i].numBoundaryEdges > 0 )
-		{
-			verticesLinks[i].boundaryEdges = malloc( sizeof( int ) * verticesLinks[i].numBoundaryEdges );
-		}
-		if ( verticesLinks[i].numTriangles > 0 )
-		{
-			verticesLinks[i].triangles = malloc( sizeof( int ) * verticesLinks[i].numTriangles );
-		}
-	}
+			QVector vectorA;
+			QVector vectorB;
+			edgeToVector( &edgeA, &vectorA );
+			edgeToVector( &edgeB, &vectorB );
 
-	// Store which edges touch each vertex
-	for ( int i = 0; i < triangleOutput->numberofedges; i++ )
-	{
-		for ( int j = 0; j < 2; j++ )
-		{
-			VertexLinks *const vertexLinks = &verticesLinks[triangleOutput->edgelist[2 * i + j]];
-			assert( vertexLinks->curNumEdges < vertexLinks->numEdges );
-			vertexLinks->edges[vertexLinks->curNumEdges] = i;
-			if ( triangleOutput->edgemarkerlist[i] )
+			if ( areVectorsColinear( &vectorA, &vectorB ) )
 			{
-				assert( vertexLinks->curNumBoundaryEdges < vertexLinks->numBoundaryEdges );
-				vertexLinks->boundaryEdges[vertexLinks->curNumBoundaryEdges] = vertexLinks->curNumEdges;
-				vertexLinks->curNumBoundaryEdges++;
+				QVector paddingVector;
+				vectorNormal( &vectorA, !isClockwise, &paddingVector );
+				vectorNormalize( &paddingVector );
+				vectorScale( &paddingVector, padding );
+				vectorAdd( targetVertex, &paddingVector, targetVertex );
 			}
-			vertexLinks->curNumEdges++;
-		}
-	}
+			else
+			{
+				{
+					QVector edgeNormal;
+					vectorNormal( &vectorA, !isClockwise, &edgeNormal );
+					vectorNormalize( &edgeNormal );
+					vectorScale( &edgeNormal, padding );
+					edgeOffset( &edgeA, &edgeNormal, &edgeA );
+				}
+				{
+					QVector edgeNormal;
+					vectorNormal( &vectorB, !isClockwise, &edgeNormal );
+					vectorNormalize( &edgeNormal );
+					vectorScale( &edgeNormal, padding );
+					edgeOffset( &edgeB, &edgeNormal, &edgeB );
+				}
 
-	// Store which triangle touch each vertex
-	for ( int i = 0; i < triangleOutput->numberoftriangles; i++ )
-	{
-		for ( int j = 0; j < 3; j++ )
-		{
-			VertexLinks *const vertexLinks = &verticesLinks[triangleOutput->trianglelist[3 * i + j]];
-			assert( vertexLinks->curNumTriangles < vertexLinks->numTriangles );
-			vertexLinks->triangles[vertexLinks->curNumTriangles] = i;
-			vertexLinks->curNumTriangles++;
-		}
-	}
-}
-
-void getPointsOutsideWall( const struct triangulateio *triangleOutput, const VertexLinks *vertexLinks, const QEdge *edgeA, const QEdge *edgeB, QVector *outPointA, QVector *outPointB )
-{
-	assert( vertexLinks->numTriangles > 0 );
-	if ( vertexLinks->numTriangles == 1 )
-	{
-		const int triangle = vertexLinks->triangles[0];
-		QEdge outsideEdge;
-		getTriangleOppositeEdge( triangleOutput, triangle, &edgeA->start, &outsideEdge );
-		edgeMiddle( &outsideEdge, outPointA );
-		*outPointB = *outPointA;
-	}
-	else
-	{
-		int numOutsidePoints = 0;
-		for ( int t = 0; t < vertexLinks->numTriangles; t++ )
-		{
-			const int triangle = vertexLinks->triangles[t];
-			assert( isVertexFromTriangle( triangleOutput, triangle, &edgeA->start ) );
-			if ( isVertexFromTriangle( triangleOutput, triangle, &edgeA->end ) )
-			{
-				QEdge outsideEdge;
-				getTriangleOppositeEdge( triangleOutput, triangle, &edgeA->start, &outsideEdge );
-				edgeMiddle( &outsideEdge, outPointA );
-				numOutsidePoints++;
-			}
-			if ( isVertexFromTriangle( triangleOutput, triangle, &edgeB->end ) )
-			{
-				QEdge outsideEdge;
-				getTriangleOppositeEdge( triangleOutput, triangle, &edgeB->start, &outsideEdge );
-				edgeMiddle( &outsideEdge, outPointB );
-				numOutsidePoints++;
-			}
-			if ( numOutsidePoints == 2 )
-			{
-				break;
+				printf( "Before: %f, %f\n", targetVertex->x, targetVertex->y );
+				const int intersects = lineIntersection( &edgeA, &edgeB, targetVertex );
+				printf( "After: %f, %f\n\n", targetVertex->x, targetVertex->y );
+				assert( intersects );
 			}
 		}
-		assert( numOutsidePoints == 2 );
 	}
 }
 
-void padVertex( const struct triangulateio *triangleOutput, VertexLinks *verticesLinks, int vertexIndex, REAL padding, QNavmesh *outNavmesh )
+static void mapToPolygonWithHoles( const QMap *map, gpc_polygon *outMapPolygon )
 {
-	QVector vertex;
-	VertexLinks *vertexLinks = &verticesLinks[vertexIndex];
-	getVertex( triangleOutput, vertexIndex, &vertex );
-
-	assert( vertexLinks->curNumEdges == vertexLinks->numEdges );
-	assert( vertexLinks->curNumBoundaryEdges == vertexLinks->numBoundaryEdges );
-	assert( vertexLinks->curNumTriangles == vertexLinks->numTriangles );
-
-	// Ignore non boundary vertices
-	if ( vertexLinks->numBoundaryEdges == 0 )
+	memset( outMapPolygon, 0, sizeof( *outMapPolygon ) );
 	{
-		assert( !triangleOutput->pointmarkerlist[vertexIndex] );
-		return;
+		gpc_vertex_list mapEdges;
+		mapEdges.num_vertices = 4;
+		mapEdges.vertex = malloc( 4 * sizeof( gpc_vertex ) );
+		mapEdges.vertex[0].x = map->x;
+		mapEdges.vertex[0].y = map->y;
+		mapEdges.vertex[1].x = map->x + map->width;
+		mapEdges.vertex[1].y = map->y;
+		mapEdges.vertex[2].x = map->x + map->width;
+		mapEdges.vertex[2].y = map->y + map->height;
+		mapEdges.vertex[3].x = map->x;
+		mapEdges.vertex[3].y = map->y + map->height;
+		gpc_add_contour( outMapPolygon, &mapEdges, 0 );
+		free( mapEdges.vertex );
 	}
 
-	assert( vertexLinks->numBoundaryEdges % 2 == 0 );
-
-	if ( vertexLinks->numBoundaryEdges == 2 )
+	for ( int obstacleIndex = 0; obstacleIndex < map->numObstacles; obstacleIndex++ )
 	{
-		// Get the two wall edges touch from this vertex
-		QEdge edgeA;
-		QEdge edgeB;
-		getEdge( triangleOutput, vertexLinks->edges[vertexLinks->boundaryEdges[0]], &edgeA );
-		getEdge( triangleOutput, vertexLinks->edges[vertexLinks->boundaryEdges[1]], &edgeB );
-		
-		// Flip them so they start on this vertex
-		if ( !vectorEquals( &edgeA.start, &vertex ) )
+		const int numVertices = map->obstacles[obstacleIndex].numVertices;
+		assert( numVertices > 2 );
+
+		gpc_vertex_list *obstacleContour = malloc( sizeof( gpc_vertex_list ) );
+		obstacleContour->num_vertices = numVertices;
+		obstacleContour->vertex = malloc( numVertices * sizeof( gpc_vertex ) );
+		for ( int vertexIndex = 0; vertexIndex < numVertices; vertexIndex++ )
 		{
-			flipEdge( &edgeA );
-			assert( vectorEquals( &edgeA.start, &vertex ) );
+			gpc_vertex *const vertex = &obstacleContour->vertex[vertexIndex];
+			vertex->x = map->obstacles[obstacleIndex].vertices[vertexIndex].x;
+			vertex->y = map->obstacles[obstacleIndex].vertices[vertexIndex].y;
 		}
 
-		if ( !vectorEquals( &edgeB.start, &vertex ) )
-		{
-			flipEdge( &edgeB );
-			assert( vectorEquals( &edgeB.start, &vertex ) );
-		}
+		gpc_polygon obstaclePolygon;
+		obstaclePolygon.contour = obstacleContour;
+		obstaclePolygon.num_contours = 1;
+		obstaclePolygon.hole = malloc( sizeof( int ) );
+		obstaclePolygon.hole[0] = 0;
 
-		// Get points outside of this wall
-		QVector outsidePointA; // Guaranteed not to be aligned with edgeA
-		QVector outsidePointB; // Guaranteed not to be aligned with edgeB
-		getPointsOutsideWall( triangleOutput, vertexLinks, &edgeA, &edgeB, &outsidePointA, &outsidePointB );
-		
-		QVector movedVertex;
-		getPushedVector( &edgeA, &edgeB, &outsidePointA, &outsidePointB, padding, &movedVertex );
-		outNavmesh->vertices[vertexIndex] = movedVertex;
+		gpc_polygon_clip( GPC_DIFF, outMapPolygon, &obstaclePolygon, outMapPolygon );
 
-	} // else todo
+		gpc_free_polygon( &obstaclePolygon );
+	}
 }
 
-void padNavmesh( const QNavmesh *inNavmesh, const struct triangulateio *triangleOutput, QNavmesh *outNavmesh, REAL padding )
+// TODO.optimization: This would be faster if we kept the array sorted
+static int insertPointInTriangulationInput( REAL x, REAL y, QTriangulation *outTriangulation )
 {
-	assert( inNavmesh );
+	for ( int i = 0; i < outTriangulation->numberofpoints; i++ )
+	{
+		const REAL *const point = &outTriangulation->pointlist[2 * i];
+		if ( point[0] == x && point[1] == y )
+		{
+			return i;
+		}
+	}
+	REAL *const point = &outTriangulation->pointlist[2 * outTriangulation->numberofpoints];
+	point[0] = x;
+	point[1] = y;
+	outTriangulation->numberofpoints += 1;
+	return outTriangulation->numberofpoints - 1;
+}
+
+static void triangulateMap( QMap *map, QTriangulation *outTriangulation )
+{
+	memset( outTriangulation, 0, sizeof( *outTriangulation ) );
+
+	gpc_polygon mapPolygon;
+	mapToPolygonWithHoles( map, &mapPolygon );
+
+	QTriangulation triangulationInput;
+	memset( &triangulationInput, 0, sizeof( triangulationInput ) );
+
+	int maxPoints = 0;
+	assert( mapPolygon.num_contours > 0 );
+	for ( int contourIndex = 0; contourIndex < mapPolygon.num_contours; contourIndex++ )
+	{
+		const gpc_vertex_list *const contour = &mapPolygon.contour[contourIndex];
+		assert( contour->num_vertices > 2 );
+		maxPoints += contour->num_vertices;
+		triangulationInput.numberofsegments += contour->num_vertices;
+		/* TODO
+		if ( mapPolygon.hole[contourIndex] )
+		{
+			triangulationInput.numberofholes++;
+		}*/
+	}
+
+	triangulationInput.pointlist = malloc( maxPoints * 2 * sizeof( REAL ) );
+	triangulationInput.segmentlist = malloc( triangulationInput.numberofsegments * 2 * sizeof( int ) );
+	triangulationInput.holelist = malloc( triangulationInput.numberofholes * 2 * sizeof( REAL ) );
+	
+	triangulationInput.numberofpoints = 0;
+	int numSegments = 0;
+	int numHoles = 0;
+	for ( int contourIndex = 0; contourIndex < mapPolygon.num_contours; contourIndex++ )
+	{
+		const gpc_vertex_list *const contour = &mapPolygon.contour[contourIndex];
+		const int numVertices = contour->num_vertices;
+		assert( numVertices > 2 );
+		for ( int vertexIndex = 0; vertexIndex <= numVertices; vertexIndex++ )
+		{
+			const gpc_vertex *vertex = &contour->vertex[vertexIndex % numVertices];
+			const int endPoint = insertPointInTriangulationInput( vertex->x, vertex->y, &triangulationInput );
+			if ( vertexIndex > 0 )
+			{
+				const gpc_vertex *const previousVertex = &contour->vertex[vertexIndex - 1];
+				const int startPoint = insertPointInTriangulationInput( previousVertex->x, previousVertex->y, &triangulationInput );
+				int *const segment = &triangulationInput.segmentlist[2 * numSegments];
+				segment[0] = startPoint;
+				segment[1] = endPoint;
+				numSegments++;
+			}
+		}
+		/* TODO
+		if ( mapPolygon.hole[contourIndex] )
+		{
+			triangulationInput.numberofholes++;
+		}*/
+	}
+
+	assert( numSegments == triangulationInput.numberofsegments );
+	assert( numHoles == triangulationInput.numberofholes );
+
+	triangulate( "pjenzq0V", &triangulationInput, outTriangulation, NULL );
+
+	gpc_free_polygon( &mapPolygon );
+}
+
+static void triangulationToNavmesh( const struct triangulateio *triangleOutput, QNavmesh *outNavmesh )
+{
 	assert( outNavmesh );
-	assert( inNavmesh != outNavmesh );
-	assert( padding >= 0 );
-	assert( inNavmesh->valid );
-
-	*outNavmesh = *inNavmesh;
-
-	if ( padding == 0 )
-	{
-		return;
-	}
-
-	// Terminology: "edge" means any edge in the output, "segment" means constrained-edge (ie. part of the obstacles or map boundaries)
-	const int numVertices = triangleOutput->numberofpoints;
-	VertexLinks *verticesLinks = malloc( sizeof( VertexLinks ) * numVertices );
-	populateVerticesLinks( triangleOutput, verticesLinks );
-
-	// Move vertices!
-	for ( int i = 0; i < numVertices; i++ )
-	{
-		padVertex( triangleOutput, verticesLinks, i, padding, outNavmesh );
-	}
-
-	// Cleanup
-	for ( int i = 0; i < numVertices; i++ )
-	{
-		if ( verticesLinks[i].numEdges > 0 )
-		{
-			free( verticesLinks[i].edges );
-		}
-		if ( verticesLinks[i].numBoundaryEdges > 0 )
-		{
-			free( verticesLinks[i].boundaryEdges );
-		}
-	}
-	free( verticesLinks );
-
-}
-
-void populateNavmesh( QNavmesh *navmesh, const struct triangulateio *triangleOutput )
-{
-	assert( navmesh );
 	assert( triangleOutput );
 
-	memset( navmesh, 0, sizeof( *navmesh ) );
-	if ( triangleOutput->numberofpoints > MAX_VERTICES )
+	memset( outNavmesh, 0, sizeof( *outNavmesh ) );
+	assert( triangleOutput->numberofpoints < MAX_VERTICES );
+	assert( triangleOutput->numberoftriangles < MAX_TRIANGLES );
+
+	outNavmesh->numVertices = triangleOutput->numberofpoints;
+	outNavmesh->numEdges = triangleOutput->numberofedges;
+	outNavmesh->numTriangles = triangleOutput->numberoftriangles;
+
+	for ( int i = 0; i < outNavmesh->numVertices; i++ )
 	{
-		return;
-	}
-	if ( triangleOutput->numberofedges > MAX_EDGES )
-	{
-		return;
-	}
-	if ( triangleOutput->numberoftriangles > MAX_TRIANGLES )
-	{
-		return;
+		outNavmesh->vertices[i].x = triangleOutput->pointlist[2 * i + 0];
+		outNavmesh->vertices[i].y = triangleOutput->pointlist[2 * i + 1];
 	}
 
-	navmesh->valid = 1;
-	navmesh->numVertices = triangleOutput->numberofpoints;
-	navmesh->numEdges = triangleOutput->numberofedges;
-	navmesh->numTriangles = triangleOutput->numberoftriangles;
-
-	for ( int i = 0; i < navmesh->numVertices; i++ )
+	for ( int i = 0; i < outNavmesh->numTriangles; i++ )
 	{
-		navmesh->vertices[i].x = triangleOutput->pointlist[2 * i + 0];
-		navmesh->vertices[i].y = triangleOutput->pointlist[2 * i + 1];
-	}
-
-	for ( int i = 0; i < navmesh->numTriangles; i++ )
-	{
-		navmesh->triangles[i].vertices[0] = triangleOutput->trianglelist[3 * i + 0];
-		navmesh->triangles[i].vertices[1] = triangleOutput->trianglelist[3 * i + 1];
-		navmesh->triangles[i].vertices[2] = triangleOutput->trianglelist[3 * i + 2];
-		navmesh->triangles[i].neighbours[0] = triangleOutput->neighborlist[3 * i + 0];
-		navmesh->triangles[i].neighbours[1] = triangleOutput->neighborlist[3 * i + 1];
-		navmesh->triangles[i].neighbours[2] = triangleOutput->neighborlist[3 * i + 2];
+		outNavmesh->triangles[i].vertices[0] = triangleOutput->trianglelist[3 * i + 0];
+		outNavmesh->triangles[i].vertices[1] = triangleOutput->trianglelist[3 * i + 1];
+		outNavmesh->triangles[i].vertices[2] = triangleOutput->trianglelist[3 * i + 2];
+		outNavmesh->triangles[i].neighbours[0] = triangleOutput->neighborlist[3 * i + 0];
+		outNavmesh->triangles[i].neighbours[1] = triangleOutput->neighborlist[3 * i + 1];
+		outNavmesh->triangles[i].neighbours[2] = triangleOutput->neighborlist[3 * i + 2];
 	}
 
 	return;
 }
 
-void generateNavmesh( int numVertices, REAL vertices[], int numSegments, int segments[], int numHoles, REAL holes[], REAL padding, QNavmesh *outNavmesh )
+static void freeMap( QMap *map )
 {
-	assert( numVertices >= 0 );
-	assert( numSegments >= 0 );
-	assert( numHoles >= 0 );
-	assert( vertices );
-	assert( segments );
-	assert( holes );
+	for ( int obstacleIndex = 0; obstacleIndex < map->numObstacles; obstacleIndex++ )
+	{
+		free( map->obstacles[obstacleIndex].vertices );
+		map->obstacles[obstacleIndex].vertices = NULL;
+	}
+	free( map->obstacles );
+	map->obstacles = NULL;
+	free( map );
+}
 
-	struct triangulateio triangleInput;
-	struct triangulateio triangleOutput;
-	memset( &triangleInput, 0, sizeof( triangleInput ) );
-	memset( &triangleOutput, 0, sizeof( triangleOutput ) );
+void generateNavmesh( QMap *map, int padding, QNavmesh *outNavmesh )
+{
+	assert( map->width > 0 );
+	assert( map->height > 0 );
+
+	QMap *paddedMap = malloc( sizeof( QMap ) );
+	padMap( padding, map, paddedMap );
+
+	QTriangulation triangulation;
+	triangulateMap( paddedMap, &triangulation );
+
+	triangulationToNavmesh( &triangulation, outNavmesh );
 	
-	triangleInput.numberofpoints = numVertices;
-	triangleInput.pointlist = vertices;
-	triangleInput.numberofsegments = numSegments;
-	triangleInput.segmentlist = segments;
-	triangleInput.holelist = holes;
-	triangleInput.numberofholes = numHoles;
-	
-	triangulate( "pjenzq0V", &triangleInput, &triangleOutput, NULL );
-
-	assert( holes == triangleOutput.holelist );
-	assert( triangleOutput.numberofcorners == 3 );
-	// TODO. Investigate why test map output as 5 points more than input while only 2 extra-points are visible in the navmesh
-
-	QNavmesh *navmesh = malloc( sizeof( QNavmesh ) );
-	populateNavmesh( navmesh, &triangleOutput );
-
-	padNavmesh( navmesh, &triangleOutput, outNavmesh, padding );
-	free( navmesh );
-
-	trifree( triangleOutput.pointlist );
-	trifree( triangleOutput.pointmarkerlist );
-	trifree( triangleOutput.trianglelist );
-	trifree( triangleOutput.neighborlist );
-	trifree( triangleOutput.segmentlist );
-	trifree( triangleOutput.segmentmarkerlist );
-	trifree( triangleOutput.edgelist );
-	trifree( triangleOutput.edgemarkerlist );
+	freeMap( paddedMap );
+	trifree( triangulation.pointlist );
+	trifree( triangulation.pointmarkerlist );
+	trifree( triangulation.trianglelist );
+	trifree( triangulation.neighborlist );
+	trifree( triangulation.segmentlist );
+	trifree( triangulation.segmentmarkerlist );
+	trifree( triangulation.edgelist );
+	trifree( triangulation.edgemarkerlist );
 }

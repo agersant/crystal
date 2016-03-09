@@ -2,8 +2,23 @@
 #include "vector_math.h"
 
 #define MAX_TRIANGLES 1000 // Update Lua FFI if changing this
-#define MAX_EDGES ( 3 * MAX_TRIANGLES )
 #define MAX_VERTICES ( 3 * MAX_TRIANGLES )
+
+typedef struct QObstacle
+{
+	int numVertices;
+	QVector *vertices;
+} QObstacle;
+
+typedef struct QMap
+{
+	int x;
+	int y;
+	int width;
+	int height;
+	QObstacle *obstacles;
+	int numObstacles;
+} QMap;
 
 typedef struct QTriangle
 {
@@ -13,7 +28,6 @@ typedef struct QTriangle
 
 typedef struct QNavmesh
 {
-	int valid;
 	int numTriangles;
 	int numEdges;
 	int numVertices;
@@ -23,4 +37,4 @@ typedef struct QNavmesh
 
 __declspec (dllexport) void ping();
 
-__declspec ( dllexport ) void generateNavmesh( int numVertices, REAL vertices[], int numSegments, int segments[], int numHoles, REAL holes[], REAL padding, QNavmesh *outNavmesh );
+__declspec ( dllexport ) void generateNavmesh( QMap *map, int padding, QNavmesh *outNavmesh );

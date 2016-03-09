@@ -38,6 +38,16 @@ void vectorScale( QVector *vector, REAL scale )
 	vector->y *= scale;
 }
 
+void vectorNormal( const QVector *vector, int left, QVector *outNormal )
+{
+	outNormal->x = -vector->y;
+	outNormal->y = vector->x;
+	if ( left )
+	{
+		vectorScale( outNormal, -1 );
+	}
+}
+
 REAL vectorCrossProduct( const QVector *a, const QVector *b )
 {
 	return a->x * b->y - a->y * b->x;
@@ -46,25 +56,6 @@ REAL vectorCrossProduct( const QVector *a, const QVector *b )
 int areVectorsColinear( const QVector *a, const QVector *b )
 {
 	return vectorCrossProduct( a, b ) == 0;
-}
-
-int isPointRightOfVector( const QVector *point, const QVector *vector )
-{
-	return vectorCrossProduct( vector, point ) > 0;
-}
-
-void flipEdge( QEdge *edge )
-{
-	QVector tmp;
-	tmp = edge->start;
-	edge->start = edge->end;
-	edge->end = tmp;
-}
-
-void edgeMiddle( const QEdge *edge, QVector *result )
-{
-	result->x = ( edge->start.x + edge->end.x ) / 2;
-	result->y = ( edge->start.y + edge->end.y ) / 2;
 }
 
 void edgeOffset( const QEdge *edge, const QVector *offset, QEdge *result )
@@ -77,87 +68,6 @@ void edgeToVector( const QEdge *edge, QVector *vector )
 {
 	vector->x = edge->end.x - edge->start.x;
 	vector->y = edge->end.y - edge->start.y;
-}
-
-void getPushedVector( const QEdge *inEdgeA, const QEdge *inEdgeB, const QVector *outsidePointA, const QVector *outsidePointB, REAL padding, QVector *out )
-{
-	assert( vectorEquals( &inEdgeA->start, &inEdgeB->start ) );
-	
-	QVector vectorA;
-	QVector vectorB;
-	edgeToVector( inEdgeA, &vectorA );
-	edgeToVector( inEdgeB, &vectorB );
-	vectorNormalize( &vectorA );
-	vectorNormalize( &vectorB );
-	vectorScale( &vectorA, padding );
-	vectorScale( &vectorB, padding );
-
-	QVector outsideVectorA;
-	QVector outsideVectorB;
-	vectorSubtract( outsidePointA, &inEdgeA->start, &outsideVectorA );
-	vectorSubtract( outsidePointB, &inEdgeB->start, &outsideVectorB );
-
-	assert( !areVectorsColinear( &vectorA, &outsideVectorA ) );
-	assert( !areVectorsColinear( &vectorB, &outsideVectorB ) );
-
-	out->x = 0;
-	out->y = 0;
-
-	const int isOutsidePointRightOfA = isPointRightOfVector( &outsideVectorA, &vectorA );
-	const int isOutsidePointRightOfB = isPointRightOfVector( &outsideVectorB, &vectorB );
-
-	if ( areVectorsColinear( &vectorA, &vectorB ) )
-	{
-		if ( isOutsidePointRightOfA )
-		{
-			out->x += -vectorA.y;
-			out->y += vectorA.x;
-		}
-		else
-		{
-			out->x -= -vectorA.y;
-			out->y -= vectorA.x;
-		}
-		vectorAdd( &inEdgeA->start, out, out );
-	}
-	else
-	{
-
-		QEdge edgeA = *inEdgeA;
-		QEdge edgeB = *inEdgeB;
-		QVector edgeNormal;
-
-		if ( isOutsidePointRightOfA )
-		{
-			edgeNormal.x = -vectorA.y;
-			edgeNormal.y = vectorA.x;
-		}
-		else
-		{
-			edgeNormal.x = vectorA.y;
-			edgeNormal.y = -vectorA.x;
-		}
-		vectorNormalize( &edgeNormal );
-		vectorScale( &edgeNormal, padding );
-		edgeOffset( &edgeA, &edgeNormal, &edgeA );
-
-		if ( isOutsidePointRightOfB )
-		{
-			edgeNormal.x = -vectorB.y;
-			edgeNormal.y = vectorB.x;
-		}
-		else
-		{
-			edgeNormal.x = vectorB.y;
-			edgeNormal.y = -vectorB.x;
-		}
-		vectorNormalize( &edgeNormal );
-		vectorScale( &edgeNormal, padding );
-		edgeOffset( &edgeB, &edgeNormal, &edgeB );
-
-		const int intersects = lineIntersection( &edgeA, &edgeB, out );
-		assert( intersects );
-	}
 }
 
 int lineIntersection( const QEdge *edgeA, const QEdge *edgeB, QVector *outResult )
