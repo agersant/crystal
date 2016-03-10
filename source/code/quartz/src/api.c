@@ -295,7 +295,7 @@ static void triangulateMap( QMap *map, QTriangulation *outTriangulation )
 	assert( numSegments == triangulationInput.numberofsegments );
 	assert( numHoles == triangulationInput.numberofholes );
 
-	triangulate( "pjenzq0V", &triangulationInput, outTriangulation, NULL );
+	triangulate( "pjenzq5V", &triangulationInput, outTriangulation, NULL );
 
 	gpc_free_polygon( &mapPolygon );
 }
