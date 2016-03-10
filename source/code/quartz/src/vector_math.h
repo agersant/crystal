@@ -24,5 +24,6 @@ REAL vectorCrossProduct( const QVector *a, const QVector *b );
 int areVectorsColinear( const QVector *a, const QVector *b );
 
 void edgeOffset( const QEdge *edge, const QVector *offset, QEdge *result );
+void edgeToVector( const QEdge *edge, QVector *vector );
 
 int lineIntersection( const QEdge *edgeA, const QEdge *edgeB, QVector *outResult );
