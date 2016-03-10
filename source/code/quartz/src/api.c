@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <float.h>
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -88,9 +89,7 @@ static void padMap( int padding, const QMap *inMap, QMap *outMap )
 					edgeOffset( &edgeB, &edgeNormal, &edgeB );
 				}
 
-				printf( "Before: %f, %f\n", targetVertex->x, targetVertex->y );
 				const int intersects = lineIntersection( &edgeA, &edgeB, targetVertex );
-				printf( "After: %f, %f\n\n", targetVertex->x, targetVertex->y );
 				assert( intersects );
 			}
 		}
@@ -161,6 +160,77 @@ static int insertPointInTriangulationInput( REAL x, REAL y, QTriangulation *outT
 	return outTriangulation->numberofpoints - 1;
 }
 
+static void getPointWithinContour( const gpc_vertex_list *contour, QVector *outPoint )
+{
+	const int numVertices = contour->num_vertices;
+	assert( numVertices > 2 );
+
+	// Find a x coordinate within the contour's bounding box
+	// which is not the x coordinate of any of the vertices
+	{
+		REAL minX = DBL_MAX;
+		REAL minX2 = DBL_MAX;
+		for ( int vertexIndex = 0; vertexIndex < numVertices; vertexIndex++ )
+		{
+			const gpc_vertex *const vertex = &contour->vertex[vertexIndex];
+			if ( vertex->x < minX )
+			{
+				minX2 = minX;
+				minX = vertex->x;
+			}
+		}
+		assert( minX != DBL_MAX );
+		assert( minX2 != DBL_MAX );
+		assert( minX != minX2 );
+		outPoint->x = ( minX + minX2 ) / 2;
+	}
+	
+	// Intersect the vertical going through x with all segments in the contour
+	// Keeping the lowest two y coordinates of intersections
+	{
+		QEdge vertical;
+		vertical.start.x = outPoint->x;
+		vertical.start.y = 0;
+		vertical.end.x = outPoint->x;
+		vertical.end.x = 1;
+		for ( int vertexIndex = 1; vertexIndex <= numVertices; vertexIndex++ )
+		{
+			REAL minY = DBL_MAX;
+			REAL minY2 = DBL_MAX;
+			for ( int vertexIndex = 1; vertexIndex <= numVertices; vertexIndex++ )
+			{
+				const gpc_vertex *const previousVertex = &contour->vertex[vertexIndex - 1];
+				const gpc_vertex *const vertex = &contour->vertex[vertexIndex % numVertices];
+				assert( outPoint->x != previousVertex->x );
+				assert( outPoint->x != vertex->x );
+				
+				if ( ( previousVertex->x - outPoint->x ) * ( vertex->x - outPoint->x ) >= 0 )
+				{
+					continue;
+				}
+
+				QEdge edge;
+				edge.start.x = previousVertex->x;
+				edge.start.y = previousVertex->y;
+				edge.end.x = vertex->x;
+				edge.end.y = vertex->y;
+
+				QVector intersection;
+				lineIntersection( &edge, &vertical, &intersection );
+				if ( intersection.y < minY )
+				{
+					minY2 = minY;
+					minY = intersection.y;
+				}
+			}
+			assert( minY != DBL_MAX );
+			assert( minY2 != DBL_MAX );
+			assert( minY != minY2 );
+			outPoint->y = ( minY + minY2 ) / 2;
+		}
+	}
+}
+
 static void triangulateMap( QMap *map, QTriangulation *outTriangulation )
 {
 	memset( outTriangulation, 0, sizeof( *outTriangulation ) );
@@ -179,11 +249,10 @@ static void triangulateMap( QMap *map, QTriangulation *outTriangulation )
 		assert( contour->num_vertices > 2 );
 		maxPoints += contour->num_vertices;
 		triangulationInput.numberofsegments += contour->num_vertices;
-		/* TODO
 		if ( mapPolygon.hole[contourIndex] )
 		{
 			triangulationInput.numberofholes++;
-		}*/
+		}
 	}
 
 	triangulationInput.pointlist = malloc( maxPoints * 2 * sizeof( REAL ) );
@@ -200,7 +269,7 @@ static void triangulateMap( QMap *map, QTriangulation *outTriangulation )
 		assert( numVertices > 2 );
 		for ( int vertexIndex = 0; vertexIndex <= numVertices; vertexIndex++ )
 		{
-			const gpc_vertex *vertex = &contour->vertex[vertexIndex % numVertices];
+			const gpc_vertex *const vertex = &contour->vertex[vertexIndex % numVertices];
 			const int endPoint = insertPointInTriangulationInput( vertex->x, vertex->y, &triangulationInput );
 			if ( vertexIndex > 0 )
 			{
@@ -212,11 +281,15 @@ static void triangulateMap( QMap *map, QTriangulation *outTriangulation )
 				numSegments++;
 			}
 		}
-		/* TODO
 		if ( mapPolygon.hole[contourIndex] )
 		{
-			triangulationInput.numberofholes++;
-		}*/
+			QVector holePoint;
+			getPointWithinContour( contour, &holePoint );
+			REAL *const hole = &triangulationInput.holelist[2 * numHoles];
+			hole[0] = holePoint.x;
+			hole[1] = holePoint.y;
+			numHoles++;
+		}
 	}
 
 	assert( numSegments == triangulationInput.numberofsegments );
