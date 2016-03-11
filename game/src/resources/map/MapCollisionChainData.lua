@@ -146,22 +146,8 @@ MapCollisionChainData.getShape = function( self )
 	return self._shape;
 end
 
-MapCollisionChainData.getRepresentative = function( self )
-	if self._outer then
-		return nil;
-	end
-	if self:getNumSegments() < 3 then
-		return nil;
-	end
-	local x1, y1, x2, y2 = self:getSegment( 1 );
-	local x2, y2, x3, y3 = self:getSegment( 2 );
-	local x = ( x1 + x3 ) / 2 - x2;
-	local y = ( y1 + y3 ) / 2 - y2;
-	local n = MathUtils.vectorLength( x, y );
-	assert( n > 0 );
-	x = x / n;
-	y = y / n;
-	return x2 + 0.5 * x, y2 + 0.5 * y;
+MapCollisionChainData.isOuter = function( self )
+	return self._outer;
 end
 
 MapCollisionChainData.getNumVertices = function( self )

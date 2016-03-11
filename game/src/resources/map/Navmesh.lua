@@ -66,7 +66,7 @@ local generateCMesh = function( self, width, height, collisionMesh, padding )
 	
 	local obstacles = {};
 	for _, chain in collisionMesh:chains() do
-		if not chain._outer then -- TODO dont use private stuff
+		if not chain:isOuter() then
 			local obstacle = FFI.gc( FFI.new( FFI.typeof( "QObstacle" ) ), FFI.C.free );
 			local vertices = {};
 			for i, x, y in chain:vertices() do
