@@ -35,6 +35,4 @@ typedef struct QNavmesh
 	QTriangle triangles[MAX_TRIANGLES];
 } QNavmesh;
 
-__declspec (dllexport) void ping();
-
 __declspec ( dllexport ) void generateNavmesh( QMap *map, int padding, QNavmesh *outNavmesh );
