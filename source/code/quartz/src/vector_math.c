@@ -12,10 +12,28 @@ REAL vectorLength( const QVector *vector )
 	return sqrt( ( vector->x *vector->x ) + ( vector->y * vector->y ) );
 }
 
+REAL vectorLength2( const QVector *vector )
+{
+	return ( vector->x * vector->x ) + ( vector->y * vector->y );
+}
+
+REAL vectorDistance2( const QVector *a, const QVector *b )
+{
+	QVector difference;
+	vectorSubtract( a, b, &difference );
+	return vectorLength2( &difference );
+}
+
 void vectorAdd( const QVector *a, const QVector *b, QVector *result )
 {
 	result->x = a->x + b->x;
 	result->y = a->y + b->y;
+}
+
+void vectorMadd( const QVector *a, REAL m, const QVector *b, QVector *result )
+{
+	result->x = a->x + m * b->x;
+	result->y = a->y + m * b->y;
 }
 
 void vectorSubtract( const QVector *a, const QVector *b, QVector *result )
@@ -46,6 +64,11 @@ void vectorNormal( const QVector *vector, int left, QVector *outNormal )
 	{
 		vectorScale( outNormal, -1 );
 	}
+}
+
+REAL vectorDotProduct( const QVector *a, const QVector *b )
+{
+	return a->x * b->x + a->y * b->y;
 }
 
 REAL vectorCrossProduct( const QVector *a, const QVector *b )
@@ -88,4 +111,15 @@ int lineIntersection( const QEdge *edgeA, const QEdge *edgeB, QVector *outResult
 	outResult->x = ( ( x1 * y2 - y1 * x2 ) * ( x3 - x4 ) - ( x1 - x2 ) * ( x3 * y4 - y3 * x4 ) ) / det;
 	outResult->y = ( ( x1 * y2 - y1 * x2 ) * ( y3 - y4 ) - ( y1 - y2 ) * ( x3 * y4 - y3 * x4 ) ) / det;
 	return 1;
+}
+
+void projectPointOntoSegment( const QVector *point, const QEdge *line, QVector *outResult )
+{
+	assert( !vectorEquals( &line->start, &line->end ) );
+	QVector AB, AP;
+	vectorSubtract( &line->end, &line->start, &AB );
+	vectorSubtract( point, &line->start, &AP );
+	const REAL length2 = vectorDistance2( &line->start, &line->end );
+	const REAL t = vectorDotProduct( &AB, &AP ) / length2;
+	vectorMadd( &line->start, t, &AB, outResult );
 }
