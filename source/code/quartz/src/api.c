@@ -369,6 +369,10 @@ static void triangulateMap( QPolygonMap *map, QTriangulation *outTriangulation )
 
 	triangulate( "pjenzq5V", &triangulationInput, outTriangulation, NULL );
 
+	trifree( triangulationInput.pointlist );
+	trifree( triangulationInput.segmentlist );
+	trifree( triangulationInput.holelist );
+
 	gpc_free_polygon( &mapPolygon );
 }
 
@@ -410,6 +414,7 @@ static void freePolygonMap( QPolygonMap *map )
 	{
 		gpc_free_polygon( &map->polygons[polygonIndex] );
 	}
+	free( map->polygons );
 	map->polygons = NULL;
 }
 
