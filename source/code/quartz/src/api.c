@@ -9,6 +9,11 @@
 #include "../../../../lib/triangle/triangle.h"
 
 #define QUARTZ_EPSILON 0.001
+#ifndef NDEBUG
+#define verify(x) assert( x )
+#else
+#define verify(x) ( ( void ) ( x) )
+#endif
 
 typedef struct triangulateio QTriangulation;
 
@@ -74,8 +79,7 @@ static void padVertex( const QEdge *inEdgeA, const QEdge *inEdgeB, int clockwise
 			edgeOffset( &edgeB, &edgeNormal, &edgeB );
 		}
 
-		const int intersects = lineIntersection( &edgeA, &edgeB, outPaddedVertex );
-		assert( intersects );
+		verify( lineIntersection( &edgeA, &edgeB, outPaddedVertex ) );
 	}
 }
 
@@ -265,8 +269,7 @@ static void getPointWithinContour( const gpc_vertex_list *contour, QVector *outP
 				edge.end.y = vertex->y;
 
 				QVector intersection;
-				const int intersects = lineIntersection( &edge, &vertical, &intersection );
-				assert( intersects );
+				verify( lineIntersection( &edge, &vertical, &intersection ) );
 
 				if ( intersection.y < minY )
 				{
