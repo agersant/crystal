@@ -367,7 +367,7 @@ static void triangulateMap( QPolygonMap *map, QTriangulation *outTriangulation )
 	assert( numSegments == triangulationInput.numberofsegments );
 	assert( numHoles == triangulationInput.numberofholes );
 
-	triangulate( "pjenzq5V", &triangulationInput, outTriangulation, NULL );
+	triangulate( "pjenzq5Q", &triangulationInput, outTriangulation, NULL );
 
 	trifree( triangulationInput.pointlist );
 	trifree( triangulationInput.segmentlist );
