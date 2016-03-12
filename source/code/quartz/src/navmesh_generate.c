@@ -7,6 +7,8 @@
 #include "types.h"
 #include "vector_math.h"
 
+#define OBSTACLE_THICKNESS_EPSILON 0.001
+
 
 
 //INTERNALS
@@ -131,8 +133,6 @@ static void getPointWithinContour( const gpc_vertex_list *contour, QVector *outP
 		outPoint->x = ( minX + minX2 ) / 2;
 	}
 
-	// Intersect the vertical going through x with all segments in the contour
-	// Keeping the lowest two y coordinates of intersections
 	{
 		QEdge vertical;
 		vertical.start.x = outPoint->x;
@@ -142,6 +142,9 @@ static void getPointWithinContour( const gpc_vertex_list *contour, QVector *outP
 		{
 			REAL minY = DBL_MAX;
 			REAL minY2 = DBL_MAX;
+
+			// Intersect the vertical going through x with all segments in the contour
+			// Keeping the lowest two y coordinates of intersections
 			for ( int vertexIndex = 1; vertexIndex <= numVertices; vertexIndex++ )
 			{
 				const gpc_vertex *const previousVertex = &contour->vertex[vertexIndex - 1];
@@ -176,10 +179,14 @@ static void getPointWithinContour( const gpc_vertex_list *contour, QVector *outP
 			assert( minY != DBL_MAX );
 			assert( minY2 != DBL_MAX );
 			assert( minY < minY2 );
+
 			// If our obstacles had no holes, we would just use ( minY + minY2 ) / 2.
-			// Since going so far away from the edge may put us in the middle of a hole,
-			// We make the bet that our obstacle is at least QUARTZ_EPSILON big.
-			outPoint->y = minY + min( QUARTZ_EPSILON, ( minY + minY2 ) / 2 );
+			// Since going so far away from minY may put us in the middle of a hole,
+			// we make the bet that the obstacle is at least OBSTACLE_THICKNESS_EPSILON
+			// thick and only go that far. This will be correct as long as their is
+			// no hole within OBSTACLE_THICKNESS_EPSILON units of minY.
+			assert( ( minY2 - minY ) > OBSTACLE_THICKNESS_EPSILON );
+			outPoint->y = minY + OBSTACLE_THICKNESS_EPSILON;
 		}
 	}
 }

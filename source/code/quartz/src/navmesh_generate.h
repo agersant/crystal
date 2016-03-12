@@ -3,8 +3,6 @@
 #include "../../../../lib/gpc/gpc.h"
 #include "../../../../lib/triangle/triangle.h"
 
-#define QUARTZ_EPSILON 0.001
-
 #ifndef NDEBUG
 #define verify(x) assert( x )
 #else
