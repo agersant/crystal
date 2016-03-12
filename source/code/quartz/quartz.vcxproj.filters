@@ -30,6 +30,9 @@
     <ClInclude Include="..\..\..\lib\gpc\gpc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\quartz.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\lib\triangle\triangle.c">
@@ -42,6 +45,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\lib\gpc\gpc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\quartz.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
