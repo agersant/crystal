@@ -2,7 +2,7 @@
 #include "types.h"
 #include "../../../../lib/triangle/triangle.h"
 #include "api.h"
-#include "quartz.h"
+#include "navmesh_generate.h"
 
 void generateNavmesh( QMap *map, int padding, QNavmesh *outNavmesh )
 {

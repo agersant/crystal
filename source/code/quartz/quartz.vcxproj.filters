@@ -30,7 +30,7 @@
     <ClInclude Include="..\..\..\lib\gpc\gpc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\quartz.h">
+    <ClInclude Include="src\navmesh_generate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -47,7 +47,7 @@
     <ClCompile Include="..\..\..\lib\gpc\gpc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\quartz.c">
+    <ClCompile Include="src\navmesh_generate.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

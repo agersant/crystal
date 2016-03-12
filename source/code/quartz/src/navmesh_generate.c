@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "api.h"
-#include "quartz.h"
+#include "navmesh_generate.h"
 #include "types.h"
 #include "vector_math.h"
 
