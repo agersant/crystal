@@ -8,7 +8,8 @@ gConf.features.cli = not release;
 gConf.features.fpsCounter = not release;
 gConf.features.debugDraw = not release;
 
-gConf.maxLocalPlayers = 8;
+gConf.splitscreen = {};
+gConf.splitscreen.maxLocalPlayers = 8;
 
 love.conf = function( options )
 	options.console = true;

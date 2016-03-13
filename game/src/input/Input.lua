@@ -9,7 +9,7 @@ local Input = Class( "Input" );
 
 Input.init = function( self )
 	self._devices = {};
-	for i = 1, gConf.maxLocalPlayers do
+	for i = 1, gConf.splitscreen.maxLocalPlayers do
 		local device = InputDevice:new();
 		table.insert( self._devices, device );
 	end
