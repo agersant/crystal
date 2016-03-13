@@ -32,3 +32,5 @@ void edgeToVector( const QEdge *edge, QVector *vector );
 
 int lineIntersection( const QEdge *edgeA, const QEdge *edgeB, QVector *outResult );
 void projectPointOntoSegment( const QVector *vector, const QEdge *line, QVector *outResult );
+
+int doesTriangleContainPoint( const QVector *a, const QVector *b, const QVector *c, const QVector *point );

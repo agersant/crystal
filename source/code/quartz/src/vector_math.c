@@ -123,3 +123,22 @@ void projectPointOntoSegment( const QVector *point, const QEdge *line, QVector *
 	const REAL t = vectorDotProduct( &AB, &AP ) / length2;
 	vectorMadd( &line->start, t, &AB, outResult );
 }
+
+int doesTriangleContainPoint( const QVector *a, const QVector *b, const QVector *c, const QVector *point )
+{
+	QVector ac, ab, ap;
+	vectorSubtract( c, a, &ac );
+	vectorSubtract( b, a, &ab );
+	vectorSubtract( point, a, &ap );
+	const REAL dotACAC = vectorDotProduct( &ac, &ac );
+	const REAL dotACAB = vectorDotProduct( &ac, &ab );
+	const REAL dotACAP = vectorDotProduct( &ac, &ap );
+	const REAL dotABAB = vectorDotProduct( &ab, &ab );
+	const REAL dotABAP = vectorDotProduct( &ab, &ap );
+
+	const REAL denom = dotACAC * dotABAB - dotACAB * dotACAB;
+	assert( denom != 0 );
+	const REAL u = ( dotABAB * dotACAP - dotACAB * dotABAP ) / denom;
+	const REAL v = ( dotACAC * dotABAP - dotACAB * dotACAP ) / denom;
+	return u >= 0 && u >= 0 && u + v <= 1;
+}
