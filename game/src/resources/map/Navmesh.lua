@@ -1,7 +1,7 @@
 require( "src/utils/OOP" );
 local FFI = require( "ffi" );
+local Font = require( "src/graphics/Font" );
 local Colors = require( "src/resources/Colors" );
-local Fonts = require( "src/resources/Fonts" );
 local Quartz = FFI.load( "quartz" );
 
 local Navmesh = Class( "Navmesh" );
@@ -139,6 +139,9 @@ end
 Navmesh.init = function( self, width, height, collisionMesh, padding )
 	self._qNavmesh = generateQNavmesh( self, width, height, collisionMesh, padding );
 	parseQNavmesh( self, self._qNavmesh );
+	if gConf.features.debugDraw then
+		self._font = Font:new( "dev", 8 );
+	end
 end
 
 Navmesh.planPath = function( self, startX, startY, endX, endY )
@@ -160,10 +163,7 @@ end
 
 Navmesh.draw = function( self )
 	assert( self._triangles );
-	
-	local font = Fonts:get( "dev", 16 );
-	love.graphics.setFont( font );
-	
+	local font = self._font;
 	love.graphics.setLineWidth( 0.2 );
 	love.graphics.setPointSize( 3 );
 	for i, triangle in ipairs( self._triangles ) do
@@ -173,7 +173,7 @@ Navmesh.draw = function( self )
 		love.graphics.polygon( "line", triangle.vertices );
 		love.graphics.points( triangle );
 		local text = tostring( i - 1 ); 
-		love.graphics.print( text, triangle.center.x - font:getWidth( text ) / 2, triangle.center.y - font:getHeight()/2 );
+		font:print( text, triangle.center.x - font:getWidth( text ) / 2, triangle.center.y - font:getHeight() / 2 );
 	end
 end
 

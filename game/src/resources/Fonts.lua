@@ -15,10 +15,10 @@ end
 -- PUBLIC API
 
 Fonts.init = function( self )
-	self._fontObjects = {};
+	self:flush();
 end
 
-Fonts.get = function( self, name, size )
+Fonts.getRaw = function( self, name, size )
 	if self._fontObjects[name] and self._fontObjects[name][size] then
 		return self._fontObjects[name][size];
 	end
@@ -29,6 +29,10 @@ Fonts.get = function( self, name, size )
 	self._fontObjects[name][size] = love.graphics.newFont( fontFile, size );
 	Log:info( "Registered font " .. fontFile .. " at size " .. size );
 	return self._fontObjects[name][size];
+end
+
+Fonts.flush = function( self )
+	self._fontObjects = {};
 end
 
 

@@ -1,9 +1,9 @@
 require( "src/utils/OOP" );
-local Fonts = require( "src/resources/Fonts" );
-local Colors = require( "src/resources/Colors" );
 local Log = require( "src/dev/Log" );
 local AutoComplete = require( "src/dev/cli/AutoComplete" );
 local CommandStore = require( "src/dev/cli/CommandStore" );
+local Font = require( "src/graphics/Font" );
+local Colors = require( "src/resources/Colors" );
 local TextInput = require( "src/ui/TextInput" );
 local StringUtils = require( "src/utils/StringUtils" );
 
@@ -104,6 +104,7 @@ CLI.init = function( self )
 	self._isActive = false;
 	self._textInputWasOn = false;
 	self._keyRepeatWasOn = false;
+	self._font = Font:new( "dev", fontSize );
 	wipeInput( self );
 end
 
@@ -130,8 +131,7 @@ CLI.draw = function( self )
 		return;
 	end
 	
-	local font = Fonts:get( "dev", fontSize );
-	love.graphics.setFont( font );
+	local font = self._font;
 	
 	-- Draw background
 	love.graphics.setColor( Colors.darkViridian:alpha( 255 * 0.7 ) );
@@ -151,13 +151,13 @@ CLI.draw = function( self )
 	local chevronY = inputBoxY + inputBoxPaddingY;
 	local chevron = "> ";
 	love.graphics.setColor( Colors.white );
-	love.graphics.print( chevron, chevronX, chevronY );
+	font:print( chevron, chevronX, chevronY );
 	
 	-- Draw input text
 	local inputX = chevronX + font:getWidth( chevron );
 	local inputY = chevronY;
 	love.graphics.setColor( Colors.white );
-	love.graphics.print( self._textInput:getText(), inputX, inputY );
+	font:print( self._textInput:getText(), inputX, inputY );
 	
 	-- Draw caret
 	local pre = self._textInput:getTextLeftOfCursor();
@@ -217,7 +217,7 @@ CLI.draw = function( self )
 				love.graphics.rectangle( "fill", autoCompleteBoxX, suggestionY, autoCompleteCursorWidth, font:getHeight() );
 			end
 			love.graphics.setColor( Colors.white );
-			love.graphics.print( suggestion.text, suggestionX, suggestionY );
+			font:print( suggestion.text, suggestionX, suggestionY );
 		end
 	end
 	

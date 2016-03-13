@@ -1,6 +1,7 @@
 local FPSCounter = require( "src/dev/FPSCounter" );
 local Log = require( "src/dev/Log" );
 local CLI = require( "src/dev/cli/CLI" );
+local GFXConfig = require( "src/graphics/GFXConfig" );
 local Input = require( "src/input/Input" );
 local Scene = require( "src/scene/Scene" );
 
@@ -8,7 +9,9 @@ local Scene = require( "src/scene/Scene" );
 
 love.load = function()
 	love.keyboard.setTextInput( false );
-	require( "src/scene/MapScene" ); 	-- Register commands
+	require( "src/graphics/GFX" ); 			-- Override Love defaults
+	require( "src/graphics/GFXCommands" ); 	-- Register commands
+	require( "src/scene/MapScene" ); 		-- Register commands
 	Log:info( "Completed startup" );
 end
 
@@ -20,7 +23,10 @@ end
 
 love.draw = function()
 	love.graphics.reset();
+	love.graphics.scale( GFXConfig:getZoom(), GFXConfig:getZoom() );
 	Scene:getCurrent():draw();
+	
+	love.graphics.reset();
 	FPSCounter:draw();
 	CLI:draw();
 end
