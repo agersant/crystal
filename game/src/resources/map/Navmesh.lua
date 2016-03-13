@@ -143,6 +143,7 @@ Navmesh.init = function( self, width, height, collisionMesh, padding )
 	if gConf.features.debugDraw then
 		self._font = Font:new( "dev", 8 );
 	end
+	self._testPath = self:planPath( 32, 32, 13*16, 4*16 ); -- TODO TMP
 end
 
 Navmesh.planPath = function( self, startX, startY, endX, endY )
@@ -150,15 +151,11 @@ Navmesh.planPath = function( self, startX, startY, endX, endY )
 	Quartz.planPath( self._qNavmesh, startX, startY, endX, endY, qPath );
 	-- TODO wrap in a class
 	local path = {};
-	table.insert( path, startX );
-	table.insert( path, startY );
 	for i = 0, qPath.numVertices - 1 do
 		local cVector = qPath.vertices[i];
 		table.insert( path, cVector.x );
 		table.insert( path, cVector.y );
 	end
-	table.insert( path, endX );
-	table.insert( path, endY );
 	return path;
 end
 
@@ -182,6 +179,12 @@ Navmesh.draw = function( self )
 		local y = MathUtils.round( triangle.center.y - font:getHeight() / 2 );
 		font:print( text, x, y );
 	end
+	
+	-- TODO TMP
+	love.graphics.setLineWidth( 2 );
+	love.graphics.setColor( 255, 0, 0, 255 );
+	love.graphics.line( self._testPath );
+	love.graphics.points( self._testPath );
 end
 
 
