@@ -2,6 +2,7 @@ require( "src/utils/OOP" );
 local FFI = require( "ffi" );
 local Font = require( "src/graphics/Font" );
 local Colors = require( "src/resources/Colors" );
+local MathUtils = require( "src/utils/MathUtils" );
 local Quartz = FFI.load( "quartz" );
 
 local Navmesh = Class( "Navmesh" );
@@ -172,8 +173,14 @@ Navmesh.draw = function( self )
 		love.graphics.setColor( Colors.cyan );
 		love.graphics.polygon( "line", triangle.vertices );
 		love.graphics.points( triangle );
-		local text = tostring( i - 1 ); 
-		font:print( text, triangle.center.x - font:getWidth( text ) / 2, triangle.center.y - font:getHeight() / 2 );
+	end
+	
+	love.graphics.setColor( Colors.oxfordBlue );
+	for i, triangle in ipairs( self._triangles ) do
+		local text = tostring( i - 1 );
+		local x = MathUtils.round( triangle.center.x - font:getWidth( text ) / 2 );
+		local y = MathUtils.round( triangle.center.y - font:getHeight() / 2 );
+		font:print( text, x, y );
 	end
 end
 
