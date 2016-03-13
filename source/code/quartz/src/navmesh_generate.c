@@ -7,8 +7,11 @@
 #include "types.h"
 #include "vector_math.h"
 
+#define MAX_MAP_OBSTACLES 500
+#define MAX_MAP_OBSTACLE_VERTICES 100
+#define MAX_NAVMESH_TRIANGLES 1000
+#define MAX_NAVMESH_VERTICES ( 3 * MAX_NAVMESH_TRIANGLES )
 #define OBSTACLE_THICKNESS_EPSILON 0.001
-
 
 
 //INTERNALS
@@ -203,12 +206,15 @@ void mapToPolygonMap( const QMap *map, QPolygonMap *outPolygonMap )
 	outPolygonMap->width = map->width;
 	outPolygonMap->height = map->height;
 	outPolygonMap->numPolygons = map->numObstacles;
+
+	assert( outPolygonMap->numPolygons < MAX_MAP_OBSTACLES );
 	outPolygonMap->polygons = malloc( outPolygonMap->numPolygons * sizeof( gpc_polygon ) );
 
 	for ( int obstacleIndex = 0; obstacleIndex < map->numObstacles; obstacleIndex++ )
 	{
 		const int numVertices = map->obstacles[obstacleIndex].numVertices;
 		assert( numVertices > 2 );
+		assert( numVertices < MAX_MAP_OBSTACLE_VERTICES );
 
 		gpc_vertex_list *obstacleContour = malloc( sizeof( gpc_vertex_list ) );
 		obstacleContour->num_vertices = numVertices;
@@ -381,12 +387,13 @@ void triangulationToNavmesh( const struct triangulateio *triangleOutput, QNavmes
 	assert( triangleOutput );
 
 	memset( outNavmesh, 0, sizeof( *outNavmesh ) );
-	assert( triangleOutput->numberofpoints < MAX_VERTICES );
-	assert( triangleOutput->numberoftriangles < MAX_TRIANGLES );
-
+	assert( triangleOutput->numberofpoints < MAX_NAVMESH_VERTICES );
+	assert( triangleOutput->numberoftriangles < MAX_NAVMESH_TRIANGLES );
+	
 	outNavmesh->numVertices = triangleOutput->numberofpoints;
-	outNavmesh->numEdges = triangleOutput->numberofedges;
 	outNavmesh->numTriangles = triangleOutput->numberoftriangles;
+	outNavmesh->triangles = malloc( outNavmesh->numTriangles * sizeof( QTriangle ) );
+	outNavmesh->vertices = malloc( outNavmesh->numVertices * sizeof( QVector ) );
 
 	for ( int i = 0; i < outNavmesh->numVertices; i++ )
 	{

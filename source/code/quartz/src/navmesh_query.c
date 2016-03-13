@@ -27,7 +27,7 @@ int findTriangleContainingPoint( const QNavmesh *navmesh, const QVector *point )
 
 void pathfinder( const QNavmesh *navmesh, const QVector *start, const QVector *end, QPath *outPath )
 {
-	outPath->numPoints = 0;
+	assert( outPath->numVertices == 0 );
 	const int startTriangle = findTriangleContainingPoint( navmesh, start );
 	const int endTriangle = findTriangleContainingPoint( navmesh, end );
 	if ( startTriangle < 0 || endTriangle < 0 )

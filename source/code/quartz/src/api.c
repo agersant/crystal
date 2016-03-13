@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <stdlib.h>
 #include "types.h"
 #include "../../../../lib/triangle/triangle.h"
 #include "api.h"
@@ -35,7 +36,30 @@ void generateNavmesh( QMap *map, int padding, QNavmesh *outNavmesh )
 
 void planPath( const QNavmesh *navmesh, REAL startX, REAL startY, REAL endX, REAL endY, QPath *outPath )
 {
-	const QVector start = { startX, startY };
-	const QVector end = { endX, endY };
+	QVector start, end;
+	start.x = startX;
+	start.y = startY;
+	end.x = endX;
+	end.y = endY;
 	pathfinder( navmesh, &start, &end, outPath );
+}
+
+void freeNavmesh( QNavmesh *navmesh )
+{
+	for ( int vertexIndex = 0; vertexIndex < navmesh->numVertices; vertexIndex++ )
+	{
+		free( &navmesh->vertices[vertexIndex] );
+	}
+	for ( int triangleIndex = 0; triangleIndex < navmesh->numTriangles; triangleIndex++ )
+	{
+		free( &navmesh->triangles[triangleIndex] );
+	}
+}
+
+void freePath( QPath *path )
+{
+	for ( int vertexIndex = 0; vertexIndex < path->numVertices; vertexIndex++ )
+	{
+		free( &path->vertices[vertexIndex] );
+	}
 }

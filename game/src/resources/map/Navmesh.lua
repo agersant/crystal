@@ -41,20 +41,22 @@ FFI.cdef[[
 	typedef struct QNavmesh
 	{
 		int numTriangles;
-		int numEdges;
 		int numVertices;
-		QVector vertices[3 * 1000];
-		QTriangle triangles[1000];
+		QVector *vertices;
+		QTriangle *triangles;
 	} QNavmesh;
-	
+
 	typedef struct QPath
 	{
-		int numPoints;
-		QVector points[50];
+		int numVertices;
+		QVector *vertices;
 	} QPath;
 
 	void generateNavmesh( QMap *map, int padding, QNavmesh *outNavmesh );
 	void planPath( const QNavmesh *navmesh, double startX, double startY, double endX, double endY, QPath *outPath );
+	
+	void freeNavmesh( QNavmesh *navmesh );
+	void freePath( QPath *path );
 	void free( void *ptr );
 ]]
 
@@ -62,7 +64,23 @@ FFI.cdef[[
 
 -- IMPLEMENTATION
 
-local generateCMesh = function( self, width, height, collisionMesh, padding )
+local newQNavmesh = function( self )
+	local output = FFI.gc( FFI.new( FFI.typeof( "QNavmesh" ) ), function( navmesh )
+		Quartz.freeNavmesh( navmesh );
+		FFI.C.free( navmesh );
+	end );
+	return output;
+end
+
+local newQPath = function( self )
+	local output = FFI.gc( FFI.new( FFI.typeof( "QPath" ) ), function( path )
+		Quartz.freePath( path );
+		FFI.C.free( path );
+	end );
+	return output;
+end
+
+local generateQNavmesh = function( self, width, height, collisionMesh, padding )
 	
 	assert( width > 0 );
 	assert( height > 0 );
@@ -88,22 +106,22 @@ local generateCMesh = function( self, width, height, collisionMesh, padding )
 	cMap.numObstacles = #obstacles;
 	cMap.obstacles = FFI.gc( FFI.new( FFI.typeof( "QObstacle[?]" ), #obstacles, obstacles ), FFI.C.free );
 	
-	local cMesh = FFI.gc( FFI.new( FFI.typeof( "QNavmesh" ) ), FFI.C.free );
-	Quartz.generateNavmesh( cMap, padding, cMesh );
+	local qNavmesh = newQNavmesh( self );
+	Quartz.generateNavmesh( cMap, padding, qNavmesh );
 	
-	return cMesh;
+	return qNavmesh;
 end
 
-local parseCMesh = function( self, cMesh )
-	assert( cMesh );
+local parseQNavmesh = function( self, qNavmesh )
+	assert( qNavmesh );
 	if gConf.features.debugDraw then
 		self._triangles = {};
-		for i = 0, cMesh.numTriangles - 1 do
-			local cTriangle = cMesh.triangles[i];
+		for i = 0, qNavmesh.numTriangles - 1 do
+			local cTriangle = qNavmesh.triangles[i];
 			local triangle = {
-				cMesh.vertices[cTriangle.vertices[0]].x, cMesh.vertices[cTriangle.vertices[0]].y,
-				cMesh.vertices[cTriangle.vertices[1]].x, cMesh.vertices[cTriangle.vertices[1]].y,
-				cMesh.vertices[cTriangle.vertices[2]].x, cMesh.vertices[cTriangle.vertices[2]].y,
+				qNavmesh.vertices[cTriangle.vertices[0]].x, qNavmesh.vertices[cTriangle.vertices[0]].y,
+				qNavmesh.vertices[cTriangle.vertices[1]].x, qNavmesh.vertices[cTriangle.vertices[1]].y,
+				qNavmesh.vertices[cTriangle.vertices[2]].x, qNavmesh.vertices[cTriangle.vertices[2]].y,
 			};
 			table.insert( self._triangles, triangle );
 		end
@@ -115,13 +133,13 @@ end
 -- PUBLIC API
 
 Navmesh.init = function( self, width, height, collisionMesh, padding )
-	self._cMesh = generateCMesh( self, width, height, collisionMesh, padding );
-	parseCMesh( self, self._cMesh );
+	self._qNavmesh = generateQNavmesh( self, width, height, collisionMesh, padding );
+	parseQNavmesh( self, self._qNavmesh );
 end
 
 Navmesh.planPath = function( self, startX, startY, endX, endY )
-	local cPath = FFI.gc( FFI.new( FFI.typeof( "QPath" ) ), FFI.C.free );
-	Quartz.planPath( self._cMesh, startX, startY, endX, endY, cPath ); 
+	local cPath = newQPath( self );
+	Quartz.planPath( self._qNavmesh, startX, startY, endX, endY, cPath ); 
 end
 
 Navmesh.draw = function( self )
