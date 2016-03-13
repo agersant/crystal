@@ -3,6 +3,7 @@
 #include "../../../../lib/triangle/triangle.h"
 #include "api.h"
 #include "navmesh_generate.h"
+#include "navmesh_query.h"
 
 void generateNavmesh( QMap *map, int padding, QNavmesh *outNavmesh )
 {
@@ -30,4 +31,11 @@ void generateNavmesh( QMap *map, int padding, QNavmesh *outNavmesh )
 	trifree( triangulation.segmentmarkerlist );
 	trifree( triangulation.edgelist );
 	trifree( triangulation.edgemarkerlist );
+}
+
+void planPath( const QNavmesh *navmesh, REAL startX, REAL startY, REAL endX, REAL endY, QPath *outPath )
+{
+	const QVector start = { startX, startY };
+	const QVector end = { endX, endY };
+	pathfinder( navmesh, &start, &end, outPath );
 }

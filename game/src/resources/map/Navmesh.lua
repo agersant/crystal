@@ -46,8 +46,15 @@ FFI.cdef[[
 		QVector vertices[3 * 1000];
 		QTriangle triangles[1000];
 	} QNavmesh;
+	
+	typedef struct QPath
+	{
+		int numPoints;
+		QVector points[50];
+	} QPath;
 
 	void generateNavmesh( QMap *map, int padding, QNavmesh *outNavmesh );
+	void planPath( const QNavmesh *navmesh, double startX, double startY, double endX, double endY, QPath *outPath );
 	void free( void *ptr );
 ]]
 
@@ -89,34 +96,16 @@ end
 
 local parseCMesh = function( self, cMesh )
 	assert( cMesh );
-	
-	self._vertices = {};
-	for i = 0, cMesh.numVertices - 1 do
-		local CVertex = cMesh.vertices[i];
-		self._vertices[i + 1] = { x = CVertex.x, y = CVertex.y };
-	end
-	
-	self._triangles = {};
-	for i = 0, cMesh.numTriangles - 1 do
-		local CTriangle = cMesh.triangles[i];
-		local vertices = {
-			self._vertices[1 + CTriangle.vertices[0]];
-			self._vertices[1 + CTriangle.vertices[1]];
-			self._vertices[1 + CTriangle.vertices[2]];
-		};
-		assert( vertices[1] );
-		assert( vertices[2] );
-		assert( vertices[3] );
-		self._triangles[i + 1] = { vertices = vertices };
-	end
-	
 	if gConf.features.debugDraw then
-		for _, triangle in ipairs( self._triangles ) do
-			triangle.drawVerts = {
-				triangle.vertices[1].x, triangle.vertices[1].y,
-				triangle.vertices[2].x, triangle.vertices[2].y,
-				triangle.vertices[3].x, triangle.vertices[3].y,
+		self._triangles = {};
+		for i = 0, cMesh.numTriangles - 1 do
+			local cTriangle = cMesh.triangles[i];
+			local triangle = {
+				cMesh.vertices[cTriangle.vertices[0]].x, cMesh.vertices[cTriangle.vertices[0]].y,
+				cMesh.vertices[cTriangle.vertices[1]].x, cMesh.vertices[cTriangle.vertices[1]].y,
+				cMesh.vertices[cTriangle.vertices[2]].x, cMesh.vertices[cTriangle.vertices[2]].y,
 			};
+			table.insert( self._triangles, triangle );
 		end
 	end
 end
@@ -126,19 +115,25 @@ end
 -- PUBLIC API
 
 Navmesh.init = function( self, width, height, collisionMesh, padding )
-	local cMesh = generateCMesh( self, width, height, collisionMesh, padding );
-	parseCMesh( self, cMesh );
+	self._cMesh = generateCMesh( self, width, height, collisionMesh, padding );
+	parseCMesh( self, self._cMesh );
+end
+
+Navmesh.planPath = function( self, startX, startY, endX, endY )
+	local cPath = FFI.gc( FFI.new( FFI.typeof( "QPath" ) ), FFI.C.free );
+	Quartz.planPath( self._cMesh, startX, startY, endX, endY, cPath ); 
 end
 
 Navmesh.draw = function( self )
+	assert( self._triangles );
 	love.graphics.setLineWidth( 0.2 );
 	love.graphics.setPointSize( 3 );
 	for _, triangle in ipairs( self._triangles ) do
 		love.graphics.setColor( Colors.cyan:alpha( 255 * .25 ) );
-		love.graphics.polygon( "fill", triangle.drawVerts );
+		love.graphics.polygon( "fill", triangle );
 		love.graphics.setColor( Colors.cyan );
-		love.graphics.polygon( "line", triangle.drawVerts );
-		love.graphics.points( triangle.drawVerts );
+		love.graphics.polygon( "line", triangle );
+		love.graphics.points( triangle );
 	end
 end
 
