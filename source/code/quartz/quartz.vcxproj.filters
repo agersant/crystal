@@ -36,6 +36,9 @@
     <ClInclude Include="src\navmesh_query.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\linked_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\lib\triangle\triangle.c">
@@ -54,6 +57,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\navmesh_query.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\linked_list.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

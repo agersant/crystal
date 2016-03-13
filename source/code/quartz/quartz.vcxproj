@@ -14,6 +14,7 @@
     <ClInclude Include="..\..\..\lib\gpc\gpc.h" />
     <ClInclude Include="..\..\..\lib\triangle\triangle.h" />
     <ClInclude Include="src\api.h" />
+    <ClInclude Include="src\linked_list.h" />
     <ClInclude Include="src\navmesh_generate.h" />
     <ClInclude Include="src\navmesh_query.h" />
     <ClInclude Include="src\types.h" />
@@ -23,6 +24,7 @@
     <ClCompile Include="..\..\..\lib\gpc\gpc.c" />
     <ClCompile Include="..\..\..\lib\triangle\triangle.c" />
     <ClCompile Include="src\api.c" />
+    <ClCompile Include="src\linked_list.c" />
     <ClCompile Include="src\navmesh_generate.c" />
     <ClCompile Include="src\navmesh_query.c" />
     <ClCompile Include="src\vector_math.c" />
