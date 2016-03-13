@@ -9,9 +9,9 @@ local Scene = require( "src/scene/Scene" );
 
 love.load = function()
 	love.keyboard.setTextInput( false );
-	require( "src/graphics/GFX" ); 			-- Override Love defaults
-	require( "src/graphics/GFXCommands" ); 	-- Register commands
-	require( "src/scene/MapScene" ); 		-- Register commands
+	require( "src/graphics/GFX" ); 				-- Override Love defaults
+	require( "src/graphics/GFXCommands" ); 		-- Register commands
+	require( "src/scene/MapSceneCommands" ); 	-- Register commands
 	Log:info( "Completed startup" );
 end
 

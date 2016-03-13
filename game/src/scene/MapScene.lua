@@ -1,5 +1,4 @@
 require( "src/utils/OOP" );
-local CLI = require( "src/dev/cli/CLI" );
 local Log = require( "src/dev/Log" );
 local Assets = require( "src/resources/Assets" );
 local Colors = require( "src/resources/Colors" );
@@ -11,38 +10,6 @@ local Warrior = require( "src/scene/entity/Warrior" );
 local Scene = require( "src/scene/Scene" );
 
 local MapScene = Class( "MapScene", Scene );
-
-
-
--- COMMANDS
-
-local loadMap = function( mapName )
-	local scene = MapScene:new( mapName );
-	Scene:setCurrent( scene );
-end
-
-CLI:addCommand( "loadMap mapName:string", loadMap );
-
-local testMap = function()
-	loadMap( "assets/map/dev.lua" );
-end
-
-CLI:addCommand( "testMap", testMap );
-
-local setDrawPhysicsOverlay = function( draw )
-	gConf.drawPhysics = draw;
-end
-
-CLI:addCommand( "showPhysicsOverlay", function() setDrawPhysicsOverlay( true ); end );
-CLI:addCommand( "hidePhysicsOverlay", function() setDrawPhysicsOverlay( false ); end );
-
-local setDrawNavmeshOverlay = function( draw )
-	gConf.drawNavmesh = draw;
-end
-
-CLI:addCommand( "showNavmeshOverlay", function() setDrawNavmeshOverlay( true ); end );
-CLI:addCommand( "hideNavmeshOverlay", function() setDrawNavmeshOverlay( false ); end );
-
 
 
 
