@@ -23,6 +23,7 @@ typedef struct QTriangle
 {
 	int vertices[3];
 	int neighbours[3];
+	QVector center;
 } QTriangle;
 
 typedef struct QNavmesh

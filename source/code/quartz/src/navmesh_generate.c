@@ -409,6 +409,15 @@ void triangulationToNavmesh( const struct triangulateio *triangleOutput, QNavmes
 		outNavmesh->triangles[i].neighbours[0] = triangleOutput->neighborlist[3 * i + 0];
 		outNavmesh->triangles[i].neighbours[1] = triangleOutput->neighborlist[3 * i + 1];
 		outNavmesh->triangles[i].neighbours[2] = triangleOutput->neighborlist[3 * i + 2];
+		outNavmesh->triangles[i].center.x = 0;
+		outNavmesh->triangles[i].center.x += outNavmesh->vertices[outNavmesh->triangles[i].vertices[0]].x;
+		outNavmesh->triangles[i].center.x += outNavmesh->vertices[outNavmesh->triangles[i].vertices[1]].x;
+		outNavmesh->triangles[i].center.x += outNavmesh->vertices[outNavmesh->triangles[i].vertices[2]].x;
+		outNavmesh->triangles[i].center.y = 0;
+		outNavmesh->triangles[i].center.y += outNavmesh->vertices[outNavmesh->triangles[i].vertices[0]].y;
+		outNavmesh->triangles[i].center.y += outNavmesh->vertices[outNavmesh->triangles[i].vertices[1]].y;
+		outNavmesh->triangles[i].center.y += outNavmesh->vertices[outNavmesh->triangles[i].vertices[2]].y;
+		vectorScale( &outNavmesh->triangles[i].center, 1.f / 3.f );
 	}
 
 	return;

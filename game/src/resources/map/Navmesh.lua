@@ -1,6 +1,7 @@
 require( "src/utils/OOP" );
 local FFI = require( "ffi" );
 local Colors = require( "src/resources/Colors" );
+local Fonts = require( "src/resources/Fonts" );
 local Quartz = FFI.load( "quartz" );
 
 local Navmesh = Class( "Navmesh" );
@@ -36,6 +37,7 @@ FFI.cdef[[
 	{
 		int vertices[3];
 		int neighbours[3];
+		QVector center;
 	} QTriangle;
 
 	typedef struct QNavmesh
@@ -118,11 +120,13 @@ local parseQNavmesh = function( self, qNavmesh )
 		self._triangles = {};
 		for i = 0, qNavmesh.numTriangles - 1 do
 			local cTriangle = qNavmesh.triangles[i];
-			local triangle = {
+			local triangle = {};
+			triangle.vertices = {
 				qNavmesh.vertices[cTriangle.vertices[0]].x, qNavmesh.vertices[cTriangle.vertices[0]].y,
 				qNavmesh.vertices[cTriangle.vertices[1]].x, qNavmesh.vertices[cTriangle.vertices[1]].y,
 				qNavmesh.vertices[cTriangle.vertices[2]].x, qNavmesh.vertices[cTriangle.vertices[2]].y,
 			};
+			triangle.center = { x = cTriangle.center.x, y = cTriangle.center.y };
 			table.insert( self._triangles, triangle );
 		end
 	end
@@ -138,20 +142,38 @@ Navmesh.init = function( self, width, height, collisionMesh, padding )
 end
 
 Navmesh.planPath = function( self, startX, startY, endX, endY )
-	local cPath = newQPath( self );
-	Quartz.planPath( self._qNavmesh, startX, startY, endX, endY, cPath ); 
+	local qPath = newQPath( self );
+	Quartz.planPath( self._qNavmesh, startX, startY, endX, endY, qPath );
+	-- TODO wrap in a class
+	local path = {};
+	table.insert( path, startX );
+	table.insert( path, startY );
+	for i = 0, qPath.numVertices - 1 do
+		local cVector = qPath.vertices[i];
+		table.insert( path, cVector.x );
+		table.insert( path, cVector.y );
+	end
+	table.insert( path, endX );
+	table.insert( path, endY );
+	return path;
 end
 
 Navmesh.draw = function( self )
 	assert( self._triangles );
+	
+	local font = Fonts:get( "dev", 16 );
+	love.graphics.setFont( font );
+	
 	love.graphics.setLineWidth( 0.2 );
 	love.graphics.setPointSize( 3 );
-	for _, triangle in ipairs( self._triangles ) do
+	for i, triangle in ipairs( self._triangles ) do
 		love.graphics.setColor( Colors.cyan:alpha( 255 * .25 ) );
-		love.graphics.polygon( "fill", triangle );
+		love.graphics.polygon( "fill", triangle.vertices );
 		love.graphics.setColor( Colors.cyan );
-		love.graphics.polygon( "line", triangle );
+		love.graphics.polygon( "line", triangle.vertices );
 		love.graphics.points( triangle );
+		local text = tostring( i - 1 ); 
+		love.graphics.print( text, triangle.center.x - font:getWidth( text ) / 2, triangle.center.y - font:getHeight()/2 );
 	end
 end
 
