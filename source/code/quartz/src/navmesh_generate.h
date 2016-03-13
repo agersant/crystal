@@ -3,12 +3,6 @@
 #include "../../../../lib/gpc/gpc.h"
 #include "../../../../lib/triangle/triangle.h"
 
-#ifndef NDEBUG
-#define verify(x) assert( x )
-#else
-#define verify(x) ( ( void ) ( x) )
-#endif
-
 typedef struct triangulateio QTriangulation;
 
 typedef struct QPolygonMap
