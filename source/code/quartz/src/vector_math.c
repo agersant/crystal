@@ -17,6 +17,13 @@ REAL vectorLength2( const QVector *vector )
 	return ( vector->x * vector->x ) + ( vector->y * vector->y );
 }
 
+REAL vectorDistance( const QVector *a, const QVector *b )
+{
+	QVector difference;
+	vectorSubtract( a, b, &difference );
+	return vectorLength( &difference );
+}
+
 REAL vectorDistance2( const QVector *a, const QVector *b )
 {
 	QVector difference;
@@ -140,5 +147,5 @@ int doesTriangleContainPoint( const QVector *a, const QVector *b, const QVector 
 	assert( denom != 0 );
 	const REAL u = ( dotABAB * dotACAP - dotACAB * dotABAP ) / denom;
 	const REAL v = ( dotACAC * dotABAP - dotACAB * dotACAP ) / denom;
-	return u >= 0 && u >= 0 && u + v <= 1;
+	return u >= 0 && v >= 0 && u + v <= 1;
 }

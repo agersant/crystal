@@ -16,6 +16,7 @@ typedef struct QEdge
 int vectorEquals( const QVector *a, const QVector *b );
 REAL vectorLength( const QVector *vector );
 REAL vectorLength2( const QVector *vector );
+REAL vectorDistance( const QVector *a, const QVector *b );
 REAL vectorDistance2( const QVector *a, const QVector *b );
 void vectorAdd( const QVector *a, const QVector *b, QVector *result );
 void vectorMadd( const QVector *a, REAL m, const QVector *b, QVector *result );
