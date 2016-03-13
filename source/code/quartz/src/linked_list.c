@@ -21,11 +21,11 @@ static void linkedListFreeNode( QLinkedList *list, QLinkedListNode *node )
 	free( node );
 }
 
-void linkedListInit( QLinkedList *list, size_t elementSize, QFreeFunction freeFunction )
+void linkedListInit( QLinkedList *list, size_t nodeDataSize, QFreeFunction freeFunction )
 {
 	list->head = NULL;
 	list->length = 0;
-	list->nodeDataSize = elementSize;
+	list->nodeDataSize = nodeDataSize;
 	list->freeFunction = freeFunction;
 }
 
@@ -39,12 +39,12 @@ void linkedListFree( QLinkedList *list )
 	}
 }
 
-int linkedListGetSize( QLinkedList *list )
+int linkedListGetSize( const QLinkedList *list )
 {
 	return list->length;
 }
 
-int linkedListIsEmpty( QLinkedList *list )
+int linkedListIsEmpty( const QLinkedList *list )
 {
 	return list->length == 0;
 }
@@ -58,26 +58,27 @@ void linkedListPrepend( QLinkedList *list, void *nodeData )
 	list->length++;
 }
 
-void linkedListGetHead( QLinkedList *list, void *outNodeData )
+void linkedListGetHead( const QLinkedList *list, void *outNodeData )
 {
 	assert( list->length > 0 );
 	assert( list->head != NULL );
 	memcpy( outNodeData, list->head->data, list->nodeDataSize );
 }
 
-void linkedListRemoveHead( QLinkedList *list )
+int linkedListRemoveHead( QLinkedList *list )
 {
 	if ( list->length == 0 )
 	{
-		return;
+		return 0;
 	}
 	QLinkedListNode *oldHead = list->head;
 	list->head = oldHead->next;
 	list->length--;
 	linkedListFreeNode( list, oldHead );
+	return 1;
 }
 
-void linkedListInsertBefore( QLinkedList *list, void *nodeData, QPredicate predicate )
+void linkedListInsertBefore( QLinkedList *list, void *nodeData, QCompare compare )
 {
 	QLinkedListNode *newNode = linkedListNewNode( list, nodeData );
 
@@ -85,7 +86,7 @@ void linkedListInsertBefore( QLinkedList *list, void *nodeData, QPredicate predi
 	QLinkedListNode *current = list->head;
 	while ( current != NULL )
 	{
-		if ( predicate( nodeData, current ) )
+		if ( compare( nodeData, current->data ) )
 		{
 			break;
 		}
@@ -103,4 +104,47 @@ void linkedListInsertBefore( QLinkedList *list, void *nodeData, QPredicate predi
 		previous->next = newNode;
 	}
 	list->length++;
+}
+
+int linkedListFind( const QLinkedList *list, QPredicate predicate, void *predicateData, void *outNodeData )
+{
+	QLinkedListNode *current = list->head;
+	while ( current != NULL )
+	{
+		if ( predicate( current->data, predicateData ) )
+		{
+			if ( outNodeData != NULL )
+			{
+				memcpy( outNodeData, current->data, list->nodeDataSize );
+			}
+			return 1;
+		}
+		current = current->next;
+	}
+	return 0;
+}
+
+int linkedListRemove( QLinkedList *list, QPredicate predicate, void *predicateData )
+{
+	QLinkedListNode *previous = NULL;
+	QLinkedListNode *current = list->head;
+	while ( current != NULL )
+	{
+		if ( predicate( current->data, predicateData ) )
+		{
+			if ( previous == NULL )
+			{
+				list->head = current->next;
+			}
+			else
+			{
+				previous->next = current->next;
+			}
+			list->length--;
+			return 1;
+		}
+		previous = current;
+		current = current->next;
+	}
+	return 0;
 }

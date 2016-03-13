@@ -8,7 +8,8 @@ typedef struct QLinkedListNode
 } QLinkedListNode;
 
 typedef void( *QFreeFunction )( void *nodeData );
-typedef int( *QPredicate )( QLinkedListNode *newNode, QLinkedListNode *listNode );
+typedef int( *QCompare )( void *newNodeData, void *listNodeData );
+typedef int( *QPredicate )( void *nodeData, void *predicateData );
 
 typedef struct QLinkedList
 {
@@ -21,11 +22,13 @@ typedef struct QLinkedList
 void linkedListInit( QLinkedList *list, size_t elementSize, QFreeFunction freeFunction );
 void linkedListFree( QLinkedList *list );
 
-void linkedListPrepend( QLinkedList *list, void *element );
-void linkedListInsertBefore( QLinkedList *list, void *element, QPredicate predicate );
+void linkedListPrepend( QLinkedList *list, void *nodeData );
+void linkedListInsertBefore( QLinkedList *list, void *nodeData, QCompare predicate );
 
-int linkedListGetSize( QLinkedList *list );
-int linkedListIsEmpty( QLinkedList *list );
-void linkedListGetHead( QLinkedList *list, void *outElement );
+int linkedListGetSize( const QLinkedList *list );
+int linkedListIsEmpty( const QLinkedList *list );
+void linkedListGetHead( const QLinkedList *list, void *outNodeData );
+int linkedListFind( const QLinkedList *list, QPredicate predicate, void *predicateData, void *outNodeData );
 
-void linkedListRemoveHead( QLinkedList *list );
+int linkedListRemove( QLinkedList *list, QPredicate predicate, void *predicateData );
+int linkedListRemoveHead( QLinkedList *list );
