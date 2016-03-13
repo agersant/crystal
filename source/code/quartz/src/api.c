@@ -46,20 +46,11 @@ void planPath( const QNavmesh *navmesh, REAL startX, REAL startY, REAL endX, REA
 
 void freeNavmesh( QNavmesh *navmesh )
 {
-	for ( int vertexIndex = 0; vertexIndex < navmesh->numVertices; vertexIndex++ )
-	{
-		free( &navmesh->vertices[vertexIndex] );
-	}
-	for ( int triangleIndex = 0; triangleIndex < navmesh->numTriangles; triangleIndex++ )
-	{
-		free( &navmesh->triangles[triangleIndex] );
-	}
+	free( navmesh->vertices );
+	free( navmesh->triangles );
 }
 
 void freePath( QPath *path )
 {
-	for ( int vertexIndex = 0; vertexIndex < path->numVertices; vertexIndex++ )
-	{
-		free( &path->vertices[vertexIndex] );
-	}
+	free( path->vertices );
 }
