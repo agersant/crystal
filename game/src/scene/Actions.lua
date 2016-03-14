@@ -18,7 +18,7 @@ Actions.walk = function( self )
 	local entity = self:getEntity();
 	local animName = "walk_" .. entity:getDirection4();
 	entity:setAnimation( animName );
-	entity:setSpeed( 144 );
+	entity:setSpeed( entity:getMovementSpeed() );
 end
 
 Actions.attack = function( self )

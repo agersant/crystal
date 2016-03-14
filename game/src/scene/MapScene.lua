@@ -143,6 +143,9 @@ MapScene.getPhysicsWorld = function( self )
 	return self._world;
 end
 
+MapScene.findPath = function( self, startX, startY, targetX, targetY )
+	return self._map:findPath( startX, startY, targetX, targetY );
+end
 
 
 return MapScene;

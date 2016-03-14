@@ -14,6 +14,7 @@ Warrior.init = function( self, scene )
 	local sheet = Assets:getSpritesheet( "assets/spritesheet/duran.lua" );
 	self:addSprite( Sprite:new( sheet ) );
 	self:addPhysicsBody( "dynamic" );
+	self:addLocomotion();
 	self:addCollisionPhysics();
 	self:addCombatComponent();
 	self:setCollisionRadius( 6 );

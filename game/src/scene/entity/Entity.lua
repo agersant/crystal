@@ -68,10 +68,6 @@ Entity.setDirection8 = function( self, xDir8, yDir8 )
 	self._angle = math.atan2( yDir8, xDir8 );
 end
 
-Entity.setSpeed = function( self, speed )
-	self._baseSpeed = speed;
-end
-
 Entity.getDirection4 = function( self )
 	return self._dir4;
 end
@@ -82,6 +78,43 @@ end
 
 Entity.setPosition = function( self, x, y )
 	self._body:setPosition( x, y );
+end
+
+Entity.setAngle = function( self, angle )
+	self:setDirection8( MathUtils.angleToDir8( angle ) );
+	self._angle = angle;
+end
+
+Entity.distance2To = function( self, targetX, targetY )
+	local x, y = self:getPosition();
+	local deltaX, deltaY = targetX - x, targetY - y;
+	return MathUtils.vectorLength2( deltaX, deltaY );
+end
+
+
+
+-- LOCOMOTION COMPONENT
+
+Entity.addLocomotion = function( self )
+	self._movementSpeed = 104; -- TODO use a stat, not a raw number
+	self._speed = 0;
+end
+
+Entity.getMovementSpeed = function( self, speed )
+	return self._movementSpeed;
+end
+
+Entity.setMovementSpeed = function( self, speed )
+	self._movementSpeed = speed;
+end
+
+Entity.setSpeed = function( self, speed )
+	self._speed = speed;
+end
+
+Entity.findPathTo = function( self, targetX, targetY )
+	local startX, startY = self:getPosition();
+	return self._scene:findPath( startX, startY, targetX, targetY );
 end
 
 
@@ -245,7 +278,7 @@ Entity.update = function( self, dt )
 		end
 	end
 	if self._body then
-		local speed = self._baseSpeed;
+		local speed = self._speed;
 		local angle = self._angle;
 		local dx = math.cos( angle );
 		local dy = math.sin( angle );

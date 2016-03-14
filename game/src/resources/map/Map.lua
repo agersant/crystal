@@ -110,6 +110,8 @@ Map.getAreaInTiles = function( self )
 	return self._width * self._height;
 end
 
-
+Map.findPath = function( self, startX, startY, targetX, targetY )
+	return self._navmesh:findPath( startX, startY, targetX, targetY );
+end
 
 return Map;
