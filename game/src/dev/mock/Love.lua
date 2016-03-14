@@ -41,6 +41,14 @@ end
 
 
 
+-- GRAPHICS
+love.graphics = {};
+
+love.graphics.newFont = function()
+end;
+
+
+
 -- SYSTEM
 
 love.system = {};
