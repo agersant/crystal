@@ -49,11 +49,11 @@ static float movementCost( const QTriangle *triangleA, const QTriangle *triangle
 	return cost;
 }
 
-static float heuristic( const QTriangle *triangle, const QTriangle *endTriangle ) // TODO use end point
+static float heuristic( const QTriangle *triangle, const QVector *destination )
 {
 	assert( triangle != NULL );
-	assert( endTriangle != NULL );
-	const float cost = ( float )vectorDistance( &triangle->center, &endTriangle->center );
+	assert( destination != NULL );
+	const float cost = ( float )vectorDistance( &triangle->center, destination );
 	return cost;
 }
 
@@ -99,8 +99,22 @@ static void funnelPath( const QNavmesh *navmesh, const QVector *start, const QVe
 	const int numTriangles = aStarOutput->numTriangles;
 	const QTriangle **triangles = aStarOutput->triangles;
 
-	assert( outPath->vertices == NULL );
-	assert( numTriangles > 1 );
+	if ( numTriangles < 1 )
+	{
+		outPath->numVertices = 0;
+		outPath->vertices = NULL;
+		return;
+	}
+
+	if ( numTriangles == 1 )
+	{
+		outPath->numVertices = 2;
+		outPath->vertices = malloc( 2 * sizeof( QVector ) );
+		outPath->vertices[0] = *start;
+		outPath->vertices[1] = *end;
+		return;
+	}
+
 	assert( isPointInsideNavmeshTriangle( navmesh, start, triangles[0] ) );
 	assert( isPointInsideNavmeshTriangle( navmesh, end, triangles[numTriangles - 1] ) );
 
@@ -202,8 +216,19 @@ static void funnelPath( const QNavmesh *navmesh, const QVector *start, const QVe
 	free( portals );
 }
 
-static void aStar( const QNavmesh *navmesh, const QTriangle *startTriangle, const QTriangle *endTriangle, QAStarOutput *output )
+static void aStar( const QNavmesh *navmesh, const QVector *start, const QVector *end, QAStarOutput *output )
 {
+	const QTriangle *const startTriangle = findTriangleContainingPoint( navmesh, start );
+	const QTriangle *const endTriangle = findTriangleContainingPoint( navmesh, end );
+
+	if ( startTriangle == NULL || endTriangle == NULL )
+	{
+		// TODO Return a decent path if start/end isn't on navmesh
+		output->numTriangles = 0;
+		output->triangles = NULL;
+		return;
+	}
+
 	QLinkedList openList, closedList;
 	linkedListInit( &openList, sizeof( QAStarNode ), NULL );
 	linkedListInit( &closedList, sizeof( QAStarNode ), NULL );
@@ -212,7 +237,7 @@ static void aStar( const QNavmesh *navmesh, const QTriangle *startTriangle, cons
 	startNode.cost = 0;
 	startNode.previousTriangle = NULL;
 	startNode.triangle = startTriangle;
-	startNode.heuristic = heuristic( startNode.triangle, endTriangle );
+	startNode.heuristic = heuristic( startNode.triangle, end );
 	linkedListPrepend( &openList, &startNode );
 
 	QAStarNode arrivalNode;
@@ -258,7 +283,7 @@ static void aStar( const QNavmesh *navmesh, const QTriangle *startTriangle, cons
 				QAStarNode newNode;
 				newNode.cost = newCost;
 				newNode.triangle = neighborTriangle;
-				newNode.heuristic = heuristic( newNode.triangle, endTriangle );
+				newNode.heuristic = heuristic( newNode.triangle, end );
 				newNode.previousTriangle = current.triangle;
 				linkedListInsertBefore( &openList, &newNode, hasBetterRank );
 			}
@@ -277,7 +302,6 @@ static void aStar( const QNavmesh *navmesh, const QTriangle *startTriangle, cons
 			output->numTriangles++;
 		}
 	}
-	assert( output->numTriangles > 1 );
 
 	output->triangles = malloc( sizeof( QTriangle * ) * output->numTriangles );
 	{
@@ -299,6 +323,9 @@ static void aStar( const QNavmesh *navmesh, const QTriangle *startTriangle, cons
 
 	linkedListFree( &openList );
 	linkedListFree( &closedList );
+
+	assert( output->triangles[0] == startTriangle );
+	assert( output->triangles[output->numTriangles - 1] == endTriangle );
 }
 
 static void freeAStarOutput( QAStarOutput *aStarOutput )
@@ -311,25 +338,10 @@ static void freeAStarOutput( QAStarOutput *aStarOutput )
 void pathfinder( const QNavmesh *navmesh, const QVector *start, const QVector *end, QPath *outPath )
 {
 	assert( outPath->numVertices == 0 );
-	const QTriangle *const startTriangle = findTriangleContainingPoint( navmesh, start );
-	const QTriangle *const endTriangle = findTriangleContainingPoint( navmesh, end );
-	if ( startTriangle == NULL || endTriangle == NULL )
-	{
-		// TODO Return a decent path if start/end isn't on navmesh
-		return;
-	}
-
-	if ( startTriangle == endTriangle )
-	{
-		outPath->numVertices = 2;
-		outPath->vertices = malloc( 2 * sizeof( QVector ) );
-		outPath->vertices[0] = *start;
-		outPath->vertices[1] = *end;
-		return;
-	}
-
+	
 	QAStarOutput aStarOutput;
-	aStar( navmesh, startTriangle, endTriangle, &aStarOutput );
+	aStar( navmesh, start, end, &aStarOutput );
+	
 	funnelPath( navmesh, start, end, &aStarOutput, outPath );
 	
 	freeAStarOutput( &aStarOutput );
