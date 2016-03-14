@@ -28,6 +28,8 @@ static int isPointInsideNavmeshTriangle( const QNavmesh *navmesh, const QVector 
 static const QTriangle *findTriangleContainingPoint( const QNavmesh *navmesh, const QVector *point )
 {
 	assert( navmesh->numTriangles >= 0 );
+	// TODO.optimization This could be more efficient if triangles were stored in
+	// a more appropriate data structure (eg. quadtree).
 	for ( int triangleIndex = 0; triangleIndex < navmesh->numTriangles; triangleIndex++ )
 	{
 		const QTriangle *triangle = &navmesh->triangles[triangleIndex];
@@ -69,6 +71,7 @@ static int isTriangle( const QAStarNode *node, const QTriangle *triangle )
 
 static void getPortal( const QNavmesh *navmesh, const QTriangle *triangleA, const QTriangle *triangleB, QEdge *outEdge )
 {
+	// TODO.optimization These results could be precomputed
 	for ( int i = 0; i < 3; i++ )
 	{
 		const int vertexIndex = triangleA->vertices[i];
