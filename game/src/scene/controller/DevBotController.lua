@@ -1,6 +1,7 @@
 require( "src/utils/OOP" );
 local CLI = require( "src/dev/cli/CLI" );
 local Actions = require( "src/scene/Actions" );
+local Tasks = require( "src/scene/ai/Tasks" );
 local CombatLogic = require( "src/scene/combat/CombatLogic" );
 local Controller = require( "src/scene/controller/Controller" );
 local MathUtils = require( "src/utils/MathUtils" );
@@ -46,6 +47,11 @@ DevBotController.run = function( self )
 			end
 			if DevBotController._behavior == "attack" then
 				self:doAction( Actions.attack );
+			end
+		end
+		if self:isTaskless() then
+			if DevBotController._behavior == "walkToPoint" then
+				self:doTask( function( self ) Tasks.walkToPoint( self, 32, 200, 6 ); end );
 			end
 		end
 		self:waitFrame();

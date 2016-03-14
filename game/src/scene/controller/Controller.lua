@@ -99,6 +99,7 @@ Controller.init = function( self, entity, script )
 	assert( entity );
 	self._entity = entity;
 	self._time = 0;
+	self._dt = 0;
 	self._threads = {};
 	self._newThreads = {};
 	self._blockedThreads = {};
@@ -120,6 +121,7 @@ Controller.update = function( self, dt )
 	self._queuedSignals = {};
 	
 	self._time = self._time + dt;
+	self._dt = dt;
 	
 	-- Add new threads
 	for _, newThread in ipairs( self._newThreads ) do
@@ -229,11 +231,17 @@ Controller.doAction = function( self, actionFunction )
 	end );
 end
 
-Controller.interruptAction = function( self )
-	if self._actionThread then
-		endThread( self, self._actionThread );
-	end
+Controller.isTaskless = function( self )
+	return not self._taskThread or self._taskThread:isDead();
 end
+
+Controller.doTask = function( self, taskFunction )
+	assert( self:isTaskless() );
+	self._taskThread = self:thread( function( self )
+		taskFunction( self );
+	end );
+end
+
 
 
 return Controller;
