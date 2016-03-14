@@ -1,19 +1,19 @@
 require( "src/utils/OOP" );
 local MathUtils = require( "src/utils/MathUtils" );
 
-local CombatStat = Class( "CombatStat" );
+local Stat = Class( "Stat" );
 
 
 
 -- PUBLIC API
 
-CombatStat.init = function( self, value, minValue, maxValue )
+Stat.init = function( self, value, minValue, maxValue )
 	self._min = minValue;
 	self._max = maxValue;
 	self:setValue( value );
 end
 
-CombatStat.setValue = function( self, value )
+Stat.setValue = function( self, value )
 	if self._min and self._max then
 		self._value = MathUtils.clamp( self._min, value, self._max );
 	elseif self._min then
@@ -23,17 +23,17 @@ CombatStat.setValue = function( self, value )
 	end
 end
 
-CombatStat.getValue = function( self )
+Stat.getValue = function( self )
 	return self._value;
 end
 
-CombatStat.substract = function( self, amount )
+Stat.substract = function( self, amount )
 	self:setValue( self._value - amount );
 end
 
-CombatStat.add = function( self, amount )
+Stat.add = function( self, amount )
 	self:setValue( self._value + amount );
 end
 
 
-return CombatStat;
+return Stat;

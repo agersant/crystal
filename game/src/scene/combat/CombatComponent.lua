@@ -1,5 +1,5 @@
 require( "src/utils/OOP" );
-local CombatStat = require( "src/scene/combat/CombatStat" );
+local Stat = require( "src/scene/entity/Stat" );
 local Damage = require( "src/scene/combat/Damage" );
 
 local CombatComponent = Class( "CombatComponent" );
@@ -23,12 +23,12 @@ end
 CombatComponent.init = function( self, entity )
 	assert( entity );
 	self._entity = entity;
-	self._health = CombatStat:new( 500, 0, nil );
-	self._defense = CombatStat:new( 10, 1, nil );
-	self._strength = CombatStat:new( 10, 1, nil );
-	self._attackRating = CombatStat:new( 1.5, 0, nil );
-	self._critRate = CombatStat:new( .02, 0, 1 );
-	self._critRating = CombatStat:new( 2, 1, nil );
+	self._health = Stat:new( 500, 0, nil );
+	self._defense = Stat:new( 10, 1, nil );
+	self._strength = Stat:new( 10, 1, nil );
+	self._attackRating = Stat:new( 1.5, 0, nil );
+	self._critRate = Stat:new( .02, 0, 1 );
+	self._critRating = Stat:new( 2, 1, nil );
 end
 
 CombatComponent.inflictDamageTo = function( self, target )
