@@ -7,61 +7,58 @@ typedef struct QPathfinderNode
 {
 	float cost;
 	float heuristic;
-	int triangle; // TODO use QTriangle *
-	int previousTriangle; // TODO use QTriangle *
+	const QTriangle *triangle;
+	const QTriangle *previousTriangle;
 } QPathfinderNode;
 
-static int isPointInsideNavmeshTriangle( const QNavmesh *navmesh, const QVector *point, int triangle )
+static int isPointInsideNavmeshTriangle( const QNavmesh *navmesh, const QVector *point, const QTriangle *triangle )
 {
-	const QVector *vertexA = &navmesh->vertices[navmesh->triangles[triangle].vertices[0]];
-	const QVector *vertexB = &navmesh->vertices[navmesh->triangles[triangle].vertices[1]];
-	const QVector *vertexC = &navmesh->vertices[navmesh->triangles[triangle].vertices[2]];
+	const QVector *vertexA = &navmesh->vertices[triangle->vertices[0]];
+	const QVector *vertexB = &navmesh->vertices[triangle->vertices[1]];
+	const QVector *vertexC = &navmesh->vertices[triangle->vertices[2]];
 	return doesTriangleContainPoint( vertexA, vertexB, vertexC, point );
 }
 
-static int findTriangleContainingPoint( const QNavmesh *navmesh, const QVector *point )
+static const QTriangle *findTriangleContainingPoint( const QNavmesh *navmesh, const QVector *point )
 {
 	assert( navmesh->numTriangles >= 0 );
 	for ( int triangleIndex = 0; triangleIndex < navmesh->numTriangles; triangleIndex++ )
 	{
-		if ( isPointInsideNavmeshTriangle( navmesh, point, triangleIndex ) )
+		const QTriangle *triangle = &navmesh->triangles[triangleIndex];
+		if ( isPointInsideNavmeshTriangle( navmesh, point, triangle ) )
 		{
-			return triangleIndex;
+			return triangle;
 		}
 	}
-	return -1;
+	return NULL;
 }
 
-static int areTrianglesNeighbors( const QNavmesh *navmesh, int triangleA, int triangleB )
+static int areTrianglesNeighbors( const QNavmesh *navmesh, const QTriangle *triangleA, const QTriangle *triangleB )
 {
 	return 1; // TODO
 }
 
-static float movementCost( const QNavmesh *navmesh, int triangleA, int triangleB )
+static float movementCost( const QTriangle *triangleA, const QTriangle *triangleB )
 {
+	assert( triangleA != NULL );
+	assert( triangleB != NULL );
 	assert( triangleA != triangleB );
-	assert( triangleA >= 0 );
-	assert( triangleB >= 0 );
-	assert( triangleA < navmesh->numTriangles );
-	assert( triangleB < navmesh->numTriangles );
-	const float cost = ( float )vectorDistance( &navmesh->triangles[triangleA].center, &navmesh->triangles[triangleB].center );
+	const float cost = ( float )vectorDistance( &triangleA->center, &triangleB->center );
 	assert( cost > 0 );
 	return cost;
 }
 
-static float heuristic( const QNavmesh *navmesh, int triangle, int endTriangle )
+static float heuristic( const QTriangle *triangle, const QTriangle *endTriangle ) // TODO use end point
 {
-	assert( triangle >= 0 );
-	assert( endTriangle >= 0 );
-	assert( triangle < navmesh->numTriangles );
-	assert( endTriangle < navmesh->numTriangles );
-	const float cost = ( float )vectorDistance( &navmesh->triangles[triangle].center, &navmesh->triangles[endTriangle].center );
+	assert( triangle != NULL );
+	assert( endTriangle != NULL );
+	const float cost = ( float )vectorDistance( &triangle->center, &endTriangle->center );
 	return cost;
 }
 
-static int isTriangle( const QPathfinderNode *node, int *triangle )
+static int isTriangle( const QPathfinderNode *node, const QTriangle *triangle )
 {
-	return node->triangle == *triangle;
+	return node->triangle == triangle;
 }
 
 static int hasBetterRank( const QPathfinderNode *nodeA, const QPathfinderNode *nodeB )
@@ -69,17 +66,15 @@ static int hasBetterRank( const QPathfinderNode *nodeA, const QPathfinderNode *n
 	return nodeA->cost + nodeA->heuristic <= nodeB->cost + nodeB->heuristic;
 }
 
-static void getPortal( const QNavmesh *navmesh, int triangleA, int triangleB, QEdge *outEdge )
+static void getPortal( const QNavmesh *navmesh, const QTriangle *triangleA, const QTriangle *triangleB, QEdge *outEdge )
 {
 	assert( areTrianglesNeighbors( navmesh, triangleA, triangleB ) );
-	const QTriangle *a = &navmesh->triangles[triangleA];
-	const QTriangle *b = &navmesh->triangles[triangleB];
 	for ( int i = 0; i < 3; i++ )
 	{
-		const int vertexIndex = a->vertices[i];
-		const int nextVertexIndex = a->vertices[( i + 1 ) % 3];
-		const int isShared = b->vertices[0] == vertexIndex || b->vertices[1] == vertexIndex || b->vertices[2] == vertexIndex;
-		const int isNextShared = b->vertices[0] == nextVertexIndex || b->vertices[1] == nextVertexIndex || b->vertices[2] == nextVertexIndex;
+		const int vertexIndex = triangleA->vertices[i];
+		const int nextVertexIndex = triangleA->vertices[( i + 1 ) % 3];
+		const int isShared = triangleB->vertices[0] == vertexIndex || triangleB->vertices[1] == vertexIndex || triangleB->vertices[2] == vertexIndex;
+		const int isNextShared = triangleB->vertices[0] == nextVertexIndex || triangleB->vertices[1] == nextVertexIndex || triangleB->vertices[2] == nextVertexIndex;
 		if ( isShared && isNextShared )
 		{
 			outEdge->start = navmesh->vertices[vertexIndex];
@@ -99,7 +94,7 @@ static REAL triangleArea2( const QVector *vertexA, const QVector *vertexB, const
 }
 
 // Based on: http://digestingduck.blogspot.com/2010/03/simple-stupid-funnel-algorithm.html
-static void funnelPath( const QNavmesh *navmesh, const QVector *start, const QVector *end, int numTriangles, int *triangles, QPath *outPath )
+static void funnelPath( const QNavmesh *navmesh, const QVector *start, const QVector *end, int numTriangles, const QTriangle **triangles, QPath *outPath )
 {
 	assert( outPath->vertices == NULL );
 	assert( numTriangles > 1 );
@@ -207,9 +202,9 @@ static void funnelPath( const QNavmesh *navmesh, const QVector *start, const QVe
 void pathfinder( const QNavmesh *navmesh, const QVector *start, const QVector *end, QPath *outPath )
 {
 	assert( outPath->numVertices == 0 );
-	const int startTriangle = findTriangleContainingPoint( navmesh, start );
-	const int endTriangle = findTriangleContainingPoint( navmesh, end );
-	if ( startTriangle < 0 || endTriangle < 0 )
+	const QTriangle *const startTriangle = findTriangleContainingPoint( navmesh, start );
+	const QTriangle *const endTriangle = findTriangleContainingPoint( navmesh, end );
+	if ( startTriangle == NULL || endTriangle == NULL )
 	{
 		// TODO Return a decent path if start/end isn't on navmesh
 		return;
@@ -230,9 +225,9 @@ void pathfinder( const QNavmesh *navmesh, const QVector *start, const QVector *e
 
 	QPathfinderNode startNode;
 	startNode.cost = 0;
-	startNode.previousTriangle = -1;
+	startNode.previousTriangle = NULL;
 	startNode.triangle = startTriangle;
-	startNode.heuristic = heuristic( navmesh, startNode.triangle, endTriangle );
+	startNode.heuristic = heuristic( startNode.triangle, endTriangle );
 	linkedListPrepend( &openList, &startNode );
 
 	QPathfinderNode arrivalNode;
@@ -252,17 +247,18 @@ void pathfinder( const QNavmesh *navmesh, const QVector *start, const QVector *e
 
 		for ( int neighborIndex = 0; neighborIndex < 3; neighborIndex++ )
 		{
-			const int neighborTriangle = navmesh->triangles[current.triangle].neighbours[neighborIndex];
+			const int neighborTriangleIndex = current.triangle->neighbours[neighborIndex];
+			assert( neighborTriangleIndex < navmesh->numTriangles );
+			const QTriangle *neighborTriangle = &navmesh->triangles[neighborTriangleIndex];
 			if ( neighborTriangle < 0 )
 			{
 				continue;
 			}
-			assert( neighborTriangle < navmesh->numTriangles );
 
-			const float newCost = current.cost + movementCost( navmesh, current.triangle, neighborTriangle );
+			const float newCost = current.cost + movementCost( current.triangle, neighborTriangle );
 			
 			QPathfinderNode occurenceInOpenList;
-			int inOpenList = linkedListFind( &openList, isTriangle, &neighborTriangle, &occurenceInOpenList );
+			int inOpenList = linkedListFind( &openList, isTriangle, neighborTriangle, &occurenceInOpenList );
 			if ( inOpenList )
 			{
 				if ( newCost < occurenceInOpenList.cost )
@@ -271,13 +267,13 @@ void pathfinder( const QNavmesh *navmesh, const QVector *start, const QVector *e
 					inOpenList = 0;
 				}
 			}
-			const int inClosedList = linkedListFind( &closedList, isTriangle, &neighborTriangle, NULL );
+			const int inClosedList = linkedListFind( &closedList, isTriangle, neighborTriangle, NULL );
 			if ( !inOpenList && !inClosedList )
 			{
 				QPathfinderNode newNode;
 				newNode.cost = newCost;
 				newNode.triangle = neighborTriangle;
-				newNode.heuristic = heuristic( navmesh, newNode.triangle, endTriangle );
+				newNode.heuristic = heuristic( newNode.triangle, endTriangle );
 				newNode.previousTriangle = current.triangle;
 				linkedListInsertBefore( &openList, &newNode, hasBetterRank );
 			}
@@ -286,23 +282,23 @@ void pathfinder( const QNavmesh *navmesh, const QVector *start, const QVector *e
 
 	int numPathTriangles = 0;
 	{
-		int currentTriangle = endTriangle;
-		while ( currentTriangle != -1 )
+		const QTriangle *currentTriangle = endTriangle;
+		while ( currentTriangle != NULL )
 		{
 			assert( currentTriangle >= 0 );
 			QPathfinderNode node;
-			verify( linkedListFind( &closedList, isTriangle, &currentTriangle, &node ) );
+			verify( linkedListFind( &closedList, isTriangle, currentTriangle, &node ) );
 			currentTriangle = node.previousTriangle;
 			numPathTriangles++;
 		}
 	}
 	assert( numPathTriangles > 1 );
 	
-	int *pathTriangles = malloc( sizeof( int ) * numPathTriangles );
+	const QTriangle **pathTriangles = malloc( sizeof( QTriangle * ) * numPathTriangles );
 	{
 		int nextPathTriangleIndex = numPathTriangles - 1;
-		int currentTriangle = endTriangle;
-		while ( currentTriangle != -1 )
+		const QTriangle *currentTriangle = endTriangle;
+		while ( currentTriangle != NULL )
 		{
 			assert( currentTriangle >= 0 );
 			assert( nextPathTriangleIndex >= 0 );
@@ -310,7 +306,7 @@ void pathfinder( const QNavmesh *navmesh, const QVector *start, const QVector *e
 			pathTriangles[nextPathTriangleIndex] = currentTriangle;
 
 			QPathfinderNode node;
-			verify( linkedListFind( &closedList, isTriangle, &currentTriangle, &node ) );
+			verify( linkedListFind( &closedList, isTriangle, currentTriangle, &node ) );
 			currentTriangle = node.previousTriangle;
 			nextPathTriangleIndex--;
 		}
