@@ -2,6 +2,7 @@ require( "src/utils/OOP" );
 local Colors = require( "src/resources/Colors" );
 local CollisionFilters = require( "src/scene/CollisionFilters" );
 local CombatComponent = require( "src/scene/combat/CombatComponent" );
+local Stat = require( "src/scene/entity/Stat" );
 local MathUtils = require( "src/utils/MathUtils" );
 
 local Entity = Class( "Entity" );
@@ -96,16 +97,16 @@ end
 -- LOCOMOTION COMPONENT
 
 Entity.addLocomotion = function( self )
-	self._movementSpeed = 104; -- TODO use a stat, not a raw number
+	self._movementStat = Stat:new( 120, 0 );
 	self._speed = 0;
 end
 
 Entity.getMovementSpeed = function( self, speed )
-	return self._movementSpeed;
+	return self._movementStat:getValue();
 end
 
 Entity.setMovementSpeed = function( self, speed )
-	self._movementSpeed = speed;
+	self._movementSpeed:setValue( speed );
 end
 
 Entity.setSpeed = function( self, speed )
