@@ -166,9 +166,11 @@ static void funnelPath( const QNavmesh *navmesh, const QVector *start, const QVe
 			{
 				// Right over left, insert left to path and restart scan from portal left point
 				assert( outPath->numVertices < maxVertices );
-				assert( !vectorEquals( &portalLeft, &outPath->vertices[outPath->numVertices - 1] ) );
-				outPath->vertices[outPath->numVertices] = portalLeft;
-				outPath->numVertices++;
+				if ( !vectorEquals( &portalLeft, &outPath->vertices[outPath->numVertices - 1] ) )
+				{
+					outPath->vertices[outPath->numVertices] = portalLeft;
+					outPath->numVertices++;
+				}
 				// Make current left the new apex
 				portalApex = portalLeft;
 				apexIndex = leftIndex;
@@ -195,9 +197,11 @@ static void funnelPath( const QNavmesh *navmesh, const QVector *start, const QVe
 			{
 				// Left over right, insert right to path and restart scan from portal right point
 				assert( outPath->numVertices < maxVertices );
-				assert( !vectorEquals( &portalRight, &outPath->vertices[outPath->numVertices - 1] ) );
-				outPath->vertices[outPath->numVertices] = portalRight;
-				outPath->numVertices++;
+				if ( !vectorEquals( &portalRight, &outPath->vertices[outPath->numVertices - 1] ) )
+				{
+					outPath->vertices[outPath->numVertices] = portalRight;
+					outPath->numVertices++;
+				}
 				// Make current right the new apex
 				portalApex = portalRight;
 				apexIndex = rightIndex;
