@@ -61,14 +61,8 @@ static int isTriangle( const QPathfinderNode *node, const QTriangle *triangle )
 	return node->triangle == triangle;
 }
 
-static int hasBetterRank( const QPathfinderNode *nodeA, const QPathfinderNode *nodeB )
-{
-	return nodeA->cost + nodeA->heuristic <= nodeB->cost + nodeB->heuristic;
-}
-
 static void getPortal( const QNavmesh *navmesh, const QTriangle *triangleA, const QTriangle *triangleB, QEdge *outEdge )
 {
-	assert( areTrianglesNeighbors( navmesh, triangleA, triangleB ) );
 	for ( int i = 0; i < 3; i++ )
 	{
 		const int vertexIndex = triangleA->vertices[i];
@@ -82,7 +76,7 @@ static void getPortal( const QNavmesh *navmesh, const QTriangle *triangleA, cons
 			return;
 		}
 	}
-	assert( 0 );
+	assert( 0 ); // Triangles don't have a shared edge
 }
 
 static REAL triangleArea2( const QVector *vertexA, const QVector *vertexB, const QVector *vertexC )
