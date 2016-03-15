@@ -218,7 +218,12 @@ static void funnelPath( const QNavmesh *navmesh, const QVector *start, const QVe
 	}
 
 	assert( vectorEquals( &outPath->vertices[0], start ) );
-	assert( vectorEquals( &outPath->vertices[outPath->numVertices - 1], end ) );
+	if ( !vectorEquals( &outPath->vertices[outPath->numVertices - 1], end ) )
+	{
+		assert( outPath->numVertices < maxVertices );
+		outPath->vertices[outPath->numVertices - 1] = *end;
+		outPath->numVertices++;
+	}
 
 	free( portals );
 }
@@ -266,11 +271,11 @@ static void aStar( const QNavmesh *navmesh, const QVector *start, const QVector 
 		{
 			const int neighborTriangleIndex = current.triangle->neighbours[neighborIndex];
 			assert( neighborTriangleIndex < navmesh->numTriangles );
-			const QTriangle *neighborTriangle = &navmesh->triangles[neighborTriangleIndex];
-			if ( neighborTriangle < 0 )
+			if ( neighborTriangleIndex < 0 )
 			{
 				continue;
 			}
+			const QTriangle *neighborTriangle = &navmesh->triangles[neighborTriangleIndex];
 
 			const float newCost = current.cost + movementCost( current.triangle, neighborTriangle );
 
