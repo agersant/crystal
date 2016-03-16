@@ -35,34 +35,30 @@ end
 
 -- PUBLIC API
 
-MapCollisionMesh.init = function( self, map )
+MapCollisionMesh.init = function( self, widthInPixels, heightInPixels, heightInTiles )
 	self._chains = {};
-	self._map = map;
 	self._activeTiles = {};
-	for y = 0, map:getHeightInTiles() - 1 do
+	for y = 0, heightInTiles - 1 do
 		self._activeTiles[y] = {};
 	end
 	
-	local mapWidth = map:getWidthInPixels();
-	local mapHeight = map:getHeightInPixels();
 	local edgesChain = MapCollisionChainData:new( true );
 	edgesChain:addVertex( 0, 0 );
-	edgesChain:addVertex( mapWidth, 0 );
-	edgesChain:addVertex( mapWidth, mapHeight );
-	edgesChain:addVertex( 0, mapHeight );
+	edgesChain:addVertex( widthInPixels, 0 );
+	edgesChain:addVertex( widthInPixels, heightInPixels );
+	edgesChain:addVertex( 0, heightInPixels );
 	addChain( self, edgesChain );
 end
 
-MapCollisionMesh.processLayer = function( self, layerData )
+MapCollisionMesh.processLayer = function( self, tileset, layerData )
 
-	local map = self._map;
-	local tileWidth = map:getTileWidth();
-	local tileHeight = map:getTileHeight();
+	local tileWidth = tileset:getTileWidth();
+	local tileHeight = tileset:getTileHeight();
 	
 	for tileNum, tileID in ipairs( layerData.data ) do
-		local tileInfo = map:getTileset():getTileData( tileID );
+		local tileInfo = tileset:getTileData( tileID );
 		if tileInfo then
-			local tileX, tileY = MathUtils.indexToXY( tileNum - 1, map:getWidthInTiles() );
+			local tileX, tileY = MathUtils.indexToXY( tileNum - 1, layerData.width );
 			if not self._activeTiles[tileY][tileX] then
 				local x = tileX * tileWidth;
 				local y = tileY * tileHeight;
@@ -88,7 +84,7 @@ end
 MapCollisionMesh.spawnBody = function( self, scene )
 	local world = scene:getPhysicsWorld();
 	local body = love.physics.newBody( world, 0, 0, "static" );
-	body:setUserData( self._map );
+	body:setUserData( self );
 	for _, chain in ipairs( self._chains ) do
 		local fixture = love.physics.newFixture( body, chain:getShape() );
 		fixture:setFilterData( CollisionFilters.GEO, CollisionFilters.SOLID, 0 );

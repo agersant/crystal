@@ -18,14 +18,14 @@ Map.init = function( self, mapData, tileset )
 	self._width = mapData.content.width;
 	self._height = mapData.content.height;
 	self._numTiles = self._width * self._height;
-	self._collisionMesh = MapCollisionMesh:new( self );
-	
+	self._collisionMesh = MapCollisionMesh:new( self:getWidthInPixels(), self:getHeightInPixels(), self:getHeightInTiles() );
+	 
 	local layers = mapData.content.layers;
 	for i = #layers, 1, -1 do
 		local layerData = layers[i];
 		if layerData.type == "tilelayer" then
 			local sort = layerData.properties.sort;
-			self._collisionMesh:processLayer( layerData );
+			self._collisionMesh:processLayer( tileset, layerData );
 			if sort == "below" or sort == "above" then
 				local layer = StaticLayer:new( self, layerData, sort );
 				table.insert( self._staticLayers, 1, layer );
