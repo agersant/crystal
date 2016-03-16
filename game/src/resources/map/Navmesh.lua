@@ -2,7 +2,7 @@ require( "src/utils/OOP" );
 local FFI = require( "ffi" );
 local Font = require( "src/graphics/Font" );
 local Colors = require( "src/resources/Colors" );
-local Path = require( "src/scene/ai/path" );
+local Path = require( "src/scene/ai/Path" );
 local MathUtils = require( "src/utils/MathUtils" );
 local Quartz = FFI.load( "quartz" );
 
