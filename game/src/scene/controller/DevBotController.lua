@@ -51,7 +51,7 @@ DevBotController.run = function( self )
 		end
 		if self:isTaskless() then
 			if DevBotController._behavior == "walkToPoint" then
-				self:doTask( function( self ) Tasks.walkToPoint( self, 32, 200, 6 ); end );
+				self:doTask( Tasks.walkToPoint( 32, 200, 6 ) );
 			end
 		end
 		self:waitFrame();
