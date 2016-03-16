@@ -7,9 +7,9 @@ addons:
       - luajit
 
 before_script:
-  - cd $TRAVIS_BUILD_DIR/source/code/quartz
+  - cd $TRAVIS_BUILD_DIR/source/code/beryl
   - make
-  - LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/source/code/quartz:$LD_LIBRARY_PATH
+  - LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/source/code/beryl:$LD_LIBRARY_PATH
   - export LD_LIBRARY_PATH
 
 script:

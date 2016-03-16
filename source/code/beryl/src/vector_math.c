@@ -2,54 +2,54 @@
 #include <math.h>
 #include "vector_math.h"
 
-int vectorEquals( const QVector *a, const QVector *b )
+int vectorEquals( const BVector *a, const BVector *b )
 {
 	return a->x == b->x && a->y == b->y;
 }
 
-REAL vectorLength( const QVector *vector )
+REAL vectorLength( const BVector *vector )
 {
 	return sqrt( ( vector->x *vector->x ) + ( vector->y * vector->y ) );
 }
 
-REAL vectorLength2( const QVector *vector )
+REAL vectorLength2( const BVector *vector )
 {
 	return ( vector->x * vector->x ) + ( vector->y * vector->y );
 }
 
-REAL vectorDistance( const QVector *a, const QVector *b )
+REAL vectorDistance( const BVector *a, const BVector *b )
 {
-	QVector difference;
+	BVector difference;
 	vectorSubtract( a, b, &difference );
 	return vectorLength( &difference );
 }
 
-REAL vectorDistance2( const QVector *a, const QVector *b )
+REAL vectorDistance2( const BVector *a, const BVector *b )
 {
-	QVector difference;
+	BVector difference;
 	vectorSubtract( a, b, &difference );
 	return vectorLength2( &difference );
 }
 
-void vectorAdd( const QVector *a, const QVector *b, QVector *result )
+void vectorAdd( const BVector *a, const BVector *b, BVector *result )
 {
 	result->x = a->x + b->x;
 	result->y = a->y + b->y;
 }
 
-void vectorMadd( const QVector *a, REAL m, const QVector *b, QVector *result )
+void vectorMadd( const BVector *a, REAL m, const BVector *b, BVector *result )
 {
 	result->x = a->x + m * b->x;
 	result->y = a->y + m * b->y;
 }
 
-void vectorSubtract( const QVector *a, const QVector *b, QVector *result )
+void vectorSubtract( const BVector *a, const BVector *b, BVector *result )
 {
 	result->x = a->x - b->x;
 	result->y = a->y - b->y;
 }
 
-void vectorNormalize( QVector *vector )
+void vectorNormalize( BVector *vector )
 {
 	REAL length = vectorLength( vector );
 	assert( length > 0 );
@@ -57,13 +57,13 @@ void vectorNormalize( QVector *vector )
 	vector->y /= length;
 }
 
-void vectorScale( QVector *vector, REAL scale )
+void vectorScale( BVector *vector, REAL scale )
 {
 	vector->x *= scale;
 	vector->y *= scale;
 }
 
-void vectorNormal( const QVector *vector, int left, QVector *outNormal )
+void vectorNormal( const BVector *vector, int left, BVector *outNormal )
 {
 	outNormal->x = -vector->y;
 	outNormal->y = vector->x;
@@ -73,34 +73,34 @@ void vectorNormal( const QVector *vector, int left, QVector *outNormal )
 	}
 }
 
-REAL vectorDotProduct( const QVector *a, const QVector *b )
+REAL vectorDotProduct( const BVector *a, const BVector *b )
 {
 	return a->x * b->x + a->y * b->y;
 }
 
-REAL vectorCrossProduct( const QVector *a, const QVector *b )
+REAL vectorCrossProduct( const BVector *a, const BVector *b )
 {
 	return a->x * b->y - a->y * b->x;
 }
 
-int areVectorsColinear( const QVector *a, const QVector *b )
+int areVectorsColinear( const BVector *a, const BVector *b )
 {
 	return vectorCrossProduct( a, b ) == 0;
 }
 
-void edgeOffset( const QEdge *edge, const QVector *offset, QEdge *result )
+void edgeOffset( const BEdge *edge, const BVector *offset, BEdge *result )
 {
 	vectorAdd( &edge->start, offset, &result->start );
 	vectorAdd( &edge->end, offset, &result->end );
 }
 
-void edgeToVector( const QEdge *edge, QVector *vector )
+void edgeToVector( const BEdge *edge, BVector *vector )
 {
 	vector->x = edge->end.x - edge->start.x;
 	vector->y = edge->end.y - edge->start.y;
 }
 
-int lineIntersection( const QEdge *edgeA, const QEdge *edgeB, QVector *outResult )
+int lineIntersection( const BEdge *edgeA, const BEdge *edgeB, BVector *outResult )
 {
 	const REAL x1 = edgeA->start.x;
 	const REAL y1 = edgeA->start.y;
@@ -120,10 +120,10 @@ int lineIntersection( const QEdge *edgeA, const QEdge *edgeB, QVector *outResult
 	return 1;
 }
 
-void projectPointOntoSegment( const QVector *point, const QEdge *line, QVector *outResult )
+void projectPointOntoSegment( const BVector *point, const BEdge *line, BVector *outResult )
 {
 	assert( !vectorEquals( &line->start, &line->end ) );
-	QVector AB, AP;
+	BVector AB, AP;
 	vectorSubtract( &line->end, &line->start, &AB );
 	vectorSubtract( point, &line->start, &AP );
 	const REAL length2 = vectorDistance2( &line->start, &line->end );
@@ -131,9 +131,9 @@ void projectPointOntoSegment( const QVector *point, const QEdge *line, QVector *
 	vectorMadd( &line->start, t, &AB, outResult );
 }
 
-int doesTriangleContainPoint( const QVector *a, const QVector *b, const QVector *c, const QVector *point )
+int doesTriangleContainPoint( const BVector *a, const BVector *b, const BVector *c, const BVector *point )
 {
-	QVector ac, ab, ap;
+	BVector ac, ab, ap;
 	vectorSubtract( c, a, &ac );
 	vectorSubtract( b, a, &ab );
 	vectorSubtract( point, a, &ap );

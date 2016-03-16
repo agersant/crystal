@@ -3,10 +3,10 @@ local MapCollisionMesh = require( "src/resources/map/MapCollisionMesh" );
 
 local tests = {};
 
-tests[#tests + 1] = { name = "Load Quartz library" };
+tests[#tests + 1] = { name = "Load Beryl library" };
 tests[#tests].body = function()
 	local FFI = require( "ffi" );
-	local Quartz = FFI.load( "quartz" );
+	local Beryl = FFI.load( "beryl" );
 end
 
 tests[#tests + 1] = { name = "Load Navmesh Lua file" };

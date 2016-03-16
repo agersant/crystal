@@ -3,36 +3,36 @@
 #include "linked_list.h"
 #include "navmesh_query.h"
 
-typedef struct QAStarNode
+typedef struct BAStarNode
 {
 	float cost;
 	float heuristic;
-	const QTriangle *triangle;
-	const QTriangle *previousTriangle;
-} QAStarNode;
+	const BTriangle *triangle;
+	const BTriangle *previousTriangle;
+} BAStarNode;
 
-typedef struct QAStarOutput
+typedef struct BAStarOutput
 {
-	const QTriangle **triangles;
+	const BTriangle **triangles;
 	int numTriangles;
-} QAStarOutput;
+} BAStarOutput;
 
-static int isPointInsideNavmeshTriangle( const QNavmesh *navmesh, const QVector *point, const QTriangle *triangle )
+static int isPointInsideNavmeshTriangle( const BNavmesh *navmesh, const BVector *point, const BTriangle *triangle )
 {
-	const QVector *vertexA = &navmesh->vertices[triangle->vertices[0]];
-	const QVector *vertexB = &navmesh->vertices[triangle->vertices[1]];
-	const QVector *vertexC = &navmesh->vertices[triangle->vertices[2]];
+	const BVector *vertexA = &navmesh->vertices[triangle->vertices[0]];
+	const BVector *vertexB = &navmesh->vertices[triangle->vertices[1]];
+	const BVector *vertexC = &navmesh->vertices[triangle->vertices[2]];
 	return doesTriangleContainPoint( vertexA, vertexB, vertexC, point );
 }
 
-static const QTriangle *findTriangleContainingPoint( const QNavmesh *navmesh, const QVector *point )
+static const BTriangle *findTriangleContainingPoint( const BNavmesh *navmesh, const BVector *point )
 {
 	assert( navmesh->numTriangles >= 0 );
 	// TODO.optimization This could be more efficient if triangles were stored in
 	// a more appropriate data structure (eg. quadtree).
 	for ( int triangleIndex = 0; triangleIndex < navmesh->numTriangles; triangleIndex++ )
 	{
-		const QTriangle *triangle = &navmesh->triangles[triangleIndex];
+		const BTriangle *triangle = &navmesh->triangles[triangleIndex];
 		if ( isPointInsideNavmeshTriangle( navmesh, point, triangle ) )
 		{
 			return triangle;
@@ -41,7 +41,7 @@ static const QTriangle *findTriangleContainingPoint( const QNavmesh *navmesh, co
 	return NULL;
 }
 
-static float movementCost( const QTriangle *triangleA, const QTriangle *triangleB )
+static float movementCost( const BTriangle *triangleA, const BTriangle *triangleB )
 {
 	assert( triangleA != NULL );
 	assert( triangleB != NULL );
@@ -51,7 +51,7 @@ static float movementCost( const QTriangle *triangleA, const QTriangle *triangle
 	return cost;
 }
 
-static float heuristic( const QTriangle *triangle, const QVector *destination )
+static float heuristic( const BTriangle *triangle, const BVector *destination )
 {
 	assert( triangle != NULL );
 	assert( destination != NULL );
@@ -59,17 +59,17 @@ static float heuristic( const QTriangle *triangle, const QVector *destination )
 	return cost;
 }
 
-static int hasBetterRank( const QAStarNode *nodeA, const QAStarNode *nodeB )
+static int hasBetterRank( const BAStarNode *nodeA, const BAStarNode *nodeB )
 {
 	return nodeA->cost + nodeA->heuristic <= nodeB->cost + nodeB->heuristic;
 }
 
-static int isTriangle( const QAStarNode *node, const QTriangle *triangle )
+static int isTriangle( const BAStarNode *node, const BTriangle *triangle )
 {
 	return node->triangle == triangle;
 }
 
-static void getPortal( const QNavmesh *navmesh, const QTriangle *triangleA, const QTriangle *triangleB, QEdge *outEdge )
+static void getPortal( const BNavmesh *navmesh, const BTriangle *triangleA, const BTriangle *triangleB, BEdge *outEdge )
 {
 	// TODO.optimization These results could be precomputed
 	for ( int i = 0; i < 3; i++ )
@@ -88,19 +88,19 @@ static void getPortal( const QNavmesh *navmesh, const QTriangle *triangleA, cons
 	assert( 0 ); // Triangles don't have a shared edge
 }
 
-static REAL triangleArea2( const QVector *vertexA, const QVector *vertexB, const QVector *vertexC )
+static REAL triangleArea2( const BVector *vertexA, const BVector *vertexB, const BVector *vertexC )
 {
-	QVector ab, ac;
+	BVector ab, ac;
 	vectorSubtract( vertexB, vertexA, &ab );
 	vectorSubtract( vertexC, vertexA, &ac );
 	return vectorCrossProduct( &ac, &ab );
 }
 
 // Based on: http://digestingduck.blogspot.com/2010/03/simple-stupid-funnel-algorithm.html
-static void funnelPath( const QNavmesh *navmesh, const QVector *start, const QVector *end, const QAStarOutput *aStarOutput, QPath *outPath )
+static void funnelPath( const BNavmesh *navmesh, const BVector *start, const BVector *end, const BAStarOutput *aStarOutput, BPath *outPath )
 {
 	const int numTriangles = aStarOutput->numTriangles;
-	const QTriangle **triangles = aStarOutput->triangles;
+	const BTriangle **triangles = aStarOutput->triangles;
 
 	if ( numTriangles < 1 )
 	{
@@ -112,7 +112,7 @@ static void funnelPath( const QNavmesh *navmesh, const QVector *start, const QVe
 	if ( numTriangles == 1 )
 	{
 		outPath->numVertices = 2;
-		outPath->vertices = malloc( 2 * sizeof( QVector ) );
+		outPath->vertices = malloc( 2 * sizeof( BVector ) );
 		outPath->vertices[0] = *start;
 		outPath->vertices[1] = *end;
 		return;
@@ -122,10 +122,10 @@ static void funnelPath( const QNavmesh *navmesh, const QVector *start, const QVe
 	assert( isPointInsideNavmeshTriangle( navmesh, end, triangles[numTriangles - 1] ) );
 
 	const int numPortals = numTriangles;
-	QEdge *portals = malloc( numPortals * sizeof( QEdge ) );
+	BEdge *portals = malloc( numPortals * sizeof( BEdge ) );
 
 	const int maxVertices = numTriangles + 1;
-	outPath->vertices = malloc( sizeof( QVector ) * maxVertices );
+	outPath->vertices = malloc( sizeof( BVector ) * maxVertices );
 	outPath->vertices[0] = *start;
 	outPath->numVertices = 1;
 
@@ -139,7 +139,7 @@ static void funnelPath( const QNavmesh *navmesh, const QVector *start, const QVe
 	portals[numPortals - 1].start = *end;
 	portals[numPortals - 1].end = *end;
 
-	QVector portalApex, portalLeft, portalRight;
+	BVector portalApex, portalLeft, portalRight;
 	portalApex = *start;
 	portalLeft = *start;
 	portalRight = *start;
@@ -151,8 +151,8 @@ static void funnelPath( const QNavmesh *navmesh, const QVector *start, const QVe
 
 	for ( int portalIndex = 0; portalIndex < numPortals; portalIndex++ )
 	{
-		const QVector *right = &portals[portalIndex].start;
-		const QVector *left = &portals[portalIndex].end;
+		const BVector *right = &portals[portalIndex].start;
+		const BVector *left = &portals[portalIndex].end;
 
 		if ( triangleArea2( &portalApex, &portalRight, right ) <= 0 )
 		{
@@ -228,10 +228,10 @@ static void funnelPath( const QNavmesh *navmesh, const QVector *start, const QVe
 	free( portals );
 }
 
-static void aStar( const QNavmesh *navmesh, const QVector *start, const QVector *end, QAStarOutput *output )
+static void aStar( const BNavmesh *navmesh, const BVector *start, const BVector *end, BAStarOutput *output )
 {
-	const QTriangle *const startTriangle = findTriangleContainingPoint( navmesh, start );
-	const QTriangle *const endTriangle = findTriangleContainingPoint( navmesh, end );
+	const BTriangle *const startTriangle = findTriangleContainingPoint( navmesh, start );
+	const BTriangle *const endTriangle = findTriangleContainingPoint( navmesh, end );
 
 	if ( startTriangle == NULL || endTriangle == NULL )
 	{
@@ -241,21 +241,21 @@ static void aStar( const QNavmesh *navmesh, const QVector *start, const QVector 
 		return;
 	}
 
-	QLinkedList openList, closedList;
-	linkedListInit( &openList, sizeof( QAStarNode ), NULL );
-	linkedListInit( &closedList, sizeof( QAStarNode ), NULL );
+	BLinkedList openList, closedList;
+	linkedListInit( &openList, sizeof( BAStarNode ), NULL );
+	linkedListInit( &closedList, sizeof( BAStarNode ), NULL );
 
-	QAStarNode startNode;
+	BAStarNode startNode;
 	startNode.cost = 0;
 	startNode.previousTriangle = NULL;
 	startNode.triangle = startTriangle;
 	startNode.heuristic = heuristic( startNode.triangle, end );
 	linkedListPrepend( &openList, &startNode );
 
-	QAStarNode arrivalNode;
+	BAStarNode arrivalNode;
 	while ( 1 )
 	{
-		QAStarNode current;
+		BAStarNode current;
 		assert( !linkedListIsEmpty( &openList ) ); // TODO Handle case where no path exists
 		linkedListGetHead( &openList, &current );
 		linkedListRemoveHead( &openList );
@@ -275,11 +275,11 @@ static void aStar( const QNavmesh *navmesh, const QVector *start, const QVector 
 			{
 				continue;
 			}
-			const QTriangle *neighborTriangle = &navmesh->triangles[neighborTriangleIndex];
+			const BTriangle *neighborTriangle = &navmesh->triangles[neighborTriangleIndex];
 
 			const float newCost = current.cost + movementCost( current.triangle, neighborTriangle );
 
-			QAStarNode occurenceInOpenList;
+			BAStarNode occurenceInOpenList;
 			int inOpenList = linkedListFind( &openList, isTriangle, neighborTriangle, &occurenceInOpenList );
 			if ( inOpenList )
 			{
@@ -292,7 +292,7 @@ static void aStar( const QNavmesh *navmesh, const QVector *start, const QVector 
 			const int inClosedList = linkedListFind( &closedList, isTriangle, neighborTriangle, NULL );
 			if ( !inOpenList && !inClosedList )
 			{
-				QAStarNode newNode;
+				BAStarNode newNode;
 				newNode.cost = newCost;
 				newNode.triangle = neighborTriangle;
 				newNode.heuristic = heuristic( newNode.triangle, end );
@@ -304,21 +304,21 @@ static void aStar( const QNavmesh *navmesh, const QVector *start, const QVector 
 
 	output->numTriangles = 0;
 	{
-		const QTriangle *currentTriangle = endTriangle;
+		const BTriangle *currentTriangle = endTriangle;
 		while ( currentTriangle != NULL )
 		{
 			assert( currentTriangle >= 0 );
-			QAStarNode node;
+			BAStarNode node;
 			verify( linkedListFind( &closedList, isTriangle, currentTriangle, &node ) );
 			currentTriangle = node.previousTriangle;
 			output->numTriangles++;
 		}
 	}
 
-	output->triangles = malloc( sizeof( QTriangle * ) * output->numTriangles );
+	output->triangles = malloc( sizeof( BTriangle * ) * output->numTriangles );
 	{
 		int nextPathTriangleIndex = output->numTriangles - 1;
-		const QTriangle *currentTriangle = endTriangle;
+		const BTriangle *currentTriangle = endTriangle;
 		while ( currentTriangle != NULL )
 		{
 			assert( currentTriangle >= 0 );
@@ -326,7 +326,7 @@ static void aStar( const QNavmesh *navmesh, const QVector *start, const QVector 
 			assert( nextPathTriangleIndex < output->numTriangles );
 			output->triangles[nextPathTriangleIndex] = currentTriangle;
 
-			QAStarNode node;
+			BAStarNode node;
 			verify( linkedListFind( &closedList, isTriangle, currentTriangle, &node ) );
 			currentTriangle = node.previousTriangle;
 			nextPathTriangleIndex--;
@@ -340,18 +340,18 @@ static void aStar( const QNavmesh *navmesh, const QVector *start, const QVector 
 	assert( output->triangles[output->numTriangles - 1] == endTriangle );
 }
 
-static void freeAStarOutput( QAStarOutput *aStarOutput )
+static void freeAStarOutput( BAStarOutput *aStarOutput )
 {
 	free( aStarOutput->triangles );
 	aStarOutput->triangles = NULL;
 	aStarOutput->numTriangles = 0;
 }
 
-void pathfinder( const QNavmesh *navmesh, const QVector *start, const QVector *end, QPath *outPath )
+void pathfinder( const BNavmesh *navmesh, const BVector *start, const BVector *end, BPath *outPath )
 {
 	assert( outPath->numVertices == 0 );
 	
-	QAStarOutput aStarOutput;
+	BAStarOutput aStarOutput;
 	aStar( navmesh, start, end, &aStarOutput );
 	
 	funnelPath( navmesh, start, end, &aStarOutput, outPath );

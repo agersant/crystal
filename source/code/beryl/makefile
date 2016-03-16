@@ -1,7 +1,7 @@
 CC ?= clang
 
 CFLAGS = -shared -fPIC -DLINUX -Wall -Wno-incompatible-pointer-types-discards-qualifiers
-TARGET = libquartz.so
+TARGET = libberyl.so
 OBJS = api.o linked_list.o navmesh_generate.o navmesh_query.o vector_math.o triangle.o gpc.o
 
 $(TARGET): $(OBJS)

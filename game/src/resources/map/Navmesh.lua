@@ -4,7 +4,7 @@ local Font = require( "src/graphics/Font" );
 local Colors = require( "src/resources/Colors" );
 local Path = require( "src/scene/ai/Path" );
 local MathUtils = require( "src/utils/MathUtils" );
-local Quartz = FFI.load( "quartz" );
+local Beryl = FFI.load( "beryl" );
 
 local Navmesh = Class( "Navmesh" );
 
@@ -13,54 +13,54 @@ local Navmesh = Class( "Navmesh" );
 -- FFI
 
 FFI.cdef[[
-	typedef struct QVector
+	typedef struct BVector
 	{
 		double x;
 		double y;
-	} QVector;
+	} BVector;
 	
-	typedef struct QObstacle
+	typedef struct BObstacle
 	{
 		int numVertices;
-		QVector *vertices;
-	} QObstacle;
+		BVector *vertices;
+	} BObstacle;
 
-	typedef struct QMap
+	typedef struct BMap
 	{
 		int x;
 		int y;
 		int width;
 		int height;
-		QObstacle *obstacles;
+		BObstacle *obstacles;
 		int numObstacles;
-	} QMap;
+	} BMap;
 
-	typedef struct QTriangle
+	typedef struct BTriangle
 	{
 		int vertices[3];
 		int neighbours[3];
-		QVector center;
-	} QTriangle;
+		BVector center;
+	} BTriangle;
 
-	typedef struct QNavmesh
+	typedef struct BNavmesh
 	{
 		int numTriangles;
 		int numVertices;
-		QVector *vertices;
-		QTriangle *triangles;
-	} QNavmesh;
+		BVector *vertices;
+		BTriangle *triangles;
+	} BNavmesh;
 
-	typedef struct QPath
+	typedef struct BPath
 	{
 		int numVertices;
-		QVector *vertices;
-	} QPath;
+		BVector *vertices;
+	} BPath;
 
-	void generateNavmesh( QMap *map, int padding, QNavmesh *outNavmesh );
-	void planPath( const QNavmesh *navmesh, double startX, double startY, double endX, double endY, QPath *outPath );
+	void generateNavmesh( BMap *map, int padding, BNavmesh *outNavmesh );
+	void planPath( const BNavmesh *navmesh, double startX, double startY, double endX, double endY, BPath *outPath );
 	
-	void freeNavmesh( QNavmesh *navmesh );
-	void freePath( QPath *path );
+	void freeNavmesh( BNavmesh *navmesh );
+	void freePath( BPath *path );
 	void free( void *ptr );
 ]]
 
@@ -68,67 +68,67 @@ FFI.cdef[[
 
 -- IMPLEMENTATION
 
-local newQNavmesh = function( self )
-	local output = FFI.gc( FFI.new( FFI.typeof( "QNavmesh" ) ), function( navmesh )
-		Quartz.freeNavmesh( navmesh );
+local newBNavmesh = function( self )
+	local output = FFI.gc( FFI.new( FFI.typeof( "BNavmesh" ) ), function( navmesh )
+		Beryl.freeNavmesh( navmesh );
 		FFI.C.free( navmesh );
 	end );
 	return output;
 end
 
-local newQPath = function( self )
-	local output = FFI.gc( FFI.new( FFI.typeof( "QPath" ) ), function( path )
-		Quartz.freePath( path );
+local newBPath = function( self )
+	local output = FFI.gc( FFI.new( FFI.typeof( "BPath" ) ), function( path )
+		Beryl.freePath( path );
 		FFI.C.free( path );
 	end );
 	return output;
 end
 
-local generateQNavmesh = function( self, width, height, collisionMesh, padding )
+local generateBNavmesh = function( self, width, height, collisionMesh, padding )
 	
 	assert( width > 0 );
 	assert( height > 0 );
 
-	local cMap = FFI.gc( FFI.new( FFI.typeof( "QMap" ) ), FFI.C.free );
-	cMap.width = width;
-	cMap.height = height;
+	local bMap = FFI.gc( FFI.new( FFI.typeof( "BMap" ) ), FFI.C.free );
+	bMap.width = width;
+	bMap.height = height;
 	
 	local obstacles = {};
 	for _, chain in collisionMesh:chains() do
 		if not chain:isOuter() then
-			local obstacle = FFI.gc( FFI.new( FFI.typeof( "QObstacle" ) ), FFI.C.free );
+			local obstacle = FFI.gc( FFI.new( FFI.typeof( "BObstacle" ) ), FFI.C.free );
 			local vertices = {};
 			for i, x, y in chain:vertices() do
-				local vertex = FFI.gc( FFI.new( FFI.typeof( "QVector" ), { x = x, y = y } ), FFI.C.free );
+				local vertex = FFI.gc( FFI.new( FFI.typeof( "BVector" ), { x = x, y = y } ), FFI.C.free );
 				table.insert( vertices, vertex );
 			end
 			obstacle.numVertices = #vertices;
-			obstacle.vertices = FFI.gc( FFI.new( FFI.typeof( "QVector[?]" ), #vertices, vertices ), FFI.C.free );
+			obstacle.vertices = FFI.gc( FFI.new( FFI.typeof( "BVector[?]" ), #vertices, vertices ), FFI.C.free );
 			table.insert( obstacles, obstacle );
 		end
 	end
-	cMap.numObstacles = #obstacles;
-	cMap.obstacles = FFI.gc( FFI.new( FFI.typeof( "QObstacle[?]" ), #obstacles, obstacles ), FFI.C.free );
+	bMap.numObstacles = #obstacles;
+	bMap.obstacles = FFI.gc( FFI.new( FFI.typeof( "BObstacle[?]" ), #obstacles, obstacles ), FFI.C.free );
 	
-	local qNavmesh = newQNavmesh( self );
-	Quartz.generateNavmesh( cMap, padding, qNavmesh );
+	local bNavmesh = newBNavmesh( self );
+	Beryl.generateNavmesh( bMap, padding, bNavmesh );
 	
-	return qNavmesh;
+	return bNavmesh;
 end
 
-local parseQNavmesh = function( self, qNavmesh )
-	assert( qNavmesh );
+local parseBNavmesh = function( self, bNavmesh )
+	assert( bNavmesh );
 	if gConf.features.debugDraw then
 		self._triangles = {};
-		for i = 0, qNavmesh.numTriangles - 1 do
-			local cTriangle = qNavmesh.triangles[i];
+		for i = 0, bNavmesh.numTriangles - 1 do
+			local bTriangle = bNavmesh.triangles[i];
 			local triangle = {};
 			triangle.vertices = {
-				qNavmesh.vertices[cTriangle.vertices[0]].x, qNavmesh.vertices[cTriangle.vertices[0]].y,
-				qNavmesh.vertices[cTriangle.vertices[1]].x, qNavmesh.vertices[cTriangle.vertices[1]].y,
-				qNavmesh.vertices[cTriangle.vertices[2]].x, qNavmesh.vertices[cTriangle.vertices[2]].y,
+				bNavmesh.vertices[bTriangle.vertices[0]].x, bNavmesh.vertices[bTriangle.vertices[0]].y,
+				bNavmesh.vertices[bTriangle.vertices[1]].x, bNavmesh.vertices[bTriangle.vertices[1]].y,
+				bNavmesh.vertices[bTriangle.vertices[2]].x, bNavmesh.vertices[bTriangle.vertices[2]].y,
 			};
-			triangle.center = { x = cTriangle.center.x, y = cTriangle.center.y };
+			triangle.center = { x = bTriangle.center.x, y = bTriangle.center.y };
 			table.insert( self._triangles, triangle );
 		end
 	end
@@ -139,20 +139,20 @@ end
 -- PUBLIC API
 
 Navmesh.init = function( self, width, height, collisionMesh, padding )
-	self._qNavmesh = generateQNavmesh( self, width, height, collisionMesh, padding );
-	parseQNavmesh( self, self._qNavmesh );
+	self._bNavmesh = generateBNavmesh( self, width, height, collisionMesh, padding );
+	parseBNavmesh( self, self._bNavmesh );
 	if gConf.features.debugDraw then
 		self._font = Font:new( "dev", 8 );
 	end
 end
 
 Navmesh.findPath = function( self, startX, startY, endX, endY )
-	local qPath = newQPath( self );
-	Quartz.planPath( self._qNavmesh, startX, startY, endX, endY, qPath );
+	local bPath = newBPath( self );
+	Beryl.planPath( self._bNavmesh, startX, startY, endX, endY, bPath );
 	local path = Path:new();
-	for i = 0, qPath.numVertices - 1 do
-		local cVector = qPath.vertices[i];
-		path:addVertex( cVector.x, cVector.y );
+	for i = 0, bPath.numVertices - 1 do
+		local bVector = bPath.vertices[i];
+		path:addVertex( bVector.x, bVector.y );
 	end
 	return path;
 end

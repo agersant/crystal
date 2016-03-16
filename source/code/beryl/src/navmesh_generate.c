@@ -28,15 +28,15 @@ static int isContourClockwise( const gpc_vertex_list *contour )
 	return sum > 0;
 }
 
-static void padVertex( const QEdge *inEdgeA, const QEdge *inEdgeB, int clockwise, REAL padding, QVector *outPaddedVertex )
+static void padVertex( const BEdge *inEdgeA, const BEdge *inEdgeB, int clockwise, REAL padding, BVector *outPaddedVertex )
 {
-	QEdge edgeA, edgeB;
+	BEdge edgeA, edgeB;
 	edgeA = *inEdgeA;
 	edgeB = *inEdgeB;
 	assert( vectorEquals( &edgeA.end, &edgeB.start ) );
 
-	QVector vectorA;
-	QVector vectorB;
+	BVector vectorA;
+	BVector vectorB;
 	edgeToVector( &edgeA, &vectorA );
 	edgeToVector( &edgeB, &vectorB );
 
@@ -44,7 +44,7 @@ static void padVertex( const QEdge *inEdgeA, const QEdge *inEdgeB, int clockwise
 
 	if ( areVectorsColinear( &vectorA, &vectorB ) )
 	{
-		QVector paddingVector;
+		BVector paddingVector;
 		vectorNormal( &vectorA, !clockwise, &paddingVector );
 		vectorNormalize( &paddingVector );
 		vectorScale( &paddingVector, padding );
@@ -53,14 +53,14 @@ static void padVertex( const QEdge *inEdgeA, const QEdge *inEdgeB, int clockwise
 	else
 	{
 		{
-			QVector edgeNormal;
+			BVector edgeNormal;
 			vectorNormal( &vectorA, !clockwise, &edgeNormal );
 			vectorNormalize( &edgeNormal );
 			vectorScale( &edgeNormal, padding );
 			edgeOffset( &edgeA, &edgeNormal, &edgeA );
 		}
 		{
-			QVector edgeNormal;
+			BVector edgeNormal;
 			vectorNormal( &vectorB, !clockwise, &edgeNormal );
 			vectorNormalize( &edgeNormal );
 			vectorScale( &edgeNormal, padding );
@@ -71,7 +71,7 @@ static void padVertex( const QEdge *inEdgeA, const QEdge *inEdgeB, int clockwise
 	}
 }
 
-static void makeQuadrilateralPolygon( QVector *cornerA, QVector *cornerB, QVector *cornerC, QVector *cornerD, gpc_polygon *outPolygon )
+static void makeQuadrilateralPolygon( BVector *cornerA, BVector *cornerB, BVector *cornerC, BVector *cornerD, gpc_polygon *outPolygon )
 {
 	outPolygon->num_contours = 1;
 	outPolygon->contour = malloc( sizeof( gpc_vertex_list ) );
@@ -89,7 +89,7 @@ static void makeQuadrilateralPolygon( QVector *cornerA, QVector *cornerB, QVecto
 	outPolygon->contour[0].vertex[3].y = cornerD->y;
 }
 
-static int insertPointInTriangulationInput( REAL x, REAL y, QTriangulation *outTriangulation )
+static int insertPointInTriangulationInput( REAL x, REAL y, BTriangulation *outTriangulation )
 {
 	// TODO.optimization: This would be faster if we kept the array sorted
 	for ( int i = 0; i < outTriangulation->numberofpoints; i++ )
@@ -107,7 +107,7 @@ static int insertPointInTriangulationInput( REAL x, REAL y, QTriangulation *outT
 	return outTriangulation->numberofpoints - 1;
 }
 
-static void getPointWithinContour( const gpc_vertex_list *contour, QVector *outPoint )
+static void getPointWithinContour( const gpc_vertex_list *contour, BVector *outPoint )
 {
 	const int numVertices = contour->num_vertices;
 	assert( numVertices > 2 );
@@ -137,7 +137,7 @@ static void getPointWithinContour( const gpc_vertex_list *contour, QVector *outP
 	}
 
 	{
-		QEdge vertical;
+		BEdge vertical;
 		vertical.start.x = outPoint->x;
 		vertical.start.y = 0;
 		vertical.end.x = outPoint->x;
@@ -160,13 +160,13 @@ static void getPointWithinContour( const gpc_vertex_list *contour, QVector *outP
 					continue;
 				}
 
-				QEdge edge;
+				BEdge edge;
 				edge.start.x = previousVertex->x;
 				edge.start.y = previousVertex->y;
 				edge.end.x = vertex->x;
 				edge.end.y = vertex->y;
 
-				QVector intersection;
+				BVector intersection;
 				verify( lineIntersection( &edge, &vertical, &intersection ) );
 
 				if ( intersection.y < minY )
@@ -198,7 +198,7 @@ static void getPointWithinContour( const gpc_vertex_list *contour, QVector *outP
 
 // PUBLIC API
 
-void mapToPolygonMap( const QMap *map, QPolygonMap *outPolygonMap )
+void mapToPolygonMap( const BMap *map, BPolygonMap *outPolygonMap )
 {
 	memset( outPolygonMap, 0, sizeof( *outPolygonMap ) );
 	outPolygonMap->x = map->x;
@@ -234,7 +234,7 @@ void mapToPolygonMap( const QMap *map, QPolygonMap *outPolygonMap )
 	}
 }
 
-void padPolygonMap( int padding, const QPolygonMap *inMap, QPolygonMap *outMap )
+void padPolygonMap( int padding, const BPolygonMap *inMap, BPolygonMap *outMap )
 {
 	assert( inMap != outMap );
 
@@ -266,7 +266,7 @@ void padPolygonMap( int padding, const QPolygonMap *inMap, QPolygonMap *outMap )
 
 			for ( int vertexIndex = 0; vertexIndex < numVertices; vertexIndex++ )
 			{
-				QEdge edgeA, edgeB, edgeC;
+				BEdge edgeA, edgeB, edgeC;
 				edgeA.start.x = inContour->vertex[vertexIndex].x;
 				edgeA.start.y = inContour->vertex[vertexIndex].y;
 				edgeA.end.x = inContour->vertex[( vertexIndex + 1 ) % numVertices].x;
@@ -278,7 +278,7 @@ void padPolygonMap( int padding, const QPolygonMap *inMap, QPolygonMap *outMap )
 				edgeC.end.x = inContour->vertex[( vertexIndex + 3 ) % numVertices].x;
 				edgeC.end.y = inContour->vertex[( vertexIndex + 3 ) % numVertices].y;
 
-				QEdge paddedEdgeB;
+				BEdge paddedEdgeB;
 				padVertex( &edgeA, &edgeB, isClockwise, padding, &paddedEdgeB.start );
 				padVertex( &edgeB, &edgeC, isClockwise, padding, &paddedEdgeB.end );
 
@@ -294,15 +294,15 @@ void padPolygonMap( int padding, const QPolygonMap *inMap, QPolygonMap *outMap )
 	}
 }
 
-void polygonMapToTriangulation( QPolygonMap *map, QTriangulation *outTriangulation )
+void polygonMapToTriangulation( BPolygonMap *map, BTriangulation *outTriangulation )
 {
 	memset( outTriangulation, 0, sizeof( *outTriangulation ) );
 
-	QTriangulation triangulationInput;
+	BTriangulation triangulationInput;
 	memset( &triangulationInput, 0, sizeof( triangulationInput ) );
 
 	gpc_polygon mapPolygon;
-	QVector topLeft, topRight, bottomRight, bottomLeft;
+	BVector topLeft, topRight, bottomRight, bottomLeft;
 	topLeft.x = map->x;
 	topLeft.y = map->y;
 	topRight.x = map->x + map->width;
@@ -360,7 +360,7 @@ void polygonMapToTriangulation( QPolygonMap *map, QTriangulation *outTriangulati
 		}
 		if ( mapPolygon.hole[contourIndex] )
 		{
-			QVector holePoint;
+			BVector holePoint;
 			getPointWithinContour( contour, &holePoint );
 			REAL *const hole = &triangulationInput.holelist[2 * numHoles];
 			hole[0] = holePoint.x;
@@ -381,7 +381,7 @@ void polygonMapToTriangulation( QPolygonMap *map, QTriangulation *outTriangulati
 	gpc_free_polygon( &mapPolygon );
 }
 
-void triangulationToNavmesh( const struct triangulateio *triangleOutput, QNavmesh *outNavmesh )
+void triangulationToNavmesh( const struct triangulateio *triangleOutput, BNavmesh *outNavmesh )
 {
 	assert( outNavmesh );
 	assert( triangleOutput );
@@ -392,8 +392,8 @@ void triangulationToNavmesh( const struct triangulateio *triangleOutput, QNavmes
 	
 	outNavmesh->numVertices = triangleOutput->numberofpoints;
 	outNavmesh->numTriangles = triangleOutput->numberoftriangles;
-	outNavmesh->triangles = malloc( outNavmesh->numTriangles * sizeof( QTriangle ) );
-	outNavmesh->vertices = malloc( outNavmesh->numVertices * sizeof( QVector ) );
+	outNavmesh->triangles = malloc( outNavmesh->numTriangles * sizeof( BTriangle ) );
+	outNavmesh->vertices = malloc( outNavmesh->numVertices * sizeof( BVector ) );
 
 	for ( int i = 0; i < outNavmesh->numVertices; i++ )
 	{
@@ -423,7 +423,7 @@ void triangulationToNavmesh( const struct triangulateio *triangleOutput, QNavmes
 	return;
 }
 
-void freePolygonMap( QPolygonMap *map )
+void freePolygonMap( BPolygonMap *map )
 {
 	for ( int polygonIndex = 0; polygonIndex < map->numPolygons; polygonIndex++ )
 	{

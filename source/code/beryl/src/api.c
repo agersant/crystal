@@ -6,18 +6,18 @@
 #include "navmesh_generate.h"
 #include "navmesh_query.h"
 
-void generateNavmesh( QMap *map, int padding, QNavmesh *outNavmesh )
+void generateNavmesh( BMap *map, int padding, BNavmesh *outNavmesh )
 {
 	assert( map->width > 0 );
 	assert( map->height > 0 );
 
-	QPolygonMap polygonMap;
+	BPolygonMap polygonMap;
 	mapToPolygonMap( map, &polygonMap );
 
-	QPolygonMap paddedMap;
+	BPolygonMap paddedMap;
 	padPolygonMap( padding, &polygonMap, &paddedMap );
 
-	QTriangulation triangulation;
+	BTriangulation triangulation;
 	polygonMapToTriangulation( &paddedMap, &triangulation );
 
 	triangulationToNavmesh( &triangulation, outNavmesh );
@@ -34,9 +34,9 @@ void generateNavmesh( QMap *map, int padding, QNavmesh *outNavmesh )
 	trifree( triangulation.edgemarkerlist );
 }
 
-void planPath( const QNavmesh *navmesh, REAL startX, REAL startY, REAL endX, REAL endY, QPath *outPath )
+void planPath( const BNavmesh *navmesh, REAL startX, REAL startY, REAL endX, REAL endY, BPath *outPath )
 {
-	QVector start, end;
+	BVector start, end;
 	start.x = startX;
 	start.y = startY;
 	end.x = endX;
@@ -44,13 +44,13 @@ void planPath( const QNavmesh *navmesh, REAL startX, REAL startY, REAL endX, REA
 	pathfinder( navmesh, &start, &end, outPath );
 }
 
-void freeNavmesh( QNavmesh *navmesh )
+void freeNavmesh( BNavmesh *navmesh )
 {
 	free( navmesh->vertices );
 	free( navmesh->triangles );
 }
 
-void freePath( QPath *path )
+void freePath( BPath *path )
 {
 	free( path->vertices );
 }
