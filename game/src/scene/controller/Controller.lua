@@ -10,12 +10,37 @@ local Controller = Class( "Controller" );
 
 local pumpThread;
 
+local newThread = function( self, parentThread, script, options )
+	assert( type( script ) == "function" );
+	local threadCoroutine = coroutine.create( script );
+	
+	local thread = {
+		coroutine = threadCoroutine,
+		allowOrphans = options.allowOrphans,
+		childThreads = {},
+		blockedBy = {},
+		endsOn = {},
+		isDead = function( self )
+			return coroutine.status( self.coroutine ) == "dead" or self.isEnded;
+		end,
+	};
+	
+	if parentThread then
+		parentThread.childThreads[thread] = true;
+		thread.parentThread = parentThread;
+	end
+	
+	if options.pumpImmediately then
+		pumpThread( self, thread );
+	end
+	
+	table.insert( self._newThreads, thread );
+	return thread;
+end
+
 local blockThread = function( self, thread, signals )
 	thread.isBlocked = true;
 	thread.isMarkedForUnblock = false;
-	if not thread.blockedBy then
-		thread.blockedBy = {};
-	end
 	for _, signal in ipairs( signals ) do
 		assert( type( signal ) == "string" );
 		if not self._blockedThreads[signal] then
@@ -40,9 +65,6 @@ local unblockThread = function( self, thread, signal, ... )
 end
 
 local endThreadOn = function( self, thread, signals )
-	if not thread.endsOn then
-		thread.endsOn = {};
-	end
 	for _, signal in ipairs( signals ) do
 		assert( type( signal ) == "string" );
 		if not self._endableThreads[signal] then
@@ -53,8 +75,22 @@ local endThreadOn = function( self, thread, signals )
 	end
 end
 
-local endThread = function( self, thread )
+local endThread;
+endThread = function( self, thread )
 	thread.isEnded = true;
+	if thread.parentThread then
+		thread.parentThread.childThreads[thread] = nil;
+		thread.parentThread = nil;
+	end
+	if not thread.allowOrphans then
+		local childThreadsCopy = {};
+		for childThread, _  in pairs( thread.childThreads ) do
+			table.insert( childThreadsCopy, childThread );
+		end
+		for i, childThread  in ipairs( childThreadsCopy ) do
+			endThread( self, childThread );
+		end
+	end
 end
 
 pumpThread = function( self, thread, resumeArgs )
@@ -69,12 +105,20 @@ pumpThread = function( self, thread, resumeArgs )
 		end
 		if not success then
 			Log:error( a );
+		elseif a == "fork" then
+			newThread( self, thread, b, { pumpImmediately = true, allowOrphans = false } );
+			pumpThread( self, thread );
 		elseif a == "waitForSignals" then
 			blockThread( self, thread, b );
 		elseif a == "endOnSignals" then
 			endThreadOn( self, thread, b );
 			pumpThread( self, thread );
 		end
+	end
+	
+	status = coroutine.status( thread.coroutine );
+	if status == "dead" and not thread.isEnded then
+		endThread( self, thread );
 	end
 end
 
@@ -84,10 +128,17 @@ local cleanupThread = function( self, thread )
 			self._endableThreads[signal][thread] = nil;
 		end
 	end
-	if thread.blockedBy then
-		for signal, _ in pairs( thread.blockedBy ) do
-			self._blockedThreads[signal][thread] = nil;
-		end
+	for signal, _ in pairs( thread.blockedBy ) do
+		self._blockedThreads[signal][thread] = nil;
+	end
+	for childThread, _  in pairs( thread.childThreads ) do
+		childThread.parentThread = nil;
+	end
+	if thread == self._actionThread then
+		self._actionThread = nil;
+	end
+	if thread == self._taskThread then
+		self._taskThread = nil;
 	end
 end
 
@@ -105,7 +156,7 @@ Controller.init = function( self, entity, script )
 	self._blockedThreads = {};
 	self._endableThreads = {};
 	self._queuedSignals = {};
-	self:thread( script, false );
+	newThread( self, nil, script, { pumpImmediately = false, allowOrphans = true } );
 end
 
 Controller.getEntity = function( self )
@@ -139,7 +190,7 @@ Controller.update = function( self, dt )
 	-- Remove dead threads
 	for i = #self._threads, 1, -1 do
 		local thread = self._threads[i];
-		if thread.isEnded or coroutine.status( thread.coroutine ) == "dead" then
+		if thread:isDead() then
 			cleanupThread( self, thread );
 			table.remove( self._threads, i );
 		end
@@ -183,20 +234,9 @@ Controller.wait = function( self, seconds )
 	end
 end
 
-Controller.thread = function( self, script, pumpImmediately )
+Controller.thread = function( self, script )
 	assert( type( script ) == "function" );
-	local threadCoroutine = coroutine.create( script );
-	
-	local thread = { coroutine = threadCoroutine };
-	thread.isDead = function( self )
-		return coroutine.status( self.coroutine ) == "dead" or self.isEnded;
-	end
-	
-	if pumpImmediately ~= false then
-		pumpThread( self, thread );
-	end
-	table.insert( self._newThreads, thread );
-	return thread;
+	coroutine.yield( "fork", script );
 end
 
 Controller.waitFor = function( self, signal )
@@ -226,9 +266,7 @@ end
 
 Controller.doAction = function( self, actionFunction )
 	assert( self:isIdle() );
-	self._actionThread = self:thread( function( self )
-		actionFunction( self );
-	end );
+	self._actionThread = newThread( self, nil, actionFunction, { pumpImmediately = true, allowOrphans = false } );
 end
 
 Controller.isTaskless = function( self )
@@ -237,9 +275,7 @@ end
 
 Controller.doTask = function( self, taskFunction )
 	assert( self:isTaskless() );
-	self._taskThread = self:thread( function( self )
-		taskFunction( self );
-	end );
+	self._taskThread = newThread( self, nil, taskFunction, { pumpImmediately = true, allowOrphans = false } );
 end
 
 
