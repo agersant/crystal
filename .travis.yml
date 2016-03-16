@@ -9,7 +9,7 @@ addons:
 before_script:
   - cd $TRAVIS_BUILD_DIR/source/code/quartz
   - make
-  - ls
+  - cp quartz.so /usr/local/lib
 
 script:
   - cd $TRAVIS_BUILD_DIR/game
