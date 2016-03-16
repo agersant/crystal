@@ -9,7 +9,8 @@ addons:
 before_script:
   - cd $TRAVIS_BUILD_DIR/source/code/quartz
   - make
-  
+  - ls
+
 script:
   - cd $TRAVIS_BUILD_DIR/game
   - luajit-2.0.0-beta9 Tests.lua
