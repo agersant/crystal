@@ -1,10 +1,15 @@
 language: c
+compiler: clang
 
 addons:
   apt:
     packages:
       - luajit
 
+before_script:
+  - cd $TRAVIS_BUILD_DIR/source/code/quartz
+  - make
+  
 script:
   - cd $TRAVIS_BUILD_DIR/game
   - luajit-2.0.0-beta9 Tests.lua
