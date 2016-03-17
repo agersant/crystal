@@ -61,7 +61,6 @@ FFI.cdef[[
 	
 	void freeNavmesh( BNavmesh *navmesh );
 	void freePath( BPath *path );
-	void free( void *ptr );
 ]]
 
 
@@ -71,7 +70,6 @@ FFI.cdef[[
 local newBNavmesh = function( self )
 	local output = FFI.gc( FFI.new( FFI.typeof( "BNavmesh" ) ), function( navmesh )
 		Beryl.freeNavmesh( navmesh );
-		FFI.C.free( navmesh );
 	end );
 	return output;
 end
@@ -79,7 +77,6 @@ end
 local newBPath = function( self )
 	local output = FFI.gc( FFI.new( FFI.typeof( "BPath" ) ), function( path )
 		Beryl.freePath( path );
-		FFI.C.free( path );
 	end );
 	return output;
 end
@@ -89,26 +86,26 @@ local generateBNavmesh = function( self, width, height, collisionMesh, padding )
 	assert( width > 0 );
 	assert( height > 0 );
 
-	local bMap = FFI.gc( FFI.new( FFI.typeof( "BMap" ) ), FFI.C.free );
+	local bMap = FFI.new( FFI.typeof( "BMap" ) );
 	bMap.width = width;
 	bMap.height = height;
 	
 	local obstacles = {};
 	for _, chain in collisionMesh:chains() do
 		if not chain:isOuter() then
-			local obstacle = FFI.gc( FFI.new( FFI.typeof( "BObstacle" ) ), FFI.C.free );
+			local obstacle = FFI.new( FFI.typeof( "BObstacle" ) );
 			local vertices = {};
 			for i, x, y in chain:vertices() do
-				local vertex = FFI.gc( FFI.new( FFI.typeof( "BVector" ), { x = x, y = y } ), FFI.C.free );
+				local vertex = FFI.new( FFI.typeof( "BVector" ), { x = x, y = y } );
 				table.insert( vertices, vertex );
 			end
 			obstacle.numVertices = #vertices;
-			obstacle.vertices = FFI.gc( FFI.new( FFI.typeof( "BVector[?]" ), #vertices, vertices ), FFI.C.free );
+			obstacle.vertices = FFI.new( FFI.typeof( "BVector[?]" ), #vertices, vertices );
 			table.insert( obstacles, obstacle );
 		end
 	end
 	bMap.numObstacles = #obstacles;
-	bMap.obstacles = FFI.gc( FFI.new( FFI.typeof( "BObstacle[?]" ), #obstacles, obstacles ), FFI.C.free );
+	bMap.obstacles = FFI.new( FFI.typeof( "BObstacle[?]" ), #obstacles, obstacles );
 	
 	local bNavmesh = newBNavmesh( self );
 	Beryl.generateNavmesh( bMap, padding, bNavmesh );
