@@ -21,6 +21,22 @@ tests[#tests].body = function()
 	local navmesh = Navmesh:new( 10, 10, collisionMesh, 0 );
 end
 
+tests[#tests + 1] = { name = "Generate navmesh for empty map with padding" };
+tests[#tests].body = function()
+	local Navmesh = require( "src/resources/map/Navmesh" );
+	local collisionMesh = MapCollisionMesh:new( 10, 10, 10 );
+	local padding = 1;
+	local navmesh = Navmesh:new( 10, 10, collisionMesh, padding );
+end
+
+tests[#tests + 1] = { name = "Generate navmesh for empty map with extreme padding" };
+tests[#tests].body = function()
+	local Navmesh = require( "src/resources/map/Navmesh" );
+	local collisionMesh = MapCollisionMesh:new( 10, 10, 10 );
+	local padding = 20;
+	local navmesh = Navmesh:new( 10, 10, collisionMesh, padding );
+end
+
 tests[#tests + 1] = { name = "Find path in empty map" };
 tests[#tests].body = function()
 	local Navmesh = require( "src/resources/map/Navmesh" );
@@ -31,6 +47,34 @@ tests[#tests].body = function()
 	for i, x, y in path:vertices() do
 		assert( i ~= 1 or ( x == 1 and y == 2 ) );
 		assert( i ~= 2 or ( x == 8 and y == 9 ) );
+	end
+end
+
+tests[#tests + 1] = { name = "Find path from outside navmesh" };
+tests[#tests].body = function()
+	local Navmesh = require( "src/resources/map/Navmesh" );
+	local collisionMesh = MapCollisionMesh:new( 10, 10, 10 );
+	local navmesh = Navmesh:new( 10, 10, collisionMesh, 0 );
+	local path = navmesh:findPath( -4, 2, 8, 9 );
+	assert( path:getNumVertices() == 3 );
+	for i, x, y in path:vertices() do
+		assert( i ~= 1 or ( x == -4 and y == 2 ) );
+		assert( i ~= 2 or ( x == 0 and y == 2 ) );
+		assert( i ~= 3 or ( x == 8 and y == 9 ) );
+	end
+end
+
+tests[#tests + 1] = { name = "Find path to outside navmesh" };
+tests[#tests].body = function()
+	local Navmesh = require( "src/resources/map/Navmesh" );
+	local collisionMesh = MapCollisionMesh:new( 10, 10, 10 );
+	local navmesh = Navmesh:new( 10, 10, collisionMesh, 0 );
+	local path = navmesh:findPath( 3, 5, 8, 14 );
+	assert( path:getNumVertices() == 3 );
+	for i, x, y in path:vertices() do
+		assert( i ~= 1 or ( x == 3 and y == 5 ) );
+		assert( i ~= 2 or ( x == 8 and y == 10 ) );
+		assert( i ~= 3 or ( x == 8 and y == 14 ) );
 	end
 end
 
