@@ -2,6 +2,11 @@
 #include <math.h>
 #include "vector_math.h"
 
+static REAL clamp( REAL low, REAL value, REAL high )
+{
+	return value > high ? high : value < low ? low : value;
+}
+
 int vectorEquals( const BVector *a, const BVector *b )
 {
 	return a->x == b->x && a->y == b->y;
@@ -148,4 +153,52 @@ int doesTriangleContainPoint( const BVector *a, const BVector *b, const BVector 
 	const REAL u = ( dotABAB * dotACAP - dotACAB * dotABAP ) / denom;
 	const REAL v = ( dotACAC * dotABAP - dotACAB * dotACAP ) / denom;
 	return u >= 0 && v >= 0 && u + v <= 1;
+}
+
+// Based on http://wonderfl.net/c/b27F
+void projectPointOntoTriangle( const BVector *a, const BVector *b, const BVector *c, const BVector *p, BVector *outPoint )
+{
+	BVector AB, AP, BC, BP, CA, CP;
+	vectorSubtract( b, a, &AB );
+	vectorSubtract( p, a, &AP );
+	vectorSubtract( c, b, &BC );
+	vectorSubtract( p, b, &BP );
+	vectorSubtract( a, c, &CA );
+	vectorSubtract( p, c, &CP );
+
+	const REAL abx = vectorCrossProduct( &AB, &AP );
+	const REAL bcx = vectorCrossProduct( &BC, &BP );
+	const REAL cax = vectorCrossProduct( &CA, &CP );
+
+	if ( abx < 0 && bcx >= 0 && cax < 0 )
+	{
+		*outPoint = *a;
+	}
+	else if ( abx < 0 && bcx < 0 && cax >= 0 )
+	{
+		*outPoint = *b;
+	}
+	else if ( abx >= 0 && bcx < 0 && cax < 0 )
+	{
+		*outPoint = *c;
+	}
+	else if ( abx < 0 && bcx >= 0 && cax >= 0 )
+	{
+		const REAL t = clamp( 0, vectorDotProduct( &AB, &AP ) / vectorLength2( &AB ), 1 );
+		vectorMadd( a, t, &AB, outPoint );
+	}
+	else if ( abx >= 0 && bcx < 0 && cax >= 0 )
+	{
+		const REAL t = clamp( 0, vectorDotProduct( &BC, &BP ) / vectorLength2( &BC ), 1 );
+		vectorMadd( b, t, &BC, outPoint );
+	}
+	else if ( abx >= 0 && bcx >= 0 && cax < 0 )
+	{
+		const REAL t = clamp( 0, vectorDotProduct( &CA, &CP ) / vectorLength2( &CA ), 1 );
+		vectorMadd( a, t, &CA, outPoint );
+	}
+	else
+	{
+		*outPoint = *p;
+	}
 }
