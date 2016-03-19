@@ -70,11 +70,10 @@ tests[#tests].body = function()
 	local collisionMesh = MapCollisionMesh:new( 10, 10, 10 );
 	local navmesh = Navmesh:new( 10, 10, collisionMesh, 0 );
 	local path = navmesh:findPath( 3, 5, 8, 14 );
-	assert( path:getNumVertices() == 3 );
+	assert( path:getNumVertices() == 2 );
 	for i, x, y in path:vertices() do
 		assert( i ~= 1 or ( x == 3 and y == 5 ) );
 		assert( i ~= 2 or ( x == 8 and y == 10 ) );
-		assert( i ~= 3 or ( x == 8 and y == 14 ) );
 	end
 end
 

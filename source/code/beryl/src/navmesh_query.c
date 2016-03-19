@@ -1,5 +1,7 @@
 #include <assert.h>
+#include <float.h>
 #include <stdio.h>
+#include <string.h>
 #include "linked_list.h"
 #include "navmesh_query.h"
 
@@ -40,6 +42,72 @@ static const BTriangle *findTriangleContainingPoint( const BNavmesh *navmesh, co
 	}
 	return NULL;
 }
+
+static void projectPointOntoNavmeshTriangle( const BNavmesh *navmesh, const BVector *point, const BTriangle *triangle, BVector *outPoint )
+{
+	const BVector *vertexA = &navmesh->vertices[triangle->vertices[0]];
+	const BVector *vertexB = &navmesh->vertices[triangle->vertices[1]];
+	const BVector *vertexC = &navmesh->vertices[triangle->vertices[2]];
+	projectPointOntoTriangle( vertexA, vertexB, vertexC, point, outPoint );
+}
+
+static void projectPointOntoNavmesh( const BNavmesh *navmesh, const BVector *point, const BTriangle **outTriangle, BVector *outPoint )
+{
+	assert( navmesh->numTriangles >= 0 );
+	REAL bestDist2 = DBL_MAX;
+
+	// TODO.optimization This could be more efficient if triangles were stored in
+	// a more appropriate data structure (eg. quadtree).
+	for ( int triangleIndex = 0; triangleIndex < navmesh->numTriangles; triangleIndex++ )
+	{
+		const BTriangle *triangle = &navmesh->triangles[triangleIndex];
+
+		BVector projectedPoint;
+		projectPointOntoNavmeshTriangle( navmesh, point, triangle, &projectedPoint );
+
+		const REAL distToNavmesh2 = vectorDistance2( point, &projectedPoint );
+		if ( distToNavmesh2 < bestDist2 )
+		{
+			bestDist2 = distToNavmesh2;
+			*outPoint = projectedPoint;
+			*outTriangle = triangle;
+		}
+	}
+
+	assert( bestDist2 != DBL_MAX );
+}
+
+
+static void projectPointOntoConnectedComponent( const BNavmesh *navmesh, const BVector *point, int connectedComponent, const BTriangle **outTriangle, BVector *outPoint )
+{
+	assert( navmesh->numTriangles >= 0 );
+	REAL bestDist2 = DBL_MAX;
+
+	// TODO.optimization This could be more efficient if triangles were stored in
+	// a more appropriate data structure (eg. quadtree).
+	for ( int triangleIndex = 0; triangleIndex < navmesh->numTriangles; triangleIndex++ )
+	{
+		const BTriangle *triangle = &navmesh->triangles[triangleIndex];
+		if ( triangle->connectedComponent != connectedComponent )
+		{
+			continue;
+		}
+
+		BVector projectedPoint;
+		projectPointOntoNavmeshTriangle( navmesh, point, triangle, &projectedPoint );
+
+		const REAL distToNavmesh2 = vectorDistance2( point, &projectedPoint );
+		if ( distToNavmesh2 < bestDist2 )
+		{
+			bestDist2 = distToNavmesh2;
+			*outPoint = projectedPoint;
+			*outTriangle = triangle;
+		}
+	}
+
+	assert( bestDist2 != DBL_MAX );
+}
+
 
 static float movementCost( const BTriangle *triangleA, const BTriangle *triangleB )
 {
@@ -228,18 +296,15 @@ static void funnelPath( const BNavmesh *navmesh, const BVector *start, const BVe
 	free( portals );
 }
 
-static void aStar( const BNavmesh *navmesh, const BVector *start, const BVector *end, BAStarOutput *output )
+static void aStar( const BNavmesh *navmesh, const BTriangle *startTriangle, const BTriangle *endTriangle, const BVector *destination, BAStarOutput *output )
 {
-	const BTriangle *const startTriangle = findTriangleContainingPoint( navmesh, start );
-	const BTriangle *const endTriangle = findTriangleContainingPoint( navmesh, end );
-
-	if ( startTriangle == NULL || endTriangle == NULL )
-	{
-		// TODO Return a decent path if start/end isn't on navmesh
-		output->numTriangles = 0;
-		output->triangles = NULL;
-		return;
-	}
+	assert( navmesh != NULL );
+	assert( startTriangle != NULL );
+	assert( endTriangle != NULL );
+	assert( destination != NULL );
+	assert( output != NULL );
+	assert( isPointInsideNavmeshTriangle( navmesh, destination, endTriangle) );
+	assert( startTriangle->connectedComponent == endTriangle->connectedComponent );
 
 	BLinkedList openList, closedList;
 	linkedListInit( &openList, sizeof( BAStarNode ), NULL );
@@ -249,7 +314,7 @@ static void aStar( const BNavmesh *navmesh, const BVector *start, const BVector 
 	startNode.cost = 0;
 	startNode.previousTriangle = NULL;
 	startNode.triangle = startTriangle;
-	startNode.heuristic = heuristic( startNode.triangle, end );
+	startNode.heuristic = heuristic( startNode.triangle, destination );
 	linkedListPrepend( &openList, &startNode );
 
 	BAStarNode arrivalNode;
@@ -280,22 +345,22 @@ static void aStar( const BNavmesh *navmesh, const BVector *start, const BVector 
 			const float newCost = current.cost + movementCost( current.triangle, neighborTriangle );
 
 			BAStarNode occurenceInOpenList;
-			int inOpenList = linkedListFind( &openList, isTriangle, neighborTriangle, &occurenceInOpenList );
+			int inOpenList = linkedListFind( &openList, isTriangle, ( void * ) neighborTriangle, &occurenceInOpenList );
 			if ( inOpenList )
 			{
 				if ( newCost < occurenceInOpenList.cost )
 				{
-					linkedListRemove( &openList, isTriangle, &current.triangle );
+					linkedListRemove( &openList, isTriangle, ( void * ) &current.triangle );
 					inOpenList = 0;
 				}
 			}
-			const int inClosedList = linkedListFind( &closedList, isTriangle, neighborTriangle, NULL );
+			const int inClosedList = linkedListFind( &closedList, isTriangle, ( void * ) neighborTriangle, NULL );
 			if ( !inOpenList && !inClosedList )
 			{
 				BAStarNode newNode;
 				newNode.cost = newCost;
 				newNode.triangle = neighborTriangle;
-				newNode.heuristic = heuristic( newNode.triangle, end );
+				newNode.heuristic = heuristic( newNode.triangle, destination );
 				newNode.previousTriangle = current.triangle;
 				linkedListInsertBefore( &openList, &newNode, hasBetterRank );
 			}
@@ -309,7 +374,7 @@ static void aStar( const BNavmesh *navmesh, const BVector *start, const BVector 
 		{
 			assert( currentTriangle >= 0 );
 			BAStarNode node;
-			verify( linkedListFind( &closedList, isTriangle, currentTriangle, &node ) );
+			verify( linkedListFind( &closedList, isTriangle, ( void * ) currentTriangle, &node ) );
 			currentTriangle = node.previousTriangle;
 			output->numTriangles++;
 		}
@@ -327,7 +392,7 @@ static void aStar( const BNavmesh *navmesh, const BVector *start, const BVector 
 			output->triangles[nextPathTriangleIndex] = currentTriangle;
 
 			BAStarNode node;
-			verify( linkedListFind( &closedList, isTriangle, currentTriangle, &node ) );
+			verify( linkedListFind( &closedList, isTriangle, ( void * ) currentTriangle, &node ) );
 			currentTriangle = node.previousTriangle;
 			nextPathTriangleIndex--;
 		}
@@ -342,7 +407,7 @@ static void aStar( const BNavmesh *navmesh, const BVector *start, const BVector 
 
 static void freeAStarOutput( BAStarOutput *aStarOutput )
 {
-	free( aStarOutput->triangles );
+	free( ( BTriangle ** ) aStarOutput->triangles );
 	aStarOutput->triangles = NULL;
 	aStarOutput->numTriangles = 0;
 }
@@ -351,10 +416,62 @@ void pathfinder( const BNavmesh *navmesh, const BVector *start, const BVector *e
 {
 	assert( outPath->numVertices == 0 );
 	
+	const BTriangle *const startTriangle = findTriangleContainingPoint( navmesh, start );
+	const BTriangle *const endTriangle = findTriangleContainingPoint( navmesh, end );
+	const BTriangle *adjustedStartTriangle, *adjustedEndTriangle;
+	BVector adjustedStart, adjustedEnd;
+
+	if ( startTriangle == NULL )
+	{
+		projectPointOntoNavmesh( navmesh, start, &adjustedStartTriangle, &adjustedStart );
+	}
+	else
+	{
+		adjustedStart = *start;
+		adjustedStartTriangle = startTriangle;
+	}
+	assert( adjustedStartTriangle );
+
+	const int isDestinationReachable = endTriangle != NULL && endTriangle->connectedComponent == adjustedStartTriangle->connectedComponent;
+	if ( !isDestinationReachable )
+	{
+		projectPointOntoConnectedComponent( navmesh, end, adjustedStartTriangle->connectedComponent, &adjustedEndTriangle, &adjustedEnd );
+	}
+	else
+	{
+		adjustedEnd = *end;
+		adjustedEndTriangle = endTriangle;
+	}
+	assert( adjustedEndTriangle );
+
 	BAStarOutput aStarOutput;
-	aStar( navmesh, start, end, &aStarOutput );
+	aStar( navmesh, adjustedStartTriangle, adjustedEndTriangle, &adjustedEnd, &aStarOutput );
 	
-	funnelPath( navmesh, start, end, &aStarOutput, outPath );
+	funnelPath( navmesh, &adjustedStart, &adjustedEnd, &aStarOutput, outPath );
 	
 	freeAStarOutput( &aStarOutput );
+	
+	assert( outPath->numVertices > 0 );
+	assert( outPath->vertices != NULL );
+
+	if ( !vectorEquals( start, &adjustedStart ) )
+	{
+		BVector *newVertices = malloc( ( 1 + outPath->numVertices ) * sizeof( BVector ) );
+		newVertices[0] = *start;
+		memcpy( &newVertices[1], outPath->vertices, ( outPath->numVertices ) * sizeof( BVector ) );
+		free( outPath->vertices );
+		outPath->vertices = newVertices;
+		outPath->numVertices++;
+	}
+
+	if ( isDestinationReachable && !vectorEquals( end, &adjustedEnd ) )
+	{
+		BVector *newVertices = malloc( ( 1 + outPath->numVertices ) * sizeof( BVector ) );
+		newVertices[outPath->numVertices] = *end;
+		memcpy( newVertices, outPath->vertices, ( outPath->numVertices ) * sizeof( BVector ) );
+		free( outPath->vertices );
+		outPath->vertices = newVertices;
+		outPath->numVertices++;
+	}
+	
 }
