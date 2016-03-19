@@ -381,6 +381,39 @@ void polygonMapToTriangulation( BPolygonMap *map, BTriangulation *outTriangulati
 	gpc_free_polygon( &mapPolygon );
 }
 
+static void markConnectedComponent( const BNavmesh *navmesh, BTriangle *triangle, int marker )
+{
+	if ( triangle->connectedComponent == marker )
+	{
+		return;
+	}
+
+	triangle->connectedComponent = marker;
+	for ( int n = 0; n < 3; n++ )
+	{
+		const int neighbour = triangle->neighbours[n];
+		if ( neighbour >= 0 )
+		{
+			markConnectedComponent( navmesh, &navmesh->triangles[neighbour], marker );
+		}
+	}
+}
+
+static void computeConnectedComponents( BNavmesh *navmesh )
+{
+	int marker = 0;
+	for ( int i = 0; i < navmesh->numTriangles; i++ )
+	{
+		BTriangle *const triangle = &navmesh->triangles[i];
+		if ( triangle->connectedComponent < 0 )
+		{
+			markConnectedComponent( navmesh, triangle, marker );
+			marker++;
+		}
+	}
+}
+
+
 void triangulationToNavmesh( const struct triangulateio *triangleOutput, BNavmesh *outNavmesh )
 {
 	assert( outNavmesh );
@@ -418,9 +451,10 @@ void triangulationToNavmesh( const struct triangulateio *triangleOutput, BNavmes
 		outNavmesh->triangles[i].center.y += outNavmesh->vertices[outNavmesh->triangles[i].vertices[1]].y;
 		outNavmesh->triangles[i].center.y += outNavmesh->vertices[outNavmesh->triangles[i].vertices[2]].y;
 		vectorScale( &outNavmesh->triangles[i].center, 1.f / 3.f );
+		outNavmesh->triangles[i].connectedComponent = -1;
 	}
 
-	return;
+	computeConnectedComponents( outNavmesh );
 }
 
 void freePolygonMap( BPolygonMap *map )

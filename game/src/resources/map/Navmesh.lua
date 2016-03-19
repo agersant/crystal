@@ -39,6 +39,7 @@ FFI.cdef[[
 	{
 		int vertices[3];
 		int neighbours[3];
+		int connectedComponent;
 		BVector center;
 	} BTriangle;
 
