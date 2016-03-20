@@ -19,6 +19,7 @@ local stepTowards = function( self, targetX, targetY )
 			return false;
 		else
 			entity:setPosition( targetX, targetY );
+			self:doAction( Actions.idle );
 			return true;
 		end
 	end
@@ -46,42 +47,45 @@ Tasks.walkToPoint = function( targetX, targetY, targetRadius )
 			return distToTarget2 <= targetRadius * targetRadius;
 		end
 		
-		if not isCloseEnough() then
+		local pathingThread;
 		
-			-- Follow path
-			self:thread( function( self )
-				while true do
-					self:waitFor( "repath" );
-					self:thread( function( self )
-						self:endOn( "repath" );
-						local path = entity:findPathTo( targetX, targetY );
-						followPath( self, path );
-						self:waitFrame();
-						self:signal( "pathComplete" );
-					end );
-				end
-			end );
+		-- Follow path
+		self:thread( function( self )
+			while true do
+				self:endOn( "closeEnough" );
+				self:waitFor( "repath" );
+				pathingThread = self:thread( function( self )
+					self:endOn( "repath" );
+					local path = entity:findPathTo( targetX, targetY );
+					followPath( self, path );
+					self:signal( "pathComplete" );
+				end );
+			end
+		end );
 		
-			-- Trigger repath
-			self:thread( function( self )
-				while true do
-					self:signal( "repath" );
-					self:wait( 2 );
+		-- Stop when close enough to objective
+		self:thread( function( self )
+			while true do
+				if isCloseEnough() then
+					self:signal( "closeEnough" );
 				end
-			end );
-		
-			-- Stop when close enough to objective
-			self:thread( function( self )
-				while true do
-					if isCloseEnough() then
-						self:signal( "closeEnough" );
-					end
-					self:wait( .1 );
-				end
-			end );
-			
+				self:wait( .1 );
+			end
+		end );
+	
+		-- Trigger repath
+		self:thread( function( self )
+			while true do
+				self:signal( "repath" );
+				self:wait( 2 );
+			end
+		end );
+	
+		if pathingThread and not pathingThread:isDead() then
 			self:waitForAny( { "pathComplete", "closeEnough" } );
-		end 
+		else
+			-- Path completed immediately
+		end
 		
 		if self:isIdle() then
 			self:doAction( Actions.idle );
