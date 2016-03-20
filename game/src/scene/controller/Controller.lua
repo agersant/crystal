@@ -14,6 +14,7 @@ local newThread = function( self, parentThread, script, options )
 	assert( type( script ) == "function" );
 	local threadCoroutine = coroutine.create( script );
 	
+	-- TODO wrap in a class
 	local thread = {
 		coroutine = threadCoroutine,
 		allowOrphans = options.allowOrphans,
@@ -106,8 +107,8 @@ pumpThread = function( self, thread, resumeArgs )
 		if not success then
 			Log:error( a );
 		elseif a == "fork" then
-			newThread( self, thread, b, { pumpImmediately = true, allowOrphans = false } );
-			pumpThread( self, thread );
+			local childThread = newThread( self, thread, b, { pumpImmediately = true, allowOrphans = false } );
+			pumpThread( self, thread, childThread );
 		elseif a == "waitForSignals" then
 			blockThread( self, thread, b );
 		elseif a == "endOnSignals" then
@@ -236,7 +237,7 @@ end
 
 Controller.thread = function( self, script )
 	assert( type( script ) == "function" );
-	coroutine.yield( "fork", script );
+	return coroutine.yield( "fork", script );
 end
 
 Controller.waitFor = function( self, signal )
