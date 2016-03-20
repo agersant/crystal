@@ -39,6 +39,7 @@ Actions.knockback = function( angle )
 		entity:setDirection8( MathUtils.angleToDir8( angle ) );
 		entity:setAnimation( "knockback_" .. entity:getDirection4(), true );
 		self:wait( .25 );
+		entity:setAngle( math.pi + angle );
 	end
 end
 
