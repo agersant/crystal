@@ -69,13 +69,18 @@ MapScene.init = function( self, mapName )
 	self._map:spawnEntities( self );
 	
 	-- TODO TMP
-	local testWarrior = self:spawn( Warrior );
-	testWarrior:setPosition( 32, 32 );
-	testWarrior:addController( PlayerController, 1 );
+	self._player = self:spawn( Warrior );
+	self._player:setPosition( 32, 32 );
+	self._player:addController( PlayerController, 1 );
 	
 	local testBot = self:spawn( Sahagin );
 	testBot:setPosition( 180, 64 );
 	testBot:addController( DevBotController );
+end
+
+-- TODO TMP
+MapScene.getPlayer = function( self )
+	return self._player;
 end
 
 MapScene.update = function( self, dt )

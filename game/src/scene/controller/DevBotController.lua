@@ -1,7 +1,7 @@
 require( "src/utils/OOP" );
 local CLI = require( "src/dev/cli/CLI" );
 local Actions = require( "src/scene/Actions" );
-local Tasks = require( "src/scene/ai/Tasks" );
+local MovementTasks = require( "src/ai/movement/MovementTasks" );
 local CombatLogic = require( "src/scene/combat/CombatLogic" );
 local Controller = require( "src/scene/controller/Controller" );
 local MathUtils = require( "src/utils/MathUtils" );
@@ -50,7 +50,11 @@ DevBotController.run = function( self )
 		end
 		if self:isTaskless() then
 			if DevBotController._behavior == "walkToPoint" then
-				self:doTask( Tasks.walkToPoint( 32, 200, 6 ) );
+				self:doTask( MovementTasks.walkToPoint( 32, 200, 6 ) );
+			end
+			if DevBotController._behavior == "follow" then
+				-- TODO TMP
+				self:doTask( MovementTasks.walkToEntity( entity:getScene():getPlayer(), 40 ) );
 			end
 		end
 		self:waitFrame();

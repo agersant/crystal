@@ -1,9 +1,11 @@
 require( "src/utils/OOP" );
+local EntityGoal = require( "src/ai/movement/EntityGoal" );
+local PositionGoal = require( "src/ai/movement/PositionGoal" );
 local Actions = require( "src/scene/Actions" );
 
 
 
-local Tasks = Class( "Tasks" );
+local MovementTasks = Class( "Tasks" );
 
 local stepTowards = function( self, targetX, targetY )
 	local entity = self:getEntity();
@@ -37,16 +39,10 @@ local followPath = function( self, path )
 	end
 end
 
-Tasks.walkToPoint = function( targetX, targetY, targetRadius )
+local walkToGoal = function( goal, repathDelay )
 	return function( self )
-		local entity = self:getEntity();
-		assert( targetRadius >= 0 );
-		local isCloseEnough = function()
-			local distToTarget2 = entity:distance2To( targetX, targetY );
-			return distToTarget2 <= targetRadius * targetRadius;
-		end
-		
 		local pathingThread;
+		local entity = self:getEntity();
 		
 		-- Follow path
 		self:thread( function( self )
@@ -55,6 +51,7 @@ Tasks.walkToPoint = function( targetX, targetY, targetRadius )
 				self:waitFor( "repath" );
 				pathingThread = self:thread( function( self )
 					self:endOn( "repath" );
+					local targetX, targetY = goal:getPosition();
 					local path = entity:findPathTo( targetX, targetY );
 					followPath( self, path );
 					self:signal( "pathComplete" );
@@ -65,10 +62,11 @@ Tasks.walkToPoint = function( targetX, targetY, targetRadius )
 		-- Stop when close enough to objective
 		self:thread( function( self )
 			while true do
-				if isCloseEnough() then
+				local x, y = entity:getPosition();
+				if goal:isPositionAcceptable( x, y ) then
 					self:signal( "closeEnough" );
 				end
-				self:wait( .1 );
+				self:waitFrame();
 			end
 		end );
 	
@@ -76,7 +74,7 @@ Tasks.walkToPoint = function( targetX, targetY, targetRadius )
 		self:thread( function( self )
 			while true do
 				self:signal( "repath" );
-				self:wait( 2 );
+				self:wait( repathDelay );
 			end
 		end );
 	
@@ -89,9 +87,25 @@ Tasks.walkToPoint = function( targetX, targetY, targetRadius )
 		if self:isIdle() then
 			self:doAction( Actions.idle );
 		end
-		return isCloseEnough();
+		
+		local x, y = entity:getPosition();
+		return goal:isPositionAcceptable( x, y );
 	end
 end
 
+MovementTasks.walkToEntity = function( targetEntity, targetRadius )
+	assert( targetRadius >= 0 );
+	local goal = EntityGoal:new( targetEntity, targetRadius );
+	local repathDelay = .5;
+	return walkToGoal( goal, repathDelay );
+end
 
-return Tasks;
+MovementTasks.walkToPoint = function( targetX, targetY, targetRadius )
+	assert( targetRadius >= 0 );
+	local goal = PositionGoal:new( targetX, targetY, targetRadius );
+	local repathDelay = 2;
+	return walkToGoal( goal, repathDelay );
+end
+
+
+return MovementTasks;

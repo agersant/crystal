@@ -1,8 +1,8 @@
 require( "src/utils/OOP" );
 local FFI = require( "ffi" );
+local Path = require( "src/ai/movement/Path" );
 local Font = require( "src/graphics/Font" );
 local Colors = require( "src/resources/Colors" );
-local Path = require( "src/scene/ai/Path" );
 local MathUtils = require( "src/utils/MathUtils" );
 local Beryl = FFI.load( "beryl" );
 
