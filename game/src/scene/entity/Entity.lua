@@ -81,6 +81,9 @@ Entity.setPosition = function( self, x, y )
 	self._body:setPosition( x, y );
 end
 
+Entity.getAngle = function( self )
+	return self._angle;
+end
 Entity.setAngle = function( self, angle )
 	self:setDirection8( MathUtils.angleToDir8( angle ) );
 	self._angle = angle;
