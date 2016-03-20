@@ -14,7 +14,7 @@ Actions.idle = function( self )
 	entity:setSpeed( 0 );
 end
 
-Actions.walk = function( self )
+Actions.walk = function( self ) -- TODO add angle parameter
 	local entity = self:getEntity();
 	local animName = "walk_" .. entity:getDirection4();
 	entity:setAnimation( animName );
