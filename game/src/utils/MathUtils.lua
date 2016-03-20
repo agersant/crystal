@@ -33,6 +33,18 @@ MathUtils.vectorLength = function( x, y )
 	return math.sqrt( x * x + y * y );
 end
 
+MathUtils.distance2 = function( x1, y1, x2, y2 )
+	local dx = x2 - x1;
+	local dy = y2 - y1;
+	return MathUtils.vectorLength2( dx, dy );
+end
+
+MathUtils.distance = function( x1, y1, x2, y2 )
+	local dx = x2 - x1;
+	local dy = y2 - y1;
+	return MathUtils.vectorLength( dx, dy );
+end
+
 MathUtils.angleBetweenVectors = function( x1, y1, x2, y2 )
 	local n1 = MathUtils.vectorLength( x1, y1 );
 	local n2 = MathUtils.vectorLength( x2, y2 );
