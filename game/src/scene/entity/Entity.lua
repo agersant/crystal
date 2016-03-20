@@ -84,6 +84,7 @@ end
 Entity.getAngle = function( self )
 	return self._angle;
 end
+
 Entity.setAngle = function( self, angle )
 	self:setDirection8( MathUtils.angleToDir8( angle ) );
 	self._angle = angle;
@@ -91,8 +92,7 @@ end
 
 Entity.distance2To = function( self, targetX, targetY )
 	local x, y = self:getPosition();
-	local deltaX, deltaY = targetX - x, targetY - y;
-	return MathUtils.vectorLength2( deltaX, deltaY );
+	return MathUtils.distance2( x, y, targetX, targetY );
 end
 
 
