@@ -6,7 +6,8 @@ local CollisionFilters = require( "src/scene/CollisionFilters" );
 local DevBotController = require( "src/scene/controller/DevBotController" );
 local PlayerController = require( "src/scene/controller/PlayerController" );
 local Entity = require( "src/scene/entity/Entity" );
-local Warrior = require( "src/scene/entity/Warrior" );
+local Warrior = require( "src/content/job/Warrior" );
+local Sahagin = require( "src/content/monster/Sahagin" );
 local Scene = require( "src/scene/Scene" );
 
 local MapScene = Class( "MapScene", Scene );
@@ -72,7 +73,7 @@ MapScene.init = function( self, mapName )
 	testWarrior:setPosition( 32, 32 );
 	testWarrior:addController( PlayerController, 1 );
 	
-	local testBot = self:spawn( Warrior );
+	local testBot = self:spawn( Sahagin );
 	testBot:setPosition( 180, 64 );
 	testBot:addController( DevBotController );
 end
