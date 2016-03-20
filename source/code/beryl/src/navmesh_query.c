@@ -444,6 +444,9 @@ void pathfinder( const BNavmesh *navmesh, const BVector *start, const BVector *e
 	}
 	assert( adjustedEndTriangle );
 
+	assert( isPointInsideNavmeshTriangle( navmesh, &adjustedStart, adjustedStartTriangle ) );
+	assert( isPointInsideNavmeshTriangle( navmesh, &adjustedEnd, adjustedEndTriangle ) );
+
 	BAStarOutput aStarOutput;
 	aStar( navmesh, adjustedStartTriangle, adjustedEndTriangle, &adjustedEnd, &aStarOutput );
 	
