@@ -14,8 +14,7 @@ local stepTowards = function( self, targetX, targetY )
 			local x, y = entity:getPosition();
 			local deltaX, deltaY = targetX - x, targetY - y;
 			local angle = math.atan2( deltaY, deltaX );
-			entity:setAngle( angle );
-			self:doAction( Actions.walk );
+			self:doAction( Actions.walk( angle ) );
 			return false;
 		else
 			entity:setPosition( targetX, targetY );

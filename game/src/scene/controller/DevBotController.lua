@@ -36,14 +36,13 @@ DevBotController.run = function( self )
 				self:doAction( Actions.idle );
 			end
 			if DevBotController._behavior == "walk" then
-				self:doAction( Actions.walk );
+				self:doAction( Actions.walk( entity:getAngle() ) );
 			end
 			if DevBotController._behavior == "circle" then
 				local circleDuration = 4;
 				local t = ( self._time % circleDuration ) / circleDuration;
 				local angle = t * 2 * math.pi;
-				self:getEntity():setDirection8( MathUtils.angleToDir8( angle ) );
-				self:doAction( Actions.walk );
+				self:doAction( Actions.walk( angle ) );
 			end
 			if DevBotController._behavior == "attack" then
 				self:doAction( Actions.attack );

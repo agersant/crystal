@@ -21,6 +21,7 @@ local idleControls = function( self )
 end
 
 local walkControls = function( self )
+	local entity = self:getEntity();
 	while true do
 		if self:isIdle() then
 			local left = self._inputDevice:isCommandActive( "moveLeft" );
@@ -28,7 +29,7 @@ local walkControls = function( self )
 			local up = self._inputDevice:isCommandActive( "moveUp" );
 			local down = self._inputDevice:isCommandActive( "moveDown" );
 			if left or right or up or down then
-				self:doAction( Actions.walk );
+				self:doAction( Actions.walk( entity:getAngle() ) );
 			end
 		end
 		self:waitFrame();
