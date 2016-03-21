@@ -3,6 +3,7 @@ local Log = require( "src/dev/Log" );
 local Colors = require( "src/resources/Colors" );
 local DynamicLayer = require( "src/resources/map/DynamicLayer" );
 local MapCollisionMesh = require( "src/resources/map/MapCollisionMesh" );
+local MapEntity = require( "src/resources/map/MapEntity" );
 local Navmesh = require( "src/resources/map/Navmesh" );
 local StaticLayer = require( "src/resources/map/StaticLayer" );
 
@@ -10,31 +11,66 @@ local Map = Class( "Map" );
 
 
 
+-- IMPLEMENTATION
+
+local parseTileLayer = function( self, layerData )
+	local sort = layerData.properties.sort;
+	self._collisionMesh:processLayer( self._tileset, layerData );
+	if sort == "below" or sort == "above" then
+		local layer = StaticLayer:new( self, layerData, sort );
+		table.insert( self._staticLayers, 1, layer );
+	elseif sort == "dynamic" then
+		local layer = DynamicLayer:new( self, layerData );
+		table.insert( self._dynamicLayers, 1, layer );
+	else
+		Log:warning( "Unexpected map layer sorting: " .. tostring( sort ) );
+	end
+end
+
+local parseEntity = function( self, objectData )
+	if objectData.shape ~= "rectangle" then
+		Log:warning( "Ignored map entity not defined as rectangle" );
+		return;
+	end
+	if not objectData.properties.class then
+		Log:warning( "Ignored map entity because of missing 'class' property" );
+		return;
+	end
+	local x = objectData.x + objectData.width / 2;
+	local y = objectData.y + objectData.height / 2;
+	local class = objectData.properties.class;
+	local mapEntity = MapEntity:new( class, x, y );
+	table.insert( self._mapEntities, mapEntity );
+end
+
+local parseObjectGroup = function( self, layerData )
+	for i, object in ipairs( layerData.objects ) do
+		parseEntity( self, object );
+	end
+end
+
+
+
+-- PUBLIC API
+
 Map.init = function( self, mapData, tileset )
 	self._tileset = tileset;
 	self._staticLayers = {};
 	self._dynamicLayers = {};
+	self._mapEntities = {};
 	
 	self._width = mapData.content.width;
 	self._height = mapData.content.height;
 	self._numTiles = self._width * self._height;
 	self._collisionMesh = MapCollisionMesh:new( self:getWidthInPixels(), self:getHeightInPixels(), self:getHeightInTiles() );
-	 
+
 	local layers = mapData.content.layers;
 	for i = #layers, 1, -1 do
 		local layerData = layers[i];
 		if layerData.type == "tilelayer" then
-			local sort = layerData.properties.sort;
-			self._collisionMesh:processLayer( tileset, layerData );
-			if sort == "below" or sort == "above" then
-				local layer = StaticLayer:new( self, layerData, sort );
-				table.insert( self._staticLayers, 1, layer );
-			elseif sort == "dynamic" then
-				local layer = DynamicLayer:new( self, layerData );
-				table.insert( self._dynamicLayers, 1, layer );
-			else
-				Log:warning( "Unexpected map layer sorting: " .. tostring( sort ) );
-			end
+			parseTileLayer( self, layerData );
+		elseif layerData.type == "objectgroup" then
+			parseObjectGroup( self, layerData );
 		end
 	end
 	
@@ -48,6 +84,9 @@ end
 Map.spawnEntities = function( self, scene )
 	for i, layer in ipairs( self._dynamicLayers ) do
 		layer:spawnEntities( scene );
+	end
+	for i, mapEntity in ipairs( self._mapEntities ) do
+		mapEntity:spawn( scene );
 	end
 end
 
