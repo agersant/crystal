@@ -35,4 +35,5 @@ int lineIntersection( const BEdge *edgeA, const BEdge *edgeB, BVector *outResult
 void projectPointOntoSegment( const BVector *vector, const BEdge *line, BVector *outResult );
 void projectPointOntoTriangle( const BVector *a, const BVector *b, const BVector *c, const BVector *p, BVector *outPoint );
 
+int isTriangleCCW( const BVector *a, const BVector *b, const BVector *c );
 int doesTriangleContainPoint( const BVector *a, const BVector *b, const BVector *c, const BVector *point );

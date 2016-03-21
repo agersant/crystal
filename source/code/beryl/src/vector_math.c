@@ -2,6 +2,8 @@
 #include <math.h>
 #include "vector_math.h"
 
+#define B_EPSILON 1E-8
+
 static REAL clamp( REAL low, REAL value, REAL high )
 {
 	return value > high ? high : value < low ? low : value;
@@ -131,33 +133,58 @@ void projectPointOntoSegment( const BVector *point, const BEdge *line, BVector *
 	BVector AB, AP;
 	vectorSubtract( &line->end, &line->start, &AB );
 	vectorSubtract( point, &line->start, &AP );
-	const REAL length2 = vectorDistance2( &line->start, &line->end );
+	const REAL length2 = vectorLength2( &AB );
 	const REAL t = vectorDotProduct( &AB, &AP ) / length2;
 	vectorMadd( &line->start, t, &AB, outResult );
 }
 
-int doesTriangleContainPoint( const BVector *a, const BVector *b, const BVector *c, const BVector *point )
+int doesTriangleContainPoint( const BVector *a, const BVector *b, const BVector *c, const BVector *p )
 {
-	BVector ac, ab, ap;
-	vectorSubtract( c, a, &ac );
+	BVector ab, bc, ca, ap, bp, cp;
 	vectorSubtract( b, a, &ab );
-	vectorSubtract( point, a, &ap );
-	const REAL dotACAC = vectorDotProduct( &ac, &ac );
-	const REAL dotACAB = vectorDotProduct( &ac, &ab );
-	const REAL dotACAP = vectorDotProduct( &ac, &ap );
-	const REAL dotABAB = vectorDotProduct( &ab, &ab );
-	const REAL dotABAP = vectorDotProduct( &ab, &ap );
+	vectorSubtract( c, b, &bc );
+	vectorSubtract( a, c, &ca );
+	vectorSubtract( p, a, &ap );
+	vectorSubtract( p, b, &bp );
+	vectorSubtract( p, c, &cp );
 
-	const REAL denom = dotACAC * dotABAB - dotACAB * dotACAB;
-	assert( denom != 0 );
-	const REAL u = ( dotABAB * dotACAP - dotACAB * dotABAP ) / denom;
-	const REAL v = ( dotACAC * dotABAP - dotACAB * dotACAP ) / denom;
-	return u >= 0 && v >= 0 && u + v <= 1;
+	REAL abx = vectorCrossProduct( &ab, &ap );
+	REAL bcx = vectorCrossProduct( &bc, &bp );
+	REAL cax = vectorCrossProduct( &ca, &cp );
+
+	if ( fabs( abx ) <= B_EPSILON )
+	{
+		abx = 0.f;
+	}
+
+	if ( fabs( bcx ) <= B_EPSILON )
+	{
+		bcx = 0.f;
+	}
+
+	if ( fabs( cax ) <= B_EPSILON )
+	{
+		cax = 0.f;
+	}
+
+	return	( abx >= 0 && bcx >= 0 && cax >= 0 )
+		||	( abx <= 0 && bcx <= 0 && cax <= 0 );
 }
+
+int isTriangleCCW( const BVector *a, const BVector *b, const BVector *c )
+{
+	BVector ab, ac;
+	vectorSubtract( b, a, &ab );
+	vectorSubtract( c, a, &ac );
+	return vectorCrossProduct( &ac, &ab ) < 0;
+}
+
 
 // Based on http://wonderfl.net/c/b27F
 void projectPointOntoTriangle( const BVector *a, const BVector *b, const BVector *c, const BVector *p, BVector *outPoint )
 {
+	assert( isTriangleCCW( a, b, c ) );
+
 	BVector AB, AP, BC, BP, CA, CP;
 	vectorSubtract( b, a, &AB );
 	vectorSubtract( p, a, &AP );
@@ -195,10 +222,12 @@ void projectPointOntoTriangle( const BVector *a, const BVector *b, const BVector
 	else if ( abx >= 0 && bcx >= 0 && cax < 0 )
 	{
 		const REAL t = clamp( 0, vectorDotProduct( &CA, &CP ) / vectorLength2( &CA ), 1 );
-		vectorMadd( a, t, &CA, outPoint );
+		vectorMadd( c, t, &CA, outPoint );
 	}
 	else
 	{
 		*outPoint = *p;
 	}
+
+	assert( doesTriangleContainPoint( a, b, c, outPoint ) );
 }

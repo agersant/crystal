@@ -413,6 +413,13 @@ static void computeConnectedComponents( BNavmesh *navmesh )
 	}
 }
 
+static int isNavmeshTriangleCCW( const BNavmesh *navmesh, const BTriangle *triangle )
+{
+	const BVector *vertexA = &navmesh->vertices[triangle->vertices[0]];
+	const BVector *vertexB = &navmesh->vertices[triangle->vertices[1]];
+	const BVector *vertexC = &navmesh->vertices[triangle->vertices[2]];
+	return isTriangleCCW( vertexA, vertexB, vertexC );	
+}
 
 void triangulationToNavmesh( const struct triangulateio *triangleOutput, BNavmesh *outNavmesh )
 {
@@ -436,22 +443,24 @@ void triangulationToNavmesh( const struct triangulateio *triangleOutput, BNavmes
 
 	for ( int i = 0; i < outNavmesh->numTriangles; i++ )
 	{
-		outNavmesh->triangles[i].vertices[0] = triangleOutput->trianglelist[3 * i + 0];
-		outNavmesh->triangles[i].vertices[1] = triangleOutput->trianglelist[3 * i + 1];
-		outNavmesh->triangles[i].vertices[2] = triangleOutput->trianglelist[3 * i + 2];
-		outNavmesh->triangles[i].neighbours[0] = triangleOutput->neighborlist[3 * i + 0];
-		outNavmesh->triangles[i].neighbours[1] = triangleOutput->neighborlist[3 * i + 1];
-		outNavmesh->triangles[i].neighbours[2] = triangleOutput->neighborlist[3 * i + 2];
-		outNavmesh->triangles[i].center.x = 0;
-		outNavmesh->triangles[i].center.x += outNavmesh->vertices[outNavmesh->triangles[i].vertices[0]].x;
-		outNavmesh->triangles[i].center.x += outNavmesh->vertices[outNavmesh->triangles[i].vertices[1]].x;
-		outNavmesh->triangles[i].center.x += outNavmesh->vertices[outNavmesh->triangles[i].vertices[2]].x;
-		outNavmesh->triangles[i].center.y = 0;
-		outNavmesh->triangles[i].center.y += outNavmesh->vertices[outNavmesh->triangles[i].vertices[0]].y;
-		outNavmesh->triangles[i].center.y += outNavmesh->vertices[outNavmesh->triangles[i].vertices[1]].y;
-		outNavmesh->triangles[i].center.y += outNavmesh->vertices[outNavmesh->triangles[i].vertices[2]].y;
-		vectorScale( &outNavmesh->triangles[i].center, 1.f / 3.f );
-		outNavmesh->triangles[i].connectedComponent = -1;
+		BTriangle *const triangle = &outNavmesh->triangles[i];
+		triangle->vertices[0] = triangleOutput->trianglelist[3 * i + 0];
+		triangle->vertices[1] = triangleOutput->trianglelist[3 * i + 1];
+		triangle->vertices[2] = triangleOutput->trianglelist[3 * i + 2];
+		triangle->neighbours[0] = triangleOutput->neighborlist[3 * i + 0];
+		triangle->neighbours[1] = triangleOutput->neighborlist[3 * i + 1];
+		triangle->neighbours[2] = triangleOutput->neighborlist[3 * i + 2];
+		triangle->center.x = 0;
+		triangle->center.x += outNavmesh->vertices[outNavmesh->triangles[i].vertices[0]].x;
+		triangle->center.x += outNavmesh->vertices[outNavmesh->triangles[i].vertices[1]].x;
+		triangle->center.x += outNavmesh->vertices[outNavmesh->triangles[i].vertices[2]].x;
+		triangle->center.y = 0;
+		triangle->center.y += outNavmesh->vertices[outNavmesh->triangles[i].vertices[0]].y;
+		triangle->center.y += outNavmesh->vertices[outNavmesh->triangles[i].vertices[1]].y;
+		triangle->center.y += outNavmesh->vertices[outNavmesh->triangles[i].vertices[2]].y;
+		vectorScale( &triangle->center, 1.f / 3.f );
+		triangle->connectedComponent = -1;
+		assert( isNavmeshTriangleCCW( outNavmesh, triangle ) );
 	}
 
 	computeConnectedComponents( outNavmesh );
