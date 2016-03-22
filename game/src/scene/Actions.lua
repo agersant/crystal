@@ -30,6 +30,7 @@ Actions.attack = function( self )
 	entity:setSpeed( 0 );
 	entity:setAnimation( "attack_" .. entity:getDirection4(), true );
 	self:waitFor( "animationEnd" );
+	Actions.idle( self );
 end
 
 Actions.knockback = function( angle )
@@ -40,6 +41,7 @@ Actions.knockback = function( angle )
 		entity:setAnimation( "knockback_" .. entity:getDirection4(), true );
 		self:wait( .25 );
 		entity:setAngle( math.pi + angle );
+		Actions.idle( self );
 	end
 end
 
