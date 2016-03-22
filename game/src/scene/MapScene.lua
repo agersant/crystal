@@ -62,6 +62,7 @@ MapScene.init = function( self, mapName )
 	self._entities = {};
 	self._updatableEntities = {};
 	self._drawableEntities = {};
+	self._combatableEntities = {};
 	self._spawnedEntities = {};
 	self._despawnedEntities = {};
 	self._map = Assets:getMap( mapName );
@@ -72,10 +73,7 @@ MapScene.init = function( self, mapName )
 	self._player = self:spawn( Warrior );
 	self._player:setPosition( 32, 32 );
 	self._player:addController( PlayerController, 1 );
-	
-	local testBot = self:spawn( Sahagin );
-	testBot:setPosition( 180, 64 );
-	testBot:addController( DevBotController );
+	self._player:setTeam( 0 );
 end
 
 -- TODO TMP
@@ -102,6 +100,11 @@ MapScene.update = function( self, dt )
 		if entity:isDrawable() then
 			table.insert( self._drawableEntities, entity );
 		end
+		if entity:isCombatable() then
+			table.insert( self._combatableEntities, entity );
+		end
+	end
+	for entity, _ in pairs( self._spawnedEntities ) do
 		if entity:isUpdatable() then
 			table.insert( self._updatableEntities, entity );
 			entity:update( 0 );
@@ -149,9 +152,14 @@ MapScene.getPhysicsWorld = function( self )
 	return self._world;
 end
 
+MapScene.getCombatableEntities = function( self )
+	return self._combatableEntities;
+end
+
 MapScene.findPath = function( self, startX, startY, targetX, targetY )
 	return self._map:findPath( startX, startY, targetX, targetY );
 end
+
 
 
 return MapScene;

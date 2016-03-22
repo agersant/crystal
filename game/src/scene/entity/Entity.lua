@@ -231,7 +231,8 @@ end
 
 Entity.addCombatComponent = function( self )
 	assert( not self._combatComponent );
-	self._combatComponent = CombatComponent:new( self );
+	local combatableEntities = self:getScene():getCombatableEntities();
+	self._combatComponent = CombatComponent:new( self, combatableEntities );
 end
 
 Entity.inflictDamageTo = function( self, target )
@@ -244,6 +245,33 @@ Entity.receiveDamage = function( self, damage )
 	self._combatComponent:receiveDamage( damage );
 end
 
+Entity.setTeam = function( self, team )
+	assert( self._combatComponent );
+	self._combatComponent:setTeam( team );
+end
+
+Entity.isAlly = function( self, other )
+	assert( self._combatComponent );
+	assert( other._combatComponent );
+	return self._combatComponent:isAlly( other._combatComponent );
+end
+
+Entity.isEnemy = function( self, other )
+	assert( self._combatComponent );
+	assert( other._combatComponent );
+	return self._combatComponent:isEnemy( other._combatComponent );
+end
+
+Entity.allies = function( self )
+	assert( self._combatComponent );
+	return self._combatComponent:allies();
+end
+
+Entity.enemies = function( self )
+	assert( self._combatComponent );
+	return self._combatComponent:enemies();
+end
+
 
 
 -- CORE
@@ -254,6 +282,10 @@ end
 
 Entity.isDrawable = function( self )
 	return self._sprite or ( self.draw ~= Entity.draw );
+end
+
+Entity.isCombatable = function( self )
+	return self._combatComponent;
 end
 
 Entity.update = function( self, dt )
