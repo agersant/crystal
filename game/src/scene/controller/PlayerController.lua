@@ -11,15 +11,6 @@ local PlayerController = Class( "PlayerController", InputDrivenController );
 
 -- CONTROLS
 
-local idleControls = function( self )
-	while true do
-		if self:isIdle() then
-			self:doAction( Actions.idle );
-		end
-		self:waitFrame();
-	end
-end
-
 local walkControls = function( self )
 	local entity = self:getEntity();
 	while true do
@@ -30,6 +21,8 @@ local walkControls = function( self )
 			local down = self._inputDevice:isCommandActive( "moveDown" );
 			if left or right or up or down then
 				self:doAction( Actions.walk( entity:getAngle() ) );
+			else
+				self:doAction( Actions.idle );
 			end
 		end
 		self:waitFrame();
@@ -57,7 +50,6 @@ end
 PlayerController.run = function( self )
 	self._combatLogic = CombatLogic:new( self );
 	self._playerDirectionControls = PlayerDirectionControls:new( self );
-	self:thread( idleControls );
 	self:thread( walkControls );
 	self:thread( attackControls );
 end
