@@ -11,7 +11,7 @@ return {
 		texture = "assets/texture/sprite/sahagin.png",
 		frames = {
 			attack_left_2 = { x = 0 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
-			attack_left_1 = { x = 1 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } }, hit = { rect = { x = -10, y = -8, w = 24, h = 8 } } } },
+			attack_left_1 = { x = 1 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } }, hit = { rect = { x = -34, y = -8, w = 24, h = 8 } } } },
 			attack_left_0 = { x = 2 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
 			walk_left_1 = 	{ x = 3 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
 			walk_left_0 = 	{ x = 4 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
