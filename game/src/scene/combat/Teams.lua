@@ -1,5 +1,6 @@
+require( "src/utils/OOP" );
 
-local Teams = {};
+local Teams = Class( "Teams" );
 
 
 
