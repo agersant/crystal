@@ -14,6 +14,17 @@ Actions.idle = function( self )
 	entity:setSpeed( 0 );
 end
 
+Actions.lookAt = function( target )
+	return function( self )
+		local entity = self:getEntity();
+		local x, y = entity:getPosition();
+		local targetX, targetY = target:getPosition();
+		local deltaX, deltaY = targetX - x, targetY - y;
+		local angle = math.atan2( deltaY, deltaX );
+		entity:setAngle( angle );
+	end
+end
+
 Actions.walk = function( angle )
 	return function( self )
 		local entity = self:getEntity();

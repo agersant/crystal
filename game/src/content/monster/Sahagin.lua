@@ -41,6 +41,7 @@ SahaginController.reachAndAttack = function( self )
 	end
 	if Movement.walkToEntity( target, 40 )( self ) then
 		if self:isIdle() then
+			Actions.lookAt( target )( self );
 			self:doAction( Actions.attack );
 		end
 	end
