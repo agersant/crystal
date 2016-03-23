@@ -1,5 +1,6 @@
 require( "src/utils/OOP" );
 local Actions = require( "src/scene/Actions" );
+local Teams = require( "src/scene/combat/Teams" );
 
 local CombatLogic = Class( "CombatLogic" );
 
@@ -16,7 +17,9 @@ CombatLogic.init = function( self, controller )
 		local entity = controller:getEntity();
 		while true do
 			local target = controller:waitFor( "giveHit" );
-			entity:inflictDamageTo( target );
+			if Teams:areEnemies( entity:getTeam(), target:getTeam() ) then
+				entity:inflictDamageTo( target );
+			end
 		end
 	end );
 	
