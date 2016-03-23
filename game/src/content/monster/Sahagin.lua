@@ -1,5 +1,5 @@
 require( "src/utils/OOP" );
-local MovementTasks = require( "src/ai/movement/MovementTasks" );
+local Movement = require( "src/ai/movement/Movement" );
 local Sprite = require( "src/graphics/Sprite" );
 local Assets = require( "src/resources/Assets" );
 local CombatLogic = require( "src/scene/combat/CombatLogic" );
@@ -39,7 +39,7 @@ SahaginController.reachAndAttack = function( self )
 	if not target then
 		return;
 	end
-	if MovementTasks.walkToEntity( target, 40 )( self ) then
+	if Movement.walkToEntity( target, 40 )( self ) then
 		if self:isIdle() then
 			self:doAction( Actions.attack );
 		end

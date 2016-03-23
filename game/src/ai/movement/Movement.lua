@@ -3,9 +3,11 @@ local EntityGoal = require( "src/ai/movement/EntityGoal" );
 local PositionGoal = require( "src/ai/movement/PositionGoal" );
 local Actions = require( "src/scene/Actions" );
 
+local Movement = Class( "Movement" );
 
 
-local MovementTasks = Class( "Tasks" );
+
+-- IMPLEMENTATION
 
 local stepTowards = function( self, targetX, targetY )
 	local entity = self:getEntity();
@@ -93,14 +95,18 @@ local walkToGoal = function( goal, repathDelay )
 	end
 end
 
-MovementTasks.walkToEntity = function( targetEntity, targetRadius )
+
+
+-- PUBLIC API
+
+Movement.walkToEntity = function( targetEntity, targetRadius )
 	assert( targetRadius >= 0 );
 	local goal = EntityGoal:new( targetEntity, targetRadius );
 	local repathDelay = .5;
 	return walkToGoal( goal, repathDelay );
 end
 
-MovementTasks.walkToPoint = function( targetX, targetY, targetRadius )
+Movement.walkToPoint = function( targetX, targetY, targetRadius )
 	assert( targetRadius >= 0 );
 	local goal = PositionGoal:new( targetX, targetY, targetRadius );
 	local repathDelay = 2;
@@ -108,4 +114,5 @@ MovementTasks.walkToPoint = function( targetX, targetY, targetRadius )
 end
 
 
-return MovementTasks;
+
+return Movement;
