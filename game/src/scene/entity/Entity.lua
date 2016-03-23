@@ -90,6 +90,21 @@ Entity.setAngle = function( self, angle )
 	self._angle = angle;
 end
 
+Entity.distanceToEntity = function( self, entity )
+	local targetX, targetY = entity:getPosition();
+	return self:distanceTo( targetX, targetY );
+end
+
+Entity.distance2ToEntity = function( self, entity )
+	local targetX, targetY = entity:getPosition();
+	return self:distance2To( targetX, targetY );
+end
+
+Entity.distanceTo = function( self, targetX, targetY )
+	local x, y = self:getPosition();
+	return MathUtils.distance( x, y, targetX, targetY );
+end
+
 Entity.distance2To = function( self, targetX, targetY )
 	local x, y = self:getPosition();
 	return MathUtils.distance2( x, y, targetX, targetY );
@@ -231,8 +246,7 @@ end
 
 Entity.addCombatComponent = function( self )
 	assert( not self._combatComponent );
-	local combatableEntities = self:getScene():getCombatableEntities();
-	self._combatComponent = CombatComponent:new( self, combatableEntities );
+	self._combatComponent = CombatComponent:new( self );
 end
 
 Entity.inflictDamageTo = function( self, target )
@@ -250,26 +264,9 @@ Entity.setTeam = function( self, team )
 	self._combatComponent:setTeam( team );
 end
 
-Entity.isAlly = function( self, other )
+Entity.getTeam = function( self )
 	assert( self._combatComponent );
-	assert( other._combatComponent );
-	return self._combatComponent:isAlly( other._combatComponent );
-end
-
-Entity.isEnemy = function( self, other )
-	assert( self._combatComponent );
-	assert( other._combatComponent );
-	return self._combatComponent:isEnemy( other._combatComponent );
-end
-
-Entity.allies = function( self )
-	assert( self._combatComponent );
-	return self._combatComponent:allies();
-end
-
-Entity.enemies = function( self )
-	assert( self._combatComponent );
-	return self._combatComponent:enemies();
+	return self._combatComponent:getTeam();
 end
 
 

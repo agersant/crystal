@@ -17,30 +17,12 @@ local mitigateDamage = function( self, damage )
 	return mitigatedAmount;
 end
 
-local combatableIter = function( filter )
-	return function( self, i )
-		i = i + 1;
-		local numEntities = #self._peers;
-		while i <= numEntities and not filter( self, self._peers[i] ) do
-			i = i + 1;
-		end
-		if i <= numEntities then
-			return i, self._peers[i];
-		end
-	end
-end
-
-local enemyIter = combatableIter( function( self, other ) return self._entity:isEnemy( other ) end );
-local allyIter = combatableIter( function( self, other ) return self._entity:isAlly( other ) end );
-
-
 
 
 -- PUBLIC API
 
-CombatComponent.init = function( self, entity, peers )
+CombatComponent.init = function( self, entity )
 	assert( entity );
-	self._peers = peers;
 	self:setTeam( Teams.wild );
 	self._entity = entity;
 	self._health = Stat:new( 500, 0, nil );
@@ -56,20 +38,8 @@ CombatComponent.setTeam = function( self, team )
 	self._team = team;
 end
 
-CombatComponent.isAlly = function( self, otherCombatComponent )
-	return Teams:areAllies( self._team, otherCombatComponent._team );
-end
-
-CombatComponent.isEnemy = function( self, otherCombatComponent )
-	return Teams:areEnemies( self._team, otherCombatComponent._team );
-end
-
-CombatComponent.allies = function( self )
-	return allyIter, self, 0;
-end
-
-CombatComponent.enemies = function( self )
-	return enemyIter, self, 0;
+CombatComponent.getTeam = function( self )
+	return self._team;
 end
 
 CombatComponent.inflictDamageTo = function( self, target )

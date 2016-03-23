@@ -1,5 +1,6 @@
 require( "src/utils/OOP" );
 local Log = require( "src/dev/Log" );
+local TargetSelector = require( "src/ai/tactics/TargetSelector" );
 local Assets = require( "src/resources/Assets" );
 local Colors = require( "src/resources/Colors" );
 local CollisionFilters = require( "src/scene/CollisionFilters" );
@@ -65,6 +66,9 @@ MapScene.init = function( self, mapName )
 	self._combatableEntities = {};
 	self._spawnedEntities = {};
 	self._despawnedEntities = {};
+	
+	self._targetSelector = TargetSelector:new( self._combatableEntities );
+	
 	self._map = Assets:getMap( mapName );
 	self._map:spawnCollisionMeshBody( self );
 	self._map:spawnEntities( self );
@@ -152,8 +156,8 @@ MapScene.getPhysicsWorld = function( self )
 	return self._world;
 end
 
-MapScene.getCombatableEntities = function( self )
-	return self._combatableEntities;
+MapScene.getTargetSelector = function( self )
+	return self._targetSelector;
 end
 
 MapScene.findPath = function( self, startX, startY, targetX, targetY )
