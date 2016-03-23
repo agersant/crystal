@@ -4,11 +4,9 @@ local TargetSelector = require( "src/ai/tactics/TargetSelector" );
 local Assets = require( "src/resources/Assets" );
 local Colors = require( "src/resources/Colors" );
 local CollisionFilters = require( "src/scene/CollisionFilters" );
-local DevBotController = require( "src/scene/controller/DevBotController" );
 local PlayerController = require( "src/scene/controller/PlayerController" );
 local Entity = require( "src/scene/entity/Entity" );
 local Warrior = require( "src/content/job/Warrior" );
-local Sahagin = require( "src/content/monster/Sahagin" );
 local Scene = require( "src/scene/Scene" );
 
 local MapScene = Class( "MapScene", Scene );
