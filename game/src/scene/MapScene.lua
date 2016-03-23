@@ -120,6 +120,7 @@ MapScene.update = function( self, dt )
 	removeDespawnedEntitiesFrom( self, self._entities );
 	removeDespawnedEntitiesFrom( self, self._updatableEntities );
 	removeDespawnedEntitiesFrom( self, self._drawableEntities );
+	removeDespawnedEntitiesFrom( self, self._combatableEntities );
 	for entity, _ in pairs( self._despawnedEntities ) do
 		entity:destroy();
 	end
