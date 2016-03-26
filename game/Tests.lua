@@ -15,6 +15,7 @@ local testFiles = {
 	"src/utils/TestMathUtils",
 	"src/utils/TestOOP",
 	"src/utils/TestStringUtils",
+	"src/utils/TestTableUtils",
 };
 
 
