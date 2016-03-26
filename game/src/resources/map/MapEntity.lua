@@ -1,5 +1,6 @@
 require( "src/utils/OOP" );
 local Log = require( "src/dev/Log" );
+local Entity = require( "src/scene/entity/Entity" );
 
 local MapEntity = Class( "MapEntity" );
 
@@ -18,7 +19,9 @@ end
 
 MapEntity.spawn = function( self, scene )
 	local success, err = pcall( function()
-		local class = require( self._class );
+		local class = Class:getByName( self._class );
+		assert( class );
+		assert( class:isInstanceOf( Entity ) );
 		local entity = scene:spawn( class );
 		entity:setPosition( self._x, self._y );
 	end	);

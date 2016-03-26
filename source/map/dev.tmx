@@ -114,17 +114,17 @@
  <objectgroup name="monsters">
   <object id="5" x="208" y="32" width="16" height="16">
    <properties>
-    <property name="class" value="src/content/monster/Sahagin"/>
+    <property name="class" value="Sahagin"/>
    </properties>
   </object>
   <object id="7" x="272" y="112" width="16" height="16">
    <properties>
-    <property name="class" value="src/content/monster/Sahagin"/>
+    <property name="class" value="Sahagin"/>
    </properties>
   </object>
   <object id="8" x="48" y="32" width="16" height="16">
    <properties>
-    <property name="class" value="src/content/monster/Sahagin"/>
+    <property name="class" value="Sahagin"/>
    </properties>
   </object>
  </objectgroup>

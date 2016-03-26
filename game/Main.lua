@@ -3,6 +3,7 @@ local Log = require( "src/dev/Log" );
 local CLI = require( "src/dev/cli/CLI" );
 local GFXConfig = require( "src/graphics/GFXConfig" );
 local Input = require( "src/input/Input" );
+local Content = require( "src/resources/Content" );
 local Scene = require( "src/scene/Scene" );
 
 
@@ -12,6 +13,7 @@ love.load = function()
 	require( "src/graphics/GFX" ); 				-- Override Love defaults
 	require( "src/graphics/GFXCommands" ); 		-- Register commands
 	require( "src/scene/MapSceneCommands" ); 	-- Register commands
+	Content:requireAll( "src/content" );	
 	Log:info( "Completed startup" );
 end
 

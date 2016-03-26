@@ -833,7 +833,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["class"] = "src/content/monster/Sahagin"
+            ["class"] = "Sahagin"
           }
         },
         {
@@ -848,7 +848,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["class"] = "src/content/monster/Sahagin"
+            ["class"] = "Sahagin"
           }
         },
         {
@@ -863,7 +863,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["class"] = "src/content/monster/Sahagin"
+            ["class"] = "Sahagin"
           }
         }
       }
