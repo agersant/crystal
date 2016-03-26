@@ -1,37 +1,18 @@
-local makeClass = function( name, baseClass )
-	local classMeta = {};
-	classMeta.__index = baseClass;
-	classMeta.__tostring = function( class )
-		return "Class definition of: " .. class._name;
-	end
-	return setmetatable( {}, classMeta );
+local classIndex = {};
+local getClassByName = function( classPackage, name )
+	return classIndex[name];
 end
 
+local objectConstuctor = function( class, ... )
+	local obj = setmetatable( {}, class._objMetaTable );
+	if obj.init then
+		obj:init( ... );
+	end
+	return obj;
+end
 
-Class = function( name, baseClass )
-	
-	local class = makeClass( name, baseClass );
-	
-	local objMetaTable = {};
-	objMetaTable.__index = class;
-	objMetaTable.__tostring = function( obj )
-		return "Instance of class: " .. obj._class._name;
-	end
-	
-	class.super = baseClass;
-	class._class = class;
-	class._name = name;
-	class._objMetaTable = objMetaTable;
-	
-	class.new = function( class, ... )
-		local obj = setmetatable( {}, class._objMetaTable );
-		if obj.init then
-			obj:init( ... );
-		end
-		return obj;
-	end
-	
-	class.isInstanceOf = function( self, otherClass )
+local makeIsInstanceOf = function( class )
+	return function( self, otherClass )
 		if class == otherClass then
 			return true;
 		end
@@ -40,6 +21,37 @@ Class = function( name, baseClass )
 		end
 		return false;
 	end
+end
+
+local declareClass = function( self, name, baseClass )
+	
+	local classMetaTable = {};
+	classMetaTable.__index = baseClass;
+	classMetaTable.__tostring = function( class )
+		return "Class definition of: " .. class._name;
+	end
+	local class = setmetatable( {}, classMetaTable );
+	
+	local objMetaTable = {};
+	objMetaTable.__index = class;
+	objMetaTable.__tostring = function( obj )
+		return "Instance of class: " .. obj._class._name;
+	end
+	
+	class._class = class;
+	class._name = name;
+	class._objMetaTable = objMetaTable;
+	
+	class.super = baseClass;
+	class.new = objectConstuctor;
+	class.isInstanceOf = makeIsInstanceOf( class );
+	
+	classIndex[name] = class;
 	
 	return class;
 end
+
+
+
+Class = setmetatable( {}, { __call = declareClass } );
+Class.getByName = getClassByName;
