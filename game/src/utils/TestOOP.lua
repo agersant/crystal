@@ -13,6 +13,15 @@ tests[#tests].body = function()
 	assert( tostring( Fruit ) ~= tostring( Bird ) );
 	assert( tostring( Fruit ) ~= tostring( Peach ) );
 end
+tests[#tests + 1] = { name = "Get class name" };
+tests[#tests].body = function()
+	local Fruit = Class( "Fruit" );
+	local Peach = Class( "Peach", Fruit );
+	local myFruit = Fruit:new();
+	local myPeach = Peach:new();
+	assert( myFruit:getClassName() == "Fruit" );
+	assert( myPeach:getClassName() == "Peach" );
+end
 
 tests[#tests + 1] = { name = "Is instance of" };
 tests[#tests].body = function()

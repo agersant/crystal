@@ -23,6 +23,10 @@ local makeIsInstanceOf = function( class )
 	end
 end
 
+local getClassName = function( self )
+	return self._class._name;
+end
+
 local declareClass = function( self, name, baseClass )
 	
 	local classMetaTable = {};
@@ -44,6 +48,7 @@ local declareClass = function( self, name, baseClass )
 	
 	class.super = baseClass;
 	class.new = objectConstuctor;
+	class.getClassName = getClassName;
 	class.isInstanceOf = makeIsInstanceOf( class );
 	
 	classIndex[name] = class;
