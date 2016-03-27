@@ -69,4 +69,13 @@ TableUtils.unserialize = function( source )
 	return outTable;
 end
 
+TableUtils.contains = function( t, value )
+	for k, v in pairs( t ) do
+		if v == value then
+			return true;
+		end
+	end
+	return false;
+end
+
 return TableUtils;

@@ -10,6 +10,14 @@ tests[#tests].body = function()
 	assert( TableUtils.countKeys( { 1, 2, 3 } ) == 3 );
 end
 
+tests[#tests + 1] = { name = "Contains" };
+tests[#tests].body = function()
+	assert( TableUtils.contains( { 2 }, 2 ) );
+	assert( TableUtils.contains( { a = 2 }, 2 ) );
+	assert( not TableUtils.contains( { 2 }, 3 ) );
+	assert( not TableUtils.contains( { [3] = 2 }, 3 ) );
+end
+
 tests[#tests + 1] = { name = "Shallow copy" };
 tests[#tests].body = function()
 	local original = { a = { 1, 2 ,3 } };
