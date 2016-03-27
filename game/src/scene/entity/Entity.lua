@@ -110,6 +110,11 @@ Entity.distance2To = function( self, targetX, targetY )
 	return MathUtils.distance2( x, y, targetX, targetY );
 end
 
+Entity.findPathTo = function( self, targetX, targetY )
+	local startX, startY = self:getPosition();
+	return self._scene:findPath( startX, startY, targetX, targetY );
+end
+
 
 
 -- LOCOMOTION COMPONENT
@@ -129,11 +134,6 @@ end
 
 Entity.setSpeed = function( self, speed )
 	self._speed = speed;
-end
-
-Entity.findPathTo = function( self, targetX, targetY )
-	local startX, startY = self:getPosition();
-	return self._scene:findPath( startX, startY, targetX, targetY );
 end
 
 
