@@ -8,6 +8,8 @@ require( "Conf" );
 local testFiles = {
 	"src/dev/cli/TestCLI",
 	"src/input/TestInputDevice",
+	"src/persistence/TestParty",
+	"src/persistence/TestPartyMember",
 	"src/resources/map/TestMapCollisionChainData",
 	"src/resources/map/TestNavmesh",
 	"src/scene/controller/TestController",
