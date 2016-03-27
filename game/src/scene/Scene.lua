@@ -2,6 +2,10 @@ require( "src/utils/OOP" );
 
 local Scene = Class( "Scene" );
 
+
+
+-- PUBLIC API
+
 Scene.init = function( self )
 	self._canProcessSignals = true;
 end
@@ -12,11 +16,16 @@ end
 Scene.draw = function( self )
 end
 
+Scene.saveTo = function( self, playerSave )
+end
+
 Scene.canProcessSignals = function( self )
 	return self._canProcessSignals;
 end
 
 
+
+-- STATIC
 
 local currentScene = Scene:new();
 

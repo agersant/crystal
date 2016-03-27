@@ -240,6 +240,24 @@ Entity.signal = function( self, signal, ... )
 	self._controller:signal( signal, ... );
 end
 
+Entity.getAssignedPlayer = function( self )
+	if self._controller.getAssignedPlayer then
+		return self._controller:getAssignedPlayer();
+	end
+end
+
+
+
+-- PARTY COMPONENT
+
+Entity.addToParty = function( self )
+	self._scene:addEntityToParty( self );
+end
+
+Entity.removeFromParty = function( self )
+	self._scene:removeEntityFromParty( self );
+end
+
 
 
 -- COMBAT COMPONENT
