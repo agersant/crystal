@@ -1,4 +1,5 @@
 require( "src/utils/OOP" );
+local AlignGoal = require( "src/ai/movement/AlignGoal" );
 local EntityGoal = require( "src/ai/movement/EntityGoal" );
 local PositionGoal = require( "src/ai/movement/PositionGoal" );
 local Actions = require( "src/scene/Actions" );
@@ -41,6 +42,7 @@ local followPath = function( self, path )
 	end
 end
 
+-- TODO deal with scenarios where target entity despawns while we're pathing towards it
 local walkToGoal = function( goal, repathDelay )
 	return function( self )
 		local pathingThread;
@@ -49,6 +51,7 @@ local walkToGoal = function( goal, repathDelay )
 		-- Follow path
 		self:thread( function( self )
 			while true do
+				self:endOn( "endWalkToGoal" );
 				self:endOn( "closeEnough" );
 				self:waitFor( "repath" );
 				pathingThread = self:thread( function( self )
@@ -63,6 +66,7 @@ local walkToGoal = function( goal, repathDelay )
 		
 		-- Stop when close enough to objective
 		self:thread( function( self )
+			self:endOn( "endWalkToGoal" );
 			while true do
 				local x, y = entity:getPosition();
 				if goal:isPositionAcceptable( x, y ) then
@@ -74,6 +78,7 @@ local walkToGoal = function( goal, repathDelay )
 	
 		-- Trigger repath
 		self:thread( function( self )
+			self:endOn( "endWalkToGoal" );
 			while true do
 				self:signal( "repath" );
 				self:wait( repathDelay );
@@ -85,6 +90,7 @@ local walkToGoal = function( goal, repathDelay )
 		else
 			-- Path completed immediately
 		end
+		self:signal( "endWalkToGoal" );
 		
 		if self:isIdle() then
 			self:doAction( Actions.idle );
@@ -110,6 +116,13 @@ Movement.walkToPoint = function( targetX, targetY, targetRadius )
 	assert( targetRadius >= 0 );
 	local goal = PositionGoal:new( targetX, targetY, targetRadius );
 	local repathDelay = 2;
+	return walkToGoal( goal, repathDelay );
+end
+
+Movement.alignWithEntity = function( movingEntity, targetEntity, targetRadius )
+	assert( targetRadius >= 0 );
+	local goal = AlignGoal:new( movingEntity, targetEntity, targetRadius );
+	local repathDelay = 1;
 	return walkToGoal( goal, repathDelay );
 end
 
