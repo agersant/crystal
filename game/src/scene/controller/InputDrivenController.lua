@@ -20,7 +20,12 @@ end
 
 InputDrivenController.init = function( self, entity, playerIndex, script )
 	InputDrivenController.super.init( self, entity, script );
+	self._playerIndex = playerIndex;
 	self._inputDevice = Input:getDevice( playerIndex );
+end
+
+InputDrivenController.getAssignedPlayer = function( self )
+	return self._playerIndex;
 end
 
 InputDrivenController.getInputDevice = function( self )
