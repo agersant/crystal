@@ -892,7 +892,7 @@ return {
             ["class"] = "Teleport",
             ["targetMap"] = "assets/map/dev2.lua",
             ["targetX"] = "160",
-            ["targetY"] = "10"
+            ["targetY"] = "8"
           }
         }
       }

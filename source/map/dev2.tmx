@@ -29,7 +29,7 @@
     <property name="class" value="Teleport"/>
     <property name="targetMap" value="assets/map/dev.lua"/>
     <property name="targetX" value="160"/>
-    <property name="targetY" value="230"/>
+    <property name="targetY" value="232"/>
    </properties>
   </object>
  </objectgroup>
