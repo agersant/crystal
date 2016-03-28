@@ -31,12 +31,13 @@ PartyMember.toPOD = function( self )
 	};
 end
 
-PartyMember.spawn = function( self, scene )
+PartyMember.spawn = function( self, scene, options )
+	assert( type( options ) == "table" );
 	local className = self:getInstanceClass();
 	local class = Class:getByName( className );
 	assert( class );
 	
-	local entity = scene:spawn( class );
+	local entity = scene:spawn( class, options );
 	entity:addToParty();
 	
 	local assignedPlayer = self:getAssignedPlayer();

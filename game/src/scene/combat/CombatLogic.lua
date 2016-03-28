@@ -16,7 +16,7 @@ CombatLogic.init = function( self, controller )
 	controller:thread( function( controller )
 		local entity = controller:getEntity();
 		while true do
-			local target = controller:waitFor( "giveHit" );
+			local target = controller:waitFor( "+giveHit" );
 			if Teams:areEnemies( entity:getTeam(), target:getTeam() ) then
 				entity:inflictDamageTo( target );
 			end

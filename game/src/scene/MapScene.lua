@@ -30,34 +30,43 @@ local removeDespawnedEntitiesFrom = function( self, list )
 	end
 end
 
-local beginContact = function( self, fixtureA, fixtureB, contact )
+local beginOrEndContact = function( self, fixtureA, fixtureB, contact, prefix )
 	local objectA = fixtureA:getBody():getUserData();
 	local objectB = fixtureB:getBody():getUserData();
 	assert( objectA );
 	assert( objectB );
+	
 	if objectA:isInstanceOf( Entity ) and objectB:isInstanceOf( Entity ) then
 		local categoryA = fixtureA:getFilterData();
 		local categoryB = fixtureB:getFilterData();
 
 		-- Weakbox VS hitbox
 		if bit.band( categoryA, CollisionFilters.HITBOX ) ~= 0 and bit.band( categoryB, CollisionFilters.WEAKBOX ) ~= 0 then
-			objectA:signal( "giveHit", objectB );
+			objectA:signal( prefix .. "giveHit", objectB );
 		elseif bit.band( categoryA, CollisionFilters.WEAKBOX ) ~= 0 and bit.band( categoryB, CollisionFilters.HITBOX ) ~= 0 then
-			objectB:signal( "giveHit", objectA );
+			objectB:signal( prefix .. "giveHit", objectA );
 		
 		-- Trigger VS solid
 		elseif bit.band( categoryA, CollisionFilters.TRIGGER ) ~= 0 and bit.band( categoryB, CollisionFilters.SOLID ) ~= 0 then
-			objectA:signal( "trigger", objectB );
+			objectA:signal( prefix .. "trigger", objectB );
 		elseif bit.band( categoryA, CollisionFilters.SOLID ) ~= 0 and bit.band( categoryB, CollisionFilters.TRIGGER ) ~= 0 then
-			objectB:signal( "trigger", objectA );
+			objectB:signal( prefix .. "trigger", objectA );
 		end
 	end
 end
 
-local spawnParty = function( self, party, x, y )
+local beginContact = function( self, fixtureA, fixtureB, contact )
+	return beginOrEndContact( self, fixtureA, fixtureB, contact, "+" );
+end
+
+local endContact = function( self, fixtureA, fixtureB, contact )
+	return beginOrEndContact( self, fixtureA, fixtureB, contact, "-" );
+end
+
+local spawnParty = function( self, party, x ,y )
 	assert( party );
 	for i, partyMember in ipairs( party:getMembers() ) do
-		local entity = partyMember:spawn( self );
+		local entity = partyMember:spawn( self, {} );
 		entity:setPosition( x, y );
 	end
 end
@@ -73,7 +82,8 @@ MapScene.init = function( self, mapName, party, partyX, partyY )
 	
 	self._world = love.physics.newWorld( 0, 0, false );
 	self._world:setCallbacks(
-		function( ... ) beginContact( self, ... ) end
+		function( ... ) beginContact( self, ... ); end,
+		function( ... ) endContact( self, ... ); end
 	);
 	
 	self._entities = {};
@@ -160,8 +170,9 @@ MapScene.draw = function( self )
 	self._map:drawDebug();
 end
 
-MapScene.spawn = function( self, class, ... )
-	local entity = class:new( self, ... );
+MapScene.spawn = function( self, class, options )
+	assert( type( options ) == "table" );
+	local entity = class:new( self, options );
 	self._spawnedEntities[entity] = true;
 	return entity;
 end
@@ -174,6 +185,12 @@ MapScene.getPhysicsWorld = function( self )
 	return self._world;
 end
 
+
+-- MAP
+
+MapScene.getMap = function( self )
+	return self._map;
+end
 
 
 -- AI

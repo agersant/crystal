@@ -7,13 +7,13 @@ local Tile = Class( "Tile", Entity );
 
 -- PUBLIC API
 
-Tile.init = function( self, scene, tileset, quad, x, y )
+Tile.init = function( self, scene, options )
 	Tile.super.init( self, scene );
-	local _, _, _, h = quad:getViewport();
-	self._tileset = tileset;
-	self._quad = quad;
-	self._x = x;
-	self._y = y;
+	local _, _, _, h = options.quad:getViewport();
+	self._tileset = options.tileset;
+	self._quad = options.quad;
+	self._x = options.x;
+	self._y = options.y;
 	self._z = self._y + h;
 end
 
