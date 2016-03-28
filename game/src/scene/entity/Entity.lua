@@ -27,6 +27,10 @@ Entity.addPhysicsBody = function( self, bodyType )
 	self:setSpeed( 0 );
 end
 
+Entity.hasPhysicsBody = function( self )
+	return self._body ~= nil;
+end
+
 Entity.getZ = function( self )
 	assert( self._body );
 	return self._body:getY();
