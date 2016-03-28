@@ -31,11 +31,33 @@ TeleportController.init = function( self, entity )
 end
 
 TeleportController.run = function( self )
+	local teleportEntity = self:getEntity();
+	self:endOn( "teleportActivated" );
 	while true do
-		local triggeredBy = self:waitFor( "trigger" );
-		if triggeredBy:getAssignedPlayer() then
-			doTeleport( self, triggeredBy );
-		end
+		local triggeredBy = self:waitFor( "+trigger" );
+		local watchDirectionThread = self:thread( function( self )
+			while true do
+				self:waitFrame();
+				if triggeredBy:getAssignedPlayer() then
+					local teleportAngle = teleportEntity:getAngle();
+					local entityAngle = triggeredBy:getAngle();
+					local correctDirection = math.abs( teleportAngle - entityAngle ) < math.pi / 2;
+					if correctDirection then
+						self:signal( "teleportActivated" );
+						doTeleport( self, triggeredBy );
+					end
+				end
+			end
+		end );
+		self:thread( function( self )
+			while true do
+				local noLongerTriggering = self:waitFor( "-trigger" );
+				if noLongerTriggering == triggeredBy then
+					watchDirectionThread:stop();
+					break;
+				end
+			end
+		end );
 	end
 end
 
@@ -57,6 +79,29 @@ Teleport.init = function( self, scene, options )
 	self._targetMap = options.targetMap;
 	self._targetX = options.targetX;
 	self._targetY = options.targetY;
+	
+	local mapWidth = scene:getMap():getWidthInPixels();
+	local mapHeight = scene:getMap():getHeightInPixels();
+	local left = math.abs( options.x );
+	local top = math.abs( options.y );
+	local right = math.abs( mapWidth - options.x );
+	local bottom = math.abs( mapHeight - options.y );
+	local dx = math.min( left, right );
+	local dy = math.min( top, bottom );
+	
+	if dx < dy then
+		if left < right then
+			self:setAngle( math.pi );
+		else
+			self:setAngle( 0 );
+		end
+	else
+		if top < bottom then
+			self:setAngle( -math.pi / 2 );
+		else
+			self:setAngle( math.pi / 2 );
+		end
+	end
 end
 
 
