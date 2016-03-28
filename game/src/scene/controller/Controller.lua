@@ -8,7 +8,7 @@ local Controller = Class( "Controller" );
 
 -- IMPLEMENTATION
 
-local pumpThread;
+local pumpThread, endThread;
 
 local newThread = function( self, parentThread, script, options )
 	assert( type( script ) == "function" );
@@ -21,8 +21,12 @@ local newThread = function( self, parentThread, script, options )
 		childThreads = {},
 		blockedBy = {},
 		endsOn = {},
-		isDead = function( self )
-			return coroutine.status( self.coroutine ) == "dead" or self.isEnded;
+		isDead = function( thread )
+			return coroutine.status( thread.coroutine ) == "dead" or thread.isEnded;
+		end,
+		stop = function( thread )
+			assert( not thread:isDead() );
+			endThread( self, thread );
 		end,
 	};
 	
@@ -76,7 +80,6 @@ local endThreadOn = function( self, thread, signals )
 	end
 end
 
-local endThread;
 endThread = function( self, thread )
 	thread.isEnded = true;
 	if thread.parentThread then

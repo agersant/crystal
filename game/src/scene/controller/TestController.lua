@@ -113,6 +113,22 @@ tests[#tests].body = function()
 	assert( a == 4 );
 end
 
+tests[#tests + 1] = { name = "Stop thread" };
+tests[#tests].body = function()
+	local a = 0;
+	local controller = Controller:new( Entity:new( Scene:new() ), function( self )
+		local t = self:thread( function( self )
+			self:waitFrame();
+			a = 1;
+		end );
+		t:stop();
+	end	);
+	controller:update( 0 );
+	assert( a == 0 );
+	controller:update( 0 );
+	assert( a == 0 );
+end
+
 tests[#tests + 1] = { name = "Signal additional data" };
 tests[#tests].body = function()
 	local a = 0;
