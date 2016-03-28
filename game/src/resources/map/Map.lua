@@ -16,6 +16,9 @@ local Map = Class( "Map" );
 
 local parseTileLayer = function( self, layerData )
 	local sort = layerData.properties.sort;
+	if sort ~= "above" and sort ~= "dynamic" then
+		sort = "below";
+	end
 	self._collisionMesh:processLayer( self._tileset, layerData );
 	if sort == "below" or sort == "above" then
 		local layer = StaticLayer:new( self, layerData, sort );
@@ -23,8 +26,6 @@ local parseTileLayer = function( self, layerData )
 	elseif sort == "dynamic" then
 		local layer = DynamicLayer:new( self, layerData );
 		table.insert( self._dynamicLayers, 1, layer );
-	else
-		Log:warning( "Unexpected map layer sorting: " .. tostring( sort ) );
 	end
 end
 
