@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="15" tilewidth="16" tileheight="16" nextobjectid="9">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="15" tilewidth="16" tileheight="16" nextobjectid="10">
  <tileset firstgid="1" source="../tileset/dev.tsx"/>
  <layer name="bg" width="20" height="15">
   <properties>
@@ -20,7 +20,7 @@
 3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
 3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
 3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
-3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3
+3,3,3,3,3,3,3,3,2,2,2,2,3,3,3,3,3,3,3,3
 </data>
  </layer>
  <layer name="walls" width="20" height="15">
@@ -125,6 +125,16 @@
   <object id="8" x="48" y="32" width="16" height="16">
    <properties>
     <property name="class" value="Sahagin"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="teleports">
+  <object id="9" x="128" y="224" width="64" height="16">
+   <properties>
+    <property name="class" value="Teleport"/>
+    <property name="targetMap" value="assets/map/dev2.lua"/>
+    <property name="targetX" value="160"/>
+    <property name="targetY" value="10"/>
    </properties>
   </object>
  </objectgroup>

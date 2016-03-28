@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="15" tilewidth="16" tileheight="16" nextobjectid="4">
+ <tileset firstgid="1" source="../tileset/dev.tsx"/>
+ <layer name="Tile Layer 1" width="20" height="15">
+  <properties>
+   <property name="sort" value="below"/>
+  </properties>
+  <data encoding="csv">
+3,3,3,3,3,3,3,3,2,2,2,2,3,3,3,3,3,3,3,3,
+3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,3,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,
+3,3,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,2,2,3,
+3,3,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,2,2,3,
+3,3,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,2,2,3,
+3,3,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,2,2,3,
+3,3,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,2,2,3,
+3,3,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,
+3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3
+</data>
+ </layer>
+ <objectgroup name="teleports">
+  <object id="2" x="128" y="0" width="64" height="16">
+   <properties>
+    <property name="class" value="Teleport"/>
+    <property name="targetMap" value="assets/map/dev.lua"/>
+    <property name="targetX" value="160"/>
+    <property name="targetY" value="230"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>
