@@ -38,10 +38,18 @@ local beginContact = function( self, fixtureA, fixtureB, contact )
 	if objectA:isInstanceOf( Entity ) and objectB:isInstanceOf( Entity ) then
 		local categoryA = fixtureA:getFilterData();
 		local categoryB = fixtureB:getFilterData();
+
+		-- Weakbox VS hitbox
 		if bit.band( categoryA, CollisionFilters.HITBOX ) ~= 0 and bit.band( categoryB, CollisionFilters.WEAKBOX ) ~= 0 then
 			objectA:signal( "giveHit", objectB );
 		elseif bit.band( categoryA, CollisionFilters.WEAKBOX ) ~= 0 and bit.band( categoryB, CollisionFilters.HITBOX ) ~= 0 then
 			objectB:signal( "giveHit", objectA );
+		
+		-- Trigger VS solid
+		elseif bit.band( categoryA, CollisionFilters.TRIGGER ) ~= 0 and bit.band( categoryB, CollisionFilters.SOLID ) ~= 0 then
+			objectA:signal( "trigger", objectB );
+		elseif bit.band( categoryA, CollisionFilters.SOLID ) ~= 0 and bit.band( categoryB, CollisionFilters.TRIGGER ) ~= 0 then
+			objectB:signal( "trigger", objectA );
 		end
 	end
 end

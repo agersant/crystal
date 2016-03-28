@@ -145,7 +145,7 @@ Entity.addCollisionPhysics = function( self )
 	assert( not self._collisionFixture );
 	local collisionShape = love.physics.newCircleShape( 1 );
 	self._collisionFixture = love.physics.newFixture( self._body, collisionShape );
-	self._collisionFixture:setFilterData( CollisionFilters.SOLID, CollisionFilters.GEO + CollisionFilters.SOLID, 0 );
+	self._collisionFixture:setFilterData( CollisionFilters.SOLID, CollisionFilters.GEO + CollisionFilters.SOLID + CollisionFilters.TRIGGER, 0 );
 	self._collisionFixture:setFriction( 0 );
 	self._collisionFixture:setRestitution( 0 );
 end
@@ -203,6 +203,30 @@ Entity.removeWeakboxPhysics = function( self )
 	end
 	self._weakboxFixture = nil;
 	self._weakboxShape = nil;
+end
+
+
+
+-- TRIGGER COMPONENT
+
+Entity.addTrigger = function( self, shape )
+	assert( self._body );
+	if self._triggerShape == shape then
+		return;
+	end
+	self:removeTrigger();
+	self._triggerFixture = love.physics.newFixture( self._body, shape );
+	self._triggerFixture:setFilterData( CollisionFilters.TRIGGER, CollisionFilters.SOLID, 0 );
+	self._triggerFixture:setSensor( true );
+	self._triggerShape = shape;
+end
+
+Entity.removeTrigger = function( self )
+	if self._triggerFixture then
+		self._triggerFixture:destroy();
+	end
+	self._triggerFixture = nil;
+	self._triggerShape = nil;
 end
 
 
@@ -296,7 +320,7 @@ Entity.isUpdatable = function( self )
 end
 
 Entity.isDrawable = function( self )
-	return self._sprite or ( self.draw ~= Entity.draw );
+	return self._sprite or self._body or ( self.draw ~= Entity.draw );
 end
 
 Entity.isCombatable = function( self )
@@ -351,7 +375,10 @@ Entity.draw = function( self )
 		if self._weakboxFixture then
 			self:drawShape( self._weakboxFixture:getShape(), Colors.ecoGreen );
 		end
-	end
+		if self._triggerFixture then
+			self:drawShape( self._triggerFixture:getShape(), Colors.ecoGreen );
+		end
+	end	
 end
 
 Entity.drawShape = function( self, shape, color )
