@@ -6,6 +6,7 @@ local MapCollisionMesh = require( "src/resources/map/MapCollisionMesh" );
 local MapEntity = require( "src/resources/map/MapEntity" );
 local Navmesh = require( "src/resources/map/Navmesh" );
 local StaticLayer = require( "src/resources/map/StaticLayer" );
+local TableUtils = require( "src/utils/TableUtils" );
 
 local Map = Class( "Map" );
 
@@ -36,10 +37,12 @@ local parseEntity = function( self, objectData )
 		Log:warning( "Ignored map entity because of missing 'class' property" );
 		return;
 	end
-	local x = objectData.x + objectData.width / 2;
-	local y = objectData.y + objectData.height / 2;
+	local options = TableUtils.shallowCopy( objectData.properties );
+	options.x = objectData.x + objectData.width / 2;
+	options.y = objectData.y + objectData.height / 2;
+	options.shape = love.physics.newRectangleShape( 0, 0, objectData.width, objectData.height );
 	local class = objectData.properties.class;
-	local mapEntity = MapEntity:new( class, x, y );
+	local mapEntity = MapEntity:new( class, options );
 	table.insert( self._mapEntities, mapEntity );
 end
 
@@ -152,5 +155,7 @@ end
 Map.findPath = function( self, startX, startY, targetX, targetY )
 	return self._navmesh:findPath( startX, startY, targetX, targetY );
 end
+
+
 
 return Map;

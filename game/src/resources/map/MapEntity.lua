@@ -8,13 +8,11 @@ local MapEntity = Class( "MapEntity" );
 
 -- PUBLIC API
 
-MapEntity.init = function( self, class, x, y )
+MapEntity.init = function( self, class, options )
 	assert( type( class ) == "string" );
-	assert( type( x ) == "number" );
-	assert( type( y ) == "number" );
-	self._x = x;
-	self._y = y;
+	assert( type( options ) == "table" );
 	self._class = class;
+	self._options = options;
 end
 
 MapEntity.spawn = function( self, scene )
@@ -22,8 +20,7 @@ MapEntity.spawn = function( self, scene )
 		local class = Class:getByName( self._class );
 		assert( class );
 		assert( class:isInstanceOf( Entity ) );
-		local entity = scene:spawn( class );
-		entity:setPosition( self._x, self._y );
+		local entity = scene:spawn( class, self._options );
 	end	);
 	if not success then
 		Log:error( "Error spawning map entity of class " .. tostring( self._class ) .. ":\n" .. tostring( err ) );
