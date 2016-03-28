@@ -81,6 +81,14 @@ Entity.setPosition = function( self, x, y )
 	self._body:setPosition( x, y );
 end
 
+Entity.getVelocity = function( self )
+	local speed = self._speed;
+	local angle = self._angle;
+	local dx = math.cos( angle );
+	local dy = math.sin( angle );
+	return speed * dx, speed * dy;
+end
+
 Entity.getAngle = function( self )
 	return self._angle;
 end
@@ -353,11 +361,8 @@ Entity.update = function( self, dt )
 		end
 	end
 	if self._body then
-		local speed = self._speed;
-		local angle = self._angle;
-		local dx = math.cos( angle );
-		local dy = math.sin( angle );
-		self._body:setLinearVelocity( speed * dx, speed * dy );
+		local vx, vy = self:getVelocity();
+		self._body:setLinearVelocity( vx, vy );
 	end
 end
 
