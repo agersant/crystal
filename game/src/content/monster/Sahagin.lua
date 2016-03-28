@@ -14,7 +14,7 @@ local SahaginController = Class( "SahaginController", Controller );
 
 -- PUBLIC API
 
-Sahagin.init = function( self, scene, options )
+Sahagin.init = function( self, scene )
 	Sahagin.super.init( self, scene );
 	local sheet = Assets:getSpritesheet( "assets/spritesheet/sahagin.lua" );
 	self:addSprite( Sprite:new( sheet ) );
@@ -25,7 +25,6 @@ Sahagin.init = function( self, scene, options )
 	self:setCollisionRadius( 4 );
 	self:setUseSpriteHitboxData( true );
 	self:addController( SahaginController:new( self ) );
-	self:setPosition( options.x, options.y );
 end
 
 SahaginController.init = function( self, entity )

@@ -21,6 +21,11 @@ MapEntity.spawn = function( self, scene )
 		assert( class );
 		assert( class:isInstanceOf( Entity ) );
 		local entity = scene:spawn( class, self._options );
+		if entity:hasPhysicsBody() then
+			assert( self._options.x );
+			assert( self._options.y );
+			entity:setPosition( self._options.x, self._options.y );
+		end
 	end	);
 	if not success then
 		Log:error( "Error spawning map entity of class " .. tostring( self._class ) .. ":\n" .. tostring( err ) );
