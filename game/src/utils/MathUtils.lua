@@ -33,6 +33,13 @@ MathUtils.vectorLength = function( x, y )
 	return math.sqrt( x * x + y * y );
 end
 
+MathUtils.normalize = function( x, y, n )
+	n = n or 1;
+	local length = MathUtils.vectorLength( x, y );
+	assert( length > 0 );
+	return n * x / length, n * y / length;
+end
+
 MathUtils.distance2 = function( x1, y1, x2, y2 )
 	local dx = x2 - x1;
 	local dy = y2 - y1;
