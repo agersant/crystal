@@ -18,6 +18,7 @@ love.conf = function( options )
 	options.window.height = 720;
 	options.window.resizable = true;
 	options.window.msaa = 8;
+	options.window.vsync = false;
 	
 	options.modules.audio = true;
 	options.modules.event = true;
