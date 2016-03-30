@@ -12,6 +12,10 @@ MathUtils.round = function( n )
 	return math.floor( n + 0.5 );
 end
 
+MathUtils.roundTo = function( n, precision )
+	return MathUtils.round( n / precision ) * precision;
+end
+
 MathUtils.clamp = function( low, value, high )
 	assert( low <= high );
 	return math.min( high, math.max( low, value ) );
