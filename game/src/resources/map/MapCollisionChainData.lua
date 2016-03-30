@@ -179,7 +179,7 @@ MapCollisionChainData.merge = function( self, otherChain )
 			local allFourPointsAligned 	= 	MathUtils.almostZero( MathUtils.crossProduct( oldX, oldY, newX1 - oldX1, newY1 - oldY1 ) )
 										and MathUtils.almostZero( MathUtils.crossProduct( oldX, oldY, newX2 - oldX1, newY2 - oldY1 ) );
 										
-			if  allFourPointsAligned then
+			if allFourPointsAligned then
 				local oldSegmentLength2 = MathUtils.vectorLength2( oldX, oldY );
 				local t1 =  MathUtils.dotProduct( oldX, oldY, newX1 - oldX1, newY1 - oldY1 ) / oldSegmentLength2; -- How far new segment's point 1 is along old segment
 				local t2 =  MathUtils.dotProduct( oldX, oldY, newX2 - oldX1, newY2 - oldY1 ) / oldSegmentLength2; -- How far new segment's point 2 is along old segment
