@@ -1,4 +1,5 @@
 require( "src/utils/OOP" );
+local GFXConfig = require( "src/graphics/GFXConfig" );
 local MathUtils = require( "src/utils/MathUtils" );
 
 local Sprite = Class( "Sprite" );
@@ -36,6 +37,7 @@ Sprite.draw = function( self, x, y )
 	local quad = self._frame:getQuad();
 	local image = self._sheet:getImage();
 	local ox, oy = self._frame:getOrigin();
+	local snapTo = 1 / GFXConfig:getZoom();
 	love.graphics.draw( image, quad, MathUtils.roundTo( x, snapTo ), MathUtils.roundTo( y, snapTo ), 0, 1, 1, ox, oy );
 end
 
