@@ -6,6 +6,7 @@ local PartyMember = require( "src/persistence/PartyMember" );
 local Assets = require( "src/resources/Assets" );
 local Colors = require( "src/resources/Colors" );
 local CollisionFilters = require( "src/scene/CollisionFilters" );
+local Camera = require( "src/scene/Camera" );
 local Scene = require( "src/scene/Scene" );
 local Teams = require( "src/scene/combat/Teams" );
 local Entity = require( "src/scene/entity/Entity" );
@@ -101,9 +102,15 @@ MapScene.init = function( self, mapName, party, partyX, partyY )
 	self._map:spawnCollisionMeshBody( self );
 	self._map:spawnEntities( self );
 	
-	self._partyX = partyX or self._map:getWidthInPixels() / 2;
-	self._partyY = partyY or self._map:getHeightInPixels() / 2;
+	local mapWidth = self._map:getWidthInPixels();
+	local mapHeight = self._map:getHeightInPixels();
+	self._camera = Camera:new( mapWidth, mapHeight );
+	
+	self._partyX = partyX or mapWidth / 2;
+	self._partyY = partyY or mapHeight / 2;
 	spawnParty( self, party, self._partyX, self._partyY );
+	
+	self:update( 0 );
 end
 
 -- TODO TMP
@@ -157,10 +164,18 @@ MapScene.update = function( self, dt )
 	
 	-- Sort drawable entities
 	table.sort( self._drawableEntities, sortDrawableEntities );
+	
+	self._camera:update( dt );
 end
 
 MapScene.draw = function( self )
 	MapScene.super.draw( self );
+	
+	love.graphics.push();
+	
+	local ox, oy = self._camera:getRenderOffset();
+	love.graphics.translate( ox, oy );
+	
 	self._map:drawBelowEntities();
 	for i, entity in ipairs( self._drawableEntities ) do
 		love.graphics.setColor( Colors.white );
@@ -168,6 +183,8 @@ MapScene.draw = function( self )
 	end
 	self._map:drawAboveEntities();
 	self._map:drawDebug();
+	
+	love.graphics.pop();
 end
 
 MapScene.spawn = function( self, class, options )
@@ -186,11 +203,13 @@ MapScene.getPhysicsWorld = function( self )
 end
 
 
+
 -- MAP
 
 MapScene.getMap = function( self )
 	return self._map;
 end
+
 
 
 -- AI
@@ -210,6 +229,7 @@ end
 MapScene.addEntityToParty = function( self, entity )
 	assert( not TableUtils.contains( self._partyEntities, entity ) );
 	table.insert( self._partyEntities, entity );
+	self._camera:addTrackedEntity( entity );
 	entity:setTeam( Teams.party );
 end
 
@@ -221,6 +241,7 @@ MapScene.removeEntityFromParty = function( self, entity )
 			return;
 		end
 	end
+	self._camera:removeTrackedEntity( entity );
 end
 
 
