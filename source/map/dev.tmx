@@ -112,26 +112,13 @@
 </data>
  </layer>
  <objectgroup name="monsters">
-  <object id="5" x="208" y="32" width="16" height="16">
-   <properties>
-    <property name="class" value="Sahagin"/>
-   </properties>
-  </object>
-  <object id="7" x="272" y="112" width="16" height="16">
-   <properties>
-    <property name="class" value="Sahagin"/>
-   </properties>
-  </object>
-  <object id="8" x="48" y="32" width="16" height="16">
-   <properties>
-    <property name="class" value="Sahagin"/>
-   </properties>
-  </object>
+  <object id="5" type="Sahagin" x="208" y="32" width="16" height="16"/>
+  <object id="7" type="Sahagin" x="272" y="112" width="16" height="16"/>
+  <object id="8" type="Sahagin" x="48" y="32" width="16" height="16"/>
  </objectgroup>
  <objectgroup name="teleports">
-  <object id="9" x="128" y="224" width="64" height="16">
+  <object id="9" type="Teleport" x="128" y="224" width="64" height="16">
    <properties>
-    <property name="class" value="Teleport"/>
     <property name="targetMap" value="assets/map/dev2.lua"/>
     <property name="targetX" value="160"/>
     <property name="targetY" value="8"/>

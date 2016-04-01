@@ -1,7 +1,7 @@
 return {
   version = "1.1",
   luaversion = "5.1",
-  tiledversion = "0.15.2",
+  tiledversion = "0.16.0",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 20,
@@ -824,7 +824,7 @@ return {
         {
           id = 5,
           name = "",
-          type = "",
+          type = "Sahagin",
           shape = "rectangle",
           x = 208,
           y = 32,
@@ -832,14 +832,12 @@ return {
           height = 16,
           rotation = 0,
           visible = true,
-          properties = {
-            ["class"] = "Sahagin"
-          }
+          properties = {}
         },
         {
           id = 7,
           name = "",
-          type = "",
+          type = "Sahagin",
           shape = "rectangle",
           x = 272,
           y = 112,
@@ -847,14 +845,12 @@ return {
           height = 16,
           rotation = 0,
           visible = true,
-          properties = {
-            ["class"] = "Sahagin"
-          }
+          properties = {}
         },
         {
           id = 8,
           name = "",
-          type = "",
+          type = "Sahagin",
           shape = "rectangle",
           x = 48,
           y = 32,
@@ -862,9 +858,7 @@ return {
           height = 16,
           rotation = 0,
           visible = true,
-          properties = {
-            ["class"] = "Sahagin"
-          }
+          properties = {}
         }
       }
     },
@@ -880,7 +874,7 @@ return {
         {
           id = 9,
           name = "",
-          type = "",
+          type = "Teleport",
           shape = "rectangle",
           x = 128,
           y = 224,
@@ -889,7 +883,6 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["class"] = "Teleport",
             ["targetMap"] = "assets/map/dev2.lua",
             ["targetX"] = "160",
             ["targetY"] = "8"

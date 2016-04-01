@@ -1,7 +1,7 @@
 return {
   version = "1.1",
   luaversion = "5.1",
-  tiledversion = "0.15.2",
+  tiledversion = "0.16.0",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 20,
@@ -692,7 +692,7 @@ return {
         {
           id = 2,
           name = "",
-          type = "",
+          type = "Teleport",
           shape = "rectangle",
           x = 128,
           y = 0,
@@ -701,7 +701,6 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["class"] = "Teleport",
             ["targetMap"] = "assets/map/dev.lua",
             ["targetX"] = "160",
             ["targetY"] = "232"

@@ -28,7 +28,7 @@ MapEntity.spawn = function( self, scene )
 		end
 	end	);
 	if not success then
-		Log:error( "Error spawning map entity of class " .. tostring( self._class ) .. ":\n" .. tostring( err ) );
+		Log:error( "Error spawning map entity of class '" .. tostring( self._class ) .. "':\n" .. tostring( err ) );
 	end
 end
 

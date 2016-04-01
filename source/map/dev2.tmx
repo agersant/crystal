@@ -24,9 +24,8 @@
 </data>
  </layer>
  <objectgroup name="teleports">
-  <object id="2" x="128" y="0" width="64" height="16">
+  <object id="2" type="Teleport" x="128" y="0" width="64" height="16">
    <properties>
-    <property name="class" value="Teleport"/>
     <property name="targetMap" value="assets/map/dev.lua"/>
     <property name="targetX" value="160"/>
     <property name="targetY" value="232"/>
