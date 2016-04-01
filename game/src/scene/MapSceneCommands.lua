@@ -9,7 +9,7 @@ local loadMap = function( mapName )
 	local playerSave = PlayerSave:getCurrent();
 	local currentScene = Scene:getCurrent();
 	currentScene:saveTo( playerSave );
-	local newScene = MapScene:new( mapName, playerSave:getParty() );
+	local newScene = MapScene:new( "assets/map/" .. mapName .. ".lua", playerSave:getParty() );
 	Scene:setCurrent( newScene );
 end
 
