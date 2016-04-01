@@ -16,7 +16,7 @@ end
 CLI:addCommand( "loadMap mapName:string", loadMap );
 
 local testMap = function()
-	loadMap( "assets/map/dev.lua" );
+	loadMap( "dev" );
 end
 
 CLI:addCommand( "testMap", testMap );
