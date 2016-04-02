@@ -1,0 +1,15 @@
+{
+	"version": "0.1.0",
+	"configurations": [
+		{
+			"name": "Launch Game",
+			"type": "extensionHost",
+			"request": "launch",
+			"runtimeExecutable": "${workspaceRoot}/game/run_game.bat",
+			"args": [],
+			"stopOnEntry": false,
+			"sourceMaps": false,
+            "preLaunchTask": ""
+		}
+	]
+}

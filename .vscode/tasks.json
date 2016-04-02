@@ -1,0 +1,56 @@
+// Available variables which can be used inside of strings.
+// ${workspaceRoot}: the root folder of the team
+// ${file}: the current opened file
+// ${fileBasename}: the current opened file's basename
+// ${fileDirname}: the current opened file's dirname
+// ${fileExtname}: the current opened file's extension
+// ${cwd}: the current working directory of the spawned process
+
+{
+	"version": "0.1.0",
+	"isShellCommand": false,
+	"suppressTaskName": true,
+	"showOutput": "always",
+	"windows": {
+		"command": "cmd",
+		"args": ["/C"]
+	},
+	
+    "tasks": [
+        {
+			"taskName": "Run Game Tests",
+			"isTestCommand": true,
+			"args": [		"cd", "${workspaceRoot}\\game",
+					"&",	"luajit", "Tests.lua"
+					],
+			"problemMatcher": {
+				"owner": "lua",
+				"fileLocation": ["relative", "${workspaceRoot}\\game"],
+				"pattern": {
+					"regexp": "^(.*):(\\d+):\\s+(.*)$",
+					"file": 1,
+					"line": 2,
+					"message": 3
+				}
+			}
+        },
+		
+		{
+			"taskName": "Build Beryl Release (Windows)",
+			"isBuildCommand": true,
+			"args": [		"msbuild", "/p:Configuration=Release", "${workspaceRoot}\\source\\code\\beryl\\beryl.sln",
+					"&",	"copy", "${workspaceRoot}\\source\\code\\beryl\\bin\\Release\\beryl.dll", "${workspaceRoot}\\game\\beryl.dll"
+					],
+			"problemMatcher": "$msCompile"
+		},
+		
+		{
+			"taskName": "Build Beryl Debug (Windows)",
+			"args": [		"msbuild", "/p:Configuration=Debug", "${workspaceRoot}\\source\\code\\beryl\\beryl.sln",
+					"&",	"copy", "${workspaceRoot}\\source\\code\\beryl\\bin\\Debug\\beryl.dll", "${workspaceRoot}\\game\\beryl.dll"
+					],
+			"problemMatcher": "$msCompile"
+		}
+		
+    ]
+}
