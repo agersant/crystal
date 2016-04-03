@@ -88,16 +88,6 @@ local walkControls = function( self )
 	end
 end
 
-local attackControls = function( self )
-	while true do
-		self:waitForCommandPress( "attack" );
-		if self:isIdle() then
-			self:doAction( Actions.attack );
-		end
-		self:waitFrame();
-	end
-end
-
 local skillControls = function( skillIndex )
 	return function( self )
 		local entity = self:getEntity();
@@ -115,7 +105,6 @@ end
 local playerControllerScript = function( self )
 	addDirectionControls( self );
 	self:thread( walkControls );
-	self:thread( attackControls );
 	for i = 1, 4 do
 		self:thread( skillControls( i ) );
 	end

@@ -1,4 +1,5 @@
 require( "src/utils/OOP" );
+local ComboAttack = require( "src/content/skill/ComboAttack" );
 local Sprite = require( "src/graphics/Sprite" );
 local Assets = require( "src/resources/Assets" );
 local Entity = require( "src/scene/entity/Entity" );
@@ -21,6 +22,8 @@ Warrior.init = function( self, scene )
 	self:setUseSpriteHitboxData( true );
 	self:addScriptRunner();
 	self:addCombatLogic();
+	
+	self:addSkill( ComboAttack:new( self ) );
 end
 
 

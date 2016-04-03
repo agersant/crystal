@@ -50,7 +50,11 @@ end
 CombatData.setSkill = function( self, index, skill )
 	assert( index > 0 );
 	local oldSkill = self:getSkill( index );
+	if oldSkill then
+		self._entity:removeScript( oldSkill );
+	end
 	self._skills[index] = skill;
+	self._entity:addScript( skill );
 end
 
 CombatData.getSkill = function( self, index )

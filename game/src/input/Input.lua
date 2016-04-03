@@ -20,6 +20,7 @@ Input.init = function( self )
 	player1Device:addBinding( "moveUp", "up" );
 	player1Device:addBinding( "moveDown", "down" );
 	player1Device:addBinding( "attack", "z" );
+	player1Device:addBinding( "useSkill1", "q" );
 end
 
 Input.getDevice = function( self, index )

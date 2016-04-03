@@ -16,6 +16,10 @@ end
 Skill.run = function()
 end
 
+Skill.use = function( self )
+	self:signal( "useSkill" );
+end
+
 
 
 return Skill;
