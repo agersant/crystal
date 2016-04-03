@@ -20,9 +20,7 @@ end
 
 Controller.addScript = function( self, script )
 	table.insert( self._newScripts, script );
-	if self._runningScripts then
-		script:update( 0 );
-	end
+	script:update( 0 );
 end
 
 Controller.removeScript = function( self, script )
@@ -40,11 +38,9 @@ Controller.update = function( self, dt )
 	end
 	self._newScripts = {};
 	
-	self._runningScripts = true;
 	for i, script in ipairs( self._scripts ) do
 		script:update( dt );
 	end
-	self._runningScripts = false;
 	
 	for i = #self._scripts, 1, -1 do
 		local script = self._scripts[i];

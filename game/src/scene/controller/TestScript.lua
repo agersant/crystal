@@ -9,7 +9,8 @@ local tests = {};
 tests[#tests + 1] = { name = "Script runs" };
 tests[#tests].body = function()
 	local a = 0;
-	local script = Script:new( {}, function()
+	local entity = Entity:new( Scene:new() );
+	local script = Script:new( entity, function( self )
 		a = a + 1;
 	end	);
 	assert( a == 0 );
@@ -22,7 +23,8 @@ end
 tests[#tests + 1] = { name = "Wait frame" };
 tests[#tests].body = function()
 	local a = 0;
-	local script = Script:new( {}, function( self )
+	local entity = Entity:new( Scene:new() );
+	local script = Script:new( entity, function( self )
 		self:waitFrame();
 		a = a + 1;
 	end	);
@@ -35,7 +37,8 @@ end
 tests[#tests + 1] = { name = "Wait duration" };
 tests[#tests].body = function()
 	local a = 0;
-	local script = Script:new( {}, function( self )
+	local entity = Entity:new( Scene:new() );
+	local script = Script:new( entity, function( self )
 		self:wait( 1 );
 		a = a + 1;
 	end	);
@@ -50,8 +53,7 @@ tests[#tests + 1] = { name = "Wait for" };
 tests[#tests].body = function()
 	local a = 0;
 	local entity = Entity:new( Scene:new() );
-	local controller = Controller:new( entity );
-	local script = Script:new( controller, function( self )
+	local script = Script:new( entity, function( self )
 		self:waitFor( "testSignal" );
 		a = a + 1;
 	end	);
@@ -65,8 +67,7 @@ tests[#tests + 1] = { name = "Successive wait for" };
 tests[#tests].body = function()
 	local a = 0;
 	local entity = Entity:new( Scene:new() );
-	local controller = Controller:new( entity );
-	local script = Script:new( controller, function( self )
+	local script = Script:new( entity, function( self )
 		self:waitFor( "test1" );
 		a = 1;
 		self:waitFor( "test2" );
@@ -86,8 +87,7 @@ tests[#tests + 1] = { name = "Wait for any" };
 tests[#tests].body = function()
 	local a = 0;
 	local entity = Entity:new( Scene:new() );
-	local controller = Controller:new( entity );
-	local script = Script:new( controller, function( self )
+	local script = Script:new( entity, function( self )
 		self:waitForAny( { "testSignal", "gruik" } );
 		a = a + 1;
 	end	);
@@ -104,7 +104,8 @@ end
 tests[#tests + 1] = { name = "Start thread" };
 tests[#tests].body = function()
 	local a = 0;
-	local script = Script:new( {}, function( self )
+	local entity = Entity:new( Scene:new() );
+	local script = Script:new( entity, function( self )
 		local t = self:thread( function( self )
 			self:waitFrame();
 			a = 1;
@@ -120,7 +121,8 @@ end
 tests[#tests + 1] = { name = "Stop thread" };
 tests[#tests].body = function()
 	local a = 0;
-	local script = Script:new( {}, function( self )
+	local entity = Entity:new( Scene:new() );
+	local script = Script:new( entity, function( self )
 		local t = self:thread( function( self )
 			self:waitFrame();
 			a = 1;
@@ -137,8 +139,7 @@ tests[#tests + 1] = { name = "Signal additional data" };
 tests[#tests].body = function()
 	local a = 0;
 	local entity = Entity:new( Scene:new() );
-	local controller = Controller:new( entity );
-	local script = Script:new( controller, function( self )
+	local script = Script:new( entity, function( self )
 		a = self:waitFor( "testSignal" );
 	end	);
 	assert( a == 0 );
@@ -153,8 +154,7 @@ tests[#tests].body = function()
 	local a = 0;
 	local s = "";
 	local entity = Entity:new( Scene:new() );
-	local controller = Controller:new( entity );
-	local script = Script:new( controller, function( self )
+	local script = Script:new( entity, function( self )
 		s, a = self:waitForAny( { "testSignal", "gruik" } );
 	end	);
 	assert( a == 0 );
@@ -169,8 +169,7 @@ tests[#tests + 1] = { name = "End on" };
 tests[#tests].body = function()
 	local a = 0;
 	local entity = Entity:new( Scene:new() );
-	local controller = Controller:new( entity );
-	local script = Script:new( controller, function( self )
+	local script = Script:new( entity, function( self )
 		self:endOn( "end" );
 		self:waitFrame();
 		a = 1;
@@ -186,8 +185,7 @@ tests[#tests + 1] = { name = "Unblock after end on" };
 tests[#tests].body = function()
 	local a = 0;
 	local entity = Entity:new( Scene:new() );
-	local controller = Controller:new( entity );
-	local script = Script:new( controller, function( self )
+	local script = Script:new( entity, function( self )
 		self:endOn( "end" );
 		self:waitFor( "signal" );
 		a = 1;
@@ -203,7 +201,8 @@ end
 tests[#tests + 1] = { name = "End child threads after main thread ends" };
 tests[#tests].body = function()
 	local a = 0;
-	local script = Script:new( {}, function( self )
+	local entity = Entity:new( Scene:new() );
+	local script = Script:new( entity, function( self )
 		self:thread( function() self:waitFrame(); a = 1; end );
 	end	);
 	script:update( 0 );

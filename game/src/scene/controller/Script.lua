@@ -1,5 +1,6 @@
 require( "src/utils/OOP" );
 local Log = require( "src/dev/Log" );
+local Entity = require( "src/scene/entity/Entity" );
 local TableUtils = require( "src/utils/TableUtils" );
 
 local Script = Class( "Script" );
@@ -149,6 +150,7 @@ end
 
 Script.init = function( self, entity, scriptFunction )
 	assert( entity );
+	assert( entity:isInstanceOf( Entity ) );
 	assert( type( scriptFunction ) == "function" );
 	self._entity = entity;
 	self._time = 0;
@@ -170,6 +172,10 @@ Script.getController = function( self )
 end
 
 Script.update = function( self, dt )
+	
+	if not self:getEntity():getScene():canProcessSignals() then
+		return;
+	end
 	
 	-- Process queued signals
 	for _, signalData in ipairs( self._queuedSignals ) do

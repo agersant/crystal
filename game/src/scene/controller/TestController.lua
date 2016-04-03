@@ -9,20 +9,19 @@ local tests = {};
 tests[#tests + 1] = { name = "Add script" };
 tests[#tests].body = function()
 	local a = 0;
-	local controller = Controller:new( Entity:new( Scene:new() ) );
-	local script = Script:new( controller, function( self )
-		local controller = self:getController();
-		local script = Script:new( controller, function( self )
-			a = a + 1;
-			self:waitFrame();
-			a = a + 1;
-		end );
+	local entity = Entity:new( Scene:new() );
+	local controller = Controller:new( entity );
+	local script = Script:new( entity, function( self )
+		local script = Script:new( entity, function( self )
+ 			a = a + 1;
+ 			self:waitFrame();
+ 			a = a + 1;
+ 		end );
 		controller:addScript( script );
 		a = 3;
 	end );
-	controller:addScript( script );
 	assert( a == 0 );
-	controller:update( 0 );
+	controller:addScript( script );
 	assert( a == 3 );
 	controller:update( 0 );
 	assert( a == 4 );
