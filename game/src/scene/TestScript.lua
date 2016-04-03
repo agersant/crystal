@@ -1,7 +1,7 @@
 assert( gUnitTesting );
-local Script = require( "src/scene/controller/Script" );
-local Entity = require( "src/scene/entity/Entity" );
 local Scene = require( "src/scene/Scene" );
+local Script = require( "src/scene/Script" );
+local Entity = require( "src/scene/entity/Entity" );
 
 local tests = {};
 

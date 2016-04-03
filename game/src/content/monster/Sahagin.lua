@@ -2,10 +2,10 @@ require( "src/utils/OOP" );
 local Movement = require( "src/ai/movement/Movement" );
 local Sprite = require( "src/graphics/Sprite" );
 local Assets = require( "src/resources/Assets" );
-local Controller = require( "src/scene/component/Controller" );
-local Script = require( "src/scene/controller/Script" );
-local Entity = require( "src/scene/entity/Entity" );
 local Actions = require( "src/scene/Actions" );
+local Script = require( "src/scene/Script" );
+local Controller = require( "src/scene/component/Controller" );
+local Entity = require( "src/scene/entity/Entity" );
 
 local Sahagin = Class( "Sahagin", Entity );
 local SahaginController = Class( "SahaginController", Controller );

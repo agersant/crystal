@@ -1,7 +1,7 @@
 require( "src/utils/OOP" );
 local Teams = require( "src//combat/Teams" );
 local Actions = require( "src/scene/Actions" );
-local Script = require( "src/scene/controller/Script" );
+local Script = require( "src/scene/Script" );
 
 local CombatLogic = Class( "CombatLogic", Script );
 

@@ -1,5 +1,5 @@
 require( "src/utils/OOP" );
-local Script = require( "src/scene/controller/Script" );
+local Script = require( "src/scene/Script" );
 
 local Skill = Class( "Skill", Script );
 

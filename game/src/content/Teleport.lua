@@ -2,8 +2,8 @@ require( "src/utils/OOP" );
 local PlayerSave = require( "src/persistence/PlayerSave" );
 local MapScene = require( "src/scene/MapScene" );
 local Scene = require( "src/scene/Scene" );
+local Script = require( "src/scene/Script" );
 local Controller = require( "src/scene/component/Controller" );
-local Script = require( "src/scene/controller/Script" );
 local Entity = require( "src/scene/entity/Entity" );
 
 local Teleport = Class( "Teleport", Entity );
