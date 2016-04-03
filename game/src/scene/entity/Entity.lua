@@ -323,6 +323,20 @@ Entity.getTeam = function( self )
 	return self._combatComponent:getTeam();
 end
 
+Entity.addSkill = function( self, skill )
+	assert( self._combatComponent );
+	self._combatComponent:addSkill( skill );
+end
+
+Entity.setSkill = function( self, index, skill )
+	assert( self._combatComponent );
+	self._combatComponent:setSkill( index, skill );
+end
+
+Entity.getSkill = function( self, index )
+	assert( self._combatComponent );
+	return self._combatComponent:getSkill( index );
+end
 
 
 -- CORE
