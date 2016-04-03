@@ -1,5 +1,5 @@
 require( "src/utils/OOP" );
-local Teams = require( "src/scene/combat/Teams" );
+local Teams = require( "src/combat/Teams" );
 
 local TargetSelector = Class( "TargetSelector" );
 

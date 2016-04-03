@@ -3,14 +3,71 @@ local Input = require( "src/input/Input" );
 local Actions = require( "src/scene/Actions" );
 local InputDrivenController = require( "src/scene/controller/InputDrivenController" );
 local Script = require( "src/scene/controller/Script" );
-local CombatLogic = require( "src/scene/combat/CombatLogic" );
-local PlayerDirectionControls = require( "src/scene/controller/PlayerDirectionControls" );
 
 local PlayerController = Class( "PlayerController", InputDrivenController );
 
 
 
 -- CONTROLS
+
+local addDirectionControls = function( self )
+	self:thread( function( self )
+		while true do
+			self:waitForCommandPress( "moveLeft" );
+			self._lastXDirInput = -1;
+		end
+	end );
+	
+	self:thread( function( self )
+		while true do
+			self:waitForCommandPress( "moveRight" );
+			self._lastXDirInput = 1;
+		end
+	end );
+	
+	self:thread( function( self )
+		while true do
+			self:waitForCommandPress( "moveUp" );
+			self._lastYDirInput = -1;
+		end
+	end );
+	
+	self:thread( function( self )
+		while true do
+			self:waitForCommandPress( "moveDown" );
+			self._lastYDirInput = 1;
+		end
+	end );
+	
+	self:thread( function( self )
+		local entity = self:getEntity();
+			local controller = self:getController();
+			while true do
+				if controller:isIdle() then
+					local inputDevice = controller:getInputDevice();
+					local left = inputDevice:isCommandActive( "moveLeft" );
+					local right = inputDevice:isCommandActive( "moveRight" );
+					local up = inputDevice:isCommandActive( "moveUp" );
+					local down = inputDevice:isCommandActive( "moveDown" );
+					if left or right or up or down then
+						local xDir, yDir;
+						if left and right then
+							xDir = self._lastXDirInput;
+						else
+							xDir = left and -1 or right and 1 or 0;
+						end
+						if up and down then
+							yDir = self._lastYDirInput;
+						else
+							yDir = up and -1 or down and 1 or 0;
+						end
+						entity:setDirection8( xDir, yDir );
+					end
+				end
+				self:waitFrame();
+			end
+	end );
+end
 
 local walkControls = function( self )
 	local entity = self:getEntity();
@@ -55,18 +112,20 @@ local skillControls = function( skillIndex )
 	end
 end	
 
+local playerControllerScript = function( self )
+	addDirectionControls( self );
+	self:thread( walkControls );
+	self:thread( attackControls );
+	for i = 1, 4 do
+		self:thread( skillControls( i ) );
+	end
+end
 
 
 -- PUBLIC API
 
 PlayerController.init = function( self, entity, playerIndex )
-	PlayerController.super.init( self, entity, playerIndex );
-	self:addScript( CombatLogic:new( entity ) );
-	self:addScript( PlayerDirectionControls:new( entity ) );
-	self:addScript( Script:new( entity, walkControls ) );
-	for i = 1, 4 do
-		self:addScript( Script:new( entity, skillControls( i ) ) );
-	end
+	PlayerController.super.init( self, entity, playerControllerScript, playerIndex );
 end
 
 

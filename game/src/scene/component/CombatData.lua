@@ -1,9 +1,9 @@
 require( "src/utils/OOP" );
-local Stat = require( "src/scene/entity/Stat" );
-local Damage = require( "src/scene/combat/Damage" );
-local Teams = require( "src/scene/combat/Teams" );
+local Stat = require( "src/combat/Stat" );
+local Damage = require( "src/combat/Damage" );
+local Teams = require( "src/combat/Teams" );
 
-local CombatComponent = Class( "CombatComponent" );
+local CombatData = Class( "CombatData" );
 
 
 
@@ -21,7 +21,7 @@ end
 
 -- PUBLIC API
 
-CombatComponent.init = function( self, entity )
+CombatData.init = function( self, entity )
 	assert( entity );
 	self:setTeam( Teams.wild );
 	self._entity = entity;
@@ -34,34 +34,31 @@ CombatComponent.init = function( self, entity )
 	self._skills = {};
 end
 
-CombatComponent.setTeam = function( self, team )
+CombatData.setTeam = function( self, team )
 	assert( Teams:isValid( team ) );
 	self._team = team;
 end
 
-CombatComponent.getTeam = function( self )
+CombatData.getTeam = function( self )
 	return self._team;
 end
 
-CombatComponent.addSkill = function( self, skill )
-	table.insert( self._skills, skill );	
+CombatData.addSkill = function( self, skill )
+	self:setSkill( 1 + #self._skills, skill );
 end
 
-CombatComponent.setSkill = function( self, index, skill )
+CombatData.setSkill = function( self, index, skill )
 	assert( index > 0 );
 	local oldSkill = self:getSkill( index );
-	if oldSkill then
-		oldSkill:cleanup();
-	end
 	self._skills[index] = skill;
 end
 
-CombatComponent.getSkill = function( self, index )
+CombatData.getSkill = function( self, index )
 	assert( index > 0 );
 	return self._skills[index];
 end
 
-CombatComponent.inflictDamageTo = function( self, target )
+CombatData.inflictDamageTo = function( self, target )
 	local effectiveStrength = self._strength:getValue() * self._attackRating:getValue();
 	local isCrit = math.random() < self._critRate:getValue();
 	if isCrit then
@@ -71,7 +68,7 @@ CombatComponent.inflictDamageTo = function( self, target )
 	target:receiveDamage( damage );
 end
 
-CombatComponent.receiveDamage = function( self, damage )
+CombatData.receiveDamage = function( self, damage )
 	if self:isDead() then
 		return;
 	end
@@ -83,10 +80,10 @@ CombatComponent.receiveDamage = function( self, damage )
 	end
 end
 
-CombatComponent.isDead = function( self )
+CombatData.isDead = function( self )
 	return self._health:getValue() == 0;
 end
 
 
 
-return CombatComponent;
+return CombatData;

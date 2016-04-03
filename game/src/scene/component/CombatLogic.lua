@@ -1,13 +1,12 @@
 require( "src/utils/OOP" );
+local Teams = require( "src//combat/Teams" );
 local Actions = require( "src/scene/Actions" );
-local Teams = require( "src/scene/combat/Teams" );
-local Controller = require( "src/scene/controller/Controller" );
 local Script = require( "src/scene/controller/Script" );
 
 local CombatLogic = Class( "CombatLogic", Script );
 
 
-local logic  = function( self )
+local logic = function( self )
 	
 	self:thread( function( self )
 		local entity = self:getEntity();

@@ -1,6 +1,6 @@
 require( "src/utils/OOP" );
 local Input = require( "src/input/Input" );
-local Controller = require( "src/scene/controller/Controller" );
+local Controller = require( "src/scene/component/Controller" );
 
 local InputDrivenController = Class( "InputDrivenController", Controller );
 
@@ -18,8 +18,8 @@ end
 
 -- PUBLIC API
 
-InputDrivenController.init = function( self, entity, playerIndex )
-	InputDrivenController.super.init( self, entity );
+InputDrivenController.init = function( self, entity, scriptContent, playerIndex )
+	InputDrivenController.super.init( self, entity, scriptContent );
 	self._playerIndex = playerIndex;
 	self._inputDevice = Input:getDevice( playerIndex );
 end

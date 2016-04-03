@@ -16,9 +16,11 @@ Warrior.init = function( self, scene )
 	self:addPhysicsBody( "dynamic" );
 	self:addLocomotion();
 	self:addCollisionPhysics();
-	self:addCombatComponent();
+	self:addCombatData();
 	self:setCollisionRadius( 6 );
 	self:setUseSpriteHitboxData( true );
+	self:addScriptRunner();
+	self:addCombatLogic();
 end
 
 

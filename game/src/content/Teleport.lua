@@ -2,7 +2,7 @@ require( "src/utils/OOP" );
 local PlayerSave = require( "src/persistence/PlayerSave" );
 local MapScene = require( "src/scene/MapScene" );
 local Scene = require( "src/scene/Scene" );
-local Controller = require( "src/scene/controller/Controller" );
+local Controller = require( "src/scene/component/Controller" );
 local Script = require( "src/scene/controller/Script" );
 local Entity = require( "src/scene/entity/Entity" );
 
@@ -60,8 +60,7 @@ local teleportScript = function( self )
 end
 
 TeleportController.init = function( self, entity )
-	TeleportController.super.init( self, entity );
-	self:addScript( Script:new( entity, teleportScript ) );
+	TeleportController.super.init( self, entity, teleportScript );
 end
 
 
@@ -76,6 +75,7 @@ Teleport.init = function( self, scene, options )
 	Teleport.super.init( self, scene );
 	self:addPhysicsBody( "static" );
 	self:addTrigger( options.shape );
+	self:addScriptRunner();
 	self:addController( TeleportController:new( self ) );
 	self:setPosition( options.x, options.y );
 	

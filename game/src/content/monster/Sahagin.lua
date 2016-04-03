@@ -2,8 +2,7 @@ require( "src/utils/OOP" );
 local Movement = require( "src/ai/movement/Movement" );
 local Sprite = require( "src/graphics/Sprite" );
 local Assets = require( "src/resources/Assets" );
-local CombatLogic = require( "src/scene/combat/CombatLogic" );
-local Controller = require( "src/scene/controller/Controller" );
+local Controller = require( "src/scene/component/Controller" );
 local Script = require( "src/scene/controller/Script" );
 local Entity = require( "src/scene/entity/Entity" );
 local Actions = require( "src/scene/Actions" );
@@ -45,9 +44,7 @@ local controllerScript = function( self )
 end
 
 SahaginController.init = function( self, entity )
-	SahaginController.super.init( self, entity );
-	self:addScript( CombatLogic:new( entity ) );
-	self:addScript( Script:new( entity, controllerScript ) );
+	SahaginController.super.init( self, entity, controllerScript );
 end
 
 
@@ -61,9 +58,11 @@ Sahagin.init = function( self, scene )
 	self:addPhysicsBody( "dynamic" );
 	self:addLocomotion();
 	self:addCollisionPhysics();
-	self:addCombatComponent();
+	self:addCombatData();
 	self:setCollisionRadius( 4 );
 	self:setUseSpriteHitboxData( true );
+	self:addScriptRunner();
+	self:addCombatLogic();
 	self:addController( SahaginController:new( self ) );
 end
 

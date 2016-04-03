@@ -1,6 +1,5 @@
 require( "src/utils/OOP" );
 local Log = require( "src/dev/Log" );
-local Entity = require( "src/scene/entity/Entity" );
 local TableUtils = require( "src/utils/TableUtils" );
 
 local Script = Class( "Script" );
@@ -21,6 +20,7 @@ local newThread = function( self, parentThread, script, options )
 		childThreads = {},
 		blockedBy = {},
 		endsOn = {},
+		allowOrphans = options.allowOrphans,
 		isDead = function( thread )
 			return coroutine.status( thread.coroutine ) == "dead" or thread.isEnded;
 		end,
@@ -86,12 +86,14 @@ endThread = function( self, thread )
 		thread.parentThread.childThreads[thread] = nil;
 		thread.parentThread = nil;
 	end
-	local childThreadsCopy = {};
-	for childThread, _  in pairs( thread.childThreads ) do
-		table.insert( childThreadsCopy, childThread );
-	end
-	for i, childThread  in ipairs( childThreadsCopy ) do
-		endThread( self, childThread );
+	if not thread.allowOrphans then
+		local childThreadsCopy = {};
+		for childThread, _  in pairs( thread.childThreads ) do
+			table.insert( childThreadsCopy, childThread );
+		end
+		for i, childThread  in ipairs( childThreadsCopy ) do
+			endThread( self, childThread );
+		end
 	end
 end
 
@@ -108,7 +110,7 @@ pumpThread = function( self, thread, resumeArgs )
 		if not success then
 			Log:error( a );
 		elseif a == "fork" then
-			local childThread = newThread( self, thread, b, { pumpImmediately = true } );
+			local childThread = newThread( self, thread, b, { pumpImmediately = true, allowOrphans = false, } );
 			pumpThread( self, thread, childThread );
 		elseif a == "waitForSignals" then
 			blockThread( self, thread, b );
@@ -150,7 +152,6 @@ end
 
 Script.init = function( self, entity, scriptFunction )
 	assert( entity );
-	assert( entity:isInstanceOf( Entity ) );
 	assert( type( scriptFunction ) == "function" );
 	self._entity = entity;
 	self._time = 0;
@@ -160,7 +161,7 @@ Script.init = function( self, entity, scriptFunction )
 	self._blockedThreads = {};
 	self._endableThreads = {};
 	self._queuedSignals = {};
-	newThread( self, nil, scriptFunction, { pumpImmediately = false } );
+	newThread( self, nil, scriptFunction, { pumpImmediately = false, allowOrphans = true, } );
 end
 
 Script.getEntity = function( self )

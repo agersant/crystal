@@ -1,6 +1,7 @@
 require( "src/utils/OOP" );
 local Log = require( "src/dev/Log" );
 local TargetSelector = require( "src/ai/tactics/TargetSelector" );
+local Teams = require( "src/combat/Teams" );
 local Party = require( "src/persistence/Party" );
 local PartyMember = require( "src/persistence/PartyMember" );
 local Assets = require( "src/resources/Assets" );
@@ -8,7 +9,6 @@ local Colors = require( "src/resources/Colors" );
 local CollisionFilters = require( "src/scene/CollisionFilters" );
 local Camera = require( "src/scene/Camera" );
 local Scene = require( "src/scene/Scene" );
-local Teams = require( "src/scene/combat/Teams" );
 local Entity = require( "src/scene/entity/Entity" );
 local TableUtils = require( "src/utils/TableUtils" );
 

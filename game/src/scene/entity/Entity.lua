@@ -1,8 +1,10 @@
 require( "src/utils/OOP" );
 local Colors = require( "src/resources/Colors" );
 local CollisionFilters = require( "src/scene/CollisionFilters" );
-local CombatComponent = require( "src/scene/combat/CombatComponent" );
-local Stat = require( "src/scene/entity/Stat" );
+local CombatData = require( "src/scene/component/CombatData" );
+local CombatLogic = require( "src/scene/component/CombatLogic" );
+local ScriptRunner = require( "src/scene/component/ScriptRunner" );
+local Stat = require( "src/combat/Stat" );
 local MathUtils = require( "src/utils/MathUtils" );
 
 local Entity = Class( "Entity" );
@@ -262,22 +264,44 @@ end
 
 
 
+-- SCRIPT COMPONENT
+
+Entity.addScriptRunner = function( self )
+	self._scriptRunner = ScriptRunner:new( self );
+end
+
+Entity.addScript = function( self, script )
+	assert( self._scriptRunner );
+	self._scriptRunner:addScript( script );
+end
+
+Entity.removeScript = function( self, script )
+	assert( self._scriptRunner );
+	self._scriptRunner:removeScript( script );
+end
+
+Entity.signal = function( self, signal, ... )
+	if not self._scriptRunner then
+		return;
+	end
+	self._scriptRunner:signal( signal, ... );
+end
+
+
+
 -- CONTROLLER COMPONENT
 
 Entity.addController = function( self, controllerClass, ... )
+	if self._controller then
+		self:removeScript( self._controller );
+	end
 	self._controller = controllerClass:new( self, ... );
+	self:addScript( self._controller );
 	assert( self._controller );
 end
 
 Entity.getController = function( self )
 	return self._controller;
-end
-
-Entity.signal = function( self, signal, ... )
-	if not self._controller then
-		return;
-	end
-	self._controller:signal( signal, ... );
 end
 
 Entity.getAssignedPlayer = function( self )
@@ -300,31 +324,41 @@ end
 
 
 
--- COMBAT COMPONENT
+-- COMBAT DATA COMPONENT
 
-Entity.addCombatComponent = function( self )
-	assert( not self._combatComponent );
-	self._combatComponent = CombatComponent:new( self );
+Entity.addCombatData = function( self )
+	assert( not self._combatData );
+	self._combatData = CombatData:new( self );
 end
 
 Entity.inflictDamageTo = function( self, target )
-	assert( self._combatComponent );
-	self._combatComponent:inflictDamageTo( target );
+	assert( self._combatData );
+	self._combatData:inflictDamageTo( target );
 end
 
 Entity.receiveDamage = function( self, damage )
-	assert( self._combatComponent );
-	self._combatComponent:receiveDamage( damage );
+	assert( self._combatData );
+	self._combatData:receiveDamage( damage );
 end
 
 Entity.setTeam = function( self, team )
-	assert( self._combatComponent );
-	self._combatComponent:setTeam( team );
+	assert( self._combatData );
+	self._combatData:setTeam( team );
 end
 
 Entity.getTeam = function( self )
-	assert( self._combatComponent );
-	return self._combatComponent:getTeam();
+	assert( self._combatData );
+	return self._combatData:getTeam();
+end
+
+
+
+-- COMBAT LOGIC COMPONENT
+
+Entity.addCombatLogic = function( self )
+	assert( not self._combatLogic );
+	self._combatLogic = CombatLogic:new( self );
+	self:addScript( self._combatLogic );
 end
 
 
@@ -340,12 +374,12 @@ Entity.isDrawable = function( self )
 end
 
 Entity.isCombatable = function( self )
-	return self._combatComponent;
+	return self._combatData;
 end
 
 Entity.update = function( self, dt )
-	if self._controller then
-		self._controller:update( dt );
+	if self._scriptRunner then
+		self._scriptRunner:update( dt );
 	end
 	if self._sprite then
 		local animationWasOver = self._sprite:isAnimationOver();

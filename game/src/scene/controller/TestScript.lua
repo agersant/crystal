@@ -1,5 +1,4 @@
 assert( gUnitTesting );
-local Controller = require( "src/scene/controller/Controller" );
 local Script = require( "src/scene/controller/Script" );
 local Entity = require( "src/scene/entity/Entity" );
 local Scene = require( "src/scene/Scene" );
@@ -198,12 +197,30 @@ tests[#tests].body = function()
 	assert( a == 0 );
 end
 
-tests[#tests + 1] = { name = "End child threads after main thread ends" };
+tests[#tests + 1] = { name = "Keep child threads after main thread ends" };
 tests[#tests].body = function()
 	local a = 0;
 	local entity = Entity:new( Scene:new() );
 	local script = Script:new( entity, function( self )
 		self:thread( function() self:waitFrame(); a = 1; end );
+	end	);
+	script:update( 0 );
+	assert( a == 0 );
+	script:update( 0 );
+	assert( a == 1 );
+end
+
+tests[#tests + 1] = { name = "End grand-child threads after owner ends" };
+tests[#tests].body = function()
+	local a = 0;
+	local entity = Entity:new( Scene:new() );
+	local script = Script:new( entity, function( self )
+		self:thread( function()
+			self:thread( function()
+				self:waitFrame();
+				a = 1;
+			end );
+		end );
 	end	);
 	script:update( 0 );
 	assert( a == 0 );

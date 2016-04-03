@@ -12,7 +12,6 @@ local testFiles = {
 	"src/persistence/TestPartyMember",
 	"src/resources/map/TestMapCollisionChainData",
 	"src/resources/map/TestNavmesh",
-	"src/scene/controller/TestController",
 	"src/scene/controller/TestScript",
 	"src/ui/TestTextInput",
 	"src/utils/TestMathUtils",
