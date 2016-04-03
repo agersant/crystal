@@ -147,10 +147,10 @@ end
 
 -- PUBLIC API
 
-Script.init = function( self, controller, scriptFunction )
-	assert( controller );
+Script.init = function( self, entity, scriptFunction )
+	assert( entity );
 	assert( type( scriptFunction ) == "function" );
-	self._controller = controller;
+	self._entity = entity;
 	self._time = 0;
 	self._dt = 0;
 	self._threads = {};
@@ -161,8 +161,12 @@ Script.init = function( self, controller, scriptFunction )
 	newThread( self, nil, scriptFunction, { pumpImmediately = false } );
 end
 
+Script.getEntity = function( self )
+	return self._entity;
+end
+
 Script.getController = function( self )
-	return self._controller;
+	return self._entity:getController();
 end
 
 Script.update = function( self, dt )
@@ -209,7 +213,7 @@ Script.update = function( self, dt )
 end
 
 Script.signal = function( self, signal, ... )
-	if not self._controller:getEntity():getScene():canProcessSignals() then
+	if not self:getEntity():getScene():canProcessSignals() then
 		table.insert( self._queuedSignals, { name = signal, userData = { ... } } );
 		return;
 	end
@@ -254,7 +258,7 @@ end
 
 Script.waitForCommandPress = function( self, command )
 	while true do
-		local inputDevice = self:getController():getInputDevice();
+		local inputDevice = self:getEntity():getController():getInputDevice();
 		if inputDevice and not inputDevice:isCommandActive( command ) then
 			break;
 		else

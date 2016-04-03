@@ -14,8 +14,7 @@ local TeleportController = Class( "TeleportController", Controller );
 -- IMPLEMENTATION
 
 local doTeleport = function( self, triggeredBy )
-	local teleportController = self:getController();
-	local teleportEntity = teleportController:getEntity();
+	local teleportEntity = self:getEntity();
 	local x, y = teleportEntity:getPosition();
 	local px, py = triggeredBy:getPosition();
 	local dx, dy = px - x, py - y;
@@ -30,8 +29,7 @@ end
 
 
 local teleportScript = function( self )
-	local teleportController = self:getController();
-	local teleportEntity = teleportController:getEntity();
+	local teleportEntity = self:getEntity();
 	self:endOn( "teleportActivated" );
 	while true do
 		local triggeredBy = self:waitFor( "+trigger" );		
@@ -63,7 +61,7 @@ end
 
 TeleportController.init = function( self, entity )
 	TeleportController.super.init( self, entity );
-	self:addScript( Script:new( self, teleportScript ) );
+	self:addScript( Script:new( entity, teleportScript ) );
 end
 
 

@@ -66,7 +66,7 @@ end
 
 Controller.doAction = function( self, actionFunction )
 	assert( self:isIdle() );
-	self._actionScript = Script:new( self, actionFunction );
+	self._actionScript = Script:new( self:getEntity(), actionFunction );
 	self:addScript( self._actionScript );
 end
 
@@ -76,7 +76,7 @@ end
 
 Controller.doTask = function( self, taskFunction )
 	assert( self:isTaskless() );
-	self._taskScript = Script:new( self, taskFunction );
+	self._taskScript = Script:new( self:getEntity(), taskFunction );
 	self:addScript( self._taskScript );
 end
 

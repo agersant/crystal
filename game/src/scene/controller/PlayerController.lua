@@ -13,8 +13,8 @@ local PlayerController = Class( "PlayerController", InputDrivenController );
 -- CONTROLS
 
 local walkControls = function( self )
+	local entity = self:getEntity();
 	local controller = self:getController();
-	local entity = controller:getEntity();
 	while true do
 		if controller:isIdle() then
 			local left = controller:getInputDevice():isCommandActive( "moveLeft" );
@@ -43,8 +43,7 @@ end
 
 local skillControls = function( skillIndex )
 	return function( self )
-		local controller = self:getController();
-		local entity = controller:getEntity();
+		local entity = self:getEntity();
 		local useSkillCommand = "useSkill" .. skillIndex;
 		while true do
 			self:waitForCommandPress( useSkillCommand );
@@ -62,11 +61,11 @@ end
 
 PlayerController.init = function( self, entity, playerIndex )
 	PlayerController.super.init( self, entity, playerIndex );
-	self:addScript( CombatLogic:new( self ) );
-	self:addScript( PlayerDirectionControls:new( self ) );
-	self:addScript( Script:new( self, walkControls ) );
+	self:addScript( CombatLogic:new( entity ) );
+	self:addScript( PlayerDirectionControls:new( entity ) );
+	self:addScript( Script:new( entity, walkControls ) );
 	for i = 1, 4 do
-		self:addScript( Script:new( self, skillControls( i ) ) );
+		self:addScript( Script:new( entity, skillControls( i ) ) );
 	end
 end
 

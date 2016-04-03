@@ -37,6 +37,7 @@ controls = function( self )
 	end );
 	
 	
+	local entity = self:getEntity();
 	local controller = self:getController();
 	while true do
 	
@@ -70,7 +71,7 @@ controls = function( self )
 					yDir = 0;
 				end
 				
-				controller:getEntity():setDirection8( xDir, yDir );
+				entity:setDirection8( xDir, yDir );
 			end
 		end
 		
@@ -83,8 +84,8 @@ end
 
 -- PUBLIC API
 
-PlayerDirectionControls.init = function( self, controller )
-	PlayerDirectionControls.super.init( self, controller, controls );
+PlayerDirectionControls.init = function( self, entity )
+	PlayerDirectionControls.super.init( self, entity, controls );
 end
 
 

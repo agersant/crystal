@@ -11,8 +11,8 @@ local Movement = Class( "Movement" );
 -- IMPLEMENTATION
 
 local stepTowards = function( self, targetX, targetY )
+	local entity = self:getEntity();
 	local controller = self:getController();
-	local entity = controller:getEntity();
 	if controller:isIdle() then
 		local distToTarget2 = entity:distance2To( targetX, targetY );
 		local epsilon = entity:getMovementSpeed() * self._dt / 2;
@@ -47,8 +47,8 @@ end
 local walkToGoal = function( goal, repathDelay )
 	return function( self )
 		local pathingThread;
+		local entity = self:getEntity();
 		local controller = self:getController();
-		local entity = controller:getEntity();
 		
 		-- Follow path
 		self:thread( function( self )

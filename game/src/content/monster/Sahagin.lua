@@ -14,8 +14,8 @@ local SahaginController = Class( "SahaginController", Controller );
 
 
 local reachAndAttack = function( self )	
+	local entity = self:getEntity();
 	local controller = self:getController();
-	local entity = controller:getEntity();
 	local targetSelector = entity:getScene():getTargetSelector();
 	local target = targetSelector:getNearestEnemy( entity );
 	if not target then
@@ -46,8 +46,8 @@ end
 
 SahaginController.init = function( self, entity )
 	SahaginController.super.init( self, entity );
-	self:addScript( CombatLogic:new( self ) );
-	self:addScript( Script:new( self, controllerScript ) );
+	self:addScript( CombatLogic:new( entity ) );
+	self:addScript( Script:new( entity, controllerScript ) );
 end
 
 

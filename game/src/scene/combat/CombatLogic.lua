@@ -10,8 +10,7 @@ local CombatLogic = Class( "CombatLogic", Script );
 local logic  = function( self )
 	
 	self:thread( function( self )
-		local controller = self:getController();
-		local entity = controller:getEntity();
+		local entity = self:getEntity();
 		while true do
 			local target = self:waitFor( "+giveHit" );
 			if Teams:areEnemies( entity:getTeam(), target:getTeam() ) then
@@ -21,8 +20,8 @@ local logic  = function( self )
 	end );
 	
 	self:thread( function( self )
+		local entity = self:getEntity();
 		local controller = self:getController();
-		local entity = controller:getEntity();
 		while true do
 			local damage = self:waitFor( "takeHit" );
 			entity:signal( "interruptByDamage" );
@@ -38,8 +37,7 @@ local logic  = function( self )
 		end
 	end );
 	
-	local controller = self:getController();
-	local entity = controller:getEntity();
+	local entity = self:getEntity();
 	while true do
 		self:waitFor( "death" );
 		entity:despawn();
@@ -50,8 +48,8 @@ end
 
 -- PUBLIC API
 
-CombatLogic.init = function( self, controller )
-	CombatLogic.super.init( self, controller, logic );
+CombatLogic.init = function( self, entity )
+	CombatLogic.super.init( self, entity, logic );
 end
 
 

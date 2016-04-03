@@ -269,6 +269,10 @@ Entity.addController = function( self, controllerClass, ... )
 	assert( self._controller );
 end
 
+Entity.getController = function( self )
+	return self._controller;
+end
+
 Entity.signal = function( self, signal, ... )
 	if not self._controller then
 		return;
