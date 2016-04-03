@@ -37,13 +37,6 @@ InputDrivenController.update = function( self, dt )
 	InputDrivenController.super.update( self, dt );
 end
 
-InputDrivenController.waitForCommandPress = function( self, command )
-	while self:getInputDevice():isCommandActive( command ) do
-		self:waitFrame();
-	end
-	self:waitFor( "+" .. command );
-end
-
 
 
 return InputDrivenController;

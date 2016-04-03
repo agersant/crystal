@@ -13,7 +13,8 @@ local TeleportController = Class( "TeleportController", Controller );
 -- IMPLEMENTATION
 
 local doTeleport = function( self, triggeredBy )
-	local teleportEntity = self:getEntity();
+	local teleportController = self:getController();
+	local teleportEntity = teleportController:getEntity();
 	local x, y = teleportEntity:getPosition();
 	local px, py = triggeredBy:getPosition();
 	local dx, dy = px - x, py - y;
@@ -26,15 +27,13 @@ local doTeleport = function( self, triggeredBy )
 	Scene:setCurrent( newScene );
 end
 
-TeleportController.init = function( self, entity )
-	TeleportController.super.init( self, entity, self.run );
-end
 
-TeleportController.run = function( self )
-	local teleportEntity = self:getEntity();
+local teleportScript = function( self )
+	local teleportController = self:getController();
+	local teleportEntity = teleportController:getEntity();
 	self:endOn( "teleportActivated" );
 	while true do
-		local triggeredBy = self:waitFor( "+trigger" );
+		local triggeredBy = self:waitFor( "+trigger" );		
 		local watchDirectionThread = self:thread( function( self )
 			while true do
 				self:waitFrame();
@@ -48,7 +47,7 @@ TeleportController.run = function( self )
 					end
 				end
 			end
-		end );
+		end );		
 		self:thread( function( self )
 			while true do
 				local noLongerTriggering = self:waitFor( "-trigger" );
@@ -59,6 +58,10 @@ TeleportController.run = function( self )
 			end
 		end );
 	end
+end
+
+TeleportController.init = function( self, entity )
+	TeleportController.super.init( self, entity, teleportScript );
 end
 
 

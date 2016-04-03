@@ -11,19 +11,20 @@ local Movement = Class( "Movement" );
 -- IMPLEMENTATION
 
 local stepTowards = function( self, targetX, targetY )
-	local entity = self:getEntity();
-	if self:isIdle() then
+	local controller = self:getController();
+	local entity = controller:getEntity();
+	if controller:isIdle() then
 		local distToTarget2 = entity:distance2To( targetX, targetY );
 		local epsilon = entity:getMovementSpeed() * self._dt / 2;
 		if distToTarget2 >= epsilon * epsilon then
 			local x, y = entity:getPosition();
 			local deltaX, deltaY = targetX - x, targetY - y;
 			local angle = math.atan2( deltaY, deltaX );
-			self:doAction( Actions.walk( angle ) );
+			controller:doAction( Actions.walk( angle ) );
 			return false;
 		else
 			entity:setPosition( targetX, targetY );
-			self:doAction( Actions.idle );
+			controller:doAction( Actions.idle );
 			return true;
 		end
 	end
@@ -46,7 +47,8 @@ end
 local walkToGoal = function( goal, repathDelay )
 	return function( self )
 		local pathingThread;
-		local entity = self:getEntity();
+		local controller = self:getController();
+		local entity = controller:getEntity();
 		
 		-- Follow path
 		self:thread( function( self )
@@ -92,8 +94,8 @@ local walkToGoal = function( goal, repathDelay )
 		end
 		self:signal( "endWalkToGoal" );
 		
-		if self:isIdle() then
-			self:doAction( Actions.idle );
+		if controller:isIdle() then
+			controller:doAction( Actions.idle );
 		end
 		
 		local x, y = entity:getPosition();

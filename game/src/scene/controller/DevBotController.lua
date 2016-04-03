@@ -27,8 +27,9 @@ DevBotController.init = function( self, entity )
 	DevBotController.super.init( self, entity, self.run );
 end
 
+-- TODO: fix me
 DevBotController.run = function( self )
-	self._combatLogic = CombatLogic:new( self );
+	self._combatLogic = CombatLogic:new( self:getController() );
 	local entity = self:getEntity();
 	while true do
 		if self:isIdle() then

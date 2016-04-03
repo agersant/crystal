@@ -31,6 +31,7 @@ CombatComponent.init = function( self, entity )
 	self._attackRating = Stat:new( 1.5, 0, nil );
 	self._critRate = Stat:new( .02, 0, 1 );
 	self._critRating = Stat:new( 2, 1, nil );
+	self._skills = {};
 end
 
 CombatComponent.setTeam = function( self, team )
@@ -40,6 +41,24 @@ end
 
 CombatComponent.getTeam = function( self )
 	return self._team;
+end
+
+CombatComponent.addSkill = function( self, skill )
+	table.insert( self._skills, skill );	
+end
+
+CombatComponent.setSkill = function( self, index, skill )
+	assert( index > 0 );
+	local oldSkill = self:getSkill( index );
+	if oldSkill then
+		oldSkill:cleanup();
+	end
+	self._skills[index] = skill;
+end
+
+CombatComponent.getSkill = function( self, index )
+	assert( index > 0 );
+	return self._skills[index];
 end
 
 CombatComponent.inflictDamageTo = function( self, target )

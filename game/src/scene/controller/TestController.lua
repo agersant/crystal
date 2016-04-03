@@ -1,5 +1,6 @@
 assert( gUnitTesting );
 local Controller = require( "src/scene/controller/Controller" );
+local Script = require( "src/scene/controller/Script" );
 local Entity = require( "src/scene/entity/Entity" );
 local Scene = require( "src/scene/Scene" );
 
@@ -94,15 +95,17 @@ tests[#tests].body = function()
 	assert( a == 1 );
 end
 
-tests[#tests + 1] = { name = "Start thread" };
+tests[#tests + 1] = { name = "Add script" };
 tests[#tests].body = function()
 	local a = 0;
 	local controller = Controller:new( Entity:new( Scene:new() ), function( self )
-		self:thread( function( self )
+		local controller = self:getController();
+		local script = Script:new( controller, function( self )
 			a = a + 1;
 			self:waitFrame();
 			a = a + 1;
 		end );
+		controller:addScript( script );
 		a = 3;
 	end	);
 	controller:update( 0 );
@@ -111,6 +114,22 @@ tests[#tests].body = function()
 	assert( a == 4 );
 	controller:update( 0 );
 	assert( a == 4 );
+end
+
+tests[#tests + 1] = { name = "Start thread" };
+tests[#tests].body = function()
+	local a = 0;
+	local controller = Controller:new( Entity:new( Scene:new() ), function( self )
+		local t = self:thread( function( self )
+			self:waitFrame();
+			a = 1;
+		end );
+		self:wait( 1 );
+	end	);
+	controller:update( 0 );
+	assert( a == 0 );
+	controller:update( 0 );
+	assert( a == 1 );
 end
 
 tests[#tests + 1] = { name = "Stop thread" };
@@ -188,25 +207,11 @@ tests[#tests].body = function()
 	assert( a == 0 );
 end
 
-tests[#tests + 1] = { name = "Keep child threads after main thread ends" };
+tests[#tests + 1] = { name = "End child threads after main thread ends" };
 tests[#tests].body = function()
 	local a = 0;
 	local controller = Controller:new( Entity:new( Scene:new() ), function( self )
 		self:thread( function() self:waitFrame(); a = 1; end );
-	end	);
-	controller:update( 0 );
-	assert( a == 0 );
-	controller:update( 0 );
-	assert( a == 1 );
-end
-
-tests[#tests + 1] = { name = "End child threads after parent thread ends" };
-tests[#tests].body = function()
-	local a = 0;
-	local controller = Controller:new( Entity:new( Scene:new() ), function( self )
-		self:thread( function()
-			self:thread( function() self:waitFrame(); a = 1 end );
-		end );
 	end	);
 	controller:update( 0 );
 	assert( a == 0 );
