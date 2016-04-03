@@ -3,6 +3,7 @@ local PlayerSave = require( "src/persistence/PlayerSave" );
 local MapScene = require( "src/scene/MapScene" );
 local Scene = require( "src/scene/Scene" );
 local Controller = require( "src/scene/controller/Controller" );
+local Script = require( "src/scene/controller/Script" );
 local Entity = require( "src/scene/entity/Entity" );
 
 local Teleport = Class( "Teleport", Entity );
@@ -61,7 +62,8 @@ local teleportScript = function( self )
 end
 
 TeleportController.init = function( self, entity )
-	TeleportController.super.init( self, entity, teleportScript );
+	TeleportController.super.init( self, entity );
+	self:addScript( Script:new( self, teleportScript ) );
 end
 
 

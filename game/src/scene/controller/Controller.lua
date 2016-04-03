@@ -7,15 +7,11 @@ local Controller = Class( "Controller" );
 
 -- PUBLIC API
 
-Controller.init = function( self, entity, defaultRun )
+Controller.init = function( self, entity )
 	assert( entity );
 	self._entity = entity;
 	self._scripts = {};
 	self._newScripts = {};
-	if defaultRun then
-		local defaultScript = Script:new( self, defaultRun );
-		self:addScript( defaultScript );
-	end
 end
 
 Controller.getEntity = function( self )

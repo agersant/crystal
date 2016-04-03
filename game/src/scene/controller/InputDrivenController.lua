@@ -18,8 +18,8 @@ end
 
 -- PUBLIC API
 
-InputDrivenController.init = function( self, entity, playerIndex, script )
-	InputDrivenController.super.init( self, entity, script );
+InputDrivenController.init = function( self, entity, playerIndex )
+	InputDrivenController.super.init( self, entity );
 	self._playerIndex = playerIndex;
 	self._inputDevice = Input:getDevice( playerIndex );
 end

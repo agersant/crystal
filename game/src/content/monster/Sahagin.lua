@@ -4,6 +4,7 @@ local Sprite = require( "src/graphics/Sprite" );
 local Assets = require( "src/resources/Assets" );
 local CombatLogic = require( "src/scene/combat/CombatLogic" );
 local Controller = require( "src/scene/controller/Controller" );
+local Script = require( "src/scene/controller/Script" );
 local Entity = require( "src/scene/entity/Entity" );
 local Actions = require( "src/scene/Actions" );
 
@@ -44,8 +45,9 @@ local controllerScript = function( self )
 end
 
 SahaginController.init = function( self, entity )
-	SahaginController.super.init( self, entity, controllerScript );
+	SahaginController.super.init( self, entity );
 	self:addScript( CombatLogic:new( self ) );
+	self:addScript( Script:new( self, controllerScript ) );
 end
 
 
