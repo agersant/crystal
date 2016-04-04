@@ -15,6 +15,10 @@ Goal.isPositionAcceptable = function( self, x, y )
 	return distToTarget2 <= self._radius2;
 end
 
+Goal.getPosition = function( self )
+	error( "Not implemented" );
+end
+
 
 
 return Goal;
