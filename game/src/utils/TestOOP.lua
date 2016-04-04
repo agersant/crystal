@@ -13,6 +13,7 @@ tests[#tests].body = function()
 	assert( tostring( Fruit ) ~= tostring( Bird ) );
 	assert( tostring( Fruit ) ~= tostring( Peach ) );
 end
+
 tests[#tests + 1] = { name = "Get class name" };
 tests[#tests].body = function()
 	local Fruit = Class( "Fruit" );
