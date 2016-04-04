@@ -6,6 +6,7 @@ local AlignGoal = Class( "AlignGoal", Goal );
 
 
 AlignGoal.init = function( self, movingEntity, targetEntity, radius )
+	assert( type( radius ) == "number" );
 	AlignGoal.super.init( self, radius );
 	self._movingEntity = movingEntity;
 	self._targetEntity = targetEntity;
