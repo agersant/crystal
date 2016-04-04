@@ -69,7 +69,9 @@ end
 local loadMap = function( self, path, origin, mapData )
 	assert( mapData.type == "map" );
 	assert( mapData.content.orientation == "orthogonal" );
-	local tileset = loadTileset( self, path, mapData.content.tilesets[1] );
+	local tilesetData = mapData.content.tilesets[1];
+	assert( tilesetData );
+	local tileset = loadTileset( self, path, tilesetData );
 	local map = Map:new( mapData, tileset );
 	return "map", map;
 end
