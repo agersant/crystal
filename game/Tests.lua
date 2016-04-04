@@ -6,7 +6,10 @@ require( "Conf" );
 
 
 local testFiles = {
+	"src/ai/movement/TestAlignGoal",
+	"src/ai/movement/TestEntityGoal",
 	"src/ai/movement/TestPath",
+	"src/ai/movement/TestPositionGoal",
 	"src/ai/tactics/TestTargetSelector",
 	"src/dev/cli/TestCLI",
 	"src/input/TestInputDevice",

@@ -23,6 +23,12 @@ AlignGoal.getPosition = function( self )
 	end
 end
 
+AlignGoal.isPositionAcceptable = function( self, x, y )
+	local targetX, targetY = self._targetEntity:getPosition();
+	local dx = math.abs( x - targetX );
+	local dy = math.abs( y - targetY );
+	return ( dx * dx <= self._radius2 ) or ( dy * dy <= self._radius2 );
+end
 
 
 return AlignGoal;
