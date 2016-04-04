@@ -12,14 +12,14 @@ Teams.isValid = function( self, team )
 end
 
 Teams.areAllies = function( self, teamA, teamB )
-	assert( teamA );
-	assert( teamB );
+	assert( Teams:isValid( teamA ) );
+	assert( Teams:isValid( teamB ) );
 	return teamA == teamB;
 end
 
 Teams.areEnemies = function( self, teamA, teamB )
-	assert( teamA );
-	assert( teamB );
+	assert( Teams:isValid( teamA ) );
+	assert( Teams:isValid( teamB ) );
 	return teamA ~= teamB;
 end
 
