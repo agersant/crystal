@@ -1,11 +1,12 @@
 gUnitTesting = true;
-love = require( "src/dev/mock/Love" );
+love = require( "src/dev/mock/love/Love" );
 
 require( "Conf" );
 
 
 
 local testFiles = {
+	"src/ai/tactics/TestTargetSelector",
 	"src/dev/cli/TestCLI",
 	"src/input/TestInputDevice",
 	"src/persistence/TestParty",
