@@ -15,6 +15,7 @@ local testFiles = {
 	"src/input/TestInputDevice",
 	"src/persistence/TestParty",
 	"src/persistence/TestPartyMember",
+	"src/resources/TestAssets",
 	"src/resources/map/TestMapCollisionChainData",
 	"src/resources/map/TestNavmesh",
 	"src/scene/TestScript",
