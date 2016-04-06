@@ -22,7 +22,11 @@ end
 
 Controller.doAction = function( self, actionFunction )
 	assert( self:isIdle() );
-	self._actionThread = self:thread( actionFunction );
+	self._actionThread = self:thread( function( self )
+		actionFunction( self );
+		self._actionThread = nil;
+		self:getEntity():signal( "idle" );
+	end );
 end
 
 Controller.isTaskless = function( self )
