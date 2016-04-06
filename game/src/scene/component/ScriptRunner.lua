@@ -1,4 +1,5 @@
 require( "src/utils/OOP" );
+local TableUtils = require( "src/utils/TableUtils" );
 
 local ScriptRunner = Class( "ScriptRunner" );
 
@@ -46,7 +47,8 @@ ScriptRunner.update = function( self, dt )
 end
 
 ScriptRunner.signal = function( self, signal, ... )
-	for i, script in ipairs( self._scripts ) do
+	local scriptsCopy = TableUtils.shallowCopy( self._scripts );
+	for _, script in ipairs( scriptsCopy ) do
 		script:signal( signal, ... );
 	end
 end
