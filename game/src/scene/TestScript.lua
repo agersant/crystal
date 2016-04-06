@@ -228,6 +228,43 @@ tests[#tests].body = function()
 	assert( a == 0 );
 end
 
+tests[#tests + 1] = { name = "Signal not propagated to thread it makes appear" };
+tests[#tests].body = function()
+	local a = 0;
+	local entity = Entity:new( Scene:new() );
+	local script = Script:new( entity, function( self )
+		self:waitFor( "signal" );
+		a = 1;
+		self:thread( function()
+			self:waitFor( "signal" );
+			a = 2;
+		end );
+	end	);
+	script:update( 0 );
+	assert( a == 0 );
+	script:signal( "signal" );
+	assert( a == 1 );
+end
+
+tests[#tests + 1] = { name = "Cross-script threading" };
+tests[#tests].body = function()
+	local a = 0;
+	local entity = Entity:new( Scene:new() );
+	
+	local scriptA = Script:new( entity, function( self ) end );
+	scriptA.b = 1;
+	
+	local scriptB = Script:new( entity, function( self )
+		scriptA:thread( function( self )
+			assert( self == scriptA );
+			a = self.b;
+		end );
+	end	);
+	
+	scriptB:update( 0 );
+	assert( a == 1 );
+end
+
 
 
 return tests;

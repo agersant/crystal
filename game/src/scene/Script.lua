@@ -101,16 +101,19 @@ pumpThread = function( self, thread, resumeArgs )
 	local status = coroutine.status( thread.coroutine );
 	assert( status ~= "running" );
 	if status == "suspended" and not thread.isEnded then
-		local success, a, b;
+		local success, a, b, c;
 		if resumeArgs then
-			success, a, b = coroutine.resume( thread.coroutine, resumeArgs );
+			success, a, b, c = coroutine.resume( thread.coroutine, resumeArgs );
 		else
-			success, a, b = coroutine.resume( thread.coroutine, self );
+			success, a, b, c = coroutine.resume( thread.coroutine, self );
 		end
 		if not success then
 			Log:error( a );
 		elseif a == "fork" then
-			local childThread = newThread( self, thread, b, { pumpImmediately = true, allowOrphans = false, } );
+			local parentScript = b; 
+			local functionToThread = c;
+			local parentThread = parentScript == self and thread or nil;
+			local childThread = newThread( parentScript, parentThread, functionToThread, { pumpImmediately = true, allowOrphans = false, } );
 			pumpThread( self, thread, childThread );
 		elseif a == "waitForSignals" then
 			blockThread( self, thread, b );
@@ -230,7 +233,8 @@ Script.signal = function( self, signal, ... )
 		end
 	end
 	if self._blockedThreads[signal] then
-		for thread, _ in pairs( self._blockedThreads[signal] ) do
+		local blockedThreadsCopy = TableUtils.shallowCopy( self._blockedThreads[signal] );
+		for thread, _ in pairs( blockedThreadsCopy ) do
 			unblockThread( self, thread, signal, ... );
 		end
 	end
@@ -247,9 +251,9 @@ Script.wait = function( self, seconds )
 	end
 end
 
-Script.thread = function( self, script )
-	assert( type( script ) == "function" );
-	return coroutine.yield( "fork", script );
+Script.thread = function( self, functionToThread )
+	assert( type( functionToThread ) == "function" );
+	return coroutine.yield( "fork", self, functionToThread );
 end
 
 Script.waitFor = function( self, signal )
