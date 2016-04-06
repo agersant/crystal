@@ -39,7 +39,7 @@ local newThread = function( self, parentThread, script, options )
 		pumpThread( self, thread );
 	end
 	
-	table.insert( self._newThreads, thread );
+	table.insert( self._threads, thread );
 	return thread;
 end
 
@@ -160,7 +160,6 @@ Script.init = function( self, entity, scriptFunction )
 	self._time = 0;
 	self._dt = 0;
 	self._threads = {};
-	self._newThreads = {};
 	self._blockedThreads = {};
 	self._endableThreads = {};
 	self._queuedSignals = {};
@@ -190,14 +189,9 @@ Script.update = function( self, dt )
 	self._time = self._time + dt;
 	self._dt = dt;
 	
-	-- Add new threads
-	for _, newThread in ipairs( self._newThreads ) do
-		table.insert( self._threads, newThread );
-	end
-	self._newThreads = {};
-	
 	-- Run existing threads
-	for _, thread in ipairs( self._threads ) do
+	local threadsCopy = TableUtils.shallowCopy( self._threads );
+	for _, thread in ipairs( threadsCopy ) do
 		if not thread.isBlocked then
 			pumpThread( self, thread );
 		end
@@ -290,7 +284,7 @@ Script.endOnAny = function( self, signals )
 end
 
 Script.isDead = function( self )
-	return #self._threads == 0 and #self._newThreads == 0;
+	return #self._threads == 0;
 end
 
 

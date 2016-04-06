@@ -265,6 +265,22 @@ tests[#tests].body = function()
 	assert( a == 1 );
 end
 
+tests[#tests + 1] = { name = "Pump new thread only once" };
+tests[#tests].body = function()
+	local a = 0;
+	local entity = Entity:new( Scene:new() );
+	local script = Script:new( entity, function( self )
+		self:thread( function( self )
+			a = 1;
+			self:waitFrame();
+			a = 2;
+		end );
+	end );
+	
+	script:update( 0 );
+	assert( a == 1 );
+end
+
 
 
 return tests;
