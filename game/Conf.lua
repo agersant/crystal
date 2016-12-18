@@ -1,3 +1,6 @@
+io.stdout:setvbuf( "no" );
+io.stderr:setvbuf( "no" );
+
 love.filesystem.setIdentity( "crystal" );
 local release = love.filesystem.isFused();
 
@@ -12,7 +15,7 @@ gConf.splitscreen = {};
 gConf.splitscreen.maxLocalPlayers = 8;
 
 love.conf = function( options )
-	options.console = true;
+	options.console = false;
 	options.window.title = "Crystal";
 	options.window.width = 1280;
 	options.window.height = 720;

@@ -11,18 +11,27 @@
 	"isShellCommand": false,
 	"suppressTaskName": true,
 	"showOutput": "always",
+	"options": {
+		"cwd": "${workspaceRoot}\\game"
+	},
 	"windows": {
 		"command": "cmd",
 		"args": ["/C"]
 	},
 	
     "tasks": [
+
+		// Launch game
+		{
+			"taskName": "Run Game",
+			"args": [ "love", "."]
+		},
+
+		// Run unit tests
         {
 			"taskName": "Run Game Tests",
 			"isTestCommand": true,
-			"args": [		"cd", "${workspaceRoot}\\game",
-					"&",	"luajit", "Tests.lua"
-					],
+			"args": ["luajit", "Tests.lua"],
 			"problemMatcher": {
 				"owner": "lua",
 				"fileLocation": ["relative", "${workspaceRoot}\\game"],
@@ -35,6 +44,7 @@
 			}
         },
 		
+		// Build Beryl (Windows Release)
 		{
 			"taskName": "Build Beryl Release (Windows)",
 			"isBuildCommand": true,
@@ -44,6 +54,7 @@
 			"problemMatcher": "$msCompile"
 		},
 		
+		// Build Beryl (Windows Debug)
 		{
 			"taskName": "Build Beryl Debug (Windows)",
 			"args": [		"msbuild", "/p:Configuration=Debug", "${workspaceRoot}\\source\\code\\beryl\\beryl.sln",
