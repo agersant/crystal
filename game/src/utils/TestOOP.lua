@@ -38,9 +38,16 @@ tests[#tests + 1] = { name = "Is instance of inheritance" };
 tests[#tests].body = function()
 	local Fruit = Class( "Fruit" );
 	local Peach = Class( "Peach", Fruit );
-	local myFruit = Peach:new();
+	local Apple = Class( "Apple", Fruit );
+
+	local myPeach = Peach:new();
+	assert( myPeach:isInstanceOf( Fruit ) );
+	assert( myPeach:isInstanceOf( Peach ) );
+	assert( not myPeach:isInstanceOf( Apple ) );
+
+	local myFruit = Fruit:new();
 	assert( myFruit:isInstanceOf( Fruit ) );
-	assert( myFruit:isInstanceOf( Peach ) );
+	assert( not myFruit:isInstanceOf( Peach ) );
 end
 
 tests[#tests + 1] = { name = "Get by name" };

@@ -17,7 +17,7 @@ local makeIsInstanceOf = function( class )
 			return true;
 		end
 		if self.super then
-			return self.super.isInstanceOf( self, otherClass );
+			return self.super.isInstanceOf( self.super, otherClass );
 		end
 		return false;
 	end
