@@ -4,7 +4,7 @@ compiler: clang
 addons:
   apt:
     packages:
-      - luajit
+      - love
 
 before_script:
   - cd $TRAVIS_BUILD_DIR/source/code/beryl
@@ -14,4 +14,4 @@ before_script:
 
 script:
   - cd $TRAVIS_BUILD_DIR/game
-  - luajit-2.0.0-beta9 Tests.lua
+  - love . /test
