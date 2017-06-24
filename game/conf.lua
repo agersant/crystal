@@ -40,7 +40,7 @@ love.conf = function( options )
 	options.modules.sound = true;
 	options.modules.system = true;
 	options.modules.timer = true;
-	options.modules.window = true; -- gConf.features.display; TODO: Pending resolution of https://bitbucket.org/rude/love/issues/1290/
+	options.modules.window = gConf.features.display;
 
 	options.modules.touch = false;
 	options.modules.video = false;
