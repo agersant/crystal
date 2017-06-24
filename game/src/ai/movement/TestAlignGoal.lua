@@ -13,7 +13,7 @@ tests[#tests].body = function()
 	
 	local me = Entity:new( scene );
 	me:addPhysicsBody();
-	me:setPosition( 1, .5, 1 );
+	me:setPosition( 1, .5 );
 	
 	local target = Entity:new( scene );
 	target:addPhysicsBody();
@@ -32,7 +32,7 @@ tests[#tests].body = function()
 	
 	local me = Entity:new( scene );
 	me:addPhysicsBody();
-	me:setPosition( 1, .5, 1 );
+	me:setPosition( 1, .5 );
 	
 	local target = Entity:new( scene );
 	target:addPhysicsBody();
@@ -53,7 +53,7 @@ tests[#tests].body = function()
 	
 	local me = Entity:new( scene );
 	me:addPhysicsBody();
-	me:setPosition( 1, .5, 1 );
+	me:setPosition( 1, .5 );
 	
 	local target = Entity:new( scene );
 	target:addPhysicsBody();
