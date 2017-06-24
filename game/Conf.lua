@@ -9,6 +9,7 @@ local release = love.filesystem.isFused();
 gConf = {};
 gConf.unitTesting = TableUtils.contains( arg, "/test" );
 gConf.features = {};
+gConf.features.audioOutput = not gConf.unitTesting;
 gConf.features.display = not gConf.unitTesting;
 gConf.features.logging = not release and not gConf.unitTesting;
 gConf.features.cli = not release;
@@ -27,7 +28,7 @@ love.conf = function( options )
 	options.window.msaa = 8;
 	options.window.vsync = false;
 	
-	options.modules.audio = true;
+	options.modules.audio = gConf.features.audioOutput;
 	options.modules.event = true;
 	options.modules.graphics = gConf.features.display;
 	options.modules.image = true;
