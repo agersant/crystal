@@ -6,11 +6,9 @@
 
 ### Dependencies
 1. Install the 32-bit version of [Love2D](https://love2d.org/) (0.10.2 as of this writing)
-1. If you plan to run unit tests, install the 32-bit version of [LuaJIT](http://luajit.org/) (2.1.0-beta3 as of this writing)
-4. Download the [Visual C++ Build Tools](http://landinghub.visualstudio.com/visual-cpp-build-tools)
-5. Run the installer, making sure the "Windows 8.1 SDK" feature is part of the installation (even on Windows 10)
-2. Add `C:\Program Files (x86)\LOVE` to your path
-3. Add `C:\Program Files (x86)\LuaJIT\2.1.0-beta3` to your path
+2. Download the [Visual C++ Build Tools](http://landinghub.visualstudio.com/visual-cpp-build-tools)
+3. Run the installer, making sure the "Windows 8.1 SDK" feature is part of the installation (even on Windows 10)
+4. Add `C:\Program Files (x86)\LOVE` to your path
 5. Add `C:\Program Files (x86)\MSBuild\14.0\Bin` to your path
 
 ### Build and run using Visual Studio Code
