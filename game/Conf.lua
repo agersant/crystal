@@ -1,3 +1,5 @@
+local TableUtils = require( "src/utils/TableUtils" );
+
 io.stdout:setvbuf( "no" );
 io.stderr:setvbuf( "no" );
 
@@ -5,8 +7,9 @@ love.filesystem.setIdentity( "crystal" );
 local release = love.filesystem.isFused();
 
 gConf = {};
+gConf.unitTesting = TableUtils.contains( arg, "/test" );
 gConf.features = {};
-gConf.features.logging = not release and not gUnitTesting;
+gConf.features.logging = not release and not gConf.unitTesting;
 gConf.features.cli = not release;
 gConf.features.fpsCounter = not release;
 gConf.features.debugDraw = not release;

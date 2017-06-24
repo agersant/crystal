@@ -1,4 +1,4 @@
-assert( gUnitTesting );
+assert( gConf.unitTesting );
 local PositionGoal = require( "src/ai/movement/PositionGoal" );
 
 local tests = {};

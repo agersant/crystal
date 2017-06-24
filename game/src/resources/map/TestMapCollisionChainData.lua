@@ -1,4 +1,4 @@
-assert( gUnitTesting );
+assert( gConf.unitTesting );
 local MapCollisionChainData = require( "src/resources/map/MapCollisionChainData" );
 
 local tests = {};

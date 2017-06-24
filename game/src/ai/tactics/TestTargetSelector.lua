@@ -1,4 +1,4 @@
-assert( gUnitTesting );
+assert( gConf.unitTesting );
 local TargetSelector = require( "src/ai/tactics/TargetSelector" );
 local Teams = require( "src/combat/Teams" );
 local Party = require( "src/persistence/Party" );

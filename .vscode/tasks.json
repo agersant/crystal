@@ -6,7 +6,7 @@
 
 		// Launch game
 		{
-			"taskName": "Run Game",
+			"taskName": "Run",
 			"options": { "cwd": "${workspaceRoot}\\game" },
 			"command": "love",
 			"args": ["."]
@@ -15,10 +15,10 @@
 		// Run unit tests
         {
 			"isTestCommand": true,
-			"taskName": "Run Tests",
+			"taskName": "Test",
 			"options": { "cwd": "${workspaceRoot}\\game" },
-			"command": "luajit",
-			"args": ["Tests.lua"],
+			"command": "love",
+			"args": [".", "/test"],
 			"problemMatcher": {
 				"owner": "lua",
 				"fileLocation": ["relative", "${workspaceRoot}\\game"],

@@ -1,4 +1,4 @@
-assert( gUnitTesting );
+assert( gConf.unitTesting );
 local MathUtils = require( "src/utils/MathUtils" );
 
 local tests = {};

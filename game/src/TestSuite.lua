@@ -1,10 +1,3 @@
-gUnitTesting = true;
-love = require( "src/dev/mock/love/Love" );
-
-require( "Conf" );
-
-
-
 local testFiles = {
 	"src/ai/movement/TestAlignGoal",
 	"src/ai/movement/TestEntityGoal",
@@ -25,8 +18,6 @@ local testFiles = {
 	"src/utils/TestStringUtils",
 	"src/utils/TestTableUtils",
 };
-
-
 
 local runTestFile = function( source )
 	
@@ -73,5 +64,8 @@ end
 
 
 
-local success = runTestSuite();
-os.exit( success, true );
+return {
+	execute = function()
+		return runTestSuite();
+	end,
+}

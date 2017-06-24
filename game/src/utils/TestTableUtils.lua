@@ -1,4 +1,4 @@
-assert( gUnitTesting );
+assert( gConf.unitTesting );
 local TableUtils = require( "src/utils/TableUtils" );
 
 local tests = {};

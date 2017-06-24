@@ -1,4 +1,4 @@
-assert( gUnitTesting );
+assert( gConf.unitTesting );
 local OOP = require( "src/utils/OOP" );
 
 local tests = {};

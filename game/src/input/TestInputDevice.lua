@@ -1,4 +1,4 @@
-assert( gUnitTesting );
+assert( gConf.unitTesting );
 local InputDevice = require( "src/input/InputDevice" );
 
 local tests = {};

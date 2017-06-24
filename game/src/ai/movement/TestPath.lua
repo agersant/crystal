@@ -1,4 +1,4 @@
-assert( gUnitTesting );
+assert( gConf.unitTesting );
 local Path = require( "src/ai/movement/Path" );
 
 local tests = {};

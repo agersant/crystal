@@ -1,4 +1,4 @@
-assert( gUnitTesting );
+assert( gConf.unitTesting );
 local Scene = require( "src/scene/Scene" );
 local Script = require( "src/scene/Script" );
 local Entity = require( "src/scene/entity/Entity" );

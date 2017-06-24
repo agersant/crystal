@@ -1,4 +1,4 @@
-assert( gUnitTesting );
+assert( gConf.unitTesting );
 local StringUtils = require( "src/utils/StringUtils" );
 
 local tests = {};
