@@ -19,10 +19,8 @@ local getSuggestionsForCommand = function( self, input )
 		local preMatch = match.matchStart > 1 and match.command:getName():sub( 1, match.matchStart - 1 ) or "";
 		local matchText = match.command:getName():sub( match.matchStart, match.matchEnd );
 		local postMatch = match.command:getName():sub( match.matchEnd + 1 );
-		if #preMatch > 0 then -- TODO File Love2D bug report for this workaround
-			table.insert( textChunks, Colors.rainCloudGrey );
-			table.insert( textChunks, preMatch );
-		end
+		table.insert( textChunks, Colors.rainCloudGrey );
+		table.insert( textChunks, preMatch );
 		table.insert( textChunks, Colors.white );
 		table.insert( textChunks, matchText );
 		table.insert( textChunks, Colors.rainCloudGrey );
