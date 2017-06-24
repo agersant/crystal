@@ -3,6 +3,8 @@ compiler: clang
 
 addons:
   apt:
+    sources:
+      - sourceline: 'ppa:bartbes/love-stable'
     packages:
       - love
 
