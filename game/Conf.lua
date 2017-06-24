@@ -9,10 +9,11 @@ local release = love.filesystem.isFused();
 gConf = {};
 gConf.unitTesting = TableUtils.contains( arg, "/test" );
 gConf.features = {};
+gConf.features.display = not gConf.unitTesting;
 gConf.features.logging = not release and not gConf.unitTesting;
 gConf.features.cli = not release;
 gConf.features.fpsCounter = not release;
-gConf.features.debugDraw = not release;
+gConf.features.debugDraw = not release and gConf.features.display;
 
 gConf.splitscreen = {};
 gConf.splitscreen.maxLocalPlayers = 8;
@@ -28,7 +29,7 @@ love.conf = function( options )
 	
 	options.modules.audio = true;
 	options.modules.event = true;
-	options.modules.graphics = true;
+	options.modules.graphics = gConf.features.display;
 	options.modules.image = true;
 	options.modules.joystick = true;
 	options.modules.keyboard = true;
@@ -38,7 +39,7 @@ love.conf = function( options )
 	options.modules.sound = true;
 	options.modules.system = true;
 	options.modules.timer = true;
-	options.modules.window = true;
+	options.modules.window = gConf.features.display;
 
 	options.modules.touch = false;
 	options.modules.video = false;
