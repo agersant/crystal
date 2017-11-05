@@ -36,7 +36,7 @@ local beginOrEndContact = function( self, fixtureA, fixtureB, contact, prefix )
 	local objectB = fixtureB:getBody():getUserData();
 	assert( objectA );
 	assert( objectB );
-	
+
 	if objectA:isInstanceOf( Entity ) and objectB:isInstanceOf( Entity ) then
 		local categoryA = fixtureA:getFilterData();
 		local categoryB = fixtureB:getFilterData();
@@ -46,7 +46,7 @@ local beginOrEndContact = function( self, fixtureA, fixtureB, contact, prefix )
 			objectA:signal( prefix .. "giveHit", objectB );
 		elseif bit.band( categoryA, CollisionFilters.WEAKBOX ) ~= 0 and bit.band( categoryB, CollisionFilters.HITBOX ) ~= 0 then
 			objectB:signal( prefix .. "giveHit", objectA );
-		
+
 		-- Trigger VS solid
 		elseif bit.band( categoryA, CollisionFilters.TRIGGER ) ~= 0 and bit.band( categoryB, CollisionFilters.SOLID ) ~= 0 then
 			objectA:signal( prefix .. "trigger", objectB );
@@ -80,13 +80,13 @@ MapScene.init = function( self, mapName, party, partyX, partyY )
 	Log:info( "Instancing scene for map: " .. tostring( mapName ) );
 	MapScene.super.init( self );
 	self._canProcessSignals = false;
-	
+
 	self._world = love.physics.newWorld( 0, 0, false );
 	self._world:setCallbacks(
 		function( ... ) beginContact( self, ... ); end,
 		function( ... ) endContact( self, ... ); end
 	);
-	
+
 	self._entities = {};
 	self._updatableEntities = {};
 	self._drawableEntities = {};
@@ -94,22 +94,22 @@ MapScene.init = function( self, mapName, party, partyX, partyY )
 	self._partyEntities = {};
 	self._spawnedEntities = {};
 	self._despawnedEntities = {};
-	
+
 	self._targetSelector = TargetSelector:new( self._combatableEntities );
-	
+
 	self._mapName = mapName;
 	self._map = Assets:getMap( mapName );
 	self._map:spawnCollisionMeshBody( self );
 	self._map:spawnEntities( self );
-	
+
 	local mapWidth = self._map:getWidthInPixels();
 	local mapHeight = self._map:getHeightInPixels();
 	self._camera = Camera:new( mapWidth, mapHeight );
-	
+
 	self._partyX = partyX or mapWidth / 2;
 	self._partyY = partyY or mapHeight / 2;
 	spawnParty( self, party, self._partyX, self._partyY );
-	
+
 	self:update( 0 );
 end
 
@@ -120,17 +120,17 @@ end
 
 MapScene.update = function( self, dt )
 	MapScene.super.update( self, dt );
-	
+
 	-- Pump physics simulation
 	self._world:update( dt );
-	
+
 	self._canProcessSignals = true;
-	
+
 	-- Update entities
 	for _, entity in ipairs( self._updatableEntities ) do
 		entity:update( dt );
 	end
-	
+
 	-- Add new entities
 	for entity, _ in pairs( self._spawnedEntities ) do
 		table.insert( self._entities, entity );
@@ -148,9 +148,9 @@ MapScene.update = function( self, dt )
 		end
 	end
 	self._spawnedEntities = {};
-	
+
 	self._canProcessSignals = false;
-	
+
 	-- Remove old entities
 	removeDespawnedEntitiesFrom( self, self._entities );
 	removeDespawnedEntitiesFrom( self, self._updatableEntities );
@@ -161,21 +161,21 @@ MapScene.update = function( self, dt )
 		entity:destroy();
 	end
 	self._despawnedEntities = {};
-	
+
 	-- Sort drawable entities
 	table.sort( self._drawableEntities, sortDrawableEntities );
-	
+
 	self._camera:update( dt );
 end
 
 MapScene.draw = function( self )
 	MapScene.super.draw( self );
-	
+
 	love.graphics.push();
-	
+
 	local ox, oy = self._camera:getRenderOffset();
 	love.graphics.translate( ox, oy );
-	
+
 	self._map:drawBelowEntities();
 	for i, entity in ipairs( self._drawableEntities ) do
 		love.graphics.setColor( Colors.white );
@@ -183,7 +183,7 @@ MapScene.draw = function( self )
 	end
 	self._map:drawAboveEntities();
 	self._map:drawDebug();
-	
+
 	love.graphics.pop();
 end
 
@@ -250,14 +250,14 @@ end
 
 MapScene.saveTo = function( self, playerSave )
 	assert( playerSave );
-	
+
 	local party = Party:new();
 	for i, entity in ipairs( self._partyEntities ) do
 		local partyMember = PartyMember:fromEntity( entity );
 		party:addMember( partyMember );
 	end
 	playerSave:setParty( party );
-	
+
 	assert( #self._partyEntities > 0 );
 	local partyLeader = self._partyEntities[1];
 	local x, y = partyLeader:getPosition();
