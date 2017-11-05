@@ -19,7 +19,7 @@ local doTeleport = function( self, triggeredBy )
 	local px, py = triggeredBy:getPosition();
 	local dx, dy = px - x, py - y;
 	local finalX, finalY = teleportEntity._targetX + dx, teleportEntity._targetY;
-	
+
 	local playerSave = PlayerSave:getCurrent();
 	local currentScene = Scene:getCurrent();
 	currentScene:saveTo( playerSave );
@@ -32,7 +32,7 @@ local teleportScript = function( self )
 	local teleportEntity = self:getEntity();
 	self:endOn( "teleportActivated" );
 	while true do
-		local triggeredBy = self:waitFor( "+trigger" );		
+		local triggeredBy = self:waitFor( "+trigger" );
 		local watchDirectionThread = self:thread( function( self )
 			while true do
 				self:waitFrame();
@@ -46,7 +46,7 @@ local teleportScript = function( self )
 					end
 				end
 			end
-		end );		
+		end );
 		self:thread( function( self )
 			while true do
 				local noLongerTriggering = self:waitFor( "-trigger" );
@@ -71,18 +71,18 @@ Teleport.init = function( self, scene, options )
 	assert( options.targetMap );
 	assert( options.targetX );
 	assert( options.targetY );
-	
+
 	Teleport.super.init( self, scene );
 	self:addPhysicsBody( "static" );
 	self:addTrigger( options.shape );
 	self:addScriptRunner();
 	self:addController( TeleportController:new( self ) );
 	self:setPosition( options.x, options.y );
-	
+
 	self._targetMap = options.targetMap;
 	self._targetX = options.targetX;
 	self._targetY = options.targetY;
-	
+
 	local mapWidth = scene:getMap():getWidthInPixels();
 	local mapHeight = scene:getMap():getHeightInPixels();
 	local left = math.abs( options.x );
@@ -91,7 +91,7 @@ Teleport.init = function( self, scene, options )
 	local bottom = math.abs( mapHeight - options.y );
 	local dx = math.min( left, right );
 	local dy = math.min( top, bottom );
-	
+
 	if dx < dy then
 		if left < right then
 			self:setAngle( math.pi );
