@@ -9,6 +9,10 @@ Goal.init = function( self, radius )
 	self._radius2 = radius * radius;
 end
 
+Goal.isValid = function( self )
+	return true;
+end
+
 Goal.isPositionAcceptable = function( self, x, y )
 	local targetX, targetY = self:getPosition();
 	local distToTarget2 = MathUtils.distance2( x, y, targetX, targetY );

@@ -14,6 +14,7 @@ local Entity = Class( "Entity" );
 Entity.init = function( self, scene )
 	assert( scene );
 	self._scene = scene;
+	self._valid = true;
 end
 
 
@@ -464,7 +465,12 @@ Entity.drawShape = function( self, shape, color )
 end
 
 Entity.despawn = function( self )
+	self._valid = false;
 	self._scene:despawn( self );
+end
+
+Entity.isValid = function( self )
+	return self._valid;
 end
 
 Entity.destroy = function( self )

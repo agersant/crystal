@@ -10,6 +10,10 @@ EntityGoal.init = function( self, entity, radius )
 	self._entity = entity;
 end
 
+EntityGoal.isValid = function( self )
+	return self._entity:isValid();
+end
+
 EntityGoal.getPosition = function( self )
 	return self._entity:getPosition();
 end

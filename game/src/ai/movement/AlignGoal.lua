@@ -12,6 +12,10 @@ AlignGoal.init = function( self, movingEntity, targetEntity, radius )
 	self._targetEntity = targetEntity;
 end
 
+AlignGoal.isValid = function( self )
+	return self._targetEntity:isValid();
+end
+
 AlignGoal.getPosition = function( self )
 	local x, y = self._movingEntity:getPosition();
 	local targetX, targetY = self._targetEntity:getPosition();

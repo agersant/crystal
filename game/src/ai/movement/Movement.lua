@@ -43,13 +43,12 @@ local followPath = function( self, path )
 	end
 end
 
--- TODO deal with scenarios where target entity despawns while we're pathing towards it
 local walkToGoal = function( goal, repathDelay )
 	return function( self )
 		local pathingThread;
 		local entity = self:getEntity();
 		local controller = self:getController();
-		
+
 		-- Follow path
 		self:thread( function( self )
 			while true do
@@ -58,26 +57,29 @@ local walkToGoal = function( goal, repathDelay )
 				self:waitFor( "repath" );
 				pathingThread = self:thread( function( self )
 					self:endOn( "repath" );
+					if not goal:isValid() then
+						self:signal( "pathEnd" );
+					end
 					local targetX, targetY = goal:getPosition();
 					local path = entity:findPathTo( targetX, targetY );
 					followPath( self, path );
-					self:signal( "pathComplete" );
+					self:signal( "pathEnd" );
 				end );
 			end
 		end );
-		
+
 		-- Stop when close enough to objective
 		self:thread( function( self )
 			self:endOn( "endWalkToGoal" );
 			while true do
 				local x, y = entity:getPosition();
-				if goal:isPositionAcceptable( x, y ) then
+				if goal:isValid() and goal:isPositionAcceptable( x, y ) then
 					self:signal( "closeEnough" );
 				end
 				self:waitFrame();
 			end
 		end );
-	
+
 		-- Trigger repath
 		self:thread( function( self )
 			self:endOn( "endWalkToGoal" );
@@ -86,20 +88,20 @@ local walkToGoal = function( goal, repathDelay )
 				self:wait( repathDelay );
 			end
 		end );
-	
+
 		if pathingThread and not pathingThread:isDead() then
-			self:waitForAny( { "pathComplete", "closeEnough" } );
+			self:waitForAny( { "pathEnd", "closeEnough" } );
 		else
 			-- Path completed immediately
 		end
 		self:signal( "endWalkToGoal" );
-		
+
 		if controller:isIdle() then
 			controller:doAction( Actions.idle );
 		end
-		
+
 		local x, y = entity:getPosition();
-		return goal:isPositionAcceptable( x, y );
+		return goal:isValid() and goal:isPositionAcceptable( x, y );
 	end
 end
 
