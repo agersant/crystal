@@ -27,7 +27,7 @@ love.conf = function( options )
 	options.window.resizable = true;
 	options.window.msaa = 8;
 	options.window.vsync = false;
-	
+
 	options.modules.audio = gConf.features.audioOutput;
 	options.modules.event = true;
 	options.modules.graphics = gConf.features.display;
@@ -44,7 +44,7 @@ love.conf = function( options )
 
 	options.modules.touch = false;
 	options.modules.video = false;
-	options.modules.thread = false;	
+	options.modules.thread = false;
 end
 
 
