@@ -20,6 +20,6 @@
 ### Build and run without Visual Studio Code
 1. In `crystal\source\code\beryl`, open a command prompt and execute `msbuild /p:Configuration=Release`
 2. Copy the resulting dll from `crystal\source\code\beryl\bin\Release` to `crystal\game`
-3. (Optional) Open a command prompt in `crystal\game` and execute `luajit Tests.lua`
+3. (Optional) Open a command prompt in `crystal\game` and execute `love . /test`
 4. Open a command prompt in `crystal\game` and execute `love .`
 5. Game is running! Press ` to access the ingame CLI
