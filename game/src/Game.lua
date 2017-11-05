@@ -14,7 +14,7 @@ love.load = function()
 	require( "src/graphics/GFXCommands" ); 				-- Register commands
 	require( "src/persistence/PlayerSaveCommands" ); 	-- Register commands
 	require( "src/scene/MapSceneCommands" ); 			-- Register commands
-	Content:requireAll( "src/content" );	
+	Content:requireAll( "src/content" );
 	Log:info( "Completed startup" );
 end
 
@@ -28,7 +28,7 @@ love.draw = function()
 	love.graphics.reset();
 	love.graphics.scale( GFXConfig:getZoom(), GFXConfig:getZoom() );
 	Scene:getCurrent():draw();
-	
+
 	love.graphics.reset();
 	FPSCounter:draw();
 	CLI:draw();
