@@ -41,7 +41,7 @@ local parseInput = function( self )
 	parse.command = parse.commandUntrimmed and StringUtils.trim( parse.commandUntrimmed );
 	parse.commandIsComplete = parse.fullText:match( "[^%s]+%s" ) ~= nil;
 	local args = parse.fullText:sub( #parse.command + 1 );
-	for arg in args:gmatch( "%s+[^%s]+" ) do 
+	for arg in args:gmatch( "%s+[^%s]+" ) do
 		table.insert( parse.arguments, StringUtils.trim( arg ) );
 	end
 	return parse;
@@ -130,35 +130,35 @@ CLI.draw = function( self )
 	if not self:isActive() then
 		return;
 	end
-	
+
 	local font = self._font;
-	
+
 	-- Draw background
 	love.graphics.setColor( Colors.darkViridian:alpha( 255 * 0.7 ) );
 	love.graphics.rectangle( "fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight() );
-	
+
 	-- Draw input box
 	local inputBoxX = marginX;
 	local inputBoxY = marginX;
 	local inputBoxWidth = love.graphics.getWidth() - 2 * marginX;
 	local inputBoxHeight = font:getHeight() + 2 * inputBoxPaddingY;
 	local rounding = 8;
-	love.graphics.setColor( Colors.nightSkyBlue );	
+	love.graphics.setColor( Colors.nightSkyBlue );
 	love.graphics.rectangle( "fill", inputBoxX, inputBoxY, inputBoxWidth, inputBoxHeight, rounding, rounding );
-	
+
 	-- Draw chevron
 	local chevronX = inputBoxX + inputBoxPaddingX;
 	local chevronY = inputBoxY + inputBoxPaddingY;
 	local chevron = "> ";
 	love.graphics.setColor( Colors.white );
 	font:print( chevron, chevronX, chevronY );
-	
+
 	-- Draw input text
 	local inputX = chevronX + font:getWidth( chevron );
 	local inputY = chevronY;
 	love.graphics.setColor( Colors.white );
 	font:print( self._textInput:getText(), inputX, inputY );
-	
+
 	-- Draw caret
 	local pre = self._textInput:getTextLeftOfCursor();
 	local caretX = inputX + font:getWidth( pre );
@@ -167,11 +167,11 @@ CLI.draw = function( self )
 	caretAlpha = caretAlpha * caretAlpha * caretAlpha;
 	love.graphics.setColor( Colors.white:alpha( 255 * caretAlpha ) );
 	love.graphics.rectangle( "fill", caretX, caretY, 1, font:getHeight() );
-	
+
 	-- Compute autocomplete content
 	local suggestionX;
 	local suggestionsWidth = 0;
-	
+
 	for i, suggestion in ipairs( self._autoCompleteOutput.lines ) do
 		local suggestionWidth = 0;
 		for j = 2, #suggestion.text, 2 do
@@ -179,7 +179,7 @@ CLI.draw = function( self )
 		end
 		suggestionsWidth = math.max( suggestionWidth, suggestionsWidth );
 	end
-	
+
 	if self._autoCompleteOutput.state == "command" then
 		suggestionX = inputX;
 	elseif self._autoCompleteOutput.state == "badcommand" then
@@ -189,22 +189,22 @@ CLI.draw = function( self )
 	else
 		error( "Unexpected autocomplete state" );
 	end
-	
+
 	if #self._autoCompleteOutput.lines > 0 then
 		-- Draw autocomplete box
 		local autoCompleteBoxX = suggestionX - autoCompletePaddingX;
 		local autoCompleteBoxY = inputBoxY + inputBoxHeight + autoCompleteMargin;
 		local autoCompleteBoxWidth = suggestionsWidth + 2 * autoCompletePaddingX;
 		local autoCompleteBoxHeight = #self._autoCompleteOutput.lines * font:getHeight() + 2 * autoCompletePaddingY;
-		love.graphics.setColor( Colors.nightSkyBlue );	
+		love.graphics.setColor( Colors.nightSkyBlue );
 		love.graphics.rectangle( "fill", autoCompleteBoxX, autoCompleteBoxY, autoCompleteBoxWidth, autoCompleteBoxHeight, 0, 0 );
-		
+
 		-- Draw autocomplete arrow
 		love.graphics.polygon	( "fill", 	autoCompleteBoxX + autoCompleteArrowMargin, autoCompleteBoxY,
 											autoCompleteBoxX + autoCompleteArrowMargin + autoCompleteArrowWidth, autoCompleteBoxY,
 											autoCompleteBoxX + autoCompleteArrowMargin + autoCompleteArrowWidth / 2, autoCompleteBoxY - autoCompleteArrowHeight
 								);
-		
+
 		-- Draw autocomplete content
 		love.graphics.setColor( Colors.white );
 		local suggestionY = autoCompleteBoxY + autoCompletePaddingY;
@@ -220,7 +220,7 @@ CLI.draw = function( self )
 			font:print( suggestion.text, suggestionX, suggestionY );
 		end
 	end
-	
+
 end
 
 CLI.textInput = function( self, text )
@@ -232,21 +232,21 @@ CLI.textInput = function( self, text )
 end
 
 CLI.keyPressed = function( self, key, scanCode, ctrl )
-	
+
 	if scanCode == "`" then
 		self:toggle();
 		return;
 	end
-	
+
 	if not self:isActive() then
 		return;
 	end
-	
+
 	if key == "return" or key == "kpenter" then
 		runCommand( self );
 		return;
 	end
-	
+
 	if key == "tab" and self._autoCompleteOutput.state == "command" then
 		local oldText = self._textInput:getText();
 		local oldCursor = self._textInput:getCursor();
@@ -265,14 +265,14 @@ CLI.keyPressed = function( self, key, scanCode, ctrl )
 		end
 		return;
 	end
-	
+
 	local textChanged, cursorMoved = self._textInput:keyPressed( key, scanCode, ctrl );
 	self._unguidedInput = self._textInput:getText();
 	if textChanged then
 		self._autoCompleteCursor = 0;
 		updateAutoComplete( self );
 	end
-	
+
 end
 
 CLI.addCommand = function( self, description, func )

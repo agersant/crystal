@@ -33,11 +33,11 @@ ScriptRunner.update = function( self, dt )
 		table.insert( self._scripts, newScript );
 	end
 	self._newScripts = {};
-	
+
 	for i, script in ipairs( self._scripts ) do
 		script:update( dt );
 	end
-	
+
 	for i = #self._scripts, 1, -1 do
 		local script = self._scripts[i];
 		if script:isDead() then
