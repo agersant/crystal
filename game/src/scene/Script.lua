@@ -15,7 +15,6 @@ local newThread = function( self, parentThread, script, options )
 	assert( type( script ) == "function" );
 	local threadCoroutine = coroutine.create( script );
 
-	-- TODO wrap in a class
 	local thread = {
 		coroutine = threadCoroutine,
 		childThreads = {},
