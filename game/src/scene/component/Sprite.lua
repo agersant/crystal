@@ -16,8 +16,8 @@ end
 
 Sprite.setAnimation = function( self, animationName, forceRestart )
 	local animation = self._sheet:getAnimation( animationName );
+	assert( animation );
 	self._animation = animation;
-	assert( self._animation );
 	if forceRestart then
 		self._time = 0;
 	end
