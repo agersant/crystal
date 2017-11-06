@@ -140,7 +140,11 @@ Entity.addLocomotion = function( self )
 	self._speed = 0;
 end
 
-Entity.getMovementSpeed = function( self, speed )
+Entity.setMovementSpeed = function( self, speed )
+	return self._movementStat:setValue( speed );
+end
+
+Entity.getMovementSpeed = function( self )
 	return self._movementStat:getValue();
 end
 
