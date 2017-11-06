@@ -245,6 +245,10 @@ MapScene.removeEntityFromParty = function( self, entity )
 	self._camera:removeTrackedEntity( entity );
 end
 
+MapScene.getPartyMemberEntities = function( self )
+	return TableUtils.shallowCopy( self._partyEntities );
+end
+
 
 
 -- SAVE

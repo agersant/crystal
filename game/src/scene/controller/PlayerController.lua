@@ -51,15 +51,27 @@ local addDirectionControls = function( self )
 					if left or right or up or down then
 						local xDir, yDir;
 						if left and right then
-							xDir = self._lastXDirInput;
+							if self._lastXDirInput then
+								xDir = self._lastXDirInput;
+							else
+								local angle = entity:getAngle();
+								xDir = math.cos( angle ) > 0 and 1 or -1;
+							end
 						else
 							xDir = left and -1 or right and 1 or 0;
 						end
+						assert( xDir );
 						if up and down then
-							yDir = self._lastYDirInput;
+							if self._lastYDirInput then
+								yDir = self._lastYDirInput;
+							else
+								local angle = entity:getAngle();
+								yDir = math.sin( angle ) > 0 and 1 or -1;
+							end
 						else
 							yDir = up and -1 or down and 1 or 0;
 						end
+						assert( yDir );
 						entity:setDirection8( xDir, yDir );
 					end
 				end

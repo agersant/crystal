@@ -25,6 +25,11 @@ local doTeleport = function( self, triggeredBy )
 	currentScene:saveTo( playerSave );
 	local newScene = MapScene:new( teleportEntity._targetMap, playerSave:getParty(), finalX, finalY );
 	Scene:setCurrent( newScene );
+
+	local teleportAngle = teleportEntity:getAngle();
+	for _, entity in ipairs( newScene:getPartyMemberEntities() ) do
+		entity:setAngle( teleportAngle );
+	end
 end
 
 
