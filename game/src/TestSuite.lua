@@ -1,6 +1,7 @@
 local testFiles = {
 	"src/ai/movement/TestAlignGoal",
 	"src/ai/movement/TestEntityGoal",
+	"src/ai/movement/TestMovement",
 	"src/ai/movement/TestPath",
 	"src/ai/movement/TestPositionGoal",
 	"src/ai/tactics/TestTargetSelector",
@@ -20,11 +21,11 @@ local testFiles = {
 };
 
 local runTestFile = function( source )
-	
+
 	print( "" );
 	local tests = require( source );
 	print( "Running " .. #tests .. " tests from: " .. source );
-	
+
 	local numSuccess = 0;
 	for i, test in ipairs( tests ) do
 		assert( type( test.name ) == "string" );
@@ -38,10 +39,10 @@ local runTestFile = function( source )
 			print( errorText );
 		end
 	end
-	
+
 	package.loaded[source] = false;
 	return numSuccess, #tests;
-	
+
 end
 
 local printResults = function( numSuccess, numTests )
