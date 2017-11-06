@@ -13,7 +13,7 @@ Input.init = function( self )
 		local device = InputDevice:new();
 		table.insert( self._devices, device );
 	end
-	
+
 	local player1Device = self:getDevice( 1 );
 	player1Device:addBinding( "moveLeft", "left" );
 	player1Device:addBinding( "moveRight", "right" );
@@ -21,6 +21,9 @@ Input.init = function( self )
 	player1Device:addBinding( "moveDown", "down" );
 	player1Device:addBinding( "attack", "z" );
 	player1Device:addBinding( "useSkill1", "q" );
+	player1Device:addBinding( "useSkill2", "w" );
+	player1Device:addBinding( "useSkill3", "e" );
+	player1Device:addBinding( "useSkill4", "r" );
 end
 
 Input.getDevice = function( self, index )
