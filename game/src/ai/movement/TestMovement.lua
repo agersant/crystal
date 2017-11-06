@@ -1,11 +1,11 @@
 assert( gConf.unitTesting );
 local Movement = require( "src/ai/movement/Movement" );
-local Sprite = require( "src/graphics/Sprite" );
 local Party = require( "src/persistence/Party" );
 local Assets = require( "src/resources/Assets" );
 local MapScene = require( "src/scene/MapScene" );
 local Entity = require( "src/scene/entity/Entity" );
 local Controller = require( "src/scene/component/Controller" );
+local Sprite = require( "src/scene/component/Sprite" );
 local Scene = require( "src/scene/Scene" );
 local Script = require( "src/scene/Script" );
 
