@@ -1,5 +1,6 @@
 require( "src/utils/OOP" );
 local ComboAttack = require( "src/content/skill/ComboAttack" );
+local Dash = require( "src/content/skill/Dash" );
 local Assets = require( "src/resources/Assets" );
 local Sprite = require( "src/scene/component/Sprite" );
 local Entity = require( "src/scene/entity/Entity" );
@@ -24,6 +25,7 @@ Warrior.init = function( self, scene )
 	self:addCombatLogic();
 
 	self:addSkill( ComboAttack:new( self ) );
+	self:addSkill( Dash:new( self ) );
 end
 
 
