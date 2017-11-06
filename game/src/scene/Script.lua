@@ -1,6 +1,7 @@
 require( "src/utils/OOP" );
 local Log = require( "src/dev/Log" );
 local TableUtils = require( "src/utils/TableUtils" );
+local Scene = require( "src/scene/Scene" );
 
 local Script = Class( "Script" );
 
@@ -13,7 +14,7 @@ local pumpThread, endThread;
 local newThread = function( self, parentThread, script, options )
 	assert( type( script ) == "function" );
 	local threadCoroutine = coroutine.create( script );
-	
+
 	-- TODO wrap in a class
 	local thread = {
 		coroutine = threadCoroutine,
@@ -29,16 +30,16 @@ local newThread = function( self, parentThread, script, options )
 			endThread( self, thread );
 		end,
 	};
-	
+
 	if parentThread then
 		parentThread.childThreads[thread] = true;
 		thread.parentThread = parentThread;
 	end
-	
+
 	if options.pumpImmediately then
 		pumpThread( self, thread );
 	end
-	
+
 	table.insert( self._threads, thread );
 	return thread;
 end
@@ -110,7 +111,7 @@ pumpThread = function( self, thread, resumeArgs )
 		if not success then
 			Log:error( a );
 		elseif a == "fork" then
-			local parentScript = b; 
+			local parentScript = b;
 			local functionToThread = c;
 			local parentThread = parentScript == self and thread or nil;
 			local childThread = newThread( parentScript, parentThread, functionToThread, { pumpImmediately = true, allowOrphans = false, } );
@@ -122,7 +123,7 @@ pumpThread = function( self, thread, resumeArgs )
 			pumpThread( self, thread );
 		end
 	end
-	
+
 	status = coroutine.status( thread.coroutine );
 	if status == "dead" and not thread.isEnded then
 		endThread( self, thread );
@@ -153,10 +154,11 @@ end
 
 -- PUBLIC API
 
-Script.init = function( self, entity, scriptFunction )
-	assert( entity );
+Script.init = function( self, scene, scriptFunction )
+	assert( scene );
+	assert( scene:isInstanceOf( Scene ) );
 	assert( type( scriptFunction ) == "function" );
-	self._entity = entity;
+	self._scene = scene;
 	self._time = 0;
 	self._dt = 0;
 	self._threads = {};
@@ -166,29 +168,21 @@ Script.init = function( self, entity, scriptFunction )
 	newThread( self, nil, scriptFunction, { pumpImmediately = false, allowOrphans = true, } );
 end
 
-Script.getEntity = function( self )
-	return self._entity;
-end
-
-Script.getController = function( self )
-	return self._entity:getController();
-end
-
 Script.update = function( self, dt )
-	
-	if not self:getEntity():getScene():canProcessSignals() then
+
+	if not self._scene:canProcessSignals() then
 		return;
 	end
-	
+
 	-- Process queued signals
 	for _, signalData in ipairs( self._queuedSignals ) do
 		self:signal( signalData.name, unpack( signalData.userData ) );
 	end
 	self._queuedSignals = {};
-	
+
 	self._time = self._time + dt;
 	self._dt = dt;
-	
+
 	-- Run existing threads
 	local threadsCopy = TableUtils.shallowCopy( self._threads );
 	for _, thread in ipairs( threadsCopy ) do
@@ -196,7 +190,7 @@ Script.update = function( self, dt )
 			pumpThread( self, thread );
 		end
 	end
-	
+
 	-- Remove dead threads
 	for i = #self._threads, 1, -1 do
 		local thread = self._threads[i];
@@ -205,7 +199,7 @@ Script.update = function( self, dt )
 			table.remove( self._threads, i );
 		end
 	end
-	
+
 	-- Unblock threads. We don't want to do this from inside the "run threads" loop above to avoid a thread being pumped twice (once in unblockThread, once in the loop above).
 	for _, thread in ipairs( self._threads ) do
 		if thread.isBlocked and thread.isMarkedForUnblock then
@@ -217,7 +211,7 @@ Script.update = function( self, dt )
 end
 
 Script.signal = function( self, signal, ... )
-	if not self:getEntity():getScene():canProcessSignals() then
+	if not self._scene:canProcessSignals() then
 		table.insert( self._queuedSignals, { name = signal, userData = { ... } } );
 		return;
 	end
@@ -259,18 +253,6 @@ Script.waitForAny = function( self, signals )
 	assert( type( signals ) == "table" );
 	local returns = coroutine.yield( "waitForSignals", signals );
 	return unpack( returns );
-end
-
-Script.waitForCommandPress = function( self, command )
-	while true do
-		local inputDevice = self:getEntity():getController():getInputDevice();
-		if inputDevice and not inputDevice:isCommandActive( command ) then
-			break;
-		else
-			self:waitFrame();
-		end
-	end
-	self:waitFor( "+" .. command );
 end
 
 Script.endOn = function( self, signal )

@@ -28,11 +28,11 @@ tests[#tests].body = function()
 	subject:setPosition( startX, startY );
 	subject:addLocomotion();
 	subject:addScriptRunner();
-	subject:addController( Controller, function( script )
-		script:thread( Movement.walkToPoint( endX, endY, acceptanceRadius ) );
-	end );
+	subject:addController( Controller:new( subject, function( controller )
+		controller:thread( Movement.walkToPoint( endX, endY, acceptanceRadius ) );
+	end ) );
 
-	for i = 1, 500 do
+	for i = 1, 200 do
 		scene:update(16/1000);
 	end
 

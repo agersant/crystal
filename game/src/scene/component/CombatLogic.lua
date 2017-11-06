@@ -7,27 +7,25 @@ local CombatLogic = Class( "CombatLogic", Script );
 
 
 local logic = function( self )
-	
+
 	self:thread( function( self )
-		local entity = self:getEntity();
 		while true do
 			local target = self:waitFor( "+giveHit" );
-			if Teams:areEnemies( entity:getTeam(), target:getTeam() ) then
-				entity:inflictDamageTo( target );
+			if Teams:areEnemies( self._entity:getTeam(), target:getTeam() ) then
+				self._entity:inflictDamageTo( target );
 			end
 		end
 	end );
-	
+
 	self:thread( function( self )
-		local entity = self:getEntity();
-		local controller = self:getController();
+		local controller = self._entity:getController();
 		while true do
 			local damage = self:waitFor( "takeHit" );
-			entity:signal( "interruptByDamage" );
+			self._entity:signal( "interruptByDamage" );
 			if controller:isIdle() then
 				local attacker = damage:getOrigin();
 				local attackerX, attackerY = attacker:getPosition();
-				local x, y = entity:getPosition();
+				local x, y = self._entity:getPosition();
 				local xFromAttacker = x - attackerX;
 				local yFromAttacker = y - attackerY;
 				local angleFromAttacker = math.atan2( yFromAttacker, xFromAttacker );
@@ -35,20 +33,21 @@ local logic = function( self )
 			end
 		end
 	end );
-	
-	local entity = self:getEntity();
+
 	while true do
 		self:waitFor( "death" );
-		entity:despawn();
+		self._entity:despawn();
 	end
-	
+
 end
 
 
 -- PUBLIC API
 
 CombatLogic.init = function( self, entity )
-	CombatLogic.super.init( self, entity, logic );
+	assert( entity );
+	self._entity = entity;
+	CombatLogic.super.init( self, entity:getScene(), logic );
 end
 
 

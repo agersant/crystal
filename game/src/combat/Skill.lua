@@ -8,9 +8,13 @@ local Skill = Class( "Skill", Script );
 -- PUBLIC API
 
 Skill.init = function( self, entity )
-	Skill.super.init( self, entity, self.run );
 	assert( entity );
-	self._entity = entity;	
+	self._entity = entity;
+	Skill.super.init( self, entity:getScene(), self.run );
+end
+
+Skill.getEntity = function( self )
+	return self._entity;
 end
 
 Skill.run = function()

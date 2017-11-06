@@ -17,34 +17,33 @@ local addDirectionControls = function( self )
 			self._lastXDirInput = -1;
 		end
 	end );
-	
+
 	self:thread( function( self )
 		while true do
 			self:waitForCommandPress( "moveRight" );
 			self._lastXDirInput = 1;
 		end
 	end );
-	
+
 	self:thread( function( self )
 		while true do
 			self:waitForCommandPress( "moveUp" );
 			self._lastYDirInput = -1;
 		end
 	end );
-	
+
 	self:thread( function( self )
 		while true do
 			self:waitForCommandPress( "moveDown" );
 			self._lastYDirInput = 1;
 		end
 	end );
-	
+
 	self:thread( function( self )
 		local entity = self:getEntity();
-			local controller = self:getController();
 			while true do
-				if controller:isIdle() then
-					local inputDevice = controller:getInputDevice();
+				if self:isIdle() then
+					local inputDevice = self:getInputDevice();
 					local left = inputDevice:isCommandActive( "moveLeft" );
 					local right = inputDevice:isCommandActive( "moveRight" );
 					local up = inputDevice:isCommandActive( "moveUp" );
@@ -71,17 +70,16 @@ end
 
 local walkControls = function( self )
 	local entity = self:getEntity();
-	local controller = self:getController();
 	while true do
-		if controller:isIdle() then
-			local left = controller:getInputDevice():isCommandActive( "moveLeft" );
-			local right = controller:getInputDevice():isCommandActive( "moveRight" );
-			local up = controller:getInputDevice():isCommandActive( "moveUp" );
-			local down = controller:getInputDevice():isCommandActive( "moveDown" );
+		if self:isIdle() then
+			local left = self:getInputDevice():isCommandActive( "moveLeft" );
+			local right = self:getInputDevice():isCommandActive( "moveRight" );
+			local up = self:getInputDevice():isCommandActive( "moveUp" );
+			local down = self:getInputDevice():isCommandActive( "moveDown" );
 			if left or right or up or down then
-				controller:doAction( Actions.walk( entity:getAngle() ) );
+				self:doAction( Actions.walk( entity:getAngle() ) );
 			else
-				controller:doAction( Actions.idle );
+				self:doAction( Actions.idle );
 			end
 		end
 		self:waitFrame();
@@ -100,7 +98,7 @@ local skillControls = function( skillIndex )
 			end
 		end
 	end
-end	
+end
 
 local playerControllerScript = function( self )
 	addDirectionControls( self );

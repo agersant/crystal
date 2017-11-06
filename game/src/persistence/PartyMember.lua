@@ -42,7 +42,7 @@ PartyMember.spawn = function( self, scene, options )
 
 	local assignedPlayer = self:getAssignedPlayer();
 	if assignedPlayer then
-		entity:addController( PlayerController, assignedPlayer );
+		entity:addController( PlayerController:new( entity, assignedPlayer ) );
 	end
 
 	return entity;

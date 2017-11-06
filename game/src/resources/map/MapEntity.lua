@@ -16,7 +16,7 @@ MapEntity.init = function( self, class, options )
 end
 
 MapEntity.spawn = function( self, scene )
-	local success, err = pcall( function()
+	xpcall( function()
 		local class = Class:getByName( self._class );
 		assert( class );
 		assert( class:isInstanceOf( Entity ) );
@@ -26,10 +26,10 @@ MapEntity.spawn = function( self, scene )
 			assert( self._options.y );
 			entity:setPosition( self._options.x, self._options.y );
 		end
-	end	);
-	if not success then
+	end, function( err )
 		Log:error( "Error spawning map entity of class '" .. tostring( self._class ) .. "':\n" .. tostring( err ) );
-	end
+		print(debug.traceback());
+	end );
 end
 
 

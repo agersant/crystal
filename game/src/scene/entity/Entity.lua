@@ -289,11 +289,11 @@ end
 
 -- CONTROLLER COMPONENT
 
-Entity.addController = function( self, controllerClass, ... )
+Entity.addController = function( self, controller )
 	if self._controller then
 		self:removeScript( self._controller );
 	end
-	self._controller = controllerClass:new( self, ... );
+	self._controller = controller;
 	self:addScript( self._controller );
 	assert( self._controller );
 end

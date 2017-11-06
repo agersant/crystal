@@ -9,7 +9,8 @@ local Controller = Class( "Controller", Script );
 
 Controller.init = function( self, entity, scriptContent )
 	assert( entity );
-	Controller.super.init( self, entity, scriptContent );
+	self._entity = entity;
+	Controller.super.init( self, entity:getScene(), scriptContent );
 end
 
 Controller.getEntity = function( self )
