@@ -187,14 +187,15 @@ MapScene.draw = function( self )
 	love.graphics.pop();
 end
 
-MapScene.spawn = function( self, class, options )
-	assert( type( options ) == "table" );
-	local entity = class:new( self, options );
+MapScene.spawn = function( self, entity )
+	assert( not self._entities[entity] );
+	assert( not self._spawnedEntities[entity] );
 	self._spawnedEntities[entity] = true;
 	return entity;
 end
 
 MapScene.despawn = function( self, entity )
+	assert( not entity:isValid() );
 	self._despawnedEntities[entity] = true;
 end
 

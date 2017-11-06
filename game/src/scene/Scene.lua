@@ -23,6 +23,12 @@ Scene.canProcessSignals = function( self )
 	return self._canProcessSignals;
 end
 
+Scene.spawn = function( self, entity )
+end
+
+Scene.despawn = function( self, entity )
+end
+
 
 
 -- STATIC

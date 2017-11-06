@@ -27,13 +27,12 @@ end
 
 DynamicLayer.spawnEntities = function( self, scene )
 	for i, tile in ipairs( self._tiles ) do
-		local options = {
+		Tile:new( scene, {
 			tileset = self._tileset:getImage(),
 			quad = tile.quad,
 			x = tile.x,
 			y = tile.y,
-		};
-		scene:spawn( Tile, options );
+		} );
 	end
 end
 

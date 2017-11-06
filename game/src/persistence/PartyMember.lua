@@ -36,15 +36,15 @@ PartyMember.spawn = function( self, scene, options )
 	local className = self:getInstanceClass();
 	local class = Class:getByName( className );
 	assert( class );
-	
-	local entity = scene:spawn( class, options );
+
+	local entity = class:new( scene, options );
 	entity:addToParty();
-	
+
 	local assignedPlayer = self:getAssignedPlayer();
 	if assignedPlayer then
 		entity:addController( PlayerController, assignedPlayer );
 	end
-	
+
 	return entity;
 end
 
