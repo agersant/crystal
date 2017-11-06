@@ -19,12 +19,21 @@ local reachAndAttack = function( self )
 	if not target then
 		return;
 	end
-	if Movement.walkToEntity( target, 40 )( self ) then
+	if Movement.walkToEntity( target, 30 )( self ) then
 		if self:isIdle() then
 			Movement.alignWithEntity( entity, target, 2 )( self );
 			if self:isIdle() then
 				Actions.lookAt( target )( self );
-				self:doAction( Actions.attack );
+				self:wait( .2 );
+				if self:isIdle() then
+					Actions.lookAt( target )( self );
+					self:doAction( Actions.attack );
+					self:waitFor( "idle" );
+					if self:isIdle() then
+						self:doAction( Actions.idle );
+						self:wait( .5 + 2 * math.random() );
+					end
+				end
 			end
 		end
 	end
@@ -36,7 +45,6 @@ local controllerScript = function( self )
 			self:waitFrame();
 		else
 			self:doTask( reachAndAttack );
-			self:wait( 1 );
 		end
 	end
 end
@@ -55,6 +63,7 @@ Sahagin.init = function( self, scene )
 	self:addSprite( Sprite:new( sheet ) );
 	self:addPhysicsBody( "dynamic" );
 	self:addLocomotion();
+	self:setMovementSpeed( 40 );
 	self:addCollisionPhysics();
 	self:addCombatData();
 	self:setCollisionRadius( 4 );
