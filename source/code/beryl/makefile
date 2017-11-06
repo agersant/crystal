@@ -1,6 +1,6 @@
-CC ?= clang
+CC = clang
 
-CFLAGS = -shared -fPIC -DLINUX -DTRILIBRARY -Wall -Wno-incompatible-pointer-types-discards-qualifiers
+CFLAGS = -shared -fPIC -fdeclspec -DLINUX -DTRILIBRARY -Wall -Wno-incompatible-pointer-types-discards-qualifiers
 TARGET = libberyl.so
 OBJS = api.o linked_list.o navmesh_generate.o navmesh_query.o vector_math.o triangle.o gpc.o
 
@@ -9,9 +9,9 @@ $(TARGET): $(OBJS)
 
 gpc.o : ../../../lib/gpc/gpc.c
 	$(CC) $(CFLAGS) $< -o $@
-	
+
 triangle.o : ../../../lib/triangle/triangle.c
 	$(CC) $(CFLAGS) $< -o $@
-	
+
 %.o : src/%.c
 	$(CC) $(CFLAGS) $< -o $@
