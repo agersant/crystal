@@ -51,5 +51,13 @@ tests[#tests].body = function()
 	CLI:removeCommand( "testCommand" );
 end
 
+tests[#tests + 1] = { name = "Execute from code" };
+tests[#tests].body = function()
+	local sentinel = "";
+	CLI:addCommand( "testCommand value:string", function( value ) sentinel = value; end );
+	CLI:execute( "testCommand oink" );
+	assert( sentinel == "oink" );
+	CLI:removeCommand( "testCommand" );
+end
 
 return tests;
