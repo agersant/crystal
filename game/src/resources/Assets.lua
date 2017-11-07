@@ -222,6 +222,14 @@ refreshAsset = function( self, rawPath )
 	loadAsset( self, rawPath, "refresh" );
 	self._loadedAssets[path].sources = oldAsset.sources;
 	self._loadedAssets[path].numSources = oldAsset.numSources;
+	for source, _ in pairs( self._loadedAssets[path].sources ) do
+		if isAssetLoaded( self, source ) then
+			local assetType = getAssetType( self, source );
+			if assetType ~= "package" then
+				refreshAsset( self, source .. ".lua" );
+			end
+		end
+	end
 end
 
 unloadAsset = function( self, path, origin )
@@ -251,6 +259,12 @@ end
 
 isAssetLoaded = function( self, path )
 	return self._loadedAssets[path] ~= nil;
+end
+
+getAssetType = function( self, path )
+	assert( type( path ) == "string" );
+	assert( isAssetLoaded( self, path ) );
+	return self._loadedAssets[path].type;
 end
 
 getAsset = function( self, assetType, rawPath )

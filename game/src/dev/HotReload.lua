@@ -60,10 +60,13 @@ local hotReload = function()
 	local gitStatus = handle:read("*a");
 	handle:close();
 
-	for match in string.gmatch( gitStatus, "%s+(%g+).lua" ) do
-		Log:info( "Hot-reloading " .. match );
-		reloadModule( match );
-		Assets:refresh( match .. ".lua" );
+	local filenameRegex = "%s+(%g+)%.([%w%d][%w%d]?[%w%d]?[%w%d]?)";
+	for file, ext in string.gmatch( gitStatus, filenameRegex ) do
+		if ext == "lua" then
+			Log:info( "Hot-reloading module" .. file );
+			reloadModule( file );
+		end
+		Assets:refresh( file .. "." .. ext );
 	end
 
 	CLI:execute( "save hot_reload" );
