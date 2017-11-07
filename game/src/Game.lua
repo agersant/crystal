@@ -1,4 +1,5 @@
 local FPSCounter = require( "src/dev/FPSCounter" );
+local HotReload = require( "src/dev/HotReload" );
 local Log = require( "src/dev/Log" );
 local CLI = require( "src/dev/cli/CLI" );
 local GFXConfig = require( "src/graphics/GFXConfig" );
