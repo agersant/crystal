@@ -15,18 +15,18 @@ local loadPackage, unloadPackage;
 local getPathAndExtension = function( rawPath )
 	assert( type( rawPath ) == "string" );
 	assert( #rawPath > 0 );
-		
+
 	local extension = StringUtils.fileExtension( rawPath );
 	if not extension or #extension == 0 then
 		error( "Asset " .. rawPath .. " has no file extension" );
 	end
-	
+
 	local path = rawPath;
 	if extension == "lua" then
 		path = StringUtils.stripFileExtension( rawPath );
 	end
 	assert( path and #path > 0 );
-	
+
 	return path, extension;
 end
 
@@ -179,7 +179,7 @@ end
 loadAsset = function( self, path, origin )
 	assert( type( origin ) == "string" );
 	local path, extension = getPathAndExtension( path );
-	
+
 	if not isAssetLoaded( self, path ) then
 		local assetData, assetType;
 		if extension == "png" then
@@ -189,9 +189,9 @@ loadAsset = function( self, path, origin )
 		else
 			error( "Unsupported asset file extension: " .. tostring( extension ) );
 		end
-		
+
 		assert( assetType );
-		
+
 		assert( not self._loadedAssets[path] );
 		self._loadedAssets[path] = {
 			raw = assetData,
@@ -201,13 +201,13 @@ loadAsset = function( self, path, origin )
 		};
 		Log:info( "Loaded asset: " .. path );
 	end
-	
+
 	assert( self._loadedAssets[path] );
 	if not self._loadedAssets[path].sources[origin] then
 		self._loadedAssets[path].sources[origin] = true;
 		self._loadedAssets[path].numSources = self._loadedAssets[path].numSources + 1;
 	end
-	
+
 	assert( isAssetLoaded( self, path ) );
 	return self._loadedAssets[path].raw;
 end
@@ -217,12 +217,12 @@ unloadAsset = function( self, path, origin )
 	if not isAssetLoaded( self, path ) then
 		return;
 	end
-	
+
 	if self._loadedAssets[path].sources[origin] then
 		self._loadedAssets[path].sources[origin] = nil;
 		self._loadedAssets[path].numSources = self._loadedAssets[path].numSources - 1;
 	end
-	
+
 	if self._loadedAssets[path].numSources == 0 then
 		if extension == "png" then
 			unloadImage( self, path, origin );
@@ -231,7 +231,7 @@ unloadAsset = function( self, path, origin )
 		else
 			error( "Unsupported asset file extension: " .. tostring( extension ) );
 		end
-		
+
 		self._loadedAssets[path] = nil;
 		Log:info( "Unloaded asset: " .. path );
 	end
