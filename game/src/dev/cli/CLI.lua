@@ -33,10 +33,10 @@ local autoCompleteArrowMargin = 8;
 local autoCompleteArrowWidth = 16;
 local autoCompleteArrowHeight = 8;
 
-local parseInput = function( self )
+local parseInput = function( input )
 	local parse = {};
 	parse.arguments = {};
-	parse.fullText = self._textInput:getText();
+	parse.fullText = input;
 	parse.commandUntrimmed = parse.fullText:match( "^(%s*[^%s]+)" ) or "";
 	parse.command = parse.commandUntrimmed and StringUtils.trim( parse.commandUntrimmed );
 	parse.commandIsComplete = parse.fullText:match( "[^%s]+%s" ) ~= nil;
@@ -48,7 +48,7 @@ local parseInput = function( self )
 end
 
 local updateAutoComplete = function( self )
-	self._parsedInput = parseInput( self );
+	self._parsedInput = parseInput( self._textInput:getText() );
 	self._autoComplete:feedInput( self._parsedInput );
 	self._autoCompleteOutput = self._autoComplete:getSuggestions();
 end
@@ -60,36 +60,8 @@ local wipeInput = function( self )
 	updateAutoComplete( self );
 end
 
-local runCommand = function( self )
-	self._parsedInput = parseInput( self );
-	local command = self._commandStore:getCommand( self._parsedInput.command );
-	if not command then
-		if #self._parsedInput.command > 0 then
-			Log:error( self._parsedInput.command .. " is not a valid command" );
-		end
-		return;
-	end
-	local useArgs = {};
-	for i, arg in ipairs( self._parsedInput.arguments ) do
-		if i > command:getNumArgs() then
-			Log:error( "Too many arguments for calling " .. command:getName() );
-			return;
-		end
-		local requiredType = command:getArg( i ).type;
-		if not command:typeCheckArgument( i, arg ) then
-			Log:error( "Argument #" .. i .. " (" .. command:getArg( i ).name .. ") of command " .. command:getName() .. " must be a " .. requiredType );
-			return;
-		end
-		table.insert( useArgs, command:castArgument( i, arg ) );
-	end
-	if #useArgs < command:getNumArgs() then
-		Log:error( command:getName() .. " requires " .. command:getNumArgs() .. " arguments" );
-		return;
-	end
-	local success, errorMessage = pcall( command:getFunc(), unpack( useArgs ) );
-	if not success then
-		Log:error( "Error while running command '" .. self._parsedInput.fullText .. "':\n" .. ( errorMessage or "" ) );
-	end
+local submitInput = function( self )
+	self:execute( self._textInput:getText() );
 	wipeInput( self );
 end
 
@@ -223,6 +195,39 @@ CLI.draw = function( self )
 
 end
 
+
+CLI.execute = function( self, command )
+	local parsedInput = parseInput( command );
+	local command = self._commandStore:getCommand( parsedInput.command );
+	if not command then
+		if #parsedInput.command > 0 then
+			Log:error( parsedInput.command .. " is not a valid command" );
+		end
+		return;
+	end
+	local useArgs = {};
+	for i, arg in ipairs( parsedInput.arguments ) do
+		if i > command:getNumArgs() then
+			Log:error( "Too many arguments for calling " .. command:getName() );
+			return;
+		end
+		local requiredType = command:getArg( i ).type;
+		if not command:typeCheckArgument( i, arg ) then
+			Log:error( "Argument #" .. i .. " (" .. command:getArg( i ).name .. ") of command " .. command:getName() .. " must be a " .. requiredType );
+			return;
+		end
+		table.insert( useArgs, command:castArgument( i, arg ) );
+	end
+	if #useArgs < command:getNumArgs() then
+		Log:error( command:getName() .. " requires " .. command:getNumArgs() .. " arguments" );
+		return;
+	end
+	local success, errorMessage = pcall( command:getFunc(), unpack( useArgs ) );
+	if not success then
+		Log:error( "Error while running command '" .. parsedInput.fullText .. "':\n" .. ( errorMessage or "" ) );
+	end
+end
+
 CLI.textInput = function( self, text )
 	if not self:isActive() then
 		return;
@@ -243,7 +248,7 @@ CLI.keyPressed = function( self, key, scanCode, ctrl )
 	end
 
 	if key == "return" or key == "kpenter" then
-		runCommand( self );
+		submitInput( self );
 		return;
 	end
 
