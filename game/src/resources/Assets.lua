@@ -212,6 +212,18 @@ loadAsset = function( self, path, origin )
 	return self._loadedAssets[path].raw;
 end
 
+refreshAsset = function( self, rawPath )
+	local path, extension = getPathAndExtension( rawPath );
+	if not isAssetLoaded( self, path ) then
+		return;
+	end
+	local oldAsset = self._loadedAssets[path];
+	self._loadedAssets[path] = nil;
+	loadAsset( self, rawPath, "refresh" );
+	self._loadedAssets[path].sources = oldAsset.sources;
+	self._loadedAssets[path].numSources = oldAsset.numSources;
+end
+
 unloadAsset = function( self, path, origin )
 	local path, extension = getPathAndExtension( path );
 	if not isAssetLoaded( self, path ) then
@@ -263,6 +275,10 @@ end
 
 Assets.load = function( self, path )
 	loadAsset( self, path, "user" );
+end
+
+Assets.refresh = function( self, path )
+	refreshAsset( self, path );
 end
 
 Assets.unload = function( self, path )

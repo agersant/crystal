@@ -63,9 +63,9 @@ local hotReload = function()
 	for match in string.gmatch( gitStatus, "%s+(%g+).lua" ) do
 		Log:info( "Hot-reloading " .. match );
 		reloadModule( match );
+		Assets:refresh( match .. ".lua" );
 	end
 
-	Assets:init();
 	CLI:execute( "save hot_reload" );
 	CLI:execute( "load hot_reload" );
 end
