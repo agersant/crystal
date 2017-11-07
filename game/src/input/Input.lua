@@ -19,7 +19,7 @@ Input.init = function( self )
 	player1Device:addBinding( "moveRight", "right" );
 	player1Device:addBinding( "moveUp", "up" );
 	player1Device:addBinding( "moveDown", "down" );
-	player1Device:addBinding( "attack", "z" );
+	player1Device:addBinding( "interact", "q" );
 	player1Device:addBinding( "useSkill1", "q" );
 	player1Device:addBinding( "useSkill2", "w" );
 	player1Device:addBinding( "useSkill3", "e" );

@@ -3,6 +3,7 @@ local Input = require( "src/input/Input" );
 local Actions = require( "src/scene/Actions" );
 local Script = require( "src/scene/Script" );
 local InputDrivenController = require( "src/scene/controller/InputDrivenController" );
+local TableUtils = require( "src/utils/TableUtils" );
 
 local PlayerController = Class( "PlayerController", InputDrivenController );
 
@@ -112,8 +113,36 @@ local skillControls = function( skillIndex )
 	end
 end
 
+local addInteractionControls = function( self )
+	self._contacts = {};
+
+	self:thread( function()
+		while true do
+			local contactEntity = self:waitFor( "+touch" );
+			self._contacts[contactEntity] = true;
+			self:thread(function()
+				repeat
+					local dropEntity = self:waitFor( "-touch" );
+				until dropEntity == contactEntity
+				self._contacts[contactEntity] = nil;
+			end );
+		end
+	end);
+
+	self:thread( function()
+		while true do
+			self:waitForCommandPress( "interact" );
+			local contactCopy = TableUtils.shallowCopy( self._contacts );
+			for entity, _ in pairs( contactCopy ) do
+				entity:signal( "interact" );
+			end
+		end
+	end);
+end
+
 local playerControllerScript = function( self )
 	addDirectionControls( self );
+	addInteractionControls( self );
 	self:thread( walkControls );
 	for i = 1, 4 do
 		self:thread( skillControls( i ) );

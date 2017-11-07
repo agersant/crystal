@@ -52,6 +52,12 @@ local beginOrEndContact = function( self, fixtureA, fixtureB, contact, prefix )
 			objectA:signal( prefix .. "trigger", objectB );
 		elseif bit.band( categoryA, CollisionFilters.SOLID ) ~= 0 and bit.band( categoryB, CollisionFilters.TRIGGER ) ~= 0 then
 			objectB:signal( prefix .. "trigger", objectA );
+
+		-- Solid VS solid
+		elseif bit.band( categoryA, CollisionFilters.SOLID ) ~= 0 and bit.band( categoryB, CollisionFilters.SOLID ) ~= 0 then
+			objectA:signal( prefix .. "touch", objectB );
+			objectB:signal( prefix .. "touch", objectA );
+
 		end
 	end
 end
