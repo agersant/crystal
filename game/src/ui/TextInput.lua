@@ -105,6 +105,10 @@ TextInput.clear = function( self )
 	self._undoStack:clear();
 end
 
+TextInput.rebaseUndoStack = function( self )
+	self._undoStack:rebase();
+end
+
 TextInput.getText = function( self )
 	return self._text;
 end
