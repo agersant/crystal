@@ -45,6 +45,11 @@ UndoStack.clear = function( self )
 	self._cursor = 1;
 end
 
+UndoStack.rebase = function( self )
+	self._stack = { table.remove( self._stack ) };
+	self._cursor = 1;
+end
+
 
 
 return UndoStack;
