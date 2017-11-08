@@ -60,4 +60,28 @@ tests[#tests].body = function()
 	CLI:removeCommand( "testCommand" );
 end
 
+tests[#tests + 1] = { name = "Execute from history" };
+tests[#tests].body = function()
+	local sentinel = "";
+	CLI:addCommand( "testCommand value:string", function( value ) sentinel = value; end );
+
+	CLI:textInput( "testCommand oink" );
+	CLI:keyPressed( "return" );
+	assert( sentinel == "oink" );
+
+	CLI:keyPressed( "up" );
+	CLI:textInput( "k" );
+	CLI:keyPressed( "return" );
+	assert( sentinel == "oinkk" );
+
+	CLI:keyPressed( "up" );
+	CLI:keyPressed( "up" );
+	CLI:keyPressed( "return" );
+	assert( sentinel == "oink" );
+
+	CLI:removeCommand( "testCommand" );
+end
+
+
+
 return tests;

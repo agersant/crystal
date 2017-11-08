@@ -19,6 +19,7 @@ end
 
 -- IMPLEMENTATION
 
+local maxHistory = 20;
 local maxUndo = 20;
 local fontSize = 20;
 local marginX = 20;
@@ -47,22 +48,52 @@ local parseInput = function( input )
 	return parse;
 end
 
+local getCurrentInput = function( self )
+	return self._inputs[self._inputCursor];
+end
+
+local getCurrentInputText = function( self )
+	return getCurrentInput( self ):getText();
+end
+
 local updateAutoComplete = function( self )
-	self._parsedInput = parseInput( self._textInput:getText() );
+	self._autoCompleteCursor = 0;
+	self._parsedInput = parseInput( getCurrentInputText( self ) );
 	self._autoComplete:feedInput( self._parsedInput );
 	self._autoCompleteOutput = self._autoComplete:getSuggestions();
 end
 
-local wipeInput = function( self )
-	self._textInput:clear();
-	self._autoCompleteCursor = 0;
-	self._unguidedInput = "";
+local pushCommandToHistory = function( self, command )
+	self._inputs[1].submittedCommand = command;
+	if #self._inputs > maxHistory then
+		table.remove( self._inputs );
+	end
+	for _, input in ipairs( self._inputs ) do
+		input:setText( input.submittedCommand );
+		input:rebaseUndoStack();
+	end
+end
+
+local navigateHistoryBackward = function( self )
+	self._inputCursor = math.min( self._inputCursor + 1, #self._inputs );
+	updateAutoComplete( self );
+end
+
+local navigateHistoryForward = function( self )
+	self._inputCursor = math.max( self._inputCursor - 1, 1 );
 	updateAutoComplete( self );
 end
 
 local submitInput = function( self )
-	self:execute( self._textInput:getText() );
-	wipeInput( self );
+	local command = getCurrentInputText( self );
+	if #command == 0 then
+		return;
+	end
+	self:execute( command );
+	pushCommandToHistory( self, command );
+	table.insert( self._inputs, 1, TextInput:new( maxUndo ) );
+	self._inputCursor = 1;
+	updateAutoComplete( self );
 end
 
 
@@ -72,12 +103,13 @@ end
 CLI.init = function( self )
 	self._commandStore = CommandStore:new();
 	self._autoComplete = AutoComplete:new( self._commandStore );
-	self._textInput = TextInput:new( maxUndo );
+	self._inputs = { TextInput:new( maxUndo ) };
+	self._inputCursor = 1;
 	self._isActive = false;
 	self._textInputWasOn = false;
 	self._keyRepeatWasOn = false;
 	self._font = Font:new( "dev", fontSize );
-	wipeInput( self );
+	updateAutoComplete( self );
 end
 
 CLI.toggle = function( self )
@@ -87,7 +119,6 @@ CLI.toggle = function( self )
 		keyRepeatWasOn = love.keyboard.hasKeyRepeat();
 		love.keyboard.setTextInput( true );
 		love.keyboard.setKeyRepeat( true );
-		wipeInput( self );
 	else
 		love.keyboard.setTextInput( textInputWasOn );
 		love.keyboard.setKeyRepeat( keyRepeatWasOn );
@@ -129,10 +160,10 @@ CLI.draw = function( self )
 	local inputX = chevronX + font:getWidth( chevron );
 	local inputY = chevronY;
 	love.graphics.setColor( Colors.white );
-	font:print( self._textInput:getText(), inputX, inputY );
+	font:print( getCurrentInputText( self ), inputX, inputY );
 
 	-- Draw caret
-	local pre = self._textInput:getTextLeftOfCursor();
+	local pre = getCurrentInput( self ):getTextLeftOfCursor();
 	local caretX = inputX + font:getWidth( pre );
 	local caretY = inputY;
 	local caretAlpha = .5 * ( 1 + math.sin( love.timer.getTime() * 1000 / 100 ) );
@@ -195,7 +226,6 @@ CLI.draw = function( self )
 
 end
 
-
 CLI.execute = function( self, command )
 	local parsedInput = parseInput( command );
 	local command = self._commandStore:getCommand( parsedInput.command );
@@ -232,7 +262,8 @@ CLI.textInput = function( self, text )
 	if not self:isActive() then
 		return;
 	end
-	self._textInput:textInput( text );
+	getCurrentInput( self ):textInput( text );
+	self._unguidedInput = getCurrentInputText( self );
 	updateAutoComplete( self );
 end
 
@@ -252,9 +283,17 @@ CLI.keyPressed = function( self, key, scanCode, ctrl )
 		return;
 	end
 
+	if key == "up" then
+		navigateHistoryBackward( self );
+	end
+
+	if key == "down" then
+		navigateHistoryForward( self );
+	end
+
 	if key == "tab" and self._autoCompleteOutput.state == "command" then
-		local oldText = self._textInput:getText();
-		local oldCursor = self._textInput:getCursor();
+		local oldText = getCurrentInputText( self );
+		local oldCursor = getCurrentInput( self ):getCursor();
 		local numSuggestions = #self._autoCompleteOutput.lines;
 		if numSuggestions > 0 then
 			if self._autoCompleteCursor == 0 then
@@ -263,21 +302,19 @@ CLI.keyPressed = function( self, key, scanCode, ctrl )
 				self._autoCompleteCursor = ( self._autoCompleteCursor + 1 ) % ( numSuggestions + 1 );
 			end
 			if self._autoCompleteCursor == 0 then
-				self._textInput:setText( self._unguidedInput );
+				getCurrentInput( self ):setText( self._unguidedInput );
 			else
-				self._textInput:setText( self._autoCompleteOutput.lines[self._autoCompleteCursor].command:getName() );
+				getCurrentInput( self ):setText( self._autoCompleteOutput.lines[self._autoCompleteCursor].command:getName() );
 			end
 		end
 		return;
 	end
 
-	local textChanged, cursorMoved = self._textInput:keyPressed( key, scanCode, ctrl );
-	self._unguidedInput = self._textInput:getText();
+	local textChanged, cursorMoved = getCurrentInput( self ):keyPressed( key, scanCode, ctrl );
+	self._unguidedInput = getCurrentInputText( self );
 	if textChanged then
-		self._autoCompleteCursor = 0;
 		updateAutoComplete( self );
 	end
-
 end
 
 CLI.addCommand = function( self, description, func )
