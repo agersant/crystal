@@ -82,6 +82,17 @@ tests[#tests].body = function()
 	CLI:removeCommand( "testCommand" );
 end
 
+tests[#tests + 1] = { name = "Autocomplete" };
+tests[#tests].body = function()
+	local sentinel = "";
+	CLI:addCommand( "testCommand", function( value ) sentinel = "oink"; end );
+	CLI:textInput( "testcomm" );
+	CLI:keyPressed( "tab" );
+	CLI:keyPressed( "return" );
+	assert( sentinel == "oink" );
+	CLI:removeCommand( "testCommand" );
+end
+
 
 
 return tests;
