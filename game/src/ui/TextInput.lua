@@ -114,6 +114,7 @@ TextInput.getTextLeftOfCursor = function( self )
 end
 
 TextInput.setText = function( self, text )
+	assert( text );
 	self._text = text;
 	moveToEnd( self );
 	pushUndoState( self );
@@ -124,6 +125,7 @@ TextInput.getCursor = function( self )
 end
 
 TextInput.textInput = function( self, text )
+	assert( text );
 	insert( self, text );
 	pushUndoState( self );
 end
@@ -132,7 +134,7 @@ TextInput.keyPressed = function( self, key, scanCode, ctrl )
 
 	local oldText = self._text;
 	local oldCursor = self._cursor;
-	
+
 	if key == "home" then
 		moveToHome( self );
 	elseif key == "end" then
@@ -177,14 +179,14 @@ TextInput.keyPressed = function( self, key, scanCode, ctrl )
 	elseif ctrl and key == "y" then
 		redo( self );
 	end
-	
+
 	local textChanged = self._text ~= oldText;
 	local cursorMoved = self._cursor ~= oldCursor;
-	
+
 	if textChanged or cursorMoved then
 		pushUndoState( self );
 	end
-	
+
 	return textChanged, cursorMoved;
 end
 
