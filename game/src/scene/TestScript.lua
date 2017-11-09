@@ -283,4 +283,27 @@ end
 
 
 
+tests[#tests + 1] = { name = "Succesive waits not treated as waitForAny" };
+tests[#tests].body = function()
+	local sentinel = false;
+	local scene = Scene:new();
+	local script = Script:new( scene, function( self )
+		local v1 = self:waitFor( "s1" );
+		assert( v1 == 1 );
+		local v2 = self:waitFor( "s2" );
+		print( v2 );
+		assert( v2 == 2 );
+		local v3 = self:waitFor( "s3" );
+		assert( v3 == 3 );
+		sentinel = true;
+	end );
+
+	script:update( 0 );
+	script:signal( "s1", 1 );
+	script:signal( "s2", 2 );
+	script:signal( "s3", 3 );
+	assert( sentinel );
+end
+
+
 return tests;

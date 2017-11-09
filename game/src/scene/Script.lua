@@ -65,6 +65,7 @@ local unblockThread = function( self, thread, signal, ... )
 	if TableUtils.countKeys( thread.blockedBy ) > 1 then
 		table.insert( signalData, 1, signal );
 	end
+	thread.blockedBy = {};
 	thread.isMarkedForUnblock = true;
 	pumpThread( self, thread, signalData );
 end
@@ -202,7 +203,6 @@ Script.update = function( self, dt )
 	-- Unblock threads. We don't want to do this from inside the "run threads" loop above to avoid a thread being pumped twice (once in unblockThread, once in the loop above).
 	for _, thread in ipairs( self._threads ) do
 		if thread.isBlocked and thread.isMarkedForUnblock then
-			thread.blockedBy = {};
 			thread.isBlocked = false;
 			thread.isMarkedForUnblock = false;
 		end
