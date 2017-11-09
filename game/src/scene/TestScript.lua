@@ -291,7 +291,6 @@ tests[#tests].body = function()
 		local v1 = self:waitFor( "s1" );
 		assert( v1 == 1 );
 		local v2 = self:waitFor( "s2" );
-		print( v2 );
 		assert( v2 == 2 );
 		local v3 = self:waitFor( "s3" );
 		assert( v3 == 3 );
