@@ -54,9 +54,18 @@ tests[#tests].body = function()
 	device:keyPressed( "z" );
 	assert( device:isCommandActive( "attack" ) );
 	assert( device:isCommandActive( "talk" ) );
+	for i, command in device:pollEvents() do
+		assert( i ~= 1 or command == "+attack" );
+		assert( i ~= 2 or command == "+talk" );
+	end
+	device:flushEvents();
 	device:keyReleased( "z" );
 	assert( not device:isCommandActive( "attack" ) );
 	assert( not device:isCommandActive( "talk" ) );
+	for i, command in device:pollEvents() do
+		assert( i ~= 1 or command == "-attack" );
+		assert( i ~= 2 or command == "-talk" );
+	end
 end
 
 
