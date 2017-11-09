@@ -9,7 +9,7 @@ local InputDrivenController = Class( "InputDrivenController", Controller );
 -- IMPLEMENTATION
 
 local sendCommandSignals = function( self )
-	for i, commandEvent in self._inputDevice:pollEvents() do
+	for _, commandEvent in self._inputDevice:pollEvents() do
 		self:signal( commandEvent );
 	end
 end
