@@ -130,11 +130,12 @@ local addInteractionControls = function( self )
 	end);
 
 	self:thread( function()
+		local player = self:getEntity();
 		while true do
 			self:waitForCommandPress( "interact" );
 			local contactCopy = TableUtils.shallowCopy( self._contacts );
 			for entity, _ in pairs( contactCopy ) do
-				entity:signal( "interact" );
+				entity:signal( "interact", player );
 			end
 		end
 	end);
