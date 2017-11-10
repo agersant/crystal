@@ -44,11 +44,10 @@ local addDirectionControls = function( self )
 		local entity = self:getEntity();
 			while true do
 				if self:isIdle() then
-					local inputDevice = self:getInputDevice();
-					local left = inputDevice:isCommandActive( "moveLeft" );
-					local right = inputDevice:isCommandActive( "moveRight" );
-					local up = inputDevice:isCommandActive( "moveUp" );
-					local down = inputDevice:isCommandActive( "moveDown" );
+					local left = self:isCommandActive( "moveLeft" );
+					local right = self:isCommandActive( "moveRight" );
+					local up = self:isCommandActive( "moveUp" );
+					local down = self:isCommandActive( "moveDown" );
 					if left or right or up or down then
 						local xDir, yDir;
 						if left and right then
@@ -85,10 +84,10 @@ local walkControls = function( self )
 	local entity = self:getEntity();
 	while true do
 		if self:isIdle() then
-			local left = self:getInputDevice():isCommandActive( "moveLeft" );
-			local right = self:getInputDevice():isCommandActive( "moveRight" );
-			local up = self:getInputDevice():isCommandActive( "moveUp" );
-			local down = self:getInputDevice():isCommandActive( "moveDown" );
+			local left = self:isCommandActive( "moveLeft" );
+			local right = self:isCommandActive( "moveRight" );
+			local up = self:isCommandActive( "moveUp" );
+			local down = self:isCommandActive( "moveDown" );
 			if left or right or up or down then
 				self:doAction( Actions.walk( entity:getAngle() ) );
 			else
@@ -133,9 +132,11 @@ local addInteractionControls = function( self )
 		local player = self:getEntity();
 		while true do
 			self:waitForCommandPress( "interact" );
-			local contactCopy = TableUtils.shallowCopy( self._contacts );
-			for entity, _ in pairs( contactCopy ) do
-				entity:signal( "interact", player );
+			if self:isIdle() then
+				local contactCopy = TableUtils.shallowCopy( self._contacts );
+				for entity, _ in pairs( contactCopy ) do
+					entity:signal( "interact", player );
+				end
 			end
 		end
 	end);

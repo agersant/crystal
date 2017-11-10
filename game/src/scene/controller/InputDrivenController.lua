@@ -10,6 +10,9 @@ local InputDrivenController = Class( "InputDrivenController", Controller );
 
 local sendCommandSignals = function( self )
 	for _, commandEvent in self._inputDevice:pollEvents() do
+		if self._disabled > 0 then
+			return;
+		end
 		self:signal( commandEvent );
 	end
 end
@@ -22,6 +25,7 @@ InputDrivenController.init = function( self, entity, scriptContent, playerIndex 
 	InputDrivenController.super.init( self, entity, scriptContent );
 	self._playerIndex = playerIndex;
 	self._inputDevice = Input:getDevice( playerIndex );
+	self._disabled = 0;
 end
 
 InputDrivenController.getAssignedPlayer = function( self )
@@ -42,6 +46,21 @@ InputDrivenController.waitForCommandPress = function( self, command )
 		self:waitFor( "-" .. command );
 	end
 	self:waitFor( "+" .. command );
+end
+
+InputDrivenController.isCommandActive = function( self, command )
+	if self._disabled > 0 then
+		return false;
+	end
+	return self._inputDevice:isCommandActive( command );
+end
+
+InputDrivenController.disable = function( self )
+	self._disabled = self._disabled + 1;
+end
+
+InputDrivenController.enable = function( self )
+	self._disabled = self._disabled - 1;
 end
 
 
