@@ -119,11 +119,6 @@ MapScene.init = function( self, mapName, party, partyX, partyY )
 	self:update( 0 );
 end
 
--- TODO TMP
-MapScene.getPlayer = function( self )
-	return self._player;
-end
-
 MapScene.update = function( self, dt )
 	MapScene.super.update( self, dt );
 

@@ -54,8 +54,9 @@ DevBotController.run = function( self )
 				self:doTask( Movement.walkToPoint( 32, 200, 6 ) );
 			end
 			if DevBotController._behavior == "follow" then
-				-- TODO TMP
-				self:doTask( Movement.walkToEntity( entity:getScene():getPlayer(), 40 ) );
+				local player = entity:getScene():getPartyMemberEntities[1];
+				assert( player );
+				self:doTask( Movement.walkToEntity( player, 40 ) );
 			end
 		end
 		self:waitFrame();
