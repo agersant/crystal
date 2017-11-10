@@ -1,4 +1,5 @@
 require( "src/utils/OOP" );
+local GFXConfig = require( "src/graphics/GFXConfig" );
 local Colors = require( "src/resources/Colors" );
 local MathUtils = require( "src/utils/MathUtils" );
 
@@ -100,33 +101,33 @@ MapCollisionChainData.getNumSegments = function( self )
 end
 
 MapCollisionChainData.removeMidPoints = function( self )
-	
+
 	local numSegments = self:getNumSegments();
 	if numSegments < 2 then
 		return;
 	end
-	
+
 	for i, x1, y1, x2, y2 in self:segments() do
 		local iNext = i == numSegments and 1 or i + 1;
 		local nx1, ny1, nx2, ny2 = self:getSegment( iNext );
-		
+
 		assert( x2 == nx1 );
 		assert( y2 == ny1 );
 		local ux, uy = x2 - x1, y2 - y1;
 		local vx, vy = nx2 - x1, ny2 - y1;
-		
+
 		if MathUtils.almostZero( MathUtils.vectorLength2( ux, uy ) ) or MathUtils.almostZero( MathUtils.vectorLength2( vx, vy ) ) then
 			self:removeVertex( iNext );
 			return self:removeMidPoints();
 		end
-		
+
 		local angle = math.deg( MathUtils.angleBetweenVectors( ux, uy, vx, vy ) );
 		if MathUtils.almostZero( angle ) or MathUtils.almostEqual( angle, 180 ) then
 			self:removeVertex( iNext );
 			return self:removeMidPoints();
 		end
 	end
-	
+
 end
 
 
@@ -172,26 +173,26 @@ MapCollisionChainData.merge = function( self, otherChain )
 	end
 	for iOld, oldX1, oldY1, oldX2, oldY2 in self:segments() do
 		for iNew, newX1, newY1, newX2, newY2 in otherChain:segments() do
-			
+
 			local oldX, oldY = oldX2 - oldX1, oldY2 - oldY1;
 			local newX, newY = newX2 - newX1, newY2 - newY1;
-			
+
 			local allFourPointsAligned 	= 	MathUtils.almostZero( MathUtils.crossProduct( oldX, oldY, newX1 - oldX1, newY1 - oldY1 ) )
 										and MathUtils.almostZero( MathUtils.crossProduct( oldX, oldY, newX2 - oldX1, newY2 - oldY1 ) );
-										
+
 			if allFourPointsAligned then
 				local oldSegmentLength2 = MathUtils.vectorLength2( oldX, oldY );
 				local t1 =  MathUtils.dotProduct( oldX, oldY, newX1 - oldX1, newY1 - oldY1 ) / oldSegmentLength2; -- How far new segment's point 1 is along old segment
 				local t2 =  MathUtils.dotProduct( oldX, oldY, newX2 - oldX1, newY2 - oldY1 ) / oldSegmentLength2; -- How far new segment's point 2 is along old segment
-				
+
 				local segmentsMatch = ( MathUtils.almostZero( t1 ) and MathUtils.almostEqual( t2, 1 ) ) or ( MathUtils.almostEqual( t1, 1 ) and MathUtils.almostZero( t2 ) );
 				local segmentsIntersect = ( t1 > 0 and t1 < 1 ) or ( t2 > 0 and t2 < 1 );
 				local flipped = t2 < t1; -- New and old segments are oriented in opposite directions
-				
+
 				if segmentsMatch then
 					replaceSegmentByChain( self, iOld, iNew, otherChain, flipped );
 					return true;
-					
+
 				elseif segmentsIntersect then
 					local iOldInsert = iOld == self:getNumSegments() and 1 or iOld + 1;
 					self:insertVertex( oldX1 + ( flipped and t1 or t2 ) * oldX, oldY1 + ( flipped and t1 or t2 ) * oldY, iOldInsert );
@@ -211,7 +212,7 @@ end
 MapCollisionChainData.draw = function( self )
 	love.graphics.setLineWidth( 2 );
 	love.graphics.polygon( "line", self._verts );
-	love.graphics.setPointSize( 6 );
+	love.graphics.setPointSize( 6 * GFXConfig:getZoom() );
 	love.graphics.points( self._verts );
 end
 
