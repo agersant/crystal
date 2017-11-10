@@ -20,7 +20,6 @@ local buildBindingTables = function( self )
 			numInputsDown = 0,
 		};
 		table.insert( self._commandBindings[command].keys, key );
-
 	end
 end
 
