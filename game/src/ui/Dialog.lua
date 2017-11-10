@@ -43,13 +43,34 @@ end
 
 Dialog.init = function( self, scene )
 	Dialog.super.init( self, scene, function() end );
+	self._textSpeed = 25;
 	self._owner = nil;
 	self._player = nil;
+	self._targetText = nil;
+	self._currentText = nil;
+	self._currentGlyphCount = nil;
 end
 
 Dialog.update = function( self, dt )
 	sendCommandSignals( self );
 	Dialog.super.update( self, dt );
+
+	if self._targetText and self._currentText ~= self._targetText then
+		self._currentGlyphCount = self._currentGlyphCount + dt * self._textSpeed;
+		self._currentGlyphCount = math.min( self._currentGlyphCount, #self._targetText );
+		if math.floor( self._currentGlyphCount ) > 1 then
+			-- TODO: This assumes each glyph is one byte, not UTF-8 aware
+			self._currentText = string.sub( self._targetText, 1, self._currentGlyphCount );
+		else
+			self._currentText = "";
+		end
+	end
+end
+
+Dialog.draw = function( self, dt )
+	if self._currentText then
+		love.graphics.printf( self._currentText, 10, 10, 100, "left" );
+	end
 end
 
 Dialog.setPortait = function( self, portait )
@@ -77,12 +98,19 @@ Dialog.say = function( self, text )
 	assert( self._player ~= nil );
 
 	Log:info( "Displaying dialog: " .. text );
+	self._targetText = text;
+	self._currentText = "";
+	self._currentGlyphCount = 0;
 
 	local controller = self._player:getController();
 	if controller:isInstanceOf( InputDrivenController ) then
 		local dialog = self;
 		self:thread( function()
 			waitForCommandPress( self, "advanceDialog" );
+			if self._currentText ~= self._targetText then
+				self._currentText = self._targetText;
+				waitForCommandPress( self, "advanceDialog" );
+			end
 			dialog._owner:signal( "advanceDialog" );
 		end );
 	end
@@ -99,6 +127,8 @@ Dialog.close = function( self )
 		controller:enable();
 	end
 
+	self._targetText = nil;
+	self._currentText = nil;
 	self._owner = nil;
 	self._player = nil;
 end
