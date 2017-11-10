@@ -38,13 +38,8 @@ InputDrivenController.update = function( self, dt )
 end
 
 InputDrivenController.waitForCommandPress = function( self, command )
-	while true do
-		local inputDevice = self:getInputDevice();
-		if inputDevice and not inputDevice:isCommandActive( command ) then
-			break;
-		else
-			self:waitFrame();
-		end
+	if self._inputDevice:isCommandActive( command ) then
+		self:waitFor( "-" .. command );
 	end
 	self:waitFor( "+" .. command );
 end
