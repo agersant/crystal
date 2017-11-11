@@ -9,6 +9,7 @@ local Scene = require( "src/scene/Scene" );
 local HUD = require( "src/ui/HUD" );
 
 
+
 love.load = function()
 	love.keyboard.setTextInput( false );
 	require( "src/graphics/GFXCommands" ); 				-- Register commands
