@@ -12,7 +12,6 @@ local HUD = require( "src/ui/HUD" );
 
 love.load = function()
 	love.keyboard.setTextInput( false );
-	require( "src/graphics/GFX" ); 						-- Override Love defaults
 	require( "src/graphics/GFXCommands" ); 				-- Register commands
 	require( "src/persistence/PlayerSaveCommands" ); 	-- Register commands
 	require( "src/scene/MapSceneCommands" ); 			-- Register commands
