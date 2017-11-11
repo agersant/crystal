@@ -15,24 +15,21 @@ end
 -- PUBLIC API
 
 Fonts.init = function( self )
-	self:flush();
+	self._fontObjects = {};
 end
 
-Fonts.getRaw = function( self, name, size )
+Fonts.get = function( self, name, size )
 	if self._fontObjects[name] and self._fontObjects[name][size] then
 		return self._fontObjects[name][size];
 	end
 	self._fontObjects[name] = self._fontObjects[name] or {};
 	assert( not self._fontObjects[name][size] );
-	
+
 	local fontFile = pickFont( name );
 	self._fontObjects[name][size] = love.graphics.newFont( fontFile, size );
+	self._fontObjects[name][size]:setFilter( "nearest" );
 	Log:info( "Registered font " .. fontFile .. " at size " .. size );
 	return self._fontObjects[name][size];
-end
-
-Fonts.flush = function( self )
-	self._fontObjects = {};
 end
 
 

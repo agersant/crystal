@@ -1,8 +1,8 @@
 require( "src/utils/OOP" );
 local CLI = require( "src/dev/cli/CLI" );
 local Log = require( "src/dev/Log" );
-local Font = require( "src/graphics/Font" );
 local Colors = require( "src/resources/Colors" );
+local Fonts = require( "src/resources/Fonts" );
 
 local FPSCounter = Class( "FPSCounter" );
 
@@ -31,7 +31,7 @@ local textPaddingY = 5;
 FPSCounter.init = function( self )
 	self._frameDurations = {};
 	self._isActive = false;
-	self._font = Font:new( "dev", fontSize );
+	self._font = Fonts:get( "dev", fontSize );
 end
 
 FPSCounter.update = function( self, dt )
@@ -43,7 +43,7 @@ FPSCounter.update = function( self, dt )
 	while #self._frameDurations > numFramesRecorded do
 		table.remove( self._frameDurations, 1 );
 	end
-	
+
 	local delta = love.timer.getAverageDelta();
 	local averageFPS = math.floor( 1 / delta );
 	self._text = string.format( "FPS: %d", averageFPS );
@@ -56,29 +56,30 @@ FPSCounter.draw = function( self )
 	end
 
 	local width = numFramesRecorded;
-	
+
 	love.graphics.setColor( Colors.darkViridian:alpha( 255 * 0.7 ) );
 	love.graphics.rectangle( "fill", paddingX, paddingY, width, height );
 
 	local x = paddingX + width - 1;
 	local y = paddingY + height;
-	
+
 	love.graphics.setColor( Colors.cyan );
 	for i = #self._frameDurations, 1, -1 do
 		local fps = math.min( 1 / self._frameDurations[i], maxFPSDisplay );
 		love.graphics.rectangle( "fill", x, y, 1, -height * fps / maxFPSDisplay );
 		x = x - 1;
 	end
-	
+
 	love.graphics.setColor( Colors.darkViridian );
 	love.graphics.rectangle( "fill", paddingX, y - height * targetFPS / maxFPSDisplay, width, 1 );
-	
+
 	x = paddingX + textPaddingX;
 	y = paddingY + textPaddingY;
 	love.graphics.setColor( Colors.nightSkyBlue );
-	self._font:print( self._text, x + 1, y + 1 );
+	love.graphics.setFont( self._font );
+	love.graphics.print( self._text, x + 1, y + 1 );
 	love.graphics.setColor( Colors.white );
-	self._font:print( self._text, x, y );
+	love.graphics.print( self._text, x, y );
 end
 
 FPSCounter.show = function( self )

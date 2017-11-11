@@ -1,8 +1,8 @@
 require( "src/utils/OOP" );
 local FFI = require( "ffi" );
 local Path = require( "src/ai/movement/Path" );
-local Font = require( "src/graphics/Font" );
 local Colors = require( "src/resources/Colors" );
+local Fonts = require( "src/resources/Fonts" );
 local MathUtils = require( "src/utils/MathUtils" );
 local Beryl = FFI.load( "beryl" );
 
@@ -18,7 +18,7 @@ FFI.cdef[[
 		double x;
 		double y;
 	} BVector;
-	
+
 	typedef struct BObstacle
 	{
 		int numVertices;
@@ -59,7 +59,7 @@ FFI.cdef[[
 
 	void generateNavmesh( BMap *map, int padding, BNavmesh *outNavmesh );
 	void planPath( const BNavmesh *navmesh, double startX, double startY, double endX, double endY, BPath *outPath );
-	
+
 	void freeNavmesh( BNavmesh *navmesh );
 	void freePath( BPath *path );
 ]]
@@ -83,14 +83,14 @@ local newBPath = function( self )
 end
 
 local generateBNavmesh = function( self, width, height, collisionMesh, padding )
-	
+
 	assert( width > 0 );
 	assert( height > 0 );
 
 	local bMap = FFI.new( FFI.typeof( "BMap" ) );
 	bMap.width = width;
 	bMap.height = height;
-	
+
 	local obstacles = {};
 	for _, chain in collisionMesh:chains() do
 		if not chain:isOuter() then
@@ -107,10 +107,10 @@ local generateBNavmesh = function( self, width, height, collisionMesh, padding )
 	end
 	bMap.numObstacles = #obstacles;
 	bMap.obstacles = FFI.new( FFI.typeof( "BObstacle[?]" ), #obstacles, obstacles );
-	
+
 	local bNavmesh = newBNavmesh( self );
 	Beryl.generateNavmesh( bMap, padding, bNavmesh );
-	
+
 	return bNavmesh;
 end
 
@@ -140,7 +140,7 @@ Navmesh.init = function( self, width, height, collisionMesh, padding )
 	self._bNavmesh = generateBNavmesh( self, width, height, collisionMesh, padding );
 	parseBNavmesh( self, self._bNavmesh );
 	if gConf.features.debugDraw then
-		self._font = Font:new( "dev", 8 );
+		self._font = Fonts:get( "dev", 12 );
 	end
 end
 
@@ -167,13 +167,14 @@ Navmesh.draw = function( self )
 		love.graphics.polygon( "line", triangle.vertices );
 		love.graphics.points( triangle );
 	end
-	
+
 	love.graphics.setColor( Colors.oxfordBlue );
 	for i, triangle in ipairs( self._triangles ) do
 		local text = tostring( i - 1 );
 		local x = MathUtils.round( triangle.center.x - font:getWidth( text ) / 2 );
 		local y = MathUtils.round( triangle.center.y - font:getHeight() / 2 );
-		font:print( text, x, y );
+		love.graphics.setFont( self._font );
+		love.graphics.print( text, x, y );
 	end
 end
 
