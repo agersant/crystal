@@ -178,6 +178,7 @@ end
 
 loadAsset = function( self, path, origin )
 	assert( type( origin ) == "string" );
+	origin = string.lower( origin );
 	local path, extension = getPathAndExtension( path );
 
 	if not isAssetLoaded( self, path ) then
@@ -233,6 +234,7 @@ refreshAsset = function( self, rawPath )
 end
 
 unloadAsset = function( self, path, origin )
+	origin = string.lower( origin );
 	local path, extension = getPathAndExtension( path );
 	if not isAssetLoaded( self, path ) then
 		return;
@@ -269,6 +271,7 @@ end
 
 getAsset = function( self, assetType, rawPath )
 	assert( type( rawPath ) == "string" );
+	rawPath = string.lower( rawPath );
 	local path, extension = getPathAndExtension( rawPath );
 	if not isAssetLoaded( self, path ) then
 		Log:warning( "Requested missing asset, loading at runtime: " .. path );
