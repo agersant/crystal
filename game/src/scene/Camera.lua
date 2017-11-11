@@ -73,10 +73,8 @@ end
 
 local computeTargetPosition = function( self )
 	local tx, ty;
-	local z = GFXConfig:getZoom();
-	local screenW = love.graphics.getWidth() / z;
-	local screenH = love.graphics.getHeight() / z;
-	
+	local screenW, screenH = GFXConfig:getNativeSize();
+
 	if #self._trackedEntities == 0 then
 		tx = self._mapWidth / 2;
 		ty = self._mapHeight / 2;
@@ -85,9 +83,9 @@ local computeTargetPosition = function( self )
 	else
 		tx, ty = computeLookAheadPosition( self, screenW, screenH );
 	end
-	
+
 	tx, ty = clampPosition( self, tx, ty, screenW, screenH );
-	
+
 	return tx, ty;
 end
 
@@ -134,8 +132,7 @@ end
 Camera.getRenderOffset = function( self )
 	local left, top = self._x, self._y;
 	local z = GFXConfig:getZoom();
-	local screenW = love.graphics.getWidth() / z;
-	local screenH = love.graphics.getHeight() / z;
+	local screenW, screenH = GFXConfig:getNativeSize();
 	left = left - screenW / 2;
 	top = top - screenH / 2;
 	left = MathUtils.roundTo( left, 1 / z );
@@ -151,32 +148,32 @@ Camera.setPosition = function( self, x, y )
 end
 
 Camera.update = function( self, dt )
-	
+
 	if not self._auto then
 		return;
 	end
-	
+
 	local z = GFXConfig:getZoom();
 	if z ~= self._previousZoom then
 		self:snap();
 		self._previousZoom = z;
 		return;
 	end
-	
+
 	local tx, ty = computeTargetPosition( self );
 	local dx, dy = tx - self._x, ty - self._y;
 	if dx == 0 and dy == 0 then
 		return;
 	end
-	
+
 	if #self._trackedEntities == 0 then
 		self._x = tx;
 		self._y = ty;
 		return;
 	end
-	
+
 	local vx, vy = computeAverageVelocity( self );
-	
+
 	if math.abs( vx ) > epsilon and dx ~= 0 then
 		vx = ( dx / math.abs( dx ) ) * ( math.abs( vx ) + self._speed );
 		local newX = self._x + dt * vx;
@@ -186,7 +183,7 @@ Camera.update = function( self, dt )
 			self._x = newX;
 		end
 	end
-	
+
 	if math.abs( vy ) > epsilon and dy ~= 0 then
 		vy = ( dy / math.abs( dy ) ) * ( math.abs( vy ) + self._speed );
 		local newY = self._y + dt * vy;

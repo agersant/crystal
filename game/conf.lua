@@ -21,12 +21,7 @@ gConf.splitscreen.maxLocalPlayers = 8;
 
 love.conf = function( options )
 	options.console = false;
-	options.window.title = "Crystal";
-	options.window.width = 1280;
-	options.window.height = 720;
-	options.window.resizable = true;
-	options.window.msaa = 8;
-	options.window.vsync = false;
+	options.window = false;
 
 	options.modules.audio = gConf.features.audioOutput;
 	options.modules.event = true;

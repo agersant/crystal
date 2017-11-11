@@ -1,13 +1,12 @@
+local GFXConfig = require( "src/graphics/GFXConfig" );
 local FPSCounter = require( "src/dev/FPSCounter" );
 local HotReload = require( "src/dev/HotReload" );
 local Log = require( "src/dev/Log" );
 local CLI = require( "src/dev/cli/CLI" );
-local GFXConfig = require( "src/graphics/GFXConfig" );
 local Input = require( "src/input/Input" );
 local Content = require( "src/resources/Content" );
 local Scene = require( "src/scene/Scene" );
 local HUD = require( "src/ui/HUD" );
-
 
 
 love.load = function()
@@ -28,9 +27,11 @@ end
 
 love.draw = function()
 	love.graphics.reset();
-	love.graphics.scale( GFXConfig:getZoom(), GFXConfig:getZoom() );
+
+	GFXConfig:applyTransforms();
 	Scene:getCurrent():draw();
 	HUD:draw();
+
 	love.graphics.reset();
 	FPSCounter:draw();
 	CLI:draw();
