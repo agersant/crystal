@@ -85,6 +85,12 @@ Entity.getPosition = function( self )
 	return self._body:getX(), self._body:getY();
 end
 
+Entity.getScreenPosition = function( self )
+	local x, y = self:getPosition();
+	local camera = self:getScene():getCamera();
+	return camera:getRelativePosition( x, y );
+end
+
 Entity.setPosition = function( self, x, y )
 	self._body:setPosition( x, y );
 end
