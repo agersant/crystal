@@ -17,6 +17,7 @@ local reachAndAttack = function( self )
 	local targetSelector = entity:getScene():getTargetSelector();
 	local target = targetSelector:getNearestEnemy( entity );
 	if not target then
+		self:waitFrame();
 		return;
 	end
 	if Movement.walkToEntity( target, 30 )( self ) then

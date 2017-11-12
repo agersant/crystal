@@ -47,7 +47,7 @@ end
 CombatLogic.init = function( self, entity )
 	assert( entity );
 	self._entity = entity;
-	CombatLogic.super.init( self, entity:getScene(), logic );
+	CombatLogic.super.init( self, logic );
 end
 
 

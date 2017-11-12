@@ -16,7 +16,6 @@ end
 
 ScriptRunner.addScript = function( self, script )
 	table.insert( self._newScripts, script );
-	script:update( 0 );
 end
 
 ScriptRunner.removeScript = function( self, script )

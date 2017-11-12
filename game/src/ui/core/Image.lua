@@ -6,8 +6,8 @@ local Image = Class( "Image", Widget );
 
 -- PUBLIC API
 
-Image.init = function( self, scene, texture )
-	Image.super.init( self, scene, function() end );
+Image.init = function( self, texture )
+	Image.super.init( self, function() end );
 	self._texture = texture;
 end
 

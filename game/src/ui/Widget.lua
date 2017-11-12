@@ -7,8 +7,8 @@ local Widget = Class( "Widget", Script );
 
 
 
-Widget.init = function( self, scene, scriptFunction )
-	Widget.super.init( self, scene, scriptFunction );
+Widget.init = function( self, scriptFunction )
+	Widget.super.init( self, scriptFunction );
 	self._parent = nil;
 	self._children = {};
 	self._leftAnchor = 0;

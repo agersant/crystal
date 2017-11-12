@@ -7,7 +7,6 @@ local Scene = Class( "Scene" );
 -- PUBLIC API
 
 Scene.init = function( self )
-	self._canProcessSignals = true;
 end
 
 Scene.update = function( self, dt )
@@ -17,10 +16,6 @@ Scene.draw = function( self )
 end
 
 Scene.saveTo = function( self, playerSave )
-end
-
-Scene.canProcessSignals = function( self )
-	return self._canProcessSignals;
 end
 
 

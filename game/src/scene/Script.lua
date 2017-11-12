@@ -1,7 +1,6 @@
 require( "src/utils/OOP" );
 local Log = require( "src/dev/Log" );
 local TableUtils = require( "src/utils/TableUtils" );
-local Scene = require( "src/scene/Scene" );
 
 local Script = Class( "Script" );
 
@@ -154,31 +153,17 @@ end
 
 -- PUBLIC API
 
-Script.init = function( self, scene, scriptFunction )
-	assert( scene );
-	assert( scene:isInstanceOf( Scene ) );
+Script.init = function( self, scriptFunction )
 	assert( type( scriptFunction ) == "function" );
-	self._scene = scene;
 	self._time = 0;
 	self._dt = 0;
 	self._threads = {};
 	self._blockedThreads = {};
 	self._endableThreads = {};
-	self._queuedSignals = {};
 	newThread( self, nil, scriptFunction, { pumpImmediately = false, allowOrphans = true, } );
 end
 
 Script.update = function( self, dt )
-
-	if not self._scene:canProcessSignals() then
-		return;
-	end
-
-	-- Process queued signals
-	for _, signalData in ipairs( self._queuedSignals ) do
-		self:signal( signalData.name, unpack( signalData.userData ) );
-	end
-	self._queuedSignals = {};
 
 	self._time = self._time + dt;
 	self._dt = dt;
@@ -210,10 +195,6 @@ Script.update = function( self, dt )
 end
 
 Script.signal = function( self, signal, ... )
-	if not self._scene:canProcessSignals() then
-		table.insert( self._queuedSignals, { name = signal, userData = { ... } } );
-		return;
-	end
 	if self._endableThreads[signal] then
 		for thread, _ in pairs( self._endableThreads[signal] ) do
 			endThread( self, thread, signal );

@@ -44,8 +44,8 @@ end
 
 -- PUBLIC API
 
-Dialog.init = function( self, scene )
-	Dialog.super.init( self, scene, function() end );
+Dialog.init = function( self )
+	Dialog.super.init( self, function() end );
 	self._textSpeed = 25;
 	self._owner = nil;
 	self._player = nil;

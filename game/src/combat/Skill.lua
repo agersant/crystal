@@ -10,7 +10,7 @@ local Skill = Class( "Skill", Script );
 Skill.init = function( self, entity )
 	assert( entity );
 	self._entity = entity;
-	Skill.super.init( self, entity:getScene(), self.run );
+	Skill.super.init( self, self.run );
 end
 
 Skill.getEntity = function( self )

@@ -18,6 +18,12 @@ local MapScene = Class( "MapScene", Scene );
 
 -- IMPLEMENTATION
 
+local queueSignal = function( self, target, signal, ... )
+	assert( target );
+	assert( signal );
+	table.insert( self._queuedSignals, { target = target, name = signal, data = { ... } } );
+end
+
 local sortDrawableEntities = function( entityA, entityB )
 	return entityA:getZ() < entityB:getZ();
 end
@@ -43,20 +49,20 @@ local beginOrEndContact = function( self, fixtureA, fixtureB, contact, prefix )
 
 		-- Weakbox VS hitbox
 		if bit.band( categoryA, CollisionFilters.HITBOX ) ~= 0 and bit.band( categoryB, CollisionFilters.WEAKBOX ) ~= 0 then
-			objectA:signal( prefix .. "giveHit", objectB );
+			queueSignal( self, objectA, prefix .. "giveHit", objectB );
 		elseif bit.band( categoryA, CollisionFilters.WEAKBOX ) ~= 0 and bit.band( categoryB, CollisionFilters.HITBOX ) ~= 0 then
-			objectB:signal( prefix .. "giveHit", objectA );
+			queueSignal( self, objectB, prefix .. "giveHit", objectA );
 
 		-- Trigger VS solid
 		elseif bit.band( categoryA, CollisionFilters.TRIGGER ) ~= 0 and bit.band( categoryB, CollisionFilters.SOLID ) ~= 0 then
-			objectA:signal( prefix .. "trigger", objectB );
+			queueSignal( self, objectA, prefix .. "trigger", objectB );
 		elseif bit.band( categoryA, CollisionFilters.SOLID ) ~= 0 and bit.band( categoryB, CollisionFilters.TRIGGER ) ~= 0 then
-			objectB:signal( prefix .. "trigger", objectA );
+			queueSignal( self, objectB, prefix .. "trigger", objectA );
 
 		-- Solid VS solid
 		elseif bit.band( categoryA, CollisionFilters.SOLID ) ~= 0 and bit.band( categoryB, CollisionFilters.SOLID ) ~= 0 then
-			objectA:signal( prefix .. "touch", objectB );
-			objectB:signal( prefix .. "touch", objectA );
+			queueSignal( self, objectA, prefix .. "touch", objectB );
+			queueSignal( self, objectB, prefix .. "touch", objectA );
 
 		end
 	end
@@ -85,14 +91,14 @@ end
 MapScene.init = function( self, mapName, party, partyX, partyY )
 	Log:info( "Instancing scene for map: " .. tostring( mapName ) );
 	MapScene.super.init( self );
-	-- TODO: get rid of this concept. Queue up signals emitted within beginOrEndContact instead
-	self._canProcessSignals = false;
 
 	self._world = love.physics.newWorld( 0, 0, false );
 	self._world:setCallbacks(
 		function( ... ) beginContact( self, ... ); end,
 		function( ... ) endContact( self, ... ); end
 	);
+
+	self._queuedSignals = {};
 
 	self._entities = {};
 	self._updatableEntities = {};
@@ -126,7 +132,10 @@ MapScene.update = function( self, dt )
 	-- Pump physics simulation
 	self._world:update( dt );
 
-	self._canProcessSignals = true;
+	for _, signal in ipairs( self._queuedSignals ) do
+		signal.target:signal( signal.name, unpack( signal.data ) );
+	end
+	self._queuedSignals = {};
 
 	-- Update entities
 	for _, entity in ipairs( self._updatableEntities ) do
@@ -150,8 +159,6 @@ MapScene.update = function( self, dt )
 		end
 	end
 	self._spawnedEntities = {};
-
-	self._canProcessSignals = false;
 
 	-- Remove old entities
 	removeDespawnedEntitiesFrom( self, self._entities );
