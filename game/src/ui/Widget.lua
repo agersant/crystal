@@ -71,6 +71,21 @@ Widget.alignBottomCenter = function( self, width, height )
 	self._bottomOffset = 0;
 end
 
+Widget.setPadding = function( self, padding )
+	self._leftAnchor = 0;
+	self._rightAnchor = 0;
+	self._topAnchor = 0;
+	self._bottomAnchor = 0;
+	self._leftOffset = padding;
+	self._rightOffset = -padding;
+	self._topOffset = padding;
+	self._bottomOffset = -padding;
+end
+
+Widget.setLeftOffset = function( self, offset )
+	self._leftOffset = offset;
+end
+
 Widget.offset = function( self, dx, dy )
 	self._leftOffset = self._leftOffset + dx;
 	self._rightOffset = self._rightOffset + dx;

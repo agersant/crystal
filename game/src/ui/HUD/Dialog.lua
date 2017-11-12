@@ -7,6 +7,7 @@ local Actions = require( "src/scene/Actions" );
 local Script = require( "src/scene/Script" );
 local Widget = require( "src/ui/Widget" );
 local Image = require( "src/ui/core/Image" );
+local Text = require( "src/ui/core/Text" );
 
 local Dialog = Class( "Dialog", Widget );
 
@@ -41,6 +42,7 @@ local waitForCommandPress = function( self, command )
 end
 
 
+
 -- PUBLIC API
 
 Dialog.init = function( self )
@@ -51,16 +53,21 @@ Dialog.init = function( self )
 	self._targetText = nil;
 	self._currentText = nil;
 	self._currentGlyphCount = nil;
-	self._font = Fonts:get( "body", 16 );
+	self._revealAll = false;
 
 	self:setAlpha( 0 );
+	self:alignBottomCenter( 424, 80 );
+	self:offset( 0, -8 );
 
-	local box = Image:new( scene );
+	local box = Image:new();
 	box:setColor( Colors.black6C );
 	box:setAlpha( .8 );
-	box:alignBottomCenter( 424, 80 );
-	box:offset( 0, -8 );
 	self:addChild( box );
+
+	self._textWidget = Text:new( "body", 16 );
+	self._textWidget:setPadding( 8 );
+	self._textWidget:setLeftOffset( 80 );
+	self:addChild( self._textWidget );
 end
 
 Dialog.update = function( self, dt )
@@ -68,22 +75,19 @@ Dialog.update = function( self, dt )
 	Dialog.super.update( self, dt );
 
 	if self._targetText and self._currentText ~= self._targetText then
-		self._currentGlyphCount = self._currentGlyphCount + dt * self._textSpeed;
-		self._currentGlyphCount = math.min( self._currentGlyphCount, #self._targetText );
-		if math.floor( self._currentGlyphCount ) > 1 then
-			-- TODO: This assumes each glyph is one byte, not UTF-8 aware
-			self._currentText = string.sub( self._targetText, 1, self._currentGlyphCount );
+		if self._revealAll then
+			self._currentText = self._targetText;
 		else
-			self._currentText = "";
+			self._currentGlyphCount = self._currentGlyphCount + dt * self._textSpeed;
+			self._currentGlyphCount = math.min( self._currentGlyphCount, #self._targetText );
+			if math.floor( self._currentGlyphCount ) > 1 then
+				-- TODO: This assumes each glyph is one byte, not UTF-8 aware
+				self._currentText = string.sub( self._targetText, 1, self._currentGlyphCount );
+			else
+				self._currentText = "";
+			end
 		end
-	end
-end
-
-Dialog.drawSelf = function( self )
-	if self._currentText then
-		love.graphics.setColor( Colors.white );
-		love.graphics.setFont( self._font );
-		love.graphics.printf( self._currentText, 108, 190, 336, "left" );
+		self._textWidget:setText( self._currentText );
 	end
 end
 
@@ -114,6 +118,7 @@ Dialog.say = function( self, text )
 	Log:info( "Displaying dialog: " .. text );
 	self._targetText = text;
 	self._currentText = "";
+	self._revealAll = false;
 	self._currentGlyphCount = 0;
 
 	local controller = self._player:getController();
@@ -122,7 +127,7 @@ Dialog.say = function( self, text )
 		self:thread( function()
 			waitForCommandPress( self, "advanceDialog" );
 			if self._currentText ~= self._targetText then
-				self._currentText = self._targetText;
+				self._revealAll = true;
 				waitForCommandPress( self, "advanceDialog" );
 			end
 			dialog._owner:signal( "advanceDialog" );
