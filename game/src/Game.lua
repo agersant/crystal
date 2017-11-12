@@ -6,7 +6,7 @@ local CLI = require( "src/dev/cli/CLI" );
 local Input = require( "src/input/Input" );
 local Content = require( "src/resources/Content" );
 local Scene = require( "src/scene/Scene" );
-local HUD = require( "src/ui/HUD/HUD" );
+local HUD = require( "src/ui/hud/HUD" );
 
 
 

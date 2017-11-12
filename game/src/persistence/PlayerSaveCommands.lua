@@ -2,7 +2,7 @@ local CLI = require( "src/dev/cli/CLI" );
 local PlayerSave = require( "src/persistence/PlayerSave" );
 local MapScene = require( "src/scene/MapScene" );
 local Scene = require( "src/scene/Scene" );
-local HUD = require( "src/ui/HUD/HUD" );
+local HUD = require( "src/ui/hud/HUD" );
 
 local save = function( fileName )
 	local playerSave = PlayerSave:getCurrent();
