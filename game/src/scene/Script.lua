@@ -154,13 +154,15 @@ end
 -- PUBLIC API
 
 Script.init = function( self, scriptFunction )
-	assert( type( scriptFunction ) == "function" );
 	self._time = 0;
 	self._dt = 0;
 	self._threads = {};
 	self._blockedThreads = {};
 	self._endableThreads = {};
-	newThread( self, nil, scriptFunction, { pumpImmediately = false, allowOrphans = true, } );
+	if scriptFunction then
+		assert( type( scriptFunction ) == "function" );
+		newThread( self, nil, scriptFunction, { pumpImmediately = false, allowOrphans = true, } );
+	end
 end
 
 Script.update = function( self, dt )
