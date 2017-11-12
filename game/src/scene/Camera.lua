@@ -147,6 +147,13 @@ Camera.setPosition = function( self, x, y )
 	self._y = y;
 end
 
+Camera.getRelativePosition = function( self, worldX, worldY )
+	local screenW, screenH = GFXConfig:getNativeSize();
+	local screenX = worldX - self._x + screenW / 2;
+	local screenY = worldY - self._y + screenH / 2;
+	return screenX, screenY;
+end
+
 Camera.update = function( self, dt )
 
 	if not self._auto then
