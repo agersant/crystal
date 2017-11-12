@@ -78,6 +78,7 @@ local computeTargetPosition = function( self )
 	if #self._trackedEntities == 0 then
 		tx = self._mapWidth / 2;
 		ty = self._mapHeight / 2;
+	-- TODO These cases will error when tracking entities that despawn
 	elseif #self._trackedEntities > 1 then
 		tx, ty = computeAveragePosition( self );
 	else
