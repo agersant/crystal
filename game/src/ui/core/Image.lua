@@ -7,7 +7,7 @@ local Image = Class( "Image", Widget );
 -- PUBLIC API
 
 Image.init = function( self, texture )
-	Image.super.init( self, function() end );
+	Image.super.init( self );
 	self._texture = texture;
 end
 
