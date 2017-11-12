@@ -6,6 +6,8 @@ local Fonts = Class( "Fonts" );
 local pickFont = function( name )
 	if name == "dev" then
 		return "assets/font/source_code_pro_medium.otf";
+	elseif name == "body" then
+		return "assets/font/karen2black.ttf";
 	end
 	error( "Unknown font: " .. tostring( name ) );
 end

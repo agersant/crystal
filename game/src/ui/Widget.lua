@@ -1,15 +1,87 @@
 require( "src/utils/OOP" );
 local Script = require( "src/scene/Script" );
+local GFXConfig = require( "src/graphics/GFXConfig" );
+local Colors = require( "src/resources/Colors" );
 
 local Widget = Class( "Widget", Script );
 
 
+
 Widget.init = function( self, scene, scriptFunction )
 	Widget.super.init( self, scene, scriptFunction );
+	self._parent = nil;
 	self._children = {};
+	self._leftAnchor = 0;
+	self._rightAnchor = 0;
+	self._topAnchor = 0;
+	self._bottomAnchor = 0;
+	self._leftOffset = 0;
+	self._rightOffset = 0;
+	self._topOffset = 0;
+	self._bottomOffset = 0;
+	self._alpha = 1;
+	self._finalAlpha = 1;
+	self._color = Colors.white;
+end
+
+Widget.addChild = function( self, child )
+	assert( not child._parent );
+	child._parent = self;
+	table.insert( self._children, child );
+end
+
+Widget.applyTransforms = function( self )
+	love.graphics.setColor( self._color[1], self._color[2], self._color[3], 255 * self._finalAlpha );
+	love.graphics.translate( self._localLeft, self._localTop );
+end
+
+Widget.setAlpha = function( self, alpha )
+	assert( alpha );
+	self._alpha = alpha;
+end
+
+Widget.setColor = function( self, color )
+	assert( color );
+	self._color = color;
+end
+
+Widget.getSize = function( self )
+	return math.abs( self._localRight - self._localLeft ), math.abs( self._localTop - self._localBottom );
+end
+
+Widget.alignBottomCenter = function( self, width, height )
+	self._leftAnchor = .5;
+	self._rightAnchor = .5;
+	self._topAnchor = 1;
+	self._bottomAnchor = 0;
+	self._leftOffset = -width / 2;
+	self._rightOffset = width / 2;
+	self._topOffset = -height;
+	self._bottomOffset = 0;
+end
+
+Widget.offset = function( self, dx, dy )
+	self._leftOffset = self._leftOffset + dx;
+	self._rightOffset = self._rightOffset + dx;
+	self._topOffset = self._topOffset + dy;
+	self._bottomOffset = self._bottomOffset + dy;
 end
 
 Widget.update = function( self, dt )
+	local parentWidth, parentHeight, parentAlpha;
+	if self._parent then
+		parentWidth, parentHeight = self._parent:getSize();
+		parentAlpha = self._parent._finalAlpha;
+	else
+		parentWidth, parentHeight = GFXConfig:getNativeSize();
+		parentAlpha = 1;
+	end
+	self._localLeft = parentWidth * self._leftAnchor + self._leftOffset;
+	self._localTop = parentHeight * self._topAnchor + self._topOffset;
+	self._localRight = parentWidth * ( 1 - self._rightAnchor ) + self._rightOffset;
+	self._localBottom = parentHeight * ( 1 - self._bottomAnchor ) + self._bottomOffset;
+	self._finalAlpha = parentAlpha * self._alpha;
+
 	Widget.super.update( self, dt );
 	for _, child in ipairs( self._children ) do
 		child:update( dt );
@@ -17,9 +89,15 @@ Widget.update = function( self, dt )
 end
 
 Widget.draw = function( self )
+	if self._finalAlpha == 0 then
+		return;
+	end
+	love.graphics.push();
+	self:applyTransforms();
 	for _, child in ipairs( self._children ) do
 		child:draw();
 	end
+	love.graphics.pop();
 end
 
 

@@ -1,10 +1,13 @@
 require( "src/utils/OOP" );
 local Log = require( "src/dev/Log" );
+local Colors = require( "src/resources/Colors" );
+local Fonts = require( "src/resources/Fonts" );
 local InputDrivenController = require( "src/scene/controller/InputDrivenController" );
 local Actions = require( "src/scene/Actions" );
 local Script = require( "src/scene/Script" );
 local Entity = require( "src/scene/entity/Entity" );
 local Widget = require( "src/ui/Widget" );
+local Image = require( "src/ui/core/Image" );
 
 local Dialog = Class( "Dialog", Widget );
 
@@ -49,6 +52,16 @@ Dialog.init = function( self, scene )
 	self._targetText = nil;
 	self._currentText = nil;
 	self._currentGlyphCount = nil;
+	self._font = Fonts:get( "body", 16 );
+
+	self:setAlpha( 0 );
+
+	local box = Image:new( scene );
+	box:setColor( Colors.black6C );
+	box:setAlpha( .8 );
+	box:alignBottomCenter( 424, 80 );
+	box:offset( 0, -8 );
+	self:addChild( box );
 end
 
 Dialog.update = function( self, dt )
@@ -67,9 +80,12 @@ Dialog.update = function( self, dt )
 	end
 end
 
-Dialog.draw = function( self, dt )
+Dialog.draw = function( self )
+	Dialog.super.draw( self );
 	if self._currentText then
-		love.graphics.printf( self._currentText, 10, 10, 100, "left" );
+		love.graphics.setColor( Colors.white );
+		love.graphics.setFont( self._font );
+		love.graphics.printf( self._currentText, 108, 190, 336, "left" );
 	end
 end
 
@@ -83,6 +99,7 @@ Dialog.open = function( self, owner, player )
 	assert( self._player == nil );
 	self._owner = owner;
 	self._player = player;
+	self:setAlpha( 1 );
 
 	local controller = self._player:getController();
 	assert( controller:isIdle() );
@@ -131,6 +148,7 @@ Dialog.close = function( self )
 	self._currentText = nil;
 	self._owner = nil;
 	self._player = nil;
+	self:setAlpha( 0 );
 end
 
 
