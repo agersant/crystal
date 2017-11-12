@@ -85,6 +85,7 @@ end
 MapScene.init = function( self, mapName, party, partyX, partyY )
 	Log:info( "Instancing scene for map: " .. tostring( mapName ) );
 	MapScene.super.init( self );
+	-- TODO: get rid of this concept. Queue up signals emitted within beginOrEndContact instead
 	self._canProcessSignals = false;
 
 	self._world = love.physics.newWorld( 0, 0, false );
