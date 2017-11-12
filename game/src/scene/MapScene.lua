@@ -212,6 +212,9 @@ MapScene.getPhysicsWorld = function( self )
 	return self._world;
 end
 
+MapScene.getCamera = function( self )
+	return self._camera;
+end
 
 
 -- MAP
