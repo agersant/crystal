@@ -14,7 +14,7 @@ local mitigateDamage = function( self, damage )
 	local defense = self._defense:getValue();
 	local mitigationFactor = defense / ( defense + 100 );
 	local mitigatedAmount = rawAmount * ( 1 - mitigationFactor );
-	return mitigatedAmount;
+	return math.ceil( mitigatedAmount );
 end
 
 
@@ -25,7 +25,7 @@ CombatData.init = function( self, entity )
 	assert( entity );
 	self:setTeam( Teams.wild );
 	self._entity = entity;
-	self._health = Stat:new( 500, 0, nil );
+	self._health = Stat:new( 50, 0, nil );
 	self._defense = Stat:new( 10, 1, nil );
 	self._strength = Stat:new( 10, 1, nil );
 	self._attackRating = Stat:new( 1.5, 0, nil );
@@ -76,9 +76,9 @@ CombatData.receiveDamage = function( self, damage )
 	if self:isDead() then
 		return;
 	end
-	self._entity:signal( "takeHit", damage );
 	local effectiveDamage = mitigateDamage( self, damage );
 	self._health:substract( effectiveDamage );
+	self._entity:signal( "takeHit", damage, effectiveDamage );
 	if self:isDead() then
 		self._entity:signal( "death" );
 	end
