@@ -1,9 +1,20 @@
 require( "src/utils/OOP" );
+local Scene = require( "src/scene/Scene" );
 local Damage = require( "src/ui/HUD/damage/Damage" );
 local Dialog = require( "src/ui/HUD/Dialog" );
 
 local HUD = Class( "HUD" );
 
+
+
+-- IMPLEMENTATION
+
+local onSceneChanged = function( self )
+	self:init();
+end
+
+
+-- PUBLIC API
 
 HUD.init = function( self )
 	self._widgets = {};
@@ -14,6 +25,11 @@ HUD.init = function( self )
 end
 
 HUD.update = function( self, dt )
+	local currentScene = Scene:getCurrent();
+	if self._scene ~= currentScene then
+		self._scene = currentScene;
+		onSceneChanged( self );
+	end
 	for _, widget in ipairs( self._widgets ) do
 		widget:update( dt );
 	end
