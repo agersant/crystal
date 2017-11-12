@@ -2,13 +2,13 @@ require( "src/utils/OOP" );
 local Script = require( "src/scene/Script" );
 local GFXConfig = require( "src/graphics/GFXConfig" );
 local Colors = require( "src/resources/Colors" );
+local TableUtils = require( "src/utils/TableUtils" );
 
 local Widget = Class( "Widget", Script );
 
 
-
-Widget.init = function( self, scriptFunction )
-	Widget.super.init( self, scriptFunction );
+Widget.init = function( self )
+	Widget.super.init( self );
 	self._parent = nil;
 	self._children = {};
 	self._leftAnchor = 0;
@@ -28,6 +28,17 @@ Widget.addChild = function( self, child )
 	assert( not child._parent );
 	child._parent = self;
 	table.insert( self._children, child );
+end
+
+Widget.remove = function( self )
+	assert( self._parent );
+	for i, child in ipairs( self._parent._children ) do
+		if child == self then
+			table.remove( self._parent._children, i );
+			return;
+		end
+	end
+	error( "UI widget not found in parent" );
 end
 
 Widget.applyTransforms = function( self )
@@ -83,9 +94,13 @@ Widget.update = function( self, dt )
 	self._finalAlpha = parentAlpha * self._alpha;
 
 	Widget.super.update( self, dt );
-	for _, child in ipairs( self._children ) do
+	local children = TableUtils.shallowCopy( self._children );
+	for _, child in ipairs( children ) do
 		child:update( dt );
 	end
+end
+
+Widget.drawSelf = function( self )
 end
 
 Widget.draw = function( self )
@@ -94,6 +109,7 @@ Widget.draw = function( self )
 	end
 	love.graphics.push();
 	self:applyTransforms();
+	self:drawSelf();
 	for _, child in ipairs( self._children ) do
 		child:draw();
 	end

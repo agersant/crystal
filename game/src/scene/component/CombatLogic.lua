@@ -2,6 +2,7 @@ require( "src/utils/OOP" );
 local Teams = require( "src//combat/Teams" );
 local Actions = require( "src/scene/Actions" );
 local Script = require( "src/scene/Script" );
+local HUD = require( "src/ui/hud/HUD" );
 
 local CombatLogic = Class( "CombatLogic", Script );
 
@@ -20,7 +21,9 @@ local logic = function( self )
 	self:thread( function( self )
 		local controller = self._entity:getController();
 		while true do
-			local damage = self:waitFor( "takeHit" );
+			local damage, damageAmount = self:waitFor( "takeHit" );
+			assert( damageAmount );
+			HUD:showDamage( self._entity, damageAmount );
 			self._entity:signal( "interruptByDamage" );
 			if controller:isIdle() then
 				local attacker = damage:getOrigin();

@@ -11,8 +11,7 @@ Image.init = function( self, texture )
 	self._texture = texture;
 end
 
-Image.draw = function( self )
-	self:applyTransforms();
+Image.drawSelf = function( self )
 	local w, h = self:getSize();
 	if self._texture then
 		love.graphics.draw( self._image, 0, 0, w, h );

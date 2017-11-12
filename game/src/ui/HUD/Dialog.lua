@@ -5,7 +5,6 @@ local Fonts = require( "src/resources/Fonts" );
 local InputDrivenController = require( "src/scene/controller/InputDrivenController" );
 local Actions = require( "src/scene/Actions" );
 local Script = require( "src/scene/Script" );
-local Entity = require( "src/scene/entity/Entity" );
 local Widget = require( "src/ui/Widget" );
 local Image = require( "src/ui/core/Image" );
 
@@ -45,7 +44,7 @@ end
 -- PUBLIC API
 
 Dialog.init = function( self )
-	Dialog.super.init( self, function() end );
+	Dialog.super.init( self );
 	self._textSpeed = 25;
 	self._owner = nil;
 	self._player = nil;
@@ -80,8 +79,7 @@ Dialog.update = function( self, dt )
 	end
 end
 
-Dialog.draw = function( self )
-	Dialog.super.draw( self );
+Dialog.drawSelf = function( self )
 	if self._currentText then
 		love.graphics.setColor( Colors.white );
 		love.graphics.setFont( self._font );
@@ -94,7 +92,6 @@ end
 
 Dialog.open = function( self, owner, player )
 	assert( owner:isInstanceOf( Script ) );
-	assert( player:isInstanceOf( Entity ) );
 	assert( self._owner == nil );
 	assert( self._player == nil );
 	self._owner = owner;
