@@ -2,6 +2,7 @@ require( "src/utils/OOP" );
 local Colors = require( "src/resources/Colors" );
 local Fonts = require( "src/resources/Fonts" );
 local Widget = require( "src/ui/Widget" );
+local Text = require( "src/ui/core/Text" );
 
 local Hit = Class( "Hit", Widget );
 
@@ -12,8 +13,6 @@ Hit.init = function( self, victim, amount )
 	assert( victim );
 	assert( amount );
 	self._victim = victim;
-	self._amount = amount;
-	self._font = Fonts:get( "fat", 16 );
 
 	assert( self._victim:isValid() );
 	self._lastKnownLeft, self._lastKnownTop = self._victim:getScreenPosition();
@@ -22,6 +21,12 @@ Hit.init = function( self, victim, amount )
 		self:wait( 2 );
 		self:remove();
 	end );
+
+	self._textWidget = Text:new( "fat", 16 );
+	self._textWidget:setColor( Colors.barbadosCherry );
+	self._textWidget:setAlignment( "center" );
+	self._textWidget:setText( amount );
+	self:addChild( self._textWidget );
 end
 
 Hit.update = function( self, dt )
@@ -36,12 +41,6 @@ Hit.update = function( self, dt )
 		self._localLeft = self._lastKnownLeft;
 		self._localTop = self._lastKnownTop;
 	end
-end
-
-Hit.drawSelf = function( self )
-	love.graphics.setFont( self._font );
-	love.graphics.setColor( Colors.barbadosCherry );
-	love.graphics.print( self._amount, 0, 0 );
 end
 
 
