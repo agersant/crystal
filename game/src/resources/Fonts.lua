@@ -8,6 +8,8 @@ local pickFont = function( name )
 		return "assets/font/source_code_pro_medium.otf";
 	elseif name == "body" then
 		return "assets/font/karen2black.ttf";
+	elseif name == "fat" then
+		return "assets/font/karenfat.ttf";
 	end
 	error( "Unknown font: " .. tostring( name ) );
 end
