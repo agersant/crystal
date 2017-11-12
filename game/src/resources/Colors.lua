@@ -1,5 +1,6 @@
 local Colors = {};
 
+Colors.barbadosCherry = { 170, 10, 39 };
 Colors.nightSkyBlue = { 24, 28, 41 };
 Colors.darkViridian = { 32, 52, 55 };
 Colors.oxfordBlue = { 19, 45, 84 };
