@@ -161,17 +161,35 @@ return {
 				{ id = "attack_up_0_2", duration = 0.08 },
 				{ id = "attack_up_0_3", duration = 0.16 },
 			} },
+			attack_up_1 = { loop = false, frames = {
+				{ id = "attack_up_1_0", duration = 0.16 },
+				{ id = "attack_up_1_1", duration = 0.08 },
+				{ id = "attack_up_1_2", duration = 0.08 },
+				{ id = "attack_up_1_3", duration = 0.24 },
+			} },
 			attack_right_0 = { loop = false, frames = {
 				{ id = "attack_right_0_0", duration = 0.08 },
 				{ id = "attack_right_0_1", duration = 0.08 },
 				{ id = "attack_right_0_2", duration = 0.08 },
 				{ id = "attack_right_0_3", duration = 0.16 },
 			} },
+			attack_right_1 = { loop = false, frames = {
+				{ id = "attack_right_1_0", duration = 0.16 },
+				{ id = "attack_right_1_1", duration = 0.08 },
+				{ id = "attack_right_1_2", duration = 0.08 },
+				{ id = "attack_right_1_3", duration = 0.24 },
+			} },
 			attack_left_0 = { loop = false, frames = {
 				{ id = "attack_left_0_0", duration = 0.08 },
 				{ id = "attack_left_0_1", duration = 0.08 },
 				{ id = "attack_left_0_2", duration = 0.08 },
 				{ id = "attack_left_0_3", duration = 0.16 },
+			} },
+			attack_left_1 = { loop = false, frames = {
+				{ id = "attack_left_1_0", duration = 0.16 },
+				{ id = "attack_left_1_1", duration = 0.08 },
+				{ id = "attack_left_1_2", duration = 0.08 },
+				{ id = "attack_left_1_3", duration = 0.24 },
 			} },
 			dash_down = { loop = false, frames = {
 				{ id = "attack_down_1_0", duration = 0.24 },
