@@ -374,6 +374,10 @@ Entity.getSkill = function( self, index )
 	return self._combatData:getSkill( index );
 end
 
+Entity.isDead = function( self )
+	assert( self._combatData );
+	return self._combatData:isDead();
+end
 
 
 -- COMBAT LOGIC COMPONENT

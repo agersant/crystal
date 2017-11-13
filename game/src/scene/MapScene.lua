@@ -10,6 +10,8 @@ local CollisionFilters = require( "src/scene/CollisionFilters" );
 local Camera = require( "src/scene/Camera" );
 local Scene = require( "src/scene/Scene" );
 local Entity = require( "src/scene/entity/Entity" );
+local UIScene = require( "src/ui/UIScene" );
+local TitleScreen = require( "src/ui/frontend/TitleScreen" );
 local TableUtils = require( "src/utils/TableUtils" );
 
 local MapScene = Class( "MapScene", Scene );
@@ -259,6 +261,15 @@ end
 
 MapScene.getPartyMemberEntities = function( self )
 	return TableUtils.shallowCopy( self._partyEntities );
+end
+
+MapScene.checkLoseCondition = function( self )
+	for _, partyEntity in ipairs( self._partyEntities ) do
+		if not partyEntity:isDead() then
+			return;
+		end
+	end
+	Scene:setCurrent( UIScene:new( TitleScreen:new() ) );
 end
 
 
