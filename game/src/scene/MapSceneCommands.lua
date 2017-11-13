@@ -48,6 +48,7 @@ local spawn = function( className )
 	assert( class );
 	assert( class:isInstanceOf( Entity ) );
 	local entity = class:new( currentScene, {} );
+
 	if entity:hasPhysicsBody() then
 		local x, y = player:getPosition();
 		local angle = math.random( 2 * math.pi );
