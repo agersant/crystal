@@ -12,7 +12,15 @@ local doComboMove = function( self )
 	controller:doAction( function( self )
 		self:endOn( "interruptByDamage" );
 		local entity = self:getEntity();
-		entity:setSpeed( 0 );
+		if comboCounter == 1 or comboCounter == 3 then
+			self:thread( function()
+				self:tween( 200, 0, 0.20, "inQuadratic", function( speed )
+					entity:setSpeed( speed );
+				end );
+			end );
+		else
+			entity:setSpeed( 0 );
+		end
 		entity:setAnimation( "attack_" .. entity:getDirection4() .. "_" .. comboCounter, true );
 		self:waitFor( "animationEnd" );
 	end );
@@ -48,10 +56,13 @@ ComboAttack.run = function( self )
 				end );
 
 				self:waitFor( "idle" );
-				assert( controller:isIdle() );
 
 				if not inputWatch:isDead() then
 					inputWatch:stop();
+				end
+
+				if not controller:isIdle() then
+					break;
 				end
 
 				if not self._didInputNextMove then
