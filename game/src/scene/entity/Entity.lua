@@ -349,6 +349,11 @@ Entity.receiveDamage = function( self, damage )
 	self._combatData:receiveDamage( damage );
 end
 
+Entity.kill = function( self )
+	assert( self._combatData );
+	self._combatData:kill();
+end
+
 Entity.setTeam = function( self, team )
 	assert( self._combatData );
 	self._combatData:setTeam( team );
