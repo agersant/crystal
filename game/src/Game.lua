@@ -21,7 +21,15 @@ end
 
 love.update = function( dt )
 	FPSCounter:update( dt );
-	Scene:getCurrent():update( dt );
+
+	local scene;
+	local newScene = Scene:getCurrent();
+	while scene ~= newScene do
+		scene = newScene;
+		scene:update( dt );
+		newScene = Scene:getCurrent();
+	end
+
 	HUD:update( dt );
 	Input:flushEvents();
 end
