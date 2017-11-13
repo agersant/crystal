@@ -13,6 +13,7 @@ local testFiles = {
 	"src/resources/map/TestMapCollisionChainData",
 	"src/resources/map/TestNavmesh",
 	"src/scene/TestScript",
+	"src/scene/component/TestCombatData",
 	"src/ui/TestTextInput",
 	"src/utils/TestMathUtils",
 	"src/utils/TestOOP",

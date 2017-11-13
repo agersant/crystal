@@ -84,9 +84,12 @@ CombatData.receiveDamage = function( self, damage )
 	end
 end
 
+CombatData.getHealth = function( self )
+	return self._health:getValue();
+end
+
 CombatData.kill = function( self )
 	self._health:setValue( 0 );
-	assert( self:isDead() );
 	self._entity:signal( "death" );
 end
 
