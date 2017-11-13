@@ -16,6 +16,7 @@ local testFiles = {
 	"src/scene/component/TestCombatData",
 	"src/ui/TestTextInput",
 	"src/ui/TestWidget",
+	"src/ui/hud/TestDialog",
 	"src/utils/TestMathUtils",
 	"src/utils/TestOOP",
 	"src/utils/TestStringUtils",
