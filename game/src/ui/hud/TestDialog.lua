@@ -2,7 +2,7 @@ assert( gConf.unitTesting );
 local Party = require( "src/persistence/Party" );
 local MapScene = require( "src/scene/MapScene" );
 local Script = require( "src/scene/Script" );
-local Controller = require( "src/scene/component/Controller" );
+local InputDrivenController = require( "src/scene/controller/InputDrivenController" );
 local Entity = require( "src/scene/entity/Entity" );
 local Dialog = require( "src/ui/hud/Dialog" );
 
@@ -16,7 +16,7 @@ tests[#tests].body = function()
 	local scene = MapScene:new( "assets/map/test/empty.lua", party );
 	local player = Entity:new( scene );
 	player:addScriptRunner();
-	local controller = Controller:new( player );
+	local controller = InputDrivenController:new( player, function() end, 1 );
 	player:addController( controller );
 
 	local dialog = Dialog:new();
@@ -29,6 +29,10 @@ tests[#tests].body = function()
 	end	);
 	script:update( 0 );
 	assert( a == 1 );
+	dialog:signal( "+advanceDialog" );
+	dialog:signal( "+advanceDialog" );
+	script:update( 0 );
+	assert( a == 2 );
 end
 
 
