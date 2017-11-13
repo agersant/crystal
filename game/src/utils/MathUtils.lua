@@ -102,4 +102,32 @@ MathUtils.almostZero = function( a )
 	return math.abs( a ) <= epsilon;
 end
 
+MathUtils.ease = function( t, easing )
+	local pow = math.pow;
+	assert( t >= 0 );
+	assert( t <= 1 );
+	if easing == "linear" then
+		return t;
+	elseif easing == "inQuadratic" then
+		return pow( t, 2 );
+	elseif easing == "outQuadratic" then
+		return -t * ( t - 2 );
+	elseif easing == "inCubic" then
+		return pow( t, 3 );
+	elseif easing == "outCubic" then
+		t = t - 1;
+		return 1 + pow( t, 3 );
+	elseif easing == "inQuartic" then
+		return pow( t, 4 );
+	elseif easing == "outQuartic" then
+		t = t - 1;
+		return 1 - pow( t, 4 );
+	elseif easing == "inQuintic" then
+		return pow( t, 5 );
+	elseif easing == "outQuintic" then
+		t = t - 1;
+		return 1 + pow( t, 5 );
+	end
+end
+
 return MathUtils;

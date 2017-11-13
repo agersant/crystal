@@ -55,4 +55,69 @@ tests[#tests].body = function()
 	assert( 1, 0 == MathUtils.angleToDir8( math.rad( 350 ) ) );
 end
 
+tests[#tests + 1] = { name = "Linear easing" };
+tests[#tests].body = function()
+	assert( 0, 0 	== MathUtils.ease( 0, "linear" ) );
+	assert( 0.25, 0 == MathUtils.ease( 0.25, "linear" ) );
+	assert( 0.5, 0 	== MathUtils.ease( 0.5, "linear" ) );
+	assert( 0.75, 0 == MathUtils.ease( 0.75, "linear" ) );
+	assert( 1, 0 	== MathUtils.ease( 1, "linear" ) );
+end
+
+tests[#tests + 1] = { name = "Quadratic easing" };
+tests[#tests].body = function()
+	assert( 0 		== MathUtils.ease( 0, "inQuadratic" ) );
+	assert( 0.0625 	== MathUtils.ease( 0.25, "inQuadratic" ) );
+	assert( 0.25 	== MathUtils.ease( 0.5, "inQuadratic" ) );
+	assert( 0.5625 	== MathUtils.ease( 0.75, "inQuadratic" ) );
+	assert( 1 		== MathUtils.ease( 1, "inQuadratic" ) );
+	assert( 0 		== MathUtils.ease( 0, "outQuadratic" ) );
+	assert( 0.4375 	== MathUtils.ease( 0.25, "outQuadratic" ) );
+	assert( 0.75 	== MathUtils.ease( 0.5, "outQuadratic" ) );
+	assert( 0.9375 	== MathUtils.ease( 0.75, "outQuadratic" ) );
+	assert( 1 		== MathUtils.ease( 1, "outQuadratic" ) );
+end
+
+tests[#tests + 1] = { name = "Cubic easing" };
+tests[#tests].body = function()
+	assert( 0 		== MathUtils.ease( 0, "inCubic" ) );
+	assert( 0.015625== MathUtils.ease( 0.25, "inCubic" ) );
+	assert( 0.125 	== MathUtils.ease( 0.5, "inCubic" ) );
+	assert( 0.421875== MathUtils.ease( 0.75, "inCubic" ) );
+	assert( 1 		== MathUtils.ease( 1, "inCubic" ) );
+	assert( 0		== MathUtils.ease( 0, "outCubic" ) );
+	assert( 0.578125== MathUtils.ease( 0.25, "outCubic" ) );
+	assert( 0.875 	== MathUtils.ease( 0.5, "outCubic" ) );
+	assert( 0.984375== MathUtils.ease( 0.75, "outCubic" ) );
+	assert( 1 		== MathUtils.ease( 1, "outCubic" ) );
+end
+
+tests[#tests + 1] = { name = "Quartic easing" };
+tests[#tests].body = function()
+	assert( 0 			== MathUtils.ease( 0, "inQuartic" ) );
+	assert( 0.00390625	== MathUtils.ease( 0.25, "inQuartic" ) );
+	assert( 0.0625	 	== MathUtils.ease( 0.5, "inQuartic" ) );
+	assert( 0.31640625	== MathUtils.ease( 0.75, "inQuartic" ) );
+	assert( 1 			== MathUtils.ease( 1, "inQuartic" ) );
+	assert( 0			== MathUtils.ease( 0, "outQuartic" ) );
+	assert( 0.68359375	== MathUtils.ease( 0.25, "outQuartic" ) );
+	assert( 0.9375	 	== MathUtils.ease( 0.5, "outQuartic" ) );
+	assert( 0.99609375	== MathUtils.ease( 0.75, "outQuartic" ) );
+	assert( 1 			== MathUtils.ease( 1, "outQuartic" ) );
+end
+
+tests[#tests + 1] = { name = "Quintic easing" };
+tests[#tests].body = function()
+	assert( 0 			== MathUtils.ease( 0, "inQuintic" ) );
+	assert( 0.0009765625== MathUtils.ease( 0.25, "inQuintic" ) );
+	assert( 0.03125	 	== MathUtils.ease( 0.5, "inQuintic" ) );
+	assert( 0.2373046875== MathUtils.ease( 0.75, "inQuintic" ) );
+	assert( 1 			== MathUtils.ease( 1, "inQuintic" ) );
+	assert( 0			== MathUtils.ease( 0, "outQuintic" ) );
+	assert( 0.7626953125== MathUtils.ease( 0.25, "outQuintic" ) );
+	assert( 0.96875	 	== MathUtils.ease( 0.5, "outQuintic" ) );
+	assert( 0.9990234375== MathUtils.ease( 0.75, "outQuintic" ) );
+	assert( 1 			== MathUtils.ease( 1, "outQuintic" ) );
+end
+
 return tests;
