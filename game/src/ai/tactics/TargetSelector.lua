@@ -69,24 +69,28 @@ local rankByDistanceTo = function( entity )
 	end
 end
 
+local isAlive = function( entity )
+	return not entity:isDead();
+end
+
 
 
 -- PUBLIC API
 
 TargetSelector.getAllies = function( self, entity )
-	return getAll( self, { isAllyOf( entity ), isNot( entity ) } );
+	return getAll( self, { isAlive, isAllyOf( entity ), isNot( entity ) } );
 end
 
 TargetSelector.getEnemies = function( self, entity )
-	return getAll( self, { isEnemyOf( entity ), isNot( entity ) } );
+	return getAll( self, { isAlive, isEnemyOf( entity ), isNot( entity ) } );
 end
 
 TargetSelector.getNearestEnemy = function( self, entity )
-	return getFittest( self, { isEnemyOf( entity ), isNot( entity ) }, rankByDistanceTo( entity ) );
+	return getFittest( self, { isAlive, isEnemyOf( entity ), isNot( entity ) }, rankByDistanceTo( entity ) );
 end
 
 TargetSelector.getNearestAlly = function( self, entity )
-	return getFittest( self, { isAllyOf( entity ), isNot( entity ) }, rankByDistanceTo( entity ) );
+	return getFittest( self, { isAlive, isAllyOf( entity ), isNot( entity ) }, rankByDistanceTo( entity ) );
 end
 
 
