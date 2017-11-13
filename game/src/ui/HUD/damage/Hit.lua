@@ -29,8 +29,7 @@ Hit.init = function( self, victim, amount )
 	self:addChild( self._textWidget );
 end
 
-Hit.update = function( self, dt )
-	Hit.super.update( self, dt );
+Hit.updatePosition = function( self, dt )
 	if self._victim:isValid() then
 		local x, y = self._victim:getScreenPosition();
 		self._localLeft = x;
@@ -41,6 +40,8 @@ Hit.update = function( self, dt )
 		self._localLeft = self._lastKnownLeft;
 		self._localTop = self._lastKnownTop;
 	end
+	self._localRight = self._localLeft + 100;
+	self._localBottom = self._localTop + 100;
 end
 
 

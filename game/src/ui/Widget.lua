@@ -197,22 +197,33 @@ Widget.offset = function( self, dx, dy )
 	self._bottomOffset = self._bottomOffset + dy;
 end
 
-Widget.update = function( self, dt )
-	local parentWidth, parentHeight, parentAlpha;
+Widget.updateAlpha = function( self, dt )
+	local parentAlpha;
 	if self._parent then
-		parentWidth, parentHeight = self._parent:getSize();
 		parentAlpha = self._parent._finalAlpha;
 	else
-		parentWidth, parentHeight = GFXConfig:getNativeSize();
 		parentAlpha = 1;
+	end
+	self._finalAlpha = parentAlpha * self._alpha;
+end
+
+Widget.updatePosition = function( self, dt )
+	local parentWidth, parentHeight;
+	if self._parent then
+		parentWidth, parentHeight = self._parent:getSize();
+	else
+		parentWidth, parentHeight = GFXConfig:getNativeSize();
 	end
 	self._localLeft = parentWidth * self._leftAnchor + self._leftOffset;
 	self._localTop = parentHeight * self._topAnchor + self._topOffset;
 	self._localRight = parentWidth * ( 1 - self._rightAnchor ) + self._rightOffset;
 	self._localBottom = parentHeight * ( 1 - self._bottomAnchor ) + self._bottomOffset;
-	self._finalAlpha = parentAlpha * self._alpha;
+end
 
+Widget.update = function( self, dt )
 	Widget.super.update( self, dt );
+	self:updateAlpha( dt );
+	self:updatePosition( dt );
 	local children = TableUtils.shallowCopy( self._children );
 	for _, child in ipairs( children ) do
 		child:update( dt );
