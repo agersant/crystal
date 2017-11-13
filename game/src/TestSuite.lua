@@ -33,13 +33,14 @@ local runTestFile = function( source )
 	for i, test in ipairs( tests ) do
 		assert( type( test.name ) == "string" );
 		assert( type( test.body ) == "function" );
-		local success, errorText = pcall( test.body );
+		local success, errorText = xpcall( test.body, function( err )
+			print( "    " .. test.name .. ": FAIL (see error output below)" );
+			print( err );
+			print( debug.traceback() );
+		end );
 		if success then
 			numSuccess = numSuccess + 1;
 			print( "    " .. test.name .. ": PASS" );
-		else
-			print( "    " .. test.name .. ": FAIL (see error output below)" );
-			print( errorText );
 		end
 	end
 
