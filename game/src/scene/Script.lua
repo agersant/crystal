@@ -1,5 +1,6 @@
 require( "src/utils/OOP" );
 local Log = require( "src/dev/Log" );
+local MathUtils = require( "src/utils/MathUtils" );
 local TableUtils = require( "src/utils/TableUtils" );
 
 local Script = Class( "Script" );
@@ -249,6 +250,22 @@ end
 
 Script.isDead = function( self )
 	return #self._threads == 0;
+end
+
+Script.tween = function( self, from, to, duration, easing, set )
+	assert( duration >= 0 );
+	if duration == 0 then
+		set( to );
+		return;
+	end
+	local startTime = self._time;
+	while self._time <= ( startTime + duration ) do
+		local t = ( self._time - startTime ) / duration;
+		local t = MathUtils.ease( t, easing );
+		local currentValue = from + t * ( to - from );
+		set( currentValue );
+		self:waitFrame();
+	end
 end
 
 

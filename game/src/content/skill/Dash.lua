@@ -33,13 +33,9 @@ Dash.run = function( self )
 					entity:setAnimation( "dash_" .. entity:getDirection4(), true );
 					self:wait( buildupDuration );
 
-					local startTime = self._time;
-					local endTime = self._time + dashDuration;
-					while self._time < endTime do
-						local t = ( self._time - startTime ) / ( endTime - startTime );
-						entity:setSpeed( peakSpeed * ( 1 - t * t * t ) );
-						self:waitFrame();
-					end
+					self:tween( peakSpeed, 0, dashDuration, "inCubic", function( speed )
+						entity:setSpeed( speed );
+					end );
 
 					Actions.idle( self );
 				end );
