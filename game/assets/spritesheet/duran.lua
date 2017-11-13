@@ -90,6 +90,9 @@ return {
 			knockback_up = 		{ x = 768, y = 4 * 64 , w = 64, h = 64, ox = 30, oy = 52, },
 			knockback_right = 	{ x = 768, y = 7 * 64 , w = 64, h = 64, ox = 30, oy = 52, },
 			knockback_left = 	{ x = 768, y = 6 * 64 , w = 64, h = 64, ox = 30, oy = 52, },
+
+			death_0 = { x = 1 * 64, y = 832 , w = 64, h = 64, ox = 30, oy = 52 },
+			death_1 = { x = 2 * 64, y = 832 , w = 64, h = 64, ox = 30, oy = 52 },
 		},
 		animations = {
 			idle_down = { frames = { { id = "idle_down" } } },
@@ -198,6 +201,10 @@ return {
 			knockback_up = { frames = { { id = "knockback_up" } } },
 			knockback_right = { frames = { { id = "knockback_right" } } },
 			knockback_left = { frames = { { id = "knockback_left" } } },
+			death = { loop = false, frames = {
+				{ id = "death_0", duration = 0.32 },
+				{ id = "death_1", duration = 0.08 },
+			} },
 		},
 	},
 };
