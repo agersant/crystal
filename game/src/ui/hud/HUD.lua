@@ -1,7 +1,7 @@
 require( "src/utils/OOP" );
 local Scene = require( "src/scene/Scene" );
-local Damage = require( "src/ui/HUD/damage/Damage" );
-local Dialog = require( "src/ui/HUD/Dialog" );
+local Damage = require( "src/ui/hud/damage/Damage" );
+local Dialog = require( "src/ui/hud/Dialog" );
 
 local HUD = Class( "HUD" );
 
