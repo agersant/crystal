@@ -16,28 +16,28 @@ return {
 			walk_left_1 = 	{ x = 3 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
 			walk_left_0 = 	{ x = 4 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
 			idle_left = 	{ x = 5 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
-			
+
 			attack_right_2 = 	{ x = 6 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
 			attack_right_1 = 	{ x = 7 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } }, hit = { rect = { x = 10, y = -8, w = 24, h = 8 } } } },
 			attack_right_0 = 	{ x = 8 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
 			walk_right_1 = 		{ x = 9 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
 			walk_right_0 = 		{ x = 10 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
 			idle_right = 		{ x = 11 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
-			
+
 			attack_up_2 = 	{ x = 12 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
 			attack_up_1 =	{ x = 13 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } }, hit = { rect = { x = 0, y = -40, w = 8, h = 24 } } } },
 			attack_up_0 = 	{ x = 14 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
 			walk_up_1 = 	{ x = 15 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
 			walk_up_0 = 	{ x = 16 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
 			idle_up = 		{ x = 17 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
-			
+
 			attack_down_2 = { x = 18 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
 			attack_down_1 =	{ x = 19 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } }, hit = { rect = { x = -8, y = 0, w = 8, h = 24 } } } },
 			attack_down_0 = { x = 20 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
 			walk_down_1 = 	{ x = 21 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
 			walk_down_0 = 	{ x = 22 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
 			idle_down = 	{ x = 23 * w, y = 0, w = w, h = w, ox = ox, oy = oy, tags = { weak = { rect = { x = -4, y = -12, w = 8, h = 12 } } } },
-			
+
 			knockback = 	{ x = 24 * w, y = 0, w = w, h = w, ox = ox, oy = oy, },
 			smashed = 		{ x = 25 * w, y = 0, w = w, h = w, ox = ox, oy = oy, },
 		},
@@ -94,6 +94,7 @@ return {
 			knockback_up = { frames = { { id = "knockback" } } },
 			knockback_right = { frames = { { id = "knockback" } } },
 			knockback_left = { frames = { { id = "knockback" } } },
+			death = { frames = { { id = "smashed" } } },
 		},
 	},
 };
