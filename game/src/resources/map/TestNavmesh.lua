@@ -77,6 +77,18 @@ tests[#tests].body = function()
 	end
 end
 
+tests[#tests + 1] = { name = "Project point on navmesh" };
+tests[#tests].body = function()
+	local Navmesh = require( "src/resources/map/Navmesh" );
+	local collisionMesh = MapCollisionMesh:new( 10, 10, 10 );
+	local navmesh = Navmesh:new( 10, 10, collisionMesh, 0 );
+	local px, py = navmesh:getNearestPointOnNavmesh( -5, -5 );
+	assert( px == 0 );
+	assert( py == 0 );
+	local px, py = navmesh:getNearestPointOnNavmesh( 5, -5 );
+	assert( px == 5 );
+	assert( py == 0 );
+end
 
 
 return tests;

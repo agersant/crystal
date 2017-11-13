@@ -43,6 +43,7 @@ typedef struct BPath
 
 __declspec ( dllexport ) void generateNavmesh( BMap *map, int padding, BNavmesh *outNavmesh );
 __declspec ( dllexport ) void planPath( const BNavmesh *navmesh, REAL startX, REAL startY, REAL endX, REAL endY, BPath *outPath );
+__declspec ( dllexport ) BVector getNearestPointOnNavmesh( const BNavmesh *navmesh, REAL x, REAL y );
 
 __declspec ( dllexport ) void freeNavmesh( BNavmesh *navmesh );
 __declspec ( dllexport ) void freePath( BPath *path );

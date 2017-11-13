@@ -51,7 +51,7 @@ static void projectPointOntoNavmeshTriangle( const BNavmesh *navmesh, const BVec
 	projectPointOntoTriangle( vertexA, vertexB, vertexC, point, outPoint );
 }
 
-static void projectPointOntoNavmesh( const BNavmesh *navmesh, const BVector *point, const BTriangle **outTriangle, BVector *outPoint )
+void projectPointOntoNavmesh( const BNavmesh *navmesh, const BVector *point, const BTriangle **outTriangle, BVector *outPoint )
 {
 	assert( navmesh->numTriangles >= 0 );
 	REAL bestDist2 = DBL_MAX;
@@ -415,7 +415,7 @@ static void freeAStarOutput( BAStarOutput *aStarOutput )
 void pathfinder( const BNavmesh *navmesh, const BVector *start, const BVector *end, BPath *outPath )
 {
 	assert( outPath->numVertices == 0 );
-	
+
 	const BTriangle *const startTriangle = findTriangleContainingPoint( navmesh, start );
 	const BTriangle *const endTriangle = findTriangleContainingPoint( navmesh, end );
 	const BTriangle *adjustedStartTriangle, *adjustedEndTriangle;
@@ -449,11 +449,11 @@ void pathfinder( const BNavmesh *navmesh, const BVector *start, const BVector *e
 
 	BAStarOutput aStarOutput;
 	aStar( navmesh, adjustedStartTriangle, adjustedEndTriangle, &adjustedEnd, &aStarOutput );
-	
+
 	funnelPath( navmesh, &adjustedStart, &adjustedEnd, &aStarOutput, outPath );
-	
+
 	freeAStarOutput( &aStarOutput );
-	
+
 	assert( outPath->numVertices > 0 );
 	assert( outPath->vertices != NULL );
 
@@ -476,5 +476,5 @@ void pathfinder( const BNavmesh *navmesh, const BVector *start, const BVector *e
 		outPath->vertices = newVertices;
 		outPath->numVertices++;
 	}
-	
+
 }

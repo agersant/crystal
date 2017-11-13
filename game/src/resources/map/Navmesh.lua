@@ -59,6 +59,7 @@ FFI.cdef[[
 
 	void generateNavmesh( BMap *map, int padding, BNavmesh *outNavmesh );
 	void planPath( const BNavmesh *navmesh, double startX, double startY, double endX, double endY, BPath *outPath );
+	BVector getNearestPointOnNavmesh( const BNavmesh *navmesh, double x, double y );
 
 	void freeNavmesh( BNavmesh *navmesh );
 	void freePath( BPath *path );
@@ -153,6 +154,11 @@ Navmesh.findPath = function( self, startX, startY, endX, endY )
 		path:addVertex( bVector.x, bVector.y );
 	end
 	return path;
+end
+
+Navmesh.getNearestPointOnNavmesh = function( self, x, y )
+	local result = Beryl.getNearestPointOnNavmesh( self._bNavmesh, x, y );
+	return result.x, result.y;
 end
 
 Navmesh.draw = function( self )

@@ -21,7 +21,7 @@ void generateNavmesh( BMap *map, int padding, BNavmesh *outNavmesh )
 	polygonMapToTriangulation( &paddedMap, &triangulation );
 
 	triangulationToNavmesh( &triangulation, outNavmesh );
-	
+
 	freePolygonMap( &polygonMap );
 	freePolygonMap( &paddedMap );
 	trifree( triangulation.pointlist );
@@ -42,6 +42,17 @@ void planPath( const BNavmesh *navmesh, REAL startX, REAL startY, REAL endX, REA
 	end.x = endX;
 	end.y = endY;
 	pathfinder( navmesh, &start, &end, outPath );
+}
+
+BVector getNearestPointOnNavmesh( const BNavmesh *navmesh, REAL x, REAL y )
+{
+	BVector start;
+	start.x = x;
+	start.y = y;
+	BTriangle *triangle;
+	BVector result;
+	projectPointOntoNavmesh( navmesh, &start, &triangle, &result );
+	return result;
 }
 
 void freeNavmesh( BNavmesh *navmesh )
