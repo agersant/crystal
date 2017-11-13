@@ -60,6 +60,87 @@ Widget.getSize = function( self )
 	return math.abs( self._localRight - self._localLeft ), math.abs( self._localTop - self._localBottom );
 end
 
+Widget.getLocalCoordinates = function( self )
+	return self._localLeft, self._localTop, self._localRight, self._localBottom;
+end
+
+Widget.alignTopLeft = function( self, width, height )
+	self._leftAnchor = 0;
+	self._rightAnchor = 1;
+	self._topAnchor = 0;
+	self._bottomAnchor = 1;
+	self._leftOffset = 0;
+	self._rightOffset = width;
+	self._topOffset = 0;
+	self._bottomOffset = height;
+end
+
+Widget.alignTopCenter = function( self, width, height )
+	self._leftAnchor = .5;
+	self._rightAnchor = .5;
+	self._topAnchor = 0;
+	self._bottomAnchor = 1;
+	self._leftOffset = -width / 2;
+	self._rightOffset = width / 2;
+	self._topOffset = 0;
+	self._bottomOffset = height;
+end
+
+Widget.alignTopRight = function( self, width, height )
+	self._leftAnchor = 1;
+	self._rightAnchor = 0;
+	self._topAnchor = 0;
+	self._bottomAnchor = 1;
+	self._leftOffset = width;
+	self._rightOffset = 0;
+	self._topOffset = 0;
+	self._bottomOffset = height;
+end
+
+Widget.alignMiddleLeft = function( self, width, height )
+	self._leftAnchor = 0;
+	self._rightAnchor = 1;
+	self._topAnchor = .5;
+	self._bottomAnchor = .5;
+	self._leftOffset = 0;
+	self._rightOffset = width;
+	self._topOffset = -height / 2;
+	self._bottomOffset = height / 2;
+end
+
+Widget.alignMiddleCenter = function( self, width, height )
+	self._leftAnchor = .5;
+	self._rightAnchor = .5;
+	self._topAnchor = .5;
+	self._bottomAnchor = .5;
+	self._leftOffset = -width / 2;
+	self._rightOffset = width / 2;
+	self._topOffset = -height / 2;
+	self._bottomOffset = height / 2;
+end
+
+Widget.alignMiddleRight = function( self, width, height )
+	self._leftAnchor = 1;
+	self._rightAnchor = 0;
+	self._topAnchor = .5;
+	self._bottomAnchor = .5;
+	self._leftOffset = -width;
+	self._rightOffset = 0;
+	self._topOffset = -height / 2;
+	self._bottomOffset = height / 2;
+end
+
+Widget.alignBottomLeft = function( self, width, height )
+	self._leftAnchor = 0;
+	self._rightAnchor = 1;
+	self._topAnchor = 1;
+	self._bottomAnchor = 0;
+	self._leftOffset = 0;
+	self._rightOffset = width;
+	self._topOffset = -height;
+	self._bottomOffset = 0;
+end
+
 Widget.alignBottomCenter = function( self, width, height )
 	self._leftAnchor = .5;
 	self._rightAnchor = .5;
@@ -67,6 +148,17 @@ Widget.alignBottomCenter = function( self, width, height )
 	self._bottomAnchor = 0;
 	self._leftOffset = -width / 2;
 	self._rightOffset = width / 2;
+	self._topOffset = -height;
+	self._bottomOffset = 0;
+end
+
+Widget.alignBottomRight = function( self, width, height )
+	self._leftAnchor = 1;
+	self._rightAnchor = 0;
+	self._topAnchor = 1;
+	self._bottomAnchor = 0;
+	self._leftOffset = -width;
+	self._rightOffset = 0;
 	self._topOffset = -height;
 	self._bottomOffset = 0;
 end
@@ -84,6 +176,18 @@ end
 
 Widget.setLeftOffset = function( self, offset )
 	self._leftOffset = offset;
+end
+
+Widget.setRightOffset = function( self, offset )
+	self._rightOffset = offset;
+end
+
+Widget.setTopOffset = function( self, offset )
+	self._topOffset = offset;
+end
+
+Widget.setBottomOffset = function( self, offset )
+	self._bottomOffset = offset;
 end
 
 Widget.offset = function( self, dx, dy )
