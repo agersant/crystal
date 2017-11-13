@@ -62,7 +62,7 @@ Map.init = function( self, mapData, tileset )
 	self._staticLayers = {};
 	self._dynamicLayers = {};
 	self._mapEntities = {};
-	
+
 	self._width = mapData.content.width;
 	self._height = mapData.content.height;
 	self._numTiles = self._width * self._height;
@@ -77,12 +77,12 @@ Map.init = function( self, mapData, tileset )
 			parseObjectGroup( self, layerData );
 		end
 	end
-	
+
 	self._navmesh = Navmesh:new( self:getWidthInPixels(), self:getHeightInPixels(), self._collisionMesh, 6 );
 end
 
 Map.spawnCollisionMeshBody = function( self, scene )
-	return self._collisionMesh:spawnBody( scene );	
+	return self._collisionMesh:spawnBody( scene );
 end
 
 Map.spawnEntities = function( self, scene )
@@ -155,6 +155,10 @@ end
 
 Map.findPath = function( self, startX, startY, targetX, targetY )
 	return self._navmesh:findPath( startX, startY, targetX, targetY );
+end
+
+Map.getNearestPointOnNavmesh = function( self, x, y )
+	return self._navmesh:getNearestPointOnNavmesh( x, y );
 end
 
 
