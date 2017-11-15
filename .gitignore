@@ -1,6 +1,7 @@
 *.suo
 *.sdf
 *.vcxproj.user
+c_cpp_properties.json
 
 *.obj
 *.iobj
