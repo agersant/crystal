@@ -1,14 +1,14 @@
 return {
   version = "1.1",
   luaversion = "5.1",
-  tiledversion = "0.16.0",
+  tiledversion = "1.0.3",
   orientation = "orthogonal",
   renderorder = "right-down",
-  width = 20,
-  height = 15,
+  width = 30,
+  height = 17,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 4,
+  nextobjectid = 6,
   properties = {},
   tilesets = {
     {
@@ -26,6 +26,11 @@ return {
         x = 0,
         y = 0
       },
+      grid = {
+        orientation = "orthogonal",
+        width = 16,
+        height = 16
+      },
       properties = {},
       terrains = {},
       tilecount = 64,
@@ -39,6 +44,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -66,6 +72,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -98,6 +105,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -130,6 +138,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -162,6 +171,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -194,6 +204,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -226,6 +237,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -258,6 +270,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -290,6 +303,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -322,6 +336,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -349,6 +364,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -376,6 +392,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -403,6 +420,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -430,6 +448,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -457,6 +476,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -484,6 +504,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -511,6 +532,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -538,6 +560,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -565,6 +588,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -598,6 +622,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -625,6 +650,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -652,8 +678,8 @@ return {
       name = "Tile Layer 1",
       x = 0,
       y = 0,
-      width = 20,
-      height = 15,
+      width = 30,
+      height = 17,
       visible = true,
       opacity = 1,
       offsetx = 0,
@@ -663,30 +689,66 @@ return {
       },
       encoding = "lua",
       data = {
-        3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3,
-        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
-        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
-        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
-        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
-        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
-        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
-        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
-        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 2, 2, 3,
-        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 2, 2, 3,
-        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 2, 2, 3,
-        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3,
-        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3,
-        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-        3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3
+        3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3,
+        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2,
+        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2,
+        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 2, 2, 2, 2, 2, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2,
+        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 2, 2, 2, 2, 2, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2,
+        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 2, 2, 2, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2,
+        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 2, 2, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2,
+        3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 3, 3,
+        3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 3, 3, 3,
+        3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3,
+        3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3
       }
     },
     {
-      type = "objectgroup",
-      name = "teleports",
+      type = "tilelayer",
+      name = "Tile Layer 2",
+      x = 0,
+      y = 0,
+      width = 30,
+      height = 17,
       visible = true,
       opacity = 1,
       offsetx = 0,
       offsety = 0,
+      properties = {},
+      encoding = "lua",
+      data = {
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 12, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 5, 0, 0, 0, 0, 0, 4, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 13, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0,
+        0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0
+      }
+    },
+    {
+      type = "objectgroup",
+      name = "Entities",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
       properties = {},
       objects = {
         {
@@ -705,6 +767,32 @@ return {
             ["targetX"] = "160",
             ["targetY"] = "232"
           }
+        },
+        {
+          id = 4,
+          name = "",
+          type = "NPC",
+          shape = "rectangle",
+          x = 64,
+          y = 160,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 5,
+          name = "",
+          type = "NPC",
+          shape = "rectangle",
+          x = 368,
+          y = 96,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          visible = true,
+          properties = {}
         }
       }
     }
