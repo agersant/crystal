@@ -49,11 +49,15 @@ end
 love.keypressed = function( key, scanCode, isRepeat )
    local ctrl = love.keyboard.isDown( "lctrl" ) or love.keyboard.isDown( "rctrl" );
 	CLI:keyPressed( key, scanCode, ctrl );
-	Input:keyPressed( key, scanCode, isRepeat );
+	if not CLI:isActive() then
+		Input:keyPressed( key, scanCode, isRepeat );
+	end
 end
 
 love.keyreleased = function( key, scanCode )
-	Input:keyReleased( key, scanCode );
+	if not CLI:isActive() then
+		Input:keyReleased( key, scanCode );
+	end
 end
 
 love.textinput = function( text )
