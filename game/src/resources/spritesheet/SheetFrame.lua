@@ -11,11 +11,7 @@ SheetFrame.init = function( self, frameData, image )
 	assert( type( frameData.y ) == "number" );
 	assert( type( frameData.w ) == "number" );
 	assert( type( frameData.h ) == "number" );
-	assert( type( frameData.ox ) == "number" );
-	assert( type( frameData.oy ) == "number" );
 	self._quad = love.graphics.newQuad( frameData.x, frameData.y, frameData.w, frameData.h, image:getDimensions() );
-	self._ox = frameData.ox;
-	self._oy = frameData.oy;
 	self._tags = {};
 	if frameData.tags then
 		for tagName, tagData in pairs( frameData.tags ) do
@@ -42,10 +38,6 @@ SheetFrame.init = function( self, frameData, image )
 			self._tags[tagName] = shape;
 		end
 	end
-end
-
-SheetFrame.getOrigin = function( self )
-	return self._ox, self._oy;
 end
 
 SheetFrame.getQuad = function( self )

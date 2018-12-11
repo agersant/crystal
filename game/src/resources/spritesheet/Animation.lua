@@ -14,7 +14,7 @@ Animation.init = function( self, sheet, animationData )
 	for k, frameData in pairs( animationData.frames ) do
 		frameData.duration = frameData.duration or 1;
 		local sheetFrame = sheet:getFrame( frameData.id );
-		local animationFrame = AnimationFrame:new( sheetFrame, frameData.duration );
+		local animationFrame = AnimationFrame:new( sheetFrame, frameData );
 		table.insert( self._animationFrames, animationFrame );
 		self._duration = self._duration + frameData.duration;
 	end
@@ -36,7 +36,7 @@ Animation.getFrameAtTime = function( self, t )
 			t = math.min( t, self._duration );
 		end
 		assert( t <= self._duration );
-		
+
 		local curTime = 0;
 		for i, frame in ipairs( self._animationFrames ) do
 			curTime = curTime + frame:getDuration()
@@ -46,7 +46,7 @@ Animation.getFrameAtTime = function( self, t )
 			end
 		end
 	end
-	return outFrame:getSheetFrame();
+	return outFrame;
 end
 
 

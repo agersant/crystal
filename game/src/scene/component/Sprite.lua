@@ -29,14 +29,16 @@ Sprite.update = function( self, dt )
 		self._time = 0;
 	end
 	self._time = self._time + dt;
-	self._frame = self._animation:getFrameAtTime( self._time );
-	assert( self._frame );
+	self._animationFrame = self._animation:getFrameAtTime( self._time );
+	assert( self._animationFrame );
+	self._sheetFrame = self._animationFrame:getSheetFrame();
+	assert( self._sheetFrame );
 end
 
 Sprite.draw = function( self, x, y )
-	local quad = self._frame:getQuad();
+	local quad = self._sheetFrame:getQuad();
 	local image = self._sheet:getImage();
-	local ox, oy = self._frame:getOrigin();
+	local ox, oy = self._animationFrame:getOrigin();
 	local snapTo = 1 / GFXConfig:getZoom();
 	love.graphics.draw( image, quad, MathUtils.roundTo( x, snapTo ), MathUtils.roundTo( y, snapTo ), 0, 1, 1, ox, oy );
 end
@@ -46,7 +48,7 @@ Sprite.isAnimationOver = function( self )
 end
 
 Sprite.getTagShape = function( self, tagName )
-	return self._frame:getTagShape( tagName );
+	return self._sheetFrame:getTagShape( tagName );
 end
 
 
