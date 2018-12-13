@@ -23,6 +23,11 @@ tests[#tests].body = function()
 	assert( "png" == StringUtils.fileExtension( "gruik.png" ) );
 end
 
+tests[#tests + 1] = { name = "Valid file extension relative path" };
+tests[#tests].body = function()
+	assert( "png" == StringUtils.fileExtension( "../gruik.png" ) );
+end
+
 tests[#tests + 1] = { name = "Bad file extension" };
 tests[#tests].body = function()
 	assert( nil == StringUtils.fileExtension( "gruikpng" ) );
@@ -31,6 +36,11 @@ end
 tests[#tests + 1] = { name = "Strip file extension" };
 tests[#tests].body = function()
 	assert( "gruik" == StringUtils.stripFileExtension( "gruik.png" ) );
+end
+
+tests[#tests + 1] = { name = "Strip file extension relative path" };
+tests[#tests].body = function()
+	assert( "../gruik" == StringUtils.stripFileExtension( "../gruik.png" ) );
 end
 
 tests[#tests + 1] = { name = "Strip file from path" };

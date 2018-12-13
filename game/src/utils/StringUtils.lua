@@ -12,11 +12,11 @@ StringUtils.split = function( str, sep )
 end
 
 StringUtils.fileExtension = function( path )
-	return path:match( "%.(.+)$" );
+	return path:match( "%.([%a%d]+)$" );
 end
 
 StringUtils.stripFileExtension = function( path )
-	return path:match( "^(.*)%..+$" );
+	return path:match( "^(.*)%.[%a%d]+$" );
 end
 
 StringUtils.stripFileFromPath = function( path )
@@ -35,12 +35,12 @@ end
 StringUtils.mergePaths = function( a, b )
 	local aSplit = StringUtils.split( a, "\\/" );
 	local bSplit = StringUtils.split( b, "\\/" );
-	
+
 	while #bSplit > 0 and bSplit[1] == ".." do
 		table.remove( aSplit );
 		table.remove( bSplit, 1 );
 	end
-	
+
 	local out = "";
 	for i, p in ipairs( aSplit ) do
 		if #out > 0 then
@@ -54,7 +54,7 @@ StringUtils.mergePaths = function( a, b )
 		end
 		out = out .. p;
 	end
-	
+
 	return out;
 end
 
