@@ -48,7 +48,7 @@ Sprite.isAnimationOver = function( self )
 end
 
 Sprite.getTagShape = function( self, tagName )
-	return self._sheetFrame:getTagShape( tagName );
+	return self._animationFrame:getTagShape( tagName );
 end
 
 
