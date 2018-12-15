@@ -1,0 +1,465 @@
+{
+  "version": "Tiger2",
+  "sheet": {
+    "frames": [
+      {
+        "source": "attack_down_0_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_down_0_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_down_0_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_down_0_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_down_1_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_down_1_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_down_1_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_down_1_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_down_2_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_down_2_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_down_2_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_down_2_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_down_3_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_down_3_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_down_3_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_down_3_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_left_0_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_left_0_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_left_0_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_left_0_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_left_1_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_left_1_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_left_1_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_left_1_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_left_2_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_left_2_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_left_2_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_left_2_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_left_3_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_left_3_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_left_3_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_left_3_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_right_0_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_right_0_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_right_0_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_right_0_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_right_1_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_right_1_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_right_1_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_right_1_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_right_2_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_right_2_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_right_2_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_right_2_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_right_3_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_right_3_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_right_3_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_right_3_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_up_0_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_up_0_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_up_0_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_up_0_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_up_1_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_up_1_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_up_1_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_up_1_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_up_2_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_up_2_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_up_2_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_up_2_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_up_3_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_up_3_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_up_3_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "attack_up_3_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "death_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "death_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "idle_down.png",
+        "hitboxes": []
+      },
+      {
+        "source": "idle_left.png",
+        "hitboxes": []
+      },
+      {
+        "source": "idle_right.png",
+        "hitboxes": []
+      },
+      {
+        "source": "idle_up.png",
+        "hitboxes": []
+      },
+      {
+        "source": "knockback_down.png",
+        "hitboxes": []
+      },
+      {
+        "source": "knockback_left.png",
+        "hitboxes": []
+      },
+      {
+        "source": "knockback_right.png",
+        "hitboxes": []
+      },
+      {
+        "source": "knockback_up.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_down_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_down_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_down_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_down_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_down_4.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_down_5.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_left_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_left_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_left_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_left_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_left_4.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_left_5.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_right_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_right_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_right_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_right_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_right_4.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_right_5.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_up_0.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_up_1.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_up_2.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_up_3.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_up_4.png",
+        "hitboxes": []
+      },
+      {
+        "source": "walk_up_5.png",
+        "hitboxes": []
+      }
+    ],
+    "animations": [
+      {
+        "name": "idle_up",
+        "timeline": [
+          {
+            "frame": "idle_up.png",
+            "duration": 100,
+            "offset": [
+              -1,
+              -13
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "idle_down",
+        "timeline": [
+          {
+            "frame": "idle_down.png",
+            "duration": 100,
+            "offset": [
+              1,
+              -13
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "idle_left",
+        "timeline": [
+          {
+            "frame": "idle_left.png",
+            "duration": 100,
+            "offset": [
+              1,
+              -13
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "idle_right",
+        "timeline": [
+          {
+            "frame": "idle_right.png",
+            "duration": 100,
+            "offset": [
+              -2,
+              -13
+            ]
+          }
+        ],
+        "is_looping": false
+      }
+    ],
+    "export_settings": {
+      "format": {
+        "Template": "..\\crystal.liquid"
+      },
+      "texture_destination": "..\\..\\..\\game\\assets\\texture\\sprite\\duran.png",
+      "metadata_destination": "..\\..\\..\\game\\assets\\spritesheet\\duran.lua",
+      "metadata_paths_root": "..\\..\\..\\game"
+    }
+  }
+}
