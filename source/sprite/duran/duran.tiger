@@ -4,259 +4,1508 @@
     "frames": [
       {
         "source": "attack_down_0_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -12,
+                  -6
+                ],
+                "size": [
+                  16,
+                  14
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_down_0_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -5,
+                  -2
+                ],
+                "size": [
+                  14,
+                  20
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_down_0_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "hit",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -21,
+                  -2
+                ],
+                "size": [
+                  42,
+                  21
+                ]
+              }
+            }
+          },
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -13,
+                  -9
+                ],
+                "size": [
+                  20,
+                  14
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_down_0_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -13,
+                  -9
+                ],
+                "size": [
+                  21,
+                  14
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_down_1_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -1,
+                  -6
+                ],
+                "size": [
+                  11,
+                  15
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_down_1_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -6,
+                  -10
+                ],
+                "size": [
+                  13,
+                  14
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_down_1_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "hit",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -8,
+                  -2
+                ],
+                "size": [
+                  12,
+                  26
+                ]
+              }
+            }
+          },
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -8,
+                  -11
+                ],
+                "size": [
+                  16,
+                  11
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_down_1_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -8,
+                  -10
+                ],
+                "size": [
+                  15,
+                  10
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_down_2_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -5,
+                  -8
+                ],
+                "size": [
+                  9,
+                  20
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_down_2_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -5,
+                  -6
+                ],
+                "size": [
+                  11,
+                  16
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_down_2_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "hit",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -14,
+                  -7
+                ],
+                "size": [
+                  27,
+                  30
+                ]
+              }
+            }
+          },
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -3,
+                  -11
+                ],
+                "size": [
+                  13,
+                  17
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_down_2_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -1,
+                  -6
+                ],
+                "size": [
+                  11,
+                  16
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_down_3_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -3,
+                  -5
+                ],
+                "size": [
+                  11,
+                  15
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_down_3_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -8,
+                  -13
+                ],
+                "size": [
+                  16,
+                  8
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_down_3_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "hit",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -34,
+                  -5
+                ],
+                "size": [
+                  55,
+                  32
+                ]
+              }
+            }
+          },
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -14,
+                  -14
+                ],
+                "size": [
+                  14,
+                  17
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_down_3_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -10,
+                  -5
+                ],
+                "size": [
+                  12,
+                  15
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_left_0_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -7,
+                  -7
+                ],
+                "size": [
+                  10,
+                  17
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_left_0_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -3,
+                  0
+                ],
+                "size": [
+                  11,
+                  16
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_left_0_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "hit",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -24,
+                  -15
+                ],
+                "size": [
+                  25,
+                  39
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_left_0_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -6,
+                  -7
+                ],
+                "size": [
+                  13,
+                  13
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_left_1_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -6,
+                  -7
+                ],
+                "size": [
+                  14,
+                  15
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_left_1_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -7,
+                  -6
+                ],
+                "size": [
+                  15,
+                  16
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_left_1_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "hit",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -26,
+                  -3
+                ],
+                "size": [
+                  30,
+                  17
+                ]
+              }
+            }
+          },
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  0,
+                  -7
+                ],
+                "size": [
+                  15,
+                  16
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_left_1_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -1,
+                  -5
+                ],
+                "size": [
+                  15,
+                  14
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_left_2_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -10,
+                  -7
+                ],
+                "size": [
+                  12,
+                  17
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_left_2_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -1,
+                  -3
+                ],
+                "size": [
+                  14,
+                  18
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_left_2_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "hit",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -23,
+                  -21
+                ],
+                "size": [
+                  24,
+                  34
+                ]
+              }
+            }
+          },
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -3,
+                  -4
+                ],
+                "size": [
+                  16,
+                  13
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_left_2_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -6,
+                  -5
+                ],
+                "size": [
+                  18,
+                  11
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_left_3_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -10,
+                  -5
+                ],
+                "size": [
+                  14,
+                  14
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_left_3_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -1,
+                  -5
+                ],
+                "size": [
+                  13,
+                  14
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_left_3_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "hit",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -23,
+                  -15
+                ],
+                "size": [
+                  26,
+                  29
+                ]
+              }
+            }
+          },
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  4,
+                  -7
+                ],
+                "size": [
+                  12,
+                  16
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_left_3_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -8,
+                  -4
+                ],
+                "size": [
+                  13,
+                  13
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_right_0_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -1,
+                  -8
+                ],
+                "size": [
+                  9,
+                  17
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_right_0_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -6,
+                  -1
+                ],
+                "size": [
+                  10,
+                  16
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_right_0_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "hit",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  0,
+                  -14
+                ],
+                "size": [
+                  20,
+                  39
+                ]
+              }
+            }
+          },
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -11,
+                  5
+                ],
+                "size": [
+                  18,
+                  11
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_right_0_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -9,
+                  -3
+                ],
+                "size": [
+                  15,
+                  9
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_right_1_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -4,
+                  -5
+                ],
+                "size": [
+                  10,
+                  12
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_right_1_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -7,
+                  -6
+                ],
+                "size": [
+                  14,
+                  14
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_right_1_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "hit",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -1,
+                  -3
+                ],
+                "size": [
+                  26,
+                  16
+                ]
+              }
+            }
+          },
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -11,
+                  -7
+                ],
+                "size": [
+                  12,
+                  16
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_right_1_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -12,
+                  -6
+                ],
+                "size": [
+                  12,
+                  14
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_right_2_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  0,
+                  -6
+                ],
+                "size": [
+                  10,
+                  15
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_right_2_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -13,
+                  -2
+                ],
+                "size": [
+                  13,
+                  14
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_right_2_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "hit",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -2,
+                  -22
+                ],
+                "size": [
+                  25,
+                  35
+                ]
+              }
+            }
+          },
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -11,
+                  -4
+                ],
+                "size": [
+                  14,
+                  11
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_right_2_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -7,
+                  -5
+                ],
+                "size": [
+                  14,
+                  10
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_right_3_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -3,
+                  -6
+                ],
+                "size": [
+                  14,
+                  12
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_right_3_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -11,
+                  -5
+                ],
+                "size": [
+                  12,
+                  11
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_right_3_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "hit",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -3,
+                  -14
+                ],
+                "size": [
+                  26,
+                  27
+                ]
+              }
+            }
+          },
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -14,
+                  -6
+                ],
+                "size": [
+                  11,
+                  13
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_right_3_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -5,
+                  -3
+                ],
+                "size": [
+                  14,
+                  11
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_up_0_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -2,
+                  -6
+                ],
+                "size": [
+                  10,
+                  13
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_up_0_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -1,
+                  -2
+                ],
+                "size": [
+                  12,
+                  14
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_up_0_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "hit",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -17,
+                  -15
+                ],
+                "size": [
+                  33,
+                  31
+                ]
+              }
+            }
+          },
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -4,
+                  -5
+                ],
+                "size": [
+                  12,
+                  14
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_up_0_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -6,
+                  -7
+                ],
+                "size": [
+                  14,
+                  12
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_up_1_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  0,
+                  -6
+                ],
+                "size": [
+                  11,
+                  14
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_up_1_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -3,
+                  -6
+                ],
+                "size": [
+                  10,
+                  13
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_up_1_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "hit",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -7,
+                  -27
+                ],
+                "size": [
+                  13,
+                  27
+                ]
+              }
+            }
+          },
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -5,
+                  -4
+                ],
+                "size": [
+                  11,
+                  19
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_up_1_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -6,
+                  -2
+                ],
+                "size": [
+                  12,
+                  20
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_up_2_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -11,
+                  -9
+                ],
+                "size": [
+                  9,
+                  19
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_up_2_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  2,
+                  1
+                ],
+                "size": [
+                  11,
+                  15
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_up_2_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "hit",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -17,
+                  -20
+                ],
+                "size": [
+                  24,
+                  31
+                ]
+              }
+            }
+          },
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  2,
+                  -3
+                ],
+                "size": [
+                  11,
+                  13
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_up_2_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -1,
+                  -5
+                ],
+                "size": [
+                  11,
+                  13
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_up_3_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  3,
+                  -6
+                ],
+                "size": [
+                  11,
+                  12
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_up_3_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -7,
+                  -4
+                ],
+                "size": [
+                  11,
+                  16
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_up_3_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "hit",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -30,
+                  -24
+                ],
+                "size": [
+                  52,
+                  33
+                ]
+              }
+            }
+          },
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -14,
+                  1
+                ],
+                "size": [
+                  11,
+                  12
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "attack_up_3_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -14,
+                  -7
+                ],
+                "size": [
+                  9,
+                  13
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "death_0.png",
@@ -268,19 +1517,83 @@
       },
       {
         "source": "idle_down.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -6,
+                  -8
+                ],
+                "size": [
+                  11,
+                  19
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "idle_left.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -5,
+                  -9
+                ],
+                "size": [
+                  11,
+                  20
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "idle_right.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -6,
+                  -11
+                ],
+                "size": [
+                  12,
+                  22
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "idle_up.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -5,
+                  -10
+                ],
+                "size": [
+                  12,
+                  22
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "knockback_down.png",
@@ -300,99 +1613,483 @@
       },
       {
         "source": "walk_down_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -5,
+                  -8
+                ],
+                "size": [
+                  10,
+                  16
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_down_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -5,
+                  -8
+                ],
+                "size": [
+                  10,
+                  18
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_down_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -6,
+                  -7
+                ],
+                "size": [
+                  11,
+                  18
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_down_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -4,
+                  -7
+                ],
+                "size": [
+                  10,
+                  17
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_down_4.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -3,
+                  -5
+                ],
+                "size": [
+                  9,
+                  15
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_down_5.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -4,
+                  -6
+                ],
+                "size": [
+                  9,
+                  16
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_left_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -5,
+                  -5
+                ],
+                "size": [
+                  11,
+                  16
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_left_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -6,
+                  -5
+                ],
+                "size": [
+                  12,
+                  15
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_left_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -6,
+                  -4
+                ],
+                "size": [
+                  13,
+                  14
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_left_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -6,
+                  -4
+                ],
+                "size": [
+                  11,
+                  15
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_left_4.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -4,
+                  -4
+                ],
+                "size": [
+                  12,
+                  15
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_left_5.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -6,
+                  -4
+                ],
+                "size": [
+                  13,
+                  13
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_right_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -4,
+                  -5
+                ],
+                "size": [
+                  11,
+                  15
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_right_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -6,
+                  -5
+                ],
+                "size": [
+                  12,
+                  14
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_right_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -5,
+                  -3
+                ],
+                "size": [
+                  12,
+                  13
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_right_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -5,
+                  -4
+                ],
+                "size": [
+                  11,
+                  14
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_right_4.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -6,
+                  -5
+                ],
+                "size": [
+                  12,
+                  15
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_right_5.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -5,
+                  -4
+                ],
+                "size": [
+                  12,
+                  13
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_up_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -4,
+                  -6
+                ],
+                "size": [
+                  9,
+                  15
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_up_1.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -5,
+                  -5
+                ],
+                "size": [
+                  10,
+                  15
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_up_2.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -5,
+                  -6
+                ],
+                "size": [
+                  9,
+                  15
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_up_3.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -5,
+                  -6
+                ],
+                "size": [
+                  10,
+                  15
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_up_4.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -4,
+                  -6
+                ],
+                "size": [
+                  11,
+                  15
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "walk_up_5.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -4,
+                  -7
+                ],
+                "size": [
+                  10,
+                  16
+                ]
+              }
+            }
+          }
+        ]
       }
     ],
     "animations": [
@@ -446,6 +2143,1060 @@
             "duration": 100,
             "offset": [
               -2,
+              -13
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "walk_left",
+        "timeline": [
+          {
+            "frame": "walk_left_1.png",
+            "duration": 146,
+            "offset": [
+              0,
+              -14
+            ]
+          },
+          {
+            "frame": "walk_left_2.png",
+            "duration": 149,
+            "offset": [
+              -1,
+              -14
+            ]
+          },
+          {
+            "frame": "walk_left_3.png",
+            "duration": 152,
+            "offset": [
+              0,
+              -14
+            ]
+          },
+          {
+            "frame": "walk_left_4.png",
+            "duration": 149,
+            "offset": [
+              -3,
+              -15
+            ]
+          },
+          {
+            "frame": "walk_left_5.png",
+            "duration": 152,
+            "offset": [
+              -1,
+              -13
+            ]
+          },
+          {
+            "frame": "walk_left_0.png",
+            "duration": 155,
+            "offset": [
+              -3,
+              -15
+            ]
+          }
+        ],
+        "is_looping": true
+      },
+      {
+        "name": "walk_right",
+        "timeline": [
+          {
+            "frame": "walk_right_0.png",
+            "duration": 158,
+            "offset": [
+              2,
+              -15
+            ]
+          },
+          {
+            "frame": "walk_right_1.png",
+            "duration": 142,
+            "offset": [
+              0,
+              -15
+            ]
+          },
+          {
+            "frame": "walk_right_2.png",
+            "duration": 151,
+            "offset": [
+              -1,
+              -14
+            ]
+          },
+          {
+            "frame": "walk_right_3.png",
+            "duration": 150,
+            "offset": [
+              0,
+              -14
+            ]
+          },
+          {
+            "frame": "walk_right_4.png",
+            "duration": 151,
+            "offset": [
+              2,
+              -15
+            ]
+          },
+          {
+            "frame": "walk_right_5.png",
+            "duration": 148,
+            "offset": [
+              1,
+              -13
+            ]
+          }
+        ],
+        "is_looping": true
+      },
+      {
+        "name": "walk_up",
+        "timeline": [
+          {
+            "frame": "walk_up_0.png",
+            "duration": 152,
+            "offset": [
+              -2,
+              -13
+            ]
+          },
+          {
+            "frame": "walk_up_1.png",
+            "duration": 149,
+            "offset": [
+              1,
+              -13
+            ]
+          },
+          {
+            "frame": "walk_up_2.png",
+            "duration": 153,
+            "offset": [
+              3,
+              -12
+            ]
+          },
+          {
+            "frame": "walk_up_3.png",
+            "duration": 147,
+            "offset": [
+              1,
+              -13
+            ]
+          },
+          {
+            "frame": "walk_up_4.png",
+            "duration": 152,
+            "offset": [
+              -2,
+              -13
+            ]
+          },
+          {
+            "frame": "walk_up_5.png",
+            "duration": 148,
+            "offset": [
+              -3,
+              -12
+            ]
+          }
+        ],
+        "is_looping": true
+      },
+      {
+        "name": "walk_down",
+        "timeline": [
+          {
+            "frame": "walk_down_0.png",
+            "duration": 148,
+            "offset": [
+              0,
+              -13
+            ]
+          },
+          {
+            "frame": "walk_down_1.png",
+            "duration": 153,
+            "offset": [
+              0,
+              -14
+            ]
+          },
+          {
+            "frame": "walk_down_2.png",
+            "duration": 153,
+            "offset": [
+              0,
+              -13
+            ]
+          },
+          {
+            "frame": "walk_down_3.png",
+            "duration": 152,
+            "offset": [
+              0,
+              -13
+            ]
+          },
+          {
+            "frame": "walk_down_4.png",
+            "duration": 150,
+            "offset": [
+              0,
+              -14
+            ]
+          },
+          {
+            "frame": "walk_down_5.png",
+            "duration": 153,
+            "offset": [
+              0,
+              -13
+            ]
+          }
+        ],
+        "is_looping": true
+      },
+      {
+        "name": "death",
+        "timeline": [
+          {
+            "frame": "death_0.png",
+            "duration": 196,
+            "offset": [
+              -4,
+              -11
+            ]
+          },
+          {
+            "frame": "death_1.png",
+            "duration": 303,
+            "offset": [
+              -5,
+              -9
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "knockback_left",
+        "timeline": [
+          {
+            "frame": "knockback_left.png",
+            "duration": 100,
+            "offset": [
+              6,
+              -14
+            ]
+          }
+        ],
+        "is_looping": true
+      },
+      {
+        "name": "knockback_right",
+        "timeline": [
+          {
+            "frame": "knockback_right.png",
+            "duration": 100,
+            "offset": [
+              -7,
+              -14
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "knockback_up",
+        "timeline": [
+          {
+            "frame": "knockback_up.png",
+            "duration": 100,
+            "offset": [
+              0,
+              -14
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "knockback_down",
+        "timeline": [
+          {
+            "frame": "knockback_down.png",
+            "duration": 100,
+            "offset": [
+              -2,
+              -16
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "attack_down_0",
+        "timeline": [
+          {
+            "frame": "attack_down_0_0.png",
+            "duration": 152,
+            "offset": [
+              8,
+              -13
+            ]
+          },
+          {
+            "frame": "attack_down_0_1.png",
+            "duration": 77,
+            "offset": [
+              4,
+              -20
+            ]
+          },
+          {
+            "frame": "attack_down_0_2.png",
+            "duration": 110,
+            "offset": [
+              11,
+              -8
+            ]
+          },
+          {
+            "frame": "attack_down_0_3.png",
+            "duration": 160,
+            "offset": [
+              11,
+              -7
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "attack_down_1",
+        "timeline": [
+          {
+            "frame": "attack_down_1_1.png",
+            "duration": 80,
+            "offset": [
+              1,
+              -3
+            ]
+          },
+          {
+            "frame": "attack_down_1_0.png",
+            "duration": 147,
+            "offset": [
+              -2,
+              -13
+            ]
+          },
+          {
+            "frame": "attack_down_1_2.png",
+            "duration": 56,
+            "offset": [
+              1,
+              0
+            ]
+          },
+          {
+            "frame": "attack_down_1_3.png",
+            "duration": 72,
+            "offset": [
+              1,
+              0
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "attack_down_2",
+        "timeline": [
+          {
+            "frame": "attack_down_2_0.png",
+            "duration": 147,
+            "offset": [
+              3,
+              -16
+            ]
+          },
+          {
+            "frame": "attack_down_2_1.png",
+            "duration": 69,
+            "offset": [
+              2,
+              -13
+            ]
+          },
+          {
+            "frame": "attack_down_2_2.png",
+            "duration": 74,
+            "offset": [
+              -2,
+              -9
+            ]
+          },
+          {
+            "frame": "attack_down_2_3.png",
+            "duration": 140,
+            "offset": [
+              -3,
+              -14
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "attack_down_3",
+        "timeline": [
+          {
+            "frame": "attack_down_3_0.png",
+            "duration": 158,
+            "offset": [
+              -1,
+              -13
+            ]
+          },
+          {
+            "frame": "attack_down_3_1.png",
+            "duration": 77,
+            "offset": [
+              0,
+              -2
+            ]
+          },
+          {
+            "frame": "attack_down_3_2.png",
+            "duration": 71,
+            "offset": [
+              13,
+              -6
+            ]
+          },
+          {
+            "frame": "attack_down_3_3.png",
+            "duration": 157,
+            "offset": [
+              12,
+              -14
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "attack_up_0",
+        "timeline": [
+          {
+            "frame": "attack_up_0_0.png",
+            "duration": 155,
+            "offset": [
+              2,
+              -14
+            ]
+          },
+          {
+            "frame": "attack_up_0_1.png",
+            "duration": 69,
+            "offset": [
+              -4,
+              -21
+            ]
+          },
+          {
+            "frame": "attack_up_0_2.png",
+            "duration": 73,
+            "offset": [
+              9,
+              -15
+            ]
+          },
+          {
+            "frame": "attack_up_0_3.png",
+            "duration": 169,
+            "offset": [
+              9,
+              -11
+            ]
+          }
+        ],
+        "is_looping": true
+      },
+      {
+        "name": "attack_up_1",
+        "timeline": [
+          {
+            "frame": "attack_up_1_0.png",
+            "duration": 158,
+            "offset": [
+              -3,
+              -12
+            ]
+          },
+          {
+            "frame": "attack_up_1_1.png",
+            "duration": 75,
+            "offset": [
+              -1,
+              -14
+            ]
+          },
+          {
+            "frame": "attack_up_1_2.png",
+            "duration": 69,
+            "offset": [
+              -1,
+              -24
+            ]
+          },
+          {
+            "frame": "attack_up_1_3.png",
+            "duration": 186,
+            "offset": [
+              0,
+              -25
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "attack_up_2",
+        "timeline": [
+          {
+            "frame": "attack_up_2_0.png",
+            "duration": 189,
+            "offset": [
+              10,
+              -15
+            ]
+          },
+          {
+            "frame": "attack_up_2_1.png",
+            "duration": 60,
+            "offset": [
+              -6,
+              -21
+            ]
+          },
+          {
+            "frame": "attack_up_2_2.png",
+            "duration": 54,
+            "offset": [
+              -6,
+              -15
+            ]
+          },
+          {
+            "frame": "attack_up_2_3.png",
+            "duration": 210,
+            "offset": [
+              -3,
+              -15
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "attack_up_3",
+        "timeline": [
+          {
+            "frame": "attack_up_3_0.png",
+            "duration": 159,
+            "offset": [
+              -13,
+              -13
+            ]
+          },
+          {
+            "frame": "attack_up_3_1.png",
+            "duration": 55,
+            "offset": [
+              0,
+              -21
+            ]
+          },
+          {
+            "frame": "attack_up_3_2.png",
+            "duration": 48,
+            "offset": [
+              8,
+              -22
+            ]
+          },
+          {
+            "frame": "attack_up_3_3.png",
+            "duration": 193,
+            "offset": [
+              9,
+              -14
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "attack_left_0",
+        "timeline": [
+          {
+            "frame": "attack_left_0_0.png",
+            "duration": 156,
+            "offset": [
+              8,
+              -14
+            ]
+          },
+          {
+            "frame": "attack_left_0_1.png",
+            "duration": 61,
+            "offset": [
+              -3,
+              -21
+            ]
+          },
+          {
+            "frame": "attack_left_0_2.png",
+            "duration": 63,
+            "offset": [
+              -11,
+              -21
+            ]
+          },
+          {
+            "frame": "attack_left_0_3.png",
+            "duration": 191,
+            "offset": [
+              -11,
+              -11
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "attack_left_1",
+        "timeline": [
+          {
+            "frame": "attack_left_1_0.png",
+            "duration": 165,
+            "offset": [
+              -2,
+              -11
+            ]
+          },
+          {
+            "frame": "attack_left_1_1.png",
+            "duration": 81,
+            "offset": [
+              -9,
+              -11
+            ]
+          },
+          {
+            "frame": "attack_left_1_2.png",
+            "duration": 66,
+            "offset": [
+              -16,
+              -12
+            ]
+          },
+          {
+            "frame": "attack_left_1_3.png",
+            "duration": 164,
+            "offset": [
+              -16,
+              -12
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "attack_left_2",
+        "timeline": [
+          {
+            "frame": "attack_left_2_0.png",
+            "duration": 180,
+            "offset": [
+              5,
+              -14
+            ]
+          },
+          {
+            "frame": "attack_left_2_1.png",
+            "duration": 81,
+            "offset": [
+              -12,
+              -18
+            ]
+          },
+          {
+            "frame": "attack_left_2_2.png",
+            "duration": 76,
+            "offset": [
+              -12,
+              -12
+            ]
+          },
+          {
+            "frame": "attack_left_2_3.png",
+            "duration": 148,
+            "offset": [
+              -9,
+              -9
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "attack_left_3",
+        "timeline": [
+          {
+            "frame": "attack_left_3_0.png",
+            "duration": 165,
+            "offset": [
+              -2,
+              -10
+            ]
+          },
+          {
+            "frame": "attack_left_3_1.png",
+            "duration": 65,
+            "offset": [
+              -15,
+              -12
+            ]
+          },
+          {
+            "frame": "attack_left_3_2.png",
+            "duration": 76,
+            "offset": [
+              -13,
+              -13
+            ]
+          },
+          {
+            "frame": "attack_left_3_3.png",
+            "duration": 172,
+            "offset": [
+              -1,
+              -15
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "attack_right_0",
+        "timeline": [
+          {
+            "frame": "attack_right_0_0.png",
+            "duration": 180,
+            "offset": [
+              -10,
+              -13
+            ]
+          },
+          {
+            "frame": "attack_right_0_1.png",
+            "duration": 81,
+            "offset": [
+              1,
+              -21
+            ]
+          },
+          {
+            "frame": "attack_right_0_2.png",
+            "duration": 78,
+            "offset": [
+              10,
+              -21
+            ]
+          },
+          {
+            "frame": "attack_right_0_3.png",
+            "duration": 142,
+            "offset": [
+              10,
+              -11
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "attack_right_1",
+        "timeline": [
+          {
+            "frame": "attack_right_1_0.png",
+            "duration": 169,
+            "offset": [
+              0,
+              -12
+            ]
+          },
+          {
+            "frame": "attack_right_1_1.png",
+            "duration": 82,
+            "offset": [
+              5,
+              -12
+            ]
+          },
+          {
+            "frame": "attack_right_1_2.png",
+            "duration": 78,
+            "offset": [
+              11,
+              -13
+            ]
+          },
+          {
+            "frame": "attack_right_1_3.png",
+            "duration": 143,
+            "offset": [
+              12,
+              -13
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "attack_right_2",
+        "timeline": [
+          {
+            "frame": "attack_right_2_0.png",
+            "duration": 171,
+            "offset": [
+              -9,
+              -15
+            ]
+          },
+          {
+            "frame": "attack_right_2_1.png",
+            "duration": 72,
+            "offset": [
+              7,
+              -19
+            ]
+          },
+          {
+            "frame": "attack_right_2_2.png",
+            "duration": 47,
+            "offset": [
+              8,
+              -12
+            ]
+          },
+          {
+            "frame": "attack_right_2_3.png",
+            "duration": 169,
+            "offset": [
+              4,
+              -10
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "attack_right_3",
+        "timeline": [
+          {
+            "frame": "attack_right_3_0.png",
+            "duration": 186,
+            "offset": [
+              1,
+              -11
+            ]
+          },
+          {
+            "frame": "attack_right_3_1.png",
+            "duration": 63,
+            "offset": [
+              12,
+              -13
+            ]
+          },
+          {
+            "frame": "attack_right_3_2.png",
+            "duration": 64,
+            "offset": [
+              11,
+              -12
+            ]
+          },
+          {
+            "frame": "attack_right_3_3.png",
+            "duration": 187,
+            "offset": [
+              0,
+              -14
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "dash_down",
+        "timeline": [
+          {
+            "frame": "attack_down_1_0.png",
+            "duration": 260,
+            "offset": [
+              -2,
+              -13
+            ]
+          },
+          {
+            "frame": "attack_down_1_1.png",
+            "duration": 78,
+            "offset": [
+              1,
+              -4
+            ]
+          },
+          {
+            "frame": "attack_down_1_2.png",
+            "duration": 75,
+            "offset": [
+              1,
+              -2
+            ]
+          },
+          {
+            "frame": "attack_down_1_3.png",
+            "duration": 76,
+            "offset": [
+              1,
+              -2
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "dash_up",
+        "timeline": [
+          {
+            "frame": "attack_up_1_0.png",
+            "duration": 248,
+            "offset": [
+              -4,
+              -13
+            ]
+          },
+          {
+            "frame": "attack_up_1_1.png",
+            "duration": 53,
+            "offset": [
+              -2,
+              -15
+            ]
+          },
+          {
+            "frame": "attack_up_1_2.png",
+            "duration": 69,
+            "offset": [
+              2,
+              -24
+            ]
+          },
+          {
+            "frame": "attack_up_1_3.png",
+            "duration": 76,
+            "offset": [
+              3,
+              -25
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "dash_left",
+        "timeline": [
+          {
+            "frame": "attack_left_1_0.png",
+            "duration": 245,
+            "offset": [
+              -2,
+              -11
+            ]
+          },
+          {
+            "frame": "attack_left_1_1.png",
+            "duration": 51,
+            "offset": [
+              -8,
+              -11
+            ]
+          },
+          {
+            "frame": "attack_left_1_2.png",
+            "duration": 60,
+            "offset": [
+              -15,
+              -12
+            ]
+          },
+          {
+            "frame": "attack_left_1_3.png",
+            "duration": 65,
+            "offset": [
+              -15,
+              -12
+            ]
+          }
+        ],
+        "is_looping": false
+      },
+      {
+        "name": "dash_right",
+        "timeline": [
+          {
+            "frame": "attack_right_1_0.png",
+            "duration": 243,
+            "offset": [
+              -1,
+              -12
+            ]
+          },
+          {
+            "frame": "attack_right_1_1.png",
+            "duration": 61,
+            "offset": [
+              5,
+              -12
+            ]
+          },
+          {
+            "frame": "attack_right_1_2.png",
+            "duration": 58,
+            "offset": [
+              11,
+              -13
+            ]
+          },
+          {
+            "frame": "attack_right_1_3.png",
+            "duration": 61,
+            "offset": [
+              12,
               -13
             ]
           }
