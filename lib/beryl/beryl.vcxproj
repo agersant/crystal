@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\lib\gpc\gpc.h" />
-    <ClInclude Include="..\..\..\lib\triangle\triangle.h" />
+    <ClInclude Include="..\external\gpc\gpc.h" />
+    <ClInclude Include="..\external\triangle\triangle.h" />
     <ClInclude Include="src\api.h" />
     <ClInclude Include="src\linked_list.h" />
     <ClInclude Include="src\navmesh_generate.h" />
@@ -21,8 +21,8 @@
     <ClInclude Include="src\vector_math.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\lib\gpc\gpc.c" />
-    <ClCompile Include="..\..\..\lib\triangle\triangle.c" />
+    <ClCompile Include="..\external\gpc\gpc.c" />
+    <ClCompile Include="..\external\triangle\triangle.c" />
     <ClCompile Include="src\api.c" />
     <ClCompile Include="src\linked_list.c" />
     <ClCompile Include="src\navmesh_generate.c" />

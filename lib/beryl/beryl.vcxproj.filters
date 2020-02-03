@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\lib\triangle\triangle.h">
+    <ClInclude Include="..\external\triangle\triangle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\api.h">
@@ -27,7 +27,7 @@
     <ClInclude Include="src\types.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\lib\gpc\gpc.h">
+    <ClInclude Include="..\external\gpc\gpc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\navmesh_generate.h">
@@ -41,7 +41,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\lib\triangle\triangle.c">
+    <ClCompile Include="..\external\triangle\triangle.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\api.c">
@@ -50,7 +50,7 @@
     <ClCompile Include="src\vector_math.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\lib\gpc\gpc.c">
+    <ClCompile Include="..\external\gpc\gpc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\navmesh_generate.c">

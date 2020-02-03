@@ -7,10 +7,10 @@ OBJS = api.o linked_list.o navmesh_generate.o navmesh_query.o vector_math.o tria
 $(TARGET): $(OBJS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(OBJS)
 
-gpc.o : ../../../lib/gpc/gpc.c
+gpc.o : ../external/gpc/gpc.c
 	$(CC) $(CFLAGS) $< -o $@
 
-triangle.o : ../../../lib/triangle/triangle.c
+triangle.o : ../external/triangle/triangle.c
 	$(CC) $(CFLAGS) $< -o $@
 
 %.o : src/%.c

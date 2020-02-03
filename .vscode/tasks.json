@@ -1,27 +1,37 @@
 {
-	"version": "0.1.0",
-	"showOutput": "always",
-	
-    "tasks": [
-
+	"version": "2.0.0",
+	"tasks": [
 		// Launch game
 		{
-			"taskName": "Run",
-			"options": { "cwd": "${workspaceRoot}\\game" },
+			"label": "Run",
+			"type": "process",
+			"options": {
+				"cwd": "${workspaceRoot}\\game"
+			},
 			"command": "love",
-			"args": ["."]
+			"args": [
+				"."
+			]
 		},
-
 		// Run unit tests
-        {
-			"isTestCommand": true,
-			"taskName": "Test",
-			"options": { "cwd": "${workspaceRoot}\\game" },
+		{
+			"label": "Test",
+			"group": "test",
+			"type": "process",
+			"options": {
+				"cwd": "${workspaceRoot}\\game"
+			},
 			"command": "love",
-			"args": [".", "/test"],
+			"args": [
+				".",
+				"/test"
+			],
 			"problemMatcher": {
 				"owner": "lua",
-				"fileLocation": ["relative", "${workspaceRoot}\\game"],
+				"fileLocation": [
+					"relative",
+					"${workspaceRoot}\\game"
+				],
 				"pattern": {
 					"regexp": "^(.*):(\\d+):\\s+(.*)$",
 					"file": 1,
@@ -29,26 +39,39 @@
 					"message": 3
 				}
 			}
-        },
-		
+		},
 		// Build Beryl (Windows Release)
 		{
-			"isBuildCommand": true,
-			"taskName": "Build Beryl Release (Windows)",
-			"options": { "cwd": "${workspaceRoot}" },
+			"label": "Build Beryl Release (Windows)",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"options": {
+				"cwd": "${workspaceRoot}"
+			},
 			"command": "msbuild",
-			"args": ["/m", "/p:Configuration=Release;OutDir=${workspaceRoot}\\game\\", ".\\source\\code\\beryl\\beryl.sln"],
+			"args": [
+				"/m",
+				"/p:Configuration=Release;OutDir=${workspaceRoot}\\game\\",
+				".\\lib\\beryl\\beryl.sln"
+			],
 			"problemMatcher": "$msCompile"
 		},
-		
 		// Build Beryl (Windows Debug)
 		{
-			"taskName": "Build Beryl Debug (Windows)",
-			"options": { "cwd": "${workspaceRoot}" },
+			"label": "Build Beryl Debug (Windows)",
+			"group": "build",
+			"options": {
+				"cwd": "${workspaceRoot}"
+			},
 			"command": "msbuild",
-			"args": ["/m", "/p:Configuration=Debug;OutDir=${workspaceRoot}\\game\\", ".\\source\\code\\beryl\\beryl.sln"],
+			"args": [
+				"/m",
+				"/p:Configuration=Debug;OutDir=${workspaceRoot}\\game\\",
+				".\\lib\\beryl\\beryl.sln"
+			],
 			"problemMatcher": "$msCompile"
 		}
-		
-    ]
+	]
 }

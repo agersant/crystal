@@ -9,9 +9,9 @@ addons:
       - love
 
 before_script:
-  - cd $TRAVIS_BUILD_DIR/source/code/beryl
+  - cd $TRAVIS_BUILD_DIR/lib/beryl
   - make
-  - LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/source/code/beryl:$LD_LIBRARY_PATH
+  - LD_LIBRARY_PATH=$TRAVIS_BUILD_DIR/lib/beryl:$LD_LIBRARY_PATH
   - export LD_LIBRARY_PATH
 
 script:

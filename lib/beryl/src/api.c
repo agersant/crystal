@@ -3,7 +3,7 @@
 #include "navmesh_query.h"
 #include "types.h"
 
-#include "../../../../lib/triangle/triangle.h"
+#include "../../external/triangle/triangle.h"
 #include <assert.h>
 #include <stdlib.h>
 
