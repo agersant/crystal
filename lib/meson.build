@@ -17,7 +17,6 @@ endif
 
 cc = meson.get_compiler('c')
 math_library = cc.find_library('m', required : false)
-standard_library = cc.find_library('stdlib', required : false)
 
 library('beryl',
            'beryl/api.c',
@@ -29,5 +28,5 @@ library('beryl',
            'external/triangle/triangle.c',
            'external/gpc/gpc.c',
            c_args : ['-DANSI_DECLARATORS', '-DTRILIBRARY'],
-           dependencies : [math_library, standard_library],
+           dependencies : [math_library],
         )
