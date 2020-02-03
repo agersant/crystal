@@ -1,6 +1,6 @@
 project('beryl', 'c',
   version : '0.1',
-  default_options : ['warning_level=3'])
+  default_options : ['c_std=c11', 'warning_level=3'])
 
 if meson.get_compiler('c').get_id() == 'msvc'
   add_project_arguments('-DNO_TIMER', language : 'c')
@@ -17,6 +17,7 @@ endif
 
 cc = meson.get_compiler('c')
 math_library = cc.find_library('m', required : false)
+standard_library = cc.find_library('stdlib', required : false)
 
 library('beryl',
            'beryl/api.c',
@@ -28,5 +29,5 @@ library('beryl',
            'external/triangle/triangle.c',
            'external/gpc/gpc.c',
            c_args : ['-DANSI_DECLARATORS', '-DTRILIBRARY'],
-           dependencies : [math_library],
+           dependencies : [math_library, standard_library],
         )
