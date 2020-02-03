@@ -6,6 +6,10 @@ if meson.get_compiler('c').get_id() == 'msvc'
   add_global_arguments('-DNO_TIMER', language : 'c')
 endif
 
+if meson.get_compiler('c').get_id() == 'clang'
+  add_global_arguments('-shared', '-fdeclspec', '-fPIC', language : 'c')
+endif
+
 if host_machine.cpu_family() == 'x86'
   add_global_arguments('-DCPU86', language : 'c')
 endif
