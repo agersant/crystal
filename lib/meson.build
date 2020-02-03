@@ -7,7 +7,7 @@ if meson.get_compiler('c').get_id() == 'msvc'
 endif
 
 if meson.get_compiler('c').get_id() == 'clang'
-  add_project_arguments('-fdeclspec', '-fPIC', language : 'c')
+  add_project_arguments('-fPIC', language : 'c')
   add_project_link_arguments('-shared', language : 'c')
 endif
 

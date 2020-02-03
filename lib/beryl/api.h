@@ -36,10 +36,14 @@ typedef struct BPath {
 	BVector* vertices;
 } BPath;
 
-__declspec(dllexport) void generateNavmesh(BMap* map, int padding, BNavmesh* outNavmesh);
-__declspec(dllexport) void planPath(const BNavmesh* navmesh, REAL startX, REAL startY, REAL endX,
-									REAL endY, BPath* outPath);
-__declspec(dllexport) BVector getNearestPointOnNavmesh(const BNavmesh* navmesh, REAL x, REAL y);
+#ifdef _MSC_VER
+#define EXPORT __declspec(dllexport)
+#endif
 
-__declspec(dllexport) void freeNavmesh(BNavmesh* navmesh);
-__declspec(dllexport) void freePath(BPath* path);
+EXPORT void generateNavmesh(BMap* map, int padding, BNavmesh* outNavmesh);
+EXPORT void planPath(const BNavmesh* navmesh, REAL startX, REAL startY, REAL endX, REAL endY,
+					 BPath* outPath);
+EXPORT BVector getNearestPointOnNavmesh(const BNavmesh* navmesh, REAL x, REAL y);
+
+EXPORT void freeNavmesh(BNavmesh* navmesh);
+EXPORT void freePath(BPath* path);
