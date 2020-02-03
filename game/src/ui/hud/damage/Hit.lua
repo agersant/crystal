@@ -1,35 +1,33 @@
-require( "src/utils/OOP" );
-local Colors = require( "src/resources/Colors" );
-local Fonts = require( "src/resources/Fonts" );
-local Widget = require( "src/ui/Widget" );
-local Text = require( "src/ui/core/Text" );
+require("src/utils/OOP");
+local Colors = require("src/resources/Colors");
+local Fonts = require("src/resources/Fonts");
+local Widget = require("src/ui/Widget");
+local Text = require("src/ui/core/Text");
 
-local Hit = Class( "Hit", Widget );
+local Hit = Class("Hit", Widget);
 
-
-
-Hit.init = function( self, victim, amount )
-	Hit.super.init( self );
-	assert( victim );
-	assert( amount );
+Hit.init = function(self, victim, amount)
+	Hit.super.init(self);
+	assert(victim);
+	assert(amount);
 	self._victim = victim;
 
-	assert( self._victim:isValid() );
+	assert(self._victim:isValid());
 	self._lastKnownLeft, self._lastKnownTop = self._victim:getScreenPosition();
 
-	self:thread( function()
-		self:wait( 2 );
+	self:thread(function()
+		self:wait(2);
 		self:remove();
-	end );
+	end);
 
-	self._textWidget = Text:new( "fat", 16 );
-	self._textWidget:setColor( Colors.barbadosCherry );
-	self._textWidget:setAlignment( "center" );
-	self._textWidget:setText( amount );
-	self:addChild( self._textWidget );
+	self._textWidget = Text:new("fat", 16);
+	self._textWidget:setColor(Colors.barbadosCherry);
+	self._textWidget:setAlignment("center");
+	self._textWidget:setText(amount);
+	self:addChild(self._textWidget);
 end
 
-Hit.updatePosition = function( self, dt )
+Hit.updatePosition = function(self, dt)
 	if self._victim:isValid() then
 		local x, y = self._victim:getScreenPosition();
 		self._localLeft = x;
@@ -43,7 +41,5 @@ Hit.updatePosition = function( self, dt )
 	self._localRight = self._localLeft + 100;
 	self._localBottom = self._localTop + 100;
 end
-
-
 
 return Hit;

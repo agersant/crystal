@@ -1,199 +1,159 @@
-require( "src/utils/OOP" );
-local UndoStack = require( "src/ui/UndoStack" );
+require("src/utils/OOP");
+local UndoStack = require("src/ui/UndoStack");
 
-
-
-local TextInput = Class( "TextInput" );
-
-
+local TextInput = Class("TextInput");
 
 -- IMPLEMENTATION
 
-local findLeftWord = function( self )
+local findLeftWord = function(self)
 	local out = self._cursor - 1;
 	while out > 0 do
-		local spaceLeft = self._text:sub( out, out ):find( "%s" );
-		local spaceRight = self._text:sub( out + 1, out + 1 ):find( "%s" );
-		if spaceLeft and not spaceRight then
-			break;
-		end
+		local spaceLeft = self._text:sub(out, out):find("%s");
+		local spaceRight = self._text:sub(out + 1, out + 1):find("%s");
+		if spaceLeft and not spaceRight then break end
 		out = out - 1;
 	end
 	return out;
 end
 
-local findRightWord = function( self )
-	local matchStart, matchEnd = self._text:find( "%s+", self._cursor + 1 );
+local findRightWord = function(self)
+	local matchStart, matchEnd = self._text:find("%s+", self._cursor + 1);
 	return matchEnd or #self._text;
 end
 
-local insert = function( self, text )
-	local firstNonPrintable = text:find( "[%c]" );
-	if firstNonPrintable then
-		text = text:sub( 1, firstNonPrintable - 1 );
-	end
-	local pre = self._text:sub( 1, self._cursor );
-	local post = self._text:sub( self._cursor + 1 );
+local insert = function(self, text)
+	local firstNonPrintable = text:find("[%c]");
+	if firstNonPrintable then text = text:sub(1, firstNonPrintable - 1); end
+	local pre = self._text:sub(1, self._cursor);
+	local post = self._text:sub(self._cursor + 1);
 	self._text = pre .. text .. post;
 	self._cursor = self._cursor + #text;
 end
 
-local backspace = function( self, numDelete )
-	assert( numDelete > 0 );
-	local pre = self._text:sub( 1, self._cursor - numDelete );
-	local post = self._text:sub( self._cursor + 1 );
+local backspace = function(self, numDelete)
+	assert(numDelete > 0);
+	local pre = self._text:sub(1, self._cursor - numDelete);
+	local post = self._text:sub(self._cursor + 1);
 	self._text = pre .. post;
 	self._cursor = self._cursor - numDelete;
-	assert( self._cursor >= 0 );
+	assert(self._cursor >= 0);
 end
 
-local delete = function( self, numDelete )
-	assert( numDelete > 0 );
-	local pre = self._text:sub( 1, self._cursor );
-	local post = self._text:sub( self._cursor + 1 + numDelete );
+local delete = function(self, numDelete)
+	assert(numDelete > 0);
+	local pre = self._text:sub(1, self._cursor);
+	local post = self._text:sub(self._cursor + 1 + numDelete);
 	self._text = pre .. post;
 end
 
-local moveToHome = function( self )
-	self._cursor = 0;
-end
+local moveToHome = function(self) self._cursor = 0; end
 
-local moveToEnd = function( self )
-	self._cursor = #self._text;
-end
+local moveToEnd = function(self) self._cursor = #self._text; end
 
-local moveLeft = function( self )
-	self._cursor = math.max( 0, self._cursor - 1 );
-end
+local moveLeft = function(self) self._cursor = math.max(0, self._cursor - 1); end
 
-local moveRight = function( self )
-	self._cursor = math.min( #self._text, self._cursor + 1 );
-end
+local moveRight = function(self) self._cursor = math.min(#self._text, self._cursor + 1); end
 
-local moveToWordLeft = function( self )
-	self._cursor = findLeftWord( self );
-end
+local moveToWordLeft = function(self) self._cursor = findLeftWord(self); end
 
-local moveToWordRight = function( self )
-	self._cursor = findRightWord( self );
-end
+local moveToWordRight = function(self) self._cursor = findRightWord(self); end
 
-local pushUndoState = function( self )
-	self._undoStack:push( self._text, self._cursor );
-end
+local pushUndoState = function(self) self._undoStack:push(self._text, self._cursor); end
 
-local undo = function( self )
-	self._text, self._cursor = self._undoStack:undo();
-end
+local undo = function(self) self._text, self._cursor = self._undoStack:undo(); end
 
-local redo = function( self )
-	self._text, self._cursor = self._undoStack:redo();
-end
-
-
+local redo = function(self) self._text, self._cursor = self._undoStack:redo(); end
 
 -- PUBLIC API
 
-TextInput.init = function( self, maxUndo )
-	self._undoStack = UndoStack:new( maxUndo );
+TextInput.init = function(self, maxUndo)
+	self._undoStack = UndoStack:new(maxUndo);
 	self:clear();
 end
 
-TextInput.clear = function( self )
+TextInput.clear = function(self)
 	self._text = "";
 	self._cursor = 0; -- _text[_cursor] is the letter left of the caret
 	self._undoStack:clear();
 end
 
-TextInput.rebaseUndoStack = function( self )
-	self._undoStack:rebase();
-end
+TextInput.rebaseUndoStack = function(self) self._undoStack:rebase(); end
 
-TextInput.getText = function( self )
-	return self._text;
-end
+TextInput.getText = function(self) return self._text; end
 
-TextInput.getTextLeftOfCursor = function( self )
-	return self._text:sub( 1, self._cursor );
-end
+TextInput.getTextLeftOfCursor = function(self) return self._text:sub(1, self._cursor); end
 
-TextInput.setText = function( self, text )
-	assert( text );
+TextInput.setText = function(self, text)
+	assert(text);
 	self._text = text;
-	moveToEnd( self );
-	pushUndoState( self );
+	moveToEnd(self);
+	pushUndoState(self);
 end
 
-TextInput.getCursor = function( self )
-	return self._cursor;
+TextInput.getCursor = function(self) return self._cursor; end
+
+TextInput.textInput = function(self, text)
+	assert(text);
+	insert(self, text);
+	pushUndoState(self);
 end
 
-TextInput.textInput = function( self, text )
-	assert( text );
-	insert( self, text );
-	pushUndoState( self );
-end
-
-TextInput.keyPressed = function( self, key, scanCode, ctrl )
+TextInput.keyPressed = function(self, key, scanCode, ctrl)
 
 	local oldText = self._text;
 	local oldCursor = self._cursor;
 
 	if key == "home" then
-		moveToHome( self );
+		moveToHome(self);
 	elseif key == "end" then
-		moveToEnd( self );
+		moveToEnd(self);
 	elseif key == "left" then
 		if ctrl then
-			moveToWordLeft( self );
+			moveToWordLeft(self);
 		else
-			moveLeft( self );
+			moveLeft(self);
 		end
 	elseif key == "right" then
 		if ctrl then
-			moveToWordRight( self );
+			moveToWordRight(self);
 		else
-			moveRight( self );
+			moveRight(self);
 		end
 	elseif key == "backspace" then
 		if self._cursor > 0 then
 			local numDelete;
 			if ctrl then
-				numDelete = self._cursor - findLeftWord( self );
+				numDelete = self._cursor - findLeftWord(self);
 			else
 				numDelete = 1;
 			end
-			backspace( self, numDelete );
+			backspace(self, numDelete);
 		end
 	elseif key == "delete" then
 		if self._cursor < #self._text then
 			local numDelete;
 			if ctrl then
-				numDelete = findRightWord( self ) - self._cursor;
+				numDelete = findRightWord(self) - self._cursor;
 			else
 				numDelete = 1;
 			end
-			delete( self, numDelete );
+			delete(self, numDelete);
 		end
 	elseif ctrl and key == "v" then
 		local clipboard = love.system.getClipboardText();
-		insert( self, clipboard );
+		insert(self, clipboard);
 	elseif ctrl and key == "z" then
-		undo( self );
+		undo(self);
 	elseif ctrl and key == "y" then
-		redo( self );
+		redo(self);
 	end
 
 	local textChanged = self._text ~= oldText;
 	local cursorMoved = self._cursor ~= oldCursor;
 
-	if textChanged or cursorMoved then
-		pushUndoState( self );
-	end
+	if textChanged or cursorMoved then pushUndoState(self); end
 
 	return textChanged, cursorMoved;
 end
-
-
 
 return TextInput;

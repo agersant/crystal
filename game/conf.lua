@@ -1,13 +1,13 @@
-local TableUtils = require( "src/utils/TableUtils" );
+local TableUtils = require("src/utils/TableUtils");
 
-io.stdout:setvbuf( "no" );
-io.stderr:setvbuf( "no" );
+io.stdout:setvbuf("no");
+io.stderr:setvbuf("no");
 
-love.filesystem.setIdentity( "crystal" );
+love.filesystem.setIdentity("crystal");
 local release = love.filesystem.isFused();
 
 gConf = {};
-gConf.unitTesting = TableUtils.contains( arg, "/test" );
+gConf.unitTesting = TableUtils.contains(arg, "/test");
 gConf.features = {};
 gConf.features.audioOutput = not gConf.unitTesting;
 gConf.features.display = not gConf.unitTesting;
@@ -19,7 +19,7 @@ gConf.features.debugDraw = not release and gConf.features.display;
 gConf.splitscreen = {};
 gConf.splitscreen.maxLocalPlayers = 8;
 
-love.conf = function( options )
+love.conf = function(options)
 	options.console = false;
 	options.window = false;
 
@@ -42,19 +42,11 @@ love.conf = function( options )
 	options.modules.thread = false;
 end
 
-
-
 -- DISABLE A FEATURE
 
 local doNothing = function() end;
 local disableFeatureMetaTable = {
-	__newindex = function( t, k, v )
-		if type( v ) == "function" then
-			rawset( t, k, doNothing );
-		end
-	end,
+	__newindex = function(t, k, v) if type(v) == "function" then rawset(t, k, doNothing); end end
 };
 
-disableFeature = function( t )
-	setmetatable( t, disableFeatureMetaTable );
-end
+disableFeature = function(t) setmetatable(t, disableFeatureMetaTable); end

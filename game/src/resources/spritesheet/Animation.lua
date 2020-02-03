@@ -1,31 +1,27 @@
-require( "src/utils/OOP" );
-local AnimationFrame = require( "src/resources/spritesheet/AnimationFrame" );
+require("src/utils/OOP");
+local AnimationFrame = require("src/resources/spritesheet/AnimationFrame");
 
-local Animation = Class( "Animation" );
-
-
+local Animation = Class("Animation");
 
 -- PUBLIC API
 
-Animation.init = function( self, sheet, animationData )
+Animation.init = function(self, sheet, animationData)
 	self._loop = animationData.loop;
 	self._animationFrames = {};
 	self._duration = 0;
-	for k, frameData in pairs( animationData.frames ) do
+	for k, frameData in pairs(animationData.frames) do
 		frameData.duration = frameData.duration or 1;
-		local sheetFrame = sheet:getFrame( frameData.id );
-		local animationFrame = AnimationFrame:new( sheetFrame, frameData );
-		table.insert( self._animationFrames, animationFrame );
+		local sheetFrame = sheet:getFrame(frameData.id);
+		local animationFrame = AnimationFrame:new(sheetFrame, frameData);
+		table.insert(self._animationFrames, animationFrame);
 		self._duration = self._duration + frameData.duration;
 	end
-	assert( #self._animationFrames > 0 );
+	assert(#self._animationFrames > 0);
 end
 
-Animation.getDuration = function( self )
-	return self._duration;
-end
+Animation.getDuration = function(self) return self._duration; end
 
-Animation.getFrameAtTime = function( self, t )
+Animation.getFrameAtTime = function(self, t)
 	local outFrame;
 	if #self._animationFrames == 1 then
 		outFrame = self._animationFrames[1];
@@ -33,22 +29,20 @@ Animation.getFrameAtTime = function( self, t )
 		if self._loop then
 			t = t % self._duration;
 		else
-			t = math.min( t, self._duration );
+			t = math.min(t, self._duration);
 		end
-		assert( t <= self._duration );
+		assert(t <= self._duration);
 
 		local curTime = 0;
-		for i, frame in ipairs( self._animationFrames ) do
+		for i, frame in ipairs(self._animationFrames) do
 			curTime = curTime + frame:getDuration()
 			if t <= curTime then
 				outFrame = frame;
-				break;
+				break
 			end
 		end
 	end
 	return outFrame;
 end
-
-
 
 return Animation;
