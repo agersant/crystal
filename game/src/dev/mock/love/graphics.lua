@@ -1,4 +1,4 @@
-love = love or {};
+_G["love"] = love or {};
 love.graphics = {};
 
 local void = function()
