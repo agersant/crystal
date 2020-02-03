@@ -1,0 +1,28 @@
+name: Build
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install Love 2D
+      run: sudo apt-get repository -y ppa:bartbes/love-stable && sudo apt-get update && sudo apt-get install -y love
+    - name: Install Meson
+      run:  sudo apt-get install python3 python3-pip python3-setuptools python3-wheel ninja-build
+    - name: Configure build directory
+      run: meson builddir --backend ninja --buildtype release
+      working-directory: ./lib/
+    - name: Build Beryl
+      run: ninja
+      working-directory: ./lib/builddir
+    - name: Copy Beryl binaries
+      run: cp ./lib/builddir/* ./game
+    - name: Run Tests
+      run: love . /test
+      working-directory: ./game
