@@ -10,7 +10,8 @@
 			"command": "love",
 			"args": [
 				"."
-			]
+			],
+			"problemMatcher": []
 		},
 		{
 			"label": "Run Test Suite",

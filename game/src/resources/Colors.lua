@@ -19,6 +19,9 @@ local applyAlpha = function(color, alpha)
 end
 
 for k, color in pairs(Colors) do
+	for i, c in ipairs(color) do
+		color[i] = c / 255;
+	end
 	color.alpha = applyAlpha;
 end
 
