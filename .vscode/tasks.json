@@ -16,8 +16,14 @@
 		// Run unit tests
 		{
 			"label": "Test",
-			"group": "test",
 			"type": "process",
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"presentation": {
+				"reveal": "always",
+			},
 			"options": {
 				"cwd": "${workspaceRoot}\\game"
 			},
