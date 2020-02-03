@@ -11,13 +11,13 @@ if host_machine.cpu_family() == 'x86'
 endif
 
 library('beryl',
-           'src/api.c',
-           'src/linked_list.c',
-           'src/navmesh_generate.c',
-           'src/navmesh_query.c',
-           'src/vector_math.c',
-           'src/vector_math.c',
-           'external/gpc/gpc.c',
+           'beryl/api.c',
+           'beryl/linked_list.c',
+           'beryl/navmesh_generate.c',
+           'beryl/navmesh_query.c',
+           'beryl/vector_math.c',
+           'beryl/vector_math.c',
            'external/triangle/triangle.c',
-           c_args : ['-DANSI_DECLARATORS', '-DTRILIBRARY']
+           'external/gpc/gpc.c',
+           c_args : ['-DANSI_DECLARATORS', '-DTRILIBRARY'],
         )

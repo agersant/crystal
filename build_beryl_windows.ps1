@@ -8,10 +8,10 @@ function VsVarsAll() {
 
 VsVarsAll
 Push-Location -StackName 'DirStack'
-Set-Location .\lib\beryl
+Set-Location .\lib
 New-Item -Name builddir -ItemType Directory -Force
 meson builddir --backend ninja --buildtype release
 Set-Location builddir
 ninja
 Pop-Location -StackName 'DirStack'
-Copy-Item .\lib\beryl\builddir\beryl.dll .\game
+Copy-Item .\lib\builddir\beryl.dll .\game
