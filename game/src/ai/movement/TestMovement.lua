@@ -1,4 +1,3 @@
-assert(gConf.unitTesting);
 local Movement = require("src/ai/movement/Movement");
 local Party = require("src/persistence/Party");
 local Assets = require("src/resources/Assets");

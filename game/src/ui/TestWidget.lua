@@ -1,4 +1,3 @@
-assert(gConf.unitTesting);
 local Widget = require("src/ui/Widget");
 
 local tests = {};

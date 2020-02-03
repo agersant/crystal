@@ -1,4 +1,3 @@
-assert(gConf.unitTesting);
 local AlignGoal = require("src/ai/movement/AlignGoal");
 local Party = require("src/persistence/Party");
 local MapScene = require("src/scene/MapScene");

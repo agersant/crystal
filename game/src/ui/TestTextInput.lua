@@ -1,4 +1,3 @@
-assert(gConf.unitTesting);
 local TextInput = require("src/ui/TextInput");
 
 local tests = {};

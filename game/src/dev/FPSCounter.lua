@@ -1,13 +1,14 @@
 require("src/utils/OOP");
 local CLI = require("src/dev/cli/CLI");
+local Features = require("src/dev/Features");
 local Log = require("src/dev/Log");
 local Colors = require("src/resources/Colors");
 local Fonts = require("src/resources/Fonts");
 
 local FPSCounter = Class("FPSCounter");
 
-if not gConf.features.fpsCounter then
-	disableFeature(FPSCounter);
+if not Features.fpsCounter then
+	Features.stub(FPSCounter);
 end
 
 local instance;

@@ -1,12 +1,13 @@
 require("src/utils/OOP");
+local Features = require("src/dev/Features");
 
 local bufferSize = 1024; -- in bytes
 local logDir = "logs";
 
 local Log = Class("Log");
 
-if not gConf.features.logging then
-	disableFeature(Log);
+if not Features.logging then
+	Features.stub(Log);
 end
 
 local append = function(self, level, text)

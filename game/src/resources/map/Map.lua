@@ -1,4 +1,5 @@
 require("src/utils/OOP");
+local DebugFlags = require("src/dev/DebugFlags");
 local Log = require("src/dev/Log");
 local Colors = require("src/resources/Colors");
 local DynamicLayer = require("src/resources/map/DynamicLayer");
@@ -109,10 +110,10 @@ Map.drawAboveEntities = function(self)
 end
 
 Map.drawDebug = function(self)
-	if gConf.drawPhysics then
+	if DebugFlags.drawPhysics then
 		self._collisionMesh:draw();
 	end
-	if gConf.drawNavmesh then
+	if DebugFlags.drawNavmesh then
 		self._navmesh:draw();
 	end
 end

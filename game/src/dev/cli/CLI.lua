@@ -1,7 +1,8 @@
 require("src/utils/OOP");
-local Log = require("src/dev/Log");
 local AutoComplete = require("src/dev/cli/AutoComplete");
 local CommandStore = require("src/dev/cli/CommandStore");
+local Features = require("src/dev/Features");
+local Log = require("src/dev/Log");
 local Colors = require("src/resources/Colors");
 local Fonts = require("src/resources/Fonts");
 local TextInput = require("src/ui/TextInput");
@@ -9,8 +10,8 @@ local StringUtils = require("src/utils/StringUtils");
 
 local CLI = Class("CLI");
 
-if not gConf.features.cli then
-	disableFeature(CLI);
+if not Features.cli then
+	Features.stub(CLI);
 end
 
 -- IMPLEMENTATION

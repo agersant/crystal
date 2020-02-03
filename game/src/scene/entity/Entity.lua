@@ -1,4 +1,5 @@
 require("src/utils/OOP");
+local DebugFlags = require("src/dev/DebugFlags");
 local Colors = require("src/resources/Colors");
 local CollisionFilters = require("src/scene/CollisionFilters");
 local CombatData = require("src/scene/component/CombatData");
@@ -422,7 +423,7 @@ Entity.draw = function(self)
 	if self._sprite and self._body then
 		self._sprite:draw(self._body:getX(), self._body:getY());
 	end
-	if gConf.drawPhysics then
+	if DebugFlags.drawPhysics then
 		if self._collisionFixture then
 			self:drawShape(self._collisionFixture:getShape(), Colors.cyan);
 		end

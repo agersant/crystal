@@ -5,9 +5,11 @@ local Input = Class("Input");
 
 -- PUBLIC API
 
+local maxLocalPlayers = 8;
+
 Input.init = function(self)
 	self._devices = {};
-	for i = 1, gConf.splitscreen.maxLocalPlayers do
+	for i = 1, maxLocalPlayers do
 		local device = InputDevice:new();
 		table.insert(self._devices, device);
 	end

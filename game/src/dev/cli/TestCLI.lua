@@ -1,4 +1,3 @@
-assert(gConf.unitTesting);
 local CLI = require("src/dev/cli/CLI");
 
 local tests = {};

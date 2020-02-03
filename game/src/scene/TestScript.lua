@@ -1,4 +1,3 @@
-assert(gConf.unitTesting);
 local Script = require("src/scene/Script");
 
 local tests = {};

@@ -1,4 +1,6 @@
-if gConf.unitTesting then
+local Features = require("src/dev/Features");
+
+if Features.unitTesting then
 	require("src/dev/mock/love/graphics");
 	local TestSuite = require("src/TestSuite");
 	local success = TestSuite.execute();

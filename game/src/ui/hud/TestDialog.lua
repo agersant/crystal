@@ -1,4 +1,3 @@
-assert(gConf.unitTesting);
 local Party = require("src/persistence/Party");
 local MapScene = require("src/scene/MapScene");
 local Script = require("src/scene/Script");

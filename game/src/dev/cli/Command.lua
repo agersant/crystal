@@ -1,10 +1,11 @@
 require("src/utils/OOP");
+local Features = require("src/dev/Features");
 local StringUtils = require("src/utils/StringUtils");
 
 local Command = Class("Command");
 
-if not gConf.features.cli then
-	disableFeature(Command);
+if not Features.cli then
+	Features.stub(Command);
 end
 
 -- PUBLIC API

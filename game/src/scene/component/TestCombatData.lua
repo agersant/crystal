@@ -1,4 +1,3 @@
-assert(gConf.unitTesting);
 local Party = require("src/persistence/Party");
 local Damage = require("src/combat/Damage");
 local CombatData = require("src/scene/component/CombatData");

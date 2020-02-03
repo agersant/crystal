@@ -1,4 +1,3 @@
-assert(gConf.unitTesting);
 local MapCollisionMesh = require("src/resources/map/MapCollisionMesh");
 
 local tests = {};

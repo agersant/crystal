@@ -1,4 +1,5 @@
 local CLI = require("src/dev/cli/CLI");
+local DebugFlags = require("src/dev/DebugFlags");
 local PlayerSave = require("src/persistence/PlayerSave");
 local MapScene = require("src/scene/MapScene");
 local Scene = require("src/scene/Scene");
@@ -21,7 +22,7 @@ end
 CLI:addCommand("testMap", testMap);
 
 local setDrawPhysicsOverlay = function(draw)
-	gConf.drawPhysics = draw;
+	DebugFlags.drawPhysics = draw;
 end
 
 CLI:addCommand("showPhysicsOverlay", function()
@@ -32,7 +33,7 @@ CLI:addCommand("hidePhysicsOverlay", function()
 end);
 
 local setDrawNavmeshOverlay = function(draw)
-	gConf.drawNavmesh = draw;
+	DebugFlags.drawNavmesh = draw;
 end
 
 CLI:addCommand("showNavmeshOverlay", function()

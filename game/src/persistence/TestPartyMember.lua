@@ -1,4 +1,3 @@
-assert(gConf.unitTesting);
 local PartyMember = require("src/persistence/PartyMember");
 
 local tests = {};

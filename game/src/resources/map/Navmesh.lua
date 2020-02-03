@@ -1,6 +1,7 @@
 require("src/utils/OOP");
 local FFI = require("ffi");
 local Path = require("src/ai/movement/Path");
+local Features = require("src/dev/Features");
 local Colors = require("src/resources/Colors");
 local Fonts = require("src/resources/Fonts");
 local MathUtils = require("src/utils/MathUtils");
@@ -113,7 +114,7 @@ end
 
 local parseBNavmesh = function(self, bNavmesh)
 	assert(bNavmesh);
-	if gConf.features.debugDraw then
+	if Features.debugDraw then
 		self._triangles = {};
 		for i = 0, bNavmesh.numTriangles - 1 do
 			local bTriangle = bNavmesh.triangles[i];
@@ -134,7 +135,7 @@ end
 Navmesh.init = function(self, width, height, collisionMesh, padding)
 	self._bNavmesh = generateBNavmesh(self, width, height, collisionMesh, padding);
 	parseBNavmesh(self, self._bNavmesh);
-	if gConf.features.debugDraw then
+	if Features.debugDraw then
 		self._font = Fonts:get("dev", 12);
 	end
 end

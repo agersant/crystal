@@ -1,4 +1,3 @@
-assert(gConf.unitTesting);
 local EntityGoal = require("src/ai/movement/EntityGoal");
 local Party = require("src/persistence/Party");
 local MapScene = require("src/scene/MapScene");

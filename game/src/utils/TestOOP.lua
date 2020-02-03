@@ -1,6 +1,3 @@
-assert(gConf.unitTesting);
-local OOP = require("src/utils/OOP");
-
 local tests = {};
 
 tests[#tests + 1] = {name = "To string"};

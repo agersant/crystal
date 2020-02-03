@@ -1,4 +1,3 @@
-assert(gConf.unitTesting);
 local Assets = require("src/resources/Assets");
 
 local tests = {};
