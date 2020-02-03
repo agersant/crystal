@@ -2,10 +2,6 @@ project('beryl', 'c',
   version : '0.1',
   default_options : ['c_std=c11', 'warning_level=3'])
 
-if meson.get_compiler('c').get_id() == 'msvc'
-  add_project_arguments('-DNO_TIMER', language : 'c')
-endif
-
 if meson.get_compiler('c').get_id() == 'clang'
   add_project_arguments('-fPIC', language : 'c')
   add_project_link_arguments('-shared', language : 'c')
@@ -27,6 +23,6 @@ library('beryl',
            'beryl/vector_math.c',
            'external/triangle/triangle.c',
            'external/gpc/gpc.c',
-           c_args : ['-DANSI_DECLARATORS', '-DTRILIBRARY'],
+           c_args : ['-DNO_TIMER', '-DANSI_DECLARATORS', '-DTRILIBRARY'],
            dependencies : [math_library],
         )
