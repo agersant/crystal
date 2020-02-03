@@ -18,7 +18,7 @@ jobs:
     - name: Install Meson
       run:  sudo pip3 install meson
     - name: Configure build directory
-      run: meson builddir --backend ninja --buildtype release
+      run: CC=clang meson builddir --backend ninja --buildtype release
       working-directory: ./lib/
     - name: Build Beryl
       run: ninja
