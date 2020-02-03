@@ -7,7 +7,7 @@
 #endif /* not SINGLE */
 
 #ifndef NDEBUG
-#define verify(x) assert( x )
+#define verify(x) assert(x)
 #else
-#define verify(x) ( ( void ) ( x) )
+#define verify(x) ((void)(x))
 #endif
