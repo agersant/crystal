@@ -3,7 +3,7 @@
 	"tasks": [
 		{
 			"label": "Launch Game",
-			"type": "process",
+			"type": "shell",
 			"options": {
 				"cwd": "${workspaceRoot}\\game"
 			},
@@ -15,13 +15,14 @@
 		},
 		{
 			"label": "Run Test Suite",
-			"type": "process",
+			"type": "shell",
 			"group": {
 				"kind": "test",
 				"isDefault": true
 			},
 			"presentation": {
-				"reveal": "always"
+				"reveal": "always",
+				"clear": true
 			},
 			"options": {
 				"cwd": "${workspaceRoot}\\game"
@@ -38,7 +39,7 @@
 					"${workspaceRoot}\\game"
 				],
 				"pattern": {
-					"regexp": "^(.*):(\\d+):\\s+(.*)$",
+					"regexp": "^([^\\s]*):(\\d+):\\s+(.*)$",
 					"file": 1,
 					"line": 2,
 					"message": 3

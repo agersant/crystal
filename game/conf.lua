@@ -6,7 +6,9 @@ io.stderr:setvbuf("no");
 love.filesystem.setIdentity("crystal");
 
 love.conf = function(options)
-	options.console = false;
+	local release = love.filesystem.isFused();
+
+	options.console = not release;
 	options.window = false;
 
 	options.modules.audio = Features.audioOutput;
