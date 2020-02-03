@@ -1,3 +1,4 @@
+#pragma warning(disable:4701 4703 4127)
 /*
 ===========================================================================
 
@@ -68,7 +69,7 @@ Copyright: (C) Advanced Interfaces Group,
 
 /*
 ===========================================================================
-                                 Macros 
+                                 Macros
 ===========================================================================
 */
 
@@ -234,7 +235,7 @@ typedef struct bbox_shape           /* Contour axis-aligned bounding box */
 const h_state next_h_state[3][6]=
 {
   /*        ABOVE     BELOW     CROSS */
-  /*        L   R     L   R     L   R */  
+  /*        L   R     L   R     L   R */
   /* NH */ {BH, TH,   TH, BH,   NH, NH},
   /* BH */ {NH, NH,   NH, NH,   TH, TH},
   /* TH */ {NH, NH,   NH, NH,   BH, BH}
@@ -671,7 +672,7 @@ static void add_st_edge(st_node **st, it_node **it, edge_node *edge,
     den= ((*st)->xt - (*st)->xb) - (edge->xt - edge->xb);
 
     /* If new edge and ST edge don't cross */
-    if ((edge->xt >= (*st)->xt) || (edge->dx == (*st)->dx) || 
+    if ((edge->xt >= (*st)->xt) || (edge->dx == (*st)->dx) ||
         (fabs(den) <= DBL_EPSILON))
     {
       /* No intersection - insert edge here (before the ST edge) */
@@ -895,7 +896,7 @@ static void merge_left(polygon_node *p, polygon_node *q, polygon_node *list)
     q->proxy->v[LEFT]= p->proxy->v[LEFT];
 
     /* Redirect any p->proxy references to q->proxy */
-    
+
     for (target= p->proxy; list; list= list->next)
     {
       if (list->proxy == target)
@@ -1018,7 +1019,7 @@ static void new_tristrip(polygon_node **tn, edge_node *edge,
     (*tn)->v[LEFT]= NULL;
     (*tn)->v[RIGHT]= NULL;
     (*tn)->active= 1;
-    add_vertex(&((*tn)->v[LEFT]), x, y); 
+    add_vertex(&((*tn)->v[LEFT]), x, y);
     edge->outp[ABOVE]= *tn;
   }
   else
@@ -1056,7 +1057,7 @@ static bbox *create_contour_bboxes(gpc_polygon *p)
           box[c].ymax= p->contour[c].vertex[v].y;
     }
   }
-  return box;  
+  return box;
 }
 
 
@@ -1090,10 +1091,10 @@ static void minimax_test(gpc_polygon *subj, gpc_polygon *clip, gpc_op op)
     if (!overlap)
       /* Flag non contributing status by negating vertex count */
       clip->contour[c].num_vertices = -clip->contour[c].num_vertices;
-  }  
+  }
 
   if (op == GPC_INT)
-  {  
+  {
     /* For each subject contour, search for any clip contour overlaps */
     for (s= 0; s < subj->num_contours; s++)
     {
@@ -1104,7 +1105,7 @@ static void minimax_test(gpc_polygon *subj, gpc_polygon *clip, gpc_op op)
       if (!overlap)
         /* Flag non contributing status by negating vertex count */
         subj->contour[s].num_vertices = -subj->contour[s].num_vertices;
-    }  
+    }
   }
 
   FREE(s_bbox);
@@ -1169,7 +1170,7 @@ void gpc_write_polygon(FILE *fp, int write_hole_flags, gpc_polygon *p)
 
     if (write_hole_flags)
       fprintf(fp, "%d\n", p->hole[c]);
-    
+
     for (v= 0; v < p->contour[c].num_vertices; v++)
       fprintf(fp, "% .*lf % .*lf\n",
               DBL_DIG, p->contour[c].vertex[v].x,
@@ -1337,9 +1338,9 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
         if (EQ(e0->xb, next_edge->xb) && EQ(e0->dx, next_edge->dx)
 	 && (e0->top.y != yb))
         {
-          next_edge->bundle[ABOVE][ next_edge->type]^= 
+          next_edge->bundle[ABOVE][ next_edge->type]^=
             e0->bundle[ABOVE][ next_edge->type];
-          next_edge->bundle[ABOVE][!next_edge->type]= 
+          next_edge->bundle[ABOVE][!next_edge->type]=
             e0->bundle[ABOVE][!next_edge->type];
           next_edge->bstate[ABOVE]= BUNDLE_HEAD;
           e0->bundle[ABOVE][CLIP]= FALSE;
@@ -1349,16 +1350,16 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
         e0= next_edge;
       }
     }
-    
+
     horiz[CLIP]= NH;
     horiz[SUBJ]= NH;
 
     /* Process each edge at this scanbeam boundary */
     for (edge= aet; edge; edge= edge->next)
     {
-      exists[CLIP]= edge->bundle[ABOVE][CLIP] + 
+      exists[CLIP]= edge->bundle[ABOVE][CLIP] +
                    (edge->bundle[BELOW][CLIP] << 1);
-      exists[SUBJ]= edge->bundle[ABOVE][SUBJ] + 
+      exists[SUBJ]= edge->bundle[ABOVE][SUBJ] +
                    (edge->bundle[BELOW][SUBJ] << 1);
 
       if (exists[CLIP] || exists[SUBJ])
@@ -1382,7 +1383,7 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
            && (parity[SUBJ] ^ edge->bundle[ABOVE][SUBJ]);
           tr= (parity[CLIP] ^ (horiz[CLIP]!=NH))
            && (parity[SUBJ] ^ (horiz[SUBJ]!=NH));
-          tl= (parity[CLIP] ^ (horiz[CLIP]!=NH) ^ edge->bundle[BELOW][CLIP]) 
+          tl= (parity[CLIP] ^ (horiz[CLIP]!=NH) ^ edge->bundle[BELOW][CLIP])
            && (parity[SUBJ] ^ (horiz[SUBJ]!=NH) ^ edge->bundle[BELOW][SUBJ]);
           break;
         case GPC_XOR:
@@ -1393,7 +1394,7 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
             ^ (parity[SUBJ] ^ edge->bundle[ABOVE][SUBJ]);
           tr= (parity[CLIP] ^ (horiz[CLIP]!=NH))
             ^ (parity[SUBJ] ^ (horiz[SUBJ]!=NH));
-          tl= (parity[CLIP] ^ (horiz[CLIP]!=NH) ^ edge->bundle[BELOW][CLIP]) 
+          tl= (parity[CLIP] ^ (horiz[CLIP]!=NH) ^ edge->bundle[BELOW][CLIP])
             ^ (parity[SUBJ] ^ (horiz[SUBJ]!=NH) ^ edge->bundle[BELOW][SUBJ]);
           break;
         case GPC_UNION:
@@ -1407,7 +1408,7 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
            || (parity[SUBJ] ^ edge->bundle[ABOVE][SUBJ]);
           tr= (parity[CLIP] ^ (horiz[CLIP]!=NH))
            || (parity[SUBJ] ^ (horiz[SUBJ]!=NH));
-          tl= (parity[CLIP] ^ (horiz[CLIP]!=NH) ^ edge->bundle[BELOW][CLIP]) 
+          tl= (parity[CLIP] ^ (horiz[CLIP]!=NH) ^ edge->bundle[BELOW][CLIP])
            || (parity[SUBJ] ^ (horiz[SUBJ]!=NH) ^ edge->bundle[BELOW][SUBJ]);
           break;
         }
@@ -1417,11 +1418,11 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
         parity[SUBJ]^= edge->bundle[ABOVE][SUBJ];
 
         /* Update horizontal state */
-        if (exists[CLIP])         
+        if (exists[CLIP])
           horiz[CLIP]=
             next_h_state[horiz[CLIP]]
                         [((exists[CLIP] - 1) << 1) + parity[CLIP]];
-        if (exists[SUBJ])         
+        if (exists[SUBJ])
           horiz[SUBJ]=
             next_h_state[horiz[SUBJ]]
                         [((exists[SUBJ] - 1) << 1) + parity[SUBJ]];
@@ -1585,7 +1586,7 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
           q= e1->outp[ABOVE];
           ix= intersect->point.x;
           iy= intersect->point.y + yb;
- 
+
           in[CLIP]= ( e0->bundle[ABOVE][CLIP] && !e0->bside[CLIP])
                  || ( e1->bundle[ABOVE][CLIP] &&  e1->bside[CLIP])
                  || (!e0->bundle[ABOVE][CLIP] && !e1->bundle[ABOVE][CLIP]
@@ -1594,7 +1595,7 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
                  || ( e1->bundle[ABOVE][SUBJ] &&  e1->bside[SUBJ])
                  || (!e0->bundle[ABOVE][SUBJ] && !e1->bundle[ABOVE][SUBJ]
                      && e0->bside[SUBJ] && e1->bside[SUBJ]);
-       
+
           /* Determine quadrant occupancies */
           switch (op)
           {
@@ -1630,7 +1631,7 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
              || (in[SUBJ] ^ e1->bundle[ABOVE][SUBJ] ^ e0->bundle[ABOVE][SUBJ]);
             break;
           }
-	  
+
           vclass= tr + (tl << 1) + (br << 2) + (bl << 3);
 
           switch (vclass)
@@ -1790,7 +1791,7 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
         MALLOC(result->contour[c].vertex,
           result->contour[c].num_vertices * sizeof(gpc_vertex),
           "vertex creation", gpc_vertex);
-      
+
         v= result->contour[c].num_vertices - 1;
         for (vtx= poly->proxy->v[LEFT]; vtx; vtx= nv)
         {
@@ -1957,10 +1958,10 @@ void gpc_tristrip_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
         if (EQ(e0->xb, next_edge->xb) && EQ(e0->dx, next_edge->dx)
 	 && (e0->top.y != yb))
         {
-          next_edge->bundle[ABOVE][ next_edge->type]^= 
+          next_edge->bundle[ABOVE][ next_edge->type]^=
             e0->bundle[ABOVE][ next_edge->type];
-          next_edge->bundle[ABOVE][!next_edge->type]= 
-            e0->bundle[ABOVE][!next_edge->type]; 
+          next_edge->bundle[ABOVE][!next_edge->type]=
+            e0->bundle[ABOVE][!next_edge->type];
           next_edge->bstate[ABOVE]= BUNDLE_HEAD;
           e0->bundle[ABOVE][CLIP]= FALSE;
           e0->bundle[ABOVE][SUBJ]= FALSE;
@@ -1976,9 +1977,9 @@ void gpc_tristrip_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
     /* Process each edge at this scanbeam boundary */
     for (edge= aet; edge; edge= edge->next)
     {
-      exists[CLIP]= edge->bundle[ABOVE][CLIP] + 
+      exists[CLIP]= edge->bundle[ABOVE][CLIP] +
                    (edge->bundle[BELOW][CLIP] << 1);
-      exists[SUBJ]= edge->bundle[ABOVE][SUBJ] + 
+      exists[SUBJ]= edge->bundle[ABOVE][SUBJ] +
                    (edge->bundle[BELOW][SUBJ] << 1);
 
       if (exists[CLIP] || exists[SUBJ])
@@ -2002,7 +2003,7 @@ void gpc_tristrip_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
            && (parity[SUBJ] ^ edge->bundle[ABOVE][SUBJ]);
           tr= (parity[CLIP] ^ (horiz[CLIP]!=NH))
            && (parity[SUBJ] ^ (horiz[SUBJ]!=NH));
-          tl= (parity[CLIP] ^ (horiz[CLIP]!=NH) ^ edge->bundle[BELOW][CLIP]) 
+          tl= (parity[CLIP] ^ (horiz[CLIP]!=NH) ^ edge->bundle[BELOW][CLIP])
            && (parity[SUBJ] ^ (horiz[SUBJ]!=NH) ^ edge->bundle[BELOW][SUBJ]);
           break;
         case GPC_XOR:
@@ -2037,15 +2038,15 @@ void gpc_tristrip_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
         parity[SUBJ]^= edge->bundle[ABOVE][SUBJ];
 
         /* Update horizontal state */
-        if (exists[CLIP])         
+        if (exists[CLIP])
           horiz[CLIP]=
             next_h_state[horiz[CLIP]]
                         [((exists[CLIP] - 1) << 1) + parity[CLIP]];
-        if (exists[SUBJ])         
+        if (exists[SUBJ])
           horiz[SUBJ]=
             next_h_state[horiz[SUBJ]]
                         [((exists[SUBJ] - 1) << 1) + parity[SUBJ]];
-        
+
         vclass= tr + (tl << 1) + (br << 2) + (bl << 3);
 
         if (contributing)
@@ -2195,7 +2196,7 @@ void gpc_tristrip_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
     if (scanbeam < sbt_entries)
     {
       /* === SCANBEAM INTERIOR PROCESSING ============================== */
-  
+
       build_intersection_table(&it, aet, dy);
 
       /* Process each node in the intersection table */
@@ -2299,7 +2300,7 @@ void gpc_tristrip_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
             VERTEX(prev_edge, ABOVE, LEFT, px, iy);
             N_EDGE(next_edge, e1, ABOVE, nx, iy);
             VERTEX(next_edge, ABOVE, RIGHT, nx, iy);
-            new_tristrip(&tlist, prev_edge, px, iy); 
+            new_tristrip(&tlist, prev_edge, px, iy);
             e1->outp[ABOVE]= prev_edge->outp[ABOVE];
             VERTEX(e1, ABOVE, RIGHT, ix, iy);
             new_tristrip(&tlist, e0, ix, iy);
