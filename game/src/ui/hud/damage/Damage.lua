@@ -4,7 +4,9 @@ local Hit = require("src/ui/hud/damage/Hit");
 
 local Damage = Class("Damage", Widget);
 
-Damage.init = function(self) Damage.super.init(self); end
+Damage.init = function(self)
+	Damage.super.init(self);
+end
 
 Damage.show = function(self, victim, amount)
 	assert(victim);

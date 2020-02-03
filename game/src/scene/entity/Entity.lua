@@ -27,7 +27,9 @@ Entity.addPhysicsBody = function(self, bodyType)
 	self:setSpeed(0);
 end
 
-Entity.hasPhysicsBody = function(self) return self._body ~= nil; end
+Entity.hasPhysicsBody = function(self)
+	return self._body ~= nil;
+end
 
 Entity.getZ = function(self)
 	assert(self._body);
@@ -40,7 +42,9 @@ Entity.setDirection8 = function(self, xDir8, yDir8)
 	assert(yDir8 == 0 or yDir8 == 1 or yDir8 == -1);
 	assert(xDir8 ~= 0 or yDir8 ~= 0);
 
-	if xDir8 == self._xDir8 and yDir8 == self._yDir8 then return; end
+	if xDir8 == self._xDir8 and yDir8 == self._yDir8 then
+		return;
+	end
 
 	if xDir8 * yDir8 == 0 then
 		if xDir8 == 1 then
@@ -53,8 +57,12 @@ Entity.setDirection8 = function(self, xDir8, yDir8)
 			self._dir4 = "up";
 		end
 	else
-		if xDir8 ~= self._xDir8 then self._dir4 = yDir8 == 1 and "down" or "up"; end
-		if yDir8 ~= self._yDir8 then self._dir4 = xDir8 == 1 and "right" or "left"; end
+		if xDir8 ~= self._xDir8 then
+			self._dir4 = yDir8 == 1 and "down" or "up";
+		end
+		if yDir8 ~= self._yDir8 then
+			self._dir4 = xDir8 == 1 and "right" or "left";
+		end
 	end
 
 	self._xDir8 = xDir8;
@@ -65,9 +73,13 @@ Entity.setDirection8 = function(self, xDir8, yDir8)
 	self._angle = math.atan2(yDir8, xDir8);
 end
 
-Entity.getDirection4 = function(self) return self._dir4; end
+Entity.getDirection4 = function(self)
+	return self._dir4;
+end
 
-Entity.getPosition = function(self) return self._body:getX(), self._body:getY(); end
+Entity.getPosition = function(self)
+	return self._body:getX(), self._body:getY();
+end
 
 Entity.getScreenPosition = function(self)
 	local x, y = self:getPosition();
@@ -75,7 +87,9 @@ Entity.getScreenPosition = function(self)
 	return camera:getRelativePosition(x, y);
 end
 
-Entity.setPosition = function(self, x, y) self._body:setPosition(x, y); end
+Entity.setPosition = function(self, x, y)
+	self._body:setPosition(x, y);
+end
 
 Entity.getVelocity = function(self)
 	local speed = self._speed;
@@ -85,7 +99,9 @@ Entity.getVelocity = function(self)
 	return speed * dx, speed * dy;
 end
 
-Entity.getAngle = function(self) return self._angle; end
+Entity.getAngle = function(self)
+	return self._angle;
+end
 
 Entity.setAngle = function(self, angle)
 	self:setDirection8(MathUtils.angleToDir8(angle));
@@ -124,11 +140,17 @@ Entity.addLocomotion = function(self)
 	self._speed = 0;
 end
 
-Entity.setMovementSpeed = function(self, speed) return self._movementStat:setValue(speed); end
+Entity.setMovementSpeed = function(self, speed)
+	return self._movementStat:setValue(speed);
+end
 
-Entity.getMovementSpeed = function(self) return self._movementStat:getValue(); end
+Entity.getMovementSpeed = function(self)
+	return self._movementStat:getValue();
+end
 
-Entity.setSpeed = function(self, speed) self._speed = speed; end
+Entity.setSpeed = function(self, speed)
+	self._speed = speed;
+end
 
 -- COLLISION COMPONENT
 
@@ -153,7 +175,9 @@ end
 
 Entity.addHitboxPhysics = function(self, shape)
 	assert(self._body);
-	if self._hitboxShape == shape then return; end
+	if self._hitboxShape == shape then
+		return;
+	end
 	self:removeHitboxPhysics();
 	self._hitboxFixture = love.physics.newFixture(self._body, shape);
 	self._hitboxFixture:setFilterData(CollisionFilters.HITBOX, CollisionFilters.WEAKBOX, 0);
@@ -162,7 +186,9 @@ Entity.addHitboxPhysics = function(self, shape)
 end
 
 Entity.removeHitboxPhysics = function(self)
-	if self._hitboxFixture then self._hitboxFixture:destroy(); end
+	if self._hitboxFixture then
+		self._hitboxFixture:destroy();
+	end
 	self._hitboxFixture = nil;
 	self._hitboxShape = nil;
 end
@@ -171,7 +197,9 @@ end
 
 Entity.addWeakboxPhysics = function(self, shape)
 	assert(self._body);
-	if self._weakboxShape == shape then return; end
+	if self._weakboxShape == shape then
+		return;
+	end
 	self:removeWeakboxPhysics();
 	self._weakboxFixture = love.physics.newFixture(self._body, shape);
 	self._weakboxFixture:setFilterData(CollisionFilters.WEAKBOX, CollisionFilters.HITBOX, 0);
@@ -180,7 +208,9 @@ Entity.addWeakboxPhysics = function(self, shape)
 end
 
 Entity.removeWeakboxPhysics = function(self)
-	if self._weakboxFixture then self._weakboxFixture:destroy(); end
+	if self._weakboxFixture then
+		self._weakboxFixture:destroy();
+	end
 	self._weakboxFixture = nil;
 	self._weakboxShape = nil;
 end
@@ -189,7 +219,9 @@ end
 
 Entity.addTrigger = function(self, shape)
 	assert(self._body);
-	if self._triggerShape == shape then return; end
+	if self._triggerShape == shape then
+		return;
+	end
 	self:removeTrigger();
 	self._triggerFixture = love.physics.newFixture(self._body, shape);
 	self._triggerFixture:setFilterData(CollisionFilters.TRIGGER, CollisionFilters.SOLID, 0);
@@ -198,7 +230,9 @@ Entity.addTrigger = function(self, shape)
 end
 
 Entity.removeTrigger = function(self)
-	if self._triggerFixture then self._triggerFixture:destroy(); end
+	if self._triggerFixture then
+		self._triggerFixture:destroy();
+	end
 	self._triggerFixture = nil;
 	self._triggerShape = nil;
 end
@@ -222,7 +256,9 @@ end
 
 -- SCRIPT COMPONENT
 
-Entity.addScriptRunner = function(self) self._scriptRunner = ScriptRunner:new(self); end
+Entity.addScriptRunner = function(self)
+	self._scriptRunner = ScriptRunner:new(self);
+end
 
 Entity.addScript = function(self, script)
 	assert(self._scriptRunner);
@@ -235,30 +271,42 @@ Entity.removeScript = function(self, script)
 end
 
 Entity.signal = function(self, signal, ...)
-	if not self._scriptRunner then return; end
+	if not self._scriptRunner then
+		return;
+	end
 	self._scriptRunner:signal(signal, ...);
 end
 
 -- CONTROLLER COMPONENT
 
 Entity.addController = function(self, controller)
-	if self._controller then self:removeScript(self._controller); end
+	if self._controller then
+		self:removeScript(self._controller);
+	end
 	self._controller = controller;
 	self:addScript(self._controller);
 	assert(self._controller);
 end
 
-Entity.getController = function(self) return self._controller; end
+Entity.getController = function(self)
+	return self._controller;
+end
 
 Entity.getAssignedPlayer = function(self)
-	if self._controller.getAssignedPlayer then return self._controller:getAssignedPlayer(); end
+	if self._controller.getAssignedPlayer then
+		return self._controller:getAssignedPlayer();
+	end
 end
 
 -- PARTY COMPONENT
 
-Entity.addToParty = function(self) self._scene:addEntityToParty(self); end
+Entity.addToParty = function(self)
+	self._scene:addEntityToParty(self);
+end
 
-Entity.removeFromParty = function(self) self._scene:removeEntityFromParty(self); end
+Entity.removeFromParty = function(self)
+	self._scene:removeEntityFromParty(self);
+end
 
 -- COMBAT DATA COMPONENT
 
@@ -327,18 +375,28 @@ end
 
 -- CORE
 
-Entity.isUpdatable = function(self) return self._scriptRunner or self._sprite or (self.update ~= Entity.update); end
+Entity.isUpdatable = function(self)
+	return self._scriptRunner or self._sprite or (self.update ~= Entity.update);
+end
 
-Entity.isDrawable = function(self) return self._sprite or self._body or (self.draw ~= Entity.draw); end
+Entity.isDrawable = function(self)
+	return self._sprite or self._body or (self.draw ~= Entity.draw);
+end
 
-Entity.isCombatable = function(self) return self._combatData; end
+Entity.isCombatable = function(self)
+	return self._combatData;
+end
 
 Entity.update = function(self, dt)
-	if self._scriptRunner then self._scriptRunner:update(dt); end
+	if self._scriptRunner then
+		self._scriptRunner:update(dt);
+	end
 	if self._sprite then
 		local animationWasOver = self._sprite:isAnimationOver();
 		self._sprite:update(dt);
-		if not animationWasOver and self._sprite:isAnimationOver() then self:signal("animationEnd"); end
+		if not animationWasOver and self._sprite:isAnimationOver() then
+			self:signal("animationEnd");
+		end
 		if self._useSpriteHitboxData then
 			local hitShape = self._sprite:getTagShape("hit");
 			if hitShape then
@@ -361,12 +419,22 @@ Entity.update = function(self, dt)
 end
 
 Entity.draw = function(self)
-	if self._sprite and self._body then self._sprite:draw(self._body:getX(), self._body:getY()); end
+	if self._sprite and self._body then
+		self._sprite:draw(self._body:getX(), self._body:getY());
+	end
 	if gConf.drawPhysics then
-		if self._collisionFixture then self:drawShape(self._collisionFixture:getShape(), Colors.cyan); end
-		if self._hitboxFixture then self:drawShape(self._hitboxFixture:getShape(), Colors.strawberry); end
-		if self._weakboxFixture then self:drawShape(self._weakboxFixture:getShape(), Colors.ecoGreen); end
-		if self._triggerFixture then self:drawShape(self._triggerFixture:getShape(), Colors.ecoGreen); end
+		if self._collisionFixture then
+			self:drawShape(self._collisionFixture:getShape(), Colors.cyan);
+		end
+		if self._hitboxFixture then
+			self:drawShape(self._hitboxFixture:getShape(), Colors.strawberry);
+		end
+		if self._weakboxFixture then
+			self:drawShape(self._weakboxFixture:getShape(), Colors.ecoGreen);
+		end
+		if self._triggerFixture then
+			self:drawShape(self._triggerFixture:getShape(), Colors.ecoGreen);
+		end
 	end
 end
 
@@ -395,10 +463,18 @@ Entity.despawn = function(self)
 	self._scene:despawn(self);
 end
 
-Entity.isValid = function(self) return self._valid; end
+Entity.isValid = function(self)
+	return self._valid;
+end
 
-Entity.destroy = function(self) if self._body then self._body:destroy(); end end
+Entity.destroy = function(self)
+	if self._body then
+		self._body:destroy();
+	end
+end
 
-Entity.getScene = function(self) return self._scene; end
+Entity.getScene = function(self)
+	return self._scene;
+end
 
 return Entity;

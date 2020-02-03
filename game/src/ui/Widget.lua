@@ -59,8 +59,9 @@ Widget.getSize = function(self)
 	return math.abs(self._localRight - self._localLeft), math.abs(self._localTop - self._localBottom);
 end
 
-Widget.getLocalCoordinates =
-				function(self) return self._localLeft, self._localTop, self._localRight, self._localBottom; end
+Widget.getLocalCoordinates = function(self)
+	return self._localLeft, self._localTop, self._localRight, self._localBottom;
+end
 
 Widget.alignTopLeft = function(self, width, height)
 	self._leftAnchor = 0;
@@ -172,13 +173,21 @@ Widget.setPadding = function(self, padding)
 	self._bottomOffset = -padding;
 end
 
-Widget.setLeftOffset = function(self, offset) self._leftOffset = offset; end
+Widget.setLeftOffset = function(self, offset)
+	self._leftOffset = offset;
+end
 
-Widget.setRightOffset = function(self, offset) self._rightOffset = offset; end
+Widget.setRightOffset = function(self, offset)
+	self._rightOffset = offset;
+end
 
-Widget.setTopOffset = function(self, offset) self._topOffset = offset; end
+Widget.setTopOffset = function(self, offset)
+	self._topOffset = offset;
+end
 
-Widget.setBottomOffset = function(self, offset) self._bottomOffset = offset; end
+Widget.setBottomOffset = function(self, offset)
+	self._bottomOffset = offset;
+end
 
 Widget.offset = function(self, dx, dy)
 	self._leftOffset = self._leftOffset + dx;
@@ -215,17 +224,24 @@ Widget.update = function(self, dt)
 	self:updateAlpha(dt);
 	self:updatePosition(dt);
 	local children = TableUtils.shallowCopy(self._children);
-	for _, child in ipairs(children) do child:update(dt); end
+	for _, child in ipairs(children) do
+		child:update(dt);
+	end
 end
 
-Widget.drawSelf = function(self) end
+Widget.drawSelf = function(self)
+end
 
 Widget.draw = function(self)
-	if self._finalAlpha == 0 then return; end
+	if self._finalAlpha == 0 then
+		return;
+	end
 	love.graphics.push();
 	self:applyTransforms();
 	self:drawSelf();
-	for _, child in ipairs(self._children) do child:draw(); end
+	for _, child in ipairs(self._children) do
+		child:draw();
+	end
 	love.graphics.pop();
 end
 

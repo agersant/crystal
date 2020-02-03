@@ -9,7 +9,9 @@ local StringUtils = require("src/utils/StringUtils");
 
 local CLI = Class("CLI");
 
-if not gConf.features.cli then disableFeature(CLI); end
+if not gConf.features.cli then
+	disableFeature(CLI);
+end
 
 -- IMPLEMENTATION
 
@@ -36,13 +38,19 @@ local parseInput = function(input)
 	parse.command = parse.commandUntrimmed and StringUtils.trim(parse.commandUntrimmed);
 	parse.commandIsComplete = parse.fullText:match("[^%s]+%s") ~= nil;
 	local args = parse.fullText:sub(#parse.command + 1);
-	for arg in args:gmatch("%s+[^%s]+") do table.insert(parse.arguments, StringUtils.trim(arg)); end
+	for arg in args:gmatch("%s+[^%s]+") do
+		table.insert(parse.arguments, StringUtils.trim(arg));
+	end
 	return parse;
 end
 
-local getCurrentInput = function(self) return self._inputs[self._inputCursor]; end
+local getCurrentInput = function(self)
+	return self._inputs[self._inputCursor];
+end
 
-local getCurrentInputText = function(self) return getCurrentInput(self):getText(); end
+local getCurrentInputText = function(self)
+	return getCurrentInput(self):getText();
+end
 
 local updateAutoComplete = function(self)
 	self._autoCompleteCursor = 0;
@@ -53,7 +61,9 @@ end
 
 local pushCommandToHistory = function(self, command)
 	self._inputs[1].submittedCommand = command;
-	if #self._inputs > maxHistory then table.remove(self._inputs); end
+	if #self._inputs > maxHistory then
+		table.remove(self._inputs);
+	end
 	for _, input in ipairs(self._inputs) do
 		input:setText(input.submittedCommand);
 		input:rebaseUndoStack();
@@ -72,7 +82,9 @@ end
 
 local submitInput = function(self)
 	local command = getCurrentInputText(self);
-	if #command == 0 then return; end
+	if #command == 0 then
+		return;
+	end
 	self:execute(command);
 	pushCommandToHistory(self, command);
 	table.insert(self._inputs, 1, TextInput:new(maxUndo));
@@ -107,10 +119,14 @@ CLI.toggle = function(self)
 	end
 end
 
-CLI.isActive = function(self) return self._isActive; end
+CLI.isActive = function(self)
+	return self._isActive;
+end
 
 CLI.draw = function(self)
-	if not self:isActive() then return; end
+	if not self:isActive() then
+		return;
+	end
 
 	local font = self._font;
 	love.graphics.setFont(font);
@@ -156,7 +172,9 @@ CLI.draw = function(self)
 
 	for i, suggestion in ipairs(self._autoCompleteOutput.lines) do
 		local suggestionWidth = 0;
-		for j = 2, #suggestion.text, 2 do suggestionWidth = suggestionWidth + font:getWidth(suggestion.text[j]); end
+		for j = 2, #suggestion.text, 2 do
+			suggestionWidth = suggestionWidth + font:getWidth(suggestion.text[j]);
+		end
 		suggestionsWidth = math.max(suggestionWidth, suggestionsWidth);
 	end
 
@@ -207,7 +225,9 @@ CLI.execute = function(self, command)
 	local parsedInput = parseInput(command);
 	local command = self._commandStore:getCommand(parsedInput.command);
 	if not command then
-		if #parsedInput.command > 0 then Log:error(parsedInput.command .. " is not a valid command"); end
+		if #parsedInput.command > 0 then
+			Log:error(parsedInput.command .. " is not a valid command");
+		end
 		return;
 	end
 	local useArgs = {};
@@ -235,7 +255,9 @@ CLI.execute = function(self, command)
 end
 
 CLI.textInput = function(self, text)
-	if not self:isActive() then return; end
+	if not self:isActive() then
+		return;
+	end
 	getCurrentInput(self):textInput(text);
 	self._unguidedInput = getCurrentInputText(self);
 	updateAutoComplete(self);
@@ -248,16 +270,22 @@ CLI.keyPressed = function(self, key, scanCode, ctrl)
 		return;
 	end
 
-	if not self:isActive() then return; end
+	if not self:isActive() then
+		return;
+	end
 
 	if key == "return" or key == "kpenter" then
 		submitInput(self);
 		return;
 	end
 
-	if key == "up" then navigateHistoryBackward(self); end
+	if key == "up" then
+		navigateHistoryBackward(self);
+	end
 
-	if key == "down" then navigateHistoryForward(self); end
+	if key == "down" then
+		navigateHistoryForward(self);
+	end
 
 	if key == "tab" and self._autoCompleteOutput.state == "command" then
 		local oldText = getCurrentInputText(self);
@@ -280,12 +308,18 @@ CLI.keyPressed = function(self, key, scanCode, ctrl)
 
 	local textChanged, cursorMoved = getCurrentInput(self):keyPressed(key, scanCode, ctrl);
 	self._unguidedInput = getCurrentInputText(self);
-	if textChanged then updateAutoComplete(self); end
+	if textChanged then
+		updateAutoComplete(self);
+	end
 end
 
-CLI.addCommand = function(self, description, func) self._commandStore:addCommand(description, func); end
+CLI.addCommand = function(self, description, func)
+	self._commandStore:addCommand(description, func);
+end
 
-CLI.removeCommand = function(self, name) self._commandStore:removeCommand(name); end
+CLI.removeCommand = function(self, name)
+	self._commandStore:removeCommand(name);
+end
 
 local instance = CLI:new();
 return instance;

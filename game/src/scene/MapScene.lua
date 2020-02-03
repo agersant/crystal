@@ -24,12 +24,16 @@ local queueSignal = function(self, target, signal, ...)
 	table.insert(self._queuedSignals, {target = target, name = signal, data = {...}});
 end
 
-local sortDrawableEntities = function(entityA, entityB) return entityA:getZ() < entityB:getZ(); end
+local sortDrawableEntities = function(entityA, entityB)
+	return entityA:getZ() < entityB:getZ();
+end
 
 local removeDespawnedEntitiesFrom = function(self, list)
 	for i = #list, 1, -1 do
 		local entity = list[i];
-		if self._despawnedEntities[entity] then table.remove(list, i); end
+		if self._despawnedEntities[entity] then
+			table.remove(list, i);
+		end
 	end
 end
 
@@ -87,7 +91,11 @@ MapScene.init = function(self, mapName, party, partyX, partyY)
 	MapScene.super.init(self);
 
 	self._world = love.physics.newWorld(0, 0, false);
-	self._world:setCallbacks(function(...) beginContact(self, ...); end, function(...) endContact(self, ...); end);
+	self._world:setCallbacks(function(...)
+		beginContact(self, ...);
+	end, function(...)
+		endContact(self, ...);
+	end);
 
 	self._queuedSignals = {};
 
@@ -123,17 +131,25 @@ MapScene.update = function(self, dt)
 	-- Pump physics simulation
 	self._world:update(dt);
 
-	for _, signal in ipairs(self._queuedSignals) do signal.target:signal(signal.name, unpack(signal.data)); end
+	for _, signal in ipairs(self._queuedSignals) do
+		signal.target:signal(signal.name, unpack(signal.data));
+	end
 	self._queuedSignals = {};
 
 	-- Update entities
-	for _, entity in ipairs(self._updatableEntities) do entity:update(dt); end
+	for _, entity in ipairs(self._updatableEntities) do
+		entity:update(dt);
+	end
 
 	-- Add new entities
 	for entity, _ in pairs(self._spawnedEntities) do
 		table.insert(self._entities, entity);
-		if entity:isDrawable() then table.insert(self._drawableEntities, entity); end
-		if entity:isCombatable() then table.insert(self._combatableEntities, entity); end
+		if entity:isDrawable() then
+			table.insert(self._drawableEntities, entity);
+		end
+		if entity:isCombatable() then
+			table.insert(self._combatableEntities, entity);
+		end
 	end
 	for entity, _ in pairs(self._spawnedEntities) do
 		if entity:isUpdatable() then
@@ -149,7 +165,9 @@ MapScene.update = function(self, dt)
 	removeDespawnedEntitiesFrom(self, self._drawableEntities);
 	removeDespawnedEntitiesFrom(self, self._combatableEntities);
 	removeDespawnedEntitiesFrom(self, self._partyEntities);
-	for entity, _ in pairs(self._despawnedEntities) do entity:destroy(); end
+	for entity, _ in pairs(self._despawnedEntities) do
+		entity:destroy();
+	end
 	self._despawnedEntities = {};
 
 	-- Sort drawable entities
@@ -189,17 +207,25 @@ MapScene.despawn = function(self, entity)
 	self._despawnedEntities[entity] = true;
 end
 
-MapScene.getPhysicsWorld = function(self) return self._world; end
+MapScene.getPhysicsWorld = function(self)
+	return self._world;
+end
 
-MapScene.getCamera = function(self) return self._camera; end
+MapScene.getCamera = function(self)
+	return self._camera;
+end
 
 -- MAP
 
-MapScene.getMap = function(self) return self._map; end
+MapScene.getMap = function(self)
+	return self._map;
+end
 
 -- AI
 
-MapScene.getTargetSelector = function(self) return self._targetSelector; end
+MapScene.getTargetSelector = function(self)
+	return self._targetSelector;
+end
 
 MapScene.findPath = function(self, startX, startY, targetX, targetY)
 	return self._map:findPath(startX, startY, targetX, targetY);
@@ -225,10 +251,16 @@ MapScene.removeEntityFromParty = function(self, entity)
 	self._camera:removeTrackedEntity(entity);
 end
 
-MapScene.getPartyMemberEntities = function(self) return TableUtils.shallowCopy(self._partyEntities); end
+MapScene.getPartyMemberEntities = function(self)
+	return TableUtils.shallowCopy(self._partyEntities);
+end
 
 MapScene.checkLoseCondition = function(self)
-	for _, partyEntity in ipairs(self._partyEntities) do if not partyEntity:isDead() then return; end end
+	for _, partyEntity in ipairs(self._partyEntities) do
+		if not partyEntity:isDead() then
+			return;
+		end
+	end
 	Scene:setCurrent(UIScene:new(TitleScreen:new()));
 end
 

@@ -32,7 +32,9 @@ tests[#tests].body = function()
 		controller:thread(Movement.walkToPoint(endX, endY, acceptanceRadius));
 	end));
 
-	for i = 1, 200 do scene:update(16 / 1000); end
+	for i = 1, 200 do
+		scene:update(16 / 1000);
+	end
 
 	assert(subject:distance2To(endX, endY) < acceptanceRadius * acceptanceRadius);
 end

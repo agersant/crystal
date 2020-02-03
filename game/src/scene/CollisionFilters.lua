@@ -3,7 +3,7 @@ CollisionFilters = {
 	SOLID = 2, -- Solid shapes
 	HITBOX = 4, -- Damaging shapes in entities
 	WEAKBOX = 8, -- Vulnerable shapes
-	TRIGGER = 16 -- Touch triggers
+	TRIGGER = 16, -- Touch triggers
 };
 
 return CollisionFilters;

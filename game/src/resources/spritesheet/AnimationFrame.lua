@@ -41,12 +41,20 @@ AnimationFrame.init = function(self, sheetFrame, animationFrameData)
 
 end
 
-AnimationFrame.getOrigin = function(self) return self._ox, self._oy; end
+AnimationFrame.getOrigin = function(self)
+	return self._ox, self._oy;
+end
 
-AnimationFrame.getDuration = function(self) return self._duration; end
+AnimationFrame.getDuration = function(self)
+	return self._duration;
+end
 
-AnimationFrame.getSheetFrame = function(self) return self._sheetFrame; end
+AnimationFrame.getSheetFrame = function(self)
+	return self._sheetFrame;
+end
 
-AnimationFrame.getTagShape = function(self, tagName) return self._tags[tagName]; end
+AnimationFrame.getTagShape = function(self, tagName)
+	return self._tags[tagName];
+end
 
 return AnimationFrame;

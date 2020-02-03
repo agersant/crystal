@@ -45,16 +45,28 @@ Tileset.init = function(self, tilesetData, image)
 	end
 end
 
-Tileset.getImage = function(self) return self._image; end
+Tileset.getImage = function(self)
+	return self._image;
+end
 
-Tileset.getTileData = function(self, tileID) return self._tiles[tileID]; end
+Tileset.getTileData = function(self, tileID)
+	return self._tiles[tileID];
+end
 
-Tileset.getFirstGID = function(self) return self._firstGID; end
+Tileset.getFirstGID = function(self)
+	return self._firstGID;
+end
 
-Tileset.getWidthInTiles = function(self) return self._widthInTiles; end
+Tileset.getWidthInTiles = function(self)
+	return self._widthInTiles;
+end
 
-Tileset.getTileWidth = function(self) return self._tileWidth; end
+Tileset.getTileWidth = function(self)
+	return self._tileWidth;
+end
 
-Tileset.getTileHeight = function(self) return self._tileHeight; end
+Tileset.getTileHeight = function(self)
+	return self._tileHeight;
+end
 
 return Tileset;

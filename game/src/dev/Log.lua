@@ -5,7 +5,9 @@ local logDir = "logs";
 
 local Log = Class("Log");
 
-if not gConf.features.logging then disableFeature(Log); end
+if not gConf.features.logging then
+	disableFeature(Log);
+end
 
 local append = function(self, level, text)
 	assert(self._fileHandle);
@@ -24,28 +26,44 @@ end
 Log.init = function(self)
 	local errorMessage;
 	local success = love.filesystem.createDirectory(logDir);
-	if not success then error("Could not create logs directory"); end
+	if not success then
+		error("Could not create logs directory");
+	end
 
 	local now = tostring(os.time());
 	local logFile = logDir .. "/crystal_" .. "_" .. now .. ".log";
 	self._fileHandle, errorMessage = love.filesystem.newFile(logFile, "w");
-	if not self._fileHandle then error(errorMessage); end
+	if not self._fileHandle then
+		error(errorMessage);
+	end
 
 	success, errorMessage = self._fileHandle:setBuffer("full", bufferSize);
-	if not success then error(errorMessage); end
+	if not success then
+		error(errorMessage);
+	end
 
 	self:info("Initialized log system");
 end
 
-Log.debug = function(self, text) append(self, "DEBUG", text); end
+Log.debug = function(self, text)
+	append(self, "DEBUG", text);
+end
 
-Log.info = function(self, text) append(self, "INFO", text); end
+Log.info = function(self, text)
+	append(self, "INFO", text);
+end
 
-Log.warning = function(self, text) append(self, "WARNING", text); end
+Log.warning = function(self, text)
+	append(self, "WARNING", text);
+end
 
-Log.error = function(self, text) append(self, "ERROR", text); end
+Log.error = function(self, text)
+	append(self, "ERROR", text);
+end
 
-Log.fatal = function(self, text) append(self, "FATAL", text); end
+Log.fatal = function(self, text)
+	append(self, "FATAL", text);
+end
 
 local instance = Log:new();
 return instance;

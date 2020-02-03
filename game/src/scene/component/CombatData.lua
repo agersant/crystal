@@ -35,14 +35,20 @@ CombatData.setTeam = function(self, team)
 	self._team = team;
 end
 
-CombatData.getTeam = function(self) return self._team; end
+CombatData.getTeam = function(self)
+	return self._team;
+end
 
-CombatData.addSkill = function(self, skill) self:setSkill(1 + #self._skills, skill); end
+CombatData.addSkill = function(self, skill)
+	self:setSkill(1 + #self._skills, skill);
+end
 
 CombatData.setSkill = function(self, index, skill)
 	assert(index > 0);
 	local oldSkill = self:getSkill(index);
-	if oldSkill then self._entity:removeScript(oldSkill); end
+	if oldSkill then
+		self._entity:removeScript(oldSkill);
+	end
 	self._skills[index] = skill;
 	self._entity:addScript(skill);
 end
@@ -55,26 +61,36 @@ end
 CombatData.inflictDamageTo = function(self, target)
 	local effectiveStrength = self._strength:getValue() * self._attackRating:getValue();
 	local isCrit = math.random() < self._critRate:getValue();
-	if isCrit then effectiveStrength = effectiveStrength * self._critRating:getValue(); end
+	if isCrit then
+		effectiveStrength = effectiveStrength * self._critRating:getValue();
+	end
 	local damage = Damage:new(effectiveStrength, self._entity);
 	target:receiveDamage(damage);
 end
 
 CombatData.receiveDamage = function(self, damage)
-	if self:isDead() then return; end
+	if self:isDead() then
+		return;
+	end
 	local effectiveDamage = mitigateDamage(self, damage);
 	self._health:substract(effectiveDamage);
 	self._entity:signal("takeHit", damage, effectiveDamage);
-	if self:isDead() then self._entity:signal("death"); end
+	if self:isDead() then
+		self._entity:signal("death");
+	end
 end
 
-CombatData.getHealth = function(self) return self._health:getValue(); end
+CombatData.getHealth = function(self)
+	return self._health:getValue();
+end
 
 CombatData.kill = function(self)
 	self._health:setValue(0);
 	self._entity:signal("death");
 end
 
-CombatData.isDead = function(self) return self._health:getValue() == 0; end
+CombatData.isDead = function(self)
+	return self._health:getValue() == 0;
+end
 
 return CombatData;

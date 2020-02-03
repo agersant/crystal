@@ -13,7 +13,9 @@ local logic = function(self)
 		while true do
 			local target = self:waitFor("+giveHit");
 			if Teams:areEnemies(self._entity:getTeam(), target:getTeam()) then
-				if not self._entity:isDead() then self._entity:inflictDamageTo(target); end
+				if not self._entity:isDead() then
+					self._entity:inflictDamageTo(target);
+				end
 			end
 		end
 	end);
@@ -40,7 +42,9 @@ local logic = function(self)
 	while true do
 		self:waitFor("death");
 		local controller = self._entity:getController();
-		if controller:isInstanceOf(InputDrivenController) then controller:disable(); end
+		if controller:isInstanceOf(InputDrivenController) then
+			controller:disable();
+		end
 		self:waitFor("idle");
 		controller:stopAction();
 		controller:doAction(Actions.death);

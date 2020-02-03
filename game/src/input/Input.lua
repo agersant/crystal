@@ -32,14 +32,22 @@ Input.getDevice = function(self, index)
 end
 
 Input.keyPressed = function(self, key, scanCode, isRepeat)
-	for i, device in ipairs(self._devices) do device:keyPressed(key, scanCode, isRepeat); end
+	for i, device in ipairs(self._devices) do
+		device:keyPressed(key, scanCode, isRepeat);
+	end
 end
 
 Input.keyReleased = function(self, key, scanCode)
-	for i, device in ipairs(self._devices) do device:keyReleased(key, scanCode); end
+	for i, device in ipairs(self._devices) do
+		device:keyReleased(key, scanCode);
+	end
 end
 
-Input.flushEvents = function(self) for i, device in ipairs(self._devices) do device:flushEvents(); end end
+Input.flushEvents = function(self)
+	for i, device in ipairs(self._devices) do
+		device:flushEvents();
+	end
+end
 
 local instance = Input:new();
 return instance;

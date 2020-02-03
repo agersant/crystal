@@ -59,7 +59,9 @@ Actions.death = function(self)
 	self:waitFor("animationEnd");
 	local scene = entity:getScene();
 	scene:checkLoseCondition();
-	while true do self:wait(1); end
+	while true do
+		self:wait(1);
+	end
 end
 
 return Actions;

@@ -14,8 +14,12 @@ Colors.black6C = {16, 24, 32};
 Colors.black = {0, 0, 0};
 Colors.white = {255, 255, 255};
 
-local applyAlpha = function(color, alpha) return {color[1], color[2], color[3], alpha}; end
+local applyAlpha = function(color, alpha)
+	return {color[1], color[2], color[3], alpha};
+end
 
-for k, color in pairs(Colors) do color.alpha = applyAlpha; end
+for k, color in pairs(Colors) do
+	color.alpha = applyAlpha;
+end
 
 return Colors;

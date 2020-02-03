@@ -5,7 +5,7 @@ local testFiles = {
  "src/resources/TestAssets", "src/resources/map/TestMapCollisionChainData", "src/resources/map/TestNavmesh",
  "src/scene/TestScript", "src/scene/component/TestCombatData", "src/ui/TestTextInput", "src/ui/TestWidget",
  "src/ui/hud/TestDialog", "src/utils/TestMathUtils", "src/utils/TestOOP", "src/utils/TestStringUtils",
- "src/utils/TestTableUtils"
+ "src/utils/TestTableUtils",
 };
 
 local runTestFile = function(source)
@@ -52,4 +52,8 @@ local runTestSuite = function()
 	return totalNumSuccess == totalNumTests;
 end
 
-return {execute = function() return runTestSuite(); end}
+return {
+	execute = function()
+		return runTestSuite();
+	end,
+}

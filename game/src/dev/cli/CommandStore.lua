@@ -4,11 +4,15 @@ local StringUtils = require("src/utils/StringUtils");
 
 local CommandStore = Class("CommandStore");
 
-if not gConf.features.cli then disableFeature(CommandStore); end
+if not gConf.features.cli then
+	disableFeature(CommandStore);
+end
 
 -- PUBLIC API
 
-CommandStore.init = function(self) self._commands = {}; end
+CommandStore.init = function(self)
+	self._commands = {};
+end
 
 CommandStore.addCommand = function(self, description, func)
 	local command = Command:new(description, func);
@@ -24,7 +28,9 @@ end
 
 CommandStore.listCommandNames = function(self)
 	local commandNames = {};
-	for k, command in pairs(self._commands) do table.insert(commandNames, command:getName()); end
+	for k, command in pairs(self._commands) do
+		table.insert(commandNames, command:getName());
+	end
 	return commandNames;
 end
 
@@ -39,7 +45,13 @@ CommandStore.search = function(self, query)
 			table.insert(matches, match);
 		end
 	end
-	if hasStrongMatch then for i = #matches, 1, -1 do if matches[i].matchStart ~= 1 then table.remove(matches, i); end end end
+	if hasStrongMatch then
+		for i = #matches, 1, -1 do
+			if matches[i].matchStart ~= 1 then
+				table.remove(matches, i);
+			end
+		end
+	end
 	return matches;
 end
 

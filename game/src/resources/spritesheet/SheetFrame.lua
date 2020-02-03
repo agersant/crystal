@@ -12,6 +12,8 @@ SheetFrame.init = function(self, frameData, image)
 	self._quad = love.graphics.newQuad(frameData.x, frameData.y, frameData.w, frameData.h, image:getDimensions());
 end
 
-SheetFrame.getQuad = function(self) return self._quad; end
+SheetFrame.getQuad = function(self)
+	return self._quad;
+end
 
 return SheetFrame;

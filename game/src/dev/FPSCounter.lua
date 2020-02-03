@@ -6,7 +6,9 @@ local Fonts = require("src/resources/Fonts");
 
 local FPSCounter = Class("FPSCounter");
 
-if not gConf.features.fpsCounter then disableFeature(FPSCounter); end
+if not gConf.features.fpsCounter then
+	disableFeature(FPSCounter);
+end
 
 local instance;
 
@@ -31,9 +33,13 @@ end
 
 FPSCounter.update = function(self, dt)
 	assert(dt > 0);
-	if dt > 1 / 50 then Log:warning("Previous frame took " .. math.ceil(dt * 1000) .. "ms"); end
+	if dt > 1 / 50 then
+		Log:warning("Previous frame took " .. math.ceil(dt * 1000) .. "ms");
+	end
 	table.insert(self._frameDurations, dt);
-	while #self._frameDurations > numFramesRecorded do table.remove(self._frameDurations, 1); end
+	while #self._frameDurations > numFramesRecorded do
+		table.remove(self._frameDurations, 1);
+	end
 
 	local delta = love.timer.getAverageDelta();
 	local averageFPS = math.floor(1 / delta);
@@ -42,7 +48,9 @@ end
 
 FPSCounter.draw = function(self)
 
-	if not self._isActive then return; end
+	if not self._isActive then
+		return;
+	end
 
 	local width = numFramesRecorded;
 
@@ -71,17 +79,25 @@ FPSCounter.draw = function(self)
 	love.graphics.print(self._text, x, y);
 end
 
-FPSCounter.show = function(self) self._isActive = true; end
+FPSCounter.show = function(self)
+	self._isActive = true;
+end
 
-FPSCounter.hide = function(self) self._isActive = false; end
+FPSCounter.hide = function(self)
+	self._isActive = false;
+end
 
 -- COMMANDS
 
-local showFPSCounter = function() instance:show(); end
+local showFPSCounter = function()
+	instance:show();
+end
 
 CLI:addCommand("showFPSCounter", showFPSCounter);
 
-local hideFPSCounter = function() instance:hide(); end
+local hideFPSCounter = function()
+	instance:hide();
+end
 
 CLI:addCommand("hideFPSCounter", hideFPSCounter);
 

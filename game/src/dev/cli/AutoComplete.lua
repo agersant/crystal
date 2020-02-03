@@ -8,7 +8,9 @@ local AutoComplete = Class("AutoComplete");
 
 local getSuggestionsForCommand = function(self, input)
 	local matches = self._commandStore:search(input.fullText);
-	table.sort(matches, function(a, b) return a.command:getName() < b.command:getName(); end);
+	table.sort(matches, function(a, b)
+		return a.command:getName() < b.command:getName();
+	end);
 
 	-- Colorize!
 	local lines = {};
@@ -30,12 +32,16 @@ end
 
 local getSuggestionsForArguments = function(self, input)
 	local command = self._commandStore:getCommand(input.command);
-	if not command:hasArgs() then return {}; end
+	if not command:hasArgs() then
+		return {};
+	end
 	local args = {};
 	for i = 1, command:getNumArgs() do
 		local commandArg = command:getArg(i);
 		local correctType;
-		if input.arguments[i] then correctType = command:typeCheckArgument(i, input.arguments[i]); end
+		if input.arguments[i] then
+			correctType = command:typeCheckArgument(i, input.arguments[i]);
+		end
 		local argString = (i > 1 and " " or "") .. commandArg.name;
 		local argColor = Colors.rainCloudGrey:alpha(255);
 		if correctType == true then
@@ -58,7 +64,7 @@ local updateSuggestions = function(self, input)
 	elseif not self._commandStore:getCommand(input.command) then
 		self._suggestions = {
 			lines = {{text = {Colors.strawberry, input.command .. " is not a valid command"}}},
-			state = "badcommand"
+			state = "badcommand",
 		};
 	else
 		self._suggestions = {lines = getSuggestionsForArguments(self, input), state = "args"};
@@ -81,6 +87,8 @@ AutoComplete.feedInput = function(self, parsedInput)
 	updateSuggestions(self, parsedInput);
 end
 
-AutoComplete.getSuggestions = function(self) return self._suggestions; end
+AutoComplete.getSuggestions = function(self)
+	return self._suggestions;
+end
 
 return AutoComplete;

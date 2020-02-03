@@ -19,7 +19,9 @@ Animation.init = function(self, sheet, animationData)
 	assert(#self._animationFrames > 0);
 end
 
-Animation.getDuration = function(self) return self._duration; end
+Animation.getDuration = function(self)
+	return self._duration;
+end
 
 Animation.getFrameAtTime = function(self, t)
 	local outFrame;

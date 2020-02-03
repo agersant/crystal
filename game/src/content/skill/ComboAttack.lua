@@ -11,7 +11,11 @@ local doComboMove = function(self)
 		self:endOn("interruptByDamage");
 		local entity = self:getEntity();
 		if comboCounter == 1 or comboCounter == 3 then
-			self:thread(function() self:tween(200, 0, 0.20, "inQuadratic", function(speed) entity:setSpeed(speed); end); end);
+			self:thread(function()
+				self:tween(200, 0, 0.20, "inQuadratic", function(speed)
+					entity:setSpeed(speed);
+				end);
+			end);
 		else
 			entity:setSpeed(0);
 		end
@@ -22,7 +26,9 @@ end
 
 -- PUBLIC API
 
-ComboAttack.init = function(self, entity) ComboAttack.super.init(self, entity); end
+ComboAttack.init = function(self, entity)
+	ComboAttack.super.init(self, entity);
+end
 
 ComboAttack.run = function(self)
 
@@ -47,9 +53,13 @@ ComboAttack.run = function(self)
 
 				self:waitFor("idle");
 
-				if not inputWatch:isDead() then inputWatch:stop(); end
+				if not inputWatch:isDead() then
+					inputWatch:stop();
+				end
 
-				if not controller:isIdle() then break end
+				if not controller:isIdle() then
+					break
+				end
 
 				if not self._didInputNextMove then
 					Actions.idle(controller);

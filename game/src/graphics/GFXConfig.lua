@@ -6,7 +6,9 @@ local instance;
 -- IMPLEMENTATION
 
 local setMode = function(self)
-	if not love.window then return; end
+	if not love.window then
+		return;
+	end
 	love.window.setMode(self._windowWidth, self._windowHeight,
                     	{msaa = 8, resizable = true, vsync = false, fullscreen = self._fullscreen});
 	love.window.setTitle("Crystal");
@@ -59,9 +61,13 @@ GFXConfig.setZoom = function(self, zoom)
 	self:setResolution(self._renderWidth * zoom, self._renderHeight * zoom);
 end
 
-GFXConfig.getZoom = function(self) return self._zoom; end
+GFXConfig.getZoom = function(self)
+	return self._zoom;
+end
 
-GFXConfig.getNativeSize = function(self) return self._nativeWidth, self._nativeHeight; end
+GFXConfig.getNativeSize = function(self)
+	return self._nativeWidth, self._nativeHeight;
+end
 
 GFXConfig.applyTransforms = function(self)
 

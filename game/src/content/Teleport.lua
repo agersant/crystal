@@ -25,7 +25,9 @@ local doTeleport = function(self, triggeredBy)
 	Scene:setCurrent(newScene);
 
 	local teleportAngle = teleportEntity:getAngle();
-	for _, entity in ipairs(newScene:getPartyMemberEntities()) do entity:setAngle(teleportAngle); end
+	for _, entity in ipairs(newScene:getPartyMemberEntities()) do
+		entity:setAngle(teleportAngle);
+	end
 end
 
 local teleportScript = function(self)
@@ -59,7 +61,9 @@ local teleportScript = function(self)
 	end
 end
 
-TeleportController.init = function(self, entity) TeleportController.super.init(self, entity, teleportScript); end
+TeleportController.init = function(self, entity)
+	TeleportController.super.init(self, entity, teleportScript);
+end
 
 -- PUBLIC API
 

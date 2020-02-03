@@ -30,10 +30,16 @@ StaticLayer.init = function(self, map, layerData, sort)
 	self._sort = sort;
 end
 
-StaticLayer.draw = function(self) love.graphics.draw(self._batch); end
+StaticLayer.draw = function(self)
+	love.graphics.draw(self._batch);
+end
 
-StaticLayer.isBelowEntities = function(self) return self._sort == "below"; end
+StaticLayer.isBelowEntities = function(self)
+	return self._sort == "below";
+end
 
-StaticLayer.isAboveEntities = function(self) return self._sort == "above"; end
+StaticLayer.isAboveEntities = function(self)
+	return self._sort == "above";
+end
 
 return StaticLayer;

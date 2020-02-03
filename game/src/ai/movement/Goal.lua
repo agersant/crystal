@@ -3,9 +3,13 @@ local MathUtils = require("src/utils/MathUtils");
 
 local Goal = Class("Goal");
 
-Goal.init = function(self, radius) self._radius2 = radius * radius; end
+Goal.init = function(self, radius)
+	self._radius2 = radius * radius;
+end
 
-Goal.isValid = function(self) return true; end
+Goal.isValid = function(self)
+	return true;
+end
 
 Goal.isPositionAcceptable = function(self, x, y)
 	local targetX, targetY = self:getPosition();
@@ -13,6 +17,8 @@ Goal.isPositionAcceptable = function(self, x, y)
 	return distToTarget2 <= self._radius2;
 end
 
-Goal.getPosition = function(self) error("Not implemented"); end
+Goal.getPosition = function(self)
+	error("Not implemented");
+end
 
 return Goal;

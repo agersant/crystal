@@ -11,10 +11,15 @@ Skill.init = function(self, entity)
 	Skill.super.init(self, self.run);
 end
 
-Skill.getEntity = function(self) return self._entity; end
+Skill.getEntity = function(self)
+	return self._entity;
+end
 
-Skill.run = function() end
+Skill.run = function()
+end
 
-Skill.use = function(self) self:signal("useSkill"); end
+Skill.use = function(self)
+	self:signal("useSkill");
+end
 
 return Skill;

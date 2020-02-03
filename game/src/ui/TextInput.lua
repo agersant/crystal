@@ -10,7 +10,9 @@ local findLeftWord = function(self)
 	while out > 0 do
 		local spaceLeft = self._text:sub(out, out):find("%s");
 		local spaceRight = self._text:sub(out + 1, out + 1):find("%s");
-		if spaceLeft and not spaceRight then break end
+		if spaceLeft and not spaceRight then
+			break
+		end
 		out = out - 1;
 	end
 	return out;
@@ -23,7 +25,9 @@ end
 
 local insert = function(self, text)
 	local firstNonPrintable = text:find("[%c]");
-	if firstNonPrintable then text = text:sub(1, firstNonPrintable - 1); end
+	if firstNonPrintable then
+		text = text:sub(1, firstNonPrintable - 1);
+	end
 	local pre = self._text:sub(1, self._cursor);
 	local post = self._text:sub(self._cursor + 1);
 	self._text = pre .. text .. post;
@@ -46,23 +50,41 @@ local delete = function(self, numDelete)
 	self._text = pre .. post;
 end
 
-local moveToHome = function(self) self._cursor = 0; end
+local moveToHome = function(self)
+	self._cursor = 0;
+end
 
-local moveToEnd = function(self) self._cursor = #self._text; end
+local moveToEnd = function(self)
+	self._cursor = #self._text;
+end
 
-local moveLeft = function(self) self._cursor = math.max(0, self._cursor - 1); end
+local moveLeft = function(self)
+	self._cursor = math.max(0, self._cursor - 1);
+end
 
-local moveRight = function(self) self._cursor = math.min(#self._text, self._cursor + 1); end
+local moveRight = function(self)
+	self._cursor = math.min(#self._text, self._cursor + 1);
+end
 
-local moveToWordLeft = function(self) self._cursor = findLeftWord(self); end
+local moveToWordLeft = function(self)
+	self._cursor = findLeftWord(self);
+end
 
-local moveToWordRight = function(self) self._cursor = findRightWord(self); end
+local moveToWordRight = function(self)
+	self._cursor = findRightWord(self);
+end
 
-local pushUndoState = function(self) self._undoStack:push(self._text, self._cursor); end
+local pushUndoState = function(self)
+	self._undoStack:push(self._text, self._cursor);
+end
 
-local undo = function(self) self._text, self._cursor = self._undoStack:undo(); end
+local undo = function(self)
+	self._text, self._cursor = self._undoStack:undo();
+end
 
-local redo = function(self) self._text, self._cursor = self._undoStack:redo(); end
+local redo = function(self)
+	self._text, self._cursor = self._undoStack:redo();
+end
 
 -- PUBLIC API
 
@@ -77,11 +99,17 @@ TextInput.clear = function(self)
 	self._undoStack:clear();
 end
 
-TextInput.rebaseUndoStack = function(self) self._undoStack:rebase(); end
+TextInput.rebaseUndoStack = function(self)
+	self._undoStack:rebase();
+end
 
-TextInput.getText = function(self) return self._text; end
+TextInput.getText = function(self)
+	return self._text;
+end
 
-TextInput.getTextLeftOfCursor = function(self) return self._text:sub(1, self._cursor); end
+TextInput.getTextLeftOfCursor = function(self)
+	return self._text:sub(1, self._cursor);
+end
 
 TextInput.setText = function(self, text)
 	assert(text);
@@ -90,7 +118,9 @@ TextInput.setText = function(self, text)
 	pushUndoState(self);
 end
 
-TextInput.getCursor = function(self) return self._cursor; end
+TextInput.getCursor = function(self)
+	return self._cursor;
+end
 
 TextInput.textInput = function(self, text)
 	assert(text);
@@ -151,7 +181,9 @@ TextInput.keyPressed = function(self, key, scanCode, ctrl)
 	local textChanged = self._text ~= oldText;
 	local cursorMoved = self._cursor ~= oldCursor;
 
-	if textChanged or cursorMoved then pushUndoState(self); end
+	if textChanged or cursorMoved then
+		pushUndoState(self);
+	end
 
 	return textChanged, cursorMoved;
 end

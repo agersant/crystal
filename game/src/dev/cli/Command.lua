@@ -3,7 +3,9 @@ local StringUtils = require("src/utils/StringUtils");
 
 local Command = Class("Command");
 
-if not gConf.features.cli then disableFeature(Command); end
+if not gConf.features.cli then
+	disableFeature(Command);
+end
 
 -- PUBLIC API
 
@@ -27,34 +29,52 @@ Command.init = function(self, description, func)
 	end
 end
 
-Command.getRef = function(self) return self._ref; end
+Command.getRef = function(self)
+	return self._ref;
+end
 
-Command.getName = function(self) return self._name; end
+Command.getName = function(self)
+	return self._name;
+end
 
-Command.getNumArgs = function(self) return #self._args; end
+Command.getNumArgs = function(self)
+	return #self._args;
+end
 
-Command.hasArgs = function(self) return #self._args > 0; end
+Command.hasArgs = function(self)
+	return #self._args > 0;
+end
 
 Command.getArg = function(self, i)
 	assert(self._args[i]);
 	return self._args[i];
 end
 
-Command.getFunc = function(self) return self._func; end
+Command.getFunc = function(self)
+	return self._func;
+end
 
 Command.typeCheckArgument = function(self, argIndex, value)
 	assert(argIndex <= self:getNumArgs());
 	local requiredType = self:getArg(argIndex).type;
-	if requiredType == "number" then return tonumber(value) ~= nil; end
-	if requiredType == "boolean" then return value == "0" or value == "1" or value == "true" or value == "false"; end
+	if requiredType == "number" then
+		return tonumber(value) ~= nil;
+	end
+	if requiredType == "boolean" then
+		return value == "0" or value == "1" or value == "true" or value == "false";
+	end
 	return true;
 end
 
 Command.castArgument = function(self, argIndex, value)
 	assert(self:typeCheckArgument(argIndex, value));
 	local requiredType = self:getArg(argIndex).type;
-	if requiredType == "number" then return tonumber(value); end
-	if requiredType == "boolean" then return value == "1" or value == "true"; end
+	if requiredType == "number" then
+		return tonumber(value);
+	end
+	if requiredType == "boolean" then
+		return value == "1" or value == "true";
+	end
 	return value;
 end
 

@@ -6,7 +6,9 @@ local Dash = Class("Dash", Skill);
 
 -- PUBLIC API
 
-Dash.init = function(self, entity) Dash.super.init(self, entity); end
+Dash.init = function(self, entity)
+	Dash.super.init(self, entity);
+end
 
 Dash.run = function(self)
 
@@ -29,7 +31,9 @@ Dash.run = function(self)
 					entity:setAnimation("dash_" .. entity:getDirection4(), true);
 					self:wait(buildupDuration);
 
-					self:tween(peakSpeed, 0, dashDuration, "inCubic", function(speed) entity:setSpeed(speed); end);
+					self:tween(peakSpeed, 0, dashDuration, "inCubic", function(speed)
+						entity:setSpeed(speed);
+					end);
 
 					Actions.idle(self);
 				end);

@@ -9,8 +9,12 @@ Damage.init = function(self, amount, origin)
 	self._origin = origin;
 end
 
-Damage.getAmount = function(self) return self._amount; end
+Damage.getAmount = function(self)
+	return self._amount;
+end
 
-Damage.getOrigin = function(self) return self._origin; end
+Damage.getOrigin = function(self)
+	return self._origin;
+end
 
 return Damage;

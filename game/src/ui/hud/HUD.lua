@@ -7,7 +7,9 @@ local HUD = Class("HUD");
 
 -- IMPLEMENTATION
 
-local onSceneChanged = function(self) self:init(); end
+local onSceneChanged = function(self)
+	self:init();
+end
 
 -- PUBLIC API
 
@@ -25,12 +27,20 @@ HUD.update = function(self, dt)
 		self._scene = currentScene;
 		onSceneChanged(self);
 	end
-	for _, widget in ipairs(self._widgets) do widget:update(dt); end
+	for _, widget in ipairs(self._widgets) do
+		widget:update(dt);
+	end
 end
 
-HUD.draw = function(self) for _, widget in ipairs(self._widgets) do widget:draw(); end end
+HUD.draw = function(self)
+	for _, widget in ipairs(self._widgets) do
+		widget:draw();
+	end
+end
 
-HUD.getDialog = function(self) return self._dialog; end
+HUD.getDialog = function(self)
+	return self._dialog;
+end
 
 HUD.showDamage = function(self, victim, amount)
 	assert(victim);

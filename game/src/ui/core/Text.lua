@@ -13,11 +13,17 @@ Text.init = function(self, fontName, size)
 	self._alignment = "left";
 end
 
-Text.setAlignment = function(self, alignment) self._alignment = alignment; end
+Text.setAlignment = function(self, alignment)
+	self._alignment = alignment;
+end
 
-Text.setText = function(self, text) self._text = tostring(text); end
+Text.setText = function(self, text)
+	self._text = tostring(text);
+end
 
-Text.getText = function(self) return self._text; end
+Text.getText = function(self)
+	return self._text;
+end
 
 Text.drawSelf = function(self)
 	local width = self:getSize();

@@ -66,12 +66,16 @@ FFI.cdef [[
 -- IMPLEMENTATION
 
 local newBNavmesh = function(self)
-	local output = FFI.gc(FFI.new(FFI.typeof("BNavmesh")), function(navmesh) Beryl.freeNavmesh(navmesh); end);
+	local output = FFI.gc(FFI.new(FFI.typeof("BNavmesh")), function(navmesh)
+		Beryl.freeNavmesh(navmesh);
+	end);
 	return output;
 end
 
 local newBPath = function(self)
-	local output = FFI.gc(FFI.new(FFI.typeof("BPath")), function(path) Beryl.freePath(path); end);
+	local output = FFI.gc(FFI.new(FFI.typeof("BPath")), function(path)
+		Beryl.freePath(path);
+	end);
 	return output;
 end
 
@@ -117,7 +121,7 @@ local parseBNavmesh = function(self, bNavmesh)
 			triangle.vertices = {
 				bNavmesh.vertices[bTriangle.vertices[0]].x, bNavmesh.vertices[bTriangle.vertices[0]].y,
     bNavmesh.vertices[bTriangle.vertices[1]].x, bNavmesh.vertices[bTriangle.vertices[1]].y,
-    bNavmesh.vertices[bTriangle.vertices[2]].x, bNavmesh.vertices[bTriangle.vertices[2]].y
+    bNavmesh.vertices[bTriangle.vertices[2]].x, bNavmesh.vertices[bTriangle.vertices[2]].y,
 			};
 			triangle.center = {x = bTriangle.center.x, y = bTriangle.center.y};
 			table.insert(self._triangles, triangle);
@@ -130,7 +134,9 @@ end
 Navmesh.init = function(self, width, height, collisionMesh, padding)
 	self._bNavmesh = generateBNavmesh(self, width, height, collisionMesh, padding);
 	parseBNavmesh(self, self._bNavmesh);
-	if gConf.features.debugDraw then self._font = Fonts:get("dev", 12); end
+	if gConf.features.debugDraw then
+		self._font = Fonts:get("dev", 12);
+	end
 end
 
 Navmesh.findPath = function(self, startX, startY, endX, endY)

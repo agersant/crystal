@@ -16,18 +16,26 @@ local Dialog = Class("Dialog", Widget);
 local getInputDevice = function(self)
 	if self._player then
 		local controller = self._player:getController();
-		if controller:isInstanceOf(InputDrivenController) then return controller:getInputDevice(); end
+		if controller:isInstanceOf(InputDrivenController) then
+			return controller:getInputDevice();
+		end
 	end
 end
 
 local sendCommandSignals = function(self)
 	local device = getInputDevice(self);
-	if device then for _, commandEvent in device:pollEvents() do self:signal(commandEvent); end end
+	if device then
+		for _, commandEvent in device:pollEvents() do
+			self:signal(commandEvent);
+		end
+	end
 end
 
 local waitForCommandPress = function(self, command)
 	local device = getInputDevice(self);
-	if device:isCommandActive(command) then self:waitFor("-" .. command); end
+	if device:isCommandActive(command) then
+		self:waitFor("-" .. command);
+	end
 	self:waitFor("+" .. command);
 end
 
@@ -79,7 +87,8 @@ Dialog.update = function(self, dt)
 	end
 end
 
-Dialog.setPortait = function(self, portait) end
+Dialog.setPortait = function(self, portait)
+end
 
 Dialog.open = function(self, owner, player)
 	assert(owner:isInstanceOf(Script));
@@ -92,7 +101,9 @@ Dialog.open = function(self, owner, player)
 	local controller = self._player:getController();
 	assert(controller:isIdle());
 	controller:doAction(Actions.idle);
-	if controller:isInstanceOf(InputDrivenController) then controller:disable(); end
+	if controller:isInstanceOf(InputDrivenController) then
+		controller:disable();
+	end
 end
 
 Dialog.say = function(self, text)
@@ -127,7 +138,9 @@ Dialog.close = function(self)
 	assert(self._player ~= nil);
 
 	local controller = self._player:getController();
-	if controller:isInstanceOf(InputDrivenController) then controller:enable(); end
+	if controller:isInstanceOf(InputDrivenController) then
+		controller:enable();
+	end
 
 	self._targetText = nil;
 	self._currentText = nil;

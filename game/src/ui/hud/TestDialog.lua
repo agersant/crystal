@@ -14,7 +14,8 @@ tests[#tests].body = function()
 	local scene = MapScene:new("assets/map/test/empty.lua", party);
 	local player = Entity:new(scene);
 	player:addScriptRunner();
-	local controller = InputDrivenController:new(player, function() end, 1);
+	local controller = InputDrivenController:new(player, function()
+	end, 1);
 	player:addController(controller);
 
 	local dialog = Dialog:new();

@@ -122,7 +122,9 @@ Camera.removeTrackedEntity = function(self, entity)
 	end
 end
 
-Camera.setAutopilotEnabled = function(self, enabled) self._auto = enabled; end
+Camera.setAutopilotEnabled = function(self, enabled)
+	self._auto = enabled;
+end
 
 Camera.getRenderOffset = function(self)
 	local left, top = self._x, self._y;
@@ -151,7 +153,9 @@ end
 
 Camera.update = function(self, dt)
 
-	if not self._auto then return; end
+	if not self._auto then
+		return;
+	end
 
 	local z = GFXConfig:getZoom();
 	if z ~= self._previousZoom then
@@ -162,7 +166,9 @@ Camera.update = function(self, dt)
 
 	local tx, ty = computeTargetPosition(self);
 	local dx, dy = tx - self._x, ty - self._y;
-	if dx == 0 and dy == 0 then return; end
+	if dx == 0 and dy == 0 then
+		return;
+	end
 
 	if #self._trackedEntities == 0 then
 		self._x = tx;

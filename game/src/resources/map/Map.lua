@@ -14,7 +14,9 @@ local Map = Class("Map");
 
 local parseTileLayer = function(self, layerData)
 	local sort = layerData.properties.sort;
-	if sort ~= "above" and sort ~= "dynamic" then sort = "below"; end
+	if sort ~= "above" and sort ~= "dynamic" then
+		sort = "below";
+	end
 	self._collisionMesh:processLayer(self._tileset, layerData);
 	if sort == "below" or sort == "above" then
 		local layer = StaticLayer:new(self, layerData, sort);
@@ -44,7 +46,9 @@ local parseEntity = function(self, objectData)
 end
 
 local parseObjectGroup = function(self, layerData)
-	for i, object in ipairs(layerData.objects) do parseEntity(self, object); end
+	for i, object in ipairs(layerData.objects) do
+		parseEntity(self, object);
+	end
 end
 
 -- PUBLIC API
@@ -73,48 +77,84 @@ Map.init = function(self, mapData, tileset)
 	self._navmesh = Navmesh:new(self:getWidthInPixels(), self:getHeightInPixels(), self._collisionMesh, 6);
 end
 
-Map.spawnCollisionMeshBody = function(self, scene) return self._collisionMesh:spawnBody(scene); end
+Map.spawnCollisionMeshBody = function(self, scene)
+	return self._collisionMesh:spawnBody(scene);
+end
 
 Map.spawnEntities = function(self, scene)
-	for i, layer in ipairs(self._dynamicLayers) do layer:spawnEntities(scene); end
-	for i, mapEntity in ipairs(self._mapEntities) do mapEntity:spawn(scene); end
+	for i, layer in ipairs(self._dynamicLayers) do
+		layer:spawnEntities(scene);
+	end
+	for i, mapEntity in ipairs(self._mapEntities) do
+		mapEntity:spawn(scene);
+	end
 end
 
 Map.drawBelowEntities = function(self)
 	love.graphics.setColor(Colors.white);
-	for i, layer in ipairs(self._staticLayers) do if layer:isBelowEntities() then layer:draw(); end end
+	for i, layer in ipairs(self._staticLayers) do
+		if layer:isBelowEntities() then
+			layer:draw();
+		end
+	end
 end
 
 Map.drawAboveEntities = function(self)
 	love.graphics.setColor(Colors.white);
-	for i, layer in ipairs(self._staticLayers) do if layer:isAboveEntities() then layer:draw(); end end
+	for i, layer in ipairs(self._staticLayers) do
+		if layer:isAboveEntities() then
+			layer:draw();
+		end
+	end
 end
 
 Map.drawDebug = function(self)
-	if gConf.drawPhysics then self._collisionMesh:draw(); end
-	if gConf.drawNavmesh then self._navmesh:draw(); end
+	if gConf.drawPhysics then
+		self._collisionMesh:draw();
+	end
+	if gConf.drawNavmesh then
+		self._navmesh:draw();
+	end
 end
 
-Map.getTileset = function(self) return self._tileset; end
+Map.getTileset = function(self)
+	return self._tileset;
+end
 
-Map.getWidthInPixels = function(self) return self._width * self._tileset:getTileWidth(); end
+Map.getWidthInPixels = function(self)
+	return self._width * self._tileset:getTileWidth();
+end
 
-Map.getHeightInPixels = function(self) return self._height * self._tileset:getTileHeight(); end
+Map.getHeightInPixels = function(self)
+	return self._height * self._tileset:getTileHeight();
+end
 
-Map.getWidthInTiles = function(self) return self._width; end
+Map.getWidthInTiles = function(self)
+	return self._width;
+end
 
-Map.getHeightInTiles = function(self) return self._height; end
+Map.getHeightInTiles = function(self)
+	return self._height;
+end
 
-Map.getTileWidth = function(self) return self._tileset:getTileWidth(); end
+Map.getTileWidth = function(self)
+	return self._tileset:getTileWidth();
+end
 
-Map.getTileHeight = function(self) return self._tileset:getTileHeight(); end
+Map.getTileHeight = function(self)
+	return self._tileset:getTileHeight();
+end
 
-Map.getAreaInTiles = function(self) return self._width * self._height; end
+Map.getAreaInTiles = function(self)
+	return self._width * self._height;
+end
 
 Map.findPath = function(self, startX, startY, targetX, targetY)
 	return self._navmesh:findPath(startX, startY, targetX, targetY);
 end
 
-Map.getNearestPointOnNavmesh = function(self, x, y) return self._navmesh:getNearestPointOnNavmesh(x, y); end
+Map.getNearestPointOnNavmesh = function(self, x, y)
+	return self._navmesh:getNearestPointOnNavmesh(x, y);
+end
 
 return Map;

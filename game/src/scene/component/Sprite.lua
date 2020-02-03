@@ -16,7 +16,9 @@ Sprite.setAnimation = function(self, animationName, forceRestart)
 	local animation = self._sheet:getAnimation(animationName);
 	assert(animation);
 	self._animation = animation;
-	if forceRestart then self._time = 0; end
+	if forceRestart then
+		self._time = 0;
+	end
 end
 
 Sprite.update = function(self, dt)
@@ -39,8 +41,12 @@ Sprite.draw = function(self, x, y)
 	love.graphics.draw(image, quad, MathUtils.roundTo(x, snapTo), MathUtils.roundTo(y, snapTo), 0, 1, 1, ox, oy);
 end
 
-Sprite.isAnimationOver = function(self) return self._time >= self._animation:getDuration(); end
+Sprite.isAnimationOver = function(self)
+	return self._time >= self._animation:getDuration();
+end
 
-Sprite.getTagShape = function(self, tagName) return self._animationFrame:getTagShape(tagName); end
+Sprite.getTagShape = function(self, tagName)
+	return self._animationFrame:getTagShape(tagName);
+end
 
 return Sprite;

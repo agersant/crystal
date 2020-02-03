@@ -48,7 +48,9 @@ local controllerScript = function(self)
 	end
 end
 
-SahaginController.init = function(self, entity) SahaginController.super.init(self, entity, controllerScript); end
+SahaginController.init = function(self, entity)
+	SahaginController.super.init(self, entity, controllerScript);
+end
 
 -- PUBLIC API
 

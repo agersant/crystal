@@ -15,10 +15,14 @@ local getPathAndExtension = function(rawPath)
 	assert(#rawPath > 0);
 
 	local extension = StringUtils.fileExtension(rawPath);
-	if not extension or #extension == 0 then error("Asset " .. rawPath .. " has no file extension"); end
+	if not extension or #extension == 0 then
+		error("Asset " .. rawPath .. " has no file extension");
+	end
 
 	local path = rawPath;
-	if extension == "lua" then path = StringUtils.stripFileExtension(rawPath); end
+	if extension == "lua" then
+		path = StringUtils.stripFileExtension(rawPath);
+	end
 	assert(path and #path > 0);
 
 	return path, extension;
@@ -91,7 +95,9 @@ loadPackage = function(self, path, origin, packageData)
 	assert(type(packageData) == "table");
 	assert(packageData.type == "package");
 	assert(type(packageData.content) == "table");
-	for i, assetPath in ipairs(packageData.content) do loadAsset(self, assetPath, path); end
+	for i, assetPath in ipairs(packageData.content) do
+		loadAsset(self, assetPath, path);
+	end
 	return "package", nil;
 end
 
@@ -99,7 +105,9 @@ unloadPackage = function(self, path, origin, packageData)
 	assert(type(packageData) == "table");
 	assert(packageData.type == "package");
 	assert(type(packageData.content) == "table");
-	for i, assetPath in ipairs(packageData.content) do unloadAsset(self, assetPath, path); end
+	for i, assetPath in ipairs(packageData.content) do
+		unloadAsset(self, assetPath, path);
+	end
 end
 
 -- LUA FILE
@@ -186,7 +194,9 @@ end
 
 refreshAsset = function(self, rawPath)
 	local path, extension = getPathAndExtension(rawPath);
-	if not isAssetLoaded(self, path) then return; end
+	if not isAssetLoaded(self, path) then
+		return;
+	end
 	local oldAsset = self._loadedAssets[path];
 	self._loadedAssets[path] = nil;
 	loadAsset(self, rawPath, "refresh");
@@ -195,7 +205,9 @@ refreshAsset = function(self, rawPath)
 	for source, _ in pairs(self._loadedAssets[path].sources) do
 		if isAssetLoaded(self, source) then
 			local assetType = getAssetType(self, source);
-			if assetType ~= "package" then refreshAsset(self, source .. ".lua"); end
+			if assetType ~= "package" then
+				refreshAsset(self, source .. ".lua");
+			end
 		end
 	end
 end
@@ -203,7 +215,9 @@ end
 unloadAsset = function(self, path, origin)
 	origin = string.lower(origin);
 	local path, extension = getPathAndExtension(path);
-	if not isAssetLoaded(self, path) then return; end
+	if not isAssetLoaded(self, path) then
+		return;
+	end
 
 	if self._loadedAssets[path].sources[origin] then
 		self._loadedAssets[path].sources[origin] = nil;
@@ -224,7 +238,9 @@ unloadAsset = function(self, path, origin)
 	end
 end
 
-isAssetLoaded = function(self, path) return self._loadedAssets[path] ~= nil; end
+isAssetLoaded = function(self, path)
+	return self._loadedAssets[path] ~= nil;
+end
 
 getAssetType = function(self, path)
 	assert(type(path) == "string");
@@ -247,17 +263,29 @@ end
 
 -- PUBLIC API
 
-Assets.init = function(self) self._loadedAssets = {}; end
+Assets.init = function(self)
+	self._loadedAssets = {};
+end
 
-Assets.load = function(self, path) loadAsset(self, path, "user"); end
+Assets.load = function(self, path)
+	loadAsset(self, path, "user");
+end
 
-Assets.refresh = function(self, path) refreshAsset(self, path); end
+Assets.refresh = function(self, path)
+	refreshAsset(self, path);
+end
 
-Assets.unload = function(self, path) unloadAsset(self, path, "user"); end
+Assets.unload = function(self, path)
+	unloadAsset(self, path, "user");
+end
 
-Assets.getMap = function(self, path) return getAsset(self, "map", path); end
+Assets.getMap = function(self, path)
+	return getAsset(self, "map", path);
+end
 
-Assets.getSpritesheet = function(self, path) return getAsset(self, "spritesheet", path); end
+Assets.getSpritesheet = function(self, path)
+	return getAsset(self, "spritesheet", path);
+end
 
 local instance = Assets:new();
 return instance;

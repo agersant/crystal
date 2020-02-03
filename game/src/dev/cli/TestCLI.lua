@@ -3,7 +3,11 @@ local CLI = require("src/dev/cli/CLI");
 
 local tests = {};
 
-local enableCLI = function() if not CLI:isActive() then CLI:toggle(); end end
+local enableCLI = function()
+	if not CLI:isActive() then
+		CLI:toggle();
+	end
+end
 
 tests[#tests + 1] = {name = "Toggling"};
 tests[#tests].body = function()
@@ -18,7 +22,9 @@ tests[#tests + 1] = {name = "Run command"};
 tests[#tests].body = function()
 	enableCLI();
 	local sentinel = 0;
-	CLI:addCommand("testCommand", function() sentinel = 1; end);
+	CLI:addCommand("testCommand", function()
+		sentinel = 1;
+	end);
 	CLI:textInput("testCommand");
 	CLI:keyPressed("return");
 	assert(sentinel == 1);
@@ -29,7 +35,9 @@ tests[#tests + 1] = {name = "Number argument"};
 tests[#tests].body = function()
 	enableCLI();
 	local sentinel = 0;
-	CLI:addCommand("testCommand value:number", function(value) sentinel = value; end);
+	CLI:addCommand("testCommand value:number", function(value)
+		sentinel = value;
+	end);
 	CLI:textInput("testCommand 2");
 	CLI:keyPressed("return");
 	assert(sentinel == 2);
@@ -40,7 +48,9 @@ tests[#tests + 1] = {name = "String argument"};
 tests[#tests].body = function()
 	enableCLI();
 	local sentinel = "";
-	CLI:addCommand("testCommand value:string", function(value) sentinel = value; end);
+	CLI:addCommand("testCommand value:string", function(value)
+		sentinel = value;
+	end);
 	CLI:textInput("testCommand oink");
 	CLI:keyPressed("return");
 	assert(sentinel == "oink");
@@ -50,7 +60,9 @@ end
 tests[#tests + 1] = {name = "Execute from code"};
 tests[#tests].body = function()
 	local sentinel = "";
-	CLI:addCommand("testCommand value:string", function(value) sentinel = value; end);
+	CLI:addCommand("testCommand value:string", function(value)
+		sentinel = value;
+	end);
 	CLI:execute("testCommand oink");
 	assert(sentinel == "oink");
 	CLI:removeCommand("testCommand");
@@ -59,7 +71,9 @@ end
 tests[#tests + 1] = {name = "Execute from history"};
 tests[#tests].body = function()
 	local sentinel = "";
-	CLI:addCommand("testCommand value:string", function(value) sentinel = value; end);
+	CLI:addCommand("testCommand value:string", function(value)
+		sentinel = value;
+	end);
 
 	CLI:textInput("testCommand oink");
 	CLI:keyPressed("return");
@@ -81,7 +95,9 @@ end
 tests[#tests + 1] = {name = "Autocomplete"};
 tests[#tests].body = function()
 	local sentinel = "";
-	CLI:addCommand("testCommand", function(value) sentinel = "oink"; end);
+	CLI:addCommand("testCommand", function(value)
+		sentinel = "oink";
+	end);
 	CLI:textInput("testcomm");
 	CLI:keyPressed("tab");
 	CLI:keyPressed("return");

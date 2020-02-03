@@ -10,7 +10,9 @@ tests[#tests].body = function()
 end
 
 tests[#tests + 1] = {name = "Load Navmesh Lua file"};
-tests[#tests].body = function() local Navmesh = require("src/resources/map/Navmesh"); end
+tests[#tests].body = function()
+	local Navmesh = require("src/resources/map/Navmesh");
+end
 
 tests[#tests + 1] = {name = "Generate navmesh for empty map"};
 tests[#tests].body = function()

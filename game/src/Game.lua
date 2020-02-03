@@ -47,9 +47,17 @@ end
 love.keypressed = function(key, scanCode, isRepeat)
 	local ctrl = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl");
 	CLI:keyPressed(key, scanCode, ctrl);
-	if not CLI:isActive() then Input:keyPressed(key, scanCode, isRepeat); end
+	if not CLI:isActive() then
+		Input:keyPressed(key, scanCode, isRepeat);
+	end
 end
 
-love.keyreleased = function(key, scanCode) if not CLI:isActive() then Input:keyReleased(key, scanCode); end end
+love.keyreleased = function(key, scanCode)
+	if not CLI:isActive() then
+		Input:keyReleased(key, scanCode);
+	end
+end
 
-love.textinput = function(text) CLI:textInput(text); end
+love.textinput = function(text)
+	CLI:textInput(text);
+end

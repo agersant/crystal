@@ -10,10 +10,14 @@ local reloadModule = function(moduleName)
 	local updated = {};
 
 	local function update(old, new)
-		if updated[old] then return; end
+		if updated[old] then
+			return;
+		end
 		updated[old] = true;
 		local oldmt, newmt = getmetatable(old), getmetatable(new);
-		if oldmt and newmt then update(oldmt, newmt); end
+		if oldmt and newmt then
+			update(oldmt, newmt);
+		end
 		for k, v in pairs(new) do
 			if type(v) == "table" then
 				update(old[k], v)
@@ -24,7 +28,9 @@ local reloadModule = function(moduleName)
 	end
 
 	local function onError(e)
-		for k in pairs(_G) do _G[k] = oldGlobal[k]; end
+		for k in pairs(_G) do
+			_G[k] = oldGlobal[k];
+		end
 		Log:error("Error while hot-reloading " .. tostring(moduleName) .. ":\n" .. tostring(e));
 	end
 
@@ -33,7 +39,9 @@ local reloadModule = function(moduleName)
 	xpcall(function()
 		package.loaded[moduleName] = nil;
 		local newmod = require(moduleName);
-		if type(oldmod) == "table" then update(oldmod, newmod); end
+		if type(oldmod) == "table" then
+			update(oldmod, newmod);
+		end
 		for k, v in pairs(oldGlobal) do
 			if v ~= _G[k] and type(v) == "table" then
 				update(v, _G[k]);

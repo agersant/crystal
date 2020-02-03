@@ -22,7 +22,11 @@ mergeChains = function(self)
 end
 
 local addChain = function(self, newChain)
-	for _, oldChain in ipairs(self._chains) do if oldChain:merge(newChain) then return; end end
+	for _, oldChain in ipairs(self._chains) do
+		if oldChain:merge(newChain) then
+			return;
+		end
+	end
 	table.insert(self._chains, newChain);
 end
 
@@ -31,7 +35,9 @@ end
 MapCollisionMesh.init = function(self, widthInPixels, heightInPixels, heightInTiles)
 	self._chains = {};
 	self._activeTiles = {};
-	for y = 0, heightInTiles - 1 do self._activeTiles[y] = {}; end
+	for y = 0, heightInTiles - 1 do
+		self._activeTiles[y] = {};
+	end
 
 	local edgesChain = MapCollisionChainData:new(true);
 	edgesChain:addVertex(0, 0);
@@ -85,9 +91,13 @@ end
 
 MapCollisionMesh.draw = function(self)
 	love.graphics.setColor(Colors.coquelicot);
-	for _, chain in ipairs(self._chains) do chain:draw(); end
+	for _, chain in ipairs(self._chains) do
+		chain:draw();
+	end
 end
 
-MapCollisionMesh.chains = function(self) return ipairs(self._chains); end
+MapCollisionMesh.chains = function(self)
+	return ipairs(self._chains);
+end
 
 return MapCollisionMesh;

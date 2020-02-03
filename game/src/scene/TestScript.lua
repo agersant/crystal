@@ -6,7 +6,9 @@ local tests = {};
 tests[#tests + 1] = {name = "Script runs"};
 tests[#tests].body = function()
 	local a = 0;
-	local script = Script:new(function(self) a = a + 1; end);
+	local script = Script:new(function(self)
+		a = a + 1;
+	end);
 	assert(a == 0);
 	script:update(0);
 	assert(a == 1);
@@ -125,7 +127,9 @@ end
 tests[#tests + 1] = {name = "Signal additional data"};
 tests[#tests].body = function()
 	local a = 0;
-	local script = Script:new(function(self) a = self:waitFor("testSignal"); end);
+	local script = Script:new(function(self)
+		a = self:waitFor("testSignal");
+	end);
 	assert(a == 0);
 	script:update(0);
 	assert(a == 0);
@@ -137,7 +141,9 @@ tests[#tests + 1] = {name = "Multiple signals additional data"};
 tests[#tests].body = function()
 	local a = 0;
 	local s = "";
-	local script = Script:new(function(self) s, a = self:waitForAny({"testSignal", "gruik"}); end);
+	local script = Script:new(function(self)
+		s, a = self:waitForAny({"testSignal", "gruik"});
+	end);
 	assert(a == 0);
 	script:update(0);
 	assert(a == 0);
@@ -230,7 +236,8 @@ tests[#tests + 1] = {name = "Cross-script threading"};
 tests[#tests].body = function()
 	local a = 0;
 
-	local scriptA = Script:new(function(self) end);
+	local scriptA = Script:new(function(self)
+	end);
 	scriptA.b = 1;
 
 	local scriptB = Script:new(function(self)

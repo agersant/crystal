@@ -103,7 +103,9 @@ local skillControls = function(skillIndex)
 		while true do
 			self:waitForCommandPress(useSkillCommand);
 			local skill = entity:getSkill(skillIndex);
-			if skill then skill:use(); end
+			if skill then
+				skill:use();
+			end
 		end
 	end
 end
@@ -116,7 +118,9 @@ local addInteractionControls = function(self)
 			local contactEntity = self:waitFor("+touch");
 			self._contacts[contactEntity] = true;
 			self:thread(function()
-				repeat local dropEntity = self:waitFor("-touch"); until dropEntity == contactEntity
+				repeat
+					local dropEntity = self:waitFor("-touch");
+				until dropEntity == contactEntity
 				self._contacts[contactEntity] = nil;
 			end);
 		end
@@ -128,7 +132,9 @@ local addInteractionControls = function(self)
 			self:waitForCommandPress("interact");
 			if self:isIdle() then
 				local contactCopy = TableUtils.shallowCopy(self._contacts);
-				for entity, _ in pairs(contactCopy) do entity:signal("interact", player); end
+				for entity, _ in pairs(contactCopy) do
+					entity:signal("interact", player);
+				end
 			end
 		end
 	end);
@@ -138,7 +144,9 @@ local playerControllerScript = function(self)
 	addDirectionControls(self);
 	addInteractionControls(self);
 	self:thread(walkControls);
-	for i = 1, 4 do self:thread(skillControls(i)); end
+	for i = 1, 4 do
+		self:thread(skillControls(i));
+	end
 end
 
 -- PUBLIC API

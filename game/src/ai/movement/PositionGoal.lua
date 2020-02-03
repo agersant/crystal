@@ -9,6 +9,8 @@ PositionGoal.init = function(self, x, y, radius)
 	self._y = y;
 end
 
-PositionGoal.getPosition = function(self) return self._x, self._y; end
+PositionGoal.getPosition = function(self)
+	return self._x, self._y;
+end
 
 return PositionGoal;

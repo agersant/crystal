@@ -36,39 +36,57 @@ end
 
 InputDevice.clearBindingsForCommand = function(self, command)
 	for i = #self._bindingPairs, 1, -1 do
-		if self._bindingPairs[i].command == command then table.remove(self._bindingPairs, i); end
+		if self._bindingPairs[i].command == command then
+			table.remove(self._bindingPairs, i);
+		end
 	end
 	buildBindingTables(self);
 end
 
 InputDevice.keyPressed = function(self, key, scanCode, isRepeat)
-	if isRepeat then return; end
-	if not self._keyBindings[key] then return; end
+	if isRepeat then
+		return;
+	end
+	if not self._keyBindings[key] then
+		return;
+	end
 	for _, command in ipairs(self._keyBindings[key]) do
 		assert(self._commandBindings[command]);
 		self._commandBindings[command].numInputsDown = self._commandBindings[command].numInputsDown + 1;
-		if self._commandBindings[command].numInputsDown == 1 then table.insert(self._events, "+" .. command); end
+		if self._commandBindings[command].numInputsDown == 1 then
+			table.insert(self._events, "+" .. command);
+		end
 	end
 end
 
 InputDevice.keyReleased = function(self, key, scanCode)
-	if not self._keyBindings[key] then return; end
+	if not self._keyBindings[key] then
+		return;
+	end
 	for _, command in ipairs(self._keyBindings[key]) do
 		assert(self._commandBindings[command]);
 		assert(self._commandBindings[command].numInputsDown > 0);
 		self._commandBindings[command].numInputsDown = self._commandBindings[command].numInputsDown - 1;
 		assert(self._commandBindings[command].numInputsDown >= 0);
-		if self._commandBindings[command].numInputsDown == 0 then table.insert(self._events, "-" .. command); end
+		if self._commandBindings[command].numInputsDown == 0 then
+			table.insert(self._events, "-" .. command);
+		end
 	end
 end
 
 InputDevice.isCommandActive = function(self, command)
-	if not self._commandBindings[command] then return false; end
+	if not self._commandBindings[command] then
+		return false;
+	end
 	return self._commandBindings[command].numInputsDown > 0;
 end
 
-InputDevice.pollEvents = function(self) return ipairs(self._events); end
+InputDevice.pollEvents = function(self)
+	return ipairs(self._events);
+end
 
-InputDevice.flushEvents = function(self) self._events = {}; end
+InputDevice.flushEvents = function(self)
+	self._events = {};
+end
 
 return InputDevice;

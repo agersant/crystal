@@ -53,7 +53,9 @@ local walkToGoal = function(goal, repathDelay)
 				self:waitFor("repath");
 				pathingThread = self:thread(function(self)
 					self:endOn("repath");
-					if not goal:isValid() then self:signal("pathEnd"); end
+					if not goal:isValid() then
+						self:signal("pathEnd");
+					end
 					local targetX, targetY = goal:getPosition();
 					local path = entity:findPathTo(targetX, targetY);
 					followPath(self, path);
@@ -67,7 +69,9 @@ local walkToGoal = function(goal, repathDelay)
 			self:endOn("endWalkToGoal");
 			while true do
 				local x, y = entity:getPosition();
-				if goal:isValid() and goal:isPositionAcceptable(x, y) then self:signal("closeEnough"); end
+				if goal:isValid() and goal:isPositionAcceptable(x, y) then
+					self:signal("closeEnough");
+				end
 				self:waitFrame();
 			end
 		end);
@@ -88,7 +92,9 @@ local walkToGoal = function(goal, repathDelay)
 		end
 		self:signal("endWalkToGoal");
 
-		if self:isIdle() then self:doAction(Actions.idle); end
+		if self:isIdle() then
+			self:doAction(Actions.idle);
+		end
 
 		local x, y = entity:getPosition();
 		return goal:isValid() and goal:isPositionAcceptable(x, y);

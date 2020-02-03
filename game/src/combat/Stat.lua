@@ -21,10 +21,16 @@ Stat.setValue = function(self, value)
 	end
 end
 
-Stat.getValue = function(self) return self._value; end
+Stat.getValue = function(self)
+	return self._value;
+end
 
-Stat.substract = function(self, amount) self:setValue(self._value - amount); end
+Stat.substract = function(self, amount)
+	self:setValue(self._value - amount);
+end
 
-Stat.add = function(self, amount) self:setValue(self._value + amount); end
+Stat.add = function(self, amount)
+	self:setValue(self._value + amount);
+end
 
 return Stat;

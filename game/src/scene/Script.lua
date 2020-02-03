@@ -19,11 +19,13 @@ local newThread = function(self, parentThread, script, options)
 		blockedBy = {},
 		endsOn = {},
 		allowOrphans = options.allowOrphans,
-		isDead = function(thread) return coroutine.status(thread.coroutine) == "dead" or thread.isEnded; end,
+		isDead = function(thread)
+			return coroutine.status(thread.coroutine) == "dead" or thread.isEnded;
+		end,
 		stop = function(thread)
 			assert(not thread:isDead());
 			endThread(self, thread);
-		end
+		end,
 	};
 
 	if parentThread then
@@ -31,7 +33,9 @@ local newThread = function(self, parentThread, script, options)
 		thread.parentThread = parentThread;
 	end
 
-	if options.pumpImmediately then pumpThread(self, thread); end
+	if options.pumpImmediately then
+		pumpThread(self, thread);
+	end
 
 	table.insert(self._threads, thread);
 	return thread;
@@ -42,7 +46,9 @@ local blockThread = function(self, thread, signals)
 	thread.isMarkedForUnblock = false;
 	for _, signal in ipairs(signals) do
 		assert(type(signal) == "string");
-		if not self._blockedThreads[signal] then self._blockedThreads[signal] = {}; end
+		if not self._blockedThreads[signal] then
+			self._blockedThreads[signal] = {};
+		end
 		self._blockedThreads[signal][thread] = true;
 		thread.blockedBy[signal] = true;
 	end
@@ -50,9 +56,13 @@ end
 
 local unblockThread = function(self, thread, signal, ...)
 	assert(thread.isBlocked);
-	for signal, _ in pairs(thread.blockedBy) do self._blockedThreads[signal][thread] = nil; end
+	for signal, _ in pairs(thread.blockedBy) do
+		self._blockedThreads[signal][thread] = nil;
+	end
 	local signalData = {...};
-	if TableUtils.countKeys(thread.blockedBy) > 1 then table.insert(signalData, 1, signal); end
+	if TableUtils.countKeys(thread.blockedBy) > 1 then
+		table.insert(signalData, 1, signal);
+	end
 	thread.blockedBy = {};
 	thread.isMarkedForUnblock = true;
 	pumpThread(self, thread, signalData);
@@ -61,7 +71,9 @@ end
 local endThreadOn = function(self, thread, signals)
 	for _, signal in ipairs(signals) do
 		assert(type(signal) == "string");
-		if not self._endableThreads[signal] then self._endableThreads[signal] = {}; end
+		if not self._endableThreads[signal] then
+			self._endableThreads[signal] = {};
+		end
 		self._endableThreads[signal][thread] = true;
 		thread.endsOn[signal] = true;
 	end
@@ -75,8 +87,12 @@ endThread = function(self, thread)
 	end
 	if not thread.allowOrphans then
 		local childThreadsCopy = {};
-		for childThread, _ in pairs(thread.childThreads) do table.insert(childThreadsCopy, childThread); end
-		for i, childThread in ipairs(childThreadsCopy) do endThread(self, childThread); end
+		for childThread, _ in pairs(thread.childThreads) do
+			table.insert(childThreadsCopy, childThread);
+		end
+		for i, childThread in ipairs(childThreadsCopy) do
+			endThread(self, childThread);
+		end
 	end
 end
 
@@ -108,13 +124,23 @@ pumpThread = function(self, thread, resumeArgs)
 	end
 
 	status = coroutine.status(thread.coroutine);
-	if status == "dead" and not thread.isEnded then endThread(self, thread); end
+	if status == "dead" and not thread.isEnded then
+		endThread(self, thread);
+	end
 end
 
 local cleanupThread = function(self, thread)
-	if thread.endsOn then for signal, _ in pairs(thread.endsOn) do self._endableThreads[signal][thread] = nil; end end
-	for signal, _ in pairs(thread.blockedBy) do self._blockedThreads[signal][thread] = nil; end
-	for childThread, _ in pairs(thread.childThreads) do childThread.parentThread = nil; end
+	if thread.endsOn then
+		for signal, _ in pairs(thread.endsOn) do
+			self._endableThreads[signal][thread] = nil;
+		end
+	end
+	for signal, _ in pairs(thread.blockedBy) do
+		self._blockedThreads[signal][thread] = nil;
+	end
+	for childThread, _ in pairs(thread.childThreads) do
+		childThread.parentThread = nil;
+	end
 end
 
 -- PUBLIC API
@@ -138,7 +164,11 @@ Script.update = function(self, dt)
 
 	-- Run existing threads
 	local threadsCopy = TableUtils.shallowCopy(self._threads);
-	for _, thread in ipairs(threadsCopy) do if not thread.isBlocked then pumpThread(self, thread); end end
+	for _, thread in ipairs(threadsCopy) do
+		if not thread.isBlocked then
+			pumpThread(self, thread);
+		end
+	end
 
 	-- Remove dead threads
 	for i = #self._threads, 1, -1 do
@@ -160,19 +190,27 @@ end
 
 Script.signal = function(self, signal, ...)
 	if self._endableThreads[signal] then
-		for thread, _ in pairs(self._endableThreads[signal]) do endThread(self, thread, signal); end
+		for thread, _ in pairs(self._endableThreads[signal]) do
+			endThread(self, thread, signal);
+		end
 	end
 	if self._blockedThreads[signal] then
 		local blockedThreadsCopy = TableUtils.shallowCopy(self._blockedThreads[signal]);
-		for thread, _ in pairs(blockedThreadsCopy) do unblockThread(self, thread, signal, ...); end
+		for thread, _ in pairs(blockedThreadsCopy) do
+			unblockThread(self, thread, signal, ...);
+		end
 	end
 end
 
-Script.waitFrame = function(self) coroutine.yield(); end
+Script.waitFrame = function(self)
+	coroutine.yield();
+end
 
 Script.wait = function(self, seconds)
 	local endTime = self._time + seconds;
-	while self._time < endTime do coroutine.yield(); end
+	while self._time < endTime do
+		coroutine.yield();
+	end
 end
 
 Script.thread = function(self, functionToThread)
@@ -201,7 +239,9 @@ Script.endOnAny = function(self, signals)
 	coroutine.yield("endOnSignals", signals);
 end
 
-Script.isDead = function(self) return #self._threads == 0; end
+Script.isDead = function(self)
+	return #self._threads == 0;
+end
 
 Script.tween = function(self, from, to, duration, easing, set)
 	assert(duration >= 0);

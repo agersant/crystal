@@ -2,24 +2,38 @@ local MathUtils = {};
 
 local epsilon = 0.0001;
 
-MathUtils.indexToXY = function(index, width) return index % width, math.floor(index / width); end
+MathUtils.indexToXY = function(index, width)
+	return index % width, math.floor(index / width);
+end
 
-MathUtils.round = function(n) return math.floor(n + 0.5); end
+MathUtils.round = function(n)
+	return math.floor(n + 0.5);
+end
 
-MathUtils.roundTo = function(n, precision) return MathUtils.round(n / precision) * precision; end
+MathUtils.roundTo = function(n, precision)
+	return MathUtils.round(n / precision) * precision;
+end
 
 MathUtils.clamp = function(low, value, high)
 	assert(low <= high);
 	return math.min(high, math.max(low, value));
 end
 
-MathUtils.dotProduct = function(x1, y1, x2, y2) return x1 * x2 + y1 * y2; end
+MathUtils.dotProduct = function(x1, y1, x2, y2)
+	return x1 * x2 + y1 * y2;
+end
 
-MathUtils.crossProduct = function(x1, y1, x2, y2) return x1 * y2 - y1 * x2; end
+MathUtils.crossProduct = function(x1, y1, x2, y2)
+	return x1 * y2 - y1 * x2;
+end
 
-MathUtils.vectorLength2 = function(x, y) return x * x + y * y; end
+MathUtils.vectorLength2 = function(x, y)
+	return x * x + y * y;
+end
 
-MathUtils.vectorLength = function(x, y) return math.sqrt(x * x + y * y); end
+MathUtils.vectorLength = function(x, y)
+	return math.sqrt(x * x + y * y);
+end
 
 MathUtils.normalize = function(x, y, n)
 	n = n or 1;
@@ -78,9 +92,13 @@ MathUtils.angleToDir8 = function(angle)
 	error("Unexpected angle: " .. tostring(snappedAngle));
 end
 
-MathUtils.almostEqual = function(a, b) return math.abs(a - b) <= epsilon; end
+MathUtils.almostEqual = function(a, b)
+	return math.abs(a - b) <= epsilon;
+end
 
-MathUtils.almostZero = function(a) return math.abs(a) <= epsilon; end
+MathUtils.almostZero = function(a)
+	return math.abs(a) <= epsilon;
+end
 
 MathUtils.ease = function(t, easing)
 	local pow = math.pow;

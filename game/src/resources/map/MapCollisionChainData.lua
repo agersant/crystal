@@ -38,7 +38,9 @@ end
 local segmentIter = function(self, i)
 	local numSegments = self:getNumSegments();
 	i = i + 1;
-	if i > numSegments then return nil; end
+	if i > numSegments then
+		return nil;
+	end
 	local x1, y1, x2, y2 = self:getSegment(i);
 	return i, x1, y1, x2, y2;
 end
@@ -46,7 +48,9 @@ end
 local vertexIter = function(self, i)
 	local numVertices = self:getNumVertices();
 	i = i + 1;
-	if i > numVertices then return nil; end
+	if i > numVertices then
+		return nil;
+	end
 	local x, y = self:getVertex(i);
 	return i, x, y;
 end
@@ -79,19 +83,27 @@ MapCollisionChainData.removeVertex = function(self, i)
 	table.remove(self._verts, 2 * i - 1);
 end
 
-MapCollisionChainData.getVertex = function(self, i) return self._verts[2 * i - 1], self._verts[2 * i]; end
+MapCollisionChainData.getVertex = function(self, i)
+	return self._verts[2 * i - 1], self._verts[2 * i];
+end
 
 MapCollisionChainData.getNumSegments = function(self)
 	local numVerts = self:getNumVertices();
-	if numVerts < 2 then return 0; end
-	if numVerts == 2 then return 1; end
+	if numVerts < 2 then
+		return 0;
+	end
+	if numVerts == 2 then
+		return 1;
+	end
 	return 1 + math.max(0, numVerts - 1);
 end
 
 MapCollisionChainData.removeMidPoints = function(self)
 
 	local numSegments = self:getNumSegments();
-	if numSegments < 2 then return; end
+	if numSegments < 2 then
+		return;
+	end
 
 	for i, x1, y1, x2, y2 in self:segments() do
 		local iNext = i == numSegments and 1 or i + 1;
@@ -124,23 +136,37 @@ MapCollisionChainData.init = function(self, outer)
 end
 
 MapCollisionChainData.getShape = function(self)
-	if self._shape then return self._shape; end
+	if self._shape then
+		return self._shape;
+	end
 	self._shape = love.physics.newChainShape(true, self._verts);
 	return self._shape;
 end
 
-MapCollisionChainData.isOuter = function(self) return self._outer; end
+MapCollisionChainData.isOuter = function(self)
+	return self._outer;
+end
 
-MapCollisionChainData.getNumVertices = function(self) return #self._verts / 2; end
+MapCollisionChainData.getNumVertices = function(self)
+	return #self._verts / 2;
+end
 
-MapCollisionChainData.vertices = function(self) return vertexIter, self, 0; end
+MapCollisionChainData.vertices = function(self)
+	return vertexIter, self, 0;
+end
 
-MapCollisionChainData.segments = function(self) return segmentIter, self, 0; end
+MapCollisionChainData.segments = function(self)
+	return segmentIter, self, 0;
+end
 
-MapCollisionChainData.addVertex = function(self, x, y) self:insertVertex(x, y, 1 + self:getNumVertices()); end
+MapCollisionChainData.addVertex = function(self, x, y)
+	self:insertVertex(x, y, 1 + self:getNumVertices());
+end
 
 MapCollisionChainData.merge = function(self, otherChain)
-	if self._outer or otherChain._outer then return false; end
+	if self._outer or otherChain._outer then
+		return false;
+	end
 	for iOld, oldX1, oldY1, oldX2, oldY2 in self:segments() do
 		for iNew, newX1, newY1, newX2, newY2 in otherChain:segments() do
 

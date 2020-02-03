@@ -18,7 +18,9 @@ PlayerSave.init = function(self)
 	self:setLocation("nowhere", 0, 0);
 end
 
-PlayerSave.getParty = function(self) return self._party; end
+PlayerSave.getParty = function(self)
+	return self._party;
+end
 
 PlayerSave.setParty = function(self, party)
 	assert(party);
@@ -39,7 +41,9 @@ PlayerSave.setLocation = function(self, map, x, y)
 	self._location.y = y;
 end
 
-PlayerSave.toPOD = function(self) return {party = self._party:toPOD(), location = self._location}; end
+PlayerSave.toPOD = function(self)
+	return {party = self._party:toPOD(), location = self._location};
+end
 
 PlayerSave.writeToDisk = function(self, path)
 	local pod = self:toPOD();
@@ -53,7 +57,9 @@ end
 
 local currentPlayerSave = PlayerSave:new();
 
-PlayerSave.getCurrent = function(self) return currentPlayerSave; end
+PlayerSave.getCurrent = function(self)
+	return currentPlayerSave;
+end
 
 PlayerSave.setCurrent = function(self, playerSave)
 	assert(playerSave);

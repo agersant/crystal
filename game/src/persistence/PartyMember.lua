@@ -5,16 +5,22 @@ local PartyMember = Class("PartyMember");
 
 -- PUBLIC API
 
-PartyMember.init = function(self, instanceClass) self._instanceClass = instanceClass; end
+PartyMember.init = function(self, instanceClass)
+	self._instanceClass = instanceClass;
+end
 
 PartyMember.getInstanceClass = function(self)
 	assert(self._instanceClass);
 	return self._instanceClass;
 end
 
-PartyMember.getAssignedPlayer = function(self) return self._assignedPlayer; end
+PartyMember.getAssignedPlayer = function(self)
+	return self._assignedPlayer;
+end
 
-PartyMember.setAssignedPlayer = function(self, assignedPlayer) self._assignedPlayer = assignedPlayer; end
+PartyMember.setAssignedPlayer = function(self, assignedPlayer)
+	self._assignedPlayer = assignedPlayer;
+end
 
 PartyMember.toPOD = function(self)
 	return {instanceClass = self:getInstanceClass(), assignedPlayer = self:getAssignedPlayer()};
@@ -30,7 +36,9 @@ PartyMember.spawn = function(self, scene, options)
 	entity:addToParty();
 
 	local assignedPlayer = self:getAssignedPlayer();
-	if assignedPlayer then entity:addController(PlayerController:new(entity, assignedPlayer)); end
+	if assignedPlayer then
+		entity:addController(PlayerController:new(entity, assignedPlayer));
+	end
 
 	return entity;
 end
