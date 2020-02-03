@@ -24,7 +24,7 @@ jobs:
       run: ninja
       working-directory: ./lib/builddir
     - name: Copy Beryl binaries
-      run: cp ./lib/builddir/* ./game
+      run: cp ./lib/builddir/libberyl.so ./game
     - name: Run Tests
       run: love . /test
       working-directory: ./game
