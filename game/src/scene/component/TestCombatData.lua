@@ -31,7 +31,7 @@ tests[#tests].body = function()
 	local attackerHealth = attacker:getHealth();
 	local victimHealth = victim:getHealth();
 
-	local damage = Damage:new(10, source);
+	local damage = Damage:new(10, attacker);
 	attacker:inflictDamageTo(victim, damage);
 	assert(attacker:getHealth() == attackerHealth);
 	assert(victim:getHealth() < victimHealth);

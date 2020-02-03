@@ -1,10 +1,11 @@
 require("src/utils/OOP");
-
 local Damage = Class("Damage");
 
 -- PUBLIC API
 
 Damage.init = function(self, amount, origin)
+	assert(amount);
+	assert(origin);
 	self._amount = amount;
 	self._origin = origin;
 end
