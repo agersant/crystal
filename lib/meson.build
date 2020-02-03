@@ -3,16 +3,16 @@ project('beryl', 'c',
   default_options : ['warning_level=3'])
 
 if meson.get_compiler('c').get_id() == 'msvc'
-  add_project_arguments('-DNO_TIMER')
+  add_project_arguments('-DNO_TIMER', language : 'c')
 endif
 
 if meson.get_compiler('c').get_id() == 'clang'
-  add_project_arguments('-fdeclspec', '-fPIC')
-  add_project_link_arguments('-shared')
+  add_project_arguments('-fdeclspec', '-fPIC', language : 'c')
+  add_project_link_arguments('-shared', language : 'c')
 endif
 
 if host_machine.cpu_family() == 'x86'
-  add_project_arguments('-DCPU86')
+  add_project_arguments('-DCPU86', language : 'c')
 endif
 
 library('beryl',
