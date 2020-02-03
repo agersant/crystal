@@ -12,7 +12,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Install Love 2D
-      run: sudo apt-get repository -y ppa:bartbes/love-stable && sudo apt-get update && sudo apt-get install -y love
+      run: sudo add-apt-repository -y ppa:bartbes/love-stable && sudo apt-get update && sudo apt-get install -y love
     - name: Install Meson
       run:  sudo apt-get install python3 python3-pip python3-setuptools python3-wheel ninja-build
     - name: Configure build directory
