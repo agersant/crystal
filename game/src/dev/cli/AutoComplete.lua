@@ -43,7 +43,7 @@ local getSuggestionsForArguments = function(self, input)
 			correctType = command:typeCheckArgument(i, input.arguments[i]);
 		end
 		local argString = (i > 1 and " " or "") .. commandArg.name;
-		local argColor = Colors.rainCloudGrey:alpha(255);
+		local argColor = Colors.rainCloudGrey:alpha(1);
 		if correctType == true then
 			argColor = Colors.ecoGreen;
 		elseif correctType == false then

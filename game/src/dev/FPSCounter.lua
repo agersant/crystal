@@ -55,7 +55,7 @@ FPSCounter.draw = function(self)
 
 	local width = numFramesRecorded;
 
-	love.graphics.setColor(Colors.darkViridian:alpha(255 * 0.7));
+	love.graphics.setColor(Colors.darkViridian:alpha(0.7));
 	love.graphics.rectangle("fill", paddingX, paddingY, width, height);
 
 	local x = paddingX + width - 1;

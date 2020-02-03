@@ -162,7 +162,7 @@ Navmesh.draw = function(self)
 	love.graphics.setLineWidth(0.2);
 	love.graphics.setPointSize(3);
 	for i, triangle in ipairs(self._triangles) do
-		love.graphics.setColor(Colors.cyan:alpha(255 * .25));
+		love.graphics.setColor(Colors.cyan:alpha(.25));
 		love.graphics.polygon("fill", triangle.vertices);
 		love.graphics.setColor(Colors.cyan);
 		love.graphics.polygon("line", triangle.vertices);

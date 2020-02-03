@@ -442,7 +442,7 @@ end
 Entity.drawShape = function(self, shape, color)
 	love.graphics.push();
 	love.graphics.translate(self._body:getX(), self._body:getY());
-	love.graphics.setColor(color:alpha(255 * .6));
+	love.graphics.setColor(color:alpha(.6));
 	if shape:getType() == "polygon" then
 		love.graphics.polygon("fill", shape:getPoints());
 	elseif shape:getType() == "circle" then

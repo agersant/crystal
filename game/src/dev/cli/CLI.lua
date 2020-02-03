@@ -133,7 +133,7 @@ CLI.draw = function(self)
 	love.graphics.setFont(font);
 
 	-- Draw background
-	love.graphics.setColor(Colors.darkViridian:alpha(255 * 0.7));
+	love.graphics.setColor(Colors.darkViridian:alpha(0.7));
 	love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight());
 
 	-- Draw input box
@@ -164,7 +164,7 @@ CLI.draw = function(self)
 	local caretY = inputY;
 	local caretAlpha = .5 * (1 + math.sin(love.timer.getTime() * 1000 / 100));
 	caretAlpha = caretAlpha * caretAlpha * caretAlpha;
-	love.graphics.setColor(Colors.white:alpha(255 * caretAlpha));
+	love.graphics.setColor(Colors.white:alpha(caretAlpha));
 	love.graphics.rectangle("fill", caretX, caretY, 1, font:getHeight());
 
 	-- Compute autocomplete content
