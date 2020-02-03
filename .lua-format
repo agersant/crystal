@@ -5,3 +5,4 @@ keep_simple_control_block_one_line: false
 keep_simple_function_one_line: false
 extra_sep_at_table_end: true
 single_quote_to_double_quote: true
+chop_down_table: true
