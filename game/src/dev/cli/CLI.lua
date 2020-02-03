@@ -110,13 +110,13 @@ end
 CLI.toggle = function(self)
 	self._isActive = not self._isActive;
 	if self._isActive then
-		textInputWasOn = love.keyboard.hasTextInput();
-		keyRepeatWasOn = love.keyboard.hasKeyRepeat();
+		self._textInputWasOn = love.keyboard.hasTextInput();
+		self._keyRepeatWasOn = love.keyboard.hasKeyRepeat();
 		love.keyboard.setTextInput(true);
 		love.keyboard.setKeyRepeat(true);
 	else
-		love.keyboard.setTextInput(textInputWasOn);
-		love.keyboard.setKeyRepeat(keyRepeatWasOn);
+		love.keyboard.setTextInput(self._textInputWasOn);
+		love.keyboard.setKeyRepeat(self._keyRepeatWasOn);
 	end
 end
 

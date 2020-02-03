@@ -7,7 +7,7 @@ local StringUtils = require("src/utils/StringUtils");
 
 local Assets = Class("Assets");
 
-local loadAsset, unloadAsset, isAssetLoaded, getAsset;
+local loadAsset, unloadAsset, isAssetLoaded, getAsset, getAssetType, refreshAsset;
 local loadPackage, unloadPackage;
 
 local getPathAndExtension = function(rawPath)
