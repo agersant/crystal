@@ -142,12 +142,6 @@ local cleanupThread = function( self, thread )
 	for childThread, _  in pairs( thread.childThreads ) do
 		childThread.parentThread = nil;
 	end
-	if thread == self._actionThread then
-		self._actionThread = nil;
-	end
-	if thread == self._taskThread then
-		self._taskThread = nil;
-	end
 end
 
 
