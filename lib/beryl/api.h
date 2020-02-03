@@ -38,6 +38,8 @@ typedef struct BPath {
 
 #ifdef _MSC_VER
 #define EXPORT __declspec(dllexport)
+#else
+#define EXPORT
 #endif
 
 EXPORT void generateNavmesh(BMap* map, int padding, BNavmesh* outNavmesh);
