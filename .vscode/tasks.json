@@ -1,9 +1,8 @@
 {
 	"version": "2.0.0",
 	"tasks": [
-		// Launch game
 		{
-			"label": "Run",
+			"label": "Launch Game",
 			"type": "process",
 			"options": {
 				"cwd": "${workspaceRoot}\\game"
@@ -13,16 +12,15 @@
 				"."
 			]
 		},
-		// Run unit tests
 		{
-			"label": "Test",
+			"label": "Run Test Suite",
 			"type": "process",
 			"group": {
 				"kind": "test",
 				"isDefault": true
 			},
 			"presentation": {
-				"reveal": "always",
+				"reveal": "always"
 			},
 			"options": {
 				"cwd": "${workspaceRoot}\\game"
@@ -46,9 +44,9 @@
 				}
 			}
 		},
-		// Build Beryl (Windows Release)
 		{
-			"label": "Build Beryl Release (Windows)",
+			"label": "Build Beryl",
+			"type": "shell",
 			"group": {
 				"kind": "build",
 				"isDefault": true
@@ -56,27 +54,12 @@
 			"options": {
 				"cwd": "${workspaceRoot}"
 			},
-			"command": "msbuild",
-			"args": [
-				"/m",
-				"/p:Configuration=Release;OutDir=${workspaceRoot}\\game\\",
-				".\\lib\\beryl\\beryl.sln"
-			],
-			"problemMatcher": "$msCompile"
-		},
-		// Build Beryl (Windows Debug)
-		{
-			"label": "Build Beryl Debug (Windows)",
-			"group": "build",
-			"options": {
-				"cwd": "${workspaceRoot}"
+			"command": ".\\build_beryl_windows.ps1",
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared",
+				"clear": false
 			},
-			"command": "msbuild",
-			"args": [
-				"/m",
-				"/p:Configuration=Debug;OutDir=${workspaceRoot}\\game\\",
-				".\\lib\\beryl\\beryl.sln"
-			],
 			"problemMatcher": "$msCompile"
 		}
 	]

@@ -37,21 +37,19 @@ This screenshot illustrates usage of the dev CLI to spawn entities of various ty
 ## Windows
 
 ### Dependencies
-1. Install the 32-bit version of [Love2D](https://love2d.org/) (0.10.2 as of this writing)
-2. Download the [Visual C++ Build Tools](http://landinghub.visualstudio.com/visual-cpp-build-tools)
-3. Run the installer, making sure the "Windows 10 SDK" feature is part of the installation
-4. Add `C:\Program Files (x86)\LOVE` to your path
-5. Add `C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin` to your path
-
-### Build and run using Visual Studio Code
-1. Open this project in Visual Studio and run the task `Build Beryl (Windows Release)`
-2. (Optional) Run the task `Run Tests`
-3. Run the task `Run Game`
-4. Game is running! Press ` to access the ingame CLI
+1. Install the 64-bit version of [Love2D](https://love2d.org/) (0.11.3 as of this writing)
+2. Install the [Visual C++ Build Tools](http://landinghub.visualstudio.com/visual-cpp-build-tools), selecting `Desktop Development With C++`
+3. Install [Meson](https://github.com/mesonbuild/meson/releases)
+4. Add `C:\Program Files\LOVE` to your path
+4. Add `C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build` to your path (this may be slightly inaccurate if you didn't install the community edition of the Visual C++ build tools)
 
 ### Build and run without Visual Studio Code
-1. In `crystal\lib\beryl`, open a command prompt and execute `msbuild /p:Configuration=Release`
-2. Copy the resulting dll from `crystal\lib\beryl\bin\Release` to `crystal\game`
-3. (Optional) Open a command prompt in `crystal\game` and execute `love . /test`
-4. Open a command prompt in `crystal\game` and execute `love .`
-5. Game is running! Press ` to access the ingame CLI
+1. From the top level of this repository, execute the `build_beryl_windows.ps1` Powershell script
+2. From `crystal\game`, execute `love .`
+3. Game is running! Press ` to access the ingame CLI
+
+### Build and run using Visual Studio Code
+1. Open this project in Visual Studio and run the task `Build Beryl`
+2. Run the task `Launch Game`
+3. Game is running! Press ` to access the ingame CLI
+

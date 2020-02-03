@@ -16,3 +16,5 @@ c_cpp_properties.json
 *.pdb
 *.log
 *.tlog
+
+builddir/

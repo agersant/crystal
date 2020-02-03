@@ -2,8 +2,8 @@
 #include "api.h"
 #include "types.h"
 
-#include "../../external/gpc/gpc.h"
-#include "../../external/triangle/triangle.h"
+#include "../external/gpc/gpc.h"
+#include "../external/triangle/triangle.h"
 
 typedef struct triangulateio BTriangulation;
 
