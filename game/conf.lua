@@ -4,7 +4,6 @@ io.stdout:setvbuf("no");
 io.stderr:setvbuf("no");
 
 love.filesystem.setIdentity("crystal");
-local release = love.filesystem.isFused();
 
 love.conf = function(options)
 	options.console = false;
