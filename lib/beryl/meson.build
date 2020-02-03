@@ -6,6 +6,10 @@ if meson.get_compiler('c').get_id() == 'msvc'
   add_global_arguments('-DNO_TIMER', language : 'c')
 endif
 
+if host_machine.cpu_family() == 'x86'
+  add_global_arguments('-DCPU86', language : 'c')
+endif
+
 library('beryl',
            'src/api.c',
            'src/linked_list.c',
@@ -15,5 +19,5 @@ library('beryl',
            'src/vector_math.c',
            'external/gpc/gpc.c',
            'external/triangle/triangle.c',
-           c_args : ['-DANSI_DECLARATORS', '-DTRILIBRARY', '-DCPU86']
+           c_args : ['-DANSI_DECLARATORS', '-DTRILIBRARY']
         )
