@@ -15,6 +15,9 @@ if host_machine.cpu_family() == 'x86'
   add_project_arguments('-DCPU86', language : 'c')
 endif
 
+cc = meson.get_compiler('c')
+math_library = cc.find_library('m', required : false)
+
 library('beryl',
            'beryl/api.c',
            'beryl/linked_list.c',
@@ -25,4 +28,5 @@ library('beryl',
            'external/triangle/triangle.c',
            'external/gpc/gpc.c',
            c_args : ['-DANSI_DECLARATORS', '-DTRILIBRARY'],
+           dependencies : [math_library],
         )
