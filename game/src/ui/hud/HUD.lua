@@ -1,6 +1,6 @@
 require("src/utils/OOP");
 local Scene = require("src/scene/Scene");
-local Damage = require("src/ui/hud/damage/Damage");
+local DamageNumbers = require("src/ui/hud/damage/DamageNumbers");
 local Dialog = require("src/ui/hud/Dialog");
 
 local HUD = Class("HUD");
@@ -15,8 +15,8 @@ end
 
 HUD.init = function(self)
 	self._widgets = {};
-	self._damage = Damage:new();
-	table.insert(self._widgets, self._damage);
+	self._damageNumbers = DamageNumbers:new();
+	table.insert(self._widgets, self._damageNumbers);
 	self._dialog = Dialog:new();
 	table.insert(self._widgets, self._dialog);
 end
@@ -45,7 +45,7 @@ end
 HUD.showDamage = function(self, victim, amount)
 	assert(victim);
 	assert(amount);
-	self._damage:show(victim, amount);
+	self._damageNumbers:show(victim, amount);
 end
 
 local instance = HUD:new();

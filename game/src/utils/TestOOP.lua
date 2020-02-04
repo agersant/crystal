@@ -2,6 +2,7 @@ local tests = {};
 
 tests[#tests + 1] = {name = "To string"};
 tests[#tests].body = function()
+	Class:resetIndex();
 	local Fruit = Class("Fruit");
 	local Peach = Class("Peach", Fruit);
 	local Bird = Class("Bird");
@@ -13,6 +14,7 @@ end
 
 tests[#tests + 1] = {name = "Get class name"};
 tests[#tests].body = function()
+	Class:resetIndex();
 	local Fruit = Class("Fruit");
 	local Peach = Class("Peach", Fruit);
 	local myFruit = Fruit:new();
@@ -23,6 +25,8 @@ end
 
 tests[#tests + 1] = {name = "Is instance of"};
 tests[#tests].body = function()
+	Class:resetIndex();
+
 	local Fruit = Class("Fruit");
 	local myFruit = Fruit:new();
 	assert(myFruit:isInstanceOf(Fruit));
@@ -33,6 +37,7 @@ end
 
 tests[#tests + 1] = {name = "Is instance of inheritance"};
 tests[#tests].body = function()
+	Class:resetIndex();
 	local Fruit = Class("Fruit");
 	local Peach = Class("Peach", Fruit);
 	local Apple = Class("Apple", Fruit);
@@ -49,6 +54,7 @@ end
 
 tests[#tests + 1] = {name = "Get by name"};
 tests[#tests].body = function()
+	Class:resetIndex();
 	local Fruit = Class("Fruit");
 	local Peach = Class("Peach", Fruit);
 	assert(Class:getByName("Fruit") == Fruit);

@@ -1,5 +1,5 @@
 require("src/utils/OOP");
-local Teams = require("src//combat/Teams");
+local Teams = require("src/combat/Teams");
 local Actions = require("src/scene/Actions");
 local Script = require("src/scene/Script");
 local InputDrivenController = require("src/scene/controller/InputDrivenController");

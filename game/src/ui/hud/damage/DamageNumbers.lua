@@ -2,17 +2,17 @@ require("src/utils/OOP");
 local Widget = require("src/ui/Widget");
 local Hit = require("src/ui/hud/damage/Hit");
 
-local Damage = Class("Damage", Widget);
+local DamageNumbers = Class("DamageNumbers", Widget);
 
-Damage.init = function(self)
-	Damage.super.init(self);
+DamageNumbers.init = function(self)
+	DamageNumbers.super.init(self);
 end
 
-Damage.show = function(self, victim, amount)
+DamageNumbers.show = function(self, victim, amount)
 	assert(victim);
 	assert(amount);
 	local hit = Hit:new(victim, amount);
 	self:addChild(hit);
 end
 
-return Damage;
+return DamageNumbers;

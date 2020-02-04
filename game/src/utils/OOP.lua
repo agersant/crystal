@@ -24,6 +24,10 @@ local makeIsInstanceOf = function(class)
 	end
 end
 
+local resetIndex = function(self)
+	classIndex = {};
+end
+
 local getClassName = function(self)
 	return self._class._name;
 end
@@ -52,6 +56,7 @@ local declareClass = function(self, name, baseClass)
 	class.getClassName = getClassName;
 	class.isInstanceOf = makeIsInstanceOf(class);
 
+	assert(not classIndex[name]);
 	classIndex[name] = class;
 
 	return class;
@@ -59,3 +64,4 @@ end
 
 Class = setmetatable({}, {__call = declareClass});
 Class.getByName = getClassByName;
+Class.resetIndex = resetIndex;
