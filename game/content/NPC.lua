@@ -1,11 +1,11 @@
-require("src/utils/OOP");
-local Assets = require("src/resources/Assets");
-local Actions = require("src/scene/Actions");
-local Script = require("src/scene/Script");
-local Controller = require("src/scene/component/Controller");
-local Sprite = require("src/scene/component/Sprite");
-local Entity = require("src/scene/entity/Entity");
-local HUD = require("src/ui/hud/HUD");
+require("engine/utils/OOP");
+local Assets = require("engine/resources/Assets");
+local Actions = require("engine/scene/Actions");
+local Script = require("engine/scene/Script");
+local Controller = require("engine/scene/component/Controller");
+local Sprite = require("engine/scene/component/Sprite");
+local Entity = require("engine/scene/entity/Entity");
+local HUD = require("engine/ui/hud/HUD");
 
 local NPC = Class("NPC", Entity);
 

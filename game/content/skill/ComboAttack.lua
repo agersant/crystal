@@ -1,6 +1,6 @@
-require("src/utils/OOP");
-local Skill = require("src/combat/Skill");
-local Actions = require("src/scene/Actions");
+require("engine/utils/OOP");
+local Skill = require("engine/combat/Skill");
+local Actions = require("engine/scene/Actions");
 
 local ComboAttack = Class("ComboAttack", Skill);
 

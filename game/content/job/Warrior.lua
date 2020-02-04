@@ -1,9 +1,9 @@
-require("src/utils/OOP");
+require("engine/utils/OOP");
 local ComboAttack = require("content/skill/ComboAttack");
 local Dash = require("content/skill/Dash");
-local Assets = require("src/resources/Assets");
-local Sprite = require("src/scene/component/Sprite");
-local Entity = require("src/scene/entity/Entity");
+local Assets = require("engine/resources/Assets");
+local Sprite = require("engine/scene/component/Sprite");
+local Entity = require("engine/scene/entity/Entity");
 
 local Warrior = Class("Warrior", Entity);
 
