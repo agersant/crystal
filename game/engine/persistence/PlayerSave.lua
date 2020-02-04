@@ -4,7 +4,7 @@ local Party = require("engine/persistence/Party");
 local PartyMember = require("engine/persistence/PartyMember");
 local TableUtils = require("engine/utils/TableUtils");
 
-local PlayerSave = Class("PartyMember");
+local PlayerSave = Class("PlayerSave");
 
 -- PUBLIC API
 
