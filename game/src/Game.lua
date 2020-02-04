@@ -13,7 +13,7 @@ love.load = function()
 	require("src/graphics/GFXCommands"); -- Register commands
 	require("src/persistence/PlayerSaveCommands"); -- Register commands
 	require("src/scene/MapSceneCommands"); -- Register commands
-	Content:requireAll("src/content");
+	Content:requireAll("content");
 	Log:info("Completed startup");
 end
 
