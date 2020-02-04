@@ -21,7 +21,7 @@ jobs:
     - name: Install Meson
       run:  |
         curl -L -o meson.msi https://github.com/mesonbuild/meson/releases/download/0.53.1/meson-0.53.1-64.msi
-        cmd /c start /wait msiexec.exe /i meson.msi /quiet
+        msiexec.exe /i meson.msi /quiet
         echo "##[add-path]C:\Program Files\Meson"
     - name: Build Beryl
       run: .\build_beryl_windows.ps1
