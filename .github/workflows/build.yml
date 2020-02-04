@@ -11,11 +11,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Add vcvars location to path
+      run: echo "##[add-path]C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build"
     - name: Install Love 2D
       run:  |
-        curl -L -o love.msi https://bitbucket.org/rude/love/downloads/love-11.3-win64.exe
-        msiexec.exe /i love.msi /qn
-        echo "##[add-path]C:\Program Files\LOVE"
+        curl -L -o love.zip https://bitbucket.org/rude/love/downloads/love-11.3-win64.zip
+        unzip love.zip
+        cp .\love-11.3-win64\love.exe .\love.exe
     - name: Install Meson
       run:  |
         curl -L -o meson.msi https://github.com/mesonbuild/meson/releases/download/0.53.1/meson-0.53.1-64.msi
