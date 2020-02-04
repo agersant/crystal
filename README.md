@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/agersant/crystal.svg?branch=master)](https://travis-ci.org/agersant/crystal)
+[![Actions Status](https://github.com/agersant/crystal/workflows/Build/badge.svg)](https://github.com/agersant/crystal/actions)
 
 This project is a playground for me to write Lua and C game code, experimenting with ideas (old and new) and focusing on features I want to explore outside of a shipping project.
 
