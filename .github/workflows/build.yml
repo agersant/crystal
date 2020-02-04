@@ -17,7 +17,7 @@ jobs:
       run:  |
         curl -L -o love.zip https://bitbucket.org/rude/love/downloads/love-11.3-win64.zip
         unzip love.zip
-        cp .\love-11.3-win64\love.exe .\love.exe
+        echo "##[add-path]${{ github.workspace }}\love-11.3-win64"
     - name: Install Meson
       run:  |
         curl -L -o meson.msi https://github.com/mesonbuild/meson/releases/download/0.53.1/meson-0.53.1-64.msi
