@@ -11,7 +11,19 @@
 			"args": [
 				"."
 			],
-			"problemMatcher": []
+			"problemMatcher": {
+				"owner": "lua",
+				"fileLocation": [
+					"relative",
+					"${workspaceRoot}\\game"
+				],
+				"pattern": {
+					"regexp": "^Error:\\s*([^\\s]*):(\\d+):\\s+(.*)$",
+					"file": 1,
+					"line": 2,
+					"message": 3
+				}
+			}
 		},
 		{
 			"label": "Run Test Suite",
