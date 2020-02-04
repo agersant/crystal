@@ -27,8 +27,6 @@ NPC.init = function(self, scene)
 	local sheet = Assets:getSpritesheet("assets/spritesheet/Sahagin.lua");
 	self:addSprite(Sprite:new(sheet));
 	self:addPhysicsBody("static");
-	self:addLocomotion();
-	self:setMovementSpeed(40);
 	self:addCollisionPhysics();
 	self:setCollisionRadius(4);
 	self:addScriptRunner();
