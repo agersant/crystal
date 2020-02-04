@@ -9,7 +9,7 @@ function VsVarsAll() {
 VsVarsAll
 Push-Location -StackName 'DirStack'
 Set-Location .\lib
-New-Item -Name builddir -ItemType Directory -Force
+New-Item -Name builddir -ItemType Directory -Force | Out-Null
 meson builddir --backend ninja --buildtype release
 Set-Location builddir
 ninja
