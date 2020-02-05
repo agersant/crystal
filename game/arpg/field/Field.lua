@@ -3,7 +3,7 @@ local MapScene = require("engine/scene/MapScene");
 local Teams = require("engine/combat/Teams");
 local Party = require("arpg/party/Party");
 local PartyMember = require("arpg/party/PartyMember");
-local PlayerSave = require("engine/persistence/PlayerSave");
+local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/scene/Scene");
 local UIScene = require("engine/ui/UIScene");
 local TitleScreen = require("engine/ui/frontend/TitleScreen");
@@ -15,7 +15,7 @@ local Field = Class("Field", MapScene);
 -- IMPLEMENTATION
 
 local spawnParty = function(self, x, y)
-	local party = PlayerSave:getCurrent():getParty();
+	local party = Persistence:getSaveData():getParty();
 	assert(party);
 	for i, partyMember in ipairs(party:getMembers()) do
 		local className = partyMember:getInstanceClass();
@@ -74,31 +74,6 @@ Field.checkLoseCondition = function(self)
 		end
 	end
 	Scene:setCurrent(UIScene:new(TitleScreen:new()));
-end
-
--- SAVE
-
-Field.saveTo = function(self, playerSave)
-	assert(playerSave);
-
-	local party = Party:new();
-	for i, entity in ipairs(self._partyEntities) do
-		local partyMember = PartyMember:fromEntity(entity);
-		party:addMember(partyMember);
-	end
-	playerSave:setParty(party);
-
-	assert(#self._partyEntities > 0);
-	local partyLeader = self._partyEntities[1];
-	local x, y = partyLeader:getPosition();
-	playerSave:setLocation(self._mapName, x, y);
-end
-
-Field.loadFrom = function(self, playerSave)
-	local map, x, y = playerSave:getLocation();
-	local party = playerSave:getParty();
-	local scene = Field:new(map, party, x, y);
-	Scene:setCurrent(scene);
 end
 
 return Field;

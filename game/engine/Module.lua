@@ -3,7 +3,7 @@ require("engine/utils/OOP");
 local Module = Class("Module");
 
 Module.init = function(self)
-	self.classes = {MapScene = require("engine/scene/MapScene")};
+	self.classes = {MapScene = require("engine/scene/MapScene"), SaveData = require("engine/persistence/BaseSaveData")};
 	self.testFiles = {};
 end
 

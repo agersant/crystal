@@ -1,14 +1,12 @@
 local CLI = require("engine/dev/cli/CLI");
 local DebugFlags = require("engine/dev/DebugFlags");
-local PlayerSave = require("engine/persistence/PlayerSave");
+local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/scene/Scene");
 local Entity = require("engine/scene/entity/Entity");
 local Module = require("engine/Module");
 
 local loadMap = function(mapName)
-	local playerSave = PlayerSave:getCurrent();
-	local currentScene = Scene:getCurrent();
-	currentScene:saveTo(playerSave);
+	Persistence:getSaveData():save();
 	local sceneClass = Module:getCurrent().classes.MapScene;
 	local newScene = sceneClass:new("assets/map/" .. mapName .. ".lua");
 	Scene:setCurrent(newScene);

@@ -3,6 +3,7 @@ local FPSCounter = require("engine/dev/FPSCounter");
 local Log = require("engine/dev/Log");
 local CLI = require("engine/dev/cli/CLI");
 local Input = require("engine/input/Input");
+local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/scene/Scene");
 local HUD = require("engine/ui/hud/HUD");
 local Module = require("engine/Module");
@@ -11,12 +12,13 @@ love.load = function()
 	love.keyboard.setTextInput(false);
 
 	-- Register CLI commands
-	require("engine/dev/HotReload");
+	require("engine/dev/HotReloadCommands");
 	require("engine/graphics/GFXCommands");
-	require("engine/persistence/PlayerSaveCommands");
+	require("engine/persistence/PersistenceCommands");
 	require("engine/scene/MapSceneCommands");
 
 	Module:setCurrent(require(MODULE):new());
+	Persistence:init();
 	Log:info("Completed startup");
 end
 

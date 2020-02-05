@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local PlayerSave = require("engine/persistence/PlayerSave");
+local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/scene/Scene");
 local Controller = require("engine/scene/component/Controller");
 local Entity = require("engine/scene/entity/Entity");
@@ -17,9 +17,7 @@ local doTeleport = function(self, triggeredBy)
 	local dx, dy = px - x, py - y;
 	local finalX, finalY = teleportEntity._targetX + dx, teleportEntity._targetY;
 
-	local playerSave = PlayerSave:getCurrent();
-	local currentScene = Scene:getCurrent();
-	currentScene:saveTo(playerSave);
+	Persistence:getSaveData():save();
 	local newScene = Field:new(teleportEntity._targetMap, finalX, finalY);
 	Scene:setCurrent(newScene);
 
