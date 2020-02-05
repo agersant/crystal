@@ -28,6 +28,10 @@ local resetIndex = function(self)
 	classIndex = {};
 end
 
+local getClass = function(self)
+	return self._class;
+end
+
 local getClassName = function(self)
 	return self._class._name;
 end
@@ -53,6 +57,7 @@ local declareClass = function(self, name, baseClass)
 
 	class.super = baseClass;
 	class.new = objectConstuctor;
+	class.getClass = getClass;
 	class.getClassName = getClassName;
 	class.isInstanceOf = makeIsInstanceOf(class);
 

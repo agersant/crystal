@@ -12,6 +12,17 @@ tests[#tests].body = function()
 	assert(tostring(Fruit) ~= tostring(Peach));
 end
 
+tests[#tests + 1] = {name = "Get class"};
+tests[#tests].body = function()
+	Class:resetIndex();
+	local Fruit = Class("Fruit");
+	local Peach = Class("Peach", Fruit);
+	local myFruit = Fruit:new();
+	local myPeach = Peach:new();
+	assert(myFruit:getClass() == Fruit);
+	assert(myPeach:getClass() == Peach);
+end
+
 tests[#tests + 1] = {name = "Get class name"};
 tests[#tests].body = function()
 	Class:resetIndex();
