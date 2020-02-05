@@ -1,5 +1,4 @@
 local AlignGoal = require("engine/ai/movement/AlignGoal");
-local Party = require("arpg/party/Party");
 local MapScene = require("engine/scene/MapScene");
 local Entity = require("engine/scene/entity/Entity");
 
@@ -7,8 +6,7 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Get position"};
 tests[#tests].body = function()
-	local party = Party:new();
-	local scene = MapScene:new("assets/map/test/empty.lua", party);
+	local scene = MapScene:new("assets/map/test/empty.lua");
 
 	local me = Entity:new(scene);
 	me:addPhysicsBody();
@@ -26,8 +24,7 @@ end
 
 tests[#tests + 1] = {name = "Accept"};
 tests[#tests].body = function()
-	local party = Party:new();
-	local scene = MapScene:new("assets/map/test/empty.lua", party);
+	local scene = MapScene:new("assets/map/test/empty.lua");
 
 	local me = Entity:new(scene);
 	me:addPhysicsBody();
@@ -47,8 +44,7 @@ end
 
 tests[#tests + 1] = {name = "Reject"};
 tests[#tests].body = function()
-	local party = Party:new();
-	local scene = MapScene:new("assets/map/test/empty.lua", party);
+	local scene = MapScene:new("assets/map/test/empty.lua");
 
 	local me = Entity:new(scene);
 	me:addPhysicsBody();

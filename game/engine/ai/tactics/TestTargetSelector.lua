@@ -1,6 +1,5 @@
 local TargetSelector = require("engine/ai/tactics/TargetSelector");
 local Teams = require("engine/combat/Teams");
-local Party = require("arpg/party/Party");
 local MapScene = require("engine/scene/MapScene");
 local Entity = require("engine/scene/entity/Entity");
 
@@ -9,8 +8,7 @@ local tests = {};
 tests[#tests + 1] = {name = "Get Nearest Enemy"};
 tests[#tests].body = function()
 
-	local party = Party:new();
-	local scene = MapScene:new("assets/map/test/empty.lua", party);
+	local scene = MapScene:new("assets/map/test/empty.lua");
 
 	local me = Entity:new(scene);
 	local friend = Entity:new(scene);
@@ -40,8 +38,7 @@ end
 tests[#tests + 1] = {name = "Get Nearest Ally"};
 tests[#tests].body = function()
 
-	local party = Party:new();
-	local scene = MapScene:new("assets/map/test/empty.lua", party);
+	local scene = MapScene:new("assets/map/test/empty.lua");
 
 	local me = Entity:new(scene);
 	local friendA = Entity:new(scene);

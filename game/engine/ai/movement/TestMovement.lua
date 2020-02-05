@@ -1,5 +1,4 @@
 local Movement = require("engine/ai/movement/Movement");
-local Party = require("arpg/party/Party");
 local Assets = require("engine/resources/Assets");
 local MapScene = require("engine/scene/MapScene");
 local Entity = require("engine/scene/entity/Entity");
@@ -12,8 +11,7 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Walk to point"};
 tests[#tests].body = function()
-	local party = Party:new();
-	local scene = MapScene:new("assets/map/test/empty.lua", party);
+	local scene = MapScene:new("assets/map/test/empty.lua");
 
 	local startX, startY = 20, 20;
 	local endX, endY = 300, 200;

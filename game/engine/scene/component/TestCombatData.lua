@@ -1,4 +1,3 @@
-local Party = require("arpg/party/Party");
 local Damage = require("engine/combat/Damage");
 local CombatData = require("engine/scene/component/CombatData");
 local Entity = require("engine/scene/entity/Entity");
@@ -8,8 +7,7 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Kill"};
 tests[#tests].body = function()
-	local party = Party:new();
-	local scene = MapScene:new("assets/map/test/empty.lua", party);
+	local scene = MapScene:new("assets/map/test/empty.lua");
 	local entity = Entity:new(scene);
 	local combatData = CombatData:new(entity);
 	assert(not combatData:isDead());
@@ -19,8 +17,7 @@ end
 
 tests[#tests + 1] = {name = "Inflicting damage reduces health"};
 tests[#tests].body = function()
-	local party = Party:new();
-	local scene = MapScene:new("assets/map/test/empty.lua", party);
+	local scene = MapScene:new("assets/map/test/empty.lua");
 
 	local attacker = Entity:new(scene);
 	local victim = Entity:new(scene);

@@ -1,4 +1,3 @@
-local Party = require("arpg/party/Party");
 local MapScene = require("engine/scene/MapScene");
 local Script = require("engine/script/Script");
 local InputDrivenController = require("engine/scene/controller/InputDrivenController");
@@ -9,8 +8,7 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Blocks script during say"};
 tests[#tests].body = function()
-	local party = Party:new();
-	local scene = MapScene:new("assets/map/test/empty.lua", party);
+	local scene = MapScene:new("assets/map/test/empty.lua");
 	local player = Entity:new(scene);
 	player:addScriptRunner();
 	local controller = InputDrivenController:new(player, function()
