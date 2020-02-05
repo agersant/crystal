@@ -1,6 +1,6 @@
 local Party = require("engine/persistence/Party");
 local MapScene = require("engine/scene/MapScene");
-local Script = require("engine/scene/Script");
+local Script = require("engine/script/Script");
 local InputDrivenController = require("engine/scene/controller/InputDrivenController");
 local Entity = require("engine/scene/entity/Entity");
 local Dialog = require("engine/ui/hud/Dialog");

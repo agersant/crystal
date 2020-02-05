@@ -1,4 +1,4 @@
-local Script = require("engine/scene/Script");
+local Script = require("engine/script/Script");
 
 local tests = {};
 

@@ -6,7 +6,7 @@ local Entity = require("engine/scene/entity/Entity");
 local Controller = require("engine/scene/component/Controller");
 local Sprite = require("engine/scene/component/Sprite");
 local Scene = require("engine/scene/Scene");
-local Script = require("engine/scene/Script");
+local Script = require("engine/script/Script");
 
 local tests = {};
 

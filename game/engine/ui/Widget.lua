@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local Script = require("engine/scene/Script");
+local Script = require("engine/script/Script");
 local GFXConfig = require("engine/graphics/GFXConfig");
 local Colors = require("engine/resources/Colors");
 local TableUtils = require("engine/utils/TableUtils");

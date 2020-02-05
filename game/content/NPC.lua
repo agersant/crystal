@@ -1,7 +1,7 @@
 require("engine/utils/OOP");
 local Assets = require("engine/resources/Assets");
 local Actions = require("engine/scene/Actions");
-local Script = require("engine/scene/Script");
+local Script = require("engine/script/Script");
 local Controller = require("engine/scene/component/Controller");
 local Sprite = require("engine/scene/component/Sprite");
 local Entity = require("engine/scene/entity/Entity");

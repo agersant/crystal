@@ -1,7 +1,7 @@
 require("engine/utils/OOP");
 local Input = require("engine/input/Input");
 local Actions = require("engine/scene/Actions");
-local Script = require("engine/scene/Script");
+local Script = require("engine/script/Script");
 local InputDrivenController = require("engine/scene/controller/InputDrivenController");
 local TableUtils = require("engine/utils/TableUtils");
 

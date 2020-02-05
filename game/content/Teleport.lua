@@ -2,7 +2,7 @@ require("engine/utils/OOP");
 local PlayerSave = require("engine/persistence/PlayerSave");
 local MapScene = require("engine/scene/MapScene");
 local Scene = require("engine/scene/Scene");
-local Script = require("engine/scene/Script");
+local Script = require("engine/script/Script");
 local Controller = require("engine/scene/component/Controller");
 local Entity = require("engine/scene/entity/Entity");
 

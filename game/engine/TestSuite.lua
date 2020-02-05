@@ -12,7 +12,7 @@ local testFiles = {
 	"engine/resources/TestAssets",
 	"engine/resources/map/TestMapCollisionChainData",
 	"engine/resources/map/TestNavmesh",
-	"engine/scene/TestScript",
+	"engine/script/TestScript",
 	"engine/scene/component/TestCombatData",
 	"engine/ui/TestTextInput",
 	"engine/ui/TestWidget",
