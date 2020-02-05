@@ -6,5 +6,6 @@ if Features.unitTesting then
 	local success = TestSuite.execute();
 	love.event.quit(success and 0 or 1);
 else
+	MODULE = "arpg/ARPG";
 	require("engine/Game");
 end

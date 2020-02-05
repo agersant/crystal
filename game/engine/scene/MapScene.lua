@@ -1,18 +1,12 @@
 require("engine/utils/OOP");
 local Log = require("engine/dev/Log");
 local TargetSelector = require("engine/ai/tactics/TargetSelector");
-local Teams = require("engine/combat/Teams");
-local Party = require("engine/persistence/Party");
-local PartyMember = require("engine/persistence/PartyMember");
 local Assets = require("engine/resources/Assets");
 local Colors = require("engine/resources/Colors");
 local CollisionFilters = require("engine/scene/CollisionFilters");
+local Entity = require("engine/scene/entity/Entity");
 local Camera = require("engine/scene/Camera");
 local Scene = require("engine/scene/Scene");
-local Entity = require("engine/scene/entity/Entity");
-local UIScene = require("engine/ui/UIScene");
-local TitleScreen = require("engine/ui/frontend/TitleScreen");
-local TableUtils = require("engine/utils/TableUtils");
 
 local MapScene = Class("MapScene", Scene);
 
@@ -76,17 +70,9 @@ local endContact = function(self, fixtureA, fixtureB, contact)
 	return beginOrEndContact(self, fixtureA, fixtureB, contact, "-");
 end
 
-local spawnParty = function(self, party, x, y)
-	assert(party);
-	for i, partyMember in ipairs(party:getMembers()) do
-		local entity = partyMember:spawn(self, {});
-		entity:setPosition(x, y);
-	end
-end
-
 -- PUBLIC API
 
-MapScene.init = function(self, mapName, party, partyX, partyY)
+MapScene.init = function(self, mapName)
 	Log:info("Instancing scene for map: " .. tostring(mapName));
 	MapScene.super.init(self);
 
@@ -117,10 +103,6 @@ MapScene.init = function(self, mapName, party, partyX, partyY)
 	local mapWidth = self._map:getWidthInPixels();
 	local mapHeight = self._map:getHeightInPixels();
 	self._camera = Camera:new(mapWidth, mapHeight);
-
-	self._partyX = partyX or mapWidth / 2;
-	self._partyY = partyY or mapHeight / 2;
-	spawnParty(self, party, self._partyX, self._partyY);
 
 	self:update(0);
 end
@@ -215,13 +197,9 @@ MapScene.getCamera = function(self)
 	return self._camera;
 end
 
--- MAP
-
 MapScene.getMap = function(self)
 	return self._map;
 end
-
--- AI
 
 MapScene.getTargetSelector = function(self)
 	return self._targetSelector;
@@ -229,64 +207,6 @@ end
 
 MapScene.findPath = function(self, startX, startY, targetX, targetY)
 	return self._map:findPath(startX, startY, targetX, targetY);
-end
-
--- PARTY
-
-MapScene.addEntityToParty = function(self, entity)
-	assert(not TableUtils.contains(self._partyEntities, entity));
-	table.insert(self._partyEntities, entity);
-	self._camera:addTrackedEntity(entity);
-	entity:setTeam(Teams.party);
-end
-
-MapScene.removeEntityFromParty = function(self, entity)
-	assert(TableUtils.contains(self._partyEntities, entity));
-	for i, partyEntity in ipairs(self._partyEntities) do
-		if entity == partyEntity then
-			table.remove(self._partyEntities, i);
-			return;
-		end
-	end
-	self._camera:removeTrackedEntity(entity);
-end
-
-MapScene.getPartyMemberEntities = function(self)
-	return TableUtils.shallowCopy(self._partyEntities);
-end
-
-MapScene.checkLoseCondition = function(self)
-	for _, partyEntity in ipairs(self._partyEntities) do
-		if not partyEntity:isDead() then
-			return;
-		end
-	end
-	Scene:setCurrent(UIScene:new(TitleScreen:new()));
-end
-
--- SAVE
-
-MapScene.saveTo = function(self, playerSave)
-	assert(playerSave);
-
-	local party = Party:new();
-	for i, entity in ipairs(self._partyEntities) do
-		local partyMember = PartyMember:fromEntity(entity);
-		party:addMember(partyMember);
-	end
-	playerSave:setParty(party);
-
-	assert(#self._partyEntities > 0);
-	local partyLeader = self._partyEntities[1];
-	local x, y = partyLeader:getPosition();
-	playerSave:setLocation(self._mapName, x, y);
-end
-
-MapScene.loadFrom = function(self, playerSave)
-	local map, x, y = playerSave:getLocation();
-	local party = playerSave:getParty();
-	local scene = MapScene:new(map, party, x, y);
-	Scene:setCurrent(scene);
 end
 
 return MapScene;

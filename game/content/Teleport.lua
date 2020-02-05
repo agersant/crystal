@@ -1,10 +1,9 @@
 require("engine/utils/OOP");
 local PlayerSave = require("engine/persistence/PlayerSave");
-local MapScene = require("engine/scene/MapScene");
 local Scene = require("engine/scene/Scene");
-local Script = require("engine/script/Script");
 local Controller = require("engine/scene/component/Controller");
 local Entity = require("engine/scene/entity/Entity");
+local Field = require("arpg/field/Field");
 
 local Teleport = Class("Teleport", Entity);
 local TeleportController = Class("TeleportController", Controller);
@@ -21,7 +20,7 @@ local doTeleport = function(self, triggeredBy)
 	local playerSave = PlayerSave:getCurrent();
 	local currentScene = Scene:getCurrent();
 	currentScene:saveTo(playerSave);
-	local newScene = MapScene:new(teleportEntity._targetMap, playerSave:getParty(), finalX, finalY);
+	local newScene = Field:new(teleportEntity._targetMap, playerSave:getParty(), finalX, finalY);
 	Scene:setCurrent(newScene);
 
 	local teleportAngle = teleportEntity:getAngle();

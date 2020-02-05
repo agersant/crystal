@@ -16,6 +16,9 @@ end
 Scene.saveTo = function(self, playerSave)
 end
 
+Scene.loadFrom = function(self, playerSave)
+end
+
 -- STATIC
 
 local currentScene = Scene:new();

@@ -1,19 +1,22 @@
 local GFXConfig = require("engine/graphics/GFXConfig");
 local FPSCounter = require("engine/dev/FPSCounter");
-local HotReload = require("engine/dev/HotReload");
 local Log = require("engine/dev/Log");
 local CLI = require("engine/dev/cli/CLI");
 local Input = require("engine/input/Input");
-local Content = require("engine/resources/Content");
 local Scene = require("engine/scene/Scene");
 local HUD = require("engine/ui/hud/HUD");
+local Module = require("engine/Module");
 
 love.load = function()
 	love.keyboard.setTextInput(false);
-	require("engine/graphics/GFXCommands"); -- Register commands
-	require("engine/persistence/PlayerSaveCommands"); -- Register commands
-	require("engine/scene/MapSceneCommands"); -- Register commands
-	Content:requireAll("content");
+
+	-- Register CLI commands
+	require("engine/dev/HotReload");
+	require("engine/graphics/GFXCommands");
+	require("engine/persistence/PlayerSaveCommands");
+	require("engine/scene/MapSceneCommands");
+
+	Module:setCurrent(require(MODULE):new());
 	Log:info("Completed startup");
 end
 

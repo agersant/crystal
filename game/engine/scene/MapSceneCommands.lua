@@ -1,15 +1,17 @@
 local CLI = require("engine/dev/cli/CLI");
 local DebugFlags = require("engine/dev/DebugFlags");
 local PlayerSave = require("engine/persistence/PlayerSave");
-local MapScene = require("engine/scene/MapScene");
 local Scene = require("engine/scene/Scene");
 local Entity = require("engine/scene/entity/Entity");
+local Module = require("engine/Module");
 
 local loadMap = function(mapName)
 	local playerSave = PlayerSave:getCurrent();
 	local currentScene = Scene:getCurrent();
 	currentScene:saveTo(playerSave);
-	local newScene = MapScene:new("assets/map/" .. mapName .. ".lua", playerSave:getParty());
+	local sceneClass = Module:getCurrent().classes.MapScene;
+	-- TODO remove party stuff from here
+	local newScene = sceneClass:new("assets/map/" .. mapName .. ".lua", playerSave:getParty());
 	Scene:setCurrent(newScene);
 end
 
