@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local PlayerController = require("engine/scene/controller/PlayerController");
 
 local PartyMember = Class("PartyMember");
 
@@ -24,23 +23,6 @@ end
 
 PartyMember.toPOD = function(self)
 	return {instanceClass = self:getInstanceClass(), assignedPlayer = self:getAssignedPlayer()};
-end
-
-PartyMember.spawn = function(self, scene, options)
-	assert(type(options) == "table");
-	local className = self:getInstanceClass();
-	local class = Class:getByName(className);
-	assert(class);
-
-	local entity = class:new(scene, options);
-	entity:addToParty();
-
-	local assignedPlayer = self:getAssignedPlayer();
-	if assignedPlayer then
-		entity:addController(PlayerController:new(entity, assignedPlayer));
-	end
-
-	return entity;
 end
 
 -- STATIC

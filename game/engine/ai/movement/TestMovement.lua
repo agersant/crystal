@@ -1,5 +1,5 @@
 local Movement = require("engine/ai/movement/Movement");
-local Party = require("engine/persistence/Party");
+local Party = require("arpg/party/Party");
 local Assets = require("engine/resources/Assets");
 local MapScene = require("engine/scene/MapScene");
 local Entity = require("engine/scene/entity/Entity");

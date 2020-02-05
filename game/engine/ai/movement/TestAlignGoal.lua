@@ -1,5 +1,5 @@
 local AlignGoal = require("engine/ai/movement/AlignGoal");
-local Party = require("engine/persistence/Party");
+local Party = require("arpg/party/Party");
 local MapScene = require("engine/scene/MapScene");
 local Entity = require("engine/scene/entity/Entity");
 

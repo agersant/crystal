@@ -1,4 +1,4 @@
-local Party = require("engine/persistence/Party");
+local Party = require("arpg/party/Party");
 local MapScene = require("engine/scene/MapScene");
 local Script = require("engine/script/Script");
 local InputDrivenController = require("engine/scene/controller/InputDrivenController");

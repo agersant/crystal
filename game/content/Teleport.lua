@@ -20,7 +20,7 @@ local doTeleport = function(self, triggeredBy)
 	local playerSave = PlayerSave:getCurrent();
 	local currentScene = Scene:getCurrent();
 	currentScene:saveTo(playerSave);
-	local newScene = Field:new(teleportEntity._targetMap, playerSave:getParty(), finalX, finalY);
+	local newScene = Field:new(teleportEntity._targetMap, finalX, finalY);
 	Scene:setCurrent(newScene);
 
 	local teleportAngle = teleportEntity:getAngle();

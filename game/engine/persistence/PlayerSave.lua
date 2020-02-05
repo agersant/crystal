@@ -1,7 +1,7 @@
 require("engine/utils/OOP");
 local Log = require("engine/dev/Log");
-local Party = require("engine/persistence/Party");
-local PartyMember = require("engine/persistence/PartyMember");
+local Party = require("arpg/party/Party");
+local PartyMember = require("arpg/party/PartyMember");
 local TableUtils = require("engine/utils/TableUtils");
 
 local PlayerSave = Class("PlayerSave");

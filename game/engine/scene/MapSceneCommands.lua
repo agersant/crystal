@@ -10,8 +10,7 @@ local loadMap = function(mapName)
 	local currentScene = Scene:getCurrent();
 	currentScene:saveTo(playerSave);
 	local sceneClass = Module:getCurrent().classes.MapScene;
-	-- TODO remove party stuff from here
-	local newScene = sceneClass:new("assets/map/" .. mapName .. ".lua", playerSave:getParty());
+	local newScene = sceneClass:new("assets/map/" .. mapName .. ".lua");
 	Scene:setCurrent(newScene);
 end
 

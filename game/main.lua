@@ -1,11 +1,12 @@
 local Features = require("engine/dev/Features");
 
+MODULE = "arpg/ARPG";
+
 if Features.unitTesting then
 	require("engine/dev/mock/love/graphics");
 	local TestSuite = require("engine/TestSuite");
 	local success = TestSuite.execute();
 	love.event.quit(success and 0 or 1);
 else
-	MODULE = "arpg/ARPG";
 	require("engine/Game");
 end

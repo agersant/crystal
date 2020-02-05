@@ -7,6 +7,7 @@ local ARPG = Class("ARPG", Module);
 ARPG.init = function(self)
 	ARPG.super.init(self);
 	self.classes.MapScene = require("arpg/field/Field");
+	self.testFiles = {"arpg/party/TestParty", "arpg/party/TestPartyMember"};
 	Content:requireAll("content");
 end
 

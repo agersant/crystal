@@ -4,6 +4,7 @@ local Module = Class("Module");
 
 Module.init = function(self)
 	self.classes = {MapScene = require("engine/scene/MapScene")};
+	self.testFiles = {};
 end
 
 -- STATIC

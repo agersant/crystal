@@ -1,4 +1,4 @@
-local Party = require("engine/persistence/Party");
+local Party = require("arpg/party/Party");
 local Damage = require("engine/combat/Damage");
 local CombatData = require("engine/scene/component/CombatData");
 local Entity = require("engine/scene/entity/Entity");

@@ -1,4 +1,6 @@
-local testFiles = {
+local Module = require("engine/Module");
+
+local engineTestFiles = {
 	"engine/ai/movement/TestAlignGoal",
 	"engine/ai/movement/TestEntityGoal",
 	"engine/ai/movement/TestMovement",
@@ -7,8 +9,6 @@ local testFiles = {
 	"engine/ai/tactics/TestTargetSelector",
 	"engine/dev/cli/TestCLI",
 	"engine/input/TestInputDevice",
-	"engine/persistence/TestParty",
-	"engine/persistence/TestPartyMember",
 	"engine/resources/TestAssets",
 	"engine/resources/map/TestMapCollisionChainData",
 	"engine/resources/map/TestNavmesh",
@@ -55,7 +55,7 @@ local printResults = function(numSuccess, numTests)
 	print("Grand total: " .. numSuccess .. "/" .. numTests .. " tests passed");
 end
 
-local runTestSuite = function()
+local runTestSuite = function(testFiles)
 	local totalNumSuccess = 0;
 	local totalNumTests = 0;
 	for i, testFile in ipairs(testFiles) do
@@ -69,6 +69,14 @@ end
 
 return {
 	execute = function()
-		return runTestSuite();
+		Module:setCurrent(require(MODULE):new());
+		local testFiles = {};
+		for _, file in ipairs(engineTestFiles) do
+			table.insert(testFiles, file);
+		end
+		for _, file in ipairs(Module:getCurrent().testFiles) do
+			table.insert(testFiles, file);
+		end
+		return runTestSuite(testFiles);
 	end,
 }

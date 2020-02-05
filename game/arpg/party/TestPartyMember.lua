@@ -1,4 +1,4 @@
-local PartyMember = require("engine/persistence/PartyMember");
+local PartyMember = require("arpg/party/PartyMember");
 
 local tests = {};
 
