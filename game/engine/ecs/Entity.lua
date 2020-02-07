@@ -159,16 +159,6 @@ end
 
 -- SPRITE COMPONENT
 
-Entity.addSprite = function(self, sprite)
-	self._sprite = sprite;
-	assert(self._sprite);
-end
-
-Entity.setAnimation = function(self, animationName, forceRestart)
-	assert(self._sprite);
-	self._sprite:setAnimation(animationName, forceRestart);
-end
-
 Entity.setUseSpriteHitboxData = function(self, enabled)
 	self._useSpriteHitboxData = enabled;
 end

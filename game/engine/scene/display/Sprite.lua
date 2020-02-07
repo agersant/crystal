@@ -1,12 +1,14 @@
 require("engine/utils/OOP");
+local Component = require("engine/ecs/Component");
 local GFXConfig = require("engine/graphics/GFXConfig");
 local MathUtils = require("engine/utils/MathUtils");
 
-local Sprite = Class("Sprite");
+local Sprite = Class("Sprite", Component);
 
 -- PUBLIC API
 
-Sprite.init = function(self, sheet)
+Sprite.init = function(self, scene, sheet)
+	Sprite.super.init(self, scene);
 	self._sheet = sheet;
 	self:setAnimation(sheet:getDefaultAnimationName());
 	self._time = 0;

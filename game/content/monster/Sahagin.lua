@@ -2,9 +2,8 @@ require("engine/utils/OOP");
 local Movement = require("engine/ai/movement/Movement");
 local Assets = require("engine/resources/Assets");
 local Actions = require("engine/scene/Actions");
-local Script = require("engine/script/Script");
 local Controller = require("engine/scene/behavior/Controller");
-local Sprite = require("engine/scene/component/Sprite");
+local Sprite = require("engine/scene/display/Sprite");
 local Entity = require("engine/ecs/Entity");
 
 local Sahagin = Class("Sahagin", Entity);
@@ -57,7 +56,7 @@ end
 Sahagin.init = function(self, scene)
 	Sahagin.super.init(self, scene);
 	local sheet = Assets:getSpritesheet("assets/spritesheet/sahagin.lua");
-	self:addSprite(Sprite:new(sheet));
+	self:addComponent(Sprite:new(scene, sheet));
 	self:addPhysicsBody("dynamic");
 	self:addLocomotion();
 	self:setMovementSpeed(40);

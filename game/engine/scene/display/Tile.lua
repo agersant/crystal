@@ -5,6 +5,7 @@ local Tile = Class("Tile", Entity);
 
 -- PUBLIC API
 
+-- TODO this isnt getting tested at all and probably broke
 Tile.init = function(self, scene, options)
 	Tile.super.init(self, scene);
 	local _, _, _, h = options.quad:getViewport();

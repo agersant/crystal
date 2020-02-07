@@ -1,7 +1,6 @@
 require("engine/utils/OOP");
-local Log = require("engine/dev/Log");
 local MathUtils = require("engine/utils/MathUtils");
-local Tile = require("engine/scene/entity/Tile");
+local Tile = require("engine/scene/display/Tile");
 
 local DynamicLayer = Class("DynamicLayer");
 

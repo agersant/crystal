@@ -183,7 +183,7 @@ ECS.getAllEntitiesWith = function(self, class)
 	local source = self._componentClassToEntities[class] or {};
 	local output = {};
 	for entity, _ in pairs(source) do
-		output[entity] = true;
+		output[entity] = self._entityToComponents[entity][class];
 	end
 	return output;
 end

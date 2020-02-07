@@ -11,6 +11,7 @@ local Camera = require("engine/scene/Camera");
 local Scene = require("engine/scene/Scene");
 local InputListener = require("engine/scene/behavior/InputListener");
 local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
+local Sprite = require("engine/scene/display/Sprite");
 local MovementSystem = require("engine/scene/physics/MovementSystem");
 local Alias = require("engine/utils/Alias");
 
@@ -120,6 +121,9 @@ MapScene.init = function(self, mapName)
 	self:addSystem(BasicSystem:new(self, ScriptRunner, function(cmp, dt)
 		cmp:update(dt);
 	end));
+	self:addSystem(BasicSystem:new(self, Sprite, function(cmp, dt)
+		cmp:update(dt);
+	end));
 	self:addSystem(MovementSystem:new(self));
 
 	self:update(0);
@@ -187,9 +191,9 @@ MapScene.draw = function(self)
 	love.graphics.translate(ox, oy);
 
 	self._map:drawBelowEntities();
-	for i, entity in ipairs(self._drawableEntities) do
-		love.graphics.setColor(Colors.white); -- TODO cleanup these calls that are sprinkled everywhere. Use proper push/pop
-		entity:draw();
+	local spriteEntities = self:getAllEntitiesWith(Sprite);
+	for entity, sprite in pairs(spriteEntities) do -- TODO sorting
+		sprite:draw(entity:getPosition());
 	end
 	self._map:drawAboveEntities();
 	self._map:drawDebug();
