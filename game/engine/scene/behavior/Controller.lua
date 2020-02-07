@@ -1,14 +1,12 @@
 require("engine/utils/OOP");
-local Log = require("engine/dev/Log");
 local Component = require("engine/ecs/Component");
 local Script = require("engine/script/Script");
-local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 
 local Controller = Class("Controller", Component);
 
 -- PUBLIC API
 
-Controller.init = function(self, ecs, scriptContent) -- TODO having to pass scriptRunner feels clunky
+Controller.init = function(self, ecs, scriptContent)
 	assert(scriptContent);
 	Controller.super.init(self, ecs);
 	self._actionThread = nil;
