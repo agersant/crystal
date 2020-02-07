@@ -29,7 +29,7 @@ Actions.walk = function(angle)
 			local animName = "walk_" .. self:getDirection4();
 			self:setAnimation(animName);
 		end
-		self:setSpeed(40); -- TODO hard coded movement speed
+		self:setSpeed(80); -- TODO hard coded movement speed
 	end
 end
 

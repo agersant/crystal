@@ -4,6 +4,7 @@ local Scene = require("engine/scene/Scene");
 local Controller = require("engine/scene/behavior/Controller");
 local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 local PhysicsBody = require("engine/scene/physics/PhysicsBody");
+local TouchTrigger = require("engine/scene/physics/TouchTrigger");
 local Entity = require("engine/ecs/Entity");
 local Field = require("arpg/field/Field");
 
@@ -33,7 +34,7 @@ local teleportScript = function(self)
 	local teleportEntity = self:getEntity();
 	self:endOn("teleportActivated");
 	while true do
-		local triggeredBy = self:waitFor("+trigger");
+		local triggeredBy = self:waitFor("+trigger"):getEntity();
 		local watchDirectionThread = self:thread(function(self)
 			while true do
 				self:waitFrame();
@@ -50,7 +51,7 @@ local teleportScript = function(self)
 		end);
 		self:thread(function(self)
 			while true do
-				local noLongerTriggering = self:waitFor("-trigger");
+				local noLongerTriggering = self:waitFor("-trigger"):getEntity();
 				if noLongerTriggering == triggeredBy then
 					watchDirectionThread:stop();
 					break
@@ -73,7 +74,7 @@ Teleport.init = function(self, scene, options)
 
 	Teleport.super.init(self, scene);
 	self:addComponent(PhysicsBody:new(scene));
-	self:addTrigger(options.shape);
+	self:addComponent(TouchTrigger:new(scene, options.shape));
 	self:addComponent(ScriptRunner:new(scene));
 	self:addComponent(TeleportController:new(scene));
 	self:setPosition(options.x, options.y);

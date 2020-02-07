@@ -1,10 +1,13 @@
 require("engine/utils/OOP");
 local Movement = require("engine/ai/movement/Movement");
+local Entity = require("engine/ecs/Entity");
 local Assets = require("engine/resources/Assets");
 local Actions = require("engine/scene/Actions");
 local Controller = require("engine/scene/behavior/Controller");
+local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 local Sprite = require("engine/scene/display/Sprite");
-local Entity = require("engine/ecs/Entity");
+local Locomotion = require("engine/scene/physics/Locomotion");
+local PhysicsBody = require("engine/scene/physics/PhysicsBody");
 
 local Sahagin = Class("Sahagin", Entity);
 local SahaginController = Class("SahaginController", Controller);
@@ -57,15 +60,15 @@ Sahagin.init = function(self, scene)
 	Sahagin.super.init(self, scene);
 	local sheet = Assets:getSpritesheet("assets/spritesheet/sahagin.lua");
 	self:addComponent(Sprite:new(scene, sheet));
-	self:addPhysicsBody("dynamic");
-	self:addLocomotion();
-	self:setMovementSpeed(40);
+	self:addComponent(PhysicsBody:new(scene, "dynamic"));
+	self:addComponent(Locomotion:new(scene));
+	-- self:setMovementSpeed(40); TODO
 	self:addCollisionPhysics();
-	self:addCombatData();
+	-- self:addCombatData(); TODO
 	self:setCollisionRadius(4);
 	self:setUseSpriteHitboxData(true);
-	self:addScriptRunner();
-	self:addCombatLogic();
+	self:addComponent(ScriptRunner:new(scene));
+	-- self:addCombatLogic(); TODO
 	self:addComponent(SahaginController:new(self));
 end
 

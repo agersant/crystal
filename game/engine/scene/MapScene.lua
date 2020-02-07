@@ -1,4 +1,5 @@
 require("engine/utils/OOP");
+local DebugFlags = require("engine/dev/DebugFlags");
 local Log = require("engine/dev/Log");
 local TargetSelector = require("engine/ai/tactics/TargetSelector");
 local Assets = require("engine/resources/Assets");
@@ -6,13 +7,14 @@ local Colors = require("engine/resources/Colors");
 local CollisionFilters = require("engine/scene/CollisionFilters");
 local BasicSystem = require("engine/ecs/BasicSystem");
 local ECS = require("engine/ecs/ECS");
-local Entity = require("engine/ecs/Entity");
+local Component = require("engine/ecs/Component");
 local Camera = require("engine/scene/Camera");
 local Scene = require("engine/scene/Scene");
 local InputListener = require("engine/scene/behavior/InputListener");
 local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 local Sprite = require("engine/scene/display/Sprite");
 local MovementSystem = require("engine/scene/physics/MovementSystem");
+local TouchTrigger = require("engine/scene/physics/TouchTrigger");
 local Alias = require("engine/utils/Alias");
 
 local MapScene = Class("MapScene", Scene);
@@ -41,29 +43,27 @@ end
 local beginOrEndContact = function(self, fixtureA, fixtureB, contact, prefix)
 	local objectA = fixtureA:getBody():getUserData();
 	local objectB = fixtureB:getBody():getUserData();
-	assert(objectA);
-	assert(objectB);
 
-	if objectA:isInstanceOf(Entity) and objectB:isInstanceOf(Entity) then
+	if objectA:isInstanceOf(Component) and objectB:isInstanceOf(Component) then
 		local categoryA = fixtureA:getFilterData();
 		local categoryB = fixtureB:getFilterData();
 
 		-- Weakbox VS hitbox
 		if bit.band(categoryA, CollisionFilters.HITBOX) ~= 0 and bit.band(categoryB, CollisionFilters.WEAKBOX) ~= 0 then
-			queueSignal(self, objectA, prefix .. "giveHit", objectB);
+			queueSignal(self, objectA:getEntity(), prefix .. "giveHit", objectB, objectA);
 		elseif bit.band(categoryA, CollisionFilters.WEAKBOX) ~= 0 and bit.band(categoryB, CollisionFilters.HITBOX) ~= 0 then
-			queueSignal(self, objectB, prefix .. "giveHit", objectA);
+			queueSignal(self, objectB:getEntity(), prefix .. "giveHit", objectA, objectB);
 
 			-- Trigger VS solid
 		elseif bit.band(categoryA, CollisionFilters.TRIGGER) ~= 0 and bit.band(categoryB, CollisionFilters.SOLID) ~= 0 then
-			queueSignal(self, objectA, prefix .. "trigger", objectB);
+			queueSignal(self, objectA:getEntity(), prefix .. "trigger", objectB, objectA);
 		elseif bit.band(categoryA, CollisionFilters.SOLID) ~= 0 and bit.band(categoryB, CollisionFilters.TRIGGER) ~= 0 then
-			queueSignal(self, objectB, prefix .. "trigger", objectA);
+			queueSignal(self, objectB:getEntity(), prefix .. "trigger", objectA, objectB);
 
 			-- Solid VS solid
 		elseif bit.band(categoryA, CollisionFilters.SOLID) ~= 0 and bit.band(categoryB, CollisionFilters.SOLID) ~= 0 then
-			queueSignal(self, objectA, prefix .. "touch", objectB);
-			queueSignal(self, objectB, prefix .. "touch", objectA);
+			queueSignal(self, objectA:getEntity(), prefix .. "touch", objectB, objectA);
+			queueSignal(self, objectB:getEntity(), prefix .. "touch", objectA, objectB);
 
 		end
 	end
@@ -84,6 +84,7 @@ MapScene.init = function(self, mapName)
 	MapScene.super.init(self);
 
 	self._ecs = ECS:new();
+	-- TODO this is too YOLO and causes stack overflow when accessing a nil member/function
 	Alias:add(self, self._ecs);
 	Alias:add(self._ecs, self);
 
@@ -138,7 +139,7 @@ MapScene.update = function(self, dt)
 	self._ecs:update(dt);
 
 	for _, signal in ipairs(self._queuedSignals) do
-		signal.target:signal(signal.name, unpack(signal.data));
+		signal.target:signalAllScripts(signal.name, unpack(signal.data));
 	end
 	self._queuedSignals = {};
 
@@ -195,6 +196,22 @@ MapScene.draw = function(self)
 	for entity, sprite in pairs(spriteEntities) do -- TODO sorting
 		sprite:draw(entity:getPosition());
 	end
+	if DebugFlags.drawPhysics then
+		for entity, touchTrigger in pairs(self:getAllEntitiesWith(TouchTrigger)) do
+			local x, y = entity:getPosition();
+			self:drawShape(x, y, touchTrigger:getShape(), Colors.ecoGreen);
+		end
+		-- TODO
+		-- if self._collisionFixture then
+		-- 	self:drawShape(self._collisionFixture:getShape(), Colors.cyan);
+		-- end
+		-- if self._hitboxFixture then
+		-- 	self:drawShape(self._hitboxFixture:getShape(), Colors.strawberry);
+		-- end
+		-- if self._weakboxFixture then
+		-- 	self:drawShape(self._weakboxFixture:getShape(), Colors.ecoGreen);
+		-- end
+	end
 	self._map:drawAboveEntities();
 	self._map:drawDebug();
 
@@ -219,6 +236,27 @@ end
 
 MapScene.findPath = function(self, startX, startY, targetX, targetY)
 	return self._map:findPath(startX, startY, targetX, targetY);
+end
+
+-- TODO move somewhere else
+MapScene.drawShape = function(self, x, y, shape, color)
+	love.graphics.push();
+	love.graphics.translate(x, y);
+	love.graphics.setColor(color:alpha(.6));
+	if shape:getType() == "polygon" then
+		love.graphics.polygon("fill", shape:getPoints());
+	elseif shape:getType() == "circle" then
+		local x, y = shape:getPoint();
+		love.graphics.circle("fill", x, y, shape:getRadius(), 16);
+	end
+	love.graphics.setColor(color);
+	if shape:getType() == "polygon" then
+		love.graphics.polygon("line", shape:getPoints());
+	elseif shape:getType() == "circle" then
+		local x, y = shape:getPoint();
+		love.graphics.circle("line", x, y, shape:getRadius(), 16);
+	end
+	love.graphics.pop();
 end
 
 return MapScene;

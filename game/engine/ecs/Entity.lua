@@ -136,22 +136,9 @@ Entity.removeWeakboxPhysics = function(self)
 end
 
 -- TRIGGER COMPONENT
-
-Entity.addTrigger = function(self, shape)
-	assert(self:getBody());
-	if self._triggerShape == shape then
-		return;
-	end
-	self:removeTrigger();
-	self._triggerFixture = love.physics.newFixture(self:getBody(), shape);
-	self._triggerFixture:setFilterData(CollisionFilters.TRIGGER, CollisionFilters.SOLID, 0);
-	self._triggerFixture:setSensor(true);
-	self._triggerShape = shape;
-end
-
 Entity.removeTrigger = function(self)
 	if self._triggerFixture then
-		self._triggerFixture:destroy();
+		self._triggerFixture:destroy(); -- TODO important do this when component is deregistered
 	end
 	self._triggerFixture = nil;
 	self._triggerShape = nil;
@@ -161,14 +148,6 @@ end
 
 Entity.setUseSpriteHitboxData = function(self, enabled)
 	self._useSpriteHitboxData = enabled;
-end
-
--- CONTROLLER COMPONENT
-
-Entity.getAssignedPlayer = function(self)
-	if self._controller.getAssignedPlayer then
-		return self._controller:getAssignedPlayer();
-	end
 end
 
 -- PARTY COMPONENT
@@ -307,29 +286,9 @@ Entity.draw = function(self)
 	end
 end
 
-Entity.drawShape = function(self, shape, color)
-	love.graphics.push();
-	love.graphics.translate(self._body:getX(), self._body:getY());
-	love.graphics.setColor(color:alpha(.6));
-	if shape:getType() == "polygon" then
-		love.graphics.polygon("fill", shape:getPoints());
-	elseif shape:getType() == "circle" then
-		local x, y = shape:getPoint();
-		love.graphics.circle("fill", x, y, shape:getRadius(), 16);
-	end
-	love.graphics.setColor(color);
-	if shape:getType() == "polygon" then
-		love.graphics.polygon("line", shape:getPoints());
-	elseif shape:getType() == "circle" then
-		local x, y = shape:getPoint();
-		love.graphics.circle("line", x, y, shape:getRadius(), 16);
-	end
-	love.graphics.pop();
-end
-
 Entity.destroy = function(self)
 	if self._body then
-		self._body:destroy();
+		self._body:destroy(); -- TODO do this when component is unregistered
 	end
 end
 
