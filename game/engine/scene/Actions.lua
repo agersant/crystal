@@ -3,11 +3,13 @@ local MathUtils = require("engine/utils/MathUtils");
 
 local Actions = Class("Actions");
 
-Actions.idle = function(self)
-	local entity = self:getEntity();
-	local animName = "idle_" .. entity:getDirection4();
-	entity:setAnimation(animName);
-	entity:setSpeed(0);
+Actions.idle = function()
+	return function(self)
+		-- TODO
+		-- local animName = "idle_" .. entity:getDirection4();
+		-- entity:setAnimation(animName);
+		self:setSpeed(0);
+	end
 end
 
 Actions.lookAt = function(target)
@@ -23,11 +25,10 @@ end
 
 Actions.walk = function(angle)
 	return function(self)
-		local entity = self:getEntity();
-		entity:setAngle(angle);
-		local animName = "walk_" .. entity:getDirection4();
-		entity:setAnimation(animName);
-		entity:setSpeed(entity:getMovementSpeed());
+		self:setAngle(angle);
+		local animName = "walk_" .. self:getDirection4();
+		-- entity:setAnimation(animName); TODO disabled animation
+		self:setSpeed(40); -- TODO hard coded movement speed
 	end
 end
 

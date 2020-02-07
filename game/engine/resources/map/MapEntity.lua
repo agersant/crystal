@@ -1,6 +1,6 @@
 require("engine/utils/OOP");
 local Log = require("engine/dev/Log");
-local Entity = require("engine/scene/entity/Entity");
+local Entity = require("engine/ecs/Entity");
 
 local MapEntity = Class("MapEntity");
 

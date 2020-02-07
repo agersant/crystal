@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local Entity = require("engine/scene/entity/Entity");
+local Entity = require("engine/ecs/Entity");
 
 local Tile = Class("Tile", Entity);
 

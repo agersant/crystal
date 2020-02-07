@@ -8,7 +8,7 @@ local Scene = require("engine/scene/Scene");
 local UIScene = require("engine/ui/UIScene");
 local TitleScreen = require("engine/ui/frontend/TitleScreen");
 local TableUtils = require("engine/utils/TableUtils");
-local PlayerController = require("engine/scene/controller/PlayerController");
+local PlayerController = require("engine/scene/behavior/PlayerController");
 
 local Field = Class("Field", MapScene);
 

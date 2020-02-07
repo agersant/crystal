@@ -2,7 +2,7 @@ require("engine/utils/OOP");
 local Input = require("engine/input/Input");
 local Actions = require("engine/scene/Actions");
 local Script = require("engine/script/Script");
-local InputDrivenController = require("engine/scene/controller/InputDrivenController");
+local InputDrivenController = require("engine/scene/behavior/InputDrivenController");
 local TableUtils = require("engine/utils/TableUtils");
 
 local PlayerController = Class("PlayerController", InputDrivenController);

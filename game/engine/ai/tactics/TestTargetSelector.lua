@@ -1,7 +1,9 @@
 local TargetSelector = require("engine/ai/tactics/TargetSelector");
 local Teams = require("engine/combat/Teams");
+local Entity = require("engine/ecs/Entity");
 local MapScene = require("engine/scene/MapScene");
-local Entity = require("engine/scene/entity/Entity");
+local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
+local PhysicsBody = require("engine/scene/physics/PhysicsBody");
 
 local tests = {};
 
@@ -10,13 +12,13 @@ tests[#tests].body = function()
 
 	local scene = MapScene:new("assets/map/test/empty.lua");
 
-	local me = Entity:new(scene);
-	local friend = Entity:new(scene);
-	local enemyA = Entity:new(scene);
-	local enemyB = Entity:new(scene);
+	local me = scene:spawn(Entity);
+	local friend = scene:spawn(Entity);
+	local enemyA = scene:spawn(Entity);
+	local enemyB = scene:spawn(Entity);
 	local targets = {me, friend, enemyA, enemyB};
 	for _, entity in ipairs(targets) do
-		entity:addPhysicsBody();
+		entity:addComponent(PhysicsBody:new(scene));
 		entity:addCombatData();
 	end
 
@@ -40,13 +42,13 @@ tests[#tests].body = function()
 
 	local scene = MapScene:new("assets/map/test/empty.lua");
 
-	local me = Entity:new(scene);
-	local friendA = Entity:new(scene);
-	local friendB = Entity:new(scene);
-	local enemy = Entity:new(scene);
+	local me = scene:spawn(Entity);
+	local friendA = scene:spawn(Entity);
+	local friendB = scene:spawn(Entity);
+	local enemy = scene:spawn(Entity);
 	local targets = {me, friendA, friendB, enemy};
 	for _, entity in ipairs(targets) do
-		entity:addPhysicsBody();
+		entity:addComponent(PhysicsBody:new(scene));
 		entity:addCombatData();
 	end
 
@@ -64,6 +66,7 @@ tests[#tests].body = function()
 	local nearest = selector:getNearestAlly(me);
 	assert(nearest == friendB);
 
+	friendB:addComponent(ScriptRunner:new(scene)); -- TODO shouldnt be needed for this test
 	friendB:kill();
 	local nearest = selector:getNearestAlly(me);
 	assert(nearest == friendA);

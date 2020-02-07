@@ -4,9 +4,14 @@ local TargetSelector = require("engine/ai/tactics/TargetSelector");
 local Assets = require("engine/resources/Assets");
 local Colors = require("engine/resources/Colors");
 local CollisionFilters = require("engine/scene/CollisionFilters");
-local Entity = require("engine/scene/entity/Entity");
+local BasicSystem = require("engine/ecs/BasicSystem");
+local ECS = require("engine/ecs/ECS");
+local Entity = require("engine/ecs/Entity");
 local Camera = require("engine/scene/Camera");
 local Scene = require("engine/scene/Scene");
+local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
+local MovementSystem = require("engine/scene/physics/MovementSystem");
+local Alias = require("engine/utils/Alias");
 
 local MapScene = Class("MapScene", Scene);
 
@@ -76,6 +81,10 @@ MapScene.init = function(self, mapName)
 	Log:info("Instancing scene for map: " .. tostring(mapName));
 	MapScene.super.init(self);
 
+	self._ecs = ECS:new();
+	Alias:add(self, self._ecs);
+	Alias:add(self._ecs, self);
+
 	self._world = love.physics.newWorld(0, 0, false);
 	self._world:setCallbacks(function(...)
 		beginContact(self, ...);
@@ -104,6 +113,11 @@ MapScene.init = function(self, mapName)
 	local mapHeight = self._map:getHeightInPixels();
 	self._camera = Camera:new(mapWidth, mapHeight);
 
+	self:addSystem(BasicSystem:new(self, ScriptRunner, function(cmp, dt)
+		cmp:update(dt);
+	end));
+	self:addSystem(MovementSystem:new(self));
+
 	self:update(0);
 end
 
@@ -112,6 +126,8 @@ MapScene.update = function(self, dt)
 
 	-- Pump physics simulation
 	self._world:update(dt);
+
+	self._ecs:update(dt);
 
 	for _, signal in ipairs(self._queuedSignals) do
 		signal.target:signal(signal.name, unpack(signal.data));
@@ -168,25 +184,13 @@ MapScene.draw = function(self)
 
 	self._map:drawBelowEntities();
 	for i, entity in ipairs(self._drawableEntities) do
-		love.graphics.setColor(Colors.white);
+		love.graphics.setColor(Colors.white); -- TODO cleanup these calls that are sprinkled everywhere. Use proper push/pop
 		entity:draw();
 	end
 	self._map:drawAboveEntities();
 	self._map:drawDebug();
 
 	love.graphics.pop();
-end
-
-MapScene.spawn = function(self, entity)
-	assert(not self._entities[entity]);
-	assert(not self._spawnedEntities[entity]);
-	self._spawnedEntities[entity] = true;
-	return entity;
-end
-
-MapScene.despawn = function(self, entity)
-	assert(not entity:isValid());
-	self._despawnedEntities[entity] = true;
 end
 
 MapScene.getPhysicsWorld = function(self)

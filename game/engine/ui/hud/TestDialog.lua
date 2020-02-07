@@ -1,7 +1,8 @@
 local MapScene = require("engine/scene/MapScene");
 local Script = require("engine/script/Script");
-local InputDrivenController = require("engine/scene/controller/InputDrivenController");
-local Entity = require("engine/scene/entity/Entity");
+local InputDrivenController = require("engine/scene/behavior/InputDrivenController");
+local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
+local Entity = require("engine/ecs/Entity");
 local Dialog = require("engine/ui/hud/Dialog");
 
 local tests = {};
@@ -9,9 +10,10 @@ local tests = {};
 tests[#tests + 1] = {name = "Blocks script during say"};
 tests[#tests].body = function()
 	local scene = MapScene:new("assets/map/test/empty.lua");
-	local player = Entity:new(scene);
-	player:addScriptRunner();
-	local controller = InputDrivenController:new(player, function()
+	local player = scene:spawn(Entity);
+	local scriptRunner = ScriptRunner:new(scene);
+	player:addComponent(scriptRunner);
+	local controller = InputDrivenController:new(player, scriptRunner, function()
 	end, 1);
 	player:addController(controller);
 

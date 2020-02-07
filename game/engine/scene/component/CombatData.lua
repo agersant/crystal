@@ -74,9 +74,9 @@ CombatData.receiveDamage = function(self, damage)
 	end
 	local effectiveDamage = mitigateDamage(self, damage);
 	self._health:substract(effectiveDamage);
-	self._entity:signal("takeHit", damage, effectiveDamage);
+	self._entity:signalAllScripts("takeHit", damage, effectiveDamage);
 	if self:isDead() then
-		self._entity:signal("death");
+		self._entity:signalAllScripts("death");
 	end
 end
 
@@ -86,7 +86,7 @@ end
 
 CombatData.kill = function(self)
 	self._health:setValue(0);
-	self._entity:signal("death");
+	self._entity:signalAllScripts("death");
 end
 
 CombatData.isDead = function(self)

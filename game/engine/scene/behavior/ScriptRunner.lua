@@ -1,18 +1,21 @@
 require("engine/utils/OOP");
 local TableUtils = require("engine/utils/TableUtils");
+local Component = require("engine/ecs/Component");
+local Alias = require("engine/utils/Alias");
 
-local ScriptRunner = Class("ScriptRunner");
+local ScriptRunner = Class("ScriptRunner", Component);
 
 -- PUBLIC API
 
-ScriptRunner.init = function(self, entity)
-	assert(entity);
-	self._entity = entity;
+ScriptRunner.init = function(self, ecs)
+	ScriptRunner.super.init(self, ecs);
 	self._scripts = {};
 	self._newScripts = {};
 end
 
 ScriptRunner.addScript = function(self, script)
+	-- TODO prevent script re-use
+	Alias:add(script, self:getEntity());
 	table.insert(self._newScripts, script);
 end
 
@@ -43,7 +46,7 @@ ScriptRunner.update = function(self, dt)
 	end
 end
 
-ScriptRunner.signal = function(self, signal, ...)
+ScriptRunner.signalAllScripts = function(self, signal, ...)
 	local scriptsCopy = TableUtils.shallowCopy(self._scripts);
 	for _, script in ipairs(scriptsCopy) do
 		script:signal(signal, ...);

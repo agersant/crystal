@@ -2,7 +2,7 @@ local CLI = require("engine/dev/cli/CLI");
 local DebugFlags = require("engine/dev/DebugFlags");
 local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/scene/Scene");
-local Entity = require("engine/scene/entity/Entity");
+local Entity = require("engine/ecs/Entity");
 local Module = require("engine/Module");
 
 local loadMap = function(mapName)

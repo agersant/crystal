@@ -3,7 +3,7 @@ local ComboAttack = require("content/skill/ComboAttack");
 local Dash = require("content/skill/Dash");
 local Assets = require("engine/resources/Assets");
 local Sprite = require("engine/scene/component/Sprite");
-local Entity = require("engine/scene/entity/Entity");
+local Entity = require("engine/ecs/Entity");
 
 local Warrior = Class("Warrior", Entity);
 

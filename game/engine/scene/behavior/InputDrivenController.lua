@@ -1,6 +1,6 @@
 require("engine/utils/OOP");
 local Input = require("engine/input/Input");
-local Controller = require("engine/scene/component/Controller");
+local Controller = require("engine/scene/behavior/Controller");
 
 local InputDrivenController = Class("InputDrivenController", Controller);
 
@@ -17,8 +17,8 @@ end
 
 -- PUBLIC API
 
-InputDrivenController.init = function(self, entity, scriptContent, playerIndex)
-	InputDrivenController.super.init(self, entity, scriptContent);
+InputDrivenController.init = function(self, entity, scriptRunner, scriptContent, playerIndex)
+	InputDrivenController.super.init(self, entity, scriptRunner, scriptContent);
 	self._playerIndex = playerIndex;
 	self._inputDevice = Input:getDevice(playerIndex);
 	self._disabled = 0;

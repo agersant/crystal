@@ -1,8 +1,8 @@
 require("engine/utils/OOP");
 local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/scene/Scene");
-local Controller = require("engine/scene/component/Controller");
-local Entity = require("engine/scene/entity/Entity");
+local Controller = require("engine/scene/behavior/Controller");
+local Entity = require("engine/ecs/Entity");
 local Field = require("arpg/field/Field");
 
 local Teleport = Class("Teleport", Entity);

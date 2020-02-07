@@ -2,7 +2,7 @@ require("engine/utils/OOP");
 local Teams = require("engine/combat/Teams");
 local Actions = require("engine/scene/Actions");
 local Script = require("engine/script/Script");
-local InputDrivenController = require("engine/scene/controller/InputDrivenController");
+local InputDrivenController = require("engine/scene/behavior/InputDrivenController");
 local HUD = require("engine/ui/hud/HUD");
 
 local CombatLogic = Class("CombatLogic", Script);

@@ -3,7 +3,7 @@ local CLI = require("engine/dev/cli/CLI");
 local Actions = require("engine/scene/Actions");
 local Movement = require("engine/ai/movement/Movement");
 local CombatLogic = require("engine/scene/combat/CombatLogic");
-local Controller = require("engine/scene/controller/Controller");
+local Controller = require("engine/scene/behavior/Controller");
 local MathUtils = require("engine/utils/MathUtils");
 
 local DevBotController = Class("DevBotController", Controller);

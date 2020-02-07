@@ -4,82 +4,48 @@ local Colors = require("engine/resources/Colors");
 local CollisionFilters = require("engine/scene/CollisionFilters");
 local CombatData = require("engine/scene/component/CombatData");
 local CombatLogic = require("engine/scene/component/CombatLogic");
-local ScriptRunner = require("engine/scene/component/ScriptRunner");
-local Stat = require("engine/combat/Stat");
-local MathUtils = require("engine/utils/MathUtils");
+local Alias = require("engine/utils/Alias");
 
 local Entity = Class("Entity");
 
-Entity.init = function(self, scene)
-	assert(scene);
-	self._scene = scene;
-	self._valid = true;
-	self._scene:spawn(self);
+Entity.init = function(self, ecs)
+	assert(ecs);
+	self._ecs = ecs;
+end
+
+Entity.addComponent = function(self, component)
+	assert(component);
+	self._ecs:addComponent(self, component);
+	Alias:add(self, component);
+end
+
+Entity.removeComponent = function(self, component)
+	assert(component);
+	self._ecs:removeComponent(self, component);
+	Alias:remove(self, component);
+end
+
+Entity.getComponent = function(self, class)
+	return self._ecs:getComponent(self, class);
+end
+
+Entity.despawn = function(self)
+	self._ecs:despawn(self);
+end
+
+Entity.setIsValid = function(self, isValid)
+	self._isValid = isValid;
+end
+
+Entity.isValid = function(self)
+	return self._isValid;
 end
 
 -- PHYSICS BODY COMPONENT
 
-Entity.addPhysicsBody = function(self, bodyType)
-	assert(not self._body);
-	self._body = love.physics.newBody(self._scene:getPhysicsWorld(), 0, 0, bodyType);
-	self._body:setFixedRotation(true);
-	self._body:setUserData(self);
-	self:setDirection8(1, 0);
-	self:setSpeed(0);
-end
-
-Entity.hasPhysicsBody = function(self)
-	return self._body ~= nil;
-end
-
 Entity.getZ = function(self)
 	assert(self._body);
 	return self._body:getY();
-end
-
-Entity.setDirection8 = function(self, xDir8, yDir8)
-	assert(self._body);
-	assert(xDir8 == 0 or xDir8 == 1 or xDir8 == -1);
-	assert(yDir8 == 0 or yDir8 == 1 or yDir8 == -1);
-	assert(xDir8 ~= 0 or yDir8 ~= 0);
-
-	if xDir8 == self._xDir8 and yDir8 == self._yDir8 then
-		return;
-	end
-
-	if xDir8 * yDir8 == 0 then
-		if xDir8 == 1 then
-			self._dir4 = "right";
-		elseif xDir8 == -1 then
-			self._dir4 = "left";
-		elseif yDir8 == 1 then
-			self._dir4 = "down";
-		elseif yDir8 == -1 then
-			self._dir4 = "up";
-		end
-	else
-		if xDir8 ~= self._xDir8 then
-			self._dir4 = yDir8 == 1 and "down" or "up";
-		end
-		if yDir8 ~= self._yDir8 then
-			self._dir4 = xDir8 == 1 and "right" or "left";
-		end
-	end
-
-	self._xDir8 = xDir8;
-	self._yDir8 = yDir8;
-	self._xDir4 = self._dir4 == "left" and -1 or self._dir4 == "right" and 1 or 0;
-	self._yDir4 = self._dir4 == "up" and -1 or self._dir4 == "down" and 1 or 0;
-
-	self._angle = math.atan2(yDir8, xDir8);
-end
-
-Entity.getDirection4 = function(self)
-	return self._dir4;
-end
-
-Entity.getPosition = function(self)
-	return self._body:getX(), self._body:getY();
 end
 
 Entity.getScreenPosition = function(self)
@@ -88,58 +54,12 @@ Entity.getScreenPosition = function(self)
 	return camera:getRelativePosition(x, y);
 end
 
-Entity.setPosition = function(self, x, y)
-	self._body:setPosition(x, y);
-end
-
-Entity.getVelocity = function(self)
-	local speed = self._speed;
-	local angle = self._angle;
-	local dx = math.cos(angle);
-	local dy = math.sin(angle);
-	return speed * dx, speed * dy;
-end
-
-Entity.getAngle = function(self)
-	return self._angle;
-end
-
-Entity.setAngle = function(self, angle)
-	self:setDirection8(MathUtils.angleToDir8(angle));
-	self._angle = angle;
-end
-
-Entity.distanceToEntity = function(self, entity)
-	local targetX, targetY = entity:getPosition();
-	return self:distanceTo(targetX, targetY);
-end
-
-Entity.distance2ToEntity = function(self, entity)
-	local targetX, targetY = entity:getPosition();
-	return self:distance2To(targetX, targetY);
-end
-
-Entity.distanceTo = function(self, targetX, targetY)
-	local x, y = self:getPosition();
-	return MathUtils.distance(x, y, targetX, targetY);
-end
-
-Entity.distance2To = function(self, targetX, targetY)
-	local x, y = self:getPosition();
-	return MathUtils.distance2(x, y, targetX, targetY);
-end
-
 Entity.findPathTo = function(self, targetX, targetY)
 	local startX, startY = self:getPosition();
-	return self._scene:findPath(startX, startY, targetX, targetY);
+	return self._ecs:findPath(startX, startY, targetX, targetY);
 end
 
 -- LOCOMOTION COMPONENT
-
-Entity.addLocomotion = function(self)
-	self._movementStat = Stat:new(120, 0);
-	self._speed = 0;
-end
 
 Entity.setMovementSpeed = function(self, speed)
 	return self._movementStat:setValue(speed);
@@ -147,10 +67,6 @@ end
 
 Entity.getMovementSpeed = function(self)
 	return self._movementStat:getValue();
-end
-
-Entity.setSpeed = function(self, speed)
-	self._speed = speed;
 end
 
 -- COLLISION COMPONENT
@@ -255,29 +171,6 @@ Entity.setUseSpriteHitboxData = function(self, enabled)
 	self._useSpriteHitboxData = enabled;
 end
 
--- SCRIPT COMPONENT
-
-Entity.addScriptRunner = function(self)
-	self._scriptRunner = ScriptRunner:new(self);
-end
-
-Entity.addScript = function(self, script)
-	assert(self._scriptRunner);
-	self._scriptRunner:addScript(script);
-end
-
-Entity.removeScript = function(self, script)
-	assert(self._scriptRunner);
-	self._scriptRunner:removeScript(script);
-end
-
-Entity.signal = function(self, signal, ...)
-	if not self._scriptRunner then
-		return;
-	end
-	self._scriptRunner:signal(signal, ...);
-end
-
 -- CONTROLLER COMPONENT
 
 Entity.addController = function(self, controller)
@@ -302,11 +195,11 @@ end
 -- PARTY COMPONENT
 
 Entity.addToParty = function(self)
-	self._scene:addEntityToParty(self);
+	self._ecs:addEntityToParty(self);
 end
 
 Entity.removeFromParty = function(self)
-	self._scene:removeEntityFromParty(self);
+	self._ecs:removeEntityFromParty(self);
 end
 
 -- COMBAT DATA COMPONENT
@@ -389,34 +282,30 @@ Entity.isCombatable = function(self)
 end
 
 Entity.update = function(self, dt)
-	if self._scriptRunner then
-		self._scriptRunner:update(dt);
-	end
-	if self._sprite then
-		local animationWasOver = self._sprite:isAnimationOver();
-		self._sprite:update(dt);
-		if not animationWasOver and self._sprite:isAnimationOver() then
-			self:signal("animationEnd");
-		end
-		if self._useSpriteHitboxData then
-			local hitShape = self._sprite:getTagShape("hit");
-			if hitShape then
-				self:addHitboxPhysics(hitShape);
-			else
-				self:removeHitboxPhysics();
-			end
-			local weakShape = self._sprite:getTagShape("weak");
-			if weakShape then
-				self:addWeakboxPhysics(weakShape);
-			else
-				self:removeWeakboxPhysics();
-			end
-		end
-	end
-	if self._body then
-		local vx, vy = self:getVelocity();
-		self._body:setLinearVelocity(vx, vy);
-	end
+	-- if self._scriptRunner then
+	-- 	self._scriptRunner:update(dt);
+	-- end
+	-- if self._sprite then
+	-- 	local animationWasOver = self._sprite:isAnimationOver();
+	-- 	self._sprite:update(dt);
+	-- 	if not animationWasOver and self._sprite:isAnimationOver() then
+	-- 		self:signal("animationEnd");
+	-- 	end
+	-- 	if self._useSpriteHitboxData then
+	-- 		local hitShape = self._sprite:getTagShape("hit");
+	-- 		if hitShape then
+	-- 			self:addHitboxPhysics(hitShape);
+	-- 		else
+	-- 			self:removeHitboxPhysics();
+	-- 		end
+	-- 		local weakShape = self._sprite:getTagShape("weak");
+	-- 		if weakShape then
+	-- 			self:addWeakboxPhysics(weakShape);
+	-- 		else
+	-- 			self:removeWeakboxPhysics();
+	-- 		end
+	-- 	end
+	-- end
 end
 
 Entity.draw = function(self)
@@ -459,15 +348,6 @@ Entity.drawShape = function(self, shape, color)
 	love.graphics.pop();
 end
 
-Entity.despawn = function(self)
-	self._valid = false;
-	self._scene:despawn(self);
-end
-
-Entity.isValid = function(self)
-	return self._valid;
-end
-
 Entity.destroy = function(self)
 	if self._body then
 		self._body:destroy();
@@ -475,7 +355,7 @@ Entity.destroy = function(self)
 end
 
 Entity.getScene = function(self)
-	return self._scene;
+	return self._ecs;
 end
 
 return Entity;

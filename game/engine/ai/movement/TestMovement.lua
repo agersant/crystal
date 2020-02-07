@@ -1,11 +1,10 @@
 local Movement = require("engine/ai/movement/Movement");
-local Assets = require("engine/resources/Assets");
 local MapScene = require("engine/scene/MapScene");
-local Entity = require("engine/scene/entity/Entity");
-local Controller = require("engine/scene/component/Controller");
-local Sprite = require("engine/scene/component/Sprite");
-local Scene = require("engine/scene/Scene");
-local Script = require("engine/script/Script");
+local Entity = require("engine/ecs/Entity");
+local Controller = require("engine/scene/behavior/Controller");
+local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
+local Locomotion = require("engine/scene/physics/Locomotion");
+local PhysicsBody = require("engine/scene/physics/PhysicsBody");
 
 local tests = {};
 
@@ -17,23 +16,24 @@ tests[#tests].body = function()
 	local endX, endY = 300, 200;
 	local acceptanceRadius = 6;
 
-	local subject = Entity:new(scene);
-	local sheet = Assets:getSpritesheet("assets/spritesheet/sahagin.lua");
-	subject:addSprite(Sprite:new(sheet));
-	subject:addPhysicsBody("dynamic");
-	subject:addCollisionPhysics();
+	local subject = scene:spawn(Entity);
+	subject:addComponent(PhysicsBody:new(scene, "dynamic"));
+	subject:addComponent(Locomotion:new(scene));
 	subject:setPosition(startX, startY);
-	subject:addLocomotion();
-	subject:addScriptRunner();
-	subject:addController(Controller:new(subject, function(controller)
-		controller:thread(Movement.walkToPoint(endX, endY, acceptanceRadius));
-	end));
 
-	for i = 1, 200 do
+	local scriptRunner = ScriptRunner:new(scene);
+	subject:addComponent(scriptRunner);
+
+	-- TODO would like not to pass script runner here
+	local controller = Controller:new(scene, scriptRunner, function(self)
+		Movement.walkToPoint(self, endX, endY, acceptanceRadius)
+	end);
+	subject:addComponent(controller);
+
+	for i = 1, 1000 do
 		scene:update(16 / 1000);
 	end
-
-	assert(subject:distance2To(endX, endY) < acceptanceRadius * acceptanceRadius);
+	assert(subject:distanceTo(endX, endY) < acceptanceRadius);
 end
 
 return tests;
