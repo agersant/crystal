@@ -83,9 +83,8 @@ MapScene.init = function(self, mapName)
 	Log:info("Instancing scene for map: " .. tostring(mapName));
 	MapScene.super.init(self);
 
-	self._ecs = ECS:new();
-	-- TODO this is too YOLO and causes stack overflow when accessing a nil member/function
-	Alias:add(self, self._ecs);
+	local ecs = ECS:new();
+	self._ecs = ecs;
 	Alias:add(self._ecs, self);
 
 	self._world = love.physics.newWorld(0, 0, false);
@@ -116,18 +115,26 @@ MapScene.init = function(self, mapName)
 	local mapHeight = self._map:getHeightInPixels();
 	self._camera = Camera:new(mapWidth, mapHeight);
 
-	self:addSystem(BasicSystem:new(self, InputListener, function(cmp, dt)
+	ecs:addSystem(BasicSystem:new(ecs, InputListener, function(cmp, dt)
 		cmp:update(dt);
 	end));
-	self:addSystem(BasicSystem:new(self, ScriptRunner, function(cmp, dt)
+	ecs:addSystem(BasicSystem:new(ecs, ScriptRunner, function(cmp, dt)
 		cmp:update(dt);
 	end));
-	self:addSystem(BasicSystem:new(self, Sprite, function(cmp, dt)
+	ecs:addSystem(BasicSystem:new(ecs, Sprite, function(cmp, dt)
 		cmp:update(dt);
 	end));
-	self:addSystem(MovementSystem:new(self));
+	ecs:addSystem(MovementSystem:new(ecs));
 
 	self:update(0);
+end
+
+MapScene.spawn = function(self, ...)
+	return self._ecs:spawn(...);
+end
+
+MapScene.despawn = function(self, ...)
+	return self._ecs:despawn(...);
 end
 
 MapScene.update = function(self, dt)
@@ -186,18 +193,20 @@ end
 MapScene.draw = function(self)
 	MapScene.super.draw(self);
 
+	local ecs = self._ecs;
+
 	love.graphics.push();
 
 	local ox, oy = self._camera:getRenderOffset();
 	love.graphics.translate(ox, oy);
 
 	self._map:drawBelowEntities();
-	local spriteEntities = self:getAllEntitiesWith(Sprite);
+	local spriteEntities = ecs:getAllEntitiesWith(Sprite);
 	for entity, sprite in pairs(spriteEntities) do -- TODO sorting
 		sprite:draw(entity:getPosition());
 	end
 	if DebugFlags.drawPhysics then
-		for entity, touchTrigger in pairs(self:getAllEntitiesWith(TouchTrigger)) do
+		for entity, touchTrigger in pairs(ecs:getAllEntitiesWith(TouchTrigger)) do
 			local x, y = entity:getPosition();
 			self:drawShape(x, y, touchTrigger:getShape(), Colors.ecoGreen);
 		end
