@@ -20,15 +20,10 @@ tests[#tests].body = function()
 	subject:addComponent(PhysicsBody:new(scene, "dynamic"));
 	subject:addComponent(Locomotion:new(scene));
 	subject:setPosition(startX, startY);
-
-	local scriptRunner = ScriptRunner:new(scene);
-	subject:addComponent(scriptRunner);
-
-	-- TODO would like not to pass script runner here
-	local controller = Controller:new(scene, scriptRunner, function(self)
+	subject:addComponent(ScriptRunner:new(scene));
+	subject:addComponent(Controller:new(scene, function(self)
 		Movement.walkToPoint(self, endX, endY, acceptanceRadius)
-	end);
-	subject:addComponent(controller);
+	end));
 
 	for i = 1, 1000 do
 		scene:update(16 / 1000);

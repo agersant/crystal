@@ -15,8 +15,8 @@ local Dialog = Class("Dialog", Widget);
 
 local getInputDevice = function(self)
 	if self._player then
-		local controller = self._player:getController();
-		if controller:isInstanceOf(InputDrivenController) then
+		local controller = self._player:getComponent(InputDrivenController);
+		if controller then
 			return controller:getInputDevice();
 		end
 	end
@@ -98,11 +98,10 @@ Dialog.open = function(self, owner, player)
 	self._player = player;
 	self:setAlpha(1);
 
-	local controller = self._player:getController();
-	assert(controller:isIdle());
-	controller:doAction(Actions.idle);
-	if controller:isInstanceOf(InputDrivenController) then
-		controller:disable();
+	assert(player:isIdle());
+	player:doAction(Actions.idle);
+	if player:getComponent(InputDrivenController) then -- TODO this will break for classes inheriting from InputDrivenController
+		player:disable();
 	end
 end
 
@@ -117,8 +116,7 @@ Dialog.say = function(self, text)
 	self._revealAll = false;
 	self._currentGlyphCount = 0;
 
-	local controller = self._player:getController();
-	if controller:isInstanceOf(InputDrivenController) then
+	if self._player:getComponent(InputDrivenController) then -- TODO this will break for classes inheriting from InputDrivenController
 		local dialog = self;
 		self:thread(function()
 			waitForCommandPress(self, "advanceDialog");

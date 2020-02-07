@@ -13,6 +13,9 @@ Entity.init = function(self, ecs)
 	self._ecs = ecs;
 end
 
+Entity.awake = function(self)
+end
+
 Entity.addComponent = function(self, component)
 	assert(component);
 	self._ecs:addComponent(self, component);

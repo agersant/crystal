@@ -7,8 +7,15 @@ Component.init = function(self, ecs)
 	self._ecs = ecs;
 end
 
+Component.awake = function(self)
+end
+
 Component.getEntity = function(self)
-	return self._ecs:getEntity(self);
+	return self._entity;
+end
+
+Component.setEntity = function(self, entity)
+	self._entity = entity;
 end
 
 return Component;

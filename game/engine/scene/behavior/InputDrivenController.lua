@@ -17,8 +17,8 @@ end
 
 -- PUBLIC API
 
-InputDrivenController.init = function(self, entity, scriptRunner, scriptContent, playerIndex)
-	InputDrivenController.super.init(self, entity, scriptRunner, scriptContent);
+InputDrivenController.init = function(self, entity, scriptContent, playerIndex)
+	InputDrivenController.super.init(self, entity, scriptContent);
 	self._playerIndex = playerIndex;
 	self._inputDevice = Input:getDevice(playerIndex);
 	self._disabled = 0;

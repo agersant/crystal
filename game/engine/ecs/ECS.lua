@@ -6,67 +6,20 @@ local Query = require("engine/ecs/query/Query");
 
 local ECS = Class("ECS");
 
-ECS.init = function(self)
-	self._entities = {};
-	self._entityToComponents = {};
-
-	self._componentToEntity = {};
-	self._componentClassToEntities = {};
-
-	self._queries = {};
-	self._componentClassToQueries = {};
-	self._queryToEntities = {};
-
-	self._systems = {};
-end
-
-ECS.update = function(self, dt)
-	for system in pairs(self._systems) do
-		system:update(dt);
-	end
-end
-
-ECS.spawn = function(self, class, ...)
-	assert(class);
-	local entity = class:new(self, ...);
-	assert(entity);
-	self._entities[entity] = true;
-	self._entityToComponents[entity] = {};
-	entity:setIsValid(true);
-	return entity;
-end
-
-ECS.despawn = function(self, entity)
-	assert(entity);
-	assert(self._entities[entity]);
-	assert(self._entityToComponents[entity]);
-	local components = TableUtils.shallowCopy(self._entityToComponents[entity]);
-	for class, component in pairs(components) do
-		self:removeComponent(component);
-	end
-	self._entities[entity] = nil;
-	self._entityToComponents[entity] = nil;
-	entity:setIsValid(false);
-end
-
-ECS.addComponent = function(self, entity, component)
+local registerComponent = function(self, entity, component)
 	assert(entity);
 	assert(entity:isValid());
 	assert(component);
 	assert(component:isInstanceOf(Component));
 
 	local class = component:getClass();
-	assert(class);
-	if not self._componentClassToEntities[class] then
-		self._componentClassToEntities[class] = {};
-	end
-
-	assert(not self._componentToEntity[component]);
-	self._componentToEntity[component] = entity;
 
 	assert(self._entityToComponents[entity]);
 	self._entityToComponents[entity][class] = component;
 
+	if not self._componentClassToEntities[class] then
+		self._componentClassToEntities[class] = {};
+	end
 	assert(not self._componentClassToEntities[class][entity]);
 	self._componentClassToEntities[class][entity] = true;
 
@@ -77,18 +30,17 @@ ECS.addComponent = function(self, entity, component)
 			end
 		end
 	end
+
+	component:awake();
 end
 
-ECS.removeComponent = function(self, entity, component)
+local deregisterComponent = function(self, entity, component)
 	assert(entity);
 	assert(entity:isValid());
 	assert(component);
 
 	local class = component:getClass();
 	assert(class);
-
-	assert(self._componentToEntity[component]);
-	self._componentToEntity[component] = nil;
 
 	assert(self._entityToComponents[entity][class]);
 	self._entityToComponents[entity][class] = nil;
@@ -103,6 +55,101 @@ ECS.removeComponent = function(self, entity, component)
 			end
 		end
 	end
+end
+
+local registerEntity = function(self, entity, components)
+	entity:setIsValid(true);
+	assert(not self._entities[entity]);
+	self._entities[entity] = true;
+	self._entityToComponents[entity] = {};
+	for class, component in pairs(components) do
+		registerComponent(self, entity, component);
+	end
+
+	entity:awake();
+end
+
+local deregisterEntity = function(self, entity)
+	assert(self._entityToComponents[entity]);
+	local components = TableUtils.shallowCopy(self._entityToComponents[entity]);
+	for _, component in pairs(components) do
+		deregisterComponent(self, entity, component);
+	end
+	assert(self._entities[entity]);
+	self._entities[entity] = nil;
+	self._entityToComponents[entity] = nil;
+	entity:setIsValid(false);
+end
+
+ECS.init = function(self)
+	self._entities = {};
+	self._entityToComponents = {};
+	self._componentClassToEntities = {};
+
+	self._queries = {};
+	self._componentClassToQueries = {};
+	self._queryToEntities = {};
+
+	self._systems = {};
+
+	self._nursery = {};
+	self._graveyard = {};
+end
+
+ECS.update = function(self, dt)
+	for entity in pairs(self._graveyard) do
+		deregisterEntity(self, entity);
+	end
+	self._graveyard = {};
+
+	for entity, components in pairs(self._nursery) do
+		registerEntity(self, entity, components);
+	end
+	self._nursery = {};
+
+	for system in pairs(self._systems) do
+		system:update(dt);
+	end
+end
+
+ECS.spawn = function(self, class, ...)
+	assert(class);
+	local entity = class:new(self, ...);
+	assert(entity);
+	self._nursery[entity] = {};
+	return entity;
+end
+
+ECS.despawn = function(self, entity)
+	assert(entity);
+	if self._nursery[entity] then
+		self._nursery[entity] = nil;
+	else
+		assert(self._entities[entity]);
+		self._graveyard[entity] = true;
+	end
+end
+
+ECS.addComponent = function(self, entity, component)
+	local nurseryComponents = self._nursery[entity];
+	if nurseryComponents then
+		assert(component);
+		assert(component:isInstanceOf(Component));
+		nurseryComponents[component:getClass()] = component;
+	else
+		registerComponent(self, entity, component);
+	end
+	component:setEntity(entity);
+end
+
+ECS.removeComponent = function(self, entity, component)
+	local nurseryComponents = self._nursery[entity];
+	if nurseryComponents then
+		nurseryComponents[component] = nil;
+	else
+		deregisterComponent(self, entity, component);
+	end
+	component:setEntity(nil);
 end
 
 ECS.addQuery = function(self, query)
@@ -127,11 +174,6 @@ end
 
 -- ACCESSORS
 
-ECS.getEntity = function(self, component)
-	assert(component);
-	return self._componentToEntity[component];
-end
-
 ECS.getAllEntities = function(self)
 	return TableUtils.shallowCopy(self._entities);
 end
@@ -152,9 +194,14 @@ end
 
 ECS.getComponent = function(self, entity, class)
 	assert(entity);
-	assert(entity:isValid());
 	assert(class);
-	return self._entityToComponents[entity][class];
+	local nurseryComponents = self._nursery[entity];
+	if nurseryComponents then
+		return nurseryComponents[class];
+	else
+		assert(entity:isValid());
+		return self._entityToComponents[entity][class];
+	end
 end
 
 return ECS;

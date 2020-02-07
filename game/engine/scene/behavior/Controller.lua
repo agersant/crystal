@@ -1,20 +1,23 @@
 require("engine/utils/OOP");
+local Log = require("engine/dev/Log");
 local Component = require("engine/ecs/Component");
 local Script = require("engine/script/Script");
+local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 
 local Controller = Class("Controller", Component);
 
 -- PUBLIC API
 
-Controller.init = function(self, ecs, scriptRunner, scriptContent) -- TODO having to pass scriptRunner feels clunky
-	assert(scriptRunner);
+Controller.init = function(self, ecs, scriptContent) -- TODO having to pass scriptRunner feels clunky
 	assert(scriptContent);
 	Controller.super.init(self, ecs);
 	self._actionThread = nil;
 	self._taskThread = nil;
-	self._scriptRunner = scriptRunner;
 	self._script = Script:new(scriptContent);
-	self._scriptRunner:addScript(self._script);
+end
+
+Controller.awake = function(self)
+	self:getEntity():addScript(self._script);
 end
 
 Controller.isIdle = function(self)
@@ -30,7 +33,7 @@ Controller.doAction = function(self, actionFunction)
 	self._actionThread = self._script:thread(function(script)
 		actionFunction(script);
 		self._actionThread = nil;
-		self._scriptRunner:signalAllScripts("idle");
+		self:getEntity():signalAllScripts("idle");
 	end);
 end
 

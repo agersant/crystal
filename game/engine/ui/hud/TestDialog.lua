@@ -11,11 +11,9 @@ tests[#tests + 1] = {name = "Blocks script during say"};
 tests[#tests].body = function()
 	local scene = MapScene:new("assets/map/test/empty.lua");
 	local player = scene:spawn(Entity);
-	local scriptRunner = ScriptRunner:new(scene);
-	player:addComponent(scriptRunner);
-	local controller = InputDrivenController:new(player, scriptRunner, function()
-	end, 1);
-	player:addController(controller);
+	player:addComponent(ScriptRunner:new(scene));
+	player:addComponent(InputDrivenController:new(player, function()
+	end, 1));
 
 	local dialog = Dialog:new();
 	local a = 0;
