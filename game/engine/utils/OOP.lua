@@ -3,12 +3,17 @@ local getClassByName = function(classPackage, name)
 	return classIndex[name];
 end
 
-local objectConstuctor = function(class, ...)
-	local obj = setmetatable({}, class._objMetaTable);
+local objectConstuctorInPlace = function(class, obj, ...)
+	setmetatable(obj, class._objMetaTable);
 	if obj.init then
 		obj:init(...);
 	end
 	return obj;
+end
+
+local objectConstuctor = function(class, ...)
+	local obj = {};
+	return objectConstuctorInPlace(class, obj, ...);
 end
 
 local makeIsInstanceOf = function(class)
@@ -57,6 +62,7 @@ local declareClass = function(self, name, baseClass)
 
 	class.super = baseClass;
 	class.new = objectConstuctor;
+	class.placementNew = objectConstuctorInPlace;
 	class.getClass = getClass;
 	class.getClassName = getClassName;
 	class.isInstanceOf = makeIsInstanceOf(class);

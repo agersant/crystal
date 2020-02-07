@@ -80,7 +80,7 @@ end
 
 MapCollisionMesh.spawnBody = function(self, scene)
 	local world = scene:getPhysicsWorld();
-	local body = love.physics.newBody(world, 0, 0, "static");
+	local body = love.physics.newBody(world, 0, 0);
 	body:setUserData(self);
 	for _, chain in ipairs(self._chains) do
 		local fixture = love.physics.newFixture(body, chain:getShape());

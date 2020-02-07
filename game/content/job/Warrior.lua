@@ -2,6 +2,9 @@ require("engine/utils/OOP");
 local ComboAttack = require("content/skill/ComboAttack");
 local Dash = require("content/skill/Dash");
 local Assets = require("engine/resources/Assets");
+local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
+local Locomotion = require("engine/scene/physics/Locomotion");
+local PhysicsBody = require("engine/scene/physics/PhysicsBody");
 local Sprite = require("engine/scene/component/Sprite");
 local Entity = require("engine/ecs/Entity");
 
@@ -13,17 +16,17 @@ Warrior.init = function(self, scene)
 	Warrior.super.init(self, scene);
 	local sheet = Assets:getSpritesheet("assets/spritesheet/duran.lua");
 	self:addSprite(Sprite:new(sheet));
-	self:addPhysicsBody("dynamic");
-	self:addLocomotion();
+	self:addComponent(Locomotion:new(scene));
+	self:addComponent(PhysicsBody:new(scene, "dynamic"));
 	self:addCollisionPhysics();
-	self:addCombatData();
+	-- self:addCombatData(); TODO
 	self:setCollisionRadius(6);
 	self:setUseSpriteHitboxData(true);
-	self:addScriptRunner();
-	self:addCombatLogic();
+	self:addComponent(ScriptRunner:new(scene));
+	-- self:addCombatLogic(); TODO
 
-	self:addSkill(ComboAttack:new(self));
-	self:addSkill(Dash:new(self));
+	-- self:addSkill(ComboAttack:new(self)); TODO
+	-- self:addSkill(Dash:new(self)); TODO
 end
 
 return Warrior;

@@ -2,6 +2,8 @@ require("engine/utils/OOP");
 local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/scene/Scene");
 local Controller = require("engine/scene/behavior/Controller");
+local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
+local PhysicsBody = require("engine/scene/physics/PhysicsBody");
 local Entity = require("engine/ecs/Entity");
 local Field = require("arpg/field/Field");
 
@@ -58,8 +60,8 @@ local teleportScript = function(self)
 	end
 end
 
-TeleportController.init = function(self, entity)
-	TeleportController.super.init(self, entity, teleportScript);
+TeleportController.init = function(self, scene)
+	TeleportController.super.init(self, scene, teleportScript);
 end
 
 -- PUBLIC API
@@ -70,10 +72,10 @@ Teleport.init = function(self, scene, options)
 	assert(options.targetY);
 
 	Teleport.super.init(self, scene);
-	self:addPhysicsBody("static");
+	self:addComponent(PhysicsBody:new(scene));
 	self:addTrigger(options.shape);
-	self:addScriptRunner();
-	self:addController(TeleportController:new(self));
+	self:addComponent(ScriptRunner:new(scene));
+	self:addComponent(TeleportController:new(scene));
 	self:setPosition(options.x, options.y);
 
 	self._targetMap = options.targetMap;

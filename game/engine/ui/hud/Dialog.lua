@@ -2,7 +2,6 @@ require("engine/utils/OOP");
 local Log = require("engine/dev/Log");
 local Colors = require("engine/resources/Colors");
 local Fonts = require("engine/resources/Fonts");
-local InputDrivenController = require("engine/scene/behavior/InputDrivenController");
 local Actions = require("engine/scene/Actions");
 local Script = require("engine/script/Script");
 local Widget = require("engine/ui/Widget");
@@ -13,9 +12,10 @@ local Dialog = Class("Dialog", Widget);
 
 -- IMPLEMENTATION
 
+-- TODO turn this into an entity and add/remove InputListener when dialog opens/closes
 local getInputDevice = function(self)
 	if self._player then
-		local controller = self._player:getComponent(InputDrivenController);
+		local controller = nil; -- TODO
 		if controller then
 			return controller:getInputDevice();
 		end
@@ -100,7 +100,7 @@ Dialog.open = function(self, owner, player)
 
 	assert(player:isIdle());
 	player:doAction(Actions.idle);
-	if player:getComponent(InputDrivenController) then -- TODO this will break for classes inheriting from InputDrivenController
+	if false then -- TODO this will break for classes inheriting from InputDrivenController
 		player:disable();
 	end
 end
@@ -116,7 +116,7 @@ Dialog.say = function(self, text)
 	self._revealAll = false;
 	self._currentGlyphCount = 0;
 
-	if self._player:getComponent(InputDrivenController) then -- TODO this will break for classes inheriting from InputDrivenController
+	if false then -- TODO this will break for classes inheriting from InputDrivenController
 		local dialog = self;
 		self:thread(function()
 			waitForCommandPress(self, "advanceDialog");
@@ -136,7 +136,7 @@ Dialog.close = function(self)
 	assert(self._player ~= nil);
 
 	local controller = self._player:getController();
-	if controller:isInstanceOf(InputDrivenController) then
+	if controller:isInstanceOf(InputDrivenController) then -- TODO
 		controller:enable();
 	end
 

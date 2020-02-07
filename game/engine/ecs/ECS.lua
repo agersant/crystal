@@ -114,9 +114,9 @@ end
 
 ECS.spawn = function(self, class, ...)
 	assert(class);
-	local entity = class:new(self, ...);
-	assert(entity);
+	local entity = {};
 	self._nursery[entity] = {};
+	class:placementNew(entity, self, ...);
 	return entity;
 end
 

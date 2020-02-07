@@ -75,10 +75,10 @@ end
 -- COLLISION COMPONENT
 
 Entity.addCollisionPhysics = function(self)
-	assert(self._body);
+	assert(self:getBody());
 	assert(not self._collisionFixture);
 	local collisionShape = love.physics.newCircleShape(1);
-	self._collisionFixture = love.physics.newFixture(self._body, collisionShape);
+	self._collisionFixture = love.physics.newFixture(self:getBody(), collisionShape);
 	self._collisionFixture:setFilterData(CollisionFilters.SOLID,
                                      	CollisionFilters.GEO + CollisionFilters.SOLID + CollisionFilters.TRIGGER, 0);
 	self._collisionFixture:setFriction(0);
@@ -138,12 +138,12 @@ end
 -- TRIGGER COMPONENT
 
 Entity.addTrigger = function(self, shape)
-	assert(self._body);
+	assert(self:getBody());
 	if self._triggerShape == shape then
 		return;
 	end
 	self:removeTrigger();
-	self._triggerFixture = love.physics.newFixture(self._body, shape);
+	self._triggerFixture = love.physics.newFixture(self:getBody(), shape);
 	self._triggerFixture:setFilterData(CollisionFilters.TRIGGER, CollisionFilters.SOLID, 0);
 	self._triggerFixture:setSensor(true);
 	self._triggerShape = shape;
@@ -170,24 +170,10 @@ Entity.setAnimation = function(self, animationName, forceRestart)
 end
 
 Entity.setUseSpriteHitboxData = function(self, enabled)
-	assert(self._body);
 	self._useSpriteHitboxData = enabled;
 end
 
 -- CONTROLLER COMPONENT
-
-Entity.addController = function(self, controller)
-	if self._controller then
-		self:removeScript(self._controller);
-	end
-	self._controller = controller;
-	self:addScript(self._controller);
-	assert(self._controller);
-end
-
-Entity.getController = function(self)
-	return self._controller;
-end
 
 Entity.getAssignedPlayer = function(self)
 	if self._controller.getAssignedPlayer then

@@ -73,4 +73,13 @@ tests[#tests].body = function()
 	assert(Class:getByName("Berry") == nil);
 end
 
+tests[#tests + 1] = {name = "Placement new"};
+tests[#tests].body = function()
+	Class:resetIndex();
+	local Fruit = Class("Fruit");
+	local fruit = {};
+	Fruit:placementNew(fruit);
+	assert(fruit:getClass() == Fruit);
+end
+
 return tests;

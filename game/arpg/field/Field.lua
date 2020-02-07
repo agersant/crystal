@@ -8,6 +8,7 @@ local Scene = require("engine/scene/Scene");
 local UIScene = require("engine/ui/UIScene");
 local TitleScreen = require("engine/ui/frontend/TitleScreen");
 local TableUtils = require("engine/utils/TableUtils");
+local InputListener = require("engine/scene/behavior/InputListener");
 local PlayerController = require("engine/scene/behavior/PlayerController");
 
 local Field = Class("Field", MapScene);
@@ -21,11 +22,12 @@ local spawnParty = function(self, x, y)
 		local className = partyMember:getInstanceClass();
 		local class = Class:getByName(className);
 		assert(class);
-		local entity = class:new(self, {});
+		local entity = self:spawn(class, {});
 		entity:addToParty();
 		local assignedPlayer = partyMember:getAssignedPlayer();
 		if assignedPlayer then
-			entity:addController(PlayerController:new(entity, assignedPlayer));
+			entity:addComponent(InputListener:new(self, assignedPlayer));
+			entity:addComponent(PlayerController:new(self));
 		end
 		entity:setPosition(x, y);
 	end
@@ -49,7 +51,7 @@ Field.addEntityToParty = function(self, entity)
 	assert(not TableUtils.contains(self._partyEntities, entity));
 	table.insert(self._partyEntities, entity);
 	self._camera:addTrackedEntity(entity);
-	entity:setTeam(Teams.party);
+	-- entity:setTeam(Teams.party); TODO
 end
 
 Field.removeEntityFromParty = function(self, entity)

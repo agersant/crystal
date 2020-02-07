@@ -12,6 +12,10 @@ PhysicsBody.init = function(self, ecs, bodyType)
 	self:setDirection8(1, 0);
 end
 
+PhysicsBody.getBody = function(self)
+	return self._body;
+end
+
 PhysicsBody.getPosition = function(self)
 	return self._body:getX(), self._body:getY();
 end

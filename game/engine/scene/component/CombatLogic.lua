@@ -2,7 +2,6 @@ require("engine/utils/OOP");
 local Teams = require("engine/combat/Teams");
 local Actions = require("engine/scene/Actions");
 local Script = require("engine/script/Script");
-local InputDrivenController = require("engine/scene/behavior/InputDrivenController");
 local HUD = require("engine/ui/hud/HUD");
 
 local CombatLogic = Class("CombatLogic", Script);
@@ -42,7 +41,7 @@ local logic = function(self)
 	while true do
 		self:waitFor("death");
 		local controller = self._entity:getController();
-		if controller:isInstanceOf(InputDrivenController) then
+		if controller:isInstanceOf(InputDrivenController) then -- TODO
 			controller:disable();
 		end
 		self:waitFor("idle");

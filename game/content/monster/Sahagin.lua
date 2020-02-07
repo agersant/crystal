@@ -67,7 +67,7 @@ Sahagin.init = function(self, scene)
 	self:setUseSpriteHitboxData(true);
 	self:addScriptRunner();
 	self:addCombatLogic();
-	self:addController(SahaginController:new(self));
+	self:addComponent(SahaginController:new(self));
 end
 
 return Sahagin;

@@ -9,6 +9,7 @@ local ECS = require("engine/ecs/ECS");
 local Entity = require("engine/ecs/Entity");
 local Camera = require("engine/scene/Camera");
 local Scene = require("engine/scene/Scene");
+local InputListener = require("engine/scene/behavior/InputListener");
 local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 local MovementSystem = require("engine/scene/physics/MovementSystem");
 local Alias = require("engine/utils/Alias");
@@ -113,6 +114,9 @@ MapScene.init = function(self, mapName)
 	local mapHeight = self._map:getHeightInPixels();
 	self._camera = Camera:new(mapWidth, mapHeight);
 
+	self:addSystem(BasicSystem:new(self, InputListener, function(cmp, dt)
+		cmp:update(dt);
+	end));
 	self:addSystem(BasicSystem:new(self, ScriptRunner, function(cmp, dt)
 		cmp:update(dt);
 	end));

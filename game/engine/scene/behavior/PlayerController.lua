@@ -1,39 +1,43 @@
 require("engine/utils/OOP");
-local Input = require("engine/input/Input");
 local Actions = require("engine/scene/Actions");
-local Script = require("engine/script/Script");
-local InputDrivenController = require("engine/scene/behavior/InputDrivenController");
+local Controller = require("engine/scene/behavior/Controller");
 local TableUtils = require("engine/utils/TableUtils");
 
-local PlayerController = Class("PlayerController", InputDrivenController);
+local PlayerController = Class("PlayerController", Controller);
 
 -- CONTROLS
+local waitForCommandPress = function(self, command)
+	if self:isCommandActive(command) then
+		self:waitFor("-" .. command);
+	end
+	self:waitFor("+" .. command);
+end
 
 local addDirectionControls = function(self)
 	self:thread(function(self)
 		while true do
-			self:waitForCommandPress("moveLeft");
+			waitForCommandPress(self, "moveLeft");
 			self._lastXDirInput = -1;
 		end
 	end);
 
 	self:thread(function(self)
 		while true do
-			self:waitForCommandPress("moveRight");
+			waitForCommandPress(self, "moveRight");
 			self._lastXDirInput = 1;
 		end
 	end);
 
 	self:thread(function(self)
 		while true do
-			self:waitForCommandPress("moveUp");
+			waitForCommandPress(self, "moveUp");
 			self._lastYDirInput = -1;
 		end
 	end);
 
 	self:thread(function(self)
 		while true do
-			self:waitForCommandPress("moveDown");
+			waitForCommandPress(self, "moveDown");
 			self._lastYDirInput = 1;
 		end
 	end);
@@ -101,7 +105,7 @@ local skillControls = function(skillIndex)
 		local entity = self:getEntity();
 		local useSkillCommand = "useSkill" .. skillIndex;
 		while true do
-			self:waitForCommandPress(useSkillCommand);
+			waitForCommandPress(self, useSkillCommand);
 			local skill = entity:getSkill(skillIndex);
 			if skill then
 				skill:use();
@@ -129,7 +133,7 @@ local addInteractionControls = function(self)
 	self:thread(function()
 		local player = self:getEntity();
 		while true do
-			self:waitForCommandPress("interact");
+			waitForCommandPress(self, "interact");
 			if self:isIdle() then
 				local contactCopy = TableUtils.shallowCopy(self._contacts);
 				for entity, _ in pairs(contactCopy) do
@@ -151,8 +155,8 @@ end
 
 -- PUBLIC API
 
-PlayerController.init = function(self, entity, playerIndex)
-	PlayerController.super.init(self, entity, playerControllerScript, playerIndex);
+PlayerController.init = function(self, scene)
+	PlayerController.super.init(self, scene, playerControllerScript);
 end
 
 return PlayerController;
