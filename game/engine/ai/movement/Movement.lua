@@ -20,7 +20,7 @@ local stepTowards = function(self, targetX, targetY)
 			return false;
 		else
 			self:setPosition(targetX, targetY);
-			self:doAction(Actions.idle(self));
+			self:doAction(Actions.idle);
 			return true;
 		end
 	end
@@ -90,7 +90,7 @@ local walkToGoal = function(self, goal, repathDelay)
 	self:signal("endWalkToGoal");
 
 	if self:isIdle() then
-		self:doAction(Actions.idle(self));
+		self:doAction(Actions.idle);
 	end
 
 	local x, y = self:getPosition();
