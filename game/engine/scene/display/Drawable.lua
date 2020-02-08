@@ -5,8 +5,8 @@ local Drawable = Class("Drawable", Component);
 
 -- PUBLIC API
 
-Drawable.init = function(self, scene)
-	Drawable.super.init(self, scene);
+Drawable.init = function(self)
+	Drawable.super.init(self);
 end
 
 Drawable.awake = function(self, scene)

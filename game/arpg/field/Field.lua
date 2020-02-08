@@ -26,8 +26,8 @@ local spawnParty = function(self, x, y)
 		entity:addToParty();
 		local assignedPlayer = partyMember:getAssignedPlayer();
 		if assignedPlayer then
-			entity:addComponent(InputListener:new(self, assignedPlayer));
-			entity:addComponent(PlayerController:new(self));
+			entity:addComponent(InputListener:new(assignedPlayer));
+			entity:addComponent(PlayerController:new());
 		end
 		entity:setPosition(x, y);
 	end

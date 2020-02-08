@@ -6,8 +6,8 @@ local Renderer = Class("Renderer", Component);
 
 -- PUBLIC API
 
-Renderer.init = function(self, scene)
-	Renderer.super.init(self, scene);
+Renderer.init = function(self)
+	Renderer.super.init(self);
 	self._drawables = {};
 end
 

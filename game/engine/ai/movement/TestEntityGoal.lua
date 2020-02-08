@@ -10,7 +10,7 @@ tests[#tests].body = function()
 	local scene = MapScene:new("assets/map/test/empty.lua");
 
 	local target = scene:spawn(Entity);
-	target:addComponent(PhysicsBody:new(scene));
+	target:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 	target:setPosition(8, 12);
 
 	local goal = EntityGoal:new(target, 1);
@@ -24,7 +24,7 @@ tests[#tests].body = function()
 	local scene = MapScene:new("assets/map/test/empty.lua");
 
 	local target = scene:spawn(Entity);
-	target:addComponent(PhysicsBody:new(scene));
+	target:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 	target:setPosition(8, 12);
 
 	local goal = EntityGoal:new(target, 1);
@@ -37,7 +37,7 @@ tests[#tests].body = function()
 	local scene = MapScene:new("assets/map/test/empty.lua");
 
 	local target = scene:spawn(Entity);
-	target:addComponent(PhysicsBody:new(scene));
+	target:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 	target:setPosition(8, 12);
 
 	local goal = EntityGoal:new(target, 1);

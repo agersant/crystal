@@ -17,8 +17,8 @@ end
 
 -- PUBLIC API
 
-InputListener.init = function(self, ecs, playerIndex)
-	InputListener.super.init(self, ecs);
+InputListener.init = function(self, playerIndex)
+	InputListener.super.init(self);
 	self._playerIndex = playerIndex;
 	self._inputDevice = Input:getDevice(playerIndex);
 	self._disabled = 0;

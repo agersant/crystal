@@ -10,7 +10,7 @@ tests[#tests + 1] = {name = "Kill"};
 tests[#tests].body = function()
 	local scene = MapScene:new("assets/map/test/empty.lua");
 	local entity = scene:spawn(Entity);
-	entity:addComponent(ScriptRunner:new(scene)); -- TODO shouldnt be needed for this test
+	entity:addComponent(ScriptRunner:new()); -- TODO shouldnt be needed for this test
 	local combatData = CombatData:new(entity);
 	assert(not combatData:isDead());
 	combatData:kill();
@@ -23,8 +23,8 @@ tests[#tests].body = function()
 
 	local attacker = scene:spawn(Entity);
 	local victim = scene:spawn(Entity);
-	attacker:addComponent(ScriptRunner:new(scene)); -- TODO shouldnt be needed for this test
-	victim:addComponent(ScriptRunner:new(scene)); -- TODO shouldnt be needed for this test
+	attacker:addComponent(ScriptRunner:new()); -- TODO shouldnt be needed for this test
+	victim:addComponent(ScriptRunner:new()); -- TODO shouldnt be needed for this test
 	attacker:addCombatData();
 	victim:addCombatData();
 

@@ -6,9 +6,9 @@ local Controller = Class("Controller", Component);
 
 -- PUBLIC API
 
-Controller.init = function(self, ecs, scriptContent)
+Controller.init = function(self, scriptContent)
 	assert(scriptContent);
-	Controller.super.init(self, ecs);
+	Controller.super.init(self);
 	self._actionThread = nil;
 	self._taskThread = nil;
 	self._script = Script:new(scriptContent);

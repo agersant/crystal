@@ -2,9 +2,7 @@ require("engine/utils/OOP");
 
 local Component = Class("Component");
 
-Component.init = function(self, ecs)
-	assert(ecs);
-	self._ecs = ecs;
+Component.init = function(self)
 end
 
 Component.awake = function(self)

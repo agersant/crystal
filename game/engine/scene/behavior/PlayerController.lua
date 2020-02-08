@@ -155,8 +155,8 @@ end
 
 -- PUBLIC API
 
-PlayerController.init = function(self, scene)
-	PlayerController.super.init(self, scene, playerControllerScript);
+PlayerController.init = function(self)
+	PlayerController.super.init(self, playerControllerScript);
 end
 
 return PlayerController;

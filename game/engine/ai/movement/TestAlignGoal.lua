@@ -10,11 +10,11 @@ tests[#tests].body = function()
 	local scene = MapScene:new("assets/map/test/empty.lua");
 
 	local me = scene:spawn(Entity);
-	me:addComponent(PhysicsBody:new(scene));
+	me:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 	me:setPosition(1, .5);
 
 	local target = scene:spawn(Entity);
-	target:addComponent(PhysicsBody:new(scene));
+	target:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 
 	local goal = AlignGoal:new(me, target, 1);
 	local x, y = goal:getPosition();
@@ -27,11 +27,11 @@ tests[#tests].body = function()
 	local scene = MapScene:new("assets/map/test/empty.lua");
 
 	local me = scene:spawn(Entity);
-	me:addComponent(PhysicsBody:new(scene));
+	me:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 	me:setPosition(1, .5);
 
 	local target = scene:spawn(Entity);
-	target:addComponent(PhysicsBody:new(scene));
+	target:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 
 	local goal = AlignGoal:new(me, target, 1);
 	assert(goal:isPositionAcceptable(0, 5));
@@ -46,11 +46,11 @@ tests[#tests].body = function()
 	local scene = MapScene:new("assets/map/test/empty.lua");
 
 	local me = scene:spawn(Entity);
-	me:addComponent(PhysicsBody:new(scene));
+	me:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 	me:setPosition(1, .5);
 
 	local target = scene:spawn(Entity);
-	target:addComponent(PhysicsBody:new(scene));
+	target:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 
 	local goal = AlignGoal:new(me, target, 1);
 	assert(not goal:isPositionAcceptable(2, 2));

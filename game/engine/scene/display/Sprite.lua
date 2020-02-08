@@ -7,8 +7,8 @@ local Sprite = Class("Sprite", Drawable);
 
 -- PUBLIC API
 
-Sprite.init = function(self, scene, sheet)
-	Sprite.super.init(self, scene);
+Sprite.init = function(self, sheet)
+	Sprite.super.init(self);
 	self._sheet = sheet;
 	self:setAnimation(sheet:getDefaultAnimationName());
 	self._time = 0;

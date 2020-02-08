@@ -4,9 +4,9 @@ local MathUtils = require("engine/utils/MathUtils");
 
 local PhysicsBody = Class("PhysicsBody", Component);
 
-PhysicsBody.init = function(self, ecs, bodyType)
-	PhysicsBody.super.init(self, ecs);
-	self._body = love.physics.newBody(self._ecs:getPhysicsWorld(), 0, 0, bodyType);
+PhysicsBody.init = function(self, physicsWorld, bodyType)
+	PhysicsBody.super.init(self);
+	self._body = love.physics.newBody(physicsWorld, 0, 0, bodyType);
 	self._body:setFixedRotation(true);
 	self._body:setUserData(self);
 	self:setDirection8(1, 0);
@@ -34,7 +34,6 @@ PhysicsBody.setAngle = function(self, angle)
 end
 
 PhysicsBody.setDirection8 = function(self, xDir8, yDir8)
-	assert(self._body);
 	assert(xDir8 == 0 or xDir8 == 1 or xDir8 == -1);
 	assert(yDir8 == 0 or yDir8 == 1 or yDir8 == -1);
 	assert(xDir8 ~= 0 or yDir8 ~= 0);

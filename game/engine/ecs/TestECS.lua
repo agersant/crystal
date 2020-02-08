@@ -32,7 +32,7 @@ tests[#tests].body = function()
 	local a = ecs:spawn(Entity);
 	local b = ecs:spawn(Entity);
 
-	local c = Component:new(ecs);
+	local c = Component:new();
 	a:addComponent(c);
 	assert(a:getComponent(Component) == c);
 	assert(b:getComponent(Component) == nil);

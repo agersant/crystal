@@ -3,8 +3,8 @@ local Component = require("engine/ecs/Component");
 
 local Locomotion = Class("Locomotion", Component);
 
-Locomotion.init = function(self, ecs)
-	Locomotion.super.init(self, ecs);
+Locomotion.init = function(self)
+	Locomotion.super.init(self);
 	self._speed = 0;
 end
 

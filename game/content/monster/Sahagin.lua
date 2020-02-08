@@ -51,8 +51,8 @@ local controllerScript = function(self)
 	end
 end
 
-SahaginController.init = function(self, entity)
-	SahaginController.super.init(self, entity, controllerScript);
+SahaginController.init = function(self)
+	SahaginController.super.init(self, controllerScript);
 end
 
 -- PUBLIC API
@@ -60,16 +60,16 @@ end
 Sahagin.init = function(self, scene)
 	Sahagin.super.init(self, scene);
 	local sheet = Assets:getSpritesheet("assets/spritesheet/sahagin.lua");
-	self:addComponent(Renderer:new(scene));
-	self:addComponent(Sprite:new(scene, sheet));
-	self:addComponent(PhysicsBody:new(scene, "dynamic"));
-	self:addComponent(Locomotion:new(scene));
+	self:addComponent(Renderer:new());
+	self:addComponent(Sprite:new(sheet));
+	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	self:addComponent(Locomotion:new());
 	-- self:setMovementSpeed(40); TODO
 	self:addCollisionPhysics();
 	-- self:addCombatData(); TODO
 	self:setCollisionRadius(4);
 	self:setUseSpriteHitboxData(true);
-	self:addComponent(ScriptRunner:new(scene));
+	self:addComponent(ScriptRunner:new());
 	-- self:addCombatLogic(); TODO
 	self:addComponent(SahaginController:new(self));
 end

@@ -7,8 +7,8 @@ local ScriptRunner = Class("ScriptRunner", Component);
 
 -- PUBLIC API
 
-ScriptRunner.init = function(self, ecs)
-	ScriptRunner.super.init(self, ecs);
+ScriptRunner.init = function(self)
+	ScriptRunner.super.init(self);
 	self._scripts = {};
 	self._newScripts = {};
 end

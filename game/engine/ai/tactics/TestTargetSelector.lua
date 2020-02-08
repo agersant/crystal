@@ -18,7 +18,7 @@ tests[#tests].body = function()
 	local enemyB = scene:spawn(Entity);
 	local targets = {me, friend, enemyA, enemyB};
 	for _, entity in ipairs(targets) do
-		entity:addComponent(PhysicsBody:new(scene));
+		entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 		entity:addCombatData();
 	end
 
@@ -48,7 +48,7 @@ tests[#tests].body = function()
 	local enemy = scene:spawn(Entity);
 	local targets = {me, friendA, friendB, enemy};
 	for _, entity in ipairs(targets) do
-		entity:addComponent(PhysicsBody:new(scene));
+		entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 		entity:addCombatData();
 	end
 
@@ -66,7 +66,7 @@ tests[#tests].body = function()
 	local nearest = selector:getNearestAlly(me);
 	assert(nearest == friendB);
 
-	friendB:addComponent(ScriptRunner:new(scene)); -- TODO shouldnt be needed for this test
+	friendB:addComponent(ScriptRunner:new()); -- TODO shouldnt be needed for this test
 	friendB:kill();
 	local nearest = selector:getNearestAlly(me);
 	assert(nearest == friendA);

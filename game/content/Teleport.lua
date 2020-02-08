@@ -62,8 +62,8 @@ local teleportScript = function(self)
 	end
 end
 
-TeleportController.init = function(self, scene)
-	TeleportController.super.init(self, scene, teleportScript);
+TeleportController.init = function(self)
+	TeleportController.super.init(self, teleportScript);
 end
 
 -- PUBLIC API
@@ -74,11 +74,11 @@ Teleport.init = function(self, scene, options)
 	assert(options.targetY);
 
 	Teleport.super.init(self, scene);
-	self:addComponent(PhysicsBody:new(scene));
-	self:addComponent(Renderer:new(scene));
-	self:addComponent(TouchTrigger:new(scene, options.shape));
-	self:addComponent(ScriptRunner:new(scene));
-	self:addComponent(TeleportController:new(scene));
+	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+	self:addComponent(Renderer:new());
+	self:addComponent(TouchTrigger:new(options.shape));
+	self:addComponent(ScriptRunner:new());
+	self:addComponent(TeleportController:new());
 	self:setPosition(options.x, options.y);
 
 	self._targetMap = options.targetMap;

@@ -17,11 +17,11 @@ tests[#tests].body = function()
 	local acceptanceRadius = 6;
 
 	local subject = scene:spawn(Entity);
-	subject:addComponent(PhysicsBody:new(scene, "dynamic"));
-	subject:addComponent(Locomotion:new(scene));
+	subject:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	subject:addComponent(Locomotion:new());
 	subject:setPosition(startX, startY);
-	subject:addComponent(ScriptRunner:new(scene));
-	subject:addComponent(Controller:new(scene, function(self)
+	subject:addComponent(ScriptRunner:new());
+	subject:addComponent(Controller:new(function(self)
 		Movement.walkToPoint(self, endX, endY, acceptanceRadius)
 	end));
 

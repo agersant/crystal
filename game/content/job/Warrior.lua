@@ -16,15 +16,15 @@ local Warrior = Class("Warrior", Entity);
 Warrior.init = function(self, scene)
 	Warrior.super.init(self, scene);
 	local sheet = Assets:getSpritesheet("assets/spritesheet/duran.lua");
-	self:addComponent(Renderer:new(scene));
-	self:addComponent(Sprite:new(scene, sheet));
-	self:addComponent(Locomotion:new(scene));
-	self:addComponent(PhysicsBody:new(scene, "dynamic"));
+	self:addComponent(Renderer:new());
+	self:addComponent(Sprite:new(sheet));
+	self:addComponent(Locomotion:new());
+	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	self:addCollisionPhysics();
 	-- self:addCombatData(); TODO
 	self:setCollisionRadius(6);
 	self:setUseSpriteHitboxData(true);
-	self:addComponent(ScriptRunner:new(scene));
+	self:addComponent(ScriptRunner:new());
 	-- self:addCombatLogic(); TODO
 
 	-- self:addSkill(ComboAttack:new(self)); TODO

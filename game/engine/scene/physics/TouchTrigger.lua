@@ -6,8 +6,8 @@ local CollisionFilters = require("engine/scene/CollisionFilters");
 
 local TouchTrigger = Class("TouchTrigger", Drawable);
 
-TouchTrigger.init = function(self, ecs, shape)
-	TouchTrigger.super.init(self, ecs);
+TouchTrigger.init = function(self, shape)
+	TouchTrigger.super.init(self);
 	assert(shape);
 	self._shape = shape;
 end

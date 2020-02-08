@@ -26,13 +26,13 @@ end
 NPC.init = function(self, scene)
 	NPC.super.init(self, scene);
 	local sheet = Assets:getSpritesheet("assets/spritesheet/Sahagin.lua");
-	self:addComponent(Renderer:new(scene));
-	self:addComponent(Sprite:new(scene, sheet));
-	self:addComponent(PhysicsBody:new(scene));
+	self:addComponent(Renderer:new());
+	self:addComponent(Sprite:new(sheet));
+	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 	self:addCollisionPhysics();
 	self:setCollisionRadius(4);
-	self:addComponent(ScriptRunner:new(scene));
-	self:addComponent(Controller:new(scene, script));
+	self:addComponent(ScriptRunner:new());
+	self:addComponent(Controller:new(script));
 end
 
 return NPC;
