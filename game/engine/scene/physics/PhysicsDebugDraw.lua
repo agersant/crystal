@@ -15,6 +15,10 @@ local pickFixtureColor = function(self, fixture)
 		return Colors.ecoGreen;
 	elseif bit.band(categories, CollisionFilters.SOLID) ~= 0 then
 		return Colors.cyan;
+	elseif bit.band(categories, CollisionFilters.WEAKBOX) ~= 0 then
+		return Colors.ecoGreen;
+	elseif bit.band(categories, CollisionFilters.HITBOX) ~= 0 then
+		return Colors.strawberry;
 	end
 end
 

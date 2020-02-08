@@ -208,18 +208,6 @@ MapScene.draw = function(self)
 	for entity, drawable in pairs(drawables) do -- TODO sorting
 		drawable:draw();
 	end
-	if DebugFlags.drawPhysics then
-		-- TODO
-		-- if self._collisionFixture then
-		-- 	self:drawShape(self._collisionFixture:getShape(), Colors.cyan);
-		-- end
-		-- if self._hitboxFixture then
-		-- 	self:drawShape(self._hitboxFixture:getShape(), Colors.strawberry);
-		-- end
-		-- if self._weakboxFixture then
-		-- 	self:drawShape(self._weakboxFixture:getShape(), Colors.ecoGreen);
-		-- end
-	end
 	self._map:drawAboveEntities();
 	self._map:drawDebug();
 
