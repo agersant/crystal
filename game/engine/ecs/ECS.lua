@@ -104,7 +104,7 @@ ECS.init = function(self)
 	self._graveyard = {};
 end
 
-ECS.update = function(self, dt)
+ECS.update = function(self)
 	local graveyard = TableUtils.shallowCopy(self._graveyard);
 	self._graveyard = {};
 	for entity in pairs(graveyard) do
@@ -116,9 +116,13 @@ ECS.update = function(self, dt)
 	for entity, components in pairs(nursery) do
 		registerEntity(self, entity, components);
 	end
+end
 
+ECS.emit = function(self, event, ...)
 	for _, system in ipairs(self._systems) do
-		system:update(dt);
+		if system[event] then
+			system[event](system, ...);
+		end
 	end
 end
 

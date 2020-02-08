@@ -7,7 +7,11 @@ System.init = function(self, ecs)
 	self._ecs = ecs;
 end
 
-System.update = function()
+System.getECS = function(self)
+	return self._ecs;
+end
+
+System.update = function(self)
 end
 
 return System;

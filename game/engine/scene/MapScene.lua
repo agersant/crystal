@@ -12,7 +12,7 @@ local Scene = require("engine/scene/Scene");
 local InputListener = require("engine/scene/behavior/InputListener");
 local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 local Sprite = require("engine/scene/display/Sprite");
-local Drawable = require("engine/scene/display/Drawable");
+local DrawableSystem = require("engine/scene/display/DrawableSystem");
 local MovementSystem = require("engine/scene/physics/MovementSystem");
 local PhysicsBody = require("engine/scene/physics/PhysicsBody");
 local Alias = require("engine/utils/Alias");
@@ -25,19 +25,6 @@ local queueSignal = function(self, target, signal, ...)
 	assert(target);
 	assert(signal);
 	table.insert(self._queuedSignals, {target = target, name = signal, data = {...}});
-end
-
-local sortDrawableEntities = function(entityA, entityB)
-	return entityA:getZOrder() < entityB:getZOrder();
-end
-
-local removeDespawnedEntitiesFrom = function(self, list)
-	for i = #list, 1, -1 do
-		local entity = list[i];
-		if self._despawnedEntities[entity] then
-			table.remove(list, i);
-		end
-	end
 end
 
 local beginOrEndContact = function(self, fixtureA, fixtureB, contact, prefix)
@@ -129,6 +116,8 @@ MapScene.init = function(self, mapName)
 		cmp:update(dt); -- TODO untested
 	end));
 
+	ecs:addSystem(DrawableSystem:new(ecs));
+
 	self:update(0);
 end
 
@@ -144,7 +133,8 @@ MapScene.update = function(self, dt)
 	MapScene.super.update(self, dt);
 
 	self._world:update(dt);
-	self._ecs:update(dt);
+	self._ecs:update();
+	self._ecs:emit("update", dt);
 
 	for _, signal in ipairs(self._queuedSignals) do
 		signal.target:signalAllScripts(signal.name, unpack(signal.data));
@@ -165,11 +155,7 @@ MapScene.draw = function(self)
 	love.graphics.translate(ox, oy);
 
 	self._map:drawBelowEntities();
-	local drawables = ecs:getAllComponents(Drawable);
-	table.sort(drawables, sortDrawableEntities);
-	for _, drawable in ipairs(drawables) do
-		drawable:draw();
-	end
+	self._ecs:emit("draw");
 	self._map:drawAboveEntities();
 	self._map:drawDebug();
 
