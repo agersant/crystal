@@ -56,11 +56,6 @@ Entity.getScreenPosition = function(self)
 	return camera:getRelativePosition(x, y);
 end
 
-Entity.findPathTo = function(self, targetX, targetY)
-	local startX, startY = self:getPosition();
-	return self._ecs:findPath(startX, startY, targetX, targetY);
-end
-
 -- LOCOMOTION COMPONENT
 
 Entity.setMovementSpeed = function(self, speed)
