@@ -143,49 +143,13 @@ end
 MapScene.update = function(self, dt)
 	MapScene.super.update(self, dt);
 
-	-- Pump physics simulation
 	self._world:update(dt);
-
 	self._ecs:update(dt);
 
 	for _, signal in ipairs(self._queuedSignals) do
 		signal.target:signalAllScripts(signal.name, unpack(signal.data));
 	end
 	self._queuedSignals = {};
-
-	-- Update entities
-	for _, entity in ipairs(self._updatableEntities) do
-		entity:update(dt);
-	end
-
-	-- Add new entities
-	for entity, _ in pairs(self._spawnedEntities) do
-		table.insert(self._entities, entity);
-		if entity:isDrawable() then
-			table.insert(self._drawableEntities, entity);
-		end
-		if entity:isCombatable() then
-			table.insert(self._combatableEntities, entity);
-		end
-	end
-	for entity, _ in pairs(self._spawnedEntities) do
-		if entity:isUpdatable() then
-			table.insert(self._updatableEntities, entity);
-			entity:update(0);
-		end
-	end
-	self._spawnedEntities = {};
-
-	-- Remove old entities
-	removeDespawnedEntitiesFrom(self, self._entities);
-	removeDespawnedEntitiesFrom(self, self._updatableEntities);
-	removeDespawnedEntitiesFrom(self, self._drawableEntities);
-	removeDespawnedEntitiesFrom(self, self._combatableEntities);
-	removeDespawnedEntitiesFrom(self, self._partyEntities);
-	for entity, _ in pairs(self._despawnedEntities) do
-		entity:destroy();
-	end
-	self._despawnedEntities = {};
 
 	self._camera:update(dt);
 end

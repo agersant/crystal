@@ -202,18 +202,6 @@ end
 
 -- CORE
 
-Entity.isUpdatable = function(self)
-	return self._scriptRunner or self._sprite or (self.update ~= Entity.update);
-end
-
-Entity.isDrawable = function(self)
-	return self._sprite or self._body or (self.draw ~= Entity.draw);
-end
-
-Entity.isCombatable = function(self)
-	return self._combatData;
-end
-
 Entity.update = function(self, dt)
 	-- if self._scriptRunner then
 	-- 	self._scriptRunner:update(dt);
