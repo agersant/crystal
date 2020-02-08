@@ -14,14 +14,18 @@ local registerComponent = function(self, entity, component)
 
 	local class = component:getClass();
 
-	assert(self._entityToComponents[entity]);
-	self._entityToComponents[entity][class] = component;
+	local baseClass = class;
+	while baseClass ~= Component do
+		assert(self._entityToComponents[entity]);
+		self._entityToComponents[entity][baseClass] = component;
 
-	if not self._componentClassToEntities[class] then
-		self._componentClassToEntities[class] = {};
+		if not self._componentClassToEntities[baseClass] then
+			self._componentClassToEntities[baseClass] = {};
+		end
+		assert(not self._componentClassToEntities[baseClass][entity]);
+		self._componentClassToEntities[baseClass][entity] = true;
+		baseClass = baseClass.super;
 	end
-	assert(not self._componentClassToEntities[class][entity]);
-	self._componentClassToEntities[class][entity] = true;
 
 	if self._componentClassToQueries[class] then
 		for query in pairs(self._componentClassToQueries[class]) do
@@ -42,11 +46,15 @@ local deregisterComponent = function(self, entity, component)
 	local class = component:getClass();
 	assert(class);
 
-	assert(self._entityToComponents[entity][class]);
-	self._entityToComponents[entity][class] = nil;
+	local baseClass = class;
+	while baseClass ~= Component do
+		assert(self._entityToComponents[entity][baseClass]);
+		self._entityToComponents[entity][baseClass] = nil;
 
-	assert(self._componentClassToEntities[class][entity]);
-	self._componentClassToEntities[class][entity] = nil;
+		assert(self._componentClassToEntities[baseClass][entity]);
+		self._componentClassToEntities[baseClass][entity] = nil;
+		baseClass = baseClass.super;
+	end
 
 	if self._componentClassToQueries[class] then
 		for query in pairs(self._componentClassToQueries[class]) do
