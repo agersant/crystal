@@ -1,10 +1,8 @@
 require("engine/utils/OOP");
-local DebugFlags = require("engine/dev/DebugFlags");
-local Colors = require("engine/resources/Colors");
-local Drawable = require("engine/scene/display/Drawable");
+local Component = require("engine/ecs/Component");
 local CollisionFilters = require("engine/scene/CollisionFilters");
 
-local Collision = Class("Collision", Drawable);
+local Collision = Class("Collision", Component);
 
 Collision.init = function(self, radius)
 	Collision.super.init(self);
@@ -34,12 +32,6 @@ end
 
 Collision.getShape = function(self)
 	return self._shape;
-end
-
-Collision.draw = function(self, x, y)
-	if DebugFlags.drawPhysics then
-		self:drawShape(x, y, self._shape, Colors.cyan);
-	end
 end
 
 return Collision;

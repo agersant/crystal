@@ -9,13 +9,8 @@ Drawable.init = function(self)
 	Drawable.super.init(self);
 end
 
-Drawable.awake = function(self)
-	self:getEntity():addDrawable(self);
-end
-
--- TODO remove from renderer when component is removed
-
-Drawable.draw = function(self, x, y)
+Drawable.draw = function(self)
+	love.graphics.setColor(1, 1, 1);
 end
 
 Drawable.drawShape = function(self, x, y, shape, color)

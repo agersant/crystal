@@ -12,9 +12,9 @@ local Scene = require("engine/scene/Scene");
 local InputListener = require("engine/scene/behavior/InputListener");
 local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 local Sprite = require("engine/scene/display/Sprite");
-local Renderer = require("engine/scene/display/Renderer");
+local Drawable = require("engine/scene/display/Drawable");
 local MovementSystem = require("engine/scene/physics/MovementSystem");
-local TouchTrigger = require("engine/scene/physics/TouchTrigger");
+local PhysicsBody = require("engine/scene/physics/PhysicsBody");
 local Alias = require("engine/utils/Alias");
 
 local MapScene = Class("MapScene", Scene);
@@ -125,6 +125,9 @@ MapScene.init = function(self, mapName)
 		cmp:update(dt);
 	end));
 	ecs:addSystem(MovementSystem:new(ecs));
+	ecs:addSystem(BasicSystem:new(ecs, PhysicsBody, function(cmp, dt)
+		cmp:update(dt); -- TODO untested
+	end));
 
 	self:update(0);
 end
@@ -201,9 +204,9 @@ MapScene.draw = function(self)
 	love.graphics.translate(ox, oy);
 
 	self._map:drawBelowEntities();
-	local renderers = ecs:getAllEntitiesWith(Renderer);
-	for entity, renderers in pairs(renderers) do -- TODO sorting
-		renderers:draw();
+	local drawables = ecs:getAllEntitiesWith(Drawable);
+	for entity, drawable in pairs(drawables) do -- TODO sorting
+		drawable:draw();
 	end
 	if DebugFlags.drawPhysics then
 		-- TODO

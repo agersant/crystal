@@ -105,17 +105,19 @@ ECS.init = function(self)
 end
 
 ECS.update = function(self, dt)
-	for entity in pairs(self._graveyard) do
+	local graveyard = TableUtils.shallowCopy(self._graveyard);
+	self._graveyard = {};
+	for entity in pairs(graveyard) do
 		deregisterEntity(self, entity);
 	end
-	self._graveyard = {};
 
-	for entity, components in pairs(self._nursery) do
+	local nursery = TableUtils.shallowCopy(self._nursery);
+	self._nursery = {};
+	for entity, components in pairs(nursery) do
 		registerEntity(self, entity, components);
 	end
-	self._nursery = {};
 
-	for system in pairs(self._systems) do
+	for _, system in ipairs(self._systems) do
 		system:update(dt);
 	end
 end
@@ -177,7 +179,7 @@ end
 ECS.addSystem = function(self, system)
 	assert(system);
 	assert(system:isInstanceOf(System));
-	self._systems[system] = true;
+	table.insert(self._systems, system);
 end
 
 -- ACCESSORS

@@ -35,7 +35,9 @@ Sprite.update = function(self, dt)
 	assert(self._sheetFrame);
 end
 
-Sprite.draw = function(self, x, y)
+Sprite.draw = function(self)
+	Sprite.super.draw();
+	local x, y = self:getEntity():getPosition();
 	local quad = self._sheetFrame:getQuad();
 	local image = self._sheet:getImage();
 	local ox, oy = self._animationFrame:getOrigin();

@@ -1,6 +1,9 @@
 require("engine/utils/OOP");
+local Features = require("engine/dev/Features");
 local Component = require("engine/ecs/Component");
+local Entity = require("engine/ecs/Entity");
 local MathUtils = require("engine/utils/MathUtils");
+local PhysicsDebugDraw = require("engine/scene/physics/PhysicsDebugDraw");
 
 local PhysicsBody = Class("PhysicsBody", Component);
 
@@ -10,6 +13,34 @@ PhysicsBody.init = function(self, physicsWorld, bodyType)
 	self._body:setFixedRotation(true);
 	self._body:setUserData(self);
 	self:setDirection8(1, 0);
+end
+
+PhysicsBody.awake = function(self)
+	PhysicsBody.super.awake(self);
+	if Features.debugDraw then
+		local ecs = self:getEntity():getECS();
+		local childEntity = ecs:spawn(Entity); -- TODO despawn when this component is removed!!
+		childEntity:addComponent(PhysicsDebugDraw:new(self._body));
+	end
+end
+
+PhysicsBody.attach = function(self, other)
+	other:attachTo(self);
+end
+
+PhysicsBody.attachTo = function(self, other)
+	self._parent = other;
+end
+
+PhysicsBody.getParent = function(self)
+	return self._parent;
+end
+
+PhysicsBody.update = function(self, dt)
+	if self._parent then
+		local x, y = self._parent:getEntity():getPosition();
+		self:setPosition(x, y);
+	end
 end
 
 PhysicsBody.getBody = function(self)

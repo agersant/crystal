@@ -5,7 +5,6 @@ local Assets = require("engine/resources/Assets");
 local Actions = require("engine/scene/Actions");
 local Controller = require("engine/scene/behavior/Controller");
 local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
-local Renderer = require("engine/scene/display/Renderer");
 local Sprite = require("engine/scene/display/Sprite");
 local Collision = require("engine/scene/physics/Collision");
 local Locomotion = require("engine/scene/physics/Locomotion");
@@ -61,7 +60,6 @@ end
 Sahagin.init = function(self, scene)
 	Sahagin.super.init(self, scene);
 	local sheet = Assets:getSpritesheet("assets/spritesheet/sahagin.lua");
-	self:addComponent(Renderer:new());
 	self:addComponent(Sprite:new(sheet));
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	self:addComponent(Locomotion:new());

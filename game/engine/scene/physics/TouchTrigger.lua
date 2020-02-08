@@ -1,10 +1,8 @@
 require("engine/utils/OOP");
-local DebugFlags = require("engine/dev/DebugFlags");
-local Colors = require("engine/resources/Colors");
-local Drawable = require("engine/scene/display/Drawable");
+local Component = require("engine/ecs/Component");
 local CollisionFilters = require("engine/scene/CollisionFilters");
 
-local TouchTrigger = Class("TouchTrigger", Drawable);
+local TouchTrigger = Class("TouchTrigger", Component);
 
 TouchTrigger.init = function(self, shape)
 	TouchTrigger.super.init(self);
@@ -22,12 +20,6 @@ end
 
 TouchTrigger.getShape = function(self)
 	return self._shape;
-end
-
-TouchTrigger.draw = function(self, x, y)
-	if DebugFlags.drawPhysics then
-		self:drawShape(x, y, self._shape, Colors.ecoGreen);
-	end
 end
 
 return TouchTrigger;

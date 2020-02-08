@@ -13,6 +13,10 @@ Entity.init = function(self, ecs)
 	self._ecs = ecs;
 end
 
+Entity.getECS = function(self)
+	return self._ecs;
+end
+
 Entity.awake = function(self)
 end
 

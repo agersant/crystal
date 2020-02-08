@@ -2,7 +2,6 @@ require("engine/utils/OOP");
 local Assets = require("engine/resources/Assets");
 local Controller = require("engine/scene/behavior/Controller");
 local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
-local Renderer = require("engine/scene/display/Renderer");
 local Sprite = require("engine/scene/display/Sprite");
 local Collision = require("engine/scene/physics/Collision");
 local PhysicsBody = require("engine/scene/physics/PhysicsBody");
@@ -27,7 +26,6 @@ end
 NPC.init = function(self, scene)
 	NPC.super.init(self, scene);
 	local sheet = Assets:getSpritesheet("assets/spritesheet/Sahagin.lua");
-	self:addComponent(Renderer:new());
 	self:addComponent(Sprite:new(sheet));
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 	self:addComponent(Collision:new(4));
