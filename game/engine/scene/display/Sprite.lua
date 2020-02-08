@@ -45,6 +45,11 @@ Sprite.draw = function(self)
 	love.graphics.draw(image, quad, MathUtils.roundTo(x, snapTo), MathUtils.roundTo(y, snapTo), 0, 1, 1, ox, oy);
 end
 
+Sprite.getZOrder = function(self)
+	local _, y = self:getEntity():getPosition();
+	return y;
+end
+
 Sprite.isAnimationOver = function(self)
 	return self._time >= self._animation:getDuration();
 end

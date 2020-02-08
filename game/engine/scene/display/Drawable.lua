@@ -13,6 +13,10 @@ Drawable.draw = function(self)
 	love.graphics.setColor(1, 1, 1);
 end
 
+Drawable.getZOrder = function(self)
+	return 0;
+end
+
 Drawable.drawShape = function(self, x, y, shape, color)
 	love.graphics.push();
 	love.graphics.translate(x, y);

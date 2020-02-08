@@ -28,7 +28,7 @@ local queueSignal = function(self, target, signal, ...)
 end
 
 local sortDrawableEntities = function(entityA, entityB)
-	return entityA:getZ() < entityB:getZ();
+	return entityA:getZOrder() < entityB:getZOrder();
 end
 
 local removeDespawnedEntitiesFrom = function(self, list)
@@ -187,9 +187,6 @@ MapScene.update = function(self, dt)
 	end
 	self._despawnedEntities = {};
 
-	-- Sort drawable entities
-	table.sort(self._drawableEntities, sortDrawableEntities);
-
 	self._camera:update(dt);
 end
 
@@ -204,8 +201,9 @@ MapScene.draw = function(self)
 	love.graphics.translate(ox, oy);
 
 	self._map:drawBelowEntities();
-	local drawables = ecs:getAllEntitiesWith(Drawable);
-	for entity, drawable in pairs(drawables) do -- TODO sorting
+	local drawables = ecs:getAllComponents(Drawable);
+	table.sort(drawables, sortDrawableEntities);
+	for _, drawable in ipairs(drawables) do
 		drawable:draw();
 	end
 	self._map:drawAboveEntities();

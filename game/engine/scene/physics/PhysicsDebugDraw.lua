@@ -40,4 +40,8 @@ PhysicsDebugDraw.draw = function(self)
 	end
 end
 
+PhysicsDebugDraw.getZOrder = function(self)
+	return self._body:getY() + 1 / 1000;
+end
+
 return PhysicsDebugDraw;

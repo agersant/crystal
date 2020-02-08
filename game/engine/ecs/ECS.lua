@@ -214,4 +214,14 @@ ECS.getComponent = function(self, entity, class)
 	end
 end
 
+ECS.getAllComponents = function(self, class)
+	assert(class);
+	local source = self._componentClassToEntities[class] or {};
+	local output = {};
+	for entity, _ in pairs(source) do
+		table.insert(output, self._entityToComponents[entity][class]);
+	end
+	return output;
+end
+
 return ECS;

@@ -66,9 +66,11 @@ tests[#tests].body = function()
 	local boop = Boop:new();
 	a:addComponent(boop);
 	ecs:update();
-	assert(ecs:getAllEntitiesWith(Snoot)[a]);
+	assert(ecs:getAllEntitiesWith(Snoot)[a] == boop);
+	assert(ecs:getAllComponents(Snoot)[1] == boop);
 	a:removeComponent(boop);
 	assert(not ecs:getAllEntitiesWith(Snoot)[a]);
+	assert(#ecs:getAllComponents(Snoot) == 0);
 end
 
 -- TODO test awake calls

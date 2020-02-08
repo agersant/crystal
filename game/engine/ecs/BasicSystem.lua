@@ -12,10 +12,8 @@ BasicSystem.init = function(self, ecs, componentClass, updateFunction)
 end
 
 BasicSystem.update = function(self, dt)
-	local entities = self._ecs:getAllEntitiesWith(self._componentClass);
-	for entity in pairs(entities) do
-		local component = entity:getComponent(self._componentClass);
-		assert(component);
+	local components = self._ecs:getAllComponents(self._componentClass);
+	for _, component in ipairs(components) do
 		self._updateFunction(component, dt);
 	end
 end
