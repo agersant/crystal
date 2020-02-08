@@ -246,23 +246,6 @@ Entity.update = function(self, dt)
 	-- end
 end
 
-Entity.draw = function(self)
-	if self._sprite and self._body then
-		self._sprite:draw(self._body:getX(), self._body:getY());
-	end
-	if DebugFlags.drawPhysics then
-		if self._hitboxFixture then
-			self:drawShape(self._hitboxFixture:getShape(), Colors.strawberry);
-		end
-		if self._weakboxFixture then
-			self:drawShape(self._weakboxFixture:getShape(), Colors.ecoGreen);
-		end
-		if self._triggerFixture then
-			self:drawShape(self._triggerFixture:getShape(), Colors.ecoGreen);
-		end
-	end
-end
-
 Entity.destroy = function(self)
 	if self._body then
 		self._body:destroy(); -- TODO do this when component is unregistered
