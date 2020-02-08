@@ -38,7 +38,7 @@ local registerComponent = function(self, entity, component)
 	component:awake();
 end
 
-local deregisterComponent = function(self, entity, component)
+local unregisterComponent = function(self, entity, component)
 	assert(entity);
 	assert(entity:isValid());
 	assert(component);
@@ -77,11 +77,11 @@ local registerEntity = function(self, entity, components)
 	entity:awake();
 end
 
-local deregisterEntity = function(self, entity)
+local unregisterEntity = function(self, entity)
 	assert(self._entityToComponents[entity]);
 	local components = TableUtils.shallowCopy(self._entityToComponents[entity]);
 	for _, component in pairs(components) do
-		deregisterComponent(self, entity, component);
+		unregisterComponent(self, entity, component);
 	end
 	assert(self._entities[entity]);
 	self._entities[entity] = nil;
@@ -108,7 +108,7 @@ ECS.update = function(self)
 	local graveyard = TableUtils.shallowCopy(self._graveyard);
 	self._graveyard = {};
 	for entity in pairs(graveyard) do
-		deregisterEntity(self, entity);
+		unregisterEntity(self, entity);
 	end
 
 	local nursery = TableUtils.shallowCopy(self._nursery);
@@ -161,7 +161,7 @@ ECS.removeComponent = function(self, entity, component)
 	if nurseryComponents then
 		nurseryComponents[component] = nil;
 	else
-		deregisterComponent(self, entity, component);
+		unregisterComponent(self, entity, component);
 	end
 	component:setEntity(nil);
 end

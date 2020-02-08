@@ -113,7 +113,7 @@ end
 -- TRIGGER COMPONENT
 Entity.removeTrigger = function(self)
 	if self._triggerFixture then
-		self._triggerFixture:destroy(); -- TODO important do this when component is deregistered
+		self._triggerFixture:destroy(); -- TODO important do this when component is unregistered
 	end
 	self._triggerFixture = nil;
 	self._triggerShape = nil;
