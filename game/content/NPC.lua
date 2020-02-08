@@ -4,6 +4,7 @@ local Controller = require("engine/scene/behavior/Controller");
 local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 local Renderer = require("engine/scene/display/Renderer");
 local Sprite = require("engine/scene/display/Sprite");
+local Collision = require("engine/scene/physics/Collision");
 local PhysicsBody = require("engine/scene/physics/PhysicsBody");
 local Entity = require("engine/ecs/Entity");
 local HUD = require("engine/ui/hud/HUD");
@@ -29,8 +30,7 @@ NPC.init = function(self, scene)
 	self:addComponent(Renderer:new());
 	self:addComponent(Sprite:new(sheet));
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
-	self:addCollisionPhysics();
-	self:setCollisionRadius(4);
+	self:addComponent(Collision:new(4));
 	self:addComponent(ScriptRunner:new());
 	self:addComponent(Controller:new(script));
 end

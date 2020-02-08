@@ -46,11 +46,6 @@ end
 
 -- PHYSICS BODY COMPONENT
 
-Entity.getZ = function(self)
-	assert(self._body);
-	return self._body:getY();
-end
-
 Entity.getScreenPosition = function(self)
 	local x, y = self:getPosition();
 	local camera = self:getScene():getCamera();
@@ -70,25 +65,6 @@ end
 
 Entity.getMovementSpeed = function(self)
 	return self._movementStat:getValue();
-end
-
--- COLLISION COMPONENT
-
-Entity.addCollisionPhysics = function(self)
-	assert(self:getBody());
-	assert(not self._collisionFixture);
-	local collisionShape = love.physics.newCircleShape(1);
-	self._collisionFixture = love.physics.newFixture(self:getBody(), collisionShape);
-	self._collisionFixture:setFilterData(CollisionFilters.SOLID,
-                                     	CollisionFilters.GEO + CollisionFilters.SOLID + CollisionFilters.TRIGGER, 0);
-	self._collisionFixture:setFriction(0);
-	self._collisionFixture:setRestitution(0);
-end
-
-Entity.setCollisionRadius = function(self, radius)
-	assert(radius > 0);
-	assert(self._collisionFixture);
-	self._collisionFixture:getShape():setRadius(radius);
 end
 
 -- HITBOX COMPONENT
@@ -271,9 +247,6 @@ Entity.draw = function(self)
 		self._sprite:draw(self._body:getX(), self._body:getY());
 	end
 	if DebugFlags.drawPhysics then
-		if self._collisionFixture then
-			self:drawShape(self._collisionFixture:getShape(), Colors.cyan);
-		end
 		if self._hitboxFixture then
 			self:drawShape(self._hitboxFixture:getShape(), Colors.strawberry);
 		end

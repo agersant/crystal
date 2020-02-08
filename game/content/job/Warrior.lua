@@ -6,6 +6,7 @@ local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 local Renderer = require("engine/scene/display/Renderer");
 local Sprite = require("engine/scene/display/Sprite");
 local Locomotion = require("engine/scene/physics/Locomotion");
+local Collision = require("engine/scene/physics/Collision");
 local PhysicsBody = require("engine/scene/physics/PhysicsBody");
 local Entity = require("engine/ecs/Entity");
 
@@ -20,9 +21,8 @@ Warrior.init = function(self, scene)
 	self:addComponent(Sprite:new(sheet));
 	self:addComponent(Locomotion:new());
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	self:addCollisionPhysics();
+	self:addComponent(Collision:new(6));
 	-- self:addCombatData(); TODO
-	self:setCollisionRadius(6);
 	self:setUseSpriteHitboxData(true);
 	self:addComponent(ScriptRunner:new());
 	-- self:addCombatLogic(); TODO

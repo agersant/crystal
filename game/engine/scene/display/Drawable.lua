@@ -9,7 +9,7 @@ Drawable.init = function(self)
 	Drawable.super.init(self);
 end
 
-Drawable.awake = function(self, scene)
+Drawable.awake = function(self)
 	self:getEntity():addDrawable(self);
 end
 

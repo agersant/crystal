@@ -7,6 +7,7 @@ local Controller = require("engine/scene/behavior/Controller");
 local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 local Renderer = require("engine/scene/display/Renderer");
 local Sprite = require("engine/scene/display/Sprite");
+local Collision = require("engine/scene/physics/Collision");
 local Locomotion = require("engine/scene/physics/Locomotion");
 local PhysicsBody = require("engine/scene/physics/PhysicsBody");
 
@@ -65,9 +66,8 @@ Sahagin.init = function(self, scene)
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	self:addComponent(Locomotion:new());
 	-- self:setMovementSpeed(40); TODO
-	self:addCollisionPhysics();
+	self:addComponent(Collision:new(4));
 	-- self:addCombatData(); TODO
-	self:setCollisionRadius(4);
 	self:setUseSpriteHitboxData(true);
 	self:addComponent(ScriptRunner:new());
 	-- self:addCombatLogic(); TODO
