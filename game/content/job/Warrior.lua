@@ -3,6 +3,7 @@ local ComboAttack = require("content/skill/ComboAttack");
 local Dash = require("content/skill/Dash");
 local Assets = require("engine/resources/Assets");
 local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
+local Renderer = require("engine/scene/display/Renderer");
 local Sprite = require("engine/scene/display/Sprite");
 local Locomotion = require("engine/scene/physics/Locomotion");
 local PhysicsBody = require("engine/scene/physics/PhysicsBody");
@@ -15,6 +16,7 @@ local Warrior = Class("Warrior", Entity);
 Warrior.init = function(self, scene)
 	Warrior.super.init(self, scene);
 	local sheet = Assets:getSpritesheet("assets/spritesheet/duran.lua");
+	self:addComponent(Renderer:new(scene));
 	self:addComponent(Sprite:new(scene, sheet));
 	self:addComponent(Locomotion:new(scene));
 	self:addComponent(PhysicsBody:new(scene, "dynamic"));

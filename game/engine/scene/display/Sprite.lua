@@ -1,9 +1,9 @@
 require("engine/utils/OOP");
-local Component = require("engine/ecs/Component");
 local GFXConfig = require("engine/graphics/GFXConfig");
+local Drawable = require("engine/scene/display/Drawable");
 local MathUtils = require("engine/utils/MathUtils");
 
-local Sprite = Class("Sprite", Component);
+local Sprite = Class("Sprite", Drawable);
 
 -- PUBLIC API
 

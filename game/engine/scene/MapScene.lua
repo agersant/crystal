@@ -3,7 +3,6 @@ local DebugFlags = require("engine/dev/DebugFlags");
 local Log = require("engine/dev/Log");
 local TargetSelector = require("engine/ai/tactics/TargetSelector");
 local Assets = require("engine/resources/Assets");
-local Colors = require("engine/resources/Colors");
 local CollisionFilters = require("engine/scene/CollisionFilters");
 local BasicSystem = require("engine/ecs/BasicSystem");
 local ECS = require("engine/ecs/ECS");
@@ -13,6 +12,7 @@ local Scene = require("engine/scene/Scene");
 local InputListener = require("engine/scene/behavior/InputListener");
 local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 local Sprite = require("engine/scene/display/Sprite");
+local Renderer = require("engine/scene/display/Renderer");
 local MovementSystem = require("engine/scene/physics/MovementSystem");
 local TouchTrigger = require("engine/scene/physics/TouchTrigger");
 local Alias = require("engine/utils/Alias");
@@ -201,15 +201,11 @@ MapScene.draw = function(self)
 	love.graphics.translate(ox, oy);
 
 	self._map:drawBelowEntities();
-	local spriteEntities = ecs:getAllEntitiesWith(Sprite);
-	for entity, sprite in pairs(spriteEntities) do -- TODO sorting
-		sprite:draw(entity:getPosition());
+	local renderers = ecs:getAllEntitiesWith(Renderer);
+	for entity, renderers in pairs(renderers) do -- TODO sorting
+		renderers:draw();
 	end
 	if DebugFlags.drawPhysics then
-		for entity, touchTrigger in pairs(ecs:getAllEntitiesWith(TouchTrigger)) do
-			local x, y = entity:getPosition();
-			self:drawShape(x, y, touchTrigger:getShape(), Colors.ecoGreen);
-		end
 		-- TODO
 		-- if self._collisionFixture then
 		-- 	self:drawShape(self._collisionFixture:getShape(), Colors.cyan);
@@ -245,27 +241,6 @@ end
 
 MapScene.findPath = function(self, startX, startY, targetX, targetY)
 	return self._map:findPath(startX, startY, targetX, targetY);
-end
-
--- TODO move somewhere else
-MapScene.drawShape = function(self, x, y, shape, color)
-	love.graphics.push();
-	love.graphics.translate(x, y);
-	love.graphics.setColor(color:alpha(.6));
-	if shape:getType() == "polygon" then
-		love.graphics.polygon("fill", shape:getPoints());
-	elseif shape:getType() == "circle" then
-		local x, y = shape:getPoint();
-		love.graphics.circle("fill", x, y, shape:getRadius(), 16);
-	end
-	love.graphics.setColor(color);
-	if shape:getType() == "polygon" then
-		love.graphics.polygon("line", shape:getPoints());
-	elseif shape:getType() == "circle" then
-		local x, y = shape:getPoint();
-		love.graphics.circle("line", x, y, shape:getRadius(), 16);
-	end
-	love.graphics.pop();
 end
 
 return MapScene;

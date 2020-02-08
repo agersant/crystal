@@ -3,6 +3,7 @@ local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/scene/Scene");
 local Controller = require("engine/scene/behavior/Controller");
 local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
+local Renderer = require("engine/scene/display/Renderer");
 local PhysicsBody = require("engine/scene/physics/PhysicsBody");
 local TouchTrigger = require("engine/scene/physics/TouchTrigger");
 local Entity = require("engine/ecs/Entity");
@@ -74,6 +75,7 @@ Teleport.init = function(self, scene, options)
 
 	Teleport.super.init(self, scene);
 	self:addComponent(PhysicsBody:new(scene));
+	self:addComponent(Renderer:new(scene));
 	self:addComponent(TouchTrigger:new(scene, options.shape));
 	self:addComponent(ScriptRunner:new(scene));
 	self:addComponent(TeleportController:new(scene));
