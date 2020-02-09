@@ -14,12 +14,8 @@ Controller.init = function(self, scriptContent)
 	self._script = Script:new(scriptContent);
 end
 
-Controller.activate = function(self)
-	self:getEntity():addScript(self._script);
-end
-
-Controller.deactivate = function(self)
-	self:getEntity():removeScript(self._script);
+Controller.getControllerScript = function(self)
+	return self._script;
 end
 
 Controller.isIdle = function(self)
