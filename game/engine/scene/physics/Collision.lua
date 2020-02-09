@@ -17,11 +17,6 @@ Collision.setFixture = function(self, fixture)
 	self._fixture = fixture;
 end
 
-Collision.setRadius = function(self, radius)
-	assert(radius > 0);
-	self._shape:setRadius(radius);
-end
-
 Collision.getShape = function(self)
 	return self._shape;
 end
