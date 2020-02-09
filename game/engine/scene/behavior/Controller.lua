@@ -14,7 +14,7 @@ Controller.init = function(self, scriptContent)
 	self._script = Script:new(scriptContent);
 end
 
-Controller.getControllerScript = function(self)
+Controller.getScript = function(self)
 	return self._script;
 end
 
