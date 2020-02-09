@@ -47,6 +47,8 @@ tests[#tests].body = function()
 	a:removeComponent(c);
 	assert(nil == a:getComponent(Snoot));
 	assert(nil == b:getComponent(Snoot));
+	assert(ecs:getAllEntitiesWith(Snoot)[a]);
+	ecs:update();
 	assert(not ecs:getAllEntitiesWith(Snoot)[a]);
 	assert(not ecs:getAllEntitiesWith(Snoot)[b]);
 	assert(c:getEntity() == nil);
@@ -68,6 +70,7 @@ tests[#tests].body = function()
 	assert(ecs:getAllEntitiesWith(Snoot)[a] == boop);
 	assert(ecs:getAllComponents(Snoot)[1] == boop);
 	a:removeComponent(boop);
+	ecs:update();
 	assert(not ecs:getAllEntitiesWith(Snoot)[a]);
 	assert(#ecs:getAllComponents(Snoot) == 0);
 end
@@ -97,9 +100,13 @@ tests[#tests].body = function()
 	assert(activated);
 
 	a:removeComponent(c);
+	assert(activated);
+	ecs:update();
 	assert(not activated);
 
 	a:addComponent(c);
+	assert(not activated);
+	ecs:update();
 	assert(activated);
 
 	a:despawn();

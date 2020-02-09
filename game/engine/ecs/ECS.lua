@@ -109,8 +109,10 @@ ECS.init = function(self)
 
 	self._systems = {};
 
-	self._nursery = {};
-	self._graveyard = {};
+	self._entityNursery = {};
+	self._entityGraveyard = {};
+	self._componentNursery = {};
+	self._componentGraveyard = {};
 end
 
 ECS.update = function(self)
@@ -118,16 +120,32 @@ ECS.update = function(self)
 		query:flush();
 	end
 
-	local graveyard = TableUtils.shallowCopy(self._graveyard);
-	self._graveyard = {};
+	local graveyard = TableUtils.shallowCopy(self._componentGraveyard);
+	self._componentGraveyard = {};
+	for entity, components in pairs(graveyard) do
+		for class, component in pairs(components) do
+			unregisterComponent(self, entity, component);
+		end
+	end
+
+	local graveyard = TableUtils.shallowCopy(self._entityGraveyard);
+	self._entityGraveyard = {};
 	for entity in pairs(graveyard) do
 		unregisterEntity(self, entity);
 	end
 
-	local nursery = TableUtils.shallowCopy(self._nursery);
-	self._nursery = {};
+	local nursery = TableUtils.shallowCopy(self._entityNursery);
+	self._entityNursery = {};
 	for entity, components in pairs(nursery) do
 		registerEntity(self, entity, components);
+	end
+
+	local nursery = TableUtils.shallowCopy(self._componentNursery);
+	self._componentNursery = {};
+	for entity, components in pairs(nursery) do
+		for class, component in pairs(components) do
+			registerComponent(self, entity, component);
+		end
 	end
 end
 
@@ -142,40 +160,44 @@ end
 ECS.spawn = function(self, class, ...)
 	assert(class);
 	local entity = {};
-	self._nursery[entity] = {};
+	self._entityNursery[entity] = {};
 	class:placementNew(entity, self, ...);
 	return entity;
 end
 
 ECS.despawn = function(self, entity)
 	assert(entity);
-	if self._nursery[entity] then
-		self._nursery[entity] = nil;
+	if self._entityNursery[entity] then
+		self._entityNursery[entity] = nil;
 	else
 		assert(self._entities[entity]);
-		self._graveyard[entity] = true;
+		self._entityGraveyard[entity] = true;
 	end
 end
 
+-- TODO support add and remove within same frame
+-- TODO error on duplicate class
 ECS.addComponent = function(self, entity, component)
-	local nurseryComponents = self._nursery[entity];
-	if nurseryComponents then
-		assert(component);
-		assert(component:isInstanceOf(Component));
-		nurseryComponents[component:getClass()] = component;
-	else
-		registerComponent(self, entity, component);
+	local nursery = self._componentNursery[entity];
+	if not nursery then
+		nursery = {};
+		self._componentNursery[entity] = nursery;
 	end
+	assert(component);
+	assert(component:isInstanceOf(Component));
+	nursery[component:getClass()] = component;
 	component:setEntity(entity);
 end
 
 ECS.removeComponent = function(self, entity, component)
-	local nurseryComponents = self._nursery[entity];
-	if nurseryComponents then
-		nurseryComponents[component] = nil;
-	else
-		unregisterComponent(self, entity, component);
+	local graveyard = self._componentGraveyard[entity];
+	if not graveyard then
+		graveyard = {};
+		self._componentGraveyard[entity] = graveyard;
 	end
+	assert(component);
+	assert(component:isInstanceOf(Component));
+	graveyard[component:getClass()] = component;
 	component:setEntity(nil);
 end
 
@@ -219,15 +241,26 @@ ECS.query = function(self, query)
 	return TableUtils.shallowCopy(self._queryToEntities[query]);
 end
 
+-- TODO support base class, multiple outputs
 ECS.getComponent = function(self, entity, class)
 	assert(entity);
 	assert(class);
-	local nurseryComponents = self._nursery[entity];
-	if nurseryComponents then
-		return nurseryComponents[class];
+	if self._entityNursery[entity] then
+		if self._componentNursery[entity] then
+			return self._componentNursery[entity][class];
+		end
 	else
 		assert(entity:isValid());
-		return self._entityToComponents[entity][class];
+		if self._componentNursery[entity] then
+			return self._componentNursery[entity][class];
+		elseif self._componentGraveyard[entity] then
+			local component = self._entityToComponents[entity][class];
+			if component ~= self._componentGraveyard[entity][class] then
+				return component;
+			end
+		else
+			return self._entityToComponents[entity][class];
+		end
 	end
 end
 
