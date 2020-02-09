@@ -38,6 +38,8 @@ end
 Field.init = function(self, mapName, startX, startY)
 	Field.super.init(self, mapName);
 
+	self._partyEntities = {}; -- TODO remove
+
 	local mapWidth = self._map:getWidthInPixels();
 	local mapHeight = self._map:getHeightInPixels();
 	startX = startX or mapWidth / 2;
