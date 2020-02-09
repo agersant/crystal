@@ -22,24 +22,4 @@ Drawable.getZOrder = function(self)
 	return self._zOrder;
 end
 
-Drawable.drawShape = function(self, x, y, shape, color)
-	love.graphics.push();
-	love.graphics.translate(x, y);
-	love.graphics.setColor(color:alpha(.6));
-	if shape:getType() == "polygon" then
-		love.graphics.polygon("fill", shape:getPoints());
-	elseif shape:getType() == "circle" then
-		local x, y = shape:getPoint();
-		love.graphics.circle("fill", x, y, shape:getRadius(), 16);
-	end
-	love.graphics.setColor(color);
-	if shape:getType() == "polygon" then
-		love.graphics.polygon("line", shape:getPoints());
-	elseif shape:getType() == "circle" then
-		local x, y = shape:getPoint();
-		love.graphics.circle("line", x, y, shape:getRadius(), 16);
-	end
-	love.graphics.pop();
-end
-
 return Drawable;

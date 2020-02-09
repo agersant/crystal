@@ -22,6 +22,26 @@ local pickFixtureColor = function(self, fixture)
 	end
 end
 
+local drawShape = function(self, x, y, shape, color)
+	love.graphics.push();
+	love.graphics.translate(x, y);
+	love.graphics.setColor(color:alpha(.6));
+	if shape:getType() == "polygon" then
+		love.graphics.polygon("fill", shape:getPoints());
+	elseif shape:getType() == "circle" then
+		local x, y = shape:getPoint();
+		love.graphics.circle("fill", x, y, shape:getRadius(), 16);
+	end
+	love.graphics.setColor(color);
+	if shape:getType() == "polygon" then
+		love.graphics.polygon("line", shape:getPoints());
+	elseif shape:getType() == "circle" then
+		local x, y = shape:getPoint();
+		love.graphics.circle("line", x, y, shape:getRadius(), 16);
+	end
+	love.graphics.pop();
+end
+
 -- PUBLIC API
 
 DebugDraw.init = function(self, body)
@@ -35,7 +55,7 @@ DebugDraw.draw = function(self)
 		local x, y = self._body:getX(), self._body:getY();
 		for _, fixture in ipairs(self._body:getFixtures()) do
 			local color = pickFixtureColor(self, fixture);
-			self:drawShape(x, y, fixture:getShape(), color);
+			drawShape(self, x, y, fixture:getShape(), color);
 		end
 	end
 end
