@@ -14,7 +14,7 @@ Controller.init = function(self, scriptContent)
 	self._script = Script:new(scriptContent);
 end
 
-Controller.awake = function(self)
+Controller.activate = function(self)
 	self:getEntity():addScript(self._script);
 end
 

@@ -15,8 +15,8 @@ PhysicsBody.init = function(self, physicsWorld, bodyType)
 	self:setDirection8(1, 0);
 end
 
-PhysicsBody.awake = function(self)
-	PhysicsBody.super.awake(self);
+PhysicsBody.activate = function(self)
+	PhysicsBody.super.activate(self);
 	if Features.debugDraw then
 		local ecs = self:getEntity():getECS();
 		local childEntity = ecs:spawn(Entity); -- TODO despawn when this component is removed!!

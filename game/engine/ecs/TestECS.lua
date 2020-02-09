@@ -73,7 +73,7 @@ tests[#tests].body = function()
 	assert(#ecs:getAllComponents(Snoot) == 0);
 end
 
--- TODO test awake calls
+-- TODO test activate calls
 
 -- TODO test queries
 

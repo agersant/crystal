@@ -10,8 +10,8 @@ TouchTrigger.init = function(self, shape)
 	self._shape = shape;
 end
 
-TouchTrigger.awake = function(self)
-	TouchTrigger.super.awake(self);
+TouchTrigger.activate = function(self)
+	TouchTrigger.super.activate(self);
 	local body = self:getEntity():getBody();
 	self._triggerFixture = love.physics.newFixture(body, self._shape);
 	self._triggerFixture:setFilterData(CollisionFilters.TRIGGER, CollisionFilters.SOLID, 0);

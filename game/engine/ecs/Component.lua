@@ -5,7 +5,7 @@ local Component = Class("Component");
 Component.init = function(self)
 end
 
-Component.awake = function(self)
+Component.activate = function(self)
 end
 
 Component.getEntity = function(self)

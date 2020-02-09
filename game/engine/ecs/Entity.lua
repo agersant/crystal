@@ -17,7 +17,7 @@ Entity.getECS = function(self)
 	return self._ecs;
 end
 
-Entity.awake = function(self)
+Entity.activate = function(self)
 end
 
 Entity.addComponent = function(self, component)

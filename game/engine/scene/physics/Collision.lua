@@ -10,8 +10,8 @@ Collision.init = function(self, radius)
 	self._radius = radius;
 end
 
-Collision.awake = function(self)
-	Collision.super.awake(self);
+Collision.activate = function(self)
+	Collision.super.activate(self);
 	local body = self:getEntity():getBody();
 	self._shape = love.physics.newCircleShape(self._radius);
 	self._collisionFixture = love.physics.newFixture(body, self._shape);

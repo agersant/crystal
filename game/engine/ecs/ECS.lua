@@ -35,7 +35,7 @@ local registerComponent = function(self, entity, component)
 		end
 	end
 
-	component:awake();
+	component:activate();
 end
 
 local unregisterComponent = function(self, entity, component)
@@ -74,7 +74,7 @@ local registerEntity = function(self, entity, components)
 		registerComponent(self, entity, component);
 	end
 
-	entity:awake();
+	entity:activate();
 end
 
 local unregisterEntity = function(self, entity)
