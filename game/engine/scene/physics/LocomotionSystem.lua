@@ -9,7 +9,7 @@ local LocomotionSystem = Class("LocomotionSystem", System);
 LocomotionSystem.init = function(self, ecs)
 	LocomotionSystem.super.init(self, ecs);
 	self._query = AllComponents:new({Locomotion, PhysicsBody});
-	self._ecs:addQuery(self._query);
+	self:getECS():addQuery(self._query);
 end
 
 LocomotionSystem.update = function(self, dt)

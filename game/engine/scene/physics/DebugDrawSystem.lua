@@ -12,7 +12,7 @@ DebugDrawSystem.init = function(self, ecs)
 	DebugDrawSystem.super.init(self, ecs);
 	self._query = AllComponents:new({PhysicsBody});
 	self._entityToDebugDraw = {};
-	self._ecs:addQuery(self._query);
+	self:getECS():addQuery(self._query);
 end
 
 DebugDrawSystem.update = function(self, dt)
