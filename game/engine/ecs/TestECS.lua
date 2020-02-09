@@ -59,7 +59,6 @@ tests[#tests].body = function()
 	local ecs = ECS:new();
 
 	local a = ecs:spawn(Entity);
-	local b = ecs:spawn(Entity);
 
 	local Snoot = Class("Snoot", Component);
 	local Boop = Class("Boop", Snoot);
@@ -73,7 +72,42 @@ tests[#tests].body = function()
 	assert(#ecs:getAllComponents(Snoot) == 0);
 end
 
--- TODO test activate calls
+tests[#tests + 1] = {name = "Activation lifecycle"};
+tests[#tests].body = function()
+	Class:resetIndex();
+
+	local ecs = ECS:new();
+
+	local activated = false;
+	local Snoot = Class("Snoot", Component);
+	Snoot.activate = function(self)
+		activated = true;
+	end
+	Snoot.deactivate = function(self)
+		activated = false;
+	end
+
+	local a = ecs:spawn(Entity);
+	local c = Snoot:new();
+
+	a:addComponent(c);
+	assert(not activated);
+
+	ecs:update();
+	assert(activated);
+
+	a:removeComponent(c);
+	assert(not activated);
+
+	a:addComponent(c);
+	assert(activated);
+
+	a:despawn();
+	assert(activated);
+
+	ecs:update();
+	assert(not activated);
+end
 
 -- TODO test queries
 

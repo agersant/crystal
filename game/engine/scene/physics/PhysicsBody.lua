@@ -12,18 +12,30 @@ PhysicsBody.init = function(self, physicsWorld, bodyType)
 	self._body = love.physics.newBody(physicsWorld, 0, 0, bodyType);
 	self._body:setFixedRotation(true);
 	self._body:setUserData(self);
+	self._body:setActive(false);
 	self:setDirection8(1, 0);
 end
 
 PhysicsBody.activate = function(self)
 	PhysicsBody.super.activate(self);
+	self._body:setActive(true);
 	if Features.debugDraw then
 		local ecs = self:getEntity():getECS();
-		local childEntity = ecs:spawn(Entity); -- TODO despawn when this component is removed!!
-		childEntity:addComponent(PhysicsDebugDraw:new(self._body));
+		self._debugDraw = ecs:spawn(Entity);
+		self._debugDraw:addComponent(PhysicsDebugDraw:new(self._body));
 	end
 end
 
+PhysicsBody.deactivate = function(self)
+	PhysicsBody.super.deactivate(self);
+	self._body:setActive(false);
+	if Features.debugDraw then
+		self._debugDraw:despawn();
+		self._debugDraw = nil;
+	end
+end
+
+-- TODO test this!
 PhysicsBody.attach = function(self, other)
 	other:attachTo(self);
 end
@@ -38,8 +50,12 @@ end
 
 PhysicsBody.update = function(self, dt)
 	if self._parent then
-		local x, y = self._parent:getEntity():getPosition();
-		self:setPosition(x, y);
+		if self._parent:isValid() then
+			local x, y = self._parent:getEntity():getPosition();
+			self:setPosition(x, y);
+		else
+			self:despawn();
+		end
 	end
 end
 

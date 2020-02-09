@@ -229,12 +229,6 @@ Entity.update = function(self, dt)
 	-- end
 end
 
-Entity.destroy = function(self)
-	if self._body then
-		self._body:destroy(); -- TODO do this when component is unregistered
-	end
-end
-
 Entity.getScene = function(self)
 	return self._ecs;
 end

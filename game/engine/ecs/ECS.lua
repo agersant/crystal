@@ -43,6 +43,8 @@ local unregisterComponent = function(self, entity, component)
 	assert(entity:isValid());
 	assert(component);
 
+	component:deactivate();
+
 	local class = component:getClass();
 	assert(class);
 
