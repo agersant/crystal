@@ -24,18 +24,19 @@ local registerComponent = function(self, entity, component)
 		end
 		assert(not self._componentClassToEntities[baseClass][entity]);
 		self._componentClassToEntities[baseClass][entity] = true;
-		baseClass = baseClass.super;
-	end
 
-	if self._componentClassToQueries[class] then
-		for query in pairs(self._componentClassToQueries[class]) do
-			if query:matches(entity) then
-				if not self._queryToEntities[query][entity] then
-					query:onMatch(entity);
-					self._queryToEntities[query][entity] = true;
+		if self._componentClassToQueries[baseClass] then
+			for query in pairs(self._componentClassToQueries[baseClass]) do
+				if query:matches(entity) then
+					if not self._queryToEntities[query][entity] then
+						query:onMatch(entity);
+						self._queryToEntities[query][entity] = true;
+					end
 				end
 			end
 		end
+
+		baseClass = baseClass.super;
 	end
 
 	component:activate();
@@ -58,19 +59,21 @@ local unregisterComponent = function(self, entity, component)
 
 		assert(self._componentClassToEntities[baseClass][entity]);
 		self._componentClassToEntities[baseClass][entity] = nil;
-		baseClass = baseClass.super;
-	end
 
-	if self._componentClassToQueries[class] then
-		for query in pairs(self._componentClassToQueries[class]) do
-			if not query:matches(entity) then
-				if self._queryToEntities[query][entity] then
-					query:onUnmatch(entity);
-					self._queryToEntities[query][entity] = nil;
+		if self._componentClassToQueries[baseClass] then
+			for query in pairs(self._componentClassToQueries[baseClass]) do
+				if not query:matches(entity) then
+					if self._queryToEntities[query][entity] then
+						query:onUnmatch(entity);
+						self._queryToEntities[query][entity] = nil;
+					end
 				end
 			end
 		end
+
+		baseClass = baseClass.super;
 	end
+
 end
 
 local registerEntity = function(self, entity, components)
