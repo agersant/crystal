@@ -1,25 +1,21 @@
 require("engine/utils/OOP");
-local DebugFlags = require("engine/dev/DebugFlags");
 local Log = require("engine/dev/Log");
 local TargetSelector = require("engine/ai/tactics/TargetSelector");
 local Assets = require("engine/resources/Assets");
 local CollisionFilters = require("engine/scene/CollisionFilters");
-local BasicSystem = require("engine/ecs/BasicSystem");
 local ECS = require("engine/ecs/ECS");
 local Component = require("engine/ecs/Component");
 local Camera = require("engine/scene/Camera");
 local Scene = require("engine/scene/Scene");
 local ControllerSystem = require("engine/scene/behavior/ControllerSystem");
+local InputListenerSystem = require("engine/scene/behavior/InputListenerSystem");
 local ScriptRunnerSystem = require("engine/scene/behavior/ScriptRunnerSystem");
-local InputListener = require("engine/scene/behavior/InputListener");
-local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 local SpriteSystem = require("engine/scene/display/SpriteSystem");
 local DrawableSystem = require("engine/scene/display/DrawableSystem");
 local CollisionSystem = require("engine/scene/physics/CollisionSystem");
 local DebugDrawSystem = require("engine/scene/physics/DebugDrawSystem");
 local LocomotionSystem = require("engine/scene/physics/LocomotionSystem");
 local TouchTriggerSystem = require("engine/scene/physics/TouchTriggerSystem");
-local PhysicsBody = require("engine/scene/physics/PhysicsBody");
 local Alias = require("engine/utils/Alias");
 
 local MapScene = Class("MapScene", Scene);
@@ -107,18 +103,13 @@ MapScene.init = function(self, mapName)
 	local mapHeight = self._map:getHeightInPixels();
 	self._camera = Camera:new(mapWidth, mapHeight);
 
-	ecs:addSystem(BasicSystem:new(ecs, InputListener, function(cmp, dt)
-		cmp:update(dt);
-	end));
+	ecs:addSystem(InputListenerSystem:new(ecs));
 	ecs:addSystem(ControllerSystem:new(ecs));
 	ecs:addSystem(ScriptRunnerSystem:new(ecs));
 	ecs:addSystem(CollisionSystem:new(ecs));
 	ecs:addSystem(DebugDrawSystem:new(ecs));
 	ecs:addSystem(LocomotionSystem:new(ecs));
 	ecs:addSystem(TouchTriggerSystem:new(ecs));
-	ecs:addSystem(BasicSystem:new(ecs, PhysicsBody, function(cmp, dt)
-		cmp:update(dt); -- TODO untested
-	end));
 
 	ecs:addSystem(SpriteSystem:new(ecs));
 	ecs:addSystem(DrawableSystem:new(ecs));

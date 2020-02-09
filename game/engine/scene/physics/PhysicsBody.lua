@@ -23,30 +23,6 @@ PhysicsBody.deactivate = function(self)
 	self._body:setActive(false);
 end
 
--- TODO test this!
-PhysicsBody.attach = function(self, other)
-	other:attachTo(self);
-end
-
-PhysicsBody.attachTo = function(self, other)
-	self._parent = other;
-end
-
-PhysicsBody.getParent = function(self)
-	return self._parent;
-end
-
-PhysicsBody.update = function(self, dt)
-	if self._parent then
-		if self._parent:isValid() then
-			local x, y = self._parent:getEntity():getPosition();
-			self:setPosition(x, y);
-		else
-			self:despawn();
-		end
-	end
-end
-
 PhysicsBody.getBody = function(self)
 	return self._body;
 end

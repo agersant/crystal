@@ -4,17 +4,6 @@ local Component = require("engine/ecs/Component");
 
 local InputListener = Class("InputListener", Component);
 
--- IMPLEMENTATION
-
-local sendCommandSignals = function(self)
-	for _, commandEvent in self._inputDevice:pollEvents() do
-		if self._disabled > 0 then
-			return;
-		end
-		self:getEntity():signalAllScripts(commandEvent);
-	end
-end
-
 -- PUBLIC API
 
 InputListener.init = function(self, playerIndex)
@@ -32,8 +21,8 @@ InputListener.getInputDevice = function(self)
 	return self._inputDevice;
 end
 
-InputListener.update = function(self, dt)
-	sendCommandSignals(self);
+InputListener.poll = function(self)
+	return self._inputDevice:pollEvents();
 end
 
 InputListener.isCommandActive = function(self, command)
@@ -49,6 +38,10 @@ end
 
 InputListener.enable = function(self)
 	self._disabled = self._disabled - 1;
+end
+
+InputListener.isDisabled = function(self)
+	return self._disabled > 0;
 end
 
 return InputListener;
