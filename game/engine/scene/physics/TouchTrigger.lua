@@ -9,15 +9,15 @@ TouchTrigger.init = function(self, shape)
 	self._shape = shape;
 end
 
-TouchTrigger.getTouchTriggerFixture = function(self)
+TouchTrigger.getFixture = function(self)
 	return self._fixture;
 end
 
-TouchTrigger.setTouchTriggerFixture = function(self, fixture)
+TouchTrigger.setFixture = function(self, fixture)
 	self._fixture = fixture;
 end
 
-TouchTrigger.getTouchTriggerShape = function(self)
+TouchTrigger.getShape = function(self)
 	return self._shape;
 end
 

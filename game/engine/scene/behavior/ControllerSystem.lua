@@ -14,11 +14,13 @@ end
 
 ControllerSystem.update = function(self, dt)
 	for _, entity in self._query:getAddedEntities() do
-		entity:addScript(entity:getControllerScript());
+		local scriptRunner = entity:getComponent(ScriptRunner);
+		scriptRunner:addScript(entity:getControllerScript());
 	end
 
 	for _, entity in self._query:getRemovedEntities() do
-		entity:removeScript(entity:getControllerScript());
+		local scriptRunner = entity:getComponent(ScriptRunner);
+		scriptRunner:removeScript(entity:getControllerScript());
 	end
 end
 

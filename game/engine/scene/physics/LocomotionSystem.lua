@@ -15,11 +15,13 @@ end
 LocomotionSystem.update = function(self, dt)
 	local entities = self:getECS():query(self._query);
 	for entity in pairs(entities) do
-		local speed = entity:getSpeed();
-		local angle = entity:getAngle();
+		local locomotion = entity:getComponent(Locomotion);
+		local physicsBody = entity:getComponent(PhysicsBody);
+		local speed = locomotion:getSpeed();
+		local angle = physicsBody:getAngle();
 		local dx = math.cos(angle);
 		local dy = math.sin(angle);
-		entity:setLinearVelocity(speed * dx, speed * dy);
+		physicsBody:setLinearVelocity(speed * dx, speed * dy);
 	end
 end
 

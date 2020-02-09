@@ -22,7 +22,8 @@ SpriteSystem.update = function(self, dt)
 
 	local entities = self:getECS():query(self._query);
 	for entity in pairs(entities) do
-		local x, y = entity:getPosition();
+		local physicsBody = entity:getComponent(PhysicsBody);
+		local x, y = physicsBody:getPosition();
 		entity:setSpritePosition(x, y);
 		entity:setZOrder(y);
 	end

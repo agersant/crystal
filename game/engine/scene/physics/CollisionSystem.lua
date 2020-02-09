@@ -14,18 +14,20 @@ end
 
 CollisionSystem.update = function(self, dt)
 	for _, entity in self._query:getAddedEntities() do
-		local body = entity:getBody();
-		local fixture = love.physics.newFixture(body, entity:getCollisionShape());
+		local body = entity:getComponent(PhysicsBody):getBody();
+		local collision = entity:getComponent(Collision);
+		local fixture = love.physics.newFixture(body, collision:getShape());
 		fixture:setFilterData(CollisionFilters.SOLID,
                       		CollisionFilters.GEO + CollisionFilters.SOLID + CollisionFilters.TRIGGER, 0);
 		fixture:setFriction(0);
 		fixture:setRestitution(0);
-		entity:setCollisionFixture(fixture);
+		collision:setFixture(fixture);
 	end
 
 	for _, entity in self._query:getRemovedEntities() do
-		entity:getCollisionFixture():destroy();
-		entity:setCollisionFixture(nil);
+		local collision = entity:getComponent(Collision);
+		collision:getFixture():destroy();
+		collision:setFixture(nil);
 	end
 end
 

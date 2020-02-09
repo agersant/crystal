@@ -4,8 +4,8 @@ local Drawable = require("engine/scene/display/Drawable");
 
 local DrawableSystem = Class("DrawableSystem", System);
 
-local sortDrawableEntities = function(entityA, entityB)
-	return entityA:getZOrder() < entityB:getZOrder();
+local sortDrawables = function(a, b)
+	return a:getZOrder() < b:getZOrder();
 end
 
 DrawableSystem.init = function(self, ecs)
@@ -15,7 +15,7 @@ end
 DrawableSystem.draw = function(self)
 	local ecs = self:getECS();
 	local drawables = ecs:getAllComponents(Drawable);
-	table.sort(drawables, sortDrawableEntities);
+	table.sort(drawables, sortDrawables);
 	for _, drawable in ipairs(drawables) do
 		drawable:draw();
 	end

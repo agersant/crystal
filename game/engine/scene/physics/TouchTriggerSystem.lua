@@ -14,16 +14,18 @@ end
 
 TouchTriggerSystem.update = function(self, dt)
 	for _, entity in self._query:getAddedEntities() do
-		local body = entity:getBody();
-		local fixture = love.physics.newFixture(body, entity:getTouchTriggerShape());
+		local body = entity:getComponent(PhysicsBody):getBody();
+		local touchTrigger = entity:getComponent(TouchTrigger);
+		local fixture = love.physics.newFixture(body, touchTrigger:getShape());
 		fixture:setFilterData(CollisionFilters.TRIGGER, CollisionFilters.SOLID, 0);
 		fixture:setSensor(true);
-		entity:setTouchTriggerFixture(fixture);
+		touchTrigger:setFixture(fixture);
 	end
 
 	for _, entity in self._query:getRemovedEntities() do
-		entity:getTouchTriggerFixture():destroy();
-		entity:setTouchTriggerFixture(nil);
+		local touchTrigger = entity:getComponent(TouchTrigger);
+		touchTrigger:getFixture():destroy();
+		touchTrigger:setFixture(nil);
 	end
 end
 

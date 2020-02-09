@@ -9,20 +9,20 @@ Collision.init = function(self, radius)
 	self._shape = love.physics.newCircleShape(radius);
 end
 
-Collision.getCollisionFixture = function(self)
+Collision.getFixture = function(self)
 	return self._fixture;
 end
 
-Collision.setCollisionFixture = function(self, fixture)
+Collision.setFixture = function(self, fixture)
 	self._fixture = fixture;
 end
 
-Collision.setCollisionRadius = function(self, radius)
+Collision.setRadius = function(self, radius)
 	assert(radius > 0);
 	self._shape:setRadius(radius);
 end
 
-Collision.getCollisionShape = function(self)
+Collision.getShape = function(self)
 	return self._shape;
 end
 
