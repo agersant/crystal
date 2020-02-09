@@ -63,50 +63,6 @@ Entity.getMovementSpeed = function(self)
 	return self._movementStat:getValue();
 end
 
--- HITBOX COMPONENT
-
-Entity.addHitboxPhysics = function(self, shape)
-	assert(self._body);
-	if self._hitboxShape == shape then
-		return;
-	end
-	self:removeHitboxPhysics();
-	self._hitboxFixture = love.physics.newFixture(self._body, shape);
-	self._hitboxFixture:setFilterData(CollisionFilters.HITBOX, CollisionFilters.WEAKBOX, 0);
-	self._hitboxFixture:setSensor(true);
-	self._hitboxShape = shape;
-end
-
-Entity.removeHitboxPhysics = function(self)
-	if self._hitboxFixture then
-		self._hitboxFixture:destroy();
-	end
-	self._hitboxFixture = nil;
-	self._hitboxShape = nil;
-end
-
--- WEAKBOX COMPONENT
-
-Entity.addWeakboxPhysics = function(self, shape)
-	assert(self._body);
-	if self._weakboxShape == shape then
-		return;
-	end
-	self:removeWeakboxPhysics();
-	self._weakboxFixture = love.physics.newFixture(self._body, shape);
-	self._weakboxFixture:setFilterData(CollisionFilters.WEAKBOX, CollisionFilters.HITBOX, 0);
-	self._weakboxFixture:setSensor(true);
-	self._weakboxShape = shape;
-end
-
-Entity.removeWeakboxPhysics = function(self)
-	if self._weakboxFixture then
-		self._weakboxFixture:destroy();
-	end
-	self._weakboxFixture = nil;
-	self._weakboxShape = nil;
-end
-
 -- TRIGGER COMPONENT
 Entity.removeTrigger = function(self)
 	if self._triggerFixture then
@@ -114,12 +70,6 @@ Entity.removeTrigger = function(self)
 	end
 	self._triggerFixture = nil;
 	self._triggerShape = nil;
-end
-
--- SPRITE COMPONENT
-
-Entity.setUseSpriteHitboxData = function(self, enabled)
-	self._useSpriteHitboxData = enabled;
 end
 
 -- PARTY COMPONENT
@@ -208,20 +158,6 @@ Entity.update = function(self, dt)
 	-- 	self._sprite:update(dt);
 	-- 	if not animationWasOver and self._sprite:isAnimationOver() then
 	-- 		self:signal("animationEnd");
-	-- 	end
-	-- 	if self._useSpriteHitboxData then
-	-- 		local hitShape = self._sprite:getTagShape("hit");
-	-- 		if hitShape then
-	-- 			self:addHitboxPhysics(hitShape);
-	-- 		else
-	-- 			self:removeHitboxPhysics();
-	-- 		end
-	-- 		local weakShape = self._sprite:getTagShape("weak");
-	-- 		if weakShape then
-	-- 			self:addWeakboxPhysics(weakShape);
-	-- 		else
-	-- 			self:removeWeakboxPhysics();
-	-- 		end
 	-- 	end
 	-- end
 end

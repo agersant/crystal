@@ -8,7 +8,9 @@ local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 local Sprite = require("engine/scene/display/Sprite");
 local Collision = require("engine/scene/physics/Collision");
 local Locomotion = require("engine/scene/physics/Locomotion");
+local Hitbox = require("engine/scene/physics/Hitbox");
 local PhysicsBody = require("engine/scene/physics/PhysicsBody");
+local Weakbox = require("engine/scene/physics/Weakbox");
 
 local Sahagin = Class("Sahagin", Entity);
 local SahaginController = Class("SahaginController", Controller);
@@ -66,7 +68,8 @@ Sahagin.init = function(self, scene)
 	-- self:setMovementSpeed(40); TODO
 	self:addComponent(Collision:new(4));
 	-- self:addCombatData(); TODO
-	self:setUseSpriteHitboxData(true);
+	self:addComponent(Hitbox:new());
+	self:addComponent(Weakbox:new());
 	self:addComponent(ScriptRunner:new());
 	-- self:addCombatLogic(); TODO
 	self:addComponent(SahaginController:new(self));

@@ -14,8 +14,10 @@ local SpriteSystem = require("engine/scene/display/SpriteSystem");
 local DrawableSystem = require("engine/scene/display/DrawableSystem");
 local CollisionSystem = require("engine/scene/physics/CollisionSystem");
 local DebugDrawSystem = require("engine/scene/physics/DebugDrawSystem");
+local HitboxSystem = require("engine/scene/physics/HitboxSystem");
 local LocomotionSystem = require("engine/scene/physics/LocomotionSystem");
 local TouchTriggerSystem = require("engine/scene/physics/TouchTriggerSystem");
+local WeakboxSystem = require("engine/scene/physics/WeakboxSystem");
 local Alias = require("engine/utils/Alias");
 
 local MapScene = Class("MapScene", Scene);
@@ -112,6 +114,9 @@ MapScene.init = function(self, mapName)
 	ecs:addSystem(TouchTriggerSystem:new(ecs));
 
 	ecs:addSystem(SpriteSystem:new(ecs));
+	ecs:addSystem(HitboxSystem:new(ecs));
+	ecs:addSystem(WeakboxSystem:new(ecs));
+
 	ecs:addSystem(DrawableSystem:new(ecs));
 
 	self:update(0);
