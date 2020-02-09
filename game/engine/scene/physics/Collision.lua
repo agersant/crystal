@@ -7,30 +7,23 @@ local Collision = Class("Collision", Component);
 Collision.init = function(self, radius)
 	Collision.super.init(self);
 	assert(radius);
-	self._radius = radius;
+	self._shape = love.physics.newCircleShape(radius);
 end
 
-Collision.activate = function(self)
-	Collision.super.activate(self);
-	local body = self:getEntity():getBody();
-	self._shape = love.physics.newCircleShape(self._radius);
-	self._collisionFixture = love.physics.newFixture(body, self._shape);
-	self._collisionFixture:setFilterData(CollisionFilters.SOLID,
-                                     	CollisionFilters.GEO + CollisionFilters.SOLID + CollisionFilters.TRIGGER, 0);
-	self._collisionFixture:setFriction(0);
-	self._collisionFixture:setRestitution(0);
+Collision.getCollisionFixture = function(self)
+	return self._fixture;
+end
+
+Collision.setCollisionFixture = function(self, fixture)
+	self._fixture = fixture;
 end
 
 Collision.setCollisionRadius = function(self, radius)
 	assert(radius > 0);
-	if self._collisionFixture then
-		self._collisionFixture:getShape():setRadius(radius);
-	else
-		self._radius = radius;
-	end
+	self._shape:setRadius(radius);
 end
 
-Collision.getShape = function(self)
+Collision.getCollisionShape = function(self)
 	return self._shape;
 end
 

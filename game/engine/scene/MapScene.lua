@@ -13,6 +13,7 @@ local InputListener = require("engine/scene/behavior/InputListener");
 local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 local Sprite = require("engine/scene/display/Sprite");
 local DrawableSystem = require("engine/scene/display/DrawableSystem");
+local CollisionSystem = require("engine/scene/physics/CollisionSystem");
 local MovementSystem = require("engine/scene/physics/MovementSystem");
 local PhysicsBody = require("engine/scene/physics/PhysicsBody");
 local Alias = require("engine/utils/Alias");
@@ -111,6 +112,7 @@ MapScene.init = function(self, mapName)
 	ecs:addSystem(BasicSystem:new(ecs, Sprite, function(cmp, dt)
 		cmp:update(dt);
 	end));
+	ecs:addSystem(CollisionSystem:new(ecs));
 	ecs:addSystem(MovementSystem:new(ecs));
 	ecs:addSystem(BasicSystem:new(ecs, PhysicsBody, function(cmp, dt)
 		cmp:update(dt); -- TODO untested

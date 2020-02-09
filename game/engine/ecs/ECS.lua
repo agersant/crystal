@@ -30,7 +30,10 @@ local registerComponent = function(self, entity, component)
 	if self._componentClassToQueries[class] then
 		for query in pairs(self._componentClassToQueries[class]) do
 			if query:matches(entity) then
-				self._queryToEntities[query][entity] = true;
+				if not self._queryToEntities[query][entity] then
+					query:onMatch(entity);
+					self._queryToEntities[query][entity] = true;
+				end
 			end
 		end
 	end
@@ -61,7 +64,10 @@ local unregisterComponent = function(self, entity, component)
 	if self._componentClassToQueries[class] then
 		for query in pairs(self._componentClassToQueries[class]) do
 			if not query:matches(entity) then
-				self._queryToEntities[query][entity] = nil;
+				if self._queryToEntities[query][entity] then
+					query:onUnmatch(entity);
+					self._queryToEntities[query][entity] = nil;
+				end
 			end
 		end
 	end
@@ -75,8 +81,6 @@ local registerEntity = function(self, entity, components)
 	for class, component in pairs(components) do
 		registerComponent(self, entity, component);
 	end
-
-	entity:activate();
 end
 
 local unregisterEntity = function(self, entity)
@@ -107,6 +111,10 @@ ECS.init = function(self)
 end
 
 ECS.update = function(self)
+	for query in pairs(self._queries) do
+		query:flush();
+	end
+
 	local graveyard = TableUtils.shallowCopy(self._graveyard);
 	self._graveyard = {};
 	for entity in pairs(graveyard) do

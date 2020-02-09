@@ -17,9 +17,6 @@ Entity.getECS = function(self)
 	return self._ecs;
 end
 
-Entity.activate = function(self)
-end
-
 Entity.addComponent = function(self, component)
 	assert(component);
 	self._ecs:addComponent(self, component);
