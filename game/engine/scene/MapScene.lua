@@ -86,13 +86,7 @@ MapScene.init = function(self, mapName)
 
 	self._queuedSignals = {};
 
-	self._entities = {};
-	self._updatableEntities = {};
-	self._drawableEntities = {};
 	self._combatableEntities = {};
-	self._partyEntities = {};
-	self._spawnedEntities = {};
-	self._despawnedEntities = {};
 
 	self._targetSelector = TargetSelector:new(self._combatableEntities);
 
