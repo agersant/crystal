@@ -131,7 +131,7 @@ ECS.update = function(self)
 	end
 end
 
-ECS.emit = function(self, event, ...)
+ECS.runSystems = function(self, event, ...)
 	for _, system in ipairs(self._systems) do
 		if system[event] then
 			system[event](system, ...);

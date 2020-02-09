@@ -128,14 +128,15 @@ end
 MapScene.update = function(self, dt)
 	MapScene.super.update(self, dt);
 
-	self._world:update(dt);
 	self._ecs:update();
-	self._ecs:emit("update", dt);
 
+	self._world:update(dt);
 	for _, signal in ipairs(self._queuedSignals) do
 		signal.target:signalAllScripts(signal.name, unpack(signal.data));
 	end
 	self._queuedSignals = {};
+
+	self._ecs:runSystems("update", dt);
 
 	self._camera:update(dt);
 end
@@ -151,7 +152,7 @@ MapScene.draw = function(self)
 	love.graphics.translate(ox, oy);
 
 	self._map:drawBelowEntities();
-	self._ecs:emit("draw");
+	self._ecs:runSystems("draw");
 	self._map:drawAboveEntities();
 	self._map:drawDebug();
 
