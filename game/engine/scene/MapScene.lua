@@ -10,6 +10,7 @@ local Component = require("engine/ecs/Component");
 local Camera = require("engine/scene/Camera");
 local Scene = require("engine/scene/Scene");
 local ControllerSystem = require("engine/scene/behavior/ControllerSystem");
+local ScriptRunnerSystem = require("engine/scene/behavior/ScriptRunnerSystem");
 local InputListener = require("engine/scene/behavior/InputListener");
 local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 local SpriteSystem = require("engine/scene/display/SpriteSystem");
@@ -110,9 +111,7 @@ MapScene.init = function(self, mapName)
 		cmp:update(dt);
 	end));
 	ecs:addSystem(ControllerSystem:new(ecs));
-	ecs:addSystem(BasicSystem:new(ecs, ScriptRunner, function(cmp, dt)
-		cmp:update(dt);
-	end));
+	ecs:addSystem(ScriptRunnerSystem:new(ecs));
 	ecs:addSystem(CollisionSystem:new(ecs));
 	ecs:addSystem(DebugDrawSystem:new(ecs));
 	ecs:addSystem(LocomotionSystem:new(ecs));

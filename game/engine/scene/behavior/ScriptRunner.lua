@@ -21,13 +21,19 @@ end
 ScriptRunner.removeScript = function(self, script)
 	for i, activeScript in ipairs(self._scripts) do
 		if activeScript == script then
-			table.remove(self, i);
+			table.remove(self._scripts, i);
+			return;
+		end
+	end
+	for i, newScript in ipairs(self._newScripts) do
+		if newScript == script then
+			table.remove(self._newScripts, i);
 			return;
 		end
 	end
 end
 
-ScriptRunner.update = function(self, dt)
+ScriptRunner.runScripts = function(self, dt)
 	for i, newScript in ipairs(self._newScripts) do
 		table.insert(self._scripts, newScript);
 	end
