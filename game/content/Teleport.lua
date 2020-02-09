@@ -10,6 +10,7 @@ local Field = require("arpg/field/Field");
 
 local Teleport = Class("Teleport", Entity);
 local TeleportController = Class("TeleportController", Controller);
+local TeleportTouchTrigger = Class("TeleportTouchTrigger", TouchTrigger);
 
 -- IMPLEMENTATION
 
@@ -34,7 +35,7 @@ local teleportScript = function(self)
 	local teleportEntity = self:getEntity();
 	self:endOn("teleportActivated");
 	while true do
-		local triggeredBy = self:waitFor("+trigger"):getEntity();
+		local triggeredBy = self:waitFor("+trigger");
 		local watchDirectionThread = self:thread(function(self)
 			while true do
 				self:waitFrame();
@@ -51,7 +52,7 @@ local teleportScript = function(self)
 		end);
 		self:thread(function(self)
 			while true do
-				local noLongerTriggering = self:waitFor("-trigger"):getEntity();
+				local noLongerTriggering = self:waitFor("-trigger");
 				if noLongerTriggering == triggeredBy then
 					watchDirectionThread:stop();
 					break
@@ -65,6 +66,18 @@ TeleportController.init = function(self)
 	TeleportController.super.init(self, teleportScript);
 end
 
+TeleportTouchTrigger.init = function(self, shape)
+	TeleportTouchTrigger.super.init(self, shape);
+end
+
+TeleportTouchTrigger.onBeginTouch = function(self, component)
+	self:getEntity():signalAllScripts("+trigger", component:getEntity());
+end
+
+TeleportTouchTrigger.onEndTouch = function(self, component)
+	self:getEntity():signalAllScripts("-trigger", component:getEntity());
+end
+
 -- PUBLIC API
 
 Teleport.init = function(self, scene, options)
@@ -74,7 +87,7 @@ Teleport.init = function(self, scene, options)
 
 	Teleport.super.init(self, scene);
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
-	self:addComponent(TouchTrigger:new(options.shape));
+	self:addComponent(TeleportTouchTrigger:new(options.shape));
 	self:addComponent(ScriptRunner:new());
 	self:addComponent(TeleportController:new());
 	self:setPosition(options.x, options.y);

@@ -21,4 +21,10 @@ Collision.getShape = function(self)
 	return self._shape;
 end
 
+Collision.onBeginTouch = function(self, otherEntity)
+end
+
+Collision.onEndTouch = function(self, otherEntity)
+end
+
 return Collision;

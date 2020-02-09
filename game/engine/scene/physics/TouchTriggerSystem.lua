@@ -19,6 +19,7 @@ TouchTriggerSystem.update = function(self, dt)
 		local fixture = love.physics.newFixture(body, touchTrigger:getShape());
 		fixture:setFilterData(CollisionFilters.TRIGGER, CollisionFilters.SOLID, 0);
 		fixture:setSensor(true);
+		fixture:setUserData(touchTrigger);
 		touchTrigger:setFixture(fixture);
 	end
 

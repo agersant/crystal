@@ -21,4 +21,10 @@ TouchTrigger.getShape = function(self)
 	return self._shape;
 end
 
+TouchTrigger.onBeginTouch = function(self, otherEntity)
+end
+
+TouchTrigger.onEndTouch = function(self, otherEntity)
+end
+
 return TouchTrigger;

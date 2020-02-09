@@ -21,6 +21,7 @@ CollisionSystem.update = function(self, dt)
                       		CollisionFilters.GEO + CollisionFilters.SOLID + CollisionFilters.TRIGGER, 0);
 		fixture:setFriction(0);
 		fixture:setRestitution(0);
+		fixture:setUserData(collision);
 		collision:setFixture(fixture);
 	end
 

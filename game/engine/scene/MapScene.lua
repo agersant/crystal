@@ -12,11 +12,15 @@ local InputListenerSystem = require("engine/scene/behavior/InputListenerSystem")
 local ScriptRunnerSystem = require("engine/scene/behavior/ScriptRunnerSystem");
 local SpriteSystem = require("engine/scene/display/SpriteSystem");
 local DrawableSystem = require("engine/scene/display/DrawableSystem");
+local Collision = require("engine/scene/physics/Collision");
 local CollisionSystem = require("engine/scene/physics/CollisionSystem");
 local DebugDrawSystem = require("engine/scene/physics/DebugDrawSystem");
+local Hitbox = require("engine/scene/physics/Hitbox");
 local HitboxSystem = require("engine/scene/physics/HitboxSystem");
 local LocomotionSystem = require("engine/scene/physics/LocomotionSystem");
+local TouchTrigger = require("engine/scene/physics/TouchTrigger");
 local TouchTriggerSystem = require("engine/scene/physics/TouchTriggerSystem");
+local Weakbox = require("engine/scene/physics/Weakbox");
 local WeakboxSystem = require("engine/scene/physics/WeakboxSystem");
 local Alias = require("engine/utils/Alias");
 
@@ -24,47 +28,44 @@ local MapScene = Class("MapScene", Scene);
 
 -- IMPLEMENTATION
 
-local queueSignal = function(self, target, signal, ...)
-	assert(target);
-	assert(signal);
-	table.insert(self._queuedSignals, {target = target, name = signal, data = {...}});
-end
-
-local beginOrEndContact = function(self, fixtureA, fixtureB, contact, prefix)
-	local objectA = fixtureA:getBody():getUserData();
-	local objectB = fixtureB:getBody():getUserData();
-
-	if objectA:isInstanceOf(Component) and objectB:isInstanceOf(Component) then
-		local categoryA = fixtureA:getFilterData();
-		local categoryB = fixtureB:getFilterData();
-
-		-- Weakbox VS hitbox
-		if bit.band(categoryA, CollisionFilters.HITBOX) ~= 0 and bit.band(categoryB, CollisionFilters.WEAKBOX) ~= 0 then
-			queueSignal(self, objectA:getEntity(), prefix .. "giveHit", objectB, objectA);
-		elseif bit.band(categoryA, CollisionFilters.WEAKBOX) ~= 0 and bit.band(categoryB, CollisionFilters.HITBOX) ~= 0 then
-			queueSignal(self, objectB:getEntity(), prefix .. "giveHit", objectA, objectB);
-
-			-- Trigger VS solid
-		elseif bit.band(categoryA, CollisionFilters.TRIGGER) ~= 0 and bit.band(categoryB, CollisionFilters.SOLID) ~= 0 then
-			queueSignal(self, objectA:getEntity(), prefix .. "trigger", objectB, objectA);
-		elseif bit.band(categoryA, CollisionFilters.SOLID) ~= 0 and bit.band(categoryB, CollisionFilters.TRIGGER) ~= 0 then
-			queueSignal(self, objectB:getEntity(), prefix .. "trigger", objectA, objectB);
-
-			-- Solid VS solid
-		elseif bit.band(categoryA, CollisionFilters.SOLID) ~= 0 and bit.band(categoryB, CollisionFilters.SOLID) ~= 0 then
-			queueSignal(self, objectA:getEntity(), prefix .. "touch", objectB, objectA);
-			queueSignal(self, objectB:getEntity(), prefix .. "touch", objectA, objectB);
-
-		end
+local beginContact = function(self, fixtureA, fixtureB, contact)
+	local objectA = fixtureA:getUserData();
+	local objectB = fixtureB:getUserData();
+	if not objectA or not objectB then
+		return;
+	end
+	if objectA:isInstanceOf(Hitbox) and objectB:isInstanceOf(Weakbox) then
+		table.insert(self._contactCallbacks, {func = objectA.onBeginTouch, args = {objectA, objectB}});
+	elseif objectA:isInstanceOf(Weakbox) and objectB:isInstanceOf(Hitbox) then
+		table.insert(self._contactCallbacks, {func = objectB.onBeginTouch, args = {objectB, objectA}});
+	elseif objectA:isInstanceOf(Collision) and objectB:isInstanceOf(Collision) then
+		table.insert(self._contactCallbacks, {func = objectA.onBeginTouch, args = {objectA, objectB}});
+		table.insert(self._contactCallbacks, {func = objectB.onBeginTouch, args = {objectB, objectA}});
+	elseif objectA:isInstanceOf(TouchTrigger) and objectB:isInstanceOf(Collision) then
+		table.insert(self._contactCallbacks, {func = objectA.onBeginTouch, args = {objectA, objectB}});
+	elseif objectA:isInstanceOf(Collision) and objectB:isInstanceOf(TouchTrigger) then
+		table.insert(self._contactCallbacks, {func = objectB.onBeginTouch, args = {objectB, objectA}});
 	end
 end
 
-local beginContact = function(self, fixtureA, fixtureB, contact)
-	return beginOrEndContact(self, fixtureA, fixtureB, contact, "+");
-end
-
 local endContact = function(self, fixtureA, fixtureB, contact)
-	return beginOrEndContact(self, fixtureA, fixtureB, contact, "-");
+	local objectA = fixtureA:getUserData();
+	local objectB = fixtureB:getUserData();
+	if not objectA or not objectB then
+		return;
+	end
+	if objectA:isInstanceOf(Hitbox) and objectB:isInstanceOf(Weakbox) then
+		table.insert(self._contactCallbacks, {func = objectA.onEndTouch, args = {objectA, objectB}});
+	elseif objectA:isInstanceOf(Weakbox) and objectB:isInstanceOf(Hitbox) then
+		table.insert(self._contactCallbacks, {func = objectB.onEndTouch, args = {objectB, objectA}});
+	elseif objectA:isInstanceOf(Collision) and objectB:isInstanceOf(Collision) then
+		table.insert(self._contactCallbacks, {func = objectA.onEndTouch, args = {objectA, objectB}});
+		table.insert(self._contactCallbacks, {func = objectB.onEndTouch, args = {objectB, objectA}});
+	elseif objectA:isInstanceOf(TouchTrigger) and objectB:isInstanceOf(Collision) then
+		table.insert(self._contactCallbacks, {func = objectA.onEndTouch, args = {objectA, objectB}});
+	elseif objectA:isInstanceOf(Collision) and objectB:isInstanceOf(TouchTrigger) then
+		table.insert(self._contactCallbacks, {func = objectB.onEndTouch, args = {objectB, objectA}});
+	end
 end
 
 -- PUBLIC API
@@ -78,13 +79,12 @@ MapScene.init = function(self, mapName)
 	Alias:add(self._ecs, self);
 
 	self._world = love.physics.newWorld(0, 0, false);
+	self._contactCallbacks = {};
 	self._world:setCallbacks(function(...)
 		beginContact(self, ...);
 	end, function(...)
 		endContact(self, ...);
 	end);
-
-	self._queuedSignals = {};
 
 	self._combatableEntities = {};
 
@@ -130,10 +130,10 @@ MapScene.update = function(self, dt)
 	self._ecs:update();
 
 	self._world:update(dt);
-	for _, signal in ipairs(self._queuedSignals) do
-		signal.target:signalAllScripts(signal.name, unpack(signal.data));
+	for _, callback in ipairs(self._contactCallbacks) do
+		callback.func(unpack(callback.args));
 	end
-	self._queuedSignals = {};
+	self._contactCallbacks = {};
 
 	self._ecs:runSystems("update", dt);
 

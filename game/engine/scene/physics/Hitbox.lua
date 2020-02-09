@@ -17,7 +17,14 @@ Hitbox.setShape = function(self, body, shape)
 		self._fixture = love.physics.newFixture(body, shape);
 		self._fixture:setFilterData(CollisionFilters.HITBOX, CollisionFilters.WEAKBOX, 0);
 		self._fixture:setSensor(true);
+		self._fixture:setUserData(self);
 	end
+end
+
+Hitbox.onBeginTouch = function(self, otherEntity)
+end
+
+Hitbox.onEndTouch = function(self, otherEntity)
 end
 
 return Hitbox;
