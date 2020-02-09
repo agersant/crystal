@@ -1,7 +1,4 @@
 require("engine/utils/OOP");
-local DebugFlags = require("engine/dev/DebugFlags");
-local Colors = require("engine/resources/Colors");
-local CollisionFilters = require("engine/scene/CollisionFilters");
 local CombatData = require("engine/scene/component/CombatData");
 local CombatLogic = require("engine/scene/component/CombatLogic");
 local Alias = require("engine/utils/Alias");
@@ -61,15 +58,6 @@ end
 
 Entity.getMovementSpeed = function(self)
 	return self._movementStat:getValue();
-end
-
--- TRIGGER COMPONENT
-Entity.removeTrigger = function(self)
-	if self._triggerFixture then
-		self._triggerFixture:destroy(); -- TODO important do this when component is unregistered
-	end
-	self._triggerFixture = nil;
-	self._triggerShape = nil;
 end
 
 -- PARTY COMPONENT
