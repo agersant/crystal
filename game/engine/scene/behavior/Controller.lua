@@ -18,6 +18,10 @@ Controller.activate = function(self)
 	self:getEntity():addScript(self._script);
 end
 
+Controller.deactivate = function(self)
+	self:getEntity():removeScript(self._script);
+end
+
 Controller.isIdle = function(self)
 	return not self._actionThread or self._actionThread:isDead();
 end
