@@ -14,7 +14,6 @@ ScriptRunner.init = function(self)
 end
 
 ScriptRunner.addScript = function(self, script)
-	-- TODO prevent script re-use
 	Alias:add(script, self:getEntity());
 	table.insert(self._newScripts, script);
 end
