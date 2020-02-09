@@ -56,7 +56,7 @@ local walkToGoal = function(self, goal, repathDelay)
 				local targetX, targetY = goal:getPosition();
 				local scene = self:getScene();
 				local x, y = self:getPosition();
-				local path = scene:findPath(x, y, targetX, targetY);
+				local path = scene:getMap():findPath(x, y, targetX, targetY);
 				followPath(self, path);
 				self:signal("pathEnd");
 			end);
