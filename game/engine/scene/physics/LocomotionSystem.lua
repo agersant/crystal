@@ -4,16 +4,16 @@ local AllComponents = require("engine/ecs/Query/AllComponents");
 local Locomotion = require("engine/scene/physics/Locomotion");
 local PhysicsBody = require("engine/scene/physics/PhysicsBody");
 
-local MovementSystem = Class("MovementSystem", System);
+local LocomotionSystem = Class("LocomotionSystem", System);
 
-MovementSystem.init = function(self, ecs)
-	MovementSystem.super.init(self, ecs);
+LocomotionSystem.init = function(self, ecs)
+	LocomotionSystem.super.init(self, ecs);
 	self._query = AllComponents:new({Locomotion, PhysicsBody});
 	self._ecs:addQuery(self._query);
 end
 
-MovementSystem.update = function(self, dt)
-	local entities = self._ecs:query(self._query);
+LocomotionSystem.update = function(self, dt)
+	local entities = self:getECS():query(self._query);
 	for entity in pairs(entities) do
 		local speed = entity:getSpeed();
 		local angle = entity:getAngle();
@@ -23,4 +23,4 @@ MovementSystem.update = function(self, dt)
 	end
 end
 
-return MovementSystem;
+return LocomotionSystem;

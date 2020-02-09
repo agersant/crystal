@@ -12,6 +12,13 @@ Sprite.init = function(self, sheet)
 	self._sheet = sheet;
 	self:setAnimation(sheet:getDefaultAnimationName());
 	self._time = 0;
+	self._x = 0;
+	self._y = 0;
+end
+
+Sprite.setSpritePosition = function(self, x, y)
+	self._x = x;
+	self._y = y;
 end
 
 Sprite.setAnimation = function(self, animationName, forceRestart)
@@ -37,17 +44,12 @@ end
 
 Sprite.draw = function(self)
 	Sprite.super.draw();
-	local x, y = self:getEntity():getPosition();
+	local x, y = self._x, self._y;
 	local quad = self._sheetFrame:getQuad();
 	local image = self._sheet:getImage();
 	local ox, oy = self._animationFrame:getOrigin();
 	local snapTo = 1 / GFXConfig:getZoom();
 	love.graphics.draw(image, quad, MathUtils.roundTo(x, snapTo), MathUtils.roundTo(y, snapTo), 0, 1, 1, ox, oy);
-end
-
-Sprite.getZOrder = function(self)
-	local _, y = self:getEntity():getPosition();
-	return y;
 end
 
 Sprite.isAnimationOver = function(self)
