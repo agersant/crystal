@@ -116,6 +116,10 @@ MapScene.init = function(self, mapName)
 	self:update(0);
 end
 
+MapScene.getECS = function(self)
+	return self._ecs;
+end
+
 MapScene.spawn = function(self, ...)
 	return self._ecs:spawn(...);
 end
