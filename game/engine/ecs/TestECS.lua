@@ -4,24 +4,43 @@ local Entity = require("engine/ecs/Entity");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Add and remove entity"};
+tests[#tests + 1] = {name = "Spawn and despawn entity"};
 tests[#tests].body = function()
 	local ecs = ECS:new();
 
 	local a = ecs:spawn(Entity);
 	local b = ecs:spawn(Entity);
+	assert(not ecs:getAllEntities()[a]);
+	assert(not ecs:getAllEntities()[b]);
 	ecs:update(0);
 	assert(ecs:getAllEntities()[a]);
-	assert(ecs:getAllEntities()[b]);
 
 	ecs:despawn(b);
+	assert(ecs:getAllEntities()[b]);
 	ecs:update(0);
 	assert(ecs:getAllEntities()[a]);
 	assert(not ecs:getAllEntities()[b]);
 
 	ecs:despawn(a);
+	assert(ecs:getAllEntities()[a]);
 	ecs:update(0);
 	assert(not ecs:getAllEntities()[a]);
+	assert(not ecs:getAllEntities()[b]);
+end
+
+tests[#tests + 1] = {name = "Spawn and despawn entity between updates"};
+tests[#tests].body = function()
+	local ecs = ECS:new();
+
+	local a = ecs:spawn(Entity);
+	ecs:update(0);
+	assert(ecs:getAllEntities()[a]);
+
+	local b = ecs:spawn(Entity);
+	assert(not ecs:getAllEntities()[b]);
+	ecs:despawn(b);
+	assert(not ecs:getAllEntities()[b]);
+	ecs:update(0);
 	assert(not ecs:getAllEntities()[b]);
 end
 
