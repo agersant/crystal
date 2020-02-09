@@ -14,17 +14,18 @@ HitboxSystem.init = function(self, ecs)
 end
 
 HitboxSystem.update = function(self, dt)
-	for _, entity in self._query:getAddedEntities() do
+	for _, entity in self._query:getRemovedEntities() do
+		local hitbox = entity:getComponent(Hitbox);
+		hitbox:setShape(nil);
+	end
+
+	local entities = self:getECS():query(self._query);
+	for entity in pairs(entities) do
 		local body = entity:getComponent(PhysicsBody):getBody();
 		local hitbox = entity:getComponent(Hitbox);
 		local sprite = entity:getComponent(Sprite);
 		local shape = sprite:getTagShape("hit");
 		hitbox:setShape(body, shape);
-	end
-
-	for _, entity in self._query:getRemovedEntities() do
-		local hitbox = entity:getComponent(Hitbox);
-		hitbox:setShape(nil);
 	end
 end
 
