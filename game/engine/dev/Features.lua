@@ -12,6 +12,7 @@ Features.init = function(self)
 	self.cli = not release;
 	self.fpsCounter = not release;
 	self.debugDraw = not release and self.display;
+	self.slowAssertions = not release;
 end
 
 local doNothing = function()

@@ -76,4 +76,48 @@ tests[#tests].body = function()
 	assert(from:getMyClass() == To);
 end
 
+tests[#tests + 1] = {name = "Errors on ambiguous call"};
+tests[#tests].body = function()
+	Class:resetIndex();
+	local From = Class("From");
+	local ToA = Class("ToA");
+	local ToB = Class("ToB");
+	ToA.example = function()
+	end
+	ToB.example = function()
+	end
+	local from = From:new();
+	local toA = ToA:new();
+	local toB = ToB:new();
+	Alias:add(from, toA);
+	Alias:add(from, toB);
+
+	local success, errorMessage = pcall(function()
+		from:example();
+	end);
+	assert(not success);
+	assert(#errorMessage > 1);
+end
+
+tests[#tests + 1] = {name = "Shared base methods are not ambiguous"};
+tests[#tests].body = function()
+	Class:resetIndex();
+	local From = Class("From");
+	local Base = Class("Base");
+	local DerivedA = Class("DerivedA", Base);
+	local DerivedB = Class("DerivedB", Base);
+	Base.example = function()
+	end
+	local from = From:new();
+	local derivedA = DerivedA:new();
+	local derivedB = DerivedB:new();
+	Alias:add(from, derivedA);
+	Alias:add(from, derivedB);
+
+	local success = pcall(function()
+		from:example();
+	end);
+	assert(success);
+end
+
 return tests;
