@@ -14,6 +14,7 @@ local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 local Sprite = require("engine/scene/display/Sprite");
 local DrawableSystem = require("engine/scene/display/DrawableSystem");
 local CollisionSystem = require("engine/scene/physics/CollisionSystem");
+local DebugDrawSystem = require("engine/scene/physics/DebugDrawSystem");
 local MovementSystem = require("engine/scene/physics/MovementSystem");
 local TouchTriggerSystem = require("engine/scene/physics/TouchTriggerSystem");
 local PhysicsBody = require("engine/scene/physics/PhysicsBody");
@@ -114,6 +115,7 @@ MapScene.init = function(self, mapName)
 		cmp:update(dt);
 	end));
 	ecs:addSystem(CollisionSystem:new(ecs));
+	ecs:addSystem(DebugDrawSystem:new(ecs));
 	ecs:addSystem(MovementSystem:new(ecs));
 	ecs:addSystem(TouchTriggerSystem:new(ecs));
 	ecs:addSystem(BasicSystem:new(ecs, PhysicsBody, function(cmp, dt)

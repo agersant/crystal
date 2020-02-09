@@ -1,9 +1,6 @@
 require("engine/utils/OOP");
-local Features = require("engine/dev/Features");
 local Component = require("engine/ecs/Component");
-local Entity = require("engine/ecs/Entity");
 local MathUtils = require("engine/utils/MathUtils");
-local PhysicsDebugDraw = require("engine/scene/physics/PhysicsDebugDraw");
 
 local PhysicsBody = Class("PhysicsBody", Component);
 
@@ -19,20 +16,11 @@ end
 PhysicsBody.activate = function(self)
 	PhysicsBody.super.activate(self);
 	self._body:setActive(true);
-	if Features.debugDraw then
-		local ecs = self:getEntity():getECS();
-		self._debugDraw = ecs:spawn(Entity);
-		self._debugDraw:addComponent(PhysicsDebugDraw:new(self._body));
-	end
 end
 
 PhysicsBody.deactivate = function(self)
 	PhysicsBody.super.deactivate(self);
 	self._body:setActive(false);
-	if Features.debugDraw then
-		self._debugDraw:despawn();
-		self._debugDraw = nil;
-	end
 end
 
 -- TODO test this!
