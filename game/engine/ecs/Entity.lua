@@ -150,9 +150,6 @@ end
 -- CORE
 
 Entity.update = function(self, dt)
-	-- if self._scriptRunner then
-	-- 	self._scriptRunner:update(dt);
-	-- end
 	-- if self._sprite then
 	-- 	local animationWasOver = self._sprite:isAnimationOver();
 	-- 	self._sprite:update(dt);
