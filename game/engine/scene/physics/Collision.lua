@@ -1,6 +1,5 @@
 require("engine/utils/OOP");
 local Component = require("engine/ecs/Component");
-local CollisionFilters = require("engine/scene/CollisionFilters");
 
 local Collision = Class("Collision", Component);
 
