@@ -108,15 +108,16 @@ MapScene.init = function(self, mapName)
 
 	-- Before scripts
 	ecs:addSystem(ControllerSystem:new(ecs));
+	ecs:addSystem(SpriteSystem:new(ecs)); -- (also has some afterScripts logic)
 
 	-- During scripts
 	ecs:addSystem(ScriptRunnerSystem:new(ecs));
 	ecs:addSystem(InputListenerSystem:new(ecs));
 
 	-- After scripts
-	ecs:addSystem(SpriteSystem:new(ecs));
 	ecs:addSystem(DebugDrawSystem:new(ecs));
 
+	-- Draw
 	ecs:addSystem(DrawableSystem:new(ecs));
 
 	self:update(0);

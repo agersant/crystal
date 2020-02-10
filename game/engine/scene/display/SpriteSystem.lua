@@ -1,6 +1,7 @@
 require("engine/utils/OOP");
 local System = require("engine/ecs/System");
 local AllComponents = require("engine/ecs/query/AllComponents");
+local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 local Sprite = require("engine/scene/display/Sprite");
 local PhysicsBody = require("engine/scene/physics/PhysicsBody");
 
@@ -8,24 +9,37 @@ local SpriteSystem = Class("SpriteSystem", System);
 
 SpriteSystem.init = function(self, ecs)
 	SpriteSystem.super.init(self, ecs);
-	self._query = AllComponents:new({Sprite, PhysicsBody});
-	self:getECS():addQuery(self._query);
+	self._bodyQuery = AllComponents:new({Sprite, PhysicsBody});
+	self._scriptQuery = AllComponents:new({Sprite, ScriptRunner});
+	self:getECS():addQuery(self._bodyQuery);
+	self:getECS():addQuery(self._scriptQuery);
 end
 
-SpriteSystem.afterScripts = function(self, dt)
+SpriteSystem.beforeScripts = function(self, dt)
 	local ecs = self:getECS();
-
 	local sprites = ecs:getAllComponents(Sprite);
 	for _, sprite in ipairs(sprites) do
 		sprite:update(dt);
 	end
 
-	local entities = self._query:getEntities();
+	local entities = self._scriptQuery:getEntities();
 	for entity in pairs(entities) do
+		local sprite = entity:getComponent(Sprite);
+		local scriptRunner = entity:getComponent(ScriptRunner);
+		if sprite:justCompletedAnimation() then
+			scriptRunner:signalAllScripts("animationEnd");
+		end
+	end
+end
+
+SpriteSystem.afterScripts = function(self, dt)
+	local entities = self._bodyQuery:getEntities();
+	for entity in pairs(entities) do
+		local sprite = entity:getComponent(Sprite);
 		local physicsBody = entity:getComponent(PhysicsBody);
 		local x, y = physicsBody:getPosition();
-		entity:setSpritePosition(x, y);
-		entity:setZOrder(y);
+		sprite:setSpritePosition(x, y);
+		sprite:setZOrder(y);
 	end
 end
 
