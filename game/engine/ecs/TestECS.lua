@@ -51,23 +51,23 @@ tests[#tests].body = function()
 	local b = ecs:spawn(Entity);
 
 	local Snoot = Class("Snoot", Component);
-	local c = Snoot:new();
-	a:addComponent(c);
-	assert(a:getComponent(Snoot) == c);
+	local snoot = Snoot:new();
+	a:addComponent(snoot);
+	assert(a:getComponent(Snoot) == snoot);
 	assert(b:getComponent(Snoot) == nil);
 	ecs:update();
 	assert(ecs:getAllEntitiesWith(Snoot)[a]);
 	assert(not ecs:getAllEntitiesWith(Snoot)[b]);
-	assert(c:getEntity() == a);
+	assert(snoot:getEntity() == a);
 
-	a:removeComponent(c);
+	a:removeComponent(snoot);
 	assert(nil == a:getComponent(Snoot));
 	assert(nil == b:getComponent(Snoot));
 	assert(ecs:getAllEntitiesWith(Snoot)[a]);
 	ecs:update();
 	assert(not ecs:getAllEntitiesWith(Snoot)[a]);
 	assert(not ecs:getAllEntitiesWith(Snoot)[b]);
-	assert(c:getEntity() == nil);
+	assert(snoot:getEntity() == nil);
 end
 
 tests[#tests + 1] = {name = "Add and remove component between updates"};
@@ -143,20 +143,20 @@ tests[#tests].body = function()
 	end
 
 	local a = ecs:spawn(Entity);
-	local c = Snoot:new();
+	local snoot = Snoot:new();
 
-	a:addComponent(c);
+	a:addComponent(snoot);
 	assert(not activated);
 
 	ecs:update();
 	assert(activated);
 
-	a:removeComponent(c);
+	a:removeComponent(snoot);
 	assert(activated);
 	ecs:update();
 	assert(not activated);
 
-	a:addComponent(c);
+	a:addComponent(snoot);
 	assert(not activated);
 	ecs:update();
 	assert(activated);
