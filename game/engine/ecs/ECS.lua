@@ -58,10 +58,16 @@ local unregisterComponent = function(self, entity, component)
 	local baseClass = class;
 	while baseClass ~= Component do
 		assert(self._entityToComponents[entity][baseClass]);
-		self._entityToComponents[entity][baseClass] = nil;
+		self._entityToComponents[entity][baseClass][component] = nil;
+		if TableUtils.countKeys(self._entityToComponents[entity][baseClass]) == 0 then
+			self._entityToComponents[entity][baseClass] = nil;
+		end
 
 		assert(self._componentClassToEntities[baseClass][entity][component]);
 		self._componentClassToEntities[baseClass][entity][component] = nil;
+		if TableUtils.countKeys(self._componentClassToEntities[baseClass][entity]) == 0 then
+			self._componentClassToEntities[baseClass][entity] = nil;
+		end
 
 		if self._componentClassToQueries[baseClass] then
 			for query in pairs(self._componentClassToQueries[baseClass]) do
@@ -245,8 +251,8 @@ ECS.getAllEntitiesWith = function(self, class)
 	assert(class);
 	local source = self._componentClassToEntities[class] or {};
 	local output = {};
-	for entity, _ in pairs(source) do
-		output[entity] = self._entityToComponents[entity][class];
+	for entity in pairs(source) do
+		output[entity] = true;
 	end
 	return output;
 end
@@ -282,8 +288,10 @@ ECS.getAllComponents = function(self, class)
 	assert(class);
 	local source = self._componentClassToEntities[class] or {};
 	local output = {};
-	for entity, _ in pairs(source) do
-		table.insert(output, self._entityToComponents[entity][class]);
+	for _, components in pairs(source) do
+		for component in pairs(components) do
+			table.insert(output, component);
+		end
 	end
 	return output;
 end

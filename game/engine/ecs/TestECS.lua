@@ -57,17 +57,12 @@ tests[#tests].body = function()
 	assert(a:getComponent(Snoot) == snoot);
 	assert(b:getComponent(Snoot) == nil);
 	ecs:update();
-	assert(ecs:getAllEntitiesWith(Snoot)[a]);
-	assert(not ecs:getAllEntitiesWith(Snoot)[b]);
 	assert(snoot:getEntity() == a);
 
 	a:removeComponent(snoot);
 	assert(nil == a:getComponent(Snoot));
 	assert(nil == b:getComponent(Snoot));
-	assert(ecs:getAllEntitiesWith(Snoot)[a]);
 	ecs:update();
-	assert(not ecs:getAllEntitiesWith(Snoot)[a]);
-	assert(not ecs:getAllEntitiesWith(Snoot)[b]);
 	assert(snoot:getEntity() == nil);
 end
 
@@ -107,7 +102,7 @@ tests[#tests].body = function()
 	assert(activated);
 end
 
-tests[#tests + 1] = {name = "Get entities with component"};
+tests[#tests + 1] = {name = "Get all entities with component"};
 tests[#tests].body = function()
 	Class:resetIndex();
 
@@ -120,12 +115,37 @@ tests[#tests].body = function()
 	local boop = Boop:new();
 	a:addComponent(boop);
 	ecs:update();
-	assert(ecs:getAllEntitiesWith(Snoot)[a] == boop);
-	assert(ecs:getAllComponents(Snoot)[1] == boop);
+	assert(ecs:getAllEntitiesWith(Snoot)[a]);
 	a:removeComponent(boop);
 	ecs:update();
 	assert(not ecs:getAllEntitiesWith(Snoot)[a]);
+end
+
+tests[#tests + 1] = {name = "Get all components"};
+tests[#tests].body = function()
+	Class:resetIndex();
+
+	local ecs = ECS:new();
+
+	local a = ecs:spawn(Entity);
+
+	local Snoot = Class("Snoot", Component);
+	local Boop = Class("Boop", Snoot);
+	local snoot = Snoot:new();
+	local boop = Boop:new();
+	a:addComponent(boop);
+	a:addComponent(snoot);
+	ecs:update();
+	assert(#ecs:getAllComponents(Snoot) == 2);
+	assert(#ecs:getAllComponents(Boop) == 1);
+	a:removeComponent(boop);
+	ecs:update();
+	assert(#ecs:getAllComponents(Snoot) == 1);
+	assert(#ecs:getAllComponents(Boop) == 0);
+	a:removeComponent(snoot);
+	ecs:update();
 	assert(#ecs:getAllComponents(Snoot) == 0);
+	assert(#ecs:getAllComponents(Boop) == 0);
 end
 
 tests[#tests + 1] = {name = "Activation lifecycle"};
