@@ -12,7 +12,7 @@ SpriteSystem.init = function(self, ecs)
 	self:getECS():addQuery(self._query);
 end
 
-SpriteSystem.update = function(self, dt)
+SpriteSystem.afterScripts = function(self, dt)
 	local ecs = self:getECS();
 
 	local sprites = ecs:getAllComponents(Sprite);

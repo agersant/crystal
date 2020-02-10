@@ -12,7 +12,7 @@ CollisionSystem.init = function(self, ecs)
 	self:getECS():addQuery(self._query);
 end
 
-CollisionSystem.update = function(self, dt)
+CollisionSystem.beforePhysics = function(self, dt)
 	for entity in pairs(self._query:getAddedEntities()) do
 		local body = entity:getComponent(PhysicsBody):getBody();
 		local collision = entity:getComponent(Collision);

@@ -8,7 +8,7 @@ ScriptRunnerSystem.init = function(self, ecs)
 	ScriptRunnerSystem.super.init(self, ecs);
 end
 
-ScriptRunnerSystem.update = function(self, dt)
+ScriptRunnerSystem.duringScripts = function(self, dt)
 	local ecs = self:getECS();
 	local scriptRunners = ecs:getAllComponents(ScriptRunner);
 	for _, scriptRunner in ipairs(scriptRunners) do

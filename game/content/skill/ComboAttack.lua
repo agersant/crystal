@@ -1,13 +1,12 @@
 require("engine/utils/OOP");
-local Skill = require("engine/combat/Skill");
+local Skill = require("arpg/combat/Skill");
 local Actions = require("engine/scene/Actions");
 
 local ComboAttack = Class("ComboAttack", Skill);
 
 local doComboMove = function(self)
-	local controller = self:getEntity():getController();
 	local comboCounter = self._comboCounter;
-	controller:doAction(function(self)
+	self:doAction(function(self)
 		self:endOn("interruptByDamage");
 		local entity = self:getEntity();
 		if comboCounter == 1 or comboCounter == 3 then
@@ -24,22 +23,12 @@ local doComboMove = function(self)
 	end);
 end
 
--- PUBLIC API
-
-ComboAttack.init = function(self, entity)
-	ComboAttack.super.init(self, entity);
-end
-
-ComboAttack.run = function(self)
-
+local comboAttackScript = function(self)
 	self:thread(function(self)
 		while true do
-			local controller = self:getEntity():getController();
-
-			self:waitFor("useSkill");
+			self:waitFor("+useSkill");
 			self._comboCounter = 0;
-
-			while controller:isIdle() do
+			while self:isIdle() do
 
 				doComboMove(self);
 
@@ -47,7 +36,7 @@ ComboAttack.run = function(self)
 				self._didInputNextMove = false;
 
 				local inputWatch = self:thread(function(self)
-					self:waitFor("useSkill");
+					self:waitFor("+useSkill");
 					self._didInputNextMove = true;
 				end);
 
@@ -57,18 +46,22 @@ ComboAttack.run = function(self)
 					inputWatch:stop();
 				end
 
-				if not controller:isIdle() then
+				if not self:isIdle() then
 					break
 				end
 
 				if not self._didInputNextMove then
-					Actions.idle(controller);
+					Actions.idle(self);
 					break
 				end
 
 			end
 		end
 	end);
+end
+
+ComboAttack.init = function(self, skillSlot)
+	ComboAttack.super.init(self, skillSlot, comboAttackScript);
 end
 
 return ComboAttack;

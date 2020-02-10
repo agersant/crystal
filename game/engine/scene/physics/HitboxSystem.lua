@@ -13,7 +13,7 @@ HitboxSystem.init = function(self, ecs)
 	self:getECS():addQuery(self._query);
 end
 
-HitboxSystem.update = function(self, dt)
+HitboxSystem.beforePhysics = function(self, dt)
 	for entity in pairs(self._query:getRemovedEntities()) do
 		local hitbox = entity:getComponent(Hitbox);
 		hitbox:setShape(nil);

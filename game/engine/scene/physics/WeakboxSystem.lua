@@ -13,7 +13,7 @@ WeakboxSystem.init = function(self, ecs)
 	self:getECS():addQuery(self._query);
 end
 
-WeakboxSystem.update = function(self, dt)
+WeakboxSystem.beforePhysics = function(self, dt)
 	for entity in pairs(self._query:getRemovedEntities()) do
 		local weakbox = entity:getComponent(Weakbox);
 		weakbox:setShape(nil);

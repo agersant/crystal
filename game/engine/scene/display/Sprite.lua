@@ -24,16 +24,21 @@ end
 Sprite.setAnimation = function(self, animationName, forceRestart)
 	local animation = self._sheet:getAnimation(animationName);
 	assert(animation);
+	local isNewAnimation = self._animation ~= animation;
 	self._animation = animation;
-	if forceRestart then
+	if forceRestart or isNewAnimation then
 		self._time = 0;
+		self._animationFrame = self._animation:getFrameAtTime(self._time);
+		assert(self._animationFrame);
+		self._sheetFrame = self._animationFrame:getSheetFrame();
+		assert(self._sheetFrame);
 	end
 end
 
 Sprite.update = function(self, dt)
 	if self._previousAnimation ~= self._animation then
 		self._previousAnimation = self._animation;
-		self._time = 0;
+		return;
 	end
 	self._time = self._time + dt;
 	self._animationFrame = self._animation:getFrameAtTime(self._time);

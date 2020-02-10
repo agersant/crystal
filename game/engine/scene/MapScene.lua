@@ -2,9 +2,7 @@ require("engine/utils/OOP");
 local Log = require("engine/dev/Log");
 local TargetSelector = require("engine/ai/tactics/TargetSelector");
 local Assets = require("engine/resources/Assets");
-local CollisionFilters = require("engine/scene/CollisionFilters");
 local ECS = require("engine/ecs/ECS");
-local Component = require("engine/ecs/Component");
 local Camera = require("engine/scene/Camera");
 local Scene = require("engine/scene/Scene");
 local ControllerSystem = require("engine/scene/behavior/ControllerSystem");
@@ -99,17 +97,25 @@ MapScene.init = function(self, mapName)
 	local mapHeight = self._map:getHeightInPixels();
 	self._camera = Camera:new(mapWidth, mapHeight);
 
-	ecs:addSystem(InputListenerSystem:new(ecs));
-	ecs:addSystem(ControllerSystem:new(ecs));
-	ecs:addSystem(ScriptRunnerSystem:new(ecs));
-	ecs:addSystem(CollisionSystem:new(ecs));
-	ecs:addSystem(DebugDrawSystem:new(ecs));
-	ecs:addSystem(LocomotionSystem:new(ecs));
+	-- Before physics
 	ecs:addSystem(TouchTriggerSystem:new(ecs));
-
-	ecs:addSystem(SpriteSystem:new(ecs));
+	ecs:addSystem(CollisionSystem:new(ecs));
+	ecs:addSystem(LocomotionSystem:new(ecs));
 	ecs:addSystem(HitboxSystem:new(ecs));
 	ecs:addSystem(WeakboxSystem:new(ecs));
+
+	-- After physics
+
+	-- Before scripts
+	ecs:addSystem(ControllerSystem:new(ecs));
+
+	-- During scripts
+	ecs:addSystem(ScriptRunnerSystem:new(ecs));
+	ecs:addSystem(InputListenerSystem:new(ecs));
+
+	-- After scripts
+	ecs:addSystem(SpriteSystem:new(ecs));
+	ecs:addSystem(DebugDrawSystem:new(ecs));
 
 	ecs:addSystem(DrawableSystem:new(ecs));
 
@@ -133,13 +139,21 @@ MapScene.update = function(self, dt)
 
 	self._ecs:update();
 
+	self._ecs:runSystems("beforePhysics", dt);
+
 	self._world:update(dt);
 	for _, callback in ipairs(self._contactCallbacks) do
 		callback.func(unpack(callback.args));
 	end
 	self._contactCallbacks = {};
 
-	self._ecs:runSystems("update", dt);
+	self._ecs:runSystems("afterPhysics", dt);
+
+	self._ecs:runSystems("beforeScripts", dt);
+
+	self._ecs:runSystems("duringScripts", dt);
+
+	self._ecs:runSystems("afterScripts", dt);
 
 	self._camera:update(dt);
 end

@@ -12,7 +12,7 @@ TouchTriggerSystem.init = function(self, ecs)
 	self:getECS():addQuery(self._query);
 end
 
-TouchTriggerSystem.update = function(self, dt)
+TouchTriggerSystem.beforePhysics = function(self, dt)
 	for entity in pairs(self._query:getAddedEntities()) do
 		local body = entity:getComponent(PhysicsBody):getBody();
 		local touchTrigger = entity:getComponent(TouchTrigger);

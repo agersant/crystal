@@ -1,46 +1,33 @@
 require("engine/utils/OOP");
-local Skill = require("engine/combat/Skill");
+local Skill = require("arpg/combat/Skill");
 local Actions = require("engine/scene/Actions");
 
 local Dash = Class("Dash", Skill);
 
--- PUBLIC API
-
-Dash.init = function(self, entity)
-	Dash.super.init(self, entity);
-end
-
-Dash.run = function(self)
-
+local dashScript = function(self)
 	self:thread(function(self)
 		while true do
-			local entity = self:getEntity();
-			local controller = entity:getController();
-
-			self:waitFor("useSkill");
-
-			if controller:isIdle() then
-
-				controller:doAction(function(self)
+			self:waitFor("+useSkill");
+			if self:isIdle() then
+				self:doAction(function(self)
 					Actions.idle(self);
-
 					local buildupDuration = 0.24;
 					local dashDuration = 0.36;
 					local peakSpeed = 300;
-
-					entity:setAnimation("dash_" .. entity:getDirection4(), true);
+					self:setAnimation("dash_" .. self:getDirection4(), true);
 					self:wait(buildupDuration);
-
 					self:tween(peakSpeed, 0, dashDuration, "inCubic", function(speed)
-						entity:setSpeed(speed);
+						self:setSpeed(speed);
 					end);
-
 					Actions.idle(self);
 				end);
-
 			end
 		end
 	end);
+end
+
+Dash.init = function(self, skillSlot)
+	Dash.super.init(self, skillSlot, dashScript);
 end
 
 return Dash;

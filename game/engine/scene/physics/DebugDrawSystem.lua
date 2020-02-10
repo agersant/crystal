@@ -15,7 +15,7 @@ DebugDrawSystem.init = function(self, ecs)
 	self:getECS():addQuery(self._query);
 end
 
-DebugDrawSystem.update = function(self, dt)
+DebugDrawSystem.afterScripts = function(self, dt)
 	if not Features.debugDraw then
 		return;
 	end

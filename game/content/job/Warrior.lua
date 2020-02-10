@@ -28,8 +28,8 @@ Warrior.init = function(self, scene)
 	self:addComponent(ScriptRunner:new());
 	-- self:addCombatLogic(); TODO
 
-	-- self:addSkill(ComboAttack:new(self)); TODO
-	-- self:addSkill(Dash:new(self)); TODO
+	self:addComponent(ComboAttack:new(1));
+	self:addComponent(Dash:new(2));
 end
 
 return Warrior;

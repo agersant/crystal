@@ -100,20 +100,6 @@ local walkControls = function(self)
 	end
 end
 
-local skillControls = function(skillIndex)
-	return function(self)
-		local entity = self:getEntity();
-		local useSkillCommand = "useSkill" .. skillIndex;
-		while true do
-			waitForCommandPress(self, useSkillCommand);
-			local skill = entity:getSkill(skillIndex);
-			if skill then
-				skill:use();
-			end
-		end
-	end
-end
-
 local addInteractionControls = function(self)
 	self._contacts = {};
 
@@ -148,9 +134,6 @@ local playerControllerScript = function(self)
 	addDirectionControls(self);
 	addInteractionControls(self);
 	self:thread(walkControls);
-	for i = 1, 4 do
-		self:thread(skillControls(i));
-	end
 end
 
 -- PUBLIC API

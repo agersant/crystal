@@ -12,7 +12,7 @@ ControllerSystem.init = function(self, ecs)
 	self:getECS():addQuery(self._query);
 end
 
-ControllerSystem.update = function(self, dt)
+ControllerSystem.beforeScripts = function(self, dt)
 	for entity in pairs(self._query:getAddedEntities()) do
 		local controller = entity:getComponent(Controller);
 		local scriptRunner = entity:getComponent(ScriptRunner);

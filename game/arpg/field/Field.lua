@@ -1,5 +1,6 @@
 require("engine/utils/OOP");
 local MapScene = require("engine/scene/MapScene");
+local SkillSystem = require("arpg/combat/SkillSystem");
 local Teams = require("engine/combat/Teams");
 local Party = require("arpg/party/Party");
 local PartyMember = require("arpg/party/PartyMember");
@@ -39,6 +40,10 @@ Field.init = function(self, mapName, startX, startY)
 	Field.super.init(self, mapName);
 
 	self._partyEntities = {}; -- TODO remove
+
+	local ecs = self:getECS();
+
+	ecs:addSystem(SkillSystem:new(ecs));
 
 	local mapWidth = self._map:getWidthInPixels();
 	local mapHeight = self._map:getHeightInPixels();
