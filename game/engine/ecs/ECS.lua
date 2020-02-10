@@ -36,21 +36,6 @@ local registerComponent = function(self, entity, component)
 		assert(not self._componentClassToEntities[baseClass][entity][component]);
 		self._componentClassToEntities[baseClass][entity][component] = true;
 
-		if self._componentClassToQueries[baseClass] then
-			for query in pairs(self._componentClassToQueries[baseClass]) do
-				if query:matches(entity) then
-					if not self._queryToEntities[query][entity] then
-						query:onMatchEntity(entity);
-						self._queryToEntities[query][entity] = true;
-					end
-					if not self._queryToComponents[query][baseClass][component] then
-						query:onMatchComponent(baseClass, component);
-						self._queryToComponents[query][baseClass][component] = true;
-					end
-				end
-			end
-		end
-
 		baseClass = baseClass.super;
 	end
 
@@ -87,35 +72,17 @@ local unregisterComponent = function(self, entity, component)
 			self._componentClassToEntities[baseClass][entity] = nil;
 		end
 
-		if self._componentClassToQueries[baseClass] then
-			for query in pairs(self._componentClassToQueries[baseClass]) do
-				if not query:matches(entity) then
-					if self._queryToEntities[query][entity] then
-						query:onUnmatchEntity(entity);
-						self._queryToEntities[query][entity] = nil;
-					end
-				end
-				if self._queryToComponents[query][baseClass][component] then
-					query:onUnmatchComponent(baseClass, component);
-					self._queryToComponents[query][baseClass][component] = nil;
-				end
-			end
-		end
-
 		baseClass = baseClass.super;
 	end
 
 end
 
-local registerEntity = function(self, entity, components)
+local registerEntity = function(self, entity)
 	entity:setIsValid(true);
 	assert(not self._entities[entity]);
 	self._entities[entity] = true;
 	self._entityToComponent[entity] = {};
 	self._entityToComponents[entity] = {};
-	for class, component in pairs(components) do
-		registerComponent(self, entity, component);
-	end
 end
 
 local unregisterEntity = function(self, entity)
@@ -131,6 +98,56 @@ local unregisterEntity = function(self, entity)
 	entity:setIsValid(false);
 end
 
+local updateQueries = function(self, entityNursery, entityGraveyard, componentNursery, componentGraveyard)
+	for query in pairs(self._queries) do
+		query:flush();
+	end
+
+	for entity in pairs(entityGraveyard) do
+		for query in pairs(self._queries) do
+			query:onEntityRemoved(entity);
+		end
+	end
+
+	for entity in pairs(entityNursery) do
+		for query in pairs(self._queries) do
+			query:onEntityAdded(entity);
+		end
+	end
+
+	for entity, components in pairs(componentGraveyard) do
+		if not entityGraveyard[entity] then
+			for class, component in pairs(components) do
+				local baseClass = class;
+				while baseClass ~= Component do
+					if self._componentClassToQueries[baseClass] then
+						for query in pairs(self._componentClassToQueries[baseClass]) do
+							query:onComponentRemoved(entity, component);
+						end
+					end
+					baseClass = baseClass.super;
+				end
+			end
+		end
+	end
+
+	for entity, components in pairs(componentNursery) do
+		if not entityNursery[entity] then
+			for class, component in pairs(components) do
+				local baseClass = class;
+				while baseClass ~= Component do
+					if self._componentClassToQueries[baseClass] then
+						for query in pairs(self._componentClassToQueries[baseClass]) do
+							query:onComponentAdded(entity, component);
+						end
+					end
+					baseClass = baseClass.super;
+				end
+			end
+		end
+	end
+end
+
 ECS.init = function(self)
 	self._entities = {};
 	self._entityToComponent = {};
@@ -139,8 +156,6 @@ ECS.init = function(self)
 
 	self._queries = {};
 	self._componentClassToQueries = {};
-	self._queryToEntities = {};
-	self._queryToComponents = {};
 
 	self._systems = {};
 
@@ -151,37 +166,37 @@ ECS.init = function(self)
 end
 
 ECS.update = function(self)
-	for query in pairs(self._queries) do
-		query:flush();
-	end
+	local entityGraveyard = TableUtils.shallowCopy(self._entityGraveyard);
+	local componentGraveyard = TableUtils.shallowCopy(self._componentGraveyard);
+	local entityNursery = TableUtils.shallowCopy(self._entityNursery);
+	local componentNursery = TableUtils.shallowCopy(self._componentNursery);
 
-	local graveyard = TableUtils.shallowCopy(self._componentGraveyard);
+	self._entityGraveyard = {};
 	self._componentGraveyard = {};
-	for entity, components in pairs(graveyard) do
+	self._entityNursery = {};
+	self._componentNursery = {};
+
+	for entity, components in pairs(componentGraveyard) do
 		for class, component in pairs(components) do
 			unregisterComponent(self, entity, component);
 		end
 	end
 
-	local graveyard = TableUtils.shallowCopy(self._entityGraveyard);
-	self._entityGraveyard = {};
-	for entity in pairs(graveyard) do
+	for entity in pairs(entityGraveyard) do
 		unregisterEntity(self, entity);
 	end
 
-	local nursery = TableUtils.shallowCopy(self._entityNursery);
-	self._entityNursery = {};
-	for entity, components in pairs(nursery) do
-		registerEntity(self, entity, components);
+	for entity in pairs(entityNursery) do
+		registerEntity(self, entity);
 	end
 
-	local nursery = TableUtils.shallowCopy(self._componentNursery);
-	self._componentNursery = {};
-	for entity, components in pairs(nursery) do
+	for entity, components in pairs(componentNursery) do
 		for class, component in pairs(components) do
 			registerComponent(self, entity, component);
 		end
 	end
+
+	updateQueries(self, entityNursery, entityGraveyard, componentNursery, componentGraveyard);
 end
 
 ECS.runSystems = function(self, event, ...)
@@ -243,10 +258,7 @@ ECS.addQuery = function(self, query)
 	assert(not self._queries[query]);
 	assert(query:isInstanceOf(Query));
 	self._queries[query] = true;
-	self._queryToEntities[query] = {};
-	self._queryToComponents[query] = {};
 	for _, class in pairs(query:getClasses()) do
-		self._queryToComponents[query][class] = {};
 		if not self._componentClassToQueries[class] then
 			self._componentClassToQueries[class] = {};
 		end
@@ -274,10 +286,6 @@ ECS.getAllEntitiesWith = function(self, class)
 		output[entity] = true;
 	end
 	return output;
-end
-
-ECS.query = function(self, query)
-	return TableUtils.shallowCopy(self._queryToEntities[query]);
 end
 
 ECS.getComponent = function(self, entity, class)

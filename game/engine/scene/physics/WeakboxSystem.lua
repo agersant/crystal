@@ -19,7 +19,7 @@ WeakboxSystem.update = function(self, dt)
 		weakbox:setShape(nil);
 	end
 
-	local entities = self:getECS():query(self._query);
+	local entities = self._query:getEntities();
 	for entity in pairs(entities) do
 		local body = entity:getComponent(PhysicsBody):getBody();
 		local weakbox = entity:getComponent(Weakbox);

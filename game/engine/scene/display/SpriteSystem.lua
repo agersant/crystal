@@ -20,7 +20,7 @@ SpriteSystem.update = function(self, dt)
 		sprite:update(dt);
 	end
 
-	local entities = self:getECS():query(self._query);
+	local entities = self._query:getEntities();
 	for entity in pairs(entities) do
 		local physicsBody = entity:getComponent(PhysicsBody);
 		local x, y = physicsBody:getPosition();

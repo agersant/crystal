@@ -2,6 +2,7 @@ local ECS = require("engine/ecs/ECS");
 local Component = require("engine/ecs/Component");
 local Entity = require("engine/ecs/Entity");
 local System = require("engine/ecs/System");
+local EitherComponent = require("engine/ecs/query/EitherComponent");
 local AllComponents = require("engine/ecs/query/AllComponents");
 
 local tests = {};
@@ -295,24 +296,24 @@ tests[#tests].body = function()
 	local c = ecs:spawn(Entity);
 	local snoot = Snoot:new();
 	b:addComponent(snoot);
-	assert(not ecs:query(query)[a]);
-	assert(not ecs:query(query)[b]);
-	assert(not ecs:query(query)[c]);
+	assert(not query:getEntities()[a]);
+	assert(not query:getEntities()[b]);
+	assert(not query:getEntities()[c]);
 
 	ecs:update();
-	assert(not ecs:query(query)[a]);
-	assert(ecs:query(query)[b]);
-	assert(not ecs:query(query)[c]);
+	assert(not query:getEntities()[a]);
+	assert(query:getEntities()[b]);
+	assert(not query:getEntities()[c]);
 
 	b:removeComponent(snoot);
-	assert(not ecs:query(query)[a]);
-	assert(ecs:query(query)[b]);
-	assert(not ecs:query(query)[c]);
+	assert(not query:getEntities()[a]);
+	assert(query:getEntities()[b]);
+	assert(not query:getEntities()[c]);
 
 	ecs:update();
-	assert(not ecs:query(query)[a]);
-	assert(not ecs:query(query)[b]);
-	assert(not ecs:query(query)[c]);
+	assert(not query:getEntities()[a]);
+	assert(not query:getEntities()[b]);
+	assert(not query:getEntities()[c]);
 end
 
 tests[#tests + 1] = {name = "Query entity list captures derived components"};
@@ -329,11 +330,11 @@ tests[#tests].body = function()
 	local boop = Boop:new();
 	a:addComponent(boop);
 	ecs:update();
-	assert(ecs:query(query)[a]);
+	assert(query:getEntities()[a]);
 
 	a:removeComponent(boop);
 	ecs:update();
-	assert(not ecs:query(query)[a]);
+	assert(not query:getEntities()[a]);
 end
 
 tests[#tests + 1] = {name = "Query maintains changelog of entities"};
@@ -404,6 +405,78 @@ tests[#tests].body = function()
 	assert(query:getRemovedComponents(BaseComp)[compA]);
 	assert(not query:getRemovedComponents(BaseComp)[compB]);
 	assert(not query:getRemovedComponents(BaseComp)[compC]);
+end
+
+tests[#tests + 1] = {name = "Query component changelog works for intersection query"};
+tests[#tests].body = function()
+	Class:resetIndex();
+
+	local ecs = ECS:new();
+	local BaseComp = Class("BaseComp", Component);
+	local CompA = Class("CompA", BaseComp);
+	local CompB = Class("CompB", BaseComp);
+	local CompC = Class("CompC", BaseComp);
+	local query = AllComponents:new({CompA, CompB, CompC});
+	ecs:addQuery(query);
+
+	local compA = CompA:new();
+	local compB = CompB:new();
+	local compC = CompC:new();
+
+	local a = ecs:spawn(Entity);
+	a:addComponent(compA);
+	a:addComponent(compB);
+	ecs:update();
+	assert(not query:getAddedComponents(CompA)[compA]);
+	assert(not query:getAddedComponents(CompB)[compB]);
+
+	a:addComponent(compC);
+	ecs:update();
+	assert(query:getAddedComponents(CompA)[compA]);
+	assert(query:getAddedComponents(CompB)[compB]);
+	assert(query:getAddedComponents(CompC)[compC]);
+
+	a:removeComponent(compA);
+	ecs:update();
+	assert(query:getRemovedComponents(CompA)[compA]);
+	assert(query:getRemovedComponents(CompB)[compB]);
+	assert(query:getRemovedComponents(CompC)[compC]);
+end
+
+tests[#tests + 1] = {name = "Query component changelog works for union query"};
+tests[#tests].body = function()
+	Class:resetIndex();
+
+	local ecs = ECS:new();
+	local BaseComp = Class("BaseComp", Component);
+	local CompA = Class("CompA", BaseComp);
+	local CompB = Class("CompB", BaseComp);
+	local CompC = Class("CompC", BaseComp);
+	local query = EitherComponent:new({CompA, CompB, CompC});
+	ecs:addQuery(query);
+
+	local compA = CompA:new();
+	local compB = CompB:new();
+	local compC = CompC:new();
+
+	local a = ecs:spawn(Entity);
+	a:addComponent(compA);
+	a:addComponent(compB);
+	ecs:update();
+	assert(query:getAddedComponents(CompA)[compA]);
+	assert(query:getAddedComponents(CompB)[compB]);
+
+	a:addComponent(compC);
+	ecs:update();
+	assert(not query:getAddedComponents(CompA)[compA]);
+	assert(not query:getAddedComponents(CompB)[compB]);
+	assert(query:getAddedComponents(CompC)[compC]);
+
+	a:removeComponent(compA);
+	ecs:update();
+	assert(query:getRemovedComponents(CompA)[compA]);
+	assert(not query:getRemovedComponents(CompB)[compB]);
+	assert(not query:getRemovedComponents(CompC)[compC]);
 end
 
 return tests;

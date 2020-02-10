@@ -19,7 +19,7 @@ HitboxSystem.update = function(self, dt)
 		hitbox:setShape(nil);
 	end
 
-	local entities = self:getECS():query(self._query);
+	local entities = self._query:getEntities();
 	for entity in pairs(entities) do
 		local body = entity:getComponent(PhysicsBody):getBody();
 		local hitbox = entity:getComponent(Hitbox);

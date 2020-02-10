@@ -13,7 +13,7 @@ InputListenerSystem.init = function(self, ecs)
 end
 
 InputListenerSystem.update = function(self, dt)
-	local entities = self:getECS():query(self._query);
+	local entities = self._query:getEntities();
 	for entity in pairs(entities) do
 		local inputListener = entity:getComponent(InputListener);
 		local scriptRunner = entity:getComponent(ScriptRunner);

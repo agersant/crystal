@@ -13,7 +13,7 @@ LocomotionSystem.init = function(self, ecs)
 end
 
 LocomotionSystem.update = function(self, dt)
-	local entities = self:getECS():query(self._query);
+	local entities = self._query:getEntities();
 	for entity in pairs(entities) do
 		local locomotion = entity:getComponent(Locomotion);
 		local physicsBody = entity:getComponent(PhysicsBody);
