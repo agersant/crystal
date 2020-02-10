@@ -1,6 +1,7 @@
 local ECS = require("engine/ecs/ECS");
 local Component = require("engine/ecs/Component");
 local Entity = require("engine/ecs/Entity");
+local System = require("engine/ecs/System");
 
 local tests = {};
 
@@ -167,8 +168,43 @@ tests[#tests].body = function()
 	assert(not activated);
 end
 
--- TODO test queries
+tests[#tests + 1] = {name = "Systems update in correct order"};
+tests[#tests].body = function()
+	local ecs = ECS:new();
 
--- TODO test systems
+	local sentinel = 0;
+	for i = 1, 10 do
+		local j = i;
+		local system = System:new(ecs);
+		system.update = function()
+			assert(sentinel == j - 1);
+			sentinel = j;
+		end
+		ecs:addSystem(system);
+	end
+	assert(sentinel == 0);
+	ecs:runSystems("randomEvent");
+	assert(sentinel == 0);
+	ecs:runSystems("update");
+	assert(sentinel == 10);
+end
+
+tests[#tests + 1] = {name = "Systems receive parameters"};
+tests[#tests].body = function()
+	local ecs = ECS:new();
+
+	local ran = false;
+	local system = System:new(ecs);
+	system.update = function(self, value)
+		assert(self == system);
+		assert(value);
+		ran = true;
+	end
+	ecs:addSystem(system);
+	ecs:runSystems("update", true);
+	assert(ran);
+end
+
+-- TODO test queries
 
 return tests;
