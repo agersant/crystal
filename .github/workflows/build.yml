@@ -28,6 +28,10 @@ jobs:
     - name: Run Tests
       run: lovec . /test
       working-directory: ./game
+    - uses: actions/upload-artifact@v1
+      with:
+        name: game-test-coverage-windows
+        path: game/luacov.report.out
 
   tests-linux:
     name: Run Tests (Linux)
@@ -49,3 +53,7 @@ jobs:
     - name: Run Tests
       run: love . /test
       working-directory: ./game
+    - uses: actions/upload-artifact@v1
+      with:
+        name: game-test-coverage-windows
+        path: game/luacov.report.out

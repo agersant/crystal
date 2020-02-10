@@ -1,3 +1,6 @@
+luacov.report.out
+luacov.stats.out
+
 *.suo
 *.sdf
 *.vcxproj.user

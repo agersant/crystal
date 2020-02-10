@@ -1,4 +1,11 @@
 {
 	"vscode-lua-format.configPath": ".lua-format",
-	"Lua.runtime.version": "LuaJIT"
+	"Lua.runtime.version": "LuaJIT",
+	"search.exclude": {
+		"**/external": true
+	},
+	"Lua.workspace.ignoreDir": [
+		".vscode",
+		"**/external"
+	]
 }
