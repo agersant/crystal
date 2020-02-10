@@ -4,7 +4,7 @@ MODULE = "arpg/ARPG";
 
 if Features.unitTesting then
 	if Features.codeCoverage then
-		require("external/luacov/runner").init({runreport = true, deletestats = true, exclude = {"^assets/.*$", "Test"}});
+		require("external/luacov/runner").init({runreport = true, exclude = {"^assets/.*$", "^main$", "Test"}});
 	end
 	require("engine/dev/mock/love/graphics");
 	local TestSuite = require("engine/TestSuite");
