@@ -49,19 +49,15 @@ tests[#tests].body = function()
 	local ecs = ECS:new();
 
 	local a = ecs:spawn(Entity);
-	local b = ecs:spawn(Entity);
 
 	local Snoot = Class("Snoot", Component);
 	local snoot = Snoot:new();
 	a:addComponent(snoot);
-	assert(a:getComponent(Snoot) == snoot);
-	assert(b:getComponent(Snoot) == nil);
 	ecs:update();
 	assert(snoot:getEntity() == a);
 
 	a:removeComponent(snoot);
-	assert(nil == a:getComponent(Snoot));
-	assert(nil == b:getComponent(Snoot));
+	assert(snoot:getEntity() == a);
 	ecs:update();
 	assert(snoot:getEntity() == nil);
 end
@@ -79,7 +75,7 @@ tests[#tests].body = function()
 		error("unexpected activation")
 	end
 	a:addComponent(snoot);
-	assert(a:getComponent(Snoot) == snoot);
+	assert(a:getComponent(Snoot) == nil);
 	a:removeComponent(snoot);
 	assert(a:getComponent(Snoot) == nil);
 	ecs:update();
@@ -92,14 +88,52 @@ tests[#tests].body = function()
 		activated = true;
 	end
 	a:addComponent(snoot);
-	assert(a:getComponent(Snoot) == snoot);
+	assert(a:getComponent(Snoot) == nil);
 	a:removeComponent(snoot);
 	assert(a:getComponent(Snoot) == nil);
 	a:addComponent(snoot);
-	assert(a:getComponent(Snoot) == snoot);
+	assert(a:getComponent(Snoot) == nil);
 	ecs:update();
 	assert(a:getComponent(Snoot) == snoot);
 	assert(activated);
+end
+
+tests[#tests + 1] = {name = "Get component"};
+tests[#tests].body = function()
+	Class:resetIndex();
+
+	local ecs = ECS:new();
+	local a = ecs:spawn(Entity);
+
+	local Snoot = Class("Snoot", Component);
+	local Boop = Class("Boop", Snoot);
+	local Bonk = Class("Bonk", Snoot);
+	local boop = Boop:new();
+	local bonk = Bonk:new();
+
+	a:addComponent(boop);
+	assert(a:getComponent(Boop) == nil);
+	assert(a:getComponent(Snoot) == nil);
+
+	ecs:update();
+	assert(a:getComponent(Boop) == boop);
+	assert(a:getComponent(Snoot) == boop);
+
+	a:addComponent(bonk);
+	assert(a:getComponent(Boop) == boop);
+	assert(a:getComponent(Snoot) == boop);
+
+	ecs:update();
+	local success = pcall(function()
+		a:getComponent(Snoot);
+	end);
+	assert(not success);
+	assert(a:getComponent(Boop) == boop);
+
+	a:removeComponent(boop);
+	ecs:update();
+	assert(a:getComponent(Boop) == nil);
+	assert(a:getComponent(Snoot) == bonk);
 end
 
 tests[#tests + 1] = {name = "Get components"};

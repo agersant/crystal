@@ -50,6 +50,7 @@ local registerComponent = function(self, entity, component)
 		baseClass = baseClass.super;
 	end
 
+	component:setEntity(entity);
 	component:activate();
 end
 
@@ -60,6 +61,7 @@ local unregisterComponent = function(self, entity, component)
 	assert(component:isInstanceOf(Component));
 
 	component:deactivate();
+	component:setEntity(nil);
 
 	local class = component:getClass();
 	assert(class);
@@ -210,7 +212,6 @@ ECS.addComponent = function(self, entity, component)
 		self._componentNursery[entity] = nursery;
 	end
 	nursery[component:getClass()] = component;
-	component:setEntity(entity);
 end
 
 ECS.removeComponent = function(self, entity, component)
@@ -227,7 +228,6 @@ ECS.removeComponent = function(self, entity, component)
 		end
 		graveyard[component:getClass()] = component;
 	end
-	component:setEntity(nil);
 end
 
 ECS.addQuery = function(self, query)
@@ -272,25 +272,20 @@ ECS.query = function(self, query)
 	return TableUtils.shallowCopy(self._queryToEntities[query]);
 end
 
--- TODO dont support nursery, just return nil until first update
 ECS.getComponent = function(self, entity, class)
 	assert(entity);
 	assert(class);
-	if self._entityNursery[entity] then
-		if self._componentNursery[entity] then
-			return self._componentNursery[entity][class];
+	if self._entityToComponent[entity] then
+		local exactMatch = self._entityToComponent[entity][class];
+		if exactMatch then
+			return exactMatch;
 		end
-	else
-		assert(entity:isValid());
-		if self._componentNursery[entity] then
-			return self._componentNursery[entity][class];
-		elseif self._componentGraveyard[entity] then
-			local component = self._entityToComponent[entity][class];
-			if component ~= self._componentGraveyard[entity][class] then
+		local derivedMatches = self._entityToComponents[entity][class];
+		if derivedMatches then
+			assert(TableUtils.countKeys(self._entityToComponents[entity][class]) <= 1); -- Ambiguous call
+			for component in pairs(derivedMatches) do
 				return component;
 			end
-		else
-			return self._entityToComponent[entity][class];
 		end
 	end
 end
