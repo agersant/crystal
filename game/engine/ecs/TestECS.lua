@@ -33,8 +33,12 @@ tests[#tests].body = function()
 	local ecs = ECS:new();
 
 	local a = ecs:spawn(Entity);
+	assert(not ecs:getAllEntities()[a]);
+	ecs:despawn(a);
+	assert(not ecs:getAllEntities()[a]);
 	ecs:update(0);
-	assert(ecs:getAllEntities()[a]);
+	assert(not ecs:getAllEntities()[a]);
+end
 
 	local b = ecs:spawn(Entity);
 	assert(not ecs:getAllEntities()[b]);
