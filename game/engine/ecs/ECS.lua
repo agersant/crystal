@@ -199,7 +199,7 @@ ECS.update = function(self)
 	updateQueries(self, entityNursery, entityGraveyard, componentNursery, componentGraveyard);
 end
 
-ECS.runSystems = function(self, event, ...)
+ECS.processEvent = function(self, event, ...)
 	for _, system in ipairs(self._systems) do
 		if system[event] then
 			system[event](system, ...);
