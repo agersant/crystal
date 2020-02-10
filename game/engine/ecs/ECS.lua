@@ -175,29 +175,33 @@ ECS.despawn = function(self, entity)
 	end
 end
 
--- TODO support add and remove within same frame
 -- TODO error on duplicate class
 ECS.addComponent = function(self, entity, component)
+	assert(component);
+	assert(component:isInstanceOf(Component));
 	local nursery = self._componentNursery[entity];
 	if not nursery then
 		nursery = {};
 		self._componentNursery[entity] = nursery;
 	end
-	assert(component);
-	assert(component:isInstanceOf(Component));
 	nursery[component:getClass()] = component;
 	component:setEntity(entity);
 end
 
 ECS.removeComponent = function(self, entity, component)
-	local graveyard = self._componentGraveyard[entity];
-	if not graveyard then
-		graveyard = {};
-		self._componentGraveyard[entity] = graveyard;
-	end
 	assert(component);
 	assert(component:isInstanceOf(Component));
-	graveyard[component:getClass()] = component;
+	local nursery = self._componentNursery[entity];
+	if nursery and nursery[component:getClass()] then
+		nursery[component:getClass()] = nil;
+	else
+		local graveyard = self._componentGraveyard[entity];
+		if not graveyard then
+			graveyard = {};
+			self._componentGraveyard[entity] = graveyard;
+		end
+		graveyard[component:getClass()] = component;
+	end
 	component:setEntity(nil);
 end
 

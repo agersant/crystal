@@ -40,14 +40,6 @@ tests[#tests].body = function()
 	assert(not ecs:getAllEntities()[a]);
 end
 
-	local b = ecs:spawn(Entity);
-	assert(not ecs:getAllEntities()[b]);
-	ecs:despawn(b);
-	assert(not ecs:getAllEntities()[b]);
-	ecs:update(0);
-	assert(not ecs:getAllEntities()[b]);
-end
-
 tests[#tests + 1] = {name = "Add and remove component"};
 tests[#tests].body = function()
 	Class:resetIndex();
@@ -75,6 +67,42 @@ tests[#tests].body = function()
 	assert(not ecs:getAllEntitiesWith(Snoot)[a]);
 	assert(not ecs:getAllEntitiesWith(Snoot)[b]);
 	assert(c:getEntity() == nil);
+end
+
+tests[#tests + 1] = {name = "Add and remove component between updates"};
+tests[#tests].body = function()
+	Class:resetIndex();
+
+	local ecs = ECS:new();
+	local Snoot = Class("Snoot", Component);
+
+	local a = ecs:spawn(Entity);
+	local snoot = Snoot:new();
+	snoot.activate = function()
+		error("unexpected activation")
+	end
+	a:addComponent(snoot);
+	assert(a:getComponent(Snoot) == snoot);
+	a:removeComponent(snoot);
+	assert(a:getComponent(Snoot) == nil);
+	ecs:update();
+	assert(a:getComponent(Snoot) == nil);
+
+	local a = ecs:spawn(Entity);
+	local snoot = Snoot:new();
+	local activated = false;
+	snoot.activate = function()
+		activated = true;
+	end
+	a:addComponent(snoot);
+	assert(a:getComponent(Snoot) == snoot);
+	a:removeComponent(snoot);
+	assert(a:getComponent(Snoot) == nil);
+	a:addComponent(snoot);
+	assert(a:getComponent(Snoot) == snoot);
+	ecs:update();
+	assert(a:getComponent(Snoot) == snoot);
+	assert(activated);
 end
 
 tests[#tests + 1] = {name = "Get entities with component"};
