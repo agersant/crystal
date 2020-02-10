@@ -139,18 +139,6 @@ Entity.addCombatLogic = function(self)
 	self:addScript(self._combatLogic);
 end
 
--- CORE
-
-Entity.update = function(self, dt)
-	-- if self._sprite then
-	-- 	local animationWasOver = self._sprite:isAnimationOver();
-	-- 	self._sprite:update(dt);
-	-- 	if not animationWasOver and self._sprite:isAnimationOver() then
-	-- 		self:signal("animationEnd");
-	-- 	end
-	-- end
-end
-
 Entity.getScene = function(self)
 	return self._ecs;
 end
