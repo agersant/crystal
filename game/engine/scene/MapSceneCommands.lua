@@ -4,6 +4,7 @@ local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/scene/Scene");
 local Entity = require("engine/ecs/Entity");
 local Module = require("engine/Module");
+local PhysicsBody = require("engine/scene/physics/PhysicsBody");
 
 local loadMap = function(mapName)
 	Persistence:getSaveData():save();
@@ -53,16 +54,17 @@ local spawn = function(className)
 	local class = Class:getByName(className);
 	assert(class);
 	assert(class:isInstanceOf(Entity));
-	local entity = class:new(currentScene, {});
+	local entity = currentScene:spawn(class);
 
-	if entity:hasPhysicsBody() then
+	local physicsBody = entity:getComponent(PhysicsBody);
+	if physicsBody then
 		local x, y = player:getPosition();
 		local angle = math.random(2 * math.pi);
 		local radius = 40;
 		x = x + radius * math.cos(angle);
 		y = y + radius * math.sin(angle);
 		x, y = map:getNearestPointOnNavmesh(x, y);
-		entity:setPosition(x, y);
+		physicsBody:setPosition(x, y);
 	end
 end
 
