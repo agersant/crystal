@@ -367,4 +367,43 @@ tests[#tests].body = function()
 	assert(not query:getRemovedEntities()[b]);
 end
 
+tests[#tests + 1] = {name = "Query maintains changelog of components"};
+tests[#tests].body = function()
+	Class:resetIndex();
+
+	local ecs = ECS:new();
+	local BaseComp = Class("BaseComp", Component);
+	local query = AllComponents:new({BaseComp});
+	ecs:addQuery(query);
+
+	local CompA = Class("CompA", BaseComp);
+	local CompB = Class("CompB", BaseComp);
+	local CompC = Class("CompC", BaseComp);
+	local compA = CompA:new();
+	local compB = CompB:new();
+	local compC = CompC:new();
+
+	local a = ecs:spawn(Entity);
+	a:addComponent(compA);
+	a:addComponent(compB);
+	assert(not query:getAddedComponents(BaseComp)[compA]);
+	assert(not query:getAddedComponents(BaseComp)[compB]);
+
+	ecs:update();
+	assert(query:getAddedComponents(BaseComp)[compA]);
+	assert(query:getAddedComponents(BaseComp)[compB]);
+
+	a:addComponent(compC);
+	ecs:update();
+	assert(not query:getAddedComponents(BaseComp)[compA]);
+	assert(not query:getAddedComponents(BaseComp)[compB]);
+	assert(query:getAddedComponents(BaseComp)[compC]);
+
+	a:removeComponent(compA);
+	ecs:update();
+	assert(query:getRemovedComponents(BaseComp)[compA]);
+	assert(not query:getRemovedComponents(BaseComp)[compB]);
+	assert(not query:getRemovedComponents(BaseComp)[compC]);
+end
+
 return tests;

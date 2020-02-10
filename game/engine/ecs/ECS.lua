@@ -43,6 +43,10 @@ local registerComponent = function(self, entity, component)
 						query:onMatchEntity(entity);
 						self._queryToEntities[query][entity] = true;
 					end
+					if not self._queryToComponents[query][baseClass][component] then
+						query:onMatchComponent(baseClass, component);
+						self._queryToComponents[query][baseClass][component] = true;
+					end
 				end
 			end
 		end
@@ -90,6 +94,10 @@ local unregisterComponent = function(self, entity, component)
 						query:onUnmatchEntity(entity);
 						self._queryToEntities[query][entity] = nil;
 					end
+				end
+				if self._queryToComponents[query][baseClass][component] then
+					query:onUnmatchComponent(baseClass, component);
+					self._queryToComponents[query][baseClass][component] = nil;
 				end
 			end
 		end

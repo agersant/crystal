@@ -1,4 +1,5 @@
 require("engine/utils/OOP");
+local Component = require("engine/ecs/Component");
 local TableUtils = require("engine/utils/TableUtils");
 
 local Query = Class("Query");
@@ -45,10 +46,42 @@ Query.getRemovedEntities = function(self)
 	return TableUtils.shallowCopy(self._removedEntities);
 end
 
+Query.onMatchComponent = function(self, class, component)
+	if self._removedComponents[class] then
+		if self._removedComponents[class][component] then
+			self._removedComponents[class][component] = nil;
+			return;
+		end
+	end
+
+	if not self._addedComponents[class] then
+		self._addedComponents[class] = {};
+	end
+	self._addedComponents[class][component] = component;
 end
 
-Query.getAddedEntities = function(self)
-	return pairs(self._addedEntities);
+Query.onUnmatchComponent = function(self, class, component)
+	if self._addedComponents[class] then
+		if self._addedComponents[class][component] then
+			self._addedComponents[class][component] = nil;
+			return;
+		end
+	end
+
+	if not self._removedComponents[class] then
+		self._removedComponents[class] = {};
+	end
+	self._removedComponents[class][component] = component;
+end
+
+Query.getAddedComponents = function(self, class)
+	assert(class);
+	return TableUtils.shallowCopy(self._addedComponents[class] or {});
+end
+
+Query.getRemovedComponents = function(self, class)
+	assert(class);
+	return TableUtils.shallowCopy(self._removedComponents[class] or {});
 end
 
 Query.flush = function(self)
