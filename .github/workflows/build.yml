@@ -28,11 +28,6 @@ jobs:
     - name: Run Tests
       run: lovec . /test
       working-directory: ./game
-    - name: Upload Test Coverage Results
-      uses: codecov/codecov-action@v1
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        fail_ci_if_error: true
 
   tests-linux:
     name: Run Tests (Linux)
@@ -54,3 +49,9 @@ jobs:
     - name: Run Tests
       run: love . /test
       working-directory: ./game
+    - name: Upload Test Coverage Results
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        fail_ci_if_error: true
+
