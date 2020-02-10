@@ -6,6 +6,7 @@ local Features = Class("Features");
 Features.init = function(self)
 	local release = love.filesystem.isFused();
 	self.unitTesting = TableUtils.contains(arg, "/test");
+	self.codeCoverage = TableUtils.contains(arg, "/coverage");
 	self.audioOutput = not self.unitTesting;
 	self.display = not self.unitTesting;
 	self.logging = not release;
