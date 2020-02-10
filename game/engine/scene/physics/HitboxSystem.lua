@@ -1,6 +1,6 @@
 require("engine/utils/OOP");
 local System = require("engine/ecs/System");
-local AllComponents = require("engine/ecs/Query/AllComponents");
+local AllComponents = require("engine/ecs/query/AllComponents");
 local Sprite = require("engine/scene/display/Sprite");
 local Hitbox = require("engine/scene/physics/Hitbox");
 local PhysicsBody = require("engine/scene/physics/PhysicsBody");
@@ -14,7 +14,7 @@ HitboxSystem.init = function(self, ecs)
 end
 
 HitboxSystem.update = function(self, dt)
-	for _, entity in self._query:getRemovedEntities() do
+	for entity in pairs(self._query:getRemovedEntities()) do
 		local hitbox = entity:getComponent(Hitbox);
 		hitbox:setShape(nil);
 	end

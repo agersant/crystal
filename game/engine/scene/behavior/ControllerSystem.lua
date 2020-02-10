@@ -1,6 +1,6 @@
 require("engine/utils/OOP");
 local System = require("engine/ecs/System");
-local AllComponents = require("engine/ecs/Query/AllComponents");
+local AllComponents = require("engine/ecs/query/AllComponents");
 local Controller = require("engine/scene/behavior/Controller");
 local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 
@@ -13,13 +13,13 @@ ControllerSystem.init = function(self, ecs)
 end
 
 ControllerSystem.update = function(self, dt)
-	for _, entity in self._query:getAddedEntities() do
+	for entity in pairs(self._query:getAddedEntities()) do
 		local controller = entity:getComponent(Controller);
 		local scriptRunner = entity:getComponent(ScriptRunner);
 		scriptRunner:addScript(controller:getScript());
 	end
 
-	for _, entity in self._query:getRemovedEntities() do
+	for entity in pairs(self._query:getRemovedEntities()) do
 		local controller = entity:getComponent(Controller);
 		local scriptRunner = entity:getComponent(ScriptRunner);
 		scriptRunner:removeScript(controller:getScript());

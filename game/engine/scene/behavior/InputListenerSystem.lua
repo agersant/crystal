@@ -1,6 +1,6 @@
 require("engine/utils/OOP");
 local System = require("engine/ecs/System");
-local AllComponents = require("engine/ecs/Query/AllComponents");
+local AllComponents = require("engine/ecs/query/AllComponents");
 local InputListener = require("engine/scene/behavior/InputListener");
 local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 

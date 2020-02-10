@@ -2,7 +2,7 @@ require("engine/utils/OOP");
 local Features = require("engine/dev/Features");
 local Entity = require("engine/ecs/Entity");
 local System = require("engine/ecs/System");
-local AllComponents = require("engine/ecs/Query/AllComponents");
+local AllComponents = require("engine/ecs/query/AllComponents");
 local DebugDraw = require("engine/scene/physics/DebugDraw");
 local PhysicsBody = require("engine/scene/physics/PhysicsBody");
 
@@ -20,14 +20,14 @@ DebugDrawSystem.update = function(self, dt)
 		return;
 	end
 
-	for _, entity in self._query:getAddedEntities() do
+	for entity in pairs(self._query:getAddedEntities()) do
 		local debugDraw = self:getECS():spawn(Entity);
 		debugDraw:addComponent(DebugDraw:new(entity:getBody()));
 		assert(not self._entityToDebugDraw[entity]);
 		self._entityToDebugDraw[entity] = debugDraw;
 	end
 
-	for _, entity in self._query:getRemovedEntities() do
+	for entity in pairs(self._query:getRemovedEntities()) do
 		assert(self._entityToDebugDraw[entity]);
 		self._entityToDebugDraw[entity]:despawn();
 		self._entityToDebugDraw[entity] = nil;

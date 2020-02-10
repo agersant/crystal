@@ -1,6 +1,6 @@
 require("engine/utils/OOP");
 local System = require("engine/ecs/System");
-local AllComponents = require("engine/ecs/Query/AllComponents");
+local AllComponents = require("engine/ecs/query/AllComponents");
 local TouchTrigger = require("engine/scene/physics/TouchTrigger");
 local PhysicsBody = require("engine/scene/physics/PhysicsBody");
 
@@ -13,7 +13,7 @@ TouchTriggerSystem.init = function(self, ecs)
 end
 
 TouchTriggerSystem.update = function(self, dt)
-	for _, entity in self._query:getAddedEntities() do
+	for entity in pairs(self._query:getAddedEntities()) do
 		local body = entity:getComponent(PhysicsBody):getBody();
 		local touchTrigger = entity:getComponent(TouchTrigger);
 		local fixture = love.physics.newFixture(body, touchTrigger:getShape());
@@ -23,7 +23,7 @@ TouchTriggerSystem.update = function(self, dt)
 		touchTrigger:setFixture(fixture);
 	end
 
-	for _, entity in self._query:getRemovedEntities() do
+	for entity in pairs(self._query:getRemovedEntities()) do
 		local touchTrigger = entity:getComponent(TouchTrigger);
 		touchTrigger:getFixture():destroy();
 		touchTrigger:setFixture(nil);

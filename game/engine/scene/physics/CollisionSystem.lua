@@ -1,6 +1,6 @@
 require("engine/utils/OOP");
 local System = require("engine/ecs/System");
-local AllComponents = require("engine/ecs/Query/AllComponents");
+local AllComponents = require("engine/ecs/query/AllComponents");
 local Collision = require("engine/scene/physics/Collision");
 local PhysicsBody = require("engine/scene/physics/PhysicsBody");
 
@@ -13,7 +13,7 @@ CollisionSystem.init = function(self, ecs)
 end
 
 CollisionSystem.update = function(self, dt)
-	for _, entity in self._query:getAddedEntities() do
+	for entity in pairs(self._query:getAddedEntities()) do
 		local body = entity:getComponent(PhysicsBody):getBody();
 		local collision = entity:getComponent(Collision);
 		local fixture = love.physics.newFixture(body, collision:getShape());
@@ -25,7 +25,7 @@ CollisionSystem.update = function(self, dt)
 		collision:setFixture(fixture);
 	end
 
-	for _, entity in self._query:getRemovedEntities() do
+	for entity in pairs(self._query:getRemovedEntities()) do
 		local collision = entity:getComponent(Collision);
 		collision:getFixture():destroy();
 		collision:setFixture(nil);

@@ -22,14 +22,17 @@ local registerComponent = function(self, entity, component)
 		if not self._componentClassToEntities[baseClass] then
 			self._componentClassToEntities[baseClass] = {};
 		end
-		assert(not self._componentClassToEntities[baseClass][entity]);
-		self._componentClassToEntities[baseClass][entity] = true;
+		if not self._componentClassToEntities[baseClass][entity] then
+			self._componentClassToEntities[baseClass][entity] = {};
+		end
+		assert(not self._componentClassToEntities[baseClass][entity][component]);
+		self._componentClassToEntities[baseClass][entity][component] = true;
 
 		if self._componentClassToQueries[baseClass] then
 			for query in pairs(self._componentClassToQueries[baseClass]) do
 				if query:matches(entity) then
 					if not self._queryToEntities[query][entity] then
-						query:onMatch(entity);
+						query:onMatchEntity(entity);
 						self._queryToEntities[query][entity] = true;
 					end
 				end
@@ -57,14 +60,14 @@ local unregisterComponent = function(self, entity, component)
 		assert(self._entityToComponents[entity][baseClass]);
 		self._entityToComponents[entity][baseClass] = nil;
 
-		assert(self._componentClassToEntities[baseClass][entity]);
-		self._componentClassToEntities[baseClass][entity] = nil;
+		assert(self._componentClassToEntities[baseClass][entity][component]);
+		self._componentClassToEntities[baseClass][entity][component] = nil;
 
 		if self._componentClassToQueries[baseClass] then
 			for query in pairs(self._componentClassToQueries[baseClass]) do
 				if not query:matches(entity) then
 					if self._queryToEntities[query][entity] then
-						query:onUnmatch(entity);
+						query:onUnmatchEntity(entity);
 						self._queryToEntities[query][entity] = nil;
 					end
 				end
@@ -106,6 +109,7 @@ ECS.init = function(self)
 	self._queries = {};
 	self._componentClassToQueries = {};
 	self._queryToEntities = {};
+	self._queryToComponents = {};
 
 	self._systems = {};
 
@@ -211,11 +215,17 @@ ECS.addQuery = function(self, query)
 	assert(query:isInstanceOf(Query));
 	self._queries[query] = true;
 	self._queryToEntities[query] = {};
+	self._queryToComponents[query] = {};
 	for _, class in pairs(query:getClasses()) do
-		if not self._componentClassToQueries[class] then
-			self._componentClassToQueries[class] = {};
+		local baseClass = class;
+		while baseClass ~= Component do
+			self._queryToComponents[query][baseClass] = {};
+			if not self._componentClassToQueries[baseClass] then
+				self._componentClassToQueries[baseClass] = {};
+			end
+			self._componentClassToQueries[baseClass][query] = true;
+			baseClass = baseClass.super;
 		end
-		self._componentClassToQueries[class][query] = true;
 	end
 end
 

@@ -1,4 +1,5 @@
 require("engine/utils/OOP");
+local TableUtils = require("engine/utils/TableUtils");
 
 local Query = Class("Query");
 
@@ -8,6 +9,8 @@ Query.init = function(self, classes)
 	self._classes = classes;
 	self._addedEntities = {};
 	self._removedEntities = {};
+	self._addedComponents = {};
+	self._removedComponents = {};
 end
 
 Query.getClasses = function(self)
@@ -18,7 +21,7 @@ Query.matches = function(self)
 	return false;
 end
 
-Query.onMatch = function(self, entity)
+Query.onMatchEntity = function(self, entity)
 	if self._removedEntities[entity] then
 		self._removedEntities[entity] = nil;
 	else
@@ -26,7 +29,7 @@ Query.onMatch = function(self, entity)
 	end
 end
 
-Query.onUnmatch = function(self, entity)
+Query.onUnmatchEntity = function(self, entity)
 	if self._addedEntities[entity] then
 		self._addedEntities[entity] = nil;
 	else
@@ -34,17 +37,25 @@ Query.onUnmatch = function(self, entity)
 	end
 end
 
-Query.flush = function(self)
-	self._addedEntities = {};
-	self._removedEntities = {};
+Query.getAddedEntities = function(self)
+	return TableUtils.shallowCopy(self._addedEntities);
+end
+
+Query.getRemovedEntities = function(self)
+	return TableUtils.shallowCopy(self._removedEntities);
+end
+
 end
 
 Query.getAddedEntities = function(self)
 	return pairs(self._addedEntities);
 end
 
-Query.getRemovedEntities = function(self)
-	return pairs(self._removedEntities);
+Query.flush = function(self)
+	self._addedEntities = {};
+	self._removedEntities = {};
+	self._addedComponents = {};
+	self._removedComponents = {};
 end
 
 return Query;

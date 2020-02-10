@@ -2,6 +2,7 @@ local ECS = require("engine/ecs/ECS");
 local Component = require("engine/ecs/Component");
 local Entity = require("engine/ecs/Entity");
 local System = require("engine/ecs/System");
+local AllComponents = require("engine/ecs/query/AllComponents");
 
 local tests = {};
 
@@ -205,6 +206,90 @@ tests[#tests].body = function()
 	assert(ran);
 end
 
--- TODO test queries
+tests[#tests + 1] = {name = "Query maintains list of entities"};
+tests[#tests].body = function()
+	Class:resetIndex();
+
+	local ecs = ECS:new();
+	local Snoot = Class("Snoot", Component);
+	local query = AllComponents:new({Snoot});
+	ecs:addQuery(query);
+
+	local a = ecs:spawn(Entity);
+	local b = ecs:spawn(Entity);
+	local c = ecs:spawn(Entity);
+	local snoot = Snoot:new();
+	b:addComponent(snoot);
+	assert(not ecs:query(query)[a]);
+	assert(not ecs:query(query)[b]);
+	assert(not ecs:query(query)[c]);
+
+	ecs:update();
+	assert(not ecs:query(query)[a]);
+	assert(ecs:query(query)[b]);
+	assert(not ecs:query(query)[c]);
+
+	b:removeComponent(snoot);
+	assert(not ecs:query(query)[a]);
+	assert(ecs:query(query)[b]);
+	assert(not ecs:query(query)[c]);
+
+	ecs:update();
+	assert(not ecs:query(query)[a]);
+	assert(not ecs:query(query)[b]);
+	assert(not ecs:query(query)[c]);
+end
+
+tests[#tests + 1] = {name = "Query entity list captures derived components"};
+tests[#tests].body = function()
+	Class:resetIndex();
+
+	local ecs = ECS:new();
+	local Snoot = Class("Snoot", Component);
+	local Boop = Class("Boop", Snoot);
+	local query = AllComponents:new({Snoot});
+	ecs:addQuery(query);
+
+	local a = ecs:spawn(Entity);
+	local boop = Boop:new();
+	a:addComponent(boop);
+	ecs:update();
+	assert(ecs:query(query)[a]);
+
+	a:removeComponent(boop);
+	ecs:update();
+	assert(not ecs:query(query)[a]);
+end
+
+tests[#tests + 1] = {name = "Query maintains changelog of entities"};
+tests[#tests].body = function()
+	Class:resetIndex();
+
+	local ecs = ECS:new();
+	local Snoot = Class("Snoot", Component);
+	local query = AllComponents:new({Snoot});
+	ecs:addQuery(query);
+
+	local a = ecs:spawn(Entity);
+	local b = ecs:spawn(Entity);
+	local snoot = Snoot:new();
+	b:addComponent(snoot);
+	assert(not query:getAddedEntities()[b]);
+
+	ecs:update();
+	assert(not query:getAddedEntities()[a]);
+	assert(query:getAddedEntities()[b]);
+	ecs:update();
+	assert(not query:getAddedEntities()[b]);
+
+	b:removeComponent(snoot);
+	assert(not query:getRemovedEntities()[b]);
+
+	ecs:update();
+	assert(query:getRemovedEntities()[b]);
+
+	ecs:update();
+	assert(not query:getRemovedEntities()[b]);
+end
 
 return tests;
