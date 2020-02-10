@@ -76,7 +76,7 @@ tests[#tests].body = function()
 		error("unexpected activation")
 	end
 	a:addComponent(snoot);
-	assert(a:getComponent(Snoot) == nil);
+	assert(a:getComponent(Snoot) == snoot);
 	a:removeComponent(snoot);
 	assert(a:getComponent(Snoot) == nil);
 	ecs:update();
@@ -89,11 +89,11 @@ tests[#tests].body = function()
 		activated = true;
 	end
 	a:addComponent(snoot);
-	assert(a:getComponent(Snoot) == nil);
+	assert(a:getComponent(Snoot) == snoot);
 	a:removeComponent(snoot);
 	assert(a:getComponent(Snoot) == nil);
 	a:addComponent(snoot);
-	assert(a:getComponent(Snoot) == nil);
+	assert(a:getComponent(Snoot) == snoot);
 	ecs:update();
 	assert(a:getComponent(Snoot) == snoot);
 	assert(activated);
@@ -113,7 +113,7 @@ tests[#tests].body = function()
 	local bonk = Bonk:new();
 
 	a:addComponent(boop);
-	assert(a:getComponent(Boop) == nil);
+	assert(a:getComponent(Boop) == boop);
 	assert(a:getComponent(Snoot) == nil);
 
 	ecs:update();

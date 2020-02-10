@@ -303,6 +303,8 @@ ECS.getComponent = function(self, entity, class)
 				return component;
 			end
 		end
+	elseif self._entityNursery[entity] then
+		return self._componentNursery[entity][class];
 	end
 end
 
