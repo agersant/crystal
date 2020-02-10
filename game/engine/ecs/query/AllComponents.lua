@@ -1,5 +1,6 @@
 require("engine/utils/OOP");
 local Query = require("engine/ecs/query/Query");
+local TableUtils = require("engine/utils/TableUtils");
 
 local AllComponents = Class("AllComponents", Query);
 
@@ -9,7 +10,7 @@ end
 
 AllComponents.matches = function(self, entity)
 	for _, class in ipairs(self:getClasses()) do
-		if not entity:getComponent(class) then
+		if TableUtils.countKeys(entity:getComponents(class)) == 0 then
 			return false;
 		end
 	end

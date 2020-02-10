@@ -30,6 +30,10 @@ Entity.getComponent = function(self, class)
 	return self._ecs:getComponent(self, class);
 end
 
+Entity.getComponents = function(self, baseClass)
+	return self._ecs:getComponents(self, baseClass);
+end
+
 Entity.despawn = function(self)
 	self._ecs:despawn(self);
 end

@@ -14,10 +14,18 @@ local registerComponent = function(self, entity, component)
 
 	local class = component:getClass();
 
+	assert(not self._entityToComponent[entity][class]);
+	self._entityToComponent[entity][class] = component;
+
 	local baseClass = class;
 	while baseClass ~= Component do
+
 		assert(self._entityToComponents[entity]);
-		self._entityToComponents[entity][baseClass] = component;
+		if not self._entityToComponents[entity][baseClass] then
+			self._entityToComponents[entity][baseClass] = {};
+		end
+		assert(not self._entityToComponents[entity][baseClass][component]);
+		self._entityToComponents[entity][baseClass][component] = true;
 
 		if not self._componentClassToEntities[baseClass] then
 			self._componentClassToEntities[baseClass] = {};
@@ -49,15 +57,19 @@ local unregisterComponent = function(self, entity, component)
 	assert(entity);
 	assert(entity:isValid());
 	assert(component);
+	assert(component:isInstanceOf(Component));
 
 	component:deactivate();
 
 	local class = component:getClass();
 	assert(class);
 
+	assert(self._entityToComponent[entity][class]);
+	self._entityToComponent[entity][class] = nil;
+
 	local baseClass = class;
 	while baseClass ~= Component do
-		assert(self._entityToComponents[entity][baseClass]);
+		assert(self._entityToComponents[entity][baseClass][component]);
 		self._entityToComponents[entity][baseClass][component] = nil;
 		if TableUtils.countKeys(self._entityToComponents[entity][baseClass]) == 0 then
 			self._entityToComponents[entity][baseClass] = nil;
@@ -89,6 +101,7 @@ local registerEntity = function(self, entity, components)
 	entity:setIsValid(true);
 	assert(not self._entities[entity]);
 	self._entities[entity] = true;
+	self._entityToComponent[entity] = {};
 	self._entityToComponents[entity] = {};
 	for class, component in pairs(components) do
 		registerComponent(self, entity, component);
@@ -96,19 +109,21 @@ local registerEntity = function(self, entity, components)
 end
 
 local unregisterEntity = function(self, entity)
-	assert(self._entityToComponents[entity]);
-	local components = TableUtils.shallowCopy(self._entityToComponents[entity]);
+	assert(self._entityToComponent[entity]);
+	local components = TableUtils.shallowCopy(self._entityToComponent[entity]);
 	for _, component in pairs(components) do
 		unregisterComponent(self, entity, component);
 	end
 	assert(self._entities[entity]);
 	self._entities[entity] = nil;
+	self._entityToComponent[entity] = nil;
 	self._entityToComponents[entity] = nil;
 	entity:setIsValid(false);
 end
 
 ECS.init = function(self)
 	self._entities = {};
+	self._entityToComponent = {};
 	self._entityToComponents = {};
 	self._componentClassToEntities = {};
 
@@ -223,15 +238,11 @@ ECS.addQuery = function(self, query)
 	self._queryToEntities[query] = {};
 	self._queryToComponents[query] = {};
 	for _, class in pairs(query:getClasses()) do
-		local baseClass = class;
-		while baseClass ~= Component do
-			self._queryToComponents[query][baseClass] = {};
-			if not self._componentClassToQueries[baseClass] then
-				self._componentClassToQueries[baseClass] = {};
-			end
-			self._componentClassToQueries[baseClass][query] = true;
-			baseClass = baseClass.super;
+		self._queryToComponents[query][class] = {};
+		if not self._componentClassToQueries[class] then
+			self._componentClassToQueries[class] = {};
 		end
+		self._componentClassToQueries[class][query] = true;
 	end
 end
 
@@ -261,7 +272,7 @@ ECS.query = function(self, query)
 	return TableUtils.shallowCopy(self._queryToEntities[query]);
 end
 
--- TODO support base class, multiple outputs
+-- TODO dont support nursery, just return nil until first update
 ECS.getComponent = function(self, entity, class)
 	assert(entity);
 	assert(class);
@@ -274,14 +285,26 @@ ECS.getComponent = function(self, entity, class)
 		if self._componentNursery[entity] then
 			return self._componentNursery[entity][class];
 		elseif self._componentGraveyard[entity] then
-			local component = self._entityToComponents[entity][class];
+			local component = self._entityToComponent[entity][class];
 			if component ~= self._componentGraveyard[entity][class] then
 				return component;
 			end
 		else
-			return self._entityToComponents[entity][class];
+			return self._entityToComponent[entity][class];
 		end
 	end
+end
+
+ECS.getComponents = function(self, entity, baseClass)
+	local allComponents = self._entityToComponents[entity];
+	if not allComponents then
+		return {};
+	end
+	local components = allComponents[baseClass];
+	if not components then
+		return {};
+	end
+	return TableUtils.shallowCopy(components);
 end
 
 ECS.getAllComponents = function(self, class)

@@ -102,6 +102,27 @@ tests[#tests].body = function()
 	assert(activated);
 end
 
+tests[#tests + 1] = {name = "Get components"};
+tests[#tests].body = function()
+	Class:resetIndex();
+
+	local ecs = ECS:new();
+
+	local a = ecs:spawn(Entity);
+
+	local Snoot = Class("Snoot", Component);
+	local Boop = Class("Boop", Snoot);
+	local boop = Boop:new();
+	a:addComponent(boop);
+	assert(not a:getComponents(Snoot)[boop]);
+	ecs:update();
+	assert(a:getComponents(Snoot)[boop]);
+	a:removeComponent(boop);
+	assert(a:getComponents(Snoot)[boop]);
+	ecs:update();
+	assert(not a:getComponents(Snoot)[boop]);
+end
+
 tests[#tests + 1] = {name = "Get all entities with component"};
 tests[#tests].body = function()
 	Class:resetIndex();
