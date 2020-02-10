@@ -111,21 +111,6 @@ Entity.getTeam = function(self)
 	return self._combatData:getTeam();
 end
 
-Entity.addSkill = function(self, skill)
-	assert(self._combatData);
-	self._combatData:addSkill(skill);
-end
-
-Entity.setSkill = function(self, index, skill)
-	assert(self._combatData);
-	self._combatData:setSkill(index, skill);
-end
-
-Entity.getSkill = function(self, index)
-	assert(self._combatData);
-	return self._combatData:getSkill(index);
-end
-
 Entity.isDead = function(self)
 	assert(self._combatData);
 	return self._combatData:isDead();
