@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local Skill = require("arpg/combat/Skill");
+local Skill = require("arpg/combat/skill/Skill");
 local Actions = require("engine/mapscene/Actions");
 
 local ComboAttack = Class("ComboAttack", Skill);

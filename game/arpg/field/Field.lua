@@ -1,6 +1,6 @@
 require("engine/utils/OOP");
 local MapScene = require("engine/mapscene/MapScene");
-local SkillSystem = require("arpg/combat/SkillSystem");
+local SkillSystem = require("arpg/combat/skill/SkillSystem");
 local TargetSelector = require("arpg/combat/ai/TargetSelector");
 local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/Scene");
