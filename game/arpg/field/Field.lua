@@ -35,11 +35,10 @@ end
 -- PUBLIC API
 
 Field.init = function(self, mapName, startX, startY)
-	Field.super.init(self, mapName);
-
+	self._targetSelector = TargetSelector:new({}); -- TODO remove
 	self._partyEntities = {}; -- TODO remove
 
-	self._targetSelector = TargetSelector:new({}); -- TODO remove
+	Field.super.init(self, mapName);
 
 	local ecs = self:getECS();
 
@@ -85,7 +84,7 @@ Field.checkLoseCondition = function(self)
 	Scene:setCurrent(UIScene:new(TitleScreen:new()));
 end
 
-MapScene.getTargetSelector = function(self)
+Field.getTargetSelector = function(self)
 	return self._targetSelector;
 end
 
