@@ -43,7 +43,6 @@ end
 
 local blockThread = function(self, thread, signals)
 	thread.isBlocked = true;
-	thread.isMarkedForUnblock = false;
 	for _, signal in ipairs(signals) do
 		assert(type(signal) == "string");
 		if not self._blockedThreads[signal] then
@@ -64,7 +63,7 @@ local unblockThread = function(self, thread, signal, ...)
 		table.insert(signalData, 1, signal);
 	end
 	thread.blockedBy = {};
-	thread.isMarkedForUnblock = true;
+	thread.isBlocked = false;
 	pumpThread(self, thread, signalData);
 end
 
@@ -176,14 +175,6 @@ Script.update = function(self, dt)
 		if thread:isDead() then
 			cleanupThread(self, thread);
 			table.remove(self._threads, i);
-		end
-	end
-
-	-- Unblock threads. We don't want to do this from inside the "run threads" loop above to avoid a thread being pumped twice (once in unblockThread, once in the loop above).
-	for _, thread in ipairs(self._threads) do
-		if thread.isBlocked and thread.isMarkedForUnblock then
-			thread.isBlocked = false;
-			thread.isMarkedForUnblock = false;
 		end
 	end
 end

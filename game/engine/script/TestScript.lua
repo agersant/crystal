@@ -55,7 +55,7 @@ tests[#tests].body = function()
 	assert(a == 1);
 end
 
-tests[#tests + 1] = {name = "Successive wait for"};
+tests[#tests + 1] = {name = "Successive waits"};
 tests[#tests].body = function()
 	local a = 0;
 	local script = Script:new(function(self)
@@ -63,6 +63,8 @@ tests[#tests].body = function()
 		a = 1;
 		self:waitFor("test2");
 		a = 2;
+		self:waitFrame();
+		a = 3;
 	end);
 	script:update(0);
 	assert(a == 0);
@@ -72,6 +74,8 @@ tests[#tests].body = function()
 	assert(a == 1);
 	script:signal("test2");
 	assert(a == 2);
+	script:update(0);
+	assert(a == 3);
 end
 
 tests[#tests + 1] = {name = "Wait for any"};
