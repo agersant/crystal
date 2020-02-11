@@ -54,11 +54,12 @@ tests[#tests].body = function()
 	local Snoot = Class("Snoot", Component);
 	local snoot = Snoot:new();
 	a:addComponent(snoot);
+	assert(snoot:getEntity() == a);
 	ecs:update();
 	assert(snoot:getEntity() == a);
 
 	a:removeComponent(snoot);
-	assert(snoot:getEntity() == a);
+	assert(snoot:getEntity() == nil);
 	ecs:update();
 	assert(snoot:getEntity() == nil);
 end

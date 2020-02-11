@@ -1,6 +1,6 @@
 require("engine/utils/OOP");
 local FFI = require("ffi");
-local Path = require("engine/ai/movement/Path");
+local Path = require("engine/ai/navmesh/Path");
 local Features = require("engine/dev/Features");
 local Colors = require("engine/resources/Colors");
 local Fonts = require("engine/resources/Fonts");
@@ -120,9 +120,12 @@ local parseBNavmesh = function(self, bNavmesh)
 			local bTriangle = bNavmesh.triangles[i];
 			local triangle = {};
 			triangle.vertices = {
-				bNavmesh.vertices[bTriangle.vertices[0]].x, bNavmesh.vertices[bTriangle.vertices[0]].y,
-    bNavmesh.vertices[bTriangle.vertices[1]].x, bNavmesh.vertices[bTriangle.vertices[1]].y,
-    bNavmesh.vertices[bTriangle.vertices[2]].x, bNavmesh.vertices[bTriangle.vertices[2]].y,
+				bNavmesh.vertices[bTriangle.vertices[0]].x,
+				bNavmesh.vertices[bTriangle.vertices[0]].y,
+				bNavmesh.vertices[bTriangle.vertices[1]].x,
+				bNavmesh.vertices[bTriangle.vertices[1]].y,
+				bNavmesh.vertices[bTriangle.vertices[2]].x,
+				bNavmesh.vertices[bTriangle.vertices[2]].y,
 			};
 			triangle.center = {x = bTriangle.center.x, y = bTriangle.center.y};
 			table.insert(self._triangles, triangle);

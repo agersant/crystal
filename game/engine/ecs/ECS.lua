@@ -39,7 +39,6 @@ local registerComponent = function(self, entity, component)
 		baseClass = baseClass.super;
 	end
 
-	component:setEntity(entity);
 	component:activate();
 end
 
@@ -50,7 +49,6 @@ local unregisterComponent = function(self, entity, component)
 	assert(component:isInstanceOf(Component));
 
 	component:deactivate();
-	component:setEntity(nil);
 
 	local class = component:getClass();
 	assert(class);
@@ -229,6 +227,8 @@ end
 ECS.addComponent = function(self, entity, component)
 	assert(component);
 	assert(component:isInstanceOf(Component));
+	assert(not component:getEntity());
+	component:setEntity(entity);
 	local nursery = self._componentNursery[entity];
 	if not nursery then
 		nursery = {};
@@ -240,6 +240,8 @@ end
 ECS.removeComponent = function(self, entity, component)
 	assert(component);
 	assert(component:isInstanceOf(Component));
+	assert(component:getEntity() == entity);
+	component:setEntity(nil);
 	local nursery = self._componentNursery[entity];
 	if nursery and nursery[component:getClass()] then
 		nursery[component:getClass()] = nil;

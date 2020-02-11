@@ -1,6 +1,4 @@
 require("engine/utils/OOP");
-local CombatData = require("engine/scene/component/CombatData");
-local CombatLogic = require("engine/scene/component/CombatLogic");
 local Alias = require("engine/utils/Alias");
 
 local Entity = Class("Entity");
@@ -72,56 +70,6 @@ end
 
 Entity.removeFromParty = function(self)
 	self._ecs:removeEntityFromParty(self);
-end
-
--- COMBAT DATA COMPONENT
-
-Entity.addCombatData = function(self)
-	assert(not self._combatData);
-	self._combatData = CombatData:new(self);
-end
-
-Entity.inflictDamageTo = function(self, target)
-	assert(self._combatData);
-	self._combatData:inflictDamageTo(target);
-end
-
-Entity.receiveDamage = function(self, damage)
-	assert(self._combatData);
-	self._combatData:receiveDamage(damage);
-end
-
-Entity.getHealth = function(self)
-	assert(self._combatData);
-	return self._combatData:getHealth();
-end
-
-Entity.kill = function(self)
-	assert(self._combatData);
-	self._combatData:kill();
-end
-
-Entity.setTeam = function(self, team)
-	assert(self._combatData);
-	self._combatData:setTeam(team);
-end
-
-Entity.getTeam = function(self)
-	assert(self._combatData);
-	return self._combatData:getTeam();
-end
-
-Entity.isDead = function(self)
-	assert(self._combatData);
-	return self._combatData:isDead();
-end
-
--- COMBAT LOGIC COMPONENT
-
-Entity.addCombatLogic = function(self)
-	assert(not self._combatLogic);
-	self._combatLogic = CombatLogic:new(self);
-	self:addScript(self._combatLogic);
 end
 
 Entity.getScene = function(self)

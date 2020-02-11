@@ -1,8 +1,7 @@
-local Damage = require("engine/combat/Damage");
-local CombatData = require("engine/scene/component/CombatData");
+local Damage = require("arpg/combat/Damage");
+local CombatLogic = require("arpg/combat/CombatLogic");
 local Entity = require("engine/ecs/Entity");
 local MapScene = require("engine/scene/MapScene");
-local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
 
 local tests = {};
 
@@ -10,11 +9,10 @@ tests[#tests + 1] = {name = "Kill"};
 tests[#tests].body = function()
 	local scene = MapScene:new("assets/map/test/empty.lua");
 	local entity = scene:spawn(Entity);
-	entity:addComponent(ScriptRunner:new()); -- TODO shouldnt be needed for this test
-	local combatData = CombatData:new(entity);
-	assert(not combatData:isDead());
-	combatData:kill();
-	assert(combatData:isDead());
+	entity:addComponent(CombatLogic:new());
+	assert(not entity:isDead());
+	entity:kill();
+	assert(entity:isDead());
 end
 
 tests[#tests + 1] = {name = "Inflicting damage reduces health"};
@@ -23,10 +21,8 @@ tests[#tests].body = function()
 
 	local attacker = scene:spawn(Entity);
 	local victim = scene:spawn(Entity);
-	attacker:addComponent(ScriptRunner:new()); -- TODO shouldnt be needed for this test
-	victim:addComponent(ScriptRunner:new()); -- TODO shouldnt be needed for this test
-	attacker:addCombatData();
-	victim:addCombatData();
+	attacker:addComponent(CombatLogic:new());
+	victim:addComponent(CombatLogic:new());
 
 	local attackerHealth = attacker:getHealth();
 	local victimHealth = victim:getHealth();

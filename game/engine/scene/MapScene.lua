@@ -1,6 +1,5 @@
 require("engine/utils/OOP");
 local Log = require("engine/dev/Log");
-local TargetSelector = require("engine/ai/tactics/TargetSelector");
 local Assets = require("engine/resources/Assets");
 local ECS = require("engine/ecs/ECS");
 local Camera = require("engine/scene/Camera");
@@ -83,10 +82,6 @@ MapScene.init = function(self, mapName)
 	end, function(...)
 		endContact(self, ...);
 	end);
-
-	self._combatableEntities = {};
-
-	self._targetSelector = TargetSelector:new(self._combatableEntities);
 
 	self._mapName = mapName;
 	self._map = Assets:getMap(mapName);
@@ -187,10 +182,6 @@ end
 
 MapScene.getMap = function(self)
 	return self._map;
-end
-
-MapScene.getTargetSelector = function(self)
-	return self._targetSelector;
 end
 
 return MapScene;

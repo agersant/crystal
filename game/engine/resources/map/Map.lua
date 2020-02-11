@@ -5,7 +5,7 @@ local Colors = require("engine/resources/Colors");
 local DynamicLayer = require("engine/resources/map/DynamicLayer");
 local MapCollisionMesh = require("engine/resources/map/MapCollisionMesh");
 local MapEntity = require("engine/resources/map/MapEntity");
-local Navmesh = require("engine/resources/map/Navmesh");
+local Navmesh = require("engine/ai/navmesh/Navmesh");
 local StaticLayer = require("engine/resources/map/StaticLayer");
 local TableUtils = require("engine/utils/TableUtils");
 
@@ -75,7 +75,7 @@ Map.init = function(self, mapData, tileset)
 		end
 	end
 
-	self._navmesh = Navmesh:new(self:getWidthInPixels(), self:getHeightInPixels(), self._collisionMesh, 6);
+	self._navmesh = Navmesh:new(self:getWidthInPixels(), self:getHeightInPixels(), self._collisionMesh, 6); -- TODO move navmesh from here into mapscene
 end
 
 Map.spawnCollisionMeshBody = function(self, scene)

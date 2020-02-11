@@ -1,4 +1,4 @@
-local Path = require("engine/ai/movement/Path");
+local Path = require("engine/ai/navmesh/Path");
 
 local tests = {};
 

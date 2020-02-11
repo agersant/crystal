@@ -1,9 +1,7 @@
 require("engine/utils/OOP");
 local MapScene = require("engine/scene/MapScene");
 local SkillSystem = require("arpg/combat/SkillSystem");
-local Teams = require("engine/combat/Teams");
-local Party = require("arpg/party/Party");
-local PartyMember = require("arpg/party/PartyMember");
+local TargetSelector = require("arpg/combat/ai/TargetSelector");
 local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/scene/Scene");
 local UIScene = require("engine/ui/UIScene");
@@ -40,6 +38,8 @@ Field.init = function(self, mapName, startX, startY)
 	Field.super.init(self, mapName);
 
 	self._partyEntities = {}; -- TODO remove
+
+	self._targetSelector = TargetSelector:new({}); -- TODO remove
 
 	local ecs = self:getECS();
 
@@ -83,6 +83,10 @@ Field.checkLoseCondition = function(self)
 		end
 	end
 	Scene:setCurrent(UIScene:new(TitleScreen:new()));
+end
+
+MapScene.getTargetSelector = function(self)
+	return self._targetSelector;
 end
 
 return Field;

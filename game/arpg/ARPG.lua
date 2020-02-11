@@ -8,7 +8,12 @@ ARPG.init = function(self)
 	ARPG.super.init(self);
 	self.classes.MapScene = require("arpg/field/Field");
 	self.classes.SaveData = require("arpg/persistence/SaveData");
-	self.testFiles = {"arpg/party/TestParty", "arpg/party/TestPartyMember"};
+	self.testFiles = {
+		"arpg/combat/ai/TestTargetSelector",
+		"arpg/combat/TestCombatLogic",
+		"arpg/party/TestParty",
+		"arpg/party/TestPartyMember",
+	};
 	Content:requireAll("content");
 end
 

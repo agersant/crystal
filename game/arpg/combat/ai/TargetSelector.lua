@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local Teams = require("engine/combat/Teams");
+local Teams = require("arpg/combat/Teams");
 
 local TargetSelector = Class("TargetSelector");
 
