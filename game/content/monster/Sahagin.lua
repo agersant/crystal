@@ -1,16 +1,16 @@
 require("engine/utils/OOP");
-local Movement = require("engine/ai/movement/Movement");
+local Movement = require("engine/mapscene/behavior/ai/movement/Movement");
 local Entity = require("engine/ecs/Entity");
 local Assets = require("engine/resources/Assets");
-local Actions = require("engine/scene/Actions");
-local Controller = require("engine/scene/behavior/Controller");
-local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
-local Sprite = require("engine/scene/display/Sprite");
-local Collision = require("engine/scene/physics/Collision");
-local Locomotion = require("engine/scene/physics/Locomotion");
-local Hitbox = require("engine/scene/physics/Hitbox");
-local PhysicsBody = require("engine/scene/physics/PhysicsBody");
-local Weakbox = require("engine/scene/physics/Weakbox");
+local Actions = require("engine/mapscene/Actions");
+local Controller = require("engine/mapscene/behavior/Controller");
+local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
+local Sprite = require("engine/mapscene/display/Sprite");
+local Collision = require("engine/mapscene/physics/Collision");
+local Locomotion = require("engine/mapscene/physics/Locomotion");
+local Hitbox = require("engine/mapscene/physics/Hitbox");
+local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
+local Weakbox = require("engine/mapscene/physics/Weakbox");
 
 local Sahagin = Class("Sahagin", Entity);
 local SahaginController = Class("SahaginController", Controller);

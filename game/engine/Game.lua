@@ -4,7 +4,7 @@ local Log = require("engine/dev/Log");
 local CLI = require("engine/dev/cli/CLI");
 local Input = require("engine/input/Input");
 local Persistence = require("engine/persistence/Persistence");
-local Scene = require("engine/scene/Scene");
+local Scene = require("engine/Scene");
 local HUD = require("engine/ui/hud/HUD");
 local Module = require("engine/Module");
 
@@ -15,7 +15,7 @@ love.load = function()
 	require("engine/dev/HotReloadCommands");
 	require("engine/graphics/GFXCommands");
 	require("engine/persistence/PersistenceCommands");
-	require("engine/scene/MapSceneCommands");
+	require("engine/mapscene/MapSceneCommands");
 
 	Module:setCurrent(require(MODULE):new());
 	Persistence:init();

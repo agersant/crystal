@@ -1,14 +1,14 @@
 require("engine/utils/OOP");
-local MapScene = require("engine/scene/MapScene");
+local MapScene = require("engine/mapscene/MapScene");
 local SkillSystem = require("arpg/combat/SkillSystem");
 local TargetSelector = require("arpg/combat/ai/TargetSelector");
 local Persistence = require("engine/persistence/Persistence");
-local Scene = require("engine/scene/Scene");
+local Scene = require("engine/Scene");
 local UIScene = require("engine/ui/UIScene");
 local TitleScreen = require("engine/ui/frontend/TitleScreen");
 local TableUtils = require("engine/utils/TableUtils");
-local InputListener = require("engine/scene/behavior/InputListener");
-local PlayerController = require("engine/scene/behavior/PlayerController");
+local InputListener = require("engine/mapscene/behavior/InputListener");
+local PlayerController = require("engine/mapscene/behavior/PlayerController");
 
 local Field = Class("Field", MapScene);
 

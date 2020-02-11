@@ -3,7 +3,7 @@ local Field = require("arpg/field/Field");
 local Party = require("arpg/party/Party");
 local PartyMember = require("arpg/party/PartyMember");
 local BaseSaveData = require("engine/persistence/BaseSaveData");
-local Scene = require("engine/scene/Scene");
+local Scene = require("engine/Scene");
 
 local SaveData = Class("SaveData", BaseSaveData);
 

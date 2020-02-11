@@ -1,7 +1,7 @@
 local Damage = require("arpg/combat/Damage");
 local CombatLogic = require("arpg/combat/CombatLogic");
 local Entity = require("engine/ecs/Entity");
-local MapScene = require("engine/scene/MapScene");
+local MapScene = require("engine/mapscene/MapScene");
 
 local tests = {};
 

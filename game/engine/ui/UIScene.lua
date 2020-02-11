@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local Scene = require("engine/scene/Scene");
+local Scene = require("engine/Scene");
 
 local UIScene = Class("UIScene", Scene);
 

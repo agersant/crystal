@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local Scene = require("engine/scene/Scene");
+local Scene = require("engine/Scene");
 local DamageNumbers = require("engine/ui/hud/damage/DamageNumbers");
 local Dialog = require("engine/ui/hud/Dialog");
 

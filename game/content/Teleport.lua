@@ -1,10 +1,10 @@
 require("engine/utils/OOP");
 local Persistence = require("engine/persistence/Persistence");
-local Scene = require("engine/scene/Scene");
-local Controller = require("engine/scene/behavior/Controller");
-local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
-local PhysicsBody = require("engine/scene/physics/PhysicsBody");
-local TouchTrigger = require("engine/scene/physics/TouchTrigger");
+local Scene = require("engine/Scene");
+local Controller = require("engine/mapscene/behavior/Controller");
+local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
+local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
+local TouchTrigger = require("engine/mapscene/physics/TouchTrigger");
 local Entity = require("engine/ecs/Entity");
 local Field = require("arpg/field/Field");
 

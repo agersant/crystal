@@ -1,6 +1,6 @@
 require("engine/utils/OOP");
 local Teams = require("engine/combat/Teams");
-local Actions = require("engine/scene/Actions");
+local Actions = require("engine/mapscene/Actions");
 local Script = require("engine/script/Script");
 local HUD = require("engine/ui/hud/HUD");
 

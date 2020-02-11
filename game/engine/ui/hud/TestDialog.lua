@@ -1,7 +1,7 @@
-local MapScene = require("engine/scene/MapScene");
+local MapScene = require("engine/mapscene/MapScene");
 local Script = require("engine/script/Script");
-local Controller = require("engine/scene/behavior/Controller");
-local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
+local Controller = require("engine/mapscene/behavior/Controller");
+local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local Entity = require("engine/ecs/Entity");
 local Dialog = require("engine/ui/hud/Dialog");
 

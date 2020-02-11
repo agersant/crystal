@@ -2,9 +2,9 @@ local TargetSelector = require("arpg/combat/ai/TargetSelector");
 local CombatLogic = require("arpg/combat/CombatLogic");
 local Teams = require("arpg/combat/Teams");
 local Entity = require("engine/ecs/Entity");
-local MapScene = require("engine/scene/MapScene");
-local ScriptRunner = require("engine/scene/behavior/ScriptRunner");
-local PhysicsBody = require("engine/scene/physics/PhysicsBody");
+local MapScene = require("engine/mapscene/MapScene");
+local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
+local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 
 local tests = {};
 

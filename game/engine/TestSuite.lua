@@ -1,12 +1,12 @@
 local Module = require("engine/Module");
 
 local engineTestFiles = {
-	"engine/ai/movement/TestAlignGoal",
-	"engine/ai/movement/TestEntityGoal",
-	"engine/ai/movement/TestMovement",
-	"engine/ai/navmesh/TestNavmesh",
-	"engine/ai/navmesh/TestPath",
-	"engine/ai/movement/TestPositionGoal",
+	"engine/mapscene/behavior/ai/movement/TestAlignGoal",
+	"engine/mapscene/behavior/ai/movement/TestEntityGoal",
+	"engine/mapscene/behavior/ai/movement/TestMovement",
+	"engine/mapscene/behavior/ai/navmesh/TestNavmesh",
+	"engine/mapscene/behavior/ai/navmesh/TestPath",
+	"engine/mapscene/behavior/ai/movement/TestPositionGoal",
 	"engine/dev/cli/TestCLI",
 	"engine/ecs/TestECS",
 	"engine/input/TestInputDevice",

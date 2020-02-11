@@ -2,7 +2,7 @@ require("engine/utils/OOP");
 local Log = require("engine/dev/Log");
 local Colors = require("engine/resources/Colors");
 local Fonts = require("engine/resources/Fonts");
-local Actions = require("engine/scene/Actions");
+local Actions = require("engine/mapscene/Actions");
 local Script = require("engine/script/Script");
 local Widget = require("engine/ui/Widget");
 local Image = require("engine/ui/core/Image");

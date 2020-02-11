@@ -1,6 +1,6 @@
 require("engine/utils/OOP");
 local Skill = require("arpg/combat/Skill");
-local Actions = require("engine/scene/Actions");
+local Actions = require("engine/mapscene/Actions");
 
 local Dash = Class("Dash", Skill);
 
