@@ -35,4 +35,10 @@ tests[#tests].body = function()
 	assert(victim:getCurrentHealth() < victimHealth);
 end
 
+-- TODO test defensive stat
+-- TODO test flat damage
+-- TODO test scaling damage
+-- TODO test affinities
+-- TODO test resistances
+
 return tests;
