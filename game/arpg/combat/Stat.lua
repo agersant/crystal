@@ -18,11 +18,21 @@ Stat.setValue = function(self, value)
 		self._value = math.max(self._min, value);
 	elseif self._max then
 		self._value = math.min(self._max, value);
+	else
+		self._value = value;
 	end
 end
 
 Stat.getValue = function(self)
 	return self._value;
+end
+
+Stat.getMinValue = function(self)
+	return self._min;
+end
+
+Stat.getMaxValue = function(self)
+	return self._max;
 end
 
 Stat.substract = function(self, amount)

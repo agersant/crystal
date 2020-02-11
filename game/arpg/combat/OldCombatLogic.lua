@@ -6,6 +6,8 @@ local HUD = require("engine/ui/hud/HUD");
 
 local CombatLogic = Class("CombatLogic", Script);
 
+-- TODO all of this
+
 local logic = function(self)
 
 	self:thread(function(self)

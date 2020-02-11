@@ -1,14 +1,15 @@
-local Damage = require("arpg/combat/Damage");
+local DamageComponent = require("arpg/combat/damage/DamageComponent");
+local DamageIntent = require("arpg/combat/damage/DamageIntent");
 local CombatLogic = require("arpg/combat/CombatLogic");
 local Entity = require("engine/ecs/Entity");
-local MapScene = require("engine/mapscene/MapScene");
+local ECS = require("engine/ecs/ECS");
 
 local tests = {};
 
 tests[#tests + 1] = {name = "Kill"};
 tests[#tests].body = function()
-	local scene = MapScene:new("assets/map/test/empty.lua");
-	local entity = scene:spawn(Entity);
+	local ecs = ECS:new();
+	local entity = ecs:spawn(Entity);
 	entity:addComponent(CombatLogic:new());
 	assert(not entity:isDead());
 	entity:kill();
@@ -17,20 +18,21 @@ end
 
 tests[#tests + 1] = {name = "Inflicting damage reduces health"};
 tests[#tests].body = function()
-	local scene = MapScene:new("assets/map/test/empty.lua");
+	local ecs = ECS:new();
 
-	local attacker = scene:spawn(Entity);
-	local victim = scene:spawn(Entity);
+	local attacker = ecs:spawn(Entity);
+	local victim = ecs:spawn(Entity);
 	attacker:addComponent(CombatLogic:new());
 	victim:addComponent(CombatLogic:new());
 
-	local attackerHealth = attacker:getHealth();
-	local victimHealth = victim:getHealth();
+	local attackerHealth = attacker:getCurrentHealth();
+	local victimHealth = victim:getCurrentHealth();
 
-	local damage = Damage:new(10, attacker);
-	attacker:inflictDamageTo(victim, damage);
-	assert(attacker:getHealth() == attackerHealth);
-	assert(victim:getHealth() < victimHealth);
+	local intent = DamageIntent:new();
+	intent:addComponent(DamageComponent:new(10));
+	attacker:inflictDamage(intent, victim:getComponent(CombatLogic));
+	assert(attacker:getCurrentHealth() == attackerHealth);
+	assert(victim:getCurrentHealth() < victimHealth);
 end
 
 return tests;
