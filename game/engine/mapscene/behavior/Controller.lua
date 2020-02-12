@@ -45,11 +45,17 @@ Controller.doTask = function(self, taskFunction)
 end
 
 Controller.stopAction = function(self)
+	if self:isIdle() then
+		return;
+	end
 	self._actionThread:stop();
 	self._actionThread = nil;
 end
 
 Controller.stopTask = function(self)
+	if self:isTaskless() then
+		return;
+	end
 	self._taskThread:stop();
 	self._taskThread = nil;
 end
