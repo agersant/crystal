@@ -1,6 +1,6 @@
 local DamageComponent = require("arpg/combat/damage/DamageComponent");
 local DamageIntent = require("arpg/combat/damage/DamageIntent");
-local CombatLogic = require("arpg/combat/CombatLogic");
+local CombatData = require("arpg/combat/CombatData");
 local Entity = require("engine/ecs/Entity");
 local ECS = require("engine/ecs/ECS");
 
@@ -10,7 +10,7 @@ tests[#tests + 1] = {name = "Kill"};
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local entity = ecs:spawn(Entity);
-	entity:addComponent(CombatLogic:new());
+	entity:addComponent(CombatData:new());
 	assert(not entity:isDead());
 	entity:kill();
 	assert(entity:isDead());
@@ -22,15 +22,15 @@ tests[#tests].body = function()
 
 	local attacker = ecs:spawn(Entity);
 	local victim = ecs:spawn(Entity);
-	attacker:addComponent(CombatLogic:new());
-	victim:addComponent(CombatLogic:new());
+	attacker:addComponent(CombatData:new());
+	victim:addComponent(CombatData:new());
 
 	local attackerHealth = attacker:getCurrentHealth();
 	local victimHealth = victim:getCurrentHealth();
 
 	local intent = DamageIntent:new();
 	intent:addComponent(DamageComponent:new(10));
-	attacker:inflictDamage(intent, victim:getComponent(CombatLogic));
+	attacker:inflictDamage(intent, victim:getComponent(CombatData));
 	assert(attacker:getCurrentHealth() == attackerHealth);
 	assert(victim:getCurrentHealth() < victimHealth);
 end

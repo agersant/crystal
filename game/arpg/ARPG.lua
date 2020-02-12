@@ -10,7 +10,7 @@ ARPG.init = function(self)
 	self.classes.SaveData = require("arpg/persistence/SaveData");
 	self.testFiles = {
 		"arpg/combat/ai/TestTargetSelector",
-		"arpg/combat/TestCombatLogic",
+		"arpg/combat/TestCombatData",
 		"arpg/party/TestParty",
 		"arpg/party/TestPartyMember",
 	};

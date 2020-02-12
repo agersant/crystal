@@ -1,5 +1,5 @@
 local TargetSelector = require("arpg/combat/ai/TargetSelector");
-local CombatLogic = require("arpg/combat/CombatLogic");
+local CombatData = require("arpg/combat/CombatData");
 local Teams = require("arpg/combat/Teams");
 local Entity = require("engine/ecs/Entity");
 local MapScene = require("engine/mapscene/MapScene");
@@ -20,7 +20,7 @@ tests[#tests].body = function()
 	local targets = {me, friend, enemyA, enemyB};
 	for _, entity in ipairs(targets) do
 		entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
-		entity:addComponent(CombatLogic:new());
+		entity:addComponent(CombatData:new());
 	end
 
 	me:setTeam(Teams.party);
@@ -50,7 +50,7 @@ tests[#tests].body = function()
 	local targets = {me, friendA, friendB, enemy};
 	for _, entity in ipairs(targets) do
 		entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
-		entity:addComponent(CombatLogic:new());
+		entity:addComponent(CombatData:new());
 	end
 
 	me:setTeam(Teams.wild);

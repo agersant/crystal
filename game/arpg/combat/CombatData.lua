@@ -9,7 +9,7 @@ local Elements = require("arpg/combat/damage/Elements");
 local Teams = require("arpg/combat/Teams");
 local Component = require("engine/ecs/Component");
 
-local CombatLogic = Class("CombatLogic", Component);
+local CombatData = Class("CombatData", Component);
 
 -- IMPLEMENTATION
 
@@ -62,8 +62,8 @@ end
 
 -- PUBLIC API
 
-CombatLogic.init = function(self)
-	CombatLogic.super.init(self);
+CombatData.init = function(self)
+	CombatData.super.init(self);
 	self:setTeam(Teams.wild);
 
 	self._stats = {};
@@ -92,16 +92,16 @@ CombatLogic.init = function(self)
 	end
 end
 
-CombatLogic.setTeam = function(self, team)
+CombatData.setTeam = function(self, team)
 	assert(Teams:isValid(team));
 	self._team = team;
 end
 
-CombatLogic.getTeam = function(self)
+CombatData.getTeam = function(self)
 	return self._team;
 end
 
-CombatLogic.computeDamage = function(self, intent, target)
+CombatData.computeDamage = function(self, intent, target)
 	local damage = Damage:new();
 	for component in pairs(intent:getComponents()) do
 		local damageType = component:getDamageType();
@@ -125,16 +125,16 @@ CombatLogic.computeDamage = function(self, intent, target)
 	return damage;
 end
 
-CombatLogic.inflictDamage = function(self, intent, target)
+CombatData.inflictDamage = function(self, intent, target)
 	assert(intent);
 	assert(target);
-	assert(target:isInstanceOf(CombatLogic));
+	assert(target:isInstanceOf(CombatData));
 	assert(intent:isInstanceOf(DamageIntent));
 	local damage = self:computeDamage(intent, target);
 	target:receiveDamage(damage);
 end
 
-CombatLogic.receiveDamage = function(self, damage)
+CombatData.receiveDamage = function(self, damage)
 	if self:isDead() then
 		return;
 	end
@@ -143,16 +143,16 @@ CombatLogic.receiveDamage = function(self, damage)
 	return effectiveDamage;
 end
 
-CombatLogic.getCurrentHealth = function(self)
+CombatData.getCurrentHealth = function(self)
 	return self._health:getValue();
 end
 
-CombatLogic.kill = function(self)
+CombatData.kill = function(self)
 	self._health:setValue(0);
 end
 
-CombatLogic.isDead = function(self)
+CombatData.isDead = function(self)
 	return self._health:getValue() == 0;
 end
 
-return CombatLogic;
+return CombatData;
