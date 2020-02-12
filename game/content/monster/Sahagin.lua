@@ -72,7 +72,6 @@ Sahagin.init = function(self, scene)
 	self:addComponent(DamageHitbox:new());
 	self:addComponent(Weakbox:new());
 	self:addComponent(ScriptRunner:new());
-	-- self:addCombatLogic(); TODO
 	self:addComponent(SahaginController:new(self));
 end
 

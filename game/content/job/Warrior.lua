@@ -27,7 +27,6 @@ Warrior.init = function(self, scene)
 	self:addComponent(CombatHitbox:new());
 	self:addComponent(Weakbox:new());
 	self:addComponent(ScriptRunner:new());
-	-- self:addCombatLogic(); TODO
 
 	self:addComponent(ComboAttack:new(1));
 	self:addComponent(Dash:new(2));
