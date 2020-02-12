@@ -11,17 +11,6 @@ local CombatLogic = Class("CombatLogic", Script);
 local logic = function(self)
 
 	self:thread(function(self)
-		while true do
-			local target = self:waitFor("+giveHit");
-			if Teams:areEnemies(self._entity:getTeam(), target:getTeam()) then
-				if not self._entity:isDead() then
-					self._entity:inflictDamageTo(target);
-				end
-			end
-		end
-	end);
-
-	self:thread(function(self)
 		local controller = self._entity:getController();
 		while true do
 			local damage, damageAmount = self:waitFor("takeHit");
