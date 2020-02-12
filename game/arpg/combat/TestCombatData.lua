@@ -25,6 +25,8 @@ tests[#tests].body = function()
 	attacker:addComponent(CombatData:new());
 	victim:addComponent(CombatData:new());
 
+	ecs:update(0);
+
 	local attackerHealth = attacker:getCurrentHealth();
 	local victimHealth = victim:getCurrentHealth();
 

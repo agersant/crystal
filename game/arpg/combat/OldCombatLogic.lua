@@ -16,7 +16,6 @@ local logic = function(self)
 			local damage, damageAmount = self:waitFor("takeHit");
 			assert(damageAmount);
 			HUD:showDamage(self._entity, damageAmount);
-			self._entity:signal("interruptByDamage");
 			if controller:isIdle() then
 				local attacker = damage:getOrigin();
 				local attackerX, attackerY = attacker:getPosition();

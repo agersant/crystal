@@ -1,7 +1,9 @@
 require("engine/utils/OOP");
 local TargetSelector = require("arpg/combat/ai/TargetSelector");
 local CombatData = require("arpg/combat/CombatData");
-local DamageHitbox = require("arpg/combat/DamageHitbox");
+local DamageComponent = require("arpg/combat/damage/DamageComponent");
+local DamageHitbox = require("arpg/combat/damage/DamageHitbox");
+local DamageIntent = require("arpg/combat/damage/DamageIntent");
 local Movement = require("engine/mapscene/behavior/ai/movement/Movement");
 local Entity = require("engine/ecs/Entity");
 local Assets = require("engine/resources/Assets");
@@ -33,6 +35,11 @@ local reachAndAttack = function(self)
 				self:wait(.2);
 				if self:isIdle() then
 					Actions.lookAt(target)(self);
+
+					local damageIntent = DamageIntent:new();
+					damageIntent:addComponent(DamageComponent:new(1));
+					self:setDamageIntent(damageIntent);
+
 					self:doAction(Actions.attack);
 					self:waitFor("idle");
 					if self:isIdle() then
@@ -46,6 +53,19 @@ local reachAndAttack = function(self)
 end
 
 local controllerScript = function(self)
+
+	self:thread(function(self)
+		while true do
+			self:waitFor("receivedDamage");
+			self:stopAction();
+			self:doAction(function(self)
+				self:setSpeed(0);
+				self:setAnimation("knockback_" .. self:getDirection4());
+				self:wait(1);
+			end);
+		end
+	end);
+
 	while true do
 		if not self:isTaskless() or not self:isIdle() then
 			self:waitFrame();

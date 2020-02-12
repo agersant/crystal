@@ -1,6 +1,6 @@
 require("engine/utils/OOP");
 local CombatData = require("arpg/combat/CombatData");
-local CombatHitbox = require("arpg/combat/DamageHitbox");
+local CombatHitbox = require("arpg/combat/damage/DamageHitbox");
 local ComboAttack = require("content/skill/ComboAttack");
 local Dash = require("content/skill/Dash");
 local Assets = require("engine/resources/Assets");

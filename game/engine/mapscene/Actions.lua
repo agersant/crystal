@@ -3,6 +3,8 @@ local MathUtils = require("engine/utils/MathUtils");
 
 local Actions = Class("Actions");
 
+-- TODO get rid of all this
+
 Actions.idle = function(self)
 	if self.setAnimation then
 		local animName = "idle_" .. self:getDirection4();
@@ -34,7 +36,6 @@ Actions.walk = function(angle)
 end
 
 Actions.attack = function(self)
-	self:endOn("interruptByDamage");
 	local entity = self:getEntity();
 	entity:setSpeed(0);
 	entity:setAnimation("attack_" .. entity:getDirection4(), true);
