@@ -2,6 +2,7 @@ require("engine/utils/OOP");
 local MapScene = require("engine/mapscene/MapScene");
 local CombatSystem = require("arpg/combat/CombatSystem");
 local SkillSystem = require("arpg/combat/skill/SkillSystem");
+local Teams = require("arpg/combat/Teams");
 local TargetSelector = require("arpg/combat/ai/TargetSelector");
 local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/Scene");
@@ -61,7 +62,7 @@ Field.addEntityToParty = function(self, entity)
 	assert(not TableUtils.contains(self._partyEntities, entity));
 	table.insert(self._partyEntities, entity);
 	self._camera:addTrackedEntity(entity);
-	-- entity:setTeam(Teams.party); TODO
+	entity:setTeam(Teams.party);
 end
 
 Field.removeEntityFromParty = function(self, entity)

@@ -1,6 +1,7 @@
 require("engine/utils/OOP");
 local CombatData = require("arpg/combat/CombatData");
 local HitEvent = require("arpg/combat/HitEvent");
+local Teams = require("arpg/combat/Teams");
 local System = require("engine/ecs/System");
 local AllComponents = require("engine/ecs/query/AllComponents");
 
@@ -17,9 +18,12 @@ CombatSystem.duringScripts = function(self, dt)
 	for _, hitEvent in ipairs(hitEvents) do
 		local attacker = hitEvent:getEntity();
 		local victim = hitEvent:getTargetEntity();
-		if self._combatDataQuery:contains(attacker) and self._combatDataQuery:contains(victim) then
-			local damageIntent = hitEvent:getDamageIntent();
-			attacker:inflictDamage(damageIntent, victim:getComponent(CombatData));
+		if Teams:areEnemies(attacker:getTeam(), victim:getTeam()) then
+			if self._combatDataQuery:contains(attacker) and self._combatDataQuery:contains(victim) then
+				local damageIntent = hitEvent:getDamageIntent();
+				attacker:inflictDamage(damageIntent, victim:getComponent(CombatData));
+				print(victim:getCurrentHealth());
+			end
 		end
 	end
 end
