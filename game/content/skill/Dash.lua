@@ -1,4 +1,6 @@
 require("engine/utils/OOP");
+local DamageComponent = require("arpg/combat/damage/DamageComponent");
+local DamageIntent = require("arpg/combat/damage/DamageIntent");
 local Skill = require("arpg/combat/skill/Skill");
 local Actions = require("engine/mapscene/Actions");
 
@@ -14,6 +16,11 @@ local dashScript = function(self)
 					local buildupDuration = 0.24;
 					local dashDuration = 0.36;
 					local peakSpeed = 300;
+
+					local damageIntent = DamageIntent:new();
+					damageIntent:addComponent(DamageComponent:new(10));
+					self:setDamageIntent(damageIntent);
+
 					self:setAnimation("dash_" .. self:getDirection4(), true);
 					self:wait(buildupDuration);
 					self:tween(peakSpeed, 0, dashDuration, "inCubic", function(speed)

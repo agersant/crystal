@@ -71,8 +71,7 @@ MapScene.init = function(self, mapName)
 	Log:info("Instancing scene for map: " .. tostring(mapName));
 	MapScene.super.init(self);
 
-	local ecs = ECS:new();
-	self._ecs = ecs;
+	self._ecs = ECS:new();
 	Alias:add(self._ecs, self);
 
 	self._world = love.physics.newWorld(0, 0, false);
@@ -91,6 +90,26 @@ MapScene.init = function(self, mapName)
 	local mapWidth = self._map:getWidthInPixels();
 	local mapHeight = self._map:getHeightInPixels();
 	self._camera = Camera:new(mapWidth, mapHeight);
+
+	self:addSystems();
+
+	self:update(0);
+end
+
+MapScene.getECS = function(self)
+	return self._ecs;
+end
+
+MapScene.spawn = function(self, ...)
+	return self._ecs:spawn(...);
+end
+
+MapScene.despawn = function(self, ...)
+	return self._ecs:despawn(...);
+end
+
+MapScene.addSystems = function(self)
+	local ecs = self:getECS();
 
 	-- Before physics
 	ecs:addSystem(TouchTriggerSystem:new(ecs));
@@ -114,20 +133,6 @@ MapScene.init = function(self, mapName)
 
 	-- Draw
 	ecs:addSystem(DrawableSystem:new(ecs));
-
-	self:update(0);
-end
-
-MapScene.getECS = function(self)
-	return self._ecs;
-end
-
-MapScene.spawn = function(self, ...)
-	return self._ecs:spawn(...);
-end
-
-MapScene.despawn = function(self, ...)
-	return self._ecs:despawn(...);
 end
 
 MapScene.update = function(self, dt)

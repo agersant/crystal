@@ -1,4 +1,6 @@
 require("engine/utils/OOP");
+local DamageIntent = require("arpg/combat/damage/DamageIntent");
+local DamageComponent = require("arpg/combat/damage/DamageComponent");
 local Skill = require("arpg/combat/skill/Skill");
 local Actions = require("engine/mapscene/Actions");
 
@@ -18,6 +20,11 @@ local doComboMove = function(self)
 		else
 			entity:setSpeed(0);
 		end
+
+		local damageIntent = DamageIntent:new();
+		damageIntent:addComponent(DamageComponent:new(10));
+		self:setDamageIntent(damageIntent);
+
 		entity:setAnimation("attack_" .. entity:getDirection4() .. "_" .. comboCounter, true);
 		self:waitFor("animationEnd");
 	end);

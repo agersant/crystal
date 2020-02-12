@@ -259,7 +259,7 @@ ECS.removeComponent = function(self, entity, component)
 end
 
 ECS.addQuery = function(self, query)
-	assert(#self._entities == 0);
+	assert(TableUtils.countKeys(self._entities) == 0);
 	assert(not self._queries[query]);
 	assert(query:isInstanceOf(Query));
 	self._queries[query] = true;

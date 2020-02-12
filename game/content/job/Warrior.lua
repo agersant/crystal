@@ -1,4 +1,6 @@
 require("engine/utils/OOP");
+local CombatData = require("arpg/combat/CombatData");
+local CombatHitbox = require("arpg/combat/DamageHitbox");
 local ComboAttack = require("content/skill/ComboAttack");
 local Dash = require("content/skill/Dash");
 local Assets = require("engine/resources/Assets");
@@ -6,7 +8,6 @@ local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local Sprite = require("engine/mapscene/display/Sprite");
 local Locomotion = require("engine/mapscene/physics/Locomotion");
 local Collision = require("engine/mapscene/physics/Collision");
-local Hitbox = require("engine/mapscene/physics/Hitbox");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local Weakbox = require("engine/mapscene/physics/Weakbox");
 local Entity = require("engine/ecs/Entity");
@@ -22,8 +23,8 @@ Warrior.init = function(self, scene)
 	self:addComponent(Locomotion:new());
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	self:addComponent(Collision:new(6));
-	-- self:addCombatData(); TODO
-	self:addComponent(Hitbox:new());
+	self:addComponent(CombatData:new());
+	self:addComponent(CombatHitbox:new());
 	self:addComponent(Weakbox:new());
 	self:addComponent(ScriptRunner:new());
 	-- self:addCombatLogic(); TODO

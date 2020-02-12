@@ -1,4 +1,6 @@
 require("engine/utils/OOP");
+local CombatData = require("arpg/combat/CombatData");
+local DamageHitbox = require("arpg/combat/DamageHitbox");
 local Movement = require("engine/mapscene/behavior/ai/movement/Movement");
 local Entity = require("engine/ecs/Entity");
 local Assets = require("engine/resources/Assets");
@@ -8,7 +10,6 @@ local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local Sprite = require("engine/mapscene/display/Sprite");
 local Collision = require("engine/mapscene/physics/Collision");
 local Locomotion = require("engine/mapscene/physics/Locomotion");
-local Hitbox = require("engine/mapscene/physics/Hitbox");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local Weakbox = require("engine/mapscene/physics/Weakbox");
 
@@ -67,8 +68,8 @@ Sahagin.init = function(self, scene)
 	self:addComponent(Locomotion:new());
 	-- self:setMovementSpeed(40); TODO
 	self:addComponent(Collision:new(4));
-	-- self:addCombatData(); TODO
-	self:addComponent(Hitbox:new());
+	self:addComponent(CombatData:new());
+	self:addComponent(DamageHitbox:new());
 	self:addComponent(Weakbox:new());
 	self:addComponent(ScriptRunner:new());
 	-- self:addCombatLogic(); TODO

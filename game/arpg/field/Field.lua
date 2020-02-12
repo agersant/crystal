@@ -1,5 +1,6 @@
 require("engine/utils/OOP");
 local MapScene = require("engine/mapscene/MapScene");
+local CombatSystem = require("arpg/combat/CombatSystem");
 local SkillSystem = require("arpg/combat/skill/SkillSystem");
 local TargetSelector = require("arpg/combat/ai/TargetSelector");
 local Persistence = require("engine/persistence/Persistence");
@@ -40,15 +41,18 @@ Field.init = function(self, mapName, startX, startY)
 
 	Field.super.init(self, mapName);
 
-	local ecs = self:getECS();
-
-	ecs:addSystem(SkillSystem:new(ecs));
-
 	local mapWidth = self._map:getWidthInPixels();
 	local mapHeight = self._map:getHeightInPixels();
 	startX = startX or mapWidth / 2;
 	startY = startY or mapHeight / 2;
 	spawnParty(self, startX, startY);
+end
+
+Field.addSystems = function(self)
+	Field.super.addSystems(self);
+	local ecs = self:getECS();
+	ecs:addSystem(SkillSystem:new(ecs));
+	ecs:addSystem(CombatSystem:new(ecs));
 end
 
 -- PARTY
