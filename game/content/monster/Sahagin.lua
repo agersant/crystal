@@ -1,4 +1,5 @@
 require("engine/utils/OOP");
+local TargetSelector = require("arpg/combat/ai/TargetSelector");
 local CombatData = require("arpg/combat/CombatData");
 local DamageHitbox = require("arpg/combat/DamageHitbox");
 local Movement = require("engine/mapscene/behavior/ai/movement/Movement");
@@ -18,15 +19,15 @@ local SahaginController = Class("SahaginController", Controller);
 
 local reachAndAttack = function(self)
 	local entity = self:getEntity();
-	local targetSelector = entity:getScene():getTargetSelector();
+	local targetSelector = TargetSelector:new(entity:getScene());
 	local target = targetSelector:getNearestEnemy(entity);
 	if not target then
 		self:waitFrame();
 		return;
 	end
-	if Movement.walkToEntity(target, 30)(self) then
+	if Movement.walkToEntity(self, target, 30) then
 		if self:isIdle() then
-			Movement.alignWithEntity(entity, target, 2)(self);
+			Movement.alignWithEntity(self, target, 2);
 			if self:isIdle() then
 				Actions.lookAt(target)(self);
 				self:wait(.2);

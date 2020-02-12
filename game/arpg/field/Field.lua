@@ -37,7 +37,6 @@ end
 -- PUBLIC API
 
 Field.init = function(self, mapName, startX, startY)
-	self._targetSelector = TargetSelector:new({}); -- TODO remove
 	self._partyEntities = {}; -- TODO remove
 
 	Field.super.init(self, mapName);
@@ -87,10 +86,6 @@ Field.checkLoseCondition = function(self)
 		end
 	end
 	Scene:setCurrent(UIScene:new(TitleScreen:new()));
-end
-
-Field.getTargetSelector = function(self)
-	return self._targetSelector;
 end
 
 return Field;

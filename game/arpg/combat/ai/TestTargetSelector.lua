@@ -3,7 +3,6 @@ local CombatData = require("arpg/combat/CombatData");
 local Teams = require("arpg/combat/Teams");
 local Entity = require("engine/ecs/Entity");
 local MapScene = require("engine/mapscene/MapScene");
-local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 
 local tests = {};
@@ -17,8 +16,7 @@ tests[#tests].body = function()
 	local friend = scene:spawn(Entity);
 	local enemyA = scene:spawn(Entity);
 	local enemyB = scene:spawn(Entity);
-	local targets = {me, friend, enemyA, enemyB};
-	for _, entity in ipairs(targets) do
+	for _, entity in ipairs({me, friend, enemyA, enemyB}) do
 		entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 		entity:addComponent(CombatData:new());
 	end
@@ -33,7 +31,8 @@ tests[#tests].body = function()
 	enemyA:setPosition(100, 100);
 	enemyB:setPosition(15, 5);
 
-	local selector = TargetSelector:new(targets);
+	scene:update(0);
+	local selector = TargetSelector:new(scene);
 	local nearest = selector:getNearestEnemy(me);
 	assert(nearest == enemyB);
 end
@@ -47,8 +46,7 @@ tests[#tests].body = function()
 	local friendA = scene:spawn(Entity);
 	local friendB = scene:spawn(Entity);
 	local enemy = scene:spawn(Entity);
-	local targets = {me, friendA, friendB, enemy};
-	for _, entity in ipairs(targets) do
+	for _, entity in ipairs({me, friendA, friendB, enemy}) do
 		entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 		entity:addComponent(CombatData:new());
 	end
@@ -63,11 +61,11 @@ tests[#tests].body = function()
 	friendB:setPosition(8, 8);
 	enemy:setPosition(15, 5);
 
-	local selector = TargetSelector:new(targets);
+	scene:update(0);
+	local selector = TargetSelector:new(scene);
 	local nearest = selector:getNearestAlly(me);
 	assert(nearest == friendB);
 
-	friendB:addComponent(ScriptRunner:new()); -- TODO shouldnt be needed for this test
 	friendB:kill();
 	local nearest = selector:getNearestAlly(me);
 	assert(nearest == friendA);

@@ -1,12 +1,14 @@
 require("engine/utils/OOP");
+local CombatData = require("arpg/combat/CombatData");
 local Teams = require("arpg/combat/Teams");
 
 local TargetSelector = Class("TargetSelector");
 
 -- IMPLEMENTATION
 
-TargetSelector.init = function(self, targets)
-	self._targets = targets;
+TargetSelector.init = function(self, scene)
+	assert(scene);
+	self._targets = scene:getECS():getAllEntitiesWith(CombatData);
 end
 
 local passesFilters = function(self, filters, target)
@@ -20,7 +22,7 @@ end
 
 local getAll = function(self, filters)
 	local out = {};
-	for i, target in ipairs(self._targets) do
+	for target in pairs(self._targets) do
 		if passesFilters(self, filters, target) then
 			table.insert(out, target);
 		end
@@ -31,7 +33,7 @@ end
 local getFittest = function(self, filters, rank)
 	local bestScore = nil;
 	local bestTarget = nil;
-	for i, target in ipairs(self._targets) do
+	for target in pairs(self._targets) do
 		if passesFilters(self, filters, target) then
 			local score = rank(target);
 			if not bestScore or score > bestScore then
@@ -63,7 +65,7 @@ end
 
 local rankByDistanceTo = function(entity)
 	return function(target)
-		return -entity:distance2ToEntity(target);
+		return -entity:distance2ToEntity(target); -- TODO this assumes targets and us have a physics body
 	end
 end
 
