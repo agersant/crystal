@@ -5,6 +5,8 @@ local TableUtils = require("engine/utils/TableUtils");
 
 local PlayerController = Class("PlayerController", Controller);
 
+-- TOOD move this to ARPG module
+
 -- CONTROLS
 local waitForCommandPress = function(self, command)
 	if self:isCommandActive(command) then
