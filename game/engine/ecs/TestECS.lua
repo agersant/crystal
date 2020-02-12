@@ -295,27 +295,30 @@ tests[#tests].body = function()
 
 	local a = ecs:spawn(Entity);
 	local b = ecs:spawn(Entity);
-	local c = ecs:spawn(Entity);
 	local snoot = Snoot:new();
 	b:addComponent(snoot);
 	assert(not query:getEntities()[a]);
 	assert(not query:getEntities()[b]);
-	assert(not query:getEntities()[c]);
+	assert(not query:contains(a));
+	assert(not query:contains(b));
 
 	ecs:update();
 	assert(not query:getEntities()[a]);
 	assert(query:getEntities()[b]);
-	assert(not query:getEntities()[c]);
+	assert(not query:contains(a));
+	assert(query:contains(b));
 
 	b:removeComponent(snoot);
 	assert(not query:getEntities()[a]);
 	assert(query:getEntities()[b]);
-	assert(not query:getEntities()[c]);
+	assert(not query:contains(a));
+	assert(query:contains(b));
 
 	ecs:update();
 	assert(not query:getEntities()[a]);
 	assert(not query:getEntities()[b]);
-	assert(not query:getEntities()[c]);
+	assert(not query:contains(a));
+	assert(not query:contains(b));
 end
 
 tests[#tests + 1] = {name = "Query entity list captures derived components"};

@@ -132,6 +132,10 @@ Query.getEntities = function(self)
 	return TableUtils.shallowCopy(self._entities);
 end
 
+Query.contains = function(self, entity)
+	return self._entities[entity];
+end
+
 Query.flush = function(self)
 	self._addedEntities = {};
 	self._removedEntities = {};
