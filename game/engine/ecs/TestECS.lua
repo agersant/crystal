@@ -261,9 +261,9 @@ tests[#tests].body = function()
 		ecs:addSystem(system);
 	end
 	assert(sentinel == 0);
-	ecs:processEvent("randomEvent");
+	ecs:runFramePortion("randomEvent");
 	assert(sentinel == 0);
-	ecs:processEvent("update");
+	ecs:runFramePortion("update");
 	assert(sentinel == 10);
 end
 
@@ -279,7 +279,7 @@ tests[#tests].body = function()
 		ran = true;
 	end
 	ecs:addSystem(system);
-	ecs:processEvent("update", true);
+	ecs:runFramePortion("update", true);
 	assert(ran);
 end
 

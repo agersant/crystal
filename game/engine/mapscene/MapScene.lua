@@ -135,7 +135,7 @@ MapScene.update = function(self, dt)
 
 	self._ecs:update();
 
-	self._ecs:processEvent("beforePhysics", dt);
+	self._ecs:runFramePortion("beforePhysics", dt);
 
 	self._world:update(dt);
 	for _, callback in ipairs(self._contactCallbacks) do
@@ -143,13 +143,13 @@ MapScene.update = function(self, dt)
 	end
 	self._contactCallbacks = {};
 
-	self._ecs:processEvent("afterPhysics", dt);
+	self._ecs:runFramePortion("afterPhysics", dt);
 
-	self._ecs:processEvent("beforeScripts", dt);
+	self._ecs:runFramePortion("beforeScripts", dt);
 
-	self._ecs:processEvent("duringScripts", dt);
+	self._ecs:runFramePortion("duringScripts", dt);
 
-	self._ecs:processEvent("afterScripts", dt);
+	self._ecs:runFramePortion("afterScripts", dt);
 
 	self._camera:update(dt);
 end
@@ -165,7 +165,7 @@ MapScene.draw = function(self)
 	love.graphics.translate(ox, oy);
 
 	self._map:drawBelowEntities();
-	self._ecs:processEvent("draw");
+	self._ecs:runFramePortion("draw");
 	self._map:drawAboveEntities();
 	self._map:drawDebug();
 

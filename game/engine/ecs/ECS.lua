@@ -197,7 +197,7 @@ ECS.update = function(self)
 	updateQueries(self, entityNursery, entityGraveyard, componentNursery, componentGraveyard);
 end
 
-ECS.processEvent = function(self, event, ...)
+ECS.runFramePortion = function(self, event, ...)
 	for _, system in ipairs(self._systems) do
 		if system[event] then
 			system[event](system, ...);
