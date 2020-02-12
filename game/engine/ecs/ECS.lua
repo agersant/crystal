@@ -1,6 +1,7 @@
 require("engine/utils/OOP");
 local TableUtils = require("engine/utils/TableUtils");
 local Component = require("engine/ecs/Component");
+local Event = require("engine/ecs/Event");
 local System = require("engine/ecs/System");
 local Query = require("engine/ecs/query/Query");
 
@@ -156,6 +157,7 @@ ECS.init = function(self)
 	self._componentClassToQueries = {};
 
 	self._systems = {};
+	self._events = {};
 
 	self._entityNursery = {};
 	self._entityGraveyard = {};
@@ -195,12 +197,13 @@ ECS.update = function(self)
 	end
 
 	updateQueries(self, entityNursery, entityGraveyard, componentNursery, componentGraveyard);
+	self._events = {};
 end
 
-ECS.runFramePortion = function(self, event, ...)
+ECS.runFramePortion = function(self, framePortion, ...)
 	for _, system in ipairs(self._systems) do
-		if system[event] then
-			system[event](system, ...);
+		if system[framePortion] then
+			system[framePortion](system, ...);
 		end
 	end
 end
@@ -274,6 +277,22 @@ ECS.addSystem = function(self, system)
 	table.insert(self._systems, system);
 end
 
+ECS.addEvent = function(self, event)
+	assert(event);
+	assert(event:isInstanceOf(Event));
+	assert(event:getEntity():isValid());
+	local baseClass = event:getClass();
+	while baseClass do
+		local events = self._events[baseClass];
+		if not events then
+			events = {};
+			self._events[baseClass] = events;
+		end
+		table.insert(events, event);
+		baseClass = baseClass.super;
+	end
+end
+
 -- ACCESSORS
 
 ECS.getAllEntities = function(self)
@@ -332,6 +351,13 @@ ECS.getAllComponents = function(self, class)
 		end
 	end
 	return output;
+end
+
+ECS.getEvents = function(self, class)
+	if not self._events[class] then
+		return {};
+	end
+	return TableUtils.shallowCopy(self._events[class]);
 end
 
 return ECS;

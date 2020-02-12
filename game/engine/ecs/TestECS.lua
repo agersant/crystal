@@ -1,6 +1,7 @@
 local ECS = require("engine/ecs/ECS");
 local Component = require("engine/ecs/Component");
 local Entity = require("engine/ecs/Entity");
+local Event = require("engine/ecs/Event");
 local System = require("engine/ecs/System");
 local EitherComponent = require("engine/ecs/query/EitherComponent");
 local AllComponents = require("engine/ecs/query/AllComponents");
@@ -478,6 +479,43 @@ tests[#tests].body = function()
 	assert(query:getRemovedComponents(CompA)[compA]);
 	assert(not query:getRemovedComponents(CompB)[compB]);
 	assert(not query:getRemovedComponents(CompC)[compC]);
+end
+
+tests[#tests + 1] = {name = "Events can be retrieved within the rest of the frame"};
+tests[#tests].body = function()
+	local ecs = ECS:new();
+	local entity = ecs:spawn(Entity);
+	ecs:update();
+	assert(#ecs:getEvents(Event) == 0);
+	entity:createEvent(Event);
+	assert(#ecs:getEvents(Event) == 1);
+	entity:createEvent(Event);
+	assert(#ecs:getEvents(Event) == 2);
+	ecs:update();
+	assert(#ecs:getEvents(Event) == 0);
+end
+
+tests[#tests + 1] = {name = "Events can be retrieved by base class"};
+tests[#tests].body = function()
+	Class:resetIndex();
+
+	local MyEvent = Class("MyEvent", Event);
+	local MyOtherEvent = Class("MyOtherEvent", Event);
+
+	local ecs = ECS:new();
+	local entity = ecs:spawn(Entity);
+
+	ecs:update();
+
+	entity:createEvent(MyEvent);
+	assert(#ecs:getEvents(Event) == 1);
+	assert(#ecs:getEvents(MyEvent) == 1);
+	assert(#ecs:getEvents(MyOtherEvent) == 0);
+
+	entity:createEvent(MyOtherEvent);
+	assert(#ecs:getEvents(Event) == 2);
+	assert(#ecs:getEvents(MyEvent) == 1);
+	assert(#ecs:getEvents(MyOtherEvent) == 1);
 end
 
 return tests;

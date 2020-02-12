@@ -32,6 +32,11 @@ Entity.getComponents = function(self, baseClass)
 	return self._ecs:getComponents(self, baseClass);
 end
 
+Entity.createEvent = function(self, class, ...)
+	local event = class:new(self, ...);
+	self._ecs:addEvent(event);
+end
+
 Entity.despawn = function(self)
 	self._ecs:despawn(self);
 end
