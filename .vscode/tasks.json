@@ -7,7 +7,7 @@
 			"options": {
 				"cwd": "${workspaceRoot}\\game"
 			},
-			"command": "love",
+			"command": "lovec",
 			"args": [
 				"."
 			],
