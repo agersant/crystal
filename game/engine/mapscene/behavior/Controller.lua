@@ -37,14 +37,20 @@ end
 
 Controller.doTask = function(self, taskFunction)
 	assert(self:isTaskless());
-	self._taskThread = self._script:thread(taskFunction);
+	self._taskThread = self._script:thread(function(script)
+		taskFunction(script);
+		self._taskThread = nil;
+		self:getEntity():signalAllScripts("taskLess");
+	end);
 end
 
 Controller.stopAction = function(self)
+	self._actionThread:stop();
 	self._actionThread = nil;
 end
 
 Controller.stopTask = function(self)
+	self._taskThread:stop();
 	self._taskThread = nil;
 end
 
