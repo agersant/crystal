@@ -62,6 +62,7 @@ local controllerScript = function(self)
 				self:setSpeed(0);
 				self:setAnimation("knockback_" .. self:getDirection4());
 				self:wait(1);
+				Actions.idle(self);
 			end);
 		end
 	end);
