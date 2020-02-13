@@ -4,7 +4,7 @@ local Assets = require("engine/resources/Assets");
 local ECS = require("engine/ecs/ECS");
 local Camera = require("engine/mapscene/Camera");
 local Scene = require("engine/Scene");
-local ControllerSystem = require("engine/mapscene/behavior/ControllerSystem");
+local ActorSystem = require("engine/mapscene/behavior/ActorSystem");
 local InputListenerSystem = require("engine/mapscene/behavior/InputListenerSystem");
 local ScriptRunnerSystem = require("engine/mapscene/behavior/ScriptRunnerSystem");
 local SpriteSystem = require("engine/mapscene/display/SpriteSystem");
@@ -122,7 +122,7 @@ MapScene.addSystems = function(self)
 
 	-- Before scripts
 	ecs:addSystem(ControllerSystem:new(ecs));
-	ecs:addSystem(SpriteSystem:new(ecs)); -- (also has some afterScripts logic)
+	ecs:addSystem(SpriteSystem:new(ecs)); -- (also has some duringScripts and afterScripts logic)
 
 	-- During scripts
 	ecs:addSystem(ScriptRunnerSystem:new(ecs));

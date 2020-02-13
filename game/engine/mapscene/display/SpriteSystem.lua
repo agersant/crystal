@@ -21,7 +21,9 @@ SpriteSystem.beforeScripts = function(self, dt)
 	for _, sprite in ipairs(sprites) do
 		sprite:update(dt);
 	end
+end
 
+SpriteSystem.duringScripts = function(self, dt)
 	local entities = self._scriptQuery:getEntities();
 	for entity in pairs(entities) do
 		local sprite = entity:getComponent(Sprite);
