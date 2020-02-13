@@ -4,6 +4,8 @@ local Teams = require("arpg/combat/Teams");
 
 local TargetSelector = Class("TargetSelector");
 
+-- TODO make this a component
+
 -- IMPLEMENTATION
 
 TargetSelector.init = function(self, scene)
