@@ -1,11 +1,11 @@
 require("engine/utils/OOP");
 local Assets = require("engine/resources/Assets");
-local Controller = require("engine/mapscene/behavior/Controller");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local Sprite = require("engine/mapscene/display/Sprite");
 local Collision = require("engine/mapscene/physics/Collision");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local Entity = require("engine/ecs/Entity");
+local Script = require("engine/script/Script");
 local HUD = require("engine/ui/hud/HUD");
 
 local NPC = Class("NPC", Entity);
@@ -30,7 +30,7 @@ NPC.init = function(self, scene)
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 	self:addComponent(Collision:new(4));
 	self:addComponent(ScriptRunner:new());
-	self:addComponent(Controller:new(script));
+	self:addScript(Script:new(script));
 end
 
 return NPC;
