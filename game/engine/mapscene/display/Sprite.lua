@@ -14,7 +14,7 @@ Sprite.init = function(self, sheet)
 	self._time = 0;
 	self._x = 0;
 	self._y = 0;
-	self._justCompletedAnimation = false;
+	self._justCompletedAnimation = false; -- TODO replace with events
 end
 
 Sprite.setSpritePosition = function(self, x, y)
