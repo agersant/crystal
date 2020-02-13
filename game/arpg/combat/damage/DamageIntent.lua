@@ -3,6 +3,8 @@ local TableUtils = require("engine/utils/TableUtils");
 
 local DamageIntent = Class("DamageIntent");
 
+-- TODO make this a component and remove DamageHitbox
+
 -- PUBLIC API
 
 DamageIntent.init = function(self)
