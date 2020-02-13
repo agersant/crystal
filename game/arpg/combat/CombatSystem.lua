@@ -36,6 +36,7 @@ CombatSystem.duringScripts = function(self, dt)
 		if self._scriptRunnerQuery:contains(victim) then
 			local damage = damageEvent:getDamage();
 			assert(damage);
+			victim:signalAllScripts("disrupted");
 			victim:signalAllScripts("receivedDamage", damage);
 		end
 	end
