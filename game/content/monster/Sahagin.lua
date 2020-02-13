@@ -68,10 +68,12 @@ local controllerScript = function(self)
 	end);
 
 	while true do
-		if not self:isTaskless() or not self:isIdle() then
+		while not self:isIdle() do
+			self:waitFor("idle");
+		end
+		local taskThread = self:thread(reachAndAttack);
+		while not taskThread:isDead() do -- TODO implement self:join(thread)
 			self:waitFrame();
-		else
-			self:doTask(reachAndAttack);
 		end
 	end
 end

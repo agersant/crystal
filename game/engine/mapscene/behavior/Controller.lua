@@ -10,7 +10,6 @@ Controller.init = function(self, scriptContent)
 	assert(scriptContent);
 	Controller.super.init(self);
 	self._actionThread = nil;
-	self._taskThread = nil;
 	self._script = Script:new(scriptContent);
 end
 
@@ -22,10 +21,6 @@ Controller.isIdle = function(self)
 	return not self._actionThread or self._actionThread:isDead();
 end
 
-Controller.isTaskless = function(self)
-	return not self._taskThread or self._taskThread:isDead();
-end
-
 Controller.doAction = function(self, actionFunction)
 	assert(self:isIdle());
 	self._actionThread = self._script:thread(function(script)
@@ -35,29 +30,12 @@ Controller.doAction = function(self, actionFunction)
 	end);
 end
 
-Controller.doTask = function(self, taskFunction)
-	assert(self:isTaskless());
-	self._taskThread = self._script:thread(function(script)
-		taskFunction(script);
-		self._taskThread = nil;
-		self:getEntity():signalAllScripts("taskLess");
-	end);
-end
-
 Controller.stopAction = function(self)
 	if self:isIdle() then
 		return;
 	end
 	self._actionThread:stop();
 	self._actionThread = nil;
-end
-
-Controller.stopTask = function(self)
-	if self:isTaskless() then
-		return;
-	end
-	self._taskThread:stop();
-	self._taskThread = nil;
 end
 
 return Controller;
