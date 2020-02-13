@@ -1,7 +1,6 @@
 require("engine/utils/OOP");
 local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/Scene");
-local Controller = require("engine/mapscene/behavior/Controller");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local TouchTrigger = require("engine/mapscene/physics/TouchTrigger");
