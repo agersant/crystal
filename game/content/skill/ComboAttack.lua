@@ -6,62 +6,59 @@ local Actions = require("engine/mapscene/Actions");
 
 local ComboAttack = Class("ComboAttack", Skill);
 
-local doComboMove = function(self)
-	local comboCounter = self._comboCounter;
-	self:doAction(function(self)
-		self:endOn("interruptByDamage");
-		local entity = self:getEntity();
-		if comboCounter == 1 or comboCounter == 3 then
+local getComboSwingAction = function(swingCount)
+	return function(self)
+		if swingCount == 1 or swingCount == 3 then
 			self:thread(function()
 				self:tween(200, 0, 0.20, "inQuadratic", function(speed)
-					entity:setSpeed(speed);
+					self:setSpeed(speed);
 				end);
 			end);
 		else
-			entity:setSpeed(0);
+			self:setSpeed(0);
 		end
 
 		local damageIntent = DamageIntent:new();
-		damageIntent:addComponent(DamageComponent:new(10));
+		damageIntent:addComponent(DamageComponent:new(1));
 		self:setDamageIntent(damageIntent);
 
-		entity:setAnimation("attack_" .. entity:getDirection4() .. "_" .. comboCounter, true);
+		self:setAnimation("attack_" .. self:getDirection4() .. "_" .. swingCount, true);
 		self:waitFor("animationEnd");
-	end);
+	end
+end
+
+local performCombo = function(self)
+	self:endOn("disrupted");
+	self._comboCounter = 0;
+	while self:isIdle() do
+		self:doAction(getComboSwingAction(self._comboCounter));
+		self._comboCounter = self._comboCounter + 1;
+		self._didInputNextMove = false;
+		local inputWatch = self:thread(function(self)
+			self:waitFor("+useSkill");
+			self._didInputNextMove = true;
+		end);
+		self:waitFor("idle");
+		if not self:isIdle() then
+			break
+		end
+		if not inputWatch:isDead() then
+			inputWatch:stop();
+		end
+		if not self._didInputNextMove then
+			Actions.idle(self);
+			break
+		end
+	end
 end
 
 local comboAttackScript = function(self)
 	self:thread(function(self)
 		while true do
 			self:waitFor("+useSkill");
-			self._comboCounter = 0;
-			while self:isIdle() do
-
-				doComboMove(self);
-
-				self._comboCounter = self._comboCounter + 1;
-				self._didInputNextMove = false;
-
-				local inputWatch = self:thread(function(self)
-					self:waitFor("+useSkill");
-					self._didInputNextMove = true;
-				end);
-
-				self:waitFor("idle");
-
-				if not inputWatch:isDead() then
-					inputWatch:stop();
-				end
-
-				if not self:isIdle() then
-					break
-				end
-
-				if not self._didInputNextMove then
-					Actions.idle(self);
-					break
-				end
-
+			local comboThread = self:thread(performCombo);
+			while not comboThread:isDead() do -- TODO implement self:join(thread)
+				self:waitFrame();
 			end
 		end
 	end);
