@@ -6,10 +6,10 @@ local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local TouchTrigger = require("engine/mapscene/physics/TouchTrigger");
 local Entity = require("engine/ecs/Entity");
+local Script = require("engine/script/Script");
 local Field = require("arpg/field/Field");
 
 local Teleport = Class("Teleport", Entity);
-local TeleportController = Class("TeleportController", Controller);
 local TeleportTouchTrigger = Class("TeleportTouchTrigger", TouchTrigger);
 
 -- IMPLEMENTATION
@@ -62,10 +62,6 @@ local teleportScript = function(self)
 	end
 end
 
-TeleportController.init = function(self)
-	TeleportController.super.init(self, teleportScript);
-end
-
 TeleportTouchTrigger.init = function(self, shape)
 	TeleportTouchTrigger.super.init(self, shape);
 end
@@ -89,8 +85,9 @@ Teleport.init = function(self, scene, options)
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 	self:addComponent(TeleportTouchTrigger:new(options.shape));
 	self:addComponent(ScriptRunner:new());
-	self:addComponent(TeleportController:new());
+
 	self:setPosition(options.x, options.y);
+	self:addScript(Script:new(teleportScript));
 
 	self._targetMap = options.targetMap;
 	self._targetX = options.targetX;
