@@ -1,6 +1,5 @@
 local MapScene = require("engine/mapscene/MapScene");
 local Script = require("engine/script/Script");
-local Controller = require("engine/mapscene/behavior/Controller");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local Entity = require("engine/ecs/Entity");
 local Dialog = require("engine/ui/hud/Dialog");
@@ -12,8 +11,8 @@ tests[#tests].body = function()
 	local scene = MapScene:new("assets/map/test/empty.lua");
 	local player = scene:spawn(Entity);
 	player:addComponent(ScriptRunner:new());
-	player:addComponent(Controller:new(function()
-	end));
+	-- player:addComponent(Controller:new(function()
+	-- end));
 	-- TODO Fix me
 	-- player:addComponent(InputDrivenController:new(player, function()
 	-- end, 1));
