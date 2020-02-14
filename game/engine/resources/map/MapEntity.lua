@@ -1,6 +1,7 @@
 require("engine/utils/OOP");
 local Log = require("engine/dev/Log");
 local Entity = require("engine/ecs/Entity");
+local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 
 local MapEntity = Class("MapEntity");
 
@@ -19,10 +20,11 @@ MapEntity.spawn = function(self, scene)
 		assert(class);
 		assert(class:isInstanceOf(Entity));
 		local entity = scene:spawn(class, self._options);
-		if entity.setPosition then
+		local physicsBody = entity:getComponent(PhysicsBody);
+		if physicsBody then
 			assert(self._options.x);
 			assert(self._options.y);
-			entity:setPosition(self._options.x, self._options.y);
+			physicsBody:setPosition(self._options.x, self._options.y);
 		end
 	end, function(err)
 		Log:error("Error spawning map entity of class '" .. tostring(self._class) .. "':\n" .. tostring(err));
