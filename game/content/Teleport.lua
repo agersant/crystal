@@ -84,8 +84,6 @@ Teleport.init = function(self, scene, options)
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 	self:addComponent(TeleportTouchTrigger:new(options.shape));
 	self:addComponent(ScriptRunner:new());
-
-	self:setPosition(options.x, options.y);
 	self:addScript(Script:new(teleportScript));
 
 	self._targetMap = options.targetMap;
