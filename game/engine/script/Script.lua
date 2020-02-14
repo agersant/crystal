@@ -7,7 +7,7 @@ local Script = Class("Script");
 
 -- IMPLEMENTATION
 
-local pumpThread, endThread;
+local pumpThread, endThread, markAsEnded;
 
 local newThread = function(self, parentThread, script, options)
 	assert(type(script) == "function");
@@ -18,13 +18,15 @@ local newThread = function(self, parentThread, script, options)
 		childThreads = {},
 		blockedBy = {},
 		endsOn = {},
+		joinedBy = {},
+		joiningOn = {},
 		allowOrphans = options.allowOrphans,
 		isDead = function(thread)
 			return coroutine.status(thread.coroutine) == "dead" or thread.isEnded;
 		end,
 		stop = function(thread)
 			assert(not thread:isDead());
-			endThread(self, thread);
+			endThread(self, thread, false);
 		end,
 	};
 
@@ -78,21 +80,52 @@ local endThreadOn = function(self, thread, signals)
 	end
 end
 
-endThread = function(self, thread)
+local joinThreadOn = function(self, thread, threadsToJoin)
+	for _, t in ipairs(threadsToJoin) do
+		if not t.isEnded then
+			thread.isBlocked = true;
+			thread.joiningOn[t] = true;
+			t.joinedBy[thread] = true;
+		end
+	end
+	if not thread.isBlocked then
+		pumpThread(self, thread, {false});
+	end
+end
+
+markAsEnded = function(self, thread)
 	thread.isEnded = true;
+	if not thread.allowOrphans then
+		for childThread in pairs(thread.childThreads) do
+			markAsEnded(self, childThread);
+		end
+	end
+end
+
+endThread = function(self, thread, completedExecution)
+	if not thread.isEnded then
+		markAsEnded(self, thread);
+	end
+
 	if thread.parentThread then
 		thread.parentThread.childThreads[thread] = nil;
 		thread.parentThread = nil;
 	end
+
 	if not thread.allowOrphans then
 		local childThreadsCopy = {};
-		for childThread, _ in pairs(thread.childThreads) do
+		for childThread in pairs(thread.childThreads) do
 			table.insert(childThreadsCopy, childThread);
 		end
 		for i, childThread in ipairs(childThreadsCopy) do
-			endThread(self, childThread);
+			endThread(self, childThread, false);
 		end
 	end
+
+	for t in pairs(thread.joinedBy) do
+		pumpThread(self, t, {completedExecution});
+	end
+	thread.joinedBy = {};
 end
 
 pumpThread = function(self, thread, resumeArgs)
@@ -100,7 +133,8 @@ pumpThread = function(self, thread, resumeArgs)
 	assert(status ~= "running");
 	if status == "suspended" and not thread.isEnded then
 		local success, a, b, c;
-		if resumeArgs then
+		if resumeArgs ~= nil then
+			assert(type(resumeArgs) == "table");
 			success, a, b, c = coroutine.resume(thread.coroutine, resumeArgs);
 		else
 			success, a, b, c = coroutine.resume(thread.coroutine, self);
@@ -119,23 +153,26 @@ pumpThread = function(self, thread, resumeArgs)
 		elseif a == "endOnSignals" then
 			endThreadOn(self, thread, b);
 			pumpThread(self, thread);
+		elseif a == "join" then
+			joinThreadOn(self, thread, b);
 		end
 	end
 
 	status = coroutine.status(thread.coroutine);
 	if status == "dead" and not thread.isEnded then
-		endThread(self, thread);
+		endThread(self, thread, true);
 	end
 end
 
 local cleanupThread = function(self, thread)
-	if thread.endsOn then
-		for signal, _ in pairs(thread.endsOn) do
-			self._endableThreads[signal][thread] = nil;
-		end
+	for signal, _ in pairs(thread.endsOn) do
+		self._endableThreads[signal][thread] = nil;
 	end
 	for signal, _ in pairs(thread.blockedBy) do
 		self._blockedThreads[signal][thread] = nil;
+	end
+	for otherThread in pairs(thread.joiningOn) do
+		otherThread.joinedBy[thread] = nil;
 	end
 	for childThread, _ in pairs(thread.childThreads) do
 		childThread.parentThread = nil;
@@ -182,7 +219,7 @@ end
 Script.signal = function(self, signal, ...)
 	if self._endableThreads[signal] then
 		for thread, _ in pairs(self._endableThreads[signal]) do
-			endThread(self, thread, signal);
+			endThread(self, thread, false);
 		end
 	end
 	if self._blockedThreads[signal] then
@@ -228,6 +265,15 @@ end
 Script.endOnAny = function(self, signals)
 	assert(type(signals) == "table");
 	coroutine.yield("endOnSignals", signals);
+end
+
+Script.join = function(self, thread)
+	return self:joinAny({thread});
+end
+
+Script.joinAny = function(self, threads)
+	local returns = coroutine.yield("join", threads);
+	return unpack(returns);
 end
 
 Script.isDead = function(self)

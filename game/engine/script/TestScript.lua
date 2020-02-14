@@ -186,6 +186,143 @@ tests[#tests].body = function()
 	assert(a == 0);
 end
 
+tests[#tests + 1] = {name = "Wait for join"};
+tests[#tests].body = function()
+	local sentinel = false;
+	local script = Script:new(function(self)
+		local t1 = self:thread(function(self)
+			self:waitFor("s1");
+			self:waitFor("s2");
+		end);
+		local t2 = self:thread(function(self)
+			self:join(t1);
+			sentinel = true;
+		end);
+	end);
+
+	script:update(0);
+	assert(not sentinel);
+	script:signal("s1");
+	assert(not sentinel);
+	script:signal("s2");
+	assert(sentinel);
+end
+
+tests[#tests + 1] = {name = "Join any"};
+tests[#tests].body = function()
+	local sentinel = false;
+	local script = Script:new(function(self)
+		local t1 = self:thread(function(self)
+			self:waitFor("s1");
+			self:waitFor("s2");
+		end);
+		local t2 = self:thread(function(self)
+			self:waitFor("s3");
+		end);
+		local t3 = self:thread(function(self)
+			self:joinAny({t1, t2});
+			sentinel = true;
+		end);
+	end);
+
+	script:update(0);
+	assert(not sentinel);
+	script:signal("s1");
+	assert(not sentinel);
+	script:signal("s3");
+	assert(sentinel);
+end
+
+tests[#tests + 1] = {name = "Join returns true when joined thread completed"};
+tests[#tests].body = function()
+	local completed;
+	local script = Script:new(function(self)
+		local t1 = self:thread(function(self)
+			self:waitFor("s1");
+		end);
+		local t2 = self:thread(function(self)
+			local c = self:join(t1);
+			completed = c;
+		end);
+	end);
+
+	script:update(0);
+	assert(completed == nil);
+	script:signal("s1");
+	assert(completed);
+end
+
+tests[#tests + 1] = {name = "Join returns false when joined thread was stopped"};
+tests[#tests].body = function()
+	local completed;
+	local script = Script:new(function(self)
+		local t1 = self:thread(function(self)
+			self:waitFor("s1");
+		end);
+		local t2 = self:thread(function(self)
+			completed = self:join(t1);
+		end);
+		local t3 = self:thread(function(self)
+			self:waitFor("s2");
+			t1:stop();
+		end);
+	end);
+
+	script:update(0);
+	assert(completed == nil);
+	script:signal("s2");
+	assert(completed == false);
+end
+
+tests[#tests + 1] = {name = "Join doesn't unblock when parent thread is in the process of stopping"};
+tests[#tests].body = function()
+	local sentinel;
+	local script = Script:new(function(self)
+		local t0 = self:thread(function(self)
+			local t01 = self:thread(function(self)
+				self:waitFor("s01");
+			end);
+			local t02 = self:thread(function(self)
+				self:join(t01);
+				sentinel = false;
+			end);
+			self:waitFor("s0");
+		end);
+		local t1 = self:thread(function(self)
+			self:waitFor("s1");
+			sentinel = true;
+			t0:stop();
+		end);
+	end);
+
+	script:update(0);
+	assert(sentinel == nil);
+	script:signal("s1");
+	assert(sentinel);
+end
+
+tests[#tests + 1] = {name = "Joining dead threads is no-op"};
+tests[#tests].body = function()
+	local sentinel;
+	local script = Script:new(function(self)
+		local t0 = self:thread(function(self)
+		end);
+		local t1 = self:thread(function(self)
+		end);
+		local t2 = self:thread(function(self)
+			self:waitFor("s1");
+			self:join(t0);
+			self:join(t1);
+			sentinel = true;
+		end);
+	end);
+
+	script:update(0);
+	assert(sentinel == nil);
+	script:signal("s1");
+	assert(sentinel);
+end
+
 tests[#tests + 1] = {name = "Keep child threads after main thread ends"};
 tests[#tests].body = function()
 	local a = 0;
