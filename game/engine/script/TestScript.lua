@@ -155,6 +155,25 @@ tests[#tests].body = function()
 	assert(a == 1);
 end
 
+tests[#tests + 1] = {name = "Signal doesn't wake dead threads"};
+tests[#tests].body = function()
+	local sentinel = true;
+	local script = Script:new(function(self)
+		local t0 = self:thread(function(self)
+			self:waitFor("s0");
+			sentinel = false;
+		end);
+		local t1 = self:thread(function(self)
+			self:waitFor("s1");
+			t0:stop();
+		end);
+	end);
+	script:update(0);
+	script:signal("s1");
+	script:signal("s0");
+	assert(sentinel);
+end
+
 tests[#tests + 1] = {name = "End on"};
 tests[#tests].body = function()
 	local a = 0;

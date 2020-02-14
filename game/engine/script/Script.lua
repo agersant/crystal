@@ -219,7 +219,9 @@ end
 Script.signal = function(self, signal, ...)
 	if self._endableThreads[signal] then
 		for thread, _ in pairs(self._endableThreads[signal]) do
-			endThread(self, thread, false);
+			if not thread.isEnded then
+				endThread(self, thread, false);
+			end
 		end
 	end
 	if self._blockedThreads[signal] then
