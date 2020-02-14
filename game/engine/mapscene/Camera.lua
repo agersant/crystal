@@ -1,5 +1,6 @@
 require("engine/utils/OOP");
 local GFXConfig = require("engine/graphics/GFXConfig");
+local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local MathUtils = require("engine/utils/MathUtils");
 local TableUtils = require("engine/utils/TableUtils");
 
@@ -37,8 +38,9 @@ local computeLookAheadPosition = function(self, screenW, screenH)
 	local tx, ty;
 	local trackedEntity = self._trackedEntities[1];
 	assert(trackedEntity);
-	local ex, ey = trackedEntity:getPosition();
-	local angle = trackedEntity:getAngle();
+	local physicsBody = trackedEntity:getComponent(PhysicsBody);
+	local ex, ey = physicsBody:getPosition();
+	local angle = physicsBody:getAngle();
 	local vx, vy = math.cos(angle), math.sin(angle);
 	if math.abs(vx) <= epsilon then
 		tx = ex;
