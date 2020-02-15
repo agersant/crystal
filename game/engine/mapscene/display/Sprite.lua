@@ -1,4 +1,5 @@
 require("engine/utils/OOP");
+local Log = require("engine/dev/Log");
 local GFXConfig = require("engine/graphics/GFXConfig");
 local Drawable = require("engine/mapscene/display/Drawable");
 local MathUtils = require("engine/utils/MathUtils");
@@ -24,7 +25,10 @@ end
 
 Sprite.setAnimation = function(self, animationName, forceRestart)
 	local animation = self._sheet:getAnimation(animationName);
-	assert(animation);
+	if not animation then
+		Log:warning("Missing animation: " .. animationName);
+		return;
+	end
 	local isNewAnimation = self._animation ~= animation;
 	if forceRestart or isNewAnimation then
 		self._animation = animation;
