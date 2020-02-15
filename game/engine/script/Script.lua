@@ -15,6 +15,7 @@ local newThread = function(self, parentThread, script, options)
 
 	local thread = {
 		coroutine = threadCoroutine,
+		owner = self,
 		childThreads = {},
 		blockedBy = {},
 		endsOn = {},
@@ -66,7 +67,7 @@ local unblockThread = function(self, thread, signal, ...)
 	end
 	thread.blockedBy = {};
 	thread.isBlocked = false;
-	pumpThread(self, thread, signalData);
+	pumpThread(thread.owner, thread, signalData);
 end
 
 local endThreadOn = function(self, thread, signals)
@@ -89,7 +90,7 @@ local joinThreadOn = function(self, thread, threadsToJoin)
 		end
 	end
 	if not thread.isBlocked then
-		pumpThread(self, thread, {false});
+		pumpThread(thread.owner, thread, {false});
 	end
 end
 
@@ -122,10 +123,12 @@ endThread = function(self, thread, completedExecution)
 		end
 	end
 
-	for t in pairs(thread.joinedBy) do
-		pumpThread(self, t, {completedExecution});
-	end
+	local joinedByCopy = TableUtils.shallowCopy(thread.joinedBy);
 	thread.joinedBy = {};
+	for t in pairs(joinedByCopy) do
+		t.isBlocked = false;
+		pumpThread(t.owner, t, {completedExecution});
+	end
 end
 
 pumpThread = function(self, thread, resumeArgs)

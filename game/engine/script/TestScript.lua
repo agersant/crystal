@@ -342,6 +342,32 @@ tests[#tests].body = function()
 	assert(sentinel);
 end
 
+tests[#tests + 1] = {name = "Cross script join keeps execution context"};
+tests[#tests].body = function()
+	local t0;
+	local scriptA = Script:new(function(self)
+		t0 = self:thread(function(self)
+			self:waitFor("s0");
+		end);
+		self:waitFor("s1");
+	end);
+
+	local sentinel;
+	local scriptB = Script:new(function(self)
+		self:join(t0);
+		self:waitFor("s2");
+		sentinel = true;
+	end);
+
+	scriptA:update(0);
+	scriptB:update(0);
+	assert(sentinel == nil);
+	scriptA:signal("s0");
+	assert(sentinel == nil);
+	scriptB:signal("s2");
+	assert(sentinel);
+end
+
 tests[#tests + 1] = {name = "Keep child threads after main thread ends"};
 tests[#tests].body = function()
 	local a = 0;
