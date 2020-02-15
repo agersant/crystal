@@ -11,7 +11,7 @@ DamageIntent.init = function(self)
 	self._components = {};
 end
 
-DamageIntent.addComponent = function(self, component)
+DamageIntent.addComponent = function(self, component) -- TODO rename this to avoid confusion with ECS components
 	self._components[component] = true;
 end
 
