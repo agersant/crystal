@@ -1,16 +1,17 @@
 require("engine/utils/OOP");
-local MapScene = require("engine/mapscene/MapScene");
+local CombatData = require("arpg/combat/CombatData");
 local CombatSystem = require("arpg/combat/CombatSystem");
 local SkillSystem = require("arpg/combat/skill/SkillSystem");
 local Teams = require("arpg/combat/Teams");
-local TargetSelector = require("arpg/combat/ai/TargetSelector");
+local AnimationSelectionSystem = require("arpg/field/animation/AnimationSelectionSystem");
+local MovementControlsSystem = require("arpg/field/movement/MovementControlsSystem");
+local MapScene = require("engine/mapscene/MapScene");
 local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/Scene");
 local UIScene = require("engine/ui/UIScene");
 local TitleScreen = require("engine/ui/frontend/TitleScreen");
 local TableUtils = require("engine/utils/TableUtils");
 local InputListener = require("engine/mapscene/behavior/InputListener");
-local PlayerController = require("engine/mapscene/behavior/PlayerController");
 
 local Field = Class("Field", MapScene);
 
@@ -28,7 +29,6 @@ local spawnParty = function(self, x, y)
 		local assignedPlayer = partyMember:getAssignedPlayer();
 		if assignedPlayer then
 			entity:addComponent(InputListener:new(assignedPlayer));
-			entity:addComponent(PlayerController:new());
 		end
 		entity:setPosition(x, y);
 	end
@@ -51,6 +51,8 @@ end
 Field.addSystems = function(self)
 	Field.super.addSystems(self);
 	local ecs = self:getECS();
+	ecs:addSystem(AnimationSelectionSystem:new(ecs));
+	ecs:addSystem(MovementControlsSystem:new(ecs));
 	ecs:addSystem(SkillSystem:new(ecs));
 	ecs:addSystem(CombatSystem:new(ecs));
 end
@@ -61,7 +63,10 @@ Field.addEntityToParty = function(self, entity)
 	assert(not TableUtils.contains(self._partyEntities, entity));
 	table.insert(self._partyEntities, entity);
 	self._camera:addTrackedEntity(entity);
-	entity:setTeam(Teams.party);
+	local combatData = entity:getComponent(CombatData);
+	if combatData then
+		combatData:setTeam(Teams.party);
+	end
 end
 
 Field.removeEntityFromParty = function(self, entity)

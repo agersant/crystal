@@ -16,7 +16,8 @@ local stepTowards = function(self, targetX, targetY)
 			local x, y = self:getPosition();
 			local deltaX, deltaY = targetX - x, targetY - y;
 			local angle = math.atan2(deltaY, deltaX);
-			self:doAction(Actions.walk(angle));
+			-- TODO fix me
+			-- self:doAction(Actions.walk(angle));
 			return false;
 		else
 			self:setPosition(targetX, targetY);

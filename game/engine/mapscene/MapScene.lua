@@ -121,7 +121,7 @@ MapScene.addSystems = function(self)
 	-- After physics
 
 	-- Before scripts
-	ecs:addSystem(ControllerSystem:new(ecs));
+	ecs:addSystem(ActorSystem:new(ecs));
 	ecs:addSystem(SpriteSystem:new(ecs)); -- (also has some duringScripts and afterScripts logic)
 
 	-- During scripts
@@ -129,6 +129,8 @@ MapScene.addSystems = function(self)
 	ecs:addSystem(InputListenerSystem:new(ecs));
 
 	-- After scripts
+
+	-- Before draw
 	ecs:addSystem(DebugDrawSystem:new(ecs));
 
 	-- Draw
@@ -155,6 +157,8 @@ MapScene.update = function(self, dt)
 	self._ecs:runFramePortion("duringScripts", dt);
 
 	self._ecs:runFramePortion("afterScripts", dt);
+
+	self._ecs:runFramePortion("beforeDraw", dt);
 
 	self._camera:update(dt);
 end

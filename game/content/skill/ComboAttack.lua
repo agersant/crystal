@@ -11,6 +11,7 @@ local getComboSwingAction = function(swingCount)
 		if swingCount == 1 or swingCount == 3 then
 			self:thread(function()
 				self:tween(200, 0, 0.20, "inQuadratic", function(speed)
+					self:setMovementAngle(self:getAngle());
 					self:setSpeed(speed);
 				end);
 			end);
@@ -30,38 +31,35 @@ end
 local performCombo = function(self)
 	self:endOn("disrupted");
 	self._comboCounter = 0;
-	while self:isIdle() do
-		self:doAction(getComboSwingAction(self._comboCounter));
+	while self:isIdle() and self._comboCounter < 4 do
+		local swing = self:doAction(getComboSwingAction(self._comboCounter));
 		self._comboCounter = self._comboCounter + 1;
 		self._didInputNextMove = false;
 		local inputWatch = self:thread(function(self)
 			self:waitFor("+useSkill");
 			self._didInputNextMove = true;
 		end);
-		self:waitFor("idle");
-		if not self:isIdle() then
+		if not self:join(swing) or not self:isIdle() then
 			break
 		end
 		if not inputWatch:isDead() then
 			inputWatch:stop();
 		end
 		if not self._didInputNextMove then
-			Actions.idle(self);
 			break
 		end
 	end
 end
 
 local comboAttackScript = function(self)
-	self:thread(function(self)
-		while true do
-			self:waitFor("+useSkill");
-			local comboThread = self:thread(performCombo);
-			while not comboThread:isDead() do -- TODO implement self:join(thread)
-				self:waitFrame();
-			end
+	while true do
+		self:waitFor("+useSkill");
+		local comboThread = self:thread(performCombo);
+		local finished = self:join(comboThread);
+		if not finished then
+			self:stopAction();
 		end
-	end);
+	end
 end
 
 ComboAttack.init = function(self, skillSlot)

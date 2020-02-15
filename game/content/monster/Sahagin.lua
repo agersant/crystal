@@ -8,18 +8,19 @@ local Movement = require("engine/mapscene/behavior/ai/movement/Movement");
 local Entity = require("engine/ecs/Entity");
 local Assets = require("engine/resources/Assets");
 local Actions = require("engine/mapscene/Actions");
-local Controller = require("engine/mapscene/behavior/Controller");
+local Actor = require("engine/mapscene/behavior/Actor");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local Sprite = require("engine/mapscene/display/Sprite");
 local Collision = require("engine/mapscene/physics/Collision");
 local Locomotion = require("engine/mapscene/physics/Locomotion");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local Weakbox = require("engine/mapscene/physics/Weakbox");
+local Script = require("engine/script/Script");
 
 local Sahagin = Class("Sahagin", Entity);
-local SahaginController = Class("SahaginController", Controller);
 
 local reachAndAttack = function(self)
+	self:endOn("disrupted");
 	local entity = self:getEntity();
 	local targetSelector = TargetSelector:new(entity:getScene());
 	local target = targetSelector:getNearestEnemy(entity);
@@ -52,18 +53,25 @@ local reachAndAttack = function(self)
 	end
 end
 
-local controllerScript = function(self)
+local aiScript = function(self)
+
+	self:thread(function(self)
+		while true do
+			self:waitFor("disrupted");
+			self:stopAction();
+		end
+	end);
 
 	self:thread(function(self)
 		while true do
 			self:waitFor("receivedDamage");
-			self:stopAction();
-			self:doAction(function(self)
-				self:setSpeed(0);
-				self:setAnimation("knockback_" .. self:getDirection4());
-				self:wait(1);
-				Actions.idle(self);
-			end);
+			if self:isIdle() then
+				self:doAction(function(self)
+					self:setSpeed(0);
+					self:setDesiredAnimation("knockback_" .. self:getDirection4());
+					self:wait(1);
+				end);
+			end
 		end
 	end);
 
@@ -72,14 +80,8 @@ local controllerScript = function(self)
 			self:waitFor("idle");
 		end
 		local taskThread = self:thread(reachAndAttack);
-		while not taskThread:isDead() do -- TODO implement self:join(thread)
-			self:waitFrame();
-		end
+		self:join(taskThread);
 	end
-end
-
-SahaginController.init = function(self)
-	SahaginController.super.init(self, controllerScript);
 end
 
 -- PUBLIC API
@@ -96,7 +98,9 @@ Sahagin.init = function(self, scene)
 	self:addComponent(DamageHitbox:new());
 	self:addComponent(Weakbox:new());
 	self:addComponent(ScriptRunner:new());
-	self:addComponent(SahaginController:new(self));
+	self:addComponent(Actor:new());
+
+	self:addScript(Script:new(aiScript));
 end
 
 return Sahagin;

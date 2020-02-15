@@ -24,17 +24,6 @@ Actions.lookAt = function(target)
 	end
 end
 
-Actions.walk = function(angle)
-	return function(self)
-		self:setAngle(angle);
-		if self.setAnimation then
-			local animName = "walk_" .. self:getDirection4();
-			self:setAnimation(animName);
-		end
-		self:setSpeed(80); -- TODO hard coded movement speed
-	end
-end
-
 Actions.attack = function(self)
 	local entity = self:getEntity();
 	entity:setSpeed(0);

@@ -149,6 +149,10 @@ CombatData.getCurrentHealth = function(self)
 	return self._health:getValue();
 end
 
+CombatData.getMovementSpeed = function(self)
+	return self._movementSpeed:getValue();
+end
+
 CombatData.kill = function(self)
 	self._health:setValue(0);
 end
