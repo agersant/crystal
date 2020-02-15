@@ -15,14 +15,15 @@ DebugDrawSystem.init = function(self, ecs)
 	self:getECS():addQuery(self._query);
 end
 
-DebugDrawSystem.afterScripts = function(self, dt)
+DebugDrawSystem.beforeDraw = function(self, dt)
 	if not Features.debugDraw then
 		return;
 	end
 
 	for entity in pairs(self._query:getAddedEntities()) do
+		local physicsBody = entity:getComponent(PhysicsBody):getBody();
 		local debugDraw = self:getECS():spawn(Entity);
-		debugDraw:addComponent(DebugDraw:new(entity:getBody()));
+		debugDraw:addComponent(DebugDraw:new(physicsBody));
 		assert(not self._entityToDebugDraw[entity]);
 		self._entityToDebugDraw[entity] = debugDraw;
 	end
