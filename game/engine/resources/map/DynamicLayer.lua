@@ -1,10 +1,8 @@
 require("engine/utils/OOP");
 local MathUtils = require("engine/utils/MathUtils");
-local Tile = require("engine/mapscene/display/Tile");
+local TileEntity = require("engine/mapscene/display/TileEntity");
 
 local DynamicLayer = Class("DynamicLayer");
-
--- PUBLIC API
 
 DynamicLayer.init = function(self, map, layerData)
 	self._tileset = map:getTileset();
@@ -25,7 +23,7 @@ end
 
 DynamicLayer.spawnEntities = function(self, scene)
 	for i, tile in ipairs(self._tiles) do
-		Tile:new(scene, {tileset = self._tileset:getImage(), quad = tile.quad, x = tile.x, y = tile.y});
+		scene:spawn(TileEntity, self._tileset:getImage(), tile.quad, tile.x, tile.y);
 	end
 end
 

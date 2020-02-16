@@ -1,27 +1,26 @@
 require("engine/utils/OOP");
-local Entity = require("engine/ecs/Entity");
+local Drawable = require("engine/mapscene/display/Drawable");
 
-local Tile = Class("Tile", Entity);
+local Tile = Class("Tile", Drawable);
 
 -- PUBLIC API
 
--- TODO this isnt getting tested at all and probably broke
-Tile.init = function(self, scene, options)
-	Tile.super.init(self, scene);
-	local _, _, _, h = options.quad:getViewport();
-	self._tileset = options.tileset;
-	self._quad = options.quad;
-	self._x = options.x;
-	self._y = options.y;
-	self._z = self._y + h;
+Tile.init = function(self, tilesetImage, quad, x, y)
+	assert(tilesetImage);
+	assert(quad);
+	assert(x);
+	assert(y);
+	Tile.super.init(self);
+	local _, _, _, h = quad:getViewport();
+	self._tileset = tilesetImage;
+	self._quad = quad;
+	self._x = x;
+	self._y = y;
+	self._zOrder = self._y;
 end
 
 Tile.draw = function(self)
 	love.graphics.draw(self._tileset, self._quad, self._x, self._y);
-end
-
-Tile.getZ = function(self)
-	return self._z;
 end
 
 return Tile;
