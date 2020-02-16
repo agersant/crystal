@@ -15,16 +15,4 @@ Actions.knockback = function(angle)
 	end
 end
 
-Actions.death = function(self)
-	local entity = self:getEntity();
-	entity:setSpeed(0);
-	entity:setAnimation("death");
-	self:waitFor("animationEnd");
-	local scene = entity:getScene();
-	scene:checkLoseCondition();
-	while true do
-		self:wait(1);
-	end
-end
-
 return Actions;

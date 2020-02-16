@@ -9,7 +9,6 @@ local WalkAnimation = require("arpg/field/animation/WalkAnimation");
 local MovementAI = require("engine/mapscene/behavior/ai/movement/MovementAI");
 local Entity = require("engine/ecs/Entity");
 local Assets = require("engine/resources/Assets");
-local Actions = require("engine/mapscene/Actions");
 local Actor = require("engine/mapscene/behavior/Actor");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local Sprite = require("engine/mapscene/display/Sprite");
@@ -29,6 +28,7 @@ end
 
 local reachAndAttack = function(self)
 	self:endOn("disrupted");
+	self:endOn("died");
 
 	local entity = self:getEntity();
 	local targetSelector = TargetSelector:new(entity:getScene());
@@ -63,8 +63,21 @@ local reachAndAttack = function(self)
 	end
 end
 
-local aiScript = function(self)
+local ai = function(self)
+	while true do
+		while not self:isIdle() do
+			self:waitFor("idle");
+		end
+		if self:isDead() then
+			break
+		end
+		local taskThread = self:thread(reachAndAttack);
+		self:join(taskThread);
+		self:waitFrame();
+	end
+end
 
+local hitReactions = function(self)
 	self:thread(function(self)
 		while true do
 			self:waitFor("disrupted");
@@ -85,14 +98,18 @@ local aiScript = function(self)
 		end
 	end);
 
-	while true do
-		while not self:isIdle() do
-			self:waitFor("idle");
+	self:thread(function(self)
+		while true do
+			self:waitFor("died");
+			self:stopAction();
+			self:doAction(function(self)
+				self:setAnimation("smashed");
+				self:wait(2);
+				self:despawn();
+				self:waitFrame();
+			end);
 		end
-		local taskThread = self:thread(reachAndAttack);
-		self:join(taskThread);
-		self:waitFrame();
-	end
+	end);
 end
 
 -- PUBLIC API
@@ -114,7 +131,8 @@ Sahagin.init = function(self, scene)
 	self:addComponent(IdleAnimation:new("idle"));
 	self:addComponent(WalkAnimation:new("walk"));
 
-	self:addScript(Script:new(aiScript));
+	self:addScript(Script:new(ai));
+	self:addScript(Script:new(hitReactions));
 end
 
 return Sahagin;
