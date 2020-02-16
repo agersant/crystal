@@ -13,7 +13,7 @@ Nova Luzia
 Decaying canal city. Lots of bridges, overhangs above water and tall structures (features stretched vertically) - partially overgrown.
 
 Khel Zet, the Toad Kingdom
-Swamp land, mangrove forest. Sits on top of the ruins of the city of Luzia, inhabited by imbecile toads.
+The swamp land and mangrove forest sitting above the ruins of the city of Luzia, inhabited by imbecile toads.
 
 PLACE3
 
