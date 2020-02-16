@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local Teams = require("engine/combat/Teams");
 local Actions = require("engine/mapscene/Actions");
 local Script = require("engine/script/Script");
 local HUD = require("engine/ui/hud/HUD");
@@ -27,17 +26,6 @@ local logic = function(self)
 			end
 		end
 	end);
-
-	while true do
-		self:waitFor("death");
-		local controller = self._entity:getController();
-		if controller:isInstanceOf(InputDrivenController) then -- TODO
-			controller:disable();
-		end
-		self:waitFor("idle");
-		controller:stopAction();
-		controller:doAction(Actions.death);
-	end
 
 end
 
