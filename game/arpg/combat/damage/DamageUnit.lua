@@ -12,7 +12,7 @@ DamageUnit.init = function(self, flatAmount, damageType, element)
 	self._element = element or Elements.UNASPECTED;
 	self._flatAmount = flatAmount or 0;
 	self._scalingRatio = 0;
-	self._scalingSource = DamageScalingSources.ATTACKER_ATTACK;
+	self._scalingSource = DamageScalingSources.ATTACKER_OFFENSE_PHYSICAL;
 end
 
 DamageUnit.getDamageType = function(self)

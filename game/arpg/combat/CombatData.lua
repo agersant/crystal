@@ -70,7 +70,7 @@ CombatData.init = function(self)
 
 	self._stats = {};
 
-	self._health = Stat:new(50, 0, nil);
+	self._health = Stat:new(100, 0, nil);
 	self._movementSpeed = Stat:new(100, 1, nil);
 	self._stats[Stats.HEALTH] = self._health;
 	self._stats[Stats.MOVEMENT_SPEED] = self._movementSpeed;
@@ -78,8 +78,8 @@ CombatData.init = function(self)
 	self._offenses = {};
 	self._defenses = {};
 	for name, damageType in pairs(DamageTypes) do
-		self._offenses[damageType] = Stat:new(10, 0, nil);
-		self._defenses[damageType] = Stat:new(10, 0, nil);
+		self._offenses[damageType] = Stat:new(0, 0, nil);
+		self._defenses[damageType] = Stat:new(0, 0, nil);
 		self._stats[Stats["OFFENSE_" .. name]] = self._offenses[damageType];
 		self._stats[Stats["DEFENSE_" .. name]] = self._defenses[damageType];
 	end
@@ -147,6 +147,12 @@ CombatData.receiveDamage = function(self, damage)
 		self:getEntity():createEvent(DeathEvent);
 	end
 	return effectiveDamage;
+end
+
+CombatData.getStat = function(self, stat)
+	local outputStat = self._stats[stat];
+	assert(outputStat)
+	return outputStat;
 end
 
 CombatData.getCurrentHealth = function(self)
