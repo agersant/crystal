@@ -101,6 +101,30 @@ tests[#tests].body = function()
 	assert(activated);
 end
 
+tests[#tests + 1] = {name = "Prevent duplicate components"};
+tests[#tests].body = function()
+	Class:resetIndex();
+
+	local ecs = ECS:new();
+
+	local a = ecs:spawn(Entity);
+
+	local Snoot = Class("Snoot", Component);
+	a:addComponent(Snoot:new());
+
+	local success = pcall(function()
+		a:addComponent(Snoot:new());
+	end);
+	assert(not success);
+
+	ecs:update();
+
+	local success = pcall(function()
+		a:addComponent(Snoot:new());
+	end);
+	assert(not success);
+end
+
 tests[#tests + 1] = {name = "Get component"};
 tests[#tests].body = function()
 	Class:resetIndex();

@@ -226,11 +226,11 @@ ECS.despawn = function(self, entity)
 	end
 end
 
--- TODO error on duplicate class
 ECS.addComponent = function(self, entity, component)
 	assert(component);
 	assert(component:isInstanceOf(Component));
 	assert(not component:getEntity());
+	assert(not entity:getComponent(component:getClass()));
 	component:setEntity(entity);
 	local nursery = self._componentNursery[entity];
 	if not nursery then
@@ -324,7 +324,7 @@ ECS.getComponent = function(self, entity, class)
 				return component;
 			end
 		end
-	elseif self._entityNursery[entity] then
+	elseif self._componentNursery[entity] then
 		return self._componentNursery[entity][class];
 	end
 end
