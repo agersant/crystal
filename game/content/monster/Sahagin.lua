@@ -51,7 +51,7 @@ local reachAndAttack = function(self)
 	self:lookAt(target:getPosition());
 
 	local damageIntent = DamageIntent:new();
-	damageIntent:addComponent(DamageComponent:new(1));
+	damageIntent:addComponent(DamageComponent:new(10));
 	self:setDamageIntent(damageIntent);
 
 	if not self:isIdle() then
