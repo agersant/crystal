@@ -46,9 +46,9 @@ local reachAndAttack = function(self)
 		return;
 	end
 
-	Actions.lookAt(target)(self);
-	self:wait(.2);
-	Actions.lookAt(target)(self);
+	self:lookAt(target:getPosition());
+	self:wait(0.2);
+	self:lookAt(target:getPosition());
 
 	local damageIntent = DamageIntent:new();
 	damageIntent:addComponent(DamageComponent:new(1));

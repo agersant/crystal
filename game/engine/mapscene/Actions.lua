@@ -3,19 +3,6 @@ local MathUtils = require("engine/utils/MathUtils");
 
 local Actions = Class("Actions");
 
--- TODO get rid of all this
-
-Actions.lookAt = function(target)
-	return function(self)
-		local entity = self:getEntity();
-		local x, y = entity:getPosition();
-		local targetX, targetY = target:getPosition();
-		local deltaX, deltaY = targetX - x, targetY - y;
-		local angle = math.atan2(deltaY, deltaX);
-		entity:setAngle(angle);
-	end
-end
-
 Actions.knockback = function(angle)
 	return function(self)
 		local entity = self:getEntity();

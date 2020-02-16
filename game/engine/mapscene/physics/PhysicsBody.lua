@@ -44,6 +44,13 @@ PhysicsBody.setAngle = function(self, angle)
 	self._angle = angle;
 end
 
+PhysicsBody.lookAt = function(self, targetX, targetY)
+	local x, y = self:getPosition();
+	local deltaX, deltaY = targetX - x, targetY - y;
+	local angle = math.atan2(deltaY, deltaX);
+	self:setAngle(angle);
+end
+
 PhysicsBody.setDirection8 = function(self, xDir8, yDir8)
 	assert(xDir8 == 0 or xDir8 == 1 or xDir8 == -1);
 	assert(yDir8 == 0 or yDir8 == 1 or yDir8 == -1);
