@@ -29,6 +29,11 @@ Path.addVertex = function(self, x, y)
 	table.insert(self._vertices, y);
 end
 
+Path.getVertex = function(self, index)
+	local i = 1 + (index - 1) * 2;
+	return self._vertices[i], self._vertices[i + 1];
+end
+
 Path.vertices = function(self)
 	return vertexIter, self, 0;
 end
