@@ -1,7 +1,7 @@
 require("engine/utils/OOP");
 local DebugFlags = require("engine/dev/DebugFlags");
 local Colors = require("engine/resources/Colors");
-local CollisionFilters = require("engine/mapscene/CollisionFilters");
+local CollisionFilters = require("engine/mapscene/physics/CollisionFilters");
 local Drawable = require("engine/mapscene/display/Drawable");
 
 local DebugDraw = Class("DebugDraw", Drawable);
