@@ -16,7 +16,9 @@ end
 HitboxSystem.beforePhysics = function(self, dt)
 	for entity in pairs(self._query:getRemovedEntities()) do
 		local hitbox = entity:getComponent(Hitbox);
-		hitbox:setShape(nil);
+		if hitbox then
+			hitbox:setShape(nil);
+		end
 	end
 
 	local entities = self._query:getEntities();

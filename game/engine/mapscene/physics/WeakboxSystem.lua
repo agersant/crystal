@@ -16,7 +16,9 @@ end
 WeakboxSystem.beforePhysics = function(self, dt)
 	for entity in pairs(self._query:getRemovedEntities()) do
 		local weakbox = entity:getComponent(Weakbox);
-		weakbox:setShape(nil);
+		if weakbox then
+			weakbox:setShape(nil);
+		end
 	end
 
 	local entities = self._query:getEntities();

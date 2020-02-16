@@ -22,7 +22,9 @@ ActorSystem.beforeScripts = function(self, dt)
 	for entity in pairs(self._withScriptRunner:getRemovedEntities()) do
 		local actor = entity:getComponent(Actor);
 		local scriptRunner = entity:getComponent(ScriptRunner);
-		scriptRunner:removeScript(actor:getScript());
+		if scriptRunner and actor then
+			scriptRunner:removeScript(actor:getScript());
+		end
 	end
 end
 

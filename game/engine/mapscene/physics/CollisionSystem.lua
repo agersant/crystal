@@ -27,8 +27,10 @@ CollisionSystem.beforePhysics = function(self, dt)
 
 	for entity in pairs(self._query:getRemovedEntities()) do
 		local collision = entity:getComponent(Collision);
-		collision:getFixture():destroy();
-		collision:setFixture(nil);
+		if collision then
+			collision:getFixture():destroy();
+			collision:setFixture(nil);
+		end
 	end
 end
 

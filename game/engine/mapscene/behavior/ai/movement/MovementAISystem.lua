@@ -54,7 +54,9 @@ MovementAISystem.beforeScripts = function(self, dt)
 	for entity in pairs(self._withScriptRunner:getRemovedEntities()) do
 		local movementAI = entity:getComponent(MovementAI);
 		local scriptRunner = entity:getComponent(ScriptRunner);
-		scriptRunner:removeScript(movementAI:getScript());
+		if scriptRunner and movementAI then
+			scriptRunner:removeScript(movementAI:getScript());
+		end
 	end
 
 	local entities = self._query:getEntities();
