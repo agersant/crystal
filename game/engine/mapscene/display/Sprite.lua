@@ -1,6 +1,7 @@
 require("engine/utils/OOP");
 local Log = require("engine/dev/Log");
 local GFXConfig = require("engine/graphics/GFXConfig");
+local AnimationEndEvent = require("engine/mapscene/display/AnimationEndEvent");
 local Drawable = require("engine/mapscene/display/Drawable");
 local MathUtils = require("engine/utils/MathUtils");
 
@@ -15,7 +16,6 @@ Sprite.init = function(self, sheet)
 	self._time = 0;
 	self._x = 0;
 	self._y = 0;
-	self._justCompletedAnimation = false; -- TODO replace with events
 end
 
 Sprite.setSpritePosition = function(self, x, y)
@@ -33,7 +33,6 @@ Sprite.setAnimation = function(self, animationName, forceRestart)
 	if forceRestart or isNewAnimation then
 		self._animation = animation;
 		self._time = 0;
-		self._justCompletedAnimation = false;
 		self._animationFrame = self._animation:getFrameAtTime(self._time);
 		assert(self._animationFrame);
 		self._sheetFrame = self._animationFrame:getSheetFrame();
@@ -48,7 +47,9 @@ Sprite.update = function(self, dt)
 	assert(self._animationFrame);
 	self._sheetFrame = self._animationFrame:getSheetFrame();
 	assert(self._sheetFrame);
-	self._justCompletedAnimation = not animationWasOver and self:isAnimationOver();
+	if not animationWasOver and self:isAnimationOver() then
+		self:getEntity():createEvent(AnimationEndEvent);
+	end
 end
 
 Sprite.draw = function(self)
@@ -63,10 +64,6 @@ end
 
 Sprite.isAnimationOver = function(self)
 	return self._time >= self._animation:getDuration();
-end
-
-Sprite.justCompletedAnimation = function(self)
-	return self._justCompletedAnimation;
 end
 
 Sprite.getTagShape = function(self, tagName)

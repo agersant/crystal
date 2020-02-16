@@ -2,6 +2,7 @@ require("engine/utils/OOP");
 local System = require("engine/ecs/System");
 local AllComponents = require("engine/ecs/query/AllComponents");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
+local AnimationEndEvent = require("engine/mapscene/display/AnimationEndEvent");
 local Sprite = require("engine/mapscene/display/Sprite");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 
@@ -10,9 +11,7 @@ local SpriteSystem = Class("SpriteSystem", System);
 SpriteSystem.init = function(self, ecs)
 	SpriteSystem.super.init(self, ecs);
 	self._bodyQuery = AllComponents:new({Sprite, PhysicsBody});
-	self._scriptQuery = AllComponents:new({Sprite, ScriptRunner});
 	self:getECS():addQuery(self._bodyQuery);
-	self:getECS():addQuery(self._scriptQuery);
 end
 
 SpriteSystem.beforeScripts = function(self, dt)
@@ -24,11 +23,10 @@ SpriteSystem.beforeScripts = function(self, dt)
 end
 
 SpriteSystem.duringScripts = function(self, dt)
-	local entities = self._scriptQuery:getEntities();
-	for entity in pairs(entities) do
-		local sprite = entity:getComponent(Sprite);
-		local scriptRunner = entity:getComponent(ScriptRunner);
-		if sprite:justCompletedAnimation() then
+	local animationEndEvents = self:getECS():getEvents(AnimationEndEvent);
+	for _, event in ipairs(animationEndEvents) do
+		local scriptRunner = event:getEntity():getComponent(ScriptRunner);
+		if scriptRunner then
 			scriptRunner:signalAllScripts("animationEnd");
 		end
 	end
