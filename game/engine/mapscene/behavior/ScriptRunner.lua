@@ -1,6 +1,7 @@
 require("engine/utils/OOP");
 local TableUtils = require("engine/utils/TableUtils");
 local Component = require("engine/ecs/Component");
+local Script = require("engine/script/Script");
 local Alias = require("engine/utils/Alias");
 
 local ScriptRunner = Class("ScriptRunner", Component);
@@ -14,6 +15,7 @@ ScriptRunner.init = function(self)
 end
 
 ScriptRunner.addScript = function(self, script)
+	assert(script:isInstanceOf(Script));
 	Alias:add(script, self:getEntity());
 	table.insert(self._newScripts, script);
 end
