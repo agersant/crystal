@@ -3,6 +3,7 @@ local Stat = require("arpg/combat/Stat");
 local Stats = require("arpg/combat/Stats");
 local Damage = require("arpg/combat/damage/Damage");
 local DamageEvent = require("arpg/combat/damage/DamageEvent");
+local DeathEvent = require("arpg/combat/damage/DeathEvent");
 local DamageIntent = require("arpg/combat/damage/DamageIntent");
 local DamageScalingSources = require("arpg/combat/damage/DamageScalingSources");
 local DamageTypes = require("arpg/combat/damage/DamageTypes");
@@ -142,6 +143,9 @@ CombatData.receiveDamage = function(self, damage)
 	local effectiveDamage = mitigateDamage(self, damage);
 	self._health:substract(effectiveDamage:getTotal());
 	self:getEntity():createEvent(DamageEvent, effectiveDamage);
+	if self:isDead() then
+		self:getEntity():createEvent(DeathEvent);
+	end
 	return effectiveDamage;
 end
 
