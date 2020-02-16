@@ -21,8 +21,7 @@ MovementAISystem.init = function(self, ecs, map)
 	self:getECS():addQuery(self._withScriptRunner);
 end
 
-local followPath = function(self, locomotion, physicsBody, movementAI)
-	local epsilon = 2; -- TODO hard coded
+local followPath = function(self, locomotion, physicsBody, movementAI, epsilon)
 	while true do
 		local x, y = physicsBody:getPosition();
 		local waypointX, waypointY = movementAI:getCurrentWaypoint();
@@ -31,8 +30,8 @@ local followPath = function(self, locomotion, physicsBody, movementAI)
 			movementAI:endNavigation();
 			return;
 		end
-		local distToTarget2 = MathUtils.distance2(x, y, waypointX, waypointY);
-		if distToTarget2 >= epsilon * epsilon then
+		local distToWaypoint2 = MathUtils.distance2(x, y, waypointX, waypointY);
+		if distToWaypoint2 >= epsilon * epsilon then
 			local deltaX, deltaY = waypointX - x, waypointY - y;
 			local angle = math.atan2(deltaY, deltaX);
 			locomotion:setMovementAngle(angle);
@@ -64,6 +63,7 @@ MovementAISystem.beforeScripts = function(self, dt)
 		local movementAI = entity:getComponent(MovementAI);
 		local physicsBody = entity:getComponent(PhysicsBody);
 		local locomotion = entity:getComponent(Locomotion);
+		local epsilon = locomotion:getSpeed() * dt;
 
 		local goal = movementAI:getGoal();
 		if goal then
@@ -75,7 +75,7 @@ MovementAISystem.beforeScripts = function(self, dt)
 					movementAI:setPath(newPath);
 				end
 				movementAI:setPathAge(movementAI:getPathAge() + dt);
-				followPath(self, locomotion, physicsBody, movementAI);
+				followPath(self, locomotion, physicsBody, movementAI, epsilon);
 			else
 				locomotion:setMovementAngle(nil);
 				movementAI:endNavigation();
