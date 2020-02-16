@@ -15,10 +15,20 @@ local Collision = require("engine/mapscene/physics/Collision");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local Weakbox = require("engine/mapscene/physics/Weakbox");
 local Entity = require("engine/ecs/Entity");
+local Script = require("engine/script/Script");
 
 local Warrior = Class("Warrior", Entity);
 
--- PUBLIC API
+local hitReactions = function(self)
+	while true do
+		self:waitFor("died");
+		self:stopAction();
+		self:doAction(function(self)
+			self:setAnimation("death");
+			self:waitFor("forever"); -- TODO this looks bad
+		end);
+	end
+end
 
 Warrior.init = function(self, scene)
 	Warrior.super.init(self, scene);
@@ -39,6 +49,8 @@ Warrior.init = function(self, scene)
 	self:addComponent(MovementControls:new());
 	self:addComponent(ComboAttack:new(1));
 	self:addComponent(Dash:new(2));
+
+	self:addScript(Script:new(hitReactions));
 
 	-- TODO reimplement knockback
 end
