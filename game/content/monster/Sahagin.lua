@@ -32,9 +32,7 @@ local reachAndAttack = function(self)
 	self:endOn("disrupted");
 	self:endOn("died");
 
-	local entity = self:getEntity();
-	local targetSelector = TargetSelector:new(entity:getScene());
-	local target = targetSelector:getNearestEnemy(entity);
+	local target = self:getNearestEnemy();
 	if not target then
 		self:waitFrame();
 		return;
@@ -119,6 +117,7 @@ Sahagin.init = function(self, scene)
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	self:addComponent(Locomotion:new());
 	self:addComponent(MovementAI:new());
+	self:addComponent(TargetSelector:new());
 	self:addComponent(Collision:new(4));
 	self:addComponent(CombatData:new());
 	self:addComponent(DamageIntent:new());

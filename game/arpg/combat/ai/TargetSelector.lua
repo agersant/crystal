@@ -1,21 +1,23 @@
 require("engine/utils/OOP");
 local CombatData = require("arpg/combat/CombatData");
 local Teams = require("arpg/combat/Teams");
+local Component = require("engine/ecs/Component");
+local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 
-local TargetSelector = Class("TargetSelector");
+local TargetSelector = Class("TargetSelector", Component);
 
--- TODO make this a component
+TargetSelector.init = function(self)
+	TargetSelector.super.init(self);
+end
 
--- IMPLEMENTATION
-
-TargetSelector.init = function(self, scene)
-	assert(scene);
-	self._targets = scene:getECS():getAllEntitiesWith(CombatData);
+local getAllPossibleTargets = function(self)
+	local ecs = self:getEntity():getECS();
+	return ecs:getAllEntitiesWith(CombatData);
 end
 
 local passesFilters = function(self, filters, target)
 	for _, filter in ipairs(filters) do
-		if not filter(target) then
+		if not filter(self, target) then
 			return false;
 		end
 	end
@@ -24,7 +26,7 @@ end
 
 local getAll = function(self, filters)
 	local out = {};
-	for target in pairs(self._targets) do
+	for target in pairs(getAllPossibleTargets(self)) do
 		if passesFilters(self, filters, target) then
 			table.insert(out, target);
 		end
@@ -35,9 +37,9 @@ end
 local getFittest = function(self, filters, rank)
 	local bestScore = nil;
 	local bestTarget = nil;
-	for target in pairs(self._targets) do
+	for target in pairs(getAllPossibleTargets(self)) do
 		if passesFilters(self, filters, target) then
-			local score = rank(target);
+			local score = rank(self, target);
 			if not bestScore or score > bestScore then
 				bestScore = score;
 				bestTarget = target;
@@ -47,50 +49,48 @@ local getFittest = function(self, filters, rank)
 	return bestTarget;
 end
 
-local isAllyOf = function(entity)
-	return function(target)
-		return Teams:areAllies(entity:getTeam(), target:getTeam());
+local isAllyOf = function(self, target)
+	return Teams:areAllies(self:getEntity():getTeam(), target:getTeam());
+end
+
+local isEnemyOf = function(self, target)
+	return Teams:areEnemies(self:getEntity():getTeam(), target:getTeam());
+end
+
+local isNotSelf = function(self, target)
+	return self:getEntity() ~= target;
+end
+
+local rankByDistance = function(self, target)
+	local physicsBody = self:getEntity():getComponent(PhysicsBody);
+	if not physicsBody then
+		return -math.huge;
 	end
+	return -physicsBody:distance2ToEntity(target);
 end
 
-local isEnemyOf = function(entity)
-	return function(target)
-		return Teams:areEnemies(entity:getTeam(), target:getTeam());
+local isAlive = function(self, target)
+	local combatData = target:getComponent(CombatData);
+	if not combatData then
+		return false;
 	end
+	return not combatData:isDead();
 end
 
-local isNot = function(entity)
-	return function(target)
-		return target ~= entity;
-	end
+TargetSelector.getAllies = function(self)
+	return getAll(self, {isAlive, isAllyOf, isNotSelf});
 end
 
-local rankByDistanceTo = function(entity)
-	return function(target)
-		return -entity:distance2ToEntity(target); -- TODO this assumes targets and us have a physics body
-	end
+TargetSelector.getEnemies = function(self)
+	return getAll(self, {isAlive, isEnemyOf, isNotSelf});
 end
 
-local isAlive = function(entity)
-	return not entity:isDead();
+TargetSelector.getNearestEnemy = function(self)
+	return getFittest(self, {isAlive, isEnemyOf, isNotSelf}, rankByDistance);
 end
 
--- PUBLIC API
-
-TargetSelector.getAllies = function(self, entity)
-	return getAll(self, {isAlive, isAllyOf(entity), isNot(entity)});
-end
-
-TargetSelector.getEnemies = function(self, entity)
-	return getAll(self, {isAlive, isEnemyOf(entity), isNot(entity)});
-end
-
-TargetSelector.getNearestEnemy = function(self, entity)
-	return getFittest(self, {isAlive, isEnemyOf(entity), isNot(entity)}, rankByDistanceTo(entity));
-end
-
-TargetSelector.getNearestAlly = function(self, entity)
-	return getFittest(self, {isAlive, isAllyOf(entity), isNot(entity)}, rankByDistanceTo(entity));
+TargetSelector.getNearestAlly = function(self)
+	return getFittest(self, {isAlive, isAllyOf, isNotSelf}, rankByDistance);
 end
 
 return TargetSelector;

@@ -19,6 +19,7 @@ tests[#tests].body = function()
 	for _, entity in ipairs({me, friend, enemyA, enemyB}) do
 		entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 		entity:addComponent(CombatData:new());
+		entity:addComponent(TargetSelector:new());
 	end
 
 	me:setTeam(Teams.party);
@@ -32,8 +33,7 @@ tests[#tests].body = function()
 	enemyB:setPosition(15, 5);
 
 	scene:update(0);
-	local selector = TargetSelector:new(scene);
-	local nearest = selector:getNearestEnemy(me);
+	local nearest = me:getNearestEnemy();
 	assert(nearest == enemyB);
 end
 
@@ -49,6 +49,7 @@ tests[#tests].body = function()
 	for _, entity in ipairs({me, friendA, friendB, enemy}) do
 		entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 		entity:addComponent(CombatData:new());
+		entity:addComponent(TargetSelector:new());
 	end
 
 	me:setTeam(Teams.wild);
@@ -62,12 +63,11 @@ tests[#tests].body = function()
 	enemy:setPosition(15, 5);
 
 	scene:update(0);
-	local selector = TargetSelector:new(scene);
-	local nearest = selector:getNearestAlly(me);
+	local nearest = me:getNearestAlly();
 	assert(nearest == friendB);
 
 	friendB:kill();
-	local nearest = selector:getNearestAlly(me);
+	local nearest = me:getNearestAlly();
 	assert(nearest == friendA);
 end
 
