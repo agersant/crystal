@@ -52,9 +52,9 @@ local declareClass = function(self, name, baseClass)
 
 	local objMetaTable = {};
 	objMetaTable.__index = class;
-	-- objMetaTable.__tostring = function(obj)
-	-- 	return "Instance of class: " .. obj._class._name;
-	-- end
+	objMetaTable.__tostring = function(obj)
+		return "Instance of class: " .. obj._class._name;
+	end
 
 	class._class = class;
 	class._name = name;
