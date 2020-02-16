@@ -105,15 +105,15 @@ end
 
 CombatData.computeDamage = function(self, intent, target)
 	local damage = Damage:new();
-	for component in pairs(intent:getComponents()) do
-		local damageType = component:getDamageType();
-		local element = component:getElement();
-		local scalingRatio = component:getScalingRatio();
-		local amount = component:getFlatAmount();
+	for unit in pairs(intent:getUnits()) do
+		local damageType = unit:getDamageType();
+		local element = unit:getElement();
+		local scalingRatio = unit:getScalingRatio();
+		local amount = unit:getFlatAmount();
 
 		-- Apply scaling
 		if scalingRatio ~= 0 then
-			local scalingSource = component:getScalingSource();
+			local scalingSource = unit:getScalingSource();
 			local scalingSourceAmount = computeScalingSourceAmount(self, target, scalingSource);
 			amount = amount + scalingRatio * scalingSourceAmount;
 		end

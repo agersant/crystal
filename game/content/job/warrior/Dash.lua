@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local DamageComponent = require("arpg/combat/damage/DamageComponent");
+local DamageUnit = require("arpg/combat/damage/DamageUnit");
 local DamageIntent = require("arpg/combat/damage/DamageIntent");
 local Skill = require("arpg/combat/skill/Skill");
 
@@ -16,7 +16,7 @@ local action = function(self)
 	self._movementToken = self:disableMovementControls();
 
 	local damageIntent = DamageIntent:new();
-	damageIntent:addComponent(DamageComponent:new(10));
+	damageIntent:setUnits({DamageUnit:new(10)});
 	self:setDamageIntent(damageIntent);
 
 	self:setAnimation("dash_" .. self:getDirection4());

@@ -3,20 +3,25 @@ local TableUtils = require("engine/utils/TableUtils");
 
 local DamageIntent = Class("DamageIntent");
 
--- TODO make this a component and remove DamageHitbox
+-- TODO make this a unit and remove DamageHitbox
 
 -- PUBLIC API
 
 DamageIntent.init = function(self)
-	self._components = {};
+	self._units = {};
 end
 
-DamageIntent.addComponent = function(self, component) -- TODO rename this to avoid confusion with ECS components
-	self._components[component] = true;
+DamageIntent.setUnits = function(self, units)
+	assert(type(units) == "table");
+	self._units = units;
 end
 
-DamageIntent.getComponents = function(self)
-	return TableUtils.shallowCopy(self._components);
+DamageIntent.getUnits = function(self)
+	local units = {};
+	for _, u in ipairs(self._units) do
+		units[u] = true;
+	end
+	return units;
 end
 
 return DamageIntent;

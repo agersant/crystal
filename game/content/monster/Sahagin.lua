@@ -1,7 +1,7 @@
 require("engine/utils/OOP");
 local TargetSelector = require("arpg/combat/ai/TargetSelector");
 local CombatData = require("arpg/combat/CombatData");
-local DamageComponent = require("arpg/combat/damage/DamageComponent");
+local DamageUnit = require("arpg/combat/damage/DamageUnit");
 local DamageHitbox = require("arpg/combat/damage/DamageHitbox");
 local DamageIntent = require("arpg/combat/damage/DamageIntent");
 local IdleAnimation = require("arpg/field/animation/IdleAnimation");
@@ -51,7 +51,7 @@ local reachAndAttack = function(self)
 	self:lookAt(target:getPosition());
 
 	local damageIntent = DamageIntent:new();
-	damageIntent:addComponent(DamageComponent:new(10));
+	damageIntent:setUnits({DamageUnit:new(10)});
 	self:setDamageIntent(damageIntent);
 
 	if not self:isIdle() then

@@ -1,4 +1,4 @@
-local DamageComponent = require("arpg/combat/damage/DamageComponent");
+local DamageUnit = require("arpg/combat/damage/DamageUnit");
 local DamageIntent = require("arpg/combat/damage/DamageIntent");
 local CombatData = require("arpg/combat/CombatData");
 local Entity = require("engine/ecs/Entity");
@@ -31,7 +31,7 @@ tests[#tests].body = function()
 	local victimHealth = victim:getCurrentHealth();
 
 	local intent = DamageIntent:new();
-	intent:addComponent(DamageComponent:new(10));
+	intent:setUnits({DamageUnit:new(10)});
 	attacker:inflictDamage(intent, victim:getComponent(CombatData));
 	assert(attacker:getCurrentHealth() == attackerHealth);
 	assert(victim:getCurrentHealth() < victimHealth);

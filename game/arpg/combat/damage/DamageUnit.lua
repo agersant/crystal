@@ -3,11 +3,11 @@ local DamageTypes = require("arpg/combat/damage/DamageTypes");
 local Elements = require("arpg/combat/damage/Elements");
 local DamageScalingSources = require("arpg/combat/damage/DamageScalingSources");
 
-local DamageComponent = Class("DamageComponent");
+local DamageUnit = Class("DamageUnit");
 
 -- PUBLIC API
 
-DamageComponent.init = function(self, flatAmount, damageType, element)
+DamageUnit.init = function(self, flatAmount, damageType, element)
 	self._damageType = damageType or DamageTypes.PHYSICAL;
 	self._element = element or Elements.UNASPECTED;
 	self._flatAmount = flatAmount or 0;
@@ -15,35 +15,35 @@ DamageComponent.init = function(self, flatAmount, damageType, element)
 	self._scalingSource = DamageScalingSources.ATTACKER_ATTACK;
 end
 
-DamageComponent.getDamageType = function(self)
+DamageUnit.getDamageType = function(self)
 	return self._damageType;
 end
 
-DamageComponent.getElement = function(self)
+DamageUnit.getElement = function(self)
 	return self._element;
 end
 
-DamageComponent.getFlatAmount = function(self, amount)
+DamageUnit.getFlatAmount = function(self, amount)
 	return self._flatAmount;
 end
 
-DamageComponent.setFlatAmount = function(self, amount)
+DamageUnit.setFlatAmount = function(self, amount)
 	self._flatAmount = amount;
 end
 
-DamageComponent.getScalingRatio = function(self)
+DamageUnit.getScalingRatio = function(self)
 	return self._scalingRatio;
 end
 
-DamageComponent.getScalingSource = function(self)
+DamageUnit.getScalingSource = function(self)
 	return self._scalingSource;
 end
 
-DamageComponent.setScalingAmount = function(self, ratio, scalingSource)
+DamageUnit.setScalingAmount = function(self, ratio, scalingSource)
 	assert(ratio);
 	assert(scalingSource);
 	self._scalingRatio = ratio;
 	self._scalingSource = scalingSource;
 end
 
-return DamageComponent;
+return DamageUnit;

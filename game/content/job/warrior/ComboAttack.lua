@@ -1,8 +1,7 @@
 require("engine/utils/OOP");
 local DamageIntent = require("arpg/combat/damage/DamageIntent");
-local DamageComponent = require("arpg/combat/damage/DamageComponent");
+local DamageUnit = require("arpg/combat/damage/DamageUnit");
 local Skill = require("arpg/combat/skill/Skill");
-local Actions = require("engine/mapscene/Actions");
 
 local ComboAttack = Class("ComboAttack", Skill);
 
@@ -20,7 +19,7 @@ local getComboSwingAction = function(swingCount)
 		end
 
 		local damageIntent = DamageIntent:new();
-		damageIntent:addComponent(DamageComponent:new(1));
+		damageIntent:setUnits({DamageUnit:new(1)});
 		self:setDamageIntent(damageIntent);
 
 		self:setAnimation("attack_" .. self:getDirection4() .. "_" .. swingCount, true);
