@@ -1,6 +1,7 @@
 require("engine/utils/OOP");
 local CombatData = require("arpg/combat/CombatData");
 local DamageEvent = require("arpg/combat/damage/DamageEvent");
+local DeathEvent = require("arpg/combat/damage/DeathEvent");
 local HitEvent = require("arpg/combat/HitEvent");
 local Teams = require("arpg/combat/Teams");
 local System = require("engine/ecs/System");
@@ -55,6 +56,14 @@ CombatSystem.duringScripts = function(self, dt)
 			assert(damage);
 			victim:signalAllScripts("disrupted");
 			victim:signalAllScripts("receivedDamage", damage);
+		end
+	end
+
+	local deathEvents = self:getECS():getEvents(DeathEvent);
+	for _, deathEvent in ipairs(deathEvents) do
+		local victim = deathEvent:getEntity();
+		if self._scriptRunnerQuery:contains(victim) then
+			victim:signalAllScripts("died");
 		end
 	end
 end
