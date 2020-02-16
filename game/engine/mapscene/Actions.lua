@@ -5,14 +5,6 @@ local Actions = Class("Actions");
 
 -- TODO get rid of all this
 
-Actions.idle = function(self)
-	if self.setAnimation then
-		local animName = "idle_" .. self:getDirection4();
-		self:setAnimation(animName);
-	end
-	self:setSpeed(0);
-end
-
 Actions.lookAt = function(target)
 	return function(self)
 		local entity = self:getEntity();
@@ -22,14 +14,6 @@ Actions.lookAt = function(target)
 		local angle = math.atan2(deltaY, deltaX);
 		entity:setAngle(angle);
 	end
-end
-
-Actions.attack = function(self)
-	local entity = self:getEntity();
-	entity:setSpeed(0);
-	entity:setAnimation("attack_" .. entity:getDirection4(), true);
-	self:waitFor("animationEnd");
-	Actions.idle(self);
 end
 
 Actions.knockback = function(angle)

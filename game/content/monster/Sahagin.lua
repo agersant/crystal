@@ -4,7 +4,9 @@ local CombatData = require("arpg/combat/CombatData");
 local DamageComponent = require("arpg/combat/damage/DamageComponent");
 local DamageHitbox = require("arpg/combat/damage/DamageHitbox");
 local DamageIntent = require("arpg/combat/damage/DamageIntent");
-local Movement = require("engine/mapscene/behavior/ai/movement/Movement");
+local IdleAnimation = require("arpg/field/animation/IdleAnimation");
+local WalkAnimation = require("arpg/field/animation/WalkAnimation");
+local MovementAI = require("engine/mapscene/behavior/ai/movement/MovementAI");
 local Entity = require("engine/ecs/Entity");
 local Assets = require("engine/resources/Assets");
 local Actions = require("engine/mapscene/Actions");
@@ -19,8 +21,15 @@ local Script = require("engine/script/Script");
 
 local Sahagin = Class("Sahagin", Entity);
 
+local attack = function(self)
+	self:setMovementAngle(nil);
+	self:setAnimation("attack_" .. self:getDirection4(), true);
+	self:waitFor("animationEnd");
+end
+
 local reachAndAttack = function(self)
 	self:endOn("disrupted");
+
 	local entity = self:getEntity();
 	local targetSelector = TargetSelector:new(entity:getScene());
 	local target = targetSelector:getNearestEnemy(entity);
@@ -28,28 +37,29 @@ local reachAndAttack = function(self)
 		self:waitFrame();
 		return;
 	end
-	if Movement.walkToEntity(self, target, 30) then
-		if self:isIdle() then
-			Movement.alignWithEntity(self, target, 2);
-			if self:isIdle() then
-				Actions.lookAt(target)(self);
-				self:wait(.2);
-				if self:isIdle() then
-					Actions.lookAt(target)(self);
 
-					local damageIntent = DamageIntent:new();
-					damageIntent:addComponent(DamageComponent:new(1));
-					self:setDamageIntent(damageIntent);
+	if not self:join(self:navigateToEntity(target, 30)) then
+		return;
+	end
 
-					self:doAction(Actions.attack);
-					self:waitFor("idle");
-					if self:isIdle() then
-						self:doAction(Actions.idle);
-						self:wait(.5 + 2 * math.random());
-					end
-				end
-			end
-		end
+	if not self:join(self:alignWithEntity(target, 2)) then
+		return;
+	end
+
+	Actions.lookAt(target)(self);
+	self:wait(.2);
+	Actions.lookAt(target)(self);
+
+	local damageIntent = DamageIntent:new();
+	damageIntent:addComponent(DamageComponent:new(1));
+	self:setDamageIntent(damageIntent);
+
+	if not self:isIdle() then
+		return;
+	end
+	local actionThread = self:doAction(attack);
+	if self:join(actionThread) then
+		self:wait(.5 + 2 * math.random());
 	end
 end
 
@@ -68,7 +78,7 @@ local aiScript = function(self)
 			if self:isIdle() then
 				self:doAction(function(self)
 					self:setSpeed(0);
-					self:setDesiredAnimation("knockback_" .. self:getDirection4());
+					self:setAnimation("knockback_" .. self:getDirection4());
 					self:wait(1);
 				end);
 			end
@@ -81,6 +91,7 @@ local aiScript = function(self)
 		end
 		local taskThread = self:thread(reachAndAttack);
 		self:join(taskThread);
+		self:waitFrame();
 	end
 end
 
@@ -92,13 +103,16 @@ Sahagin.init = function(self, scene)
 	self:addComponent(Sprite:new(sheet));
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	self:addComponent(Locomotion:new());
-	-- self:setMovementSpeed(40); TODO
+	self:addComponent(MovementAI:new());
 	self:addComponent(Collision:new(4));
 	self:addComponent(CombatData:new());
 	self:addComponent(DamageHitbox:new());
 	self:addComponent(Weakbox:new());
 	self:addComponent(ScriptRunner:new());
 	self:addComponent(Actor:new());
+
+	self:addComponent(IdleAnimation:new("idle"));
+	self:addComponent(WalkAnimation:new("walk"));
 
 	self:addScript(Script:new(aiScript));
 end

@@ -5,6 +5,7 @@ local ECS = require("engine/ecs/ECS");
 local Camera = require("engine/mapscene/Camera");
 local Scene = require("engine/Scene");
 local ActorSystem = require("engine/mapscene/behavior/ActorSystem");
+local MovementAISystem = require("engine/mapscene/behavior/ai/movement/MovementAISystem");
 local InputListenerSystem = require("engine/mapscene/behavior/InputListenerSystem");
 local ScriptRunnerSystem = require("engine/mapscene/behavior/ScriptRunnerSystem");
 local SpriteSystem = require("engine/mapscene/display/SpriteSystem");
@@ -123,6 +124,7 @@ MapScene.addSystems = function(self)
 	-- Before scripts
 	ecs:addSystem(ActorSystem:new(ecs));
 	ecs:addSystem(SpriteSystem:new(ecs)); -- (also has some duringScripts and afterScripts logic)
+	ecs:addSystem(MovementAISystem:new(ecs, self._map)); -- (also has some duringScripts logic)
 
 	-- During scripts
 	ecs:addSystem(ScriptRunnerSystem:new(ecs));
