@@ -18,10 +18,8 @@ local getComboSwingAction = function(swingCount)
 			self:setSpeed(0);
 		end
 
-		local damageIntent = DamageIntent:new();
-		damageIntent:setUnits({DamageUnit:new(1)});
-		self:setDamageIntent(damageIntent);
-
+		self:resetMultiHitTracking();
+		self:setDamageUnits({DamageUnit:new(1)});
 		self:setAnimation("attack_" .. self:getDirection4() .. "_" .. swingCount, true);
 		self:waitFor("animationEnd");
 	end

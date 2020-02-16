@@ -1,6 +1,7 @@
 require("engine/utils/OOP");
 local CombatData = require("arpg/combat/CombatData");
 local DamageEvent = require("arpg/combat/damage/DamageEvent");
+local DamageIntent = require("arpg/combat/damage/DamageIntent");
 local DeathEvent = require("arpg/combat/damage/DeathEvent");
 local HitEvent = require("arpg/combat/HitEvent");
 local Teams = require("arpg/combat/Teams");
@@ -15,11 +16,9 @@ local CombatSystem = Class("CombatSystem", System);
 
 CombatSystem.init = function(self, ecs)
 	CombatSystem.super.init(self, ecs);
-	self._combatDataQuery = AllComponents:new({CombatData});
 	self._scriptRunnerQuery = AllComponents:new({ScriptRunner});
 	self._locomotionQuery = AllComponents:new({CombatData, Locomotion});
 	self._inputQuery = AllComponents:new({CombatData, InputListener});
-	self:getECS():addQuery(self._combatDataQuery);
 	self:getECS():addQuery(self._scriptRunnerQuery);
 	self:getECS():addQuery(self._locomotionQuery);
 	self:getECS():addQuery(self._inputQuery);
@@ -44,9 +43,11 @@ CombatSystem.duringScripts = function(self, dt)
 		local attacker = hitEvent:getEntity();
 		local victim = hitEvent:getTargetEntity();
 		if Teams:areEnemies(attacker:getTeam(), victim:getTeam()) then
-			if self._combatDataQuery:contains(attacker) and self._combatDataQuery:contains(victim) then
-				local damageIntent = hitEvent:getDamageIntent();
-				attacker:inflictDamage(damageIntent, victim:getComponent(CombatData));
+			local damageIntent = attacker:getComponent(DamageIntent);
+			local attackerCombatData = attacker:getComponent(CombatData);
+			local victimCombatData = victim:getComponent(CombatData);
+			if damageIntent and attackerCombatData and victimCombatData then
+				attackerCombatData:inflictDamage(damageIntent, victimCombatData);
 			end
 		end
 	end

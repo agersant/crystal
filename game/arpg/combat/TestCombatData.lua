@@ -31,7 +31,8 @@ tests[#tests].body = function()
 	local victimHealth = victim:getCurrentHealth();
 
 	local intent = DamageIntent:new();
-	intent:setUnits({DamageUnit:new(10)});
+	intent:setDamageUnits({DamageUnit:new(10)});
+
 	attacker:inflictDamage(intent, victim:getComponent(CombatData));
 	assert(attacker:getCurrentHealth() == attackerHealth);
 	assert(victim:getCurrentHealth() < victimHealth);

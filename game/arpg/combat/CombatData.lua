@@ -105,7 +105,7 @@ end
 
 CombatData.computeDamage = function(self, intent, target)
 	local damage = Damage:new();
-	for unit in pairs(intent:getUnits()) do
+	for unit in pairs(intent:getDamageUnits()) do
 		local damageType = unit:getDamageType();
 		local element = unit:getElement();
 		local scalingRatio = unit:getScalingRatio();

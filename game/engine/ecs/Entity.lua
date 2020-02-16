@@ -16,6 +16,7 @@ Entity.addComponent = function(self, component)
 	assert(component);
 	self._ecs:addComponent(self, component);
 	Alias:add(self, component);
+	return component;
 end
 
 Entity.removeComponent = function(self, component)

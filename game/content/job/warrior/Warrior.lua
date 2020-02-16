@@ -1,6 +1,7 @@
 require("engine/utils/OOP");
 local CombatData = require("arpg/combat/CombatData");
-local CombatHitbox = require("arpg/combat/damage/DamageHitbox");
+local CombatHitbox = require("arpg/combat/CombatHitbox");
+local DamageIntent = require("arpg/combat/damage/DamageIntent");
 local IdleAnimation = require("arpg/field/animation/IdleAnimation");
 local MovementControls = require("arpg/field/movement/MovementControls");
 local WalkAnimation = require("arpg/field/animation/WalkAnimation");
@@ -38,6 +39,7 @@ Warrior.init = function(self, scene)
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	self:addComponent(Collision:new(6));
 	self:addComponent(CombatData:new());
+	self:addComponent(DamageIntent:new());
 	self:addComponent(CombatHitbox:new());
 	self:addComponent(Weakbox:new());
 	self:addComponent(ScriptRunner:new());

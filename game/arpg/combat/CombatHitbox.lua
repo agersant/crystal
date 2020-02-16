@@ -6,24 +6,19 @@ local CombatHitbox = Class("CombatHitbox", Hitbox);
 
 CombatHitbox.init = function(self)
 	CombatHitbox.super.init(self);
-	self._damageIntent = nil;
 	self._targetsHit = {};
 end
 
-CombatHitbox.setDamageIntent = function(self, damageIntent)
-	assert(damageIntent);
-	self._damageIntent = damageIntent;
+CombatHitbox.resetMultiHitTracking = function(self)
 	self._targetsHit = {};
 end
 
 CombatHitbox.onBeginTouch = function(self, weakbox)
 	CombatHitbox.super.onBeginTouch(self, weakbox);
-	if self._damageIntent then
-		local target = weakbox:getEntity();
-		if not self._targetsHit[target] then
-			self._targetsHit[target] = true;
-			self:getEntity():createEvent(HitEvent, self._damageIntent, target);
-		end
+	local target = weakbox:getEntity();
+	if not self._targetsHit[target] then
+		self._targetsHit[target] = true;
+		self:getEntity():createEvent(HitEvent, target);
 	end
 end
 

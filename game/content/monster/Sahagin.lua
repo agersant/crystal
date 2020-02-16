@@ -2,7 +2,7 @@ require("engine/utils/OOP");
 local TargetSelector = require("arpg/combat/ai/TargetSelector");
 local CombatData = require("arpg/combat/CombatData");
 local DamageUnit = require("arpg/combat/damage/DamageUnit");
-local DamageHitbox = require("arpg/combat/damage/DamageHitbox");
+local CombatHitbox = require("arpg/combat/CombatHitbox");
 local DamageIntent = require("arpg/combat/damage/DamageIntent");
 local IdleAnimation = require("arpg/field/animation/IdleAnimation");
 local WalkAnimation = require("arpg/field/animation/WalkAnimation");
@@ -22,6 +22,8 @@ local Sahagin = Class("Sahagin", Entity);
 
 local attack = function(self)
 	self:setMovementAngle(nil);
+	self:resetMultiHitTracking();
+	self:setDamageUnits({DamageUnit:new(10)});
 	self:setAnimation("attack_" .. self:getDirection4(), true);
 	self:waitFor("animationEnd");
 end
@@ -49,10 +51,6 @@ local reachAndAttack = function(self)
 	self:lookAt(target:getPosition());
 	self:wait(0.2);
 	self:lookAt(target:getPosition());
-
-	local damageIntent = DamageIntent:new();
-	damageIntent:setUnits({DamageUnit:new(10)});
-	self:setDamageIntent(damageIntent);
 
 	if not self:isIdle() then
 		return;
@@ -123,7 +121,8 @@ Sahagin.init = function(self, scene)
 	self:addComponent(MovementAI:new());
 	self:addComponent(Collision:new(4));
 	self:addComponent(CombatData:new());
-	self:addComponent(DamageHitbox:new());
+	self:addComponent(DamageIntent:new());
+	self:addComponent(CombatHitbox:new());
 	self:addComponent(Weakbox:new());
 	self:addComponent(ScriptRunner:new());
 	self:addComponent(Actor:new());

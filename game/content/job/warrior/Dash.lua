@@ -15,9 +15,8 @@ local action = function(self)
 
 	self._movementToken = self:disableMovementControls();
 
-	local damageIntent = DamageIntent:new();
-	damageIntent:setUnits({DamageUnit:new(10)});
-	self:setDamageIntent(damageIntent);
+	self:resetMultiHitTracking();
+	self:setDamageUnits({DamageUnit:new(10)});
 
 	self:setAnimation("dash_" .. self:getDirection4());
 
