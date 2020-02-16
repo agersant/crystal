@@ -7,6 +7,7 @@ local Teams = require("arpg/combat/Teams");
 local System = require("engine/ecs/System");
 local AllComponents = require("engine/ecs/query/AllComponents");
 local Actor = require("engine/mapscene/behavior/Actor");
+local InputListener = require("engine/mapscene/behavior/InputListener");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local Locomotion = require("engine/mapscene/physics/Locomotion");
 
@@ -17,9 +18,11 @@ CombatSystem.init = function(self, ecs)
 	self._combatDataQuery = AllComponents:new({CombatData});
 	self._scriptRunnerQuery = AllComponents:new({ScriptRunner});
 	self._locomotionQuery = AllComponents:new({CombatData, Locomotion});
+	self._inputQuery = AllComponents:new({CombatData, InputListener});
 	self:getECS():addQuery(self._combatDataQuery);
 	self:getECS():addQuery(self._scriptRunnerQuery);
 	self:getECS():addQuery(self._locomotionQuery);
+	self:getECS():addQuery(self._inputQuery);
 end
 
 CombatSystem.beforeScripts = function(self, dt)
@@ -63,7 +66,12 @@ CombatSystem.duringScripts = function(self, dt)
 	for _, deathEvent in ipairs(deathEvents) do
 		local victim = deathEvent:getEntity();
 		if self._scriptRunnerQuery:contains(victim) then
-			victim:signalAllScripts("died");
+			local scriptRunner = victim:getComponent(ScriptRunner);
+			scriptRunner:signalAllScripts("died");
+		end
+		if self._inputQuery:contains(victim) then
+			local inputListener = victim:getComponent(InputListener);
+			inputListener:disable();
 		end
 	end
 end
