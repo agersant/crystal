@@ -1,6 +1,8 @@
 local DamageScalingSources = require("arpg/combat/damage/DamageScalingSources");
+local DamageTypes = require("arpg/combat/damage/DamageTypes");
 local DamageUnit = require("arpg/combat/damage/DamageUnit");
 local DamageIntent = require("arpg/combat/damage/DamageIntent");
+local Elements = require("arpg/combat/damage/Elements");
 local CombatData = require("arpg/combat/CombatData");
 local Stats = require("arpg/combat/Stats");
 local Entity = require("engine/ecs/Entity");
@@ -77,7 +79,38 @@ tests[#tests].body = function()
 	assert(victim:getCurrentHealth() == 25);
 end
 
--- TODO test affinities
--- TODO test resistances
+tests[#tests + 1] = {name = "Elemental affinity multiplies damage"};
+tests[#tests].body = function()
+	local ecs = ECS:new();
+	local attacker = ecs:spawn(Entity);
+	local victim = ecs:spawn(Entity);
+	attacker:addComponent(CombatData:new());
+	victim:addComponent(CombatData:new());
+	ecs:update(0);
+
+	local intent = DamageIntent:new();
+	intent:setDamageUnits({DamageUnit:new(10, DamageTypes.MAGIC, Elements.FIRE)});
+
+	attacker:getStat(Stats.AFFINITY_FIRE):setValue(0.5);
+	attacker:inflictDamage(intent, victim:getComponent(CombatData));
+	assert(victim:getCurrentHealth() == 85);
+end
+
+tests[#tests + 1] = {name = "Elemental resistance multiplies damage"};
+tests[#tests].body = function()
+	local ecs = ECS:new();
+	local attacker = ecs:spawn(Entity);
+	local victim = ecs:spawn(Entity);
+	attacker:addComponent(CombatData:new());
+	victim:addComponent(CombatData:new());
+	ecs:update(0);
+
+	local intent = DamageIntent:new();
+	intent:setDamageUnits({DamageUnit:new(10, DamageTypes.MAGIC, Elements.FIRE)});
+
+	victim:getStat(Stats.RESISTANCE_FIRE):setValue(0.5);
+	attacker:inflictDamage(intent, victim:getComponent(CombatData));
+	assert(victim:getCurrentHealth() == 95);
+end
 
 return tests;
