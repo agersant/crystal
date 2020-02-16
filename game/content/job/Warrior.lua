@@ -25,7 +25,7 @@ local hitReactions = function(self)
 		self:stopAction();
 		self:doAction(function(self)
 			self:setAnimation("death");
-			self:waitFor("forever"); -- TODO this looks bad
+			self:hang();
 		end);
 	end
 end

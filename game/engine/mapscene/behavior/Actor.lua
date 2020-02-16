@@ -10,9 +10,7 @@ Actor.init = function(self)
 	Actor.super.init(self);
 	self._actionThread = nil;
 	self._cleanupFunction = nil;
-	self._script = Script:new(function(self)
-		self:waitFor("forever"); -- TODO this looks bad
-	end);
+	self._script = Script:new();
 end
 
 Actor.getScript = function(self)

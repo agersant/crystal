@@ -44,13 +44,6 @@ ScriptRunner.runScripts = function(self, dt)
 	for i, script in ipairs(self._scripts) do
 		script:update(dt);
 	end
-
-	for i = #self._scripts, 1, -1 do
-		local script = self._scripts[i];
-		if script:isDead() then
-			table.remove(self._scripts, i);
-		end
-	end
 end
 
 ScriptRunner.signalAllScripts = function(self, signal, ...)

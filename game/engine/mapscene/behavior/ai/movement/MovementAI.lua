@@ -9,9 +9,7 @@ local MovementAI = Class("MovementAI", Component);
 
 MovementAI.init = function(self)
 	MovementAI.super.init(self);
-	self._script = Script:new(function(self)
-		self:waitFor("forever"); -- TODO this looks bad
-	end);
+	self._script = Script:new();
 end
 
 MovementAI.setNavigationGoal = function(self, goal)

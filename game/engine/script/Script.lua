@@ -158,6 +158,8 @@ pumpThread = function(self, thread, resumeArgs)
 			pumpThread(self, thread);
 		elseif a == "join" then
 			joinThreadOn(self, thread, b);
+		elseif a == "hang" then
+			thread.isBlocked = true;
 		end
 	end
 
@@ -281,8 +283,8 @@ Script.joinAny = function(self, threads)
 	return unpack(returns);
 end
 
-Script.isDead = function(self)
-	return #self._threads == 0;
+Script.hang = function(self)
+	coroutine.yield("hang");
 end
 
 Script.tween = function(self, from, to, duration, easing, set)
