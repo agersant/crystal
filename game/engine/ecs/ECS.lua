@@ -39,8 +39,6 @@ local registerComponent = function(self, entity, component)
 
 		baseClass = baseClass.super;
 	end
-
-	component:activate();
 end
 
 local unregisterComponent = function(self, entity, component)
@@ -48,8 +46,6 @@ local unregisterComponent = function(self, entity, component)
 	assert(entity:isValid());
 	assert(component);
 	assert(component:isInstanceOf(Component));
-
-	component:deactivate();
 
 	local class = component:getClass();
 	assert(class);

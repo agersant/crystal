@@ -16,6 +16,7 @@ local DebugDrawSystem = require("engine/mapscene/physics/DebugDrawSystem");
 local Hitbox = require("engine/mapscene/physics/Hitbox");
 local HitboxSystem = require("engine/mapscene/physics/HitboxSystem");
 local LocomotionSystem = require("engine/mapscene/physics/LocomotionSystem");
+local PhysicsBodySystem = require("engine/mapscene/physics/PhysicsBodySystem");
 local TouchTrigger = require("engine/mapscene/physics/TouchTrigger");
 local TouchTriggerSystem = require("engine/mapscene/physics/TouchTriggerSystem");
 local Weakbox = require("engine/mapscene/physics/Weakbox");
@@ -113,6 +114,7 @@ MapScene.addSystems = function(self)
 	local ecs = self:getECS();
 
 	-- Before physics
+	ecs:addSystem(PhysicsBodySystem:new(ecs));
 	ecs:addSystem(TouchTriggerSystem:new(ecs));
 	ecs:addSystem(CollisionSystem:new(ecs));
 	ecs:addSystem(LocomotionSystem:new(ecs));

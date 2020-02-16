@@ -32,7 +32,9 @@ Query.onEntityAdded = function(self, entity)
 	self._entities[entity] = true;
 	self._addedEntities[entity] = true;
 	for _, class in ipairs(self._classes) do
-		self._addedComponents[class] = {};
+		if not self._addedComponents[class] then
+			self._addedComponents[class] = {};
+		end
 		for component in pairs(entity:getComponents(class)) do
 			self._addedComponents[class][component] = true;
 		end

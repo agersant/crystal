@@ -13,16 +13,6 @@ PhysicsBody.init = function(self, physicsWorld, bodyType)
 	self:setDirection8(1, 0);
 end
 
-PhysicsBody.activate = function(self)
-	PhysicsBody.super.activate(self);
-	self._body:setActive(true);
-end
-
-PhysicsBody.deactivate = function(self)
-	PhysicsBody.super.deactivate(self);
-	self._body:setActive(false);
-end
-
 PhysicsBody.getBody = function(self)
 	return self._body;
 end

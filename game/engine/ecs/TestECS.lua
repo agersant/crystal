@@ -74,9 +74,6 @@ tests[#tests].body = function()
 
 	local a = ecs:spawn(Entity);
 	local snoot = Snoot:new();
-	snoot.activate = function()
-		error("unexpected activation")
-	end
 	a:addComponent(snoot);
 	assert(a:getComponent(Snoot) == snoot);
 	a:removeComponent(snoot);
@@ -86,10 +83,7 @@ tests[#tests].body = function()
 
 	local a = ecs:spawn(Entity);
 	local snoot = Snoot:new();
-	local activated = false;
-	snoot.activate = function()
-		activated = true;
-	end
+
 	a:addComponent(snoot);
 	assert(a:getComponent(Snoot) == snoot);
 	a:removeComponent(snoot);
@@ -98,7 +92,6 @@ tests[#tests].body = function()
 	assert(a:getComponent(Snoot) == snoot);
 	ecs:update();
 	assert(a:getComponent(Snoot) == snoot);
-	assert(activated);
 end
 
 tests[#tests + 1] = {name = "Prevent duplicate components"};
@@ -228,47 +221,6 @@ tests[#tests].body = function()
 	ecs:update();
 	assert(#ecs:getAllComponents(Snoot) == 0);
 	assert(#ecs:getAllComponents(Boop) == 0);
-end
-
-tests[#tests + 1] = {name = "Activation lifecycle"};
-tests[#tests].body = function()
-	Class:resetIndex();
-
-	local ecs = ECS:new();
-
-	local activated = false;
-	local Snoot = Class("Snoot", Component);
-	Snoot.activate = function(self)
-		activated = true;
-	end
-	Snoot.deactivate = function(self)
-		activated = false;
-	end
-
-	local a = ecs:spawn(Entity);
-	local snoot = Snoot:new();
-
-	a:addComponent(snoot);
-	assert(not activated);
-
-	ecs:update();
-	assert(activated);
-
-	a:removeComponent(snoot);
-	assert(activated);
-	ecs:update();
-	assert(not activated);
-
-	a:addComponent(snoot);
-	assert(not activated);
-	ecs:update();
-	assert(activated);
-
-	a:despawn();
-	assert(activated);
-
-	ecs:update();
-	assert(not activated);
 end
 
 tests[#tests + 1] = {name = "Systems update in correct order"};
