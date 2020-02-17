@@ -50,16 +50,10 @@ Entity.isValid = function(self)
 	return self._isValid;
 end
 
--- PHYSICS BODY COMPONENT
-
-Entity.getScreenPosition = function(self)
+Entity.getScreenPosition = function(self) -- TODO remove
 	local x, y = self:getPosition();
 	local camera = self:getScene():getCamera();
 	return camera:getRelativePosition(x, y);
-end
-
-Entity.getScene = function(self)
-	return self._ecs;
 end
 
 return Entity;
