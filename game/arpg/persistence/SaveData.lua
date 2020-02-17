@@ -1,6 +1,7 @@
 require("engine/utils/OOP");
 local Field = require("arpg/field/Field");
 local PartyData = require("arpg/party/PartyData");
+local PartyMember = require("arpg/party/PartyMember");
 local PartyMemberData = require("arpg/party/PartyMemberData");
 local BaseSaveData = require("engine/persistence/BaseSaveData");
 local Scene = require("engine/Scene");
@@ -51,19 +52,30 @@ SaveData.save = function(self)
 
 	local field = Scene:getCurrent();
 	if field:isInstanceOf(Field) then
-		local partyEntities = field._partyEntities; -- TODO fixme private access
+		local partyEntities = field:getECS():getAllEntitiesWith(PartyMember);
+
+		local partyLeader;
+		local partyLeaderPlayerIndex;
 
 		local party = PartyData:new();
-		for i, entity in ipairs(partyEntities) do
-			local partyMember = PartyMemberData:fromEntity(entity);
-			party:addMember(partyMember);
+		for entity in pairs(partyEntities) do
+			local partyMemberData = PartyMemberData:fromEntity(entity);
+			party:addMember(partyMemberData);
+			local playerIndex = partyMemberData:getAssignedPlayer();
+			if not partyLeader then
+				if playerIndex and (not partyLeader or playerIndex < partyLeaderPlayerIndex) then
+					partyLeader = entity;
+					partyLeaderPlayerIndex = playerIndex;
+				end
+			end
 		end
 		self:setParty(party);
 
-		assert(#partyEntities > 0);
-		local partyLeader = partyEntities[1];
+		assert(partyLeader);
 		local x, y = partyLeader:getPosition();
-		self:setLocation(field._mapName, x, y); -- TODO fixme private access
+		assert(x);
+		assert(y);
+		self:setLocation(field:getMapName(), x, y);
 	end
 end
 

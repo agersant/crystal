@@ -68,16 +68,6 @@ Entity.getMovementSpeed = function(self)
 	return self._movementStat:getValue();
 end
 
--- PARTY COMPONENT
-
-Entity.addToParty = function(self)
-	self._ecs:addEntityToParty(self);
-end
-
-Entity.removeFromParty = function(self)
-	self._ecs:removeEntityFromParty(self);
-end
-
 Entity.getScene = function(self)
 	return self._ecs;
 end

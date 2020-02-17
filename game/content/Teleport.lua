@@ -15,19 +15,14 @@ local TeleportTouchTrigger = Class("TeleportTouchTrigger", TouchTrigger);
 
 local doTeleport = function(self, triggeredBy)
 	local teleportEntity = self:getEntity();
-	local x, y = teleportEntity:getPosition();
+	local x, y = self:getPosition();
 	local px, py = triggeredBy:getPosition();
 	local dx, dy = px - x, py - y;
-	local finalX, finalY = teleportEntity._targetX + dx, teleportEntity._targetY;
+	local finalX, finalY = teleportEntity._targetX, teleportEntity._targetY;
 
 	Persistence:getSaveData():save();
-	local newScene = Field:new(teleportEntity._targetMap, finalX, finalY);
+	local newScene = Field:new(teleportEntity._targetMap, finalX, finalY, self:getAngle());
 	Scene:setCurrent(newScene);
-
-	local teleportAngle = teleportEntity:getAngle();
-	for _, entity in ipairs(newScene:getPartyMemberEntities()) do
-		entity:setAngle(teleportAngle);
-	end
 end
 
 local teleportScript = function(self)

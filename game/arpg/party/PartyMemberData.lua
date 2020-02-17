@@ -1,44 +1,51 @@
 require("engine/utils/OOP");
+local PartyMember = require("arpg/party/PartyMember");
+local InputListener = require("engine/mapscene/behavior/InputListener");
 
-local PartyMember = Class("PartyMember");
+local PartyMemberData = Class("PartyMemberData");
 
 -- PUBLIC API
 
-PartyMember.init = function(self, instanceClass)
+PartyMemberData.init = function(self, instanceClass)
 	self._instanceClass = instanceClass;
 end
 
-PartyMember.getInstanceClass = function(self)
+PartyMemberData.getInstanceClass = function(self)
 	assert(self._instanceClass);
 	return self._instanceClass;
 end
 
-PartyMember.getAssignedPlayer = function(self)
+PartyMemberData.getAssignedPlayer = function(self)
 	return self._assignedPlayer;
 end
 
-PartyMember.setAssignedPlayer = function(self, assignedPlayer)
+PartyMemberData.setAssignedPlayer = function(self, assignedPlayer)
 	self._assignedPlayer = assignedPlayer;
 end
 
-PartyMember.toPOD = function(self)
+PartyMemberData.toPOD = function(self)
 	return {instanceClass = self:getInstanceClass(), assignedPlayer = self:getAssignedPlayer()};
 end
 
 -- STATIC
 
-PartyMember.fromPOD = function(self, pod)
+PartyMemberData.fromPOD = function(self, pod)
 	assert(pod.instanceClass);
-	local partyMember = PartyMember:new(pod.instanceClass);
-	partyMember:setAssignedPlayer(pod.assignedPlayer);
-	return partyMember;
+	local partyMemberData = PartyMemberData:new(pod.instanceClass);
+	partyMemberData:setAssignedPlayer(pod.assignedPlayer);
+	return partyMemberData;
 end
 
-PartyMember.fromEntity = function(self, entity)
+PartyMemberData.fromEntity = function(self, entity)
 	local className = entity:getClassName();
-	local partyMember = PartyMember:new(className);
-	partyMember:setAssignedPlayer(entity:getAssignedPlayer());
-	return partyMember;
+	assert(entity:getComponent(PartyMember));
+	local inputListener = entity:getComponent(InputListener);
+
+	local partyMemberData = PartyMemberData:new(className);
+	if inputListener then
+		PartyMemberData:setAssignedPlayer(inputListener:getAssignedPlayer());
+	end
+	return partyMemberData;
 end
 
-return PartyMember;
+return PartyMemberData;

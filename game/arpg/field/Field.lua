@@ -1,51 +1,48 @@
 require("engine/utils/OOP");
-local CombatData = require("arpg/combat/CombatData");
 local CombatSystem = require("arpg/combat/CombatSystem");
 local SkillSystem = require("arpg/combat/skill/SkillSystem");
 local Teams = require("arpg/combat/Teams");
 local AnimationSelectionSystem = require("arpg/field/animation/AnimationSelectionSystem");
 local MovementControlsSystem = require("arpg/field/movement/MovementControlsSystem");
+local PartyMember = require("arpg/party/PartyMember");
 local MapScene = require("engine/mapscene/MapScene");
 local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/Scene");
 local UIScene = require("engine/ui/UIScene");
 local TitleScreen = require("engine/ui/frontend/TitleScreen");
-local TableUtils = require("engine/utils/TableUtils");
 local InputListener = require("engine/mapscene/behavior/InputListener");
 
 local Field = Class("Field", MapScene);
 
--- IMPLEMENTATION
-
-local spawnParty = function(self, x, y)
-	local party = Persistence:getSaveData():getParty();
-	assert(party);
-	for i, partyMember in ipairs(party:getMembers()) do
-		local className = partyMember:getInstanceClass();
+local spawnParty = function(self, x, y, startAngle)
+	local partyData = Persistence:getSaveData():getParty();
+	assert(partyData);
+	for i, partyMemberData in ipairs(partyData:getMembers()) do
+		local assignedPlayerIndex = partyMemberData:getAssignedPlayer();
+		local className = partyMemberData:getInstanceClass();
 		local class = Class:getByName(className);
 		assert(class);
+
 		local entity = self:spawn(class, {});
-		entity:addToParty();
-		local assignedPlayer = partyMember:getAssignedPlayer();
-		if assignedPlayer then
-			entity:addComponent(InputListener:new(assignedPlayer));
+		entity:addComponent(PartyMember:new());
+		if assignedPlayerIndex then
+			entity:addComponent(InputListener:new(assignedPlayerIndex));
 		end
+		entity:setTeam(Teams.party);
 		entity:setPosition(x, y);
+		entity:setAngle(startAngle);
 	end
 end
 
--- PUBLIC API
-
-Field.init = function(self, mapName, startX, startY)
-	self._partyEntities = {}; -- TODO remove
-
+Field.init = function(self, mapName, startX, startY, startAngle)
 	Field.super.init(self, mapName);
 
 	local mapWidth = self._map:getWidthInPixels();
 	local mapHeight = self._map:getHeightInPixels();
 	startX = startX or mapWidth / 2;
 	startY = startY or mapHeight / 2;
-	spawnParty(self, startX, startY);
+	startAngle = startAngle or 0;
+	spawnParty(self, startX, startY, startAngle);
 end
 
 Field.addSystems = function(self)
@@ -58,31 +55,6 @@ Field.addSystems = function(self)
 end
 
 -- PARTY
-
-Field.addEntityToParty = function(self, entity)
-	assert(not TableUtils.contains(self._partyEntities, entity));
-	table.insert(self._partyEntities, entity);
-	self._camera:addTrackedEntity(entity);
-	local combatData = entity:getComponent(CombatData);
-	if combatData then
-		combatData:setTeam(Teams.party);
-	end
-end
-
-Field.removeEntityFromParty = function(self, entity)
-	assert(TableUtils.contains(self._partyEntities, entity));
-	for i, partyEntity in ipairs(self._partyEntities) do
-		if entity == partyEntity then
-			table.remove(self._partyEntities, i);
-			return;
-		end
-	end
-	self._camera:removeTrackedEntity(entity);
-end
-
-Field.getPartyMemberEntities = function(self)
-	return TableUtils.shallowCopy(self._partyEntities);
-end
 
 Field.checkLoseCondition = function(self)
 	for _, partyEntity in ipairs(self._partyEntities) do
