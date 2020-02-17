@@ -20,6 +20,10 @@ Widget.init = function(self, scriptFunction)
 	self._bottomOffset = 0;
 	self._alpha = 1;
 	self._finalAlpha = 1;
+	self._scaleX = 1;
+	self._scaleY = 1;
+	self._pivotX = 0.5;
+	self._pivotY = 0.5;
 	self._color = Colors.white;
 end
 
@@ -41,8 +45,12 @@ Widget.remove = function(self)
 end
 
 Widget.applyTransforms = function(self)
+	local width, height = self:getSize();
 	love.graphics.setColor(self._color[1], self._color[2], self._color[3], 255 * self._finalAlpha);
 	love.graphics.translate(self._localLeft, self._localTop);
+	love.graphics.translate(self._pivotX * width, self._pivotY * height);
+	love.graphics.scale(self._scaleX, self._scaleY);
+	love.graphics.translate(-self._pivotX * width / self._scaleX, -self._pivotY * height / self._scaleY);
 end
 
 Widget.setAlpha = function(self, alpha)
@@ -234,6 +242,9 @@ end
 
 Widget.draw = function(self)
 	if self._finalAlpha == 0 then
+		return;
+	end
+	if self._scaleX == 0 or self._scaleY == 0 then
 		return;
 	end
 	love.graphics.push();
