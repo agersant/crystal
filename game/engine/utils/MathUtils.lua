@@ -100,6 +100,10 @@ MathUtils.almostZero = function(a)
 	return math.abs(a) <= epsilon;
 end
 
+MathUtils.lerp = function(t, a, b)
+	return a + t * (b - a);
+end
+
 MathUtils.ease = function(t, easing)
 	local pow = math.pow;
 	assert(t >= 0);
@@ -125,6 +129,46 @@ MathUtils.ease = function(t, easing)
 	elseif easing == "outQuintic" then
 		t = t - 1;
 		return 1 + pow(t, 5);
+	elseif easing == "inBounce" then
+		if t <= 0.04 then
+			return MathUtils.lerp(t / 0.04, 0, 0.0154);
+		elseif t <= 0.08 then
+			return MathUtils.lerp((t - 0.04) / (0.08 - 0.04), 0.0154, 0.0066);
+		elseif t <= 0.18 then
+			return MathUtils.lerp((t - 0.08) / (0.18 - 0.08), 0.0066, 0.0625);
+		elseif t <= 0.26 then
+			return MathUtils.lerp((t - 0.18) / (0.26 - 0.18), 0.0625, 0.0163);
+		elseif t <= 0.46 then
+			return MathUtils.lerp((t - 0.26) / (0.46 - 0.26), 0.0163, 0.2498);
+		elseif t <= 0.64 then
+			return MathUtils.lerp((t - 0.46) / (0.64 - 0.46), 0.2498, 0.0199);
+		elseif t <= 0.76 then
+			return MathUtils.lerp((t - 0.64) / (0.76 - 0.64), 0.0199, 0.5644);
+		elseif t <= 0.88 then
+			return MathUtils.lerp((t - 0.76) / (0.88 - 0.76), 0.5644, 0.8911);
+		else
+			return MathUtils.lerp((t - 0.88) / (1.0 - 0.88), 0.8911, 1);
+		end
+	elseif easing == "outBounce" then
+		if t <= 0.12 then
+			return MathUtils.lerp(t / 0.12, 0, 0.1089);
+		elseif t <= 0.24 then
+			return MathUtils.lerp((t - 0.12) / (0.24 - 0.12), 0.1089, 0.4356);
+		elseif t <= 0.36 then
+			return MathUtils.lerp((t - 0.24) / (0.36 - 0.24), 0.4356, 0.9801);
+		elseif t <= 0.54 then
+			return MathUtils.lerp((t - 0.36) / (0.54 - 0.36), 0.9801, 0.7502);
+		elseif t <= 0.74 then
+			return MathUtils.lerp((t - 0.54) / (0.74 - 0.54), 0.7502, 0.9837);
+		elseif t <= 0.82 then
+			return MathUtils.lerp((t - 0.74) / (0.82 - 0.74), 0.9837, 0.9375);
+		elseif t <= 0.92 then
+			return MathUtils.lerp((t - 0.82) / (0.92 - 0.82), 0.9375, 0.9934);
+		elseif t <= 0.96 then
+			return MathUtils.lerp((t - 0.92) / (0.96 - 0.92), 0.9934, 0.9846);
+		else
+			return MathUtils.lerp((t - 0.96) / (1.0 - 0.96), 0.9846, 1);
+		end
 	end
 end
 
