@@ -58,16 +58,6 @@ Entity.getScreenPosition = function(self)
 	return camera:getRelativePosition(x, y);
 end
 
--- LOCOMOTION COMPONENT
-
-Entity.setMovementSpeed = function(self, speed)
-	return self._movementStat:setValue(speed);
-end
-
-Entity.getMovementSpeed = function(self)
-	return self._movementStat:getValue();
-end
-
 Entity.getScene = function(self)
 	return self._ecs;
 end
