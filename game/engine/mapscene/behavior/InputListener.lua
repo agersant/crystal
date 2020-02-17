@@ -7,6 +7,7 @@ local InputListener = Class("InputListener", Component);
 -- PUBLIC API
 
 InputListener.init = function(self, playerIndex)
+	assert(playerIndex);
 	InputListener.super.init(self);
 	self._playerIndex = playerIndex;
 	self._inputDevice = Input:getDevice(playerIndex);
