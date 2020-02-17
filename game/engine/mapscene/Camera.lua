@@ -1,5 +1,6 @@
 require("engine/utils/OOP");
 local GFXConfig = require("engine/graphics/GFXConfig");
+local InputListener = require("engine/mapscene/behavior/InputListener");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local MathUtils = require("engine/utils/MathUtils");
 local TableUtils = require("engine/utils/TableUtils");
@@ -9,6 +10,13 @@ local Camera = Class("Camera");
 -- IMPLEMENTATION
 
 local epsilon = 0.001;
+
+local getMapSize = function(self)
+	local map = self._scene:getMap();
+	local mapWidth = map:getWidthInPixels();
+	local mapHeight = map:getHeightInPixels();
+	return mapWidth, mapHeight;
+end
 
 local computeAveragePosition = function(self)
 	local tx, ty = 0, 0;
@@ -58,15 +66,16 @@ local computeLookAheadPosition = function(self, screenW, screenH)
 end
 
 local clampPosition = function(self, tx, ty, screenW, screenH)
-	if self._mapWidth <= screenW then
-		tx = self._mapWidth / 2;
+	local mapWidth, mapHeight = getMapSize(self);
+	if mapWidth <= screenW then
+		tx = mapWidth / 2;
 	else
-		tx = MathUtils.clamp(screenW / 2, tx, self._mapWidth - screenW / 2);
+		tx = MathUtils.clamp(screenW / 2, tx, mapWidth - screenW / 2);
 	end
-	if self._mapHeight <= screenH then
-		ty = self._mapHeight / 2;
+	if mapHeight <= screenH then
+		ty = mapHeight / 2;
 	else
-		ty = MathUtils.clamp(screenH / 2, ty, self._mapHeight - screenH / 2);
+		ty = MathUtils.clamp(screenH / 2, ty, mapHeight - screenH / 2);
 	end
 	return tx, ty;
 end
@@ -74,10 +83,11 @@ end
 local computeTargetPosition = function(self)
 	local tx, ty;
 	local screenW, screenH = GFXConfig:getNativeSize();
+	local mapWidth, mapHeight = getMapSize(self);
 
 	if #self._trackedEntities == 0 then
-		tx = self._mapWidth / 2;
-		ty = self._mapHeight / 2;
+		tx = mapWidth / 2;
+		ty = mapHeight / 2;
 		-- TODO These cases will error when tracking entities that despawn
 	elseif #self._trackedEntities > 1 then
 		tx, ty = computeAveragePosition(self);
@@ -92,11 +102,10 @@ end
 
 -- PUBLIC API
 
-Camera.init = function(self, mapWidth, mapHeight)
+Camera.init = function(self, scene)
 	self:setAutopilotEnabled(true);
 	self:setPosition(0, 0);
-	self._mapWidth = mapWidth;
-	self._mapHeight = mapHeight;
+	self._scene = scene;
 	self._trackedEntities = {};
 	self._speed = 60;
 	self._lookAhead = 0.05; -- Relative to screen size
@@ -157,6 +166,12 @@ Camera.update = function(self, dt)
 
 	if not self._auto then
 		return;
+	end
+
+	local trackedEntities = self._scene:getECS():getAllEntitiesWith(InputListener);
+	self._trackedEntities = {};
+	for entity in pairs(trackedEntities) do
+		table.insert(self._trackedEntities, entity);
 	end
 
 	local z = GFXConfig:getZoom();

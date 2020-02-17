@@ -89,9 +89,7 @@ MapScene.init = function(self, mapName)
 	self._map:spawnCollisionMeshBody(self);
 	self._map:spawnEntities(self);
 
-	local mapWidth = self._map:getWidthInPixels();
-	local mapHeight = self._map:getHeightInPixels();
-	self._camera = Camera:new(mapWidth, mapHeight);
+	self._camera = Camera:new(self);
 
 	self:addSystems();
 
