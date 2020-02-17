@@ -15,7 +15,6 @@ local engineTestFiles = {
 	"engine/script/TestScript",
 	"engine/ui/TestTextInput",
 	"engine/ui/TestWidget",
-	"engine/ui/hud/TestDialog",
 	"engine/utils/TestAlias",
 	"engine/utils/TestMathUtils",
 	"engine/utils/TestOOP",

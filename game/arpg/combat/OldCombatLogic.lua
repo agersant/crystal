@@ -1,7 +1,6 @@
 require("engine/utils/OOP");
 local Actions = require("engine/mapscene/Actions");
 local Script = require("engine/script/Script");
-local HUD = require("engine/ui/hud/HUD");
 
 local CombatLogic = Class("CombatLogic", Script);
 
@@ -14,7 +13,6 @@ local logic = function(self)
 		while true do
 			local damage, damageAmount = self:waitFor("takeHit");
 			assert(damageAmount);
-			HUD:showDamage(self._entity, damageAmount);
 			if controller:isIdle() then
 				local attacker = damage:getOrigin();
 				local attackerX, attackerY = attacker:getPosition();

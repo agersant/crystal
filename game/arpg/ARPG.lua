@@ -13,6 +13,7 @@ ARPG.init = function(self)
 		"arpg/combat/TestCombatData",
 		"arpg/party/TestPartyData",
 		"arpg/party/TestPartyMemberData",
+		"arpg/ui/hud/TestDialog",
 	};
 	Content:requireAll("content");
 end

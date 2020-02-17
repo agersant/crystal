@@ -5,11 +5,12 @@ local Teams = require("arpg/combat/Teams");
 local AnimationSelectionSystem = require("arpg/field/animation/AnimationSelectionSystem");
 local MovementControlsSystem = require("arpg/field/movement/MovementControlsSystem");
 local PartyMember = require("arpg/party/PartyMember");
+local TitleScreen = require("arpg/ui/frontend/TitleScreen");
+local HUD = require("arpg/ui/hud/HUD");
 local MapScene = require("engine/mapscene/MapScene");
 local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/Scene");
 local UIScene = require("engine/ui/UIScene");
-local TitleScreen = require("engine/ui/frontend/TitleScreen");
 local InputListener = require("engine/mapscene/behavior/InputListener");
 
 local Field = Class("Field", MapScene);
@@ -35,6 +36,8 @@ local spawnParty = function(self, x, y, startAngle)
 end
 
 Field.init = function(self, mapName, startX, startY, startAngle)
+	self._hud = HUD:new(self);
+
 	Field.super.init(self, mapName);
 
 	local mapWidth = self._map:getWidthInPixels();
@@ -54,9 +57,17 @@ Field.addSystems = function(self)
 	ecs:addSystem(CombatSystem:new(ecs));
 end
 
--- PARTY
+Field.update = function(self, dt)
+	Field.super.update(self, dt);
+	self._hud:update(dt);
+end
 
-Field.checkLoseCondition = function(self)
+Field.draw = function(self)
+	Field.super.draw(self);
+	self._hud:draw();
+end
+
+Field.checkLoseCondition = function(self) -- TODO
 	for _, partyEntity in ipairs(self._partyEntities) do
 		if not partyEntity:isDead() then
 			return;

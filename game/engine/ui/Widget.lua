@@ -6,8 +6,8 @@ local TableUtils = require("engine/utils/TableUtils");
 
 local Widget = Class("Widget", Script);
 
-Widget.init = function(self)
-	Widget.super.init(self);
+Widget.init = function(self, scriptFunction)
+	Widget.super.init(self, scriptFunction);
 	self._parent = nil;
 	self._children = {};
 	self._leftAnchor = 0;

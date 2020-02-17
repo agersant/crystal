@@ -6,19 +6,27 @@ local Text = require("engine/ui/core/Text");
 
 local Hit = Class("Hit", Widget);
 
-Hit.init = function(self, victim, amount)
-	Hit.super.init(self);
+local getScreenPosition = function(self)
+	local x, y = self._victim:getPosition();
+	local camera = self._field:getCamera();
+	return camera:getRelativePosition(x, y);
+end
+
+local script = function(self)
+	self:wait(2);
+	self:remove();
+end
+
+Hit.init = function(self, field, victim, amount)
+	Hit.super.init(self, script);
+	assert(victim);
 	assert(victim);
 	assert(amount);
+	self._field = field;
 	self._victim = victim;
 
 	assert(self._victim:isValid());
-	self._lastKnownLeft, self._lastKnownTop = self._victim:getScreenPosition();
-
-	self:thread(function()
-		self:wait(2);
-		self:remove();
-	end);
+	self._lastKnownLeft, self._lastKnownTop = getScreenPosition(self);
 
 	self._textWidget = Text:new("fat", 16);
 	self._textWidget:setColor(Colors.barbadosCherry);
@@ -29,7 +37,7 @@ end
 
 Hit.updatePosition = function(self, dt)
 	if self._victim:isValid() then
-		local x, y = self._victim:getScreenPosition();
+		local x, y = getScreenPosition(self);
 		self._localLeft = x;
 		self._localTop = y;
 		self._lastKnownLeft = x;

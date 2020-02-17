@@ -50,10 +50,4 @@ Entity.isValid = function(self)
 	return self._isValid;
 end
 
-Entity.getScreenPosition = function(self) -- TODO remove
-	local x, y = self:getPosition();
-	local camera = self:getScene():getCamera();
-	return camera:getRelativePosition(x, y);
-end
-
 return Entity;

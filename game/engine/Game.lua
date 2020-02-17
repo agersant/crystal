@@ -5,7 +5,6 @@ local CLI = require("engine/dev/cli/CLI");
 local Input = require("engine/input/Input");
 local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/Scene");
-local HUD = require("engine/ui/hud/HUD");
 local Module = require("engine/Module");
 
 love.load = function()
@@ -33,7 +32,6 @@ love.update = function(dt)
 		newScene = Scene:getCurrent();
 	end
 
-	HUD:update(dt);
 	Input:flushEvents();
 end
 
@@ -42,7 +40,6 @@ love.draw = function()
 
 	GFXConfig:applyTransforms();
 	Scene:getCurrent():draw();
-	HUD:draw();
 
 	love.graphics.reset();
 	FPSCounter:draw();

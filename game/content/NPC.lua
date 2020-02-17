@@ -6,7 +6,7 @@ local Collision = require("engine/mapscene/physics/Collision");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local Entity = require("engine/ecs/Entity");
 local Script = require("engine/script/Script");
-local HUD = require("engine/ui/hud/HUD");
+local HUD = require("arpg/ui/hud/HUD");
 
 local NPC = Class("NPC", Entity);
 
