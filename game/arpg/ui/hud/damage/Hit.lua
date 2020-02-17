@@ -64,20 +64,12 @@ Hit.init = function(self, field, victim, amount)
 	assert(self._victim:isValid());
 	self._lastKnownLeft, self._lastKnownTop = getScreenPosition(self);
 
-	-- TODO find a smaller font
-
-	for dx = -1, 1 do
-		for dy = -1, 1 do
-			if dx ~= 0 and dy ~= 0 then
-				local outline = Text:new("small", 16);
-				outline:setColor(Colors.black);
-				outline:setAlignment("center");
-				outline:setText(amount);
-				outline:offset(dx, dy);
-				self:addChild(outline);
-			end
-		end
-	end
+	local outline = Text:new("small", 16);
+	outline:setColor(Colors.black);
+	outline:setAlignment("center");
+	outline:setText(amount);
+	outline:offset(1, 1);
+	self:addChild(outline);
 
 	self._textWidget = Text:new("small", 16);
 	self._textWidget:setColor(Colors.barbadosCherry);
