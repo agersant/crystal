@@ -4,6 +4,7 @@ local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/Scene");
 local Entity = require("engine/ecs/Entity");
 local Module = require("engine/Module");
+local InputListener = require("engine/mapscene/behavior/InputListener");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 
 local loadMap = function(mapName)
@@ -45,7 +46,13 @@ end);
 
 local spawn = function(className)
 	local currentScene = Scene:getCurrent();
-	local player = currentScene:getPartyMemberEntities()[1];
+
+	local player;
+	local players = currentScene:getECS():getAllEntitiesWith(InputListener);
+	for entity in pairs(players) do
+		player = entity;
+		break
+	end
 	assert(player);
 
 	local map = currentScene:getMap();
