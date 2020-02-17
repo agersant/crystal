@@ -1,7 +1,7 @@
 require("engine/utils/OOP");
-local DamageTypes = require("arpg/combat/damage/DamageTypes");
-local Elements = require("arpg/combat/damage/Elements");
-local DamageScalingSources = require("arpg/combat/damage/DamageScalingSources");
+local DamageTypes = require("arpg/field/combat/damage/DamageTypes");
+local Elements = require("arpg/field/combat/damage/Elements");
+local DamageScalingSources = require("arpg/field/combat/damage/DamageScalingSources");
 
 local DamageUnit = Class("DamageUnit");
 

@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local MovementControls = require("arpg/field/movement/MovementControls");
+local MovementControls = require("arpg/field/controls/MovementControls");
 local System = require("engine/ecs/System");
 local AllComponents = require("engine/ecs/query/AllComponents");
 local InputListener = require("engine/mapscene/behavior/InputListener");

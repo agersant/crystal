@@ -1,10 +1,10 @@
 require("engine/utils/OOP");
-local CombatData = require("arpg/combat/CombatData");
-local DamageEvent = require("arpg/combat/damage/DamageEvent");
-local DamageIntent = require("arpg/combat/damage/DamageIntent");
-local DeathEvent = require("arpg/combat/damage/DeathEvent");
-local HitEvent = require("arpg/combat/HitEvent");
-local Teams = require("arpg/combat/Teams");
+local CombatData = require("arpg/field/combat/CombatData");
+local DamageEvent = require("arpg/field/combat/damage/DamageEvent");
+local DamageIntent = require("arpg/field/combat/damage/DamageIntent");
+local DeathEvent = require("arpg/field/combat/damage/DeathEvent");
+local HitEvent = require("arpg/field/combat/HitEvent");
+local Teams = require("arpg/field/combat/Teams");
 local System = require("engine/ecs/System");
 local AllComponents = require("engine/ecs/query/AllComponents");
 local Actor = require("engine/mapscene/behavior/Actor");

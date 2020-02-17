@@ -2,6 +2,7 @@ require("engine/utils/OOP");
 local Colors = require("engine/resources/Colors");
 local Widget = require("engine/ui/Widget");
 local Text = require("engine/ui/core/Text");
+local Script = require("engine/script/Script");
 
 local Hit = Class("Hit", Widget);
 
@@ -11,24 +12,24 @@ local getScreenPosition = function(self)
 	return camera:getRelativePosition(x, y);
 end
 
-local script = function(self)
+local scriptLogic = function(self, widget)
 
 	local shift = self:thread(function(self)
 		self:tween(0, -8 + 16 * math.random(), .6, "linear", function(xOffset)
-			self._xOffset = xOffset;
+			widget._xOffset = xOffset;
 		end);
 	end);
 
 	-- Animate in
 	local flyUp = self:thread(function(self)
 		self:tween(0, -15, .2, "outQuadratic", function(yOffset)
-			self._yOffset = yOffset;
+			widget._yOffset = yOffset;
 		end);
 	end);
 	self:join(flyUp);
 	local bounce = self:thread(function(self)
 		self:tween(-15, 0, .4, "outBounce", function(yOffset)
-			self._yOffset = yOffset;
+			widget._yOffset = yOffset;
 		end);
 	end);
 	self:join(bounce);
@@ -37,25 +38,25 @@ local script = function(self)
 
 	-- Animate out
 	local shrink = self:thread(function(self)
-		self._pivotY = 1;
+		widget._pivotY = 1;
 		self:tween(1, 0, 0.2, "inQuadratic", function(s)
-			self._scaleX = s;
+			widget._scaleX = s;
 		end);
 	end);
 	local flyOut = self:thread(function(self)
 		self:tween(0, -15, 0.2, "inQuartic", function(yOffset)
-			self._yOffset = yOffset;
+			widget._yOffset = yOffset;
 		end);
 	end);
 	self:join(flyOut);
 	self:join(shrink);
 
-	self:remove();
+	widget:remove();
 end
 
-Hit.init = function(self, field, victim, amount)
-	Hit.super.init(self, script);
-	assert(victim);
+Hit.init = function(self, field, victim, amount) -- add a way to render widgets in map space instead of passing in field
+	Hit.super.init(self);
+	assert(field);
 	assert(victim);
 	assert(amount);
 	self._field = field;
@@ -76,6 +77,16 @@ Hit.init = function(self, field, victim, amount)
 	self._textWidget:setAlignment("center");
 	self._textWidget:setText(amount);
 	self:addChild(self._textWidget);
+
+	local widget = self;
+	self._script = Script:new(function(self)
+		scriptLogic(self, widget);
+	end);
+end
+
+Hit.update = function(self, dt)
+	self._script:update(dt);
+	Hit.super.update(self, dt);
 end
 
 Hit.updatePosition = function(self, dt)

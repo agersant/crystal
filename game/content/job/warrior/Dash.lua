@@ -1,7 +1,6 @@
 require("engine/utils/OOP");
-local DamageUnit = require("arpg/combat/damage/DamageUnit");
-local DamageIntent = require("arpg/combat/damage/DamageIntent");
-local Skill = require("arpg/combat/skill/Skill");
+local DamageUnit = require("arpg/field/combat/damage/DamageUnit");
+local Skill = require("arpg/field/combat/skill/Skill");
 
 local Dash = Class("Dash", Skill);
 

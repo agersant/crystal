@@ -1,9 +1,8 @@
 require("engine/utils/OOP");
-local CombatData = require("arpg/combat/CombatData");
-local CombatHitbox = require("arpg/combat/CombatHitbox");
-local DamageIntent = require("arpg/combat/damage/DamageIntent");
+local CombatData = require("arpg/field/combat/CombatData");
+local CombatHitbox = require("arpg/field/combat/CombatHitbox");
+local DamageIntent = require("arpg/field/combat/damage/DamageIntent");
 local IdleAnimation = require("arpg/field/animation/IdleAnimation");
-local MovementControls = require("arpg/field/movement/MovementControls");
 local WalkAnimation = require("arpg/field/animation/WalkAnimation");
 local ComboAttack = require("content/job/warrior/ComboAttack");
 local Dash = require("content/job/warrior/Dash");
@@ -26,7 +25,7 @@ local hitReactions = function(self)
 		self:stopAction();
 		self:doAction(function(self)
 			self:setAnimation("death");
-			self:hang();
+			self:pause();
 		end);
 	end
 end
@@ -48,7 +47,6 @@ Warrior.init = function(self, scene)
 	self:addComponent(IdleAnimation:new("idle"));
 	self:addComponent(WalkAnimation:new("walk"));
 
-	self:addComponent(MovementControls:new());
 	self:addComponent(ComboAttack:new(1));
 	self:addComponent(Dash:new(2));
 

@@ -1,8 +1,6 @@
 require("engine/utils/OOP");
 local Damage = Class("Damage");
 
--- PUBLIC API
-
 Damage.init = function(self)
 	self._amounts = {};
 end

@@ -1,5 +1,5 @@
-local DamageTypes = require("arpg/combat/damage/DamageTypes");
-local Elements = require("arpg/combat/damage/Elements");
+local DamageTypes = require("arpg/field/combat/damage/DamageTypes");
+local Elements = require("arpg/field/combat/damage/Elements");
 local TableUtils = require("engine/utils/TableUtils");
 
 local Stats = {HEALTH = 1, MOVEMENT_SPEED = 2};

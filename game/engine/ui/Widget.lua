@@ -1,13 +1,11 @@
 require("engine/utils/OOP");
-local Script = require("engine/script/Script");
 local GFXConfig = require("engine/graphics/GFXConfig");
 local Colors = require("engine/resources/Colors");
 local TableUtils = require("engine/utils/TableUtils");
 
-local Widget = Class("Widget", Script);
+local Widget = Class("Widget");
 
-Widget.init = function(self, scriptFunction)
-	Widget.super.init(self, scriptFunction);
+Widget.init = function(self)
 	self._parent = nil;
 	self._children = {};
 	self._leftAnchor = 0;
@@ -228,7 +226,6 @@ Widget.updatePosition = function(self, dt)
 end
 
 Widget.update = function(self, dt)
-	Widget.super.update(self, dt);
 	self:updateAlpha(dt);
 	self:updatePosition(dt);
 	local children = TableUtils.shallowCopy(self._children);

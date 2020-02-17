@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local HitEvent = require("arpg/combat/HitEvent");
+local HitEvent = require("arpg/field/combat/HitEvent");
 local Hitbox = require("engine/mapscene/physics/Hitbox");
 
 local CombatHitbox = Class("CombatHitbox", Hitbox);

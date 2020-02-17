@@ -1,7 +1,7 @@
 require("engine/utils/OOP");
-local DamageIntent = require("arpg/combat/damage/DamageIntent");
-local DamageUnit = require("arpg/combat/damage/DamageUnit");
-local Skill = require("arpg/combat/skill/Skill");
+local DamageIntent = require("arpg/field/combat/damage/DamageIntent");
+local DamageUnit = require("arpg/field/combat/damage/DamageUnit");
+local Skill = require("arpg/field/combat/skill/Skill");
 
 local ComboAttack = Class("ComboAttack", Skill);
 

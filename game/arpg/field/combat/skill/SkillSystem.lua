@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local Skill = require("arpg/combat/skill/Skill");
+local Skill = require("arpg/field/combat/skill/Skill");
 local System = require("engine/ecs/System");
 local AllComponents = require("engine/ecs/query/AllComponents");
 local InputListener = require("engine/mapscene/behavior/InputListener");

@@ -1,9 +1,9 @@
 require("engine/utils/OOP");
-local TargetSelector = require("arpg/combat/ai/TargetSelector");
-local CombatData = require("arpg/combat/CombatData");
-local DamageUnit = require("arpg/combat/damage/DamageUnit");
-local CombatHitbox = require("arpg/combat/CombatHitbox");
-local DamageIntent = require("arpg/combat/damage/DamageIntent");
+local TargetSelector = require("arpg/field/combat/ai/TargetSelector");
+local CombatData = require("arpg/field/combat/CombatData");
+local DamageUnit = require("arpg/field/combat/damage/DamageUnit");
+local CombatHitbox = require("arpg/field/combat/CombatHitbox");
+local DamageIntent = require("arpg/field/combat/damage/DamageIntent");
 local IdleAnimation = require("arpg/field/animation/IdleAnimation");
 local WalkAnimation = require("arpg/field/animation/WalkAnimation");
 local MovementAI = require("engine/mapscene/behavior/ai/movement/MovementAI");

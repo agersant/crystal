@@ -9,11 +9,11 @@ ARPG.init = function(self)
 	self.classes.MapScene = require("arpg/field/Field");
 	self.classes.SaveData = require("arpg/persistence/SaveData");
 	self.testFiles = {
-		"arpg/combat/ai/TestTargetSelector",
-		"arpg/combat/TestCombatData",
+		"arpg/field/combat/ai/TestTargetSelector",
+		"arpg/field/combat/TestCombatData",
 		"arpg/party/TestPartyData",
 		"arpg/party/TestPartyMemberData",
-		"arpg/ui/hud/TestDialog",
+		"arpg/field/hud/dialog/TestDialog",
 	};
 	Content:requireAll("content");
 end

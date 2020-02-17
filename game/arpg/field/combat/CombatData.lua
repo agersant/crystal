@@ -1,14 +1,14 @@
 require("engine/utils/OOP");
-local Stat = require("arpg/combat/Stat");
-local Stats = require("arpg/combat/Stats");
-local Damage = require("arpg/combat/damage/Damage");
-local DamageEvent = require("arpg/combat/damage/DamageEvent");
-local DeathEvent = require("arpg/combat/damage/DeathEvent");
-local DamageIntent = require("arpg/combat/damage/DamageIntent");
-local DamageScalingSources = require("arpg/combat/damage/DamageScalingSources");
-local DamageTypes = require("arpg/combat/damage/DamageTypes");
-local Elements = require("arpg/combat/damage/Elements");
-local Teams = require("arpg/combat/Teams");
+local Stat = require("arpg/field/combat/Stat");
+local Stats = require("arpg/field/combat/Stats");
+local Damage = require("arpg/field/combat/damage/Damage");
+local DamageEvent = require("arpg/field/combat/damage/DamageEvent");
+local DeathEvent = require("arpg/field/combat/damage/DeathEvent");
+local DamageIntent = require("arpg/field/combat/damage/DamageIntent");
+local DamageScalingSources = require("arpg/field/combat/damage/DamageScalingSources");
+local DamageTypes = require("arpg/field/combat/damage/DamageTypes");
+local Elements = require("arpg/field/combat/damage/Elements");
+local Teams = require("arpg/field/combat/Teams");
 local Component = require("engine/ecs/Component");
 
 local CombatData = Class("CombatData", Component);

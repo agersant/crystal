@@ -1,6 +1,6 @@
 require("engine/utils/OOP");
-local CombatData = require("arpg/combat/CombatData");
-local Teams = require("arpg/combat/Teams");
+local CombatData = require("arpg/field/combat/CombatData");
+local Teams = require("arpg/field/combat/Teams");
 local Component = require("engine/ecs/Component");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 

@@ -1,4 +1,5 @@
 require("engine/utils/OOP");
+local Dialog = require("arpg/field/hud/dialog/Dialog");
 local Assets = require("engine/resources/Assets");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local Sprite = require("engine/mapscene/display/Sprite");
@@ -6,18 +7,17 @@ local Collision = require("engine/mapscene/physics/Collision");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local Entity = require("engine/ecs/Entity");
 local Script = require("engine/script/Script");
-local HUD = require("arpg/ui/hud/HUD");
 
 local NPC = Class("NPC", Entity);
 
 local script = function(self)
 	while true do
 		local player = self:waitFor("interact");
-		HUD:getDialog():open(self, player);
-		HUD:getDialog():say(
+		self:beginDialog(self, player);
+		self:sayLine(
 						"The harvest this year was meager, there is no spare bread for a stranger like you. If I cannot feed my children, why would I feed you? Extra lines of text to get to line four, come on just a little more.");
-		HUD:getDialog():say("Now leave this town before things go awry, please.");
-		HUD:getDialog():close();
+		self:sayLine("Now leave this town before things go awry, please.");
+		self:endDialog();
 	end
 end
 
@@ -30,6 +30,7 @@ NPC.init = function(self, scene)
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 	self:addComponent(Collision:new(4));
 	self:addComponent(ScriptRunner:new());
+	self:addComponent(Dialog:new());
 	self:addScript(Script:new(script));
 end
 

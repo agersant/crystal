@@ -1,12 +1,15 @@
 require("engine/utils/OOP");
-local CombatSystem = require("arpg/combat/CombatSystem");
-local SkillSystem = require("arpg/combat/skill/SkillSystem");
-local Teams = require("arpg/combat/Teams");
+local CombatSystem = require("arpg/field/combat/CombatSystem");
+local SkillSystem = require("arpg/field/combat/skill/SkillSystem");
+local Teams = require("arpg/field/combat/Teams");
+local HUD = require("arpg/field/hud/HUD");
 local AnimationSelectionSystem = require("arpg/field/animation/AnimationSelectionSystem");
-local MovementControlsSystem = require("arpg/field/movement/MovementControlsSystem");
+local InteractionControls = require("arpg/field/controls/InteractionControls");
+local InteractionControlsSystem = require("arpg/field/controls/InteractionControlsSystem");
+local MovementControls = require("arpg/field/controls/MovementControls");
+local MovementControlsSystem = require("arpg/field/controls/MovementControlsSystem");
+local TitleScreen = require("arpg/frontend/TitleScreen");
 local PartyMember = require("arpg/party/PartyMember");
-local TitleScreen = require("arpg/ui/frontend/TitleScreen");
-local HUD = require("arpg/ui/hud/HUD");
 local MapScene = require("engine/mapscene/MapScene");
 local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/Scene");
@@ -28,6 +31,8 @@ local spawnParty = function(self, x, y, startAngle)
 		entity:addComponent(PartyMember:new());
 		if assignedPlayerIndex then
 			entity:addComponent(InputListener:new(assignedPlayerIndex));
+			entity:addComponent(MovementControls:new());
+			entity:addComponent(InteractionControls:new());
 		end
 		entity:setTeam(Teams.party);
 		entity:setPosition(x, y);
@@ -53,6 +58,7 @@ Field.addSystems = function(self)
 	local ecs = self:getECS();
 	ecs:addSystem(AnimationSelectionSystem:new(ecs));
 	ecs:addSystem(MovementControlsSystem:new(ecs));
+	ecs:addSystem(InteractionControlsSystem:new(ecs));
 	ecs:addSystem(SkillSystem:new(ecs));
 	ecs:addSystem(CombatSystem:new(ecs));
 end
@@ -65,6 +71,10 @@ end
 Field.draw = function(self)
 	Field.super.draw(self);
 	self._hud:draw();
+end
+
+Field.getHUD = function(self)
+	return self._hud;
 end
 
 Field.checkLoseCondition = function(self) -- TODO

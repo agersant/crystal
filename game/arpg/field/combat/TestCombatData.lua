@@ -1,10 +1,10 @@
-local DamageScalingSources = require("arpg/combat/damage/DamageScalingSources");
-local DamageTypes = require("arpg/combat/damage/DamageTypes");
-local DamageUnit = require("arpg/combat/damage/DamageUnit");
-local DamageIntent = require("arpg/combat/damage/DamageIntent");
-local Elements = require("arpg/combat/damage/Elements");
-local CombatData = require("arpg/combat/CombatData");
-local Stats = require("arpg/combat/Stats");
+local DamageScalingSources = require("arpg/field/combat/damage/DamageScalingSources");
+local DamageTypes = require("arpg/field/combat/damage/DamageTypes");
+local DamageUnit = require("arpg/field/combat/damage/DamageUnit");
+local DamageIntent = require("arpg/field/combat/damage/DamageIntent");
+local Elements = require("arpg/field/combat/damage/Elements");
+local CombatData = require("arpg/field/combat/CombatData");
+local Stats = require("arpg/field/combat/Stats");
 local Entity = require("engine/ecs/Entity");
 local ECS = require("engine/ecs/ECS");
 
