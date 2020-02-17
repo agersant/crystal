@@ -6,6 +6,8 @@ local Fonts = Class("Fonts");
 local pickFont = function(name)
 	if name == "dev" then
 		return "assets/font/source_code_pro_medium.otf";
+	elseif name == "small" then
+		return "assets/font/16bfZX.ttf";
 	elseif name == "body" then
 		return "assets/font/karen2black.ttf";
 	elseif name == "fat" then

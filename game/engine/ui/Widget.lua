@@ -46,7 +46,7 @@ end
 
 Widget.applyTransforms = function(self)
 	local width, height = self:getSize();
-	love.graphics.setColor(self._color[1], self._color[2], self._color[3], 255 * self._finalAlpha);
+	love.graphics.setColor(self._color[1], self._color[2], self._color[3], self._finalAlpha);
 	love.graphics.translate(self._localLeft, self._localTop);
 	love.graphics.translate(self._pivotX * width, self._pivotY * height);
 	love.graphics.scale(self._scaleX, self._scaleY);

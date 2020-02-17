@@ -40,11 +40,10 @@ local script = function(self)
 		self._pivotY = 1;
 		self:tween(1, 0, 0.2, "inQuadratic", function(s)
 			self._scaleX = s;
-			-- self._scaleY = 2 - s;
 		end);
 	end);
 	local flyOut = self:thread(function(self)
-		self:tween(0, -25, 0.25, "inQuartic", function(yOffset)
+		self:tween(0, -15, 0.2, "inQuartic", function(yOffset)
 			self._yOffset = yOffset;
 		end);
 	end);
@@ -67,14 +66,20 @@ Hit.init = function(self, field, victim, amount)
 
 	-- TODO find a smaller font
 
-	self._outlineTextWidget = Text:new("fat", 16);
-	self._outlineTextWidget:setColor(Colors.black);
-	self._outlineTextWidget:setAlignment("center");
-	self._outlineTextWidget:setText(amount);
-	self._outlineTextWidget:offset(1, 1);
-	self:addChild(self._outlineTextWidget);
+	for dx = -1, 1 do
+		for dy = -1, 1 do
+			if dx ~= 0 and dy ~= 0 then
+				local outline = Text:new("small", 16);
+				outline:setColor(Colors.black);
+				outline:setAlignment("center");
+				outline:setText(amount);
+				outline:offset(dx, dy);
+				self:addChild(outline);
+			end
+		end
+	end
 
-	self._textWidget = Text:new("fat", 16);
+	self._textWidget = Text:new("small", 16);
 	self._textWidget:setColor(Colors.barbadosCherry);
 	self._textWidget:setAlignment("center");
 	self._textWidget:setText(amount);
