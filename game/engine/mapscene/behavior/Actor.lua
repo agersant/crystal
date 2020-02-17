@@ -22,9 +22,6 @@ Actor.isIdle = function(self)
 end
 
 Actor.doAction = function(self, actionFunction, cleanupFunction)
-	if not self:isIdle() then
-		print(debug.traceback());
-	end
 	assert(self:isIdle());
 	self._cleanupFunction = cleanupFunction;
 	self._actionThread = self._script:thread(function(script)
