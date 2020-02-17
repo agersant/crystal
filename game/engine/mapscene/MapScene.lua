@@ -197,4 +197,8 @@ MapScene.getMap = function(self)
 	return self._map;
 end
 
+MapScene.getMapName = function(self)
+	return self._mapName;
+end
+
 return MapScene;
