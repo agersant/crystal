@@ -1,7 +1,7 @@
 require("engine/utils/OOP");
 local Field = require("arpg/field/Field");
-local Party = require("arpg/party/Party");
-local PartyMember = require("arpg/party/PartyMember");
+local PartyData = require("arpg/party/PartyData");
+local PartyMemberData = require("arpg/party/PartyMemberData");
 local BaseSaveData = require("engine/persistence/BaseSaveData");
 local Scene = require("engine/Scene");
 
@@ -10,8 +10,8 @@ local SaveData = Class("SaveData", BaseSaveData);
 SaveData.init = function(self)
 	SaveData.super.init(self);
 
-	self._party = Party:new();
-	local defaultPartyMember = PartyMember:new("Warrior");
+	self._party = PartyData:new();
+	local defaultPartyMember = PartyMemberData:new("Warrior");
 	defaultPartyMember:setAssignedPlayer(1);
 	self._party:addMember(defaultPartyMember);
 
@@ -53,9 +53,9 @@ SaveData.save = function(self)
 	if field:isInstanceOf(Field) then
 		local partyEntities = field._partyEntities; -- TODO fixme private access
 
-		local party = Party:new();
+		local party = PartyData:new();
 		for i, entity in ipairs(partyEntities) do
-			local partyMember = PartyMember:fromEntity(entity);
+			local partyMember = PartyMemberData:fromEntity(entity);
 			party:addMember(partyMember);
 		end
 		self:setParty(party);
@@ -79,7 +79,7 @@ end
 SaveData.fromPOD = function(self, pod)
 	local playerSave = SaveData:new();
 	assert(pod.party);
-	playerSave._party = Party:fromPOD(pod.party);
+	playerSave._party = PartyData:fromPOD(pod.party);
 	assert(pod.location);
 	playerSave._location = pod.location;
 	return playerSave;

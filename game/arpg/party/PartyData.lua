@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local PartyMember = require("arpg/party/PartyMember");
+local PartyMemberData = require("arpg/party/PartyMemberData");
 local TableUtils = require("engine/utils/TableUtils");
 
 local Party = Class("Party");
@@ -43,7 +43,7 @@ Party.fromPOD = function(self, pod)
 	local party = Party:new();
 	assert(pod.members);
 	for i, memberPOD in ipairs(pod.members) do
-		local member = PartyMember:fromPOD(memberPOD);
+		local member = PartyMemberData:fromPOD(memberPOD);
 		party:addMember(member);
 	end
 	return party;
