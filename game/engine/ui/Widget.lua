@@ -5,6 +5,8 @@ local TableUtils = require("engine/utils/TableUtils");
 
 local Widget = Class("Widget");
 
+-- TODO add ._scripts member and implement update logic so individual widgets can just call addScript
+
 Widget.init = function(self)
 	self._parent = nil;
 	self._children = {};
