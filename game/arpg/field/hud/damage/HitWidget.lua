@@ -6,45 +6,40 @@ local Script = require("engine/script/Script");
 
 local HitWidget = Class("HitWidget", Widget);
 
-local scriptLogic = function(self, widget)
+local animateIn = function(self, widget)
 	self:thread(function(self)
-		self:endOn("animateOut");
-		self:waitFor("animateIn");
-		self:thread(function(self)
-			self:tween(0, -8 + 16 * math.random(), .6, "linear", function(xOffset)
-				widget._translationX = xOffset;
-			end);
+		self:tween(0, -8 + 16 * math.random(), .6, "linear", function(xOffset)
+			widget._translationX = xOffset;
 		end);
-		local flyUp = self:thread(function(self)
-			self:tween(0, -15, .2, "outQuadratic", function(yOffset)
-				widget._translationY = yOffset;
-			end);
-		end);
-		self:join(flyUp);
-		local bounce = self:thread(function(self)
-			self:tween(-15, 0, .4, "outBounce", function(yOffset)
-				widget._translationY = yOffset;
-			end);
-		end);
-		self:join(bounce);
 	end);
+	local flyUp = self:thread(function(self)
+		self:tween(0, -15, .2, "outQuadratic", function(yOffset)
+			widget._translationY = yOffset;
+		end);
+	end);
+	self:join(flyUp);
+	local bounce = self:thread(function(self)
+		self:tween(-15, 0, .4, "outBounce", function(yOffset)
+			widget._translationY = yOffset;
+		end);
+	end);
+	self:join(bounce);
+end
 
-	self:thread(function(self)
-		self:waitFor("animateOut");
-		local shrink = self:thread(function(self)
-			widget._pivotY = 1;
-			self:tween(1, 0, 0.2, "inQuadratic", function(s)
-				widget._scaleX = s;
-			end);
+local animateOut = function(self, widget)
+	local shrink = self:thread(function(self)
+		widget._pivotY = 1;
+		self:tween(1, 0, 0.2, "inQuadratic", function(s)
+			widget._scaleX = s;
 		end);
-		local flyOut = self:thread(function(self)
-			self:tween(0, -15, 0.2, "inQuartic", function(yOffset)
-				widget._translationY = yOffset;
-			end);
-		end);
-		self:join(flyOut);
-		self:join(shrink);
 	end);
+	local flyOut = self:thread(function(self)
+		self:tween(0, -15, 0.2, "inQuartic", function(yOffset)
+			widget._translationY = yOffset;
+		end);
+	end);
+	self:join(flyOut);
+	self:join(shrink);
 end
 
 HitWidget.init = function(self, amount)
@@ -64,19 +59,21 @@ HitWidget.init = function(self, amount)
 	self._textWidget:setText(amount);
 	self:addChild(self._textWidget);
 
-	local widget = self;
-	self._script = Script:new(function(self)
-		scriptLogic(self, widget);
-	end);
-	self._script:update(0);
+	self._script = Script:new();
 end
 
 HitWidget.animateIn = function(self)
-	self._script:signal("animateIn");
+	local widget = self;
+	self._script:addThread(function(self)
+		animateIn(self, widget);
+	end);
 end
 
 HitWidget.animateOut = function(self)
-	self._script:signal("animateOut");
+	local widget = self;
+	self._script:addThread(function(self)
+		animateOut(self, widget);
+	end);
 end
 
 HitWidget.update = function(self, dt)
