@@ -1,0 +1,28 @@
+require("engine/utils/OOP");
+local System = require("engine/ecs/System");
+local AllComponents = require("engine/ecs/query/AllComponents");
+local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
+local Parent = require("engine/mapscene/physics/Parent");
+
+local ParentSystem = Class("ParentSystem", System);
+
+ParentSystem.init = function(self, ecs)
+	ParentSystem.super.init(self, ecs);
+	self._query = AllComponents:new({Parent, PhysicsBody});
+	self:getECS():addQuery(self._query);
+end
+
+ParentSystem.afterPhysics = function(self, dt)
+	local entities = self._query:getEntities();
+	for entity in pairs(entities) do
+		local parent = entity:getComponent(Parent):getParentEntity();
+		local physicsBody = entity:getComponent(PhysicsBody);
+		local otherBody = parent:getComponent(PhysicsBody);
+		if otherBody then
+			local x, y = otherBody:getPosition();
+			physicsBody:setPosition(x, y);
+		end
+	end
+end
+
+return ParentSystem;
