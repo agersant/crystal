@@ -9,7 +9,7 @@ local Script = Class("Script");
 
 local pumpThread, endThread, markAsEnded;
 
-local newThread = function(self, parentThread, functionToThread, options)
+local newThread = function(self, parentThread, functionToThread)
 	assert(type(functionToThread) == "function");
 	local threadCoroutine = coroutine.create(functionToThread);
 
@@ -33,10 +33,6 @@ local newThread = function(self, parentThread, functionToThread, options)
 	if parentThread then
 		parentThread.childThreads[thread] = true;
 		thread.parentThread = parentThread;
-	end
-
-	if options.pumpImmediately then
-		pumpThread(self, thread);
 	end
 
 	table.insert(self._threads, thread);
@@ -142,8 +138,9 @@ pumpThread = function(self, thread, resumeArgs)
 		elseif a == "fork" then
 			local parentScript = b;
 			local functionToThread = c;
-			local parentThread = parentScript == self and thread or nil;
-			local childThread = newThread(parentScript, parentThread, functionToThread, {pumpImmediately = true});
+			assert(parentScript == self);
+			local childThread = newThread(parentScript, thread, functionToThread);
+			pumpThread(self, childThread);
 			pumpThread(self, thread, childThread);
 		elseif a == "waitForSignals" then
 			blockThread(self, thread, b);
@@ -188,7 +185,7 @@ Script.init = function(self, scriptFunction)
 	self._endableThreads = {};
 	if scriptFunction then
 		assert(type(scriptFunction) == "function");
-		newThread(self, nil, scriptFunction, {pumpImmediately = false});
+		newThread(self, nil, scriptFunction);
 	end
 end
 
@@ -216,11 +213,13 @@ Script.update = function(self, dt)
 end
 
 Script.addThread = function(self, functionToThread)
-	return newThread(self, nil, functionToThread, {pumpImmediately = false});
+	return newThread(self, nil, functionToThread);
 end
 
 Script.addThreadAndRun = function(self, functionToThread)
-	return newThread(self, nil, functionToThread, {pumpImmediately = true});
+	local thread = newThread(self, nil, functionToThread);
+	pumpThread(self, thread);
+	return thread;
 end
 
 Script.signal = function(self, signal, ...)

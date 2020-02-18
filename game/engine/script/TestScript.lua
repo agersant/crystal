@@ -413,12 +413,11 @@ tests[#tests + 1] = {name = "Cross-script threading"};
 tests[#tests].body = function()
 	local a = 0;
 
-	local scriptA = Script:new(function(self)
-	end);
+	local scriptA = Script:new();
 	scriptA.b = 1;
 
 	local scriptB = Script:new(function(self)
-		scriptA:thread(function(self)
+		scriptA:addThreadAndRun(function(self)
 			assert(self == scriptA);
 			a = self.b;
 		end);
