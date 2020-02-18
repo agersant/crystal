@@ -18,6 +18,7 @@ ScriptRunner.addScript = function(self, script)
 	assert(script:isInstanceOf(Script));
 	Alias:add(script, self:getEntity());
 	table.insert(self._newScripts, script);
+	return script;
 end
 
 ScriptRunner.removeScript = function(self, script)

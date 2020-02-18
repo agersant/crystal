@@ -73,39 +73,37 @@ local ai = function(self)
 	end
 end
 
-local hitReactions = function(self)
-	self:thread(function(self)
-		while true do
-			self:waitFor("disrupted");
-			self:stopAction();
-		end
-	end);
+local handleDisruption = function(self)
+	while true do
+		self:waitFor("disrupted");
+		self:stopAction();
+	end
+end
 
-	self:thread(function(self)
-		while true do
-			self:waitFor("receivedDamage");
-			if self:isIdle() then
-				self:doAction(function(self)
-					self:setSpeed(0);
-					self:setAnimation("knockback_" .. self:getDirection4());
-					self:wait(1);
-				end);
-			end
-		end
-	end);
-
-	self:thread(function(self)
-		while true do
-			self:waitFor("died");
-			self:stopAction();
+local handleDamage = function(self)
+	while true do
+		self:waitFor("receivedDamage");
+		if self:isIdle() then
 			self:doAction(function(self)
-				self:setAnimation("smashed");
-				self:wait(2);
-				self:despawn();
-				self:waitFrame();
+				self:setSpeed(0);
+				self:setAnimation("knockback_" .. self:getDirection4());
+				self:wait(1);
 			end);
 		end
-	end);
+	end
+end
+
+local handleDeath = function(self)
+	while true do
+		self:waitFor("died");
+		self:stopAction();
+		self:doAction(function(self)
+			self:setAnimation("smashed");
+			self:wait(2);
+			self:despawn();
+			self:waitFrame();
+		end);
+	end
 end
 
 -- PUBLIC API
@@ -129,8 +127,10 @@ Sahagin.init = function(self, scene)
 	self:addComponent(IdleAnimation:new("idle"));
 	self:addComponent(WalkAnimation:new("walk"));
 
-	self:addScript(Script:new(ai));
-	self:addScript(Script:new(hitReactions));
+	local ai = self:addScript(Script:new(ai));
+	ai:addThread(handleDisruption);
+	ai:addThread(handleDamage);
+	ai:addThread(handleDeath);
 end
 
 return Sahagin;
