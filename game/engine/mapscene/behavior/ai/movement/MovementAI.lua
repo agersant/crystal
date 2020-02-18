@@ -70,7 +70,7 @@ MovementAI.navigateToGoal = function(self)
 		self._navigationThread:stop();
 	end
 	local myGoal = self._goal;
-	self._navigationThread = self._script:thread(function(self)
+	self._navigationThread = self._script:addThreadAndRun(function(self)
 		local result, resultGoal = self:waitForAny({"navigationSuccess", "navigationFailure"});
 		assert(resultGoal);
 		return resultGoal == myGoal and result == "navigationSuccess";

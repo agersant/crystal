@@ -24,7 +24,7 @@ end
 Actor.doAction = function(self, actionFunction, cleanupFunction)
 	assert(self:isIdle());
 	self._cleanupFunction = cleanupFunction;
-	self._actionThread = self._script:thread(function(script)
+	self._actionThread = self._script:addThreadAndRun(function(script)
 		actionFunction(script);
 		if self._cleanupFunction then
 			self._cleanupFunction(script);

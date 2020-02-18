@@ -222,7 +222,11 @@ Script.update = function(self, dt)
 end
 
 Script.addThread = function(self, functionToThread)
-	return newThread(self, nil, functionToThread, {pumpImmediately = false, allowOrphans = true});
+	return newThread(self, nil, functionToThread, {pumpImmediately = false, allowOrphans = false});
+end
+
+Script.addThreadAndRun = function(self, functionToThread)
+	return newThread(self, nil, functionToThread, {pumpImmediately = true, allowOrphans = false});
 end
 
 Script.signal = function(self, signal, ...)
