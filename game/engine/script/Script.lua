@@ -9,9 +9,9 @@ local Script = Class("Script");
 
 local pumpThread, endThread, markAsEnded;
 
-local newThread = function(self, parentThread, script, options)
-	assert(type(script) == "function");
-	local threadCoroutine = coroutine.create(script);
+local newThread = function(self, parentThread, functionToThread, options)
+	assert(type(functionToThread) == "function");
+	local threadCoroutine = coroutine.create(functionToThread);
 
 	local thread = {
 		coroutine = threadCoroutine,
@@ -219,6 +219,10 @@ Script.update = function(self, dt)
 			table.remove(self._threads, i);
 		end
 	end
+end
+
+Script.addThread = function(self, functionToThread)
+	return newThread(self, nil, functionToThread, {pumpImmediately = false, allowOrphans = true});
 end
 
 Script.signal = function(self, signal, ...)
