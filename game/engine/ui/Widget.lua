@@ -34,6 +34,7 @@ Widget.addChild = function(self, child)
 	assert(not child._parent);
 	child._parent = self;
 	table.insert(self._children, child);
+	return child;
 end
 
 Widget.remove = function(self)
