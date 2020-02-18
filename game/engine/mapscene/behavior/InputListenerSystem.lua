@@ -21,7 +21,12 @@ InputListenerSystem.duringScripts = function(self, dt)
 			if inputListener:isDisabled() then
 				return;
 			end
-			scriptRunner:signalAllScripts(commandEvent);
+			local inputContext = inputListener:getInputContextForCommand(commandEvent);
+			if inputContext then
+				inputContext:getContext():signal(commandEvent);
+			else
+				scriptRunner:signalAllScripts(commandEvent);
+			end
 		end
 	end
 end

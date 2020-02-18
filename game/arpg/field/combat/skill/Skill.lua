@@ -10,13 +10,24 @@ Skill.init = function(self, skillSlot, scriptContent)
 	assert(skillSlot);
 	assert(scriptContent);
 	Skill.super.init(self);
-	self._skillSlot = skillSlot;
-	self._command = "useSkill" .. skillSlot;
-	self._script = Script:new(scriptContent);
-end
 
-Skill.getCommand = function(self)
-	return self._command;
+	local command = "useSkill" .. skillSlot
+
+	self._script = Script:new(scriptContent);
+
+	self._script:addThread(function(self)
+		while true do
+			self:waitFor("+" .. command);
+			self:signal("+useSkill");
+		end
+	end);
+
+	self._script:addThread(function(self)
+		while true do
+			self:waitFor("-" .. command);
+			self:signal("-useSkill");
+		end
+	end);
 end
 
 Skill.getScript = function(self)

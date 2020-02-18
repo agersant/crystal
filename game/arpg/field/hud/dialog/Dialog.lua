@@ -1,63 +1,73 @@
 require("engine/utils/OOP");
-local DialogBeginEvent = require("arpg/field/hud/dialog/DialogBeginEvent");
-local DialogEndEvent = require("arpg/field/hud/dialog/DialogEndEvent");
-local DialogLineEvent = require("arpg/field/hud/dialog/DialogLineEvent");
 local Component = require("engine/ecs/Component");
 local Entity = require("engine/ecs/Entity");
 local InputListener = require("engine/mapscene/behavior/InputListener");
-local Script = require("engine/script/Script");
 
 local Dialog = Class("Dialog", Component);
 
-Dialog.init = function(self)
+Dialog.init = function(self, dialogBox)
 	Dialog.super.init(self);
+	assert(dialogBox);
+	self._dialogBox = dialogBox;
 	self._inputListener = nil;
-	self._scriptContext = nil;
+	self._inputContext = nil;
 end
 
-Dialog.beginDialog = function(self, scriptContext, player)
+Dialog.beginDialog = function(self, script, player)
+	assert(script);
 	assert(player);
 	assert(player:isInstanceOf(Entity));
+	assert(player:getComponent(InputListener));
+
 	assert(not self._inputListener);
+	assert(not self._inputContext);
 	self._inputListener = player:getComponent(InputListener);
-	assert(self._inputListener);
-	self._inputListener:disable();
+	self._inputContext = self._inputListener:pushContext(script);
 
-	local inputDevice = self._inputListener:getInputDevice();
-	assert(inputDevice);
-	self:getEntity():createEvent(DialogBeginEvent, self, inputDevice);
-
-	assert(scriptContext);
-	assert(scriptContext:isInstanceOf(Script));
-	assert(not self._scriptContext);
-	self._scriptContext = scriptContext;
-
-	self._scriptContext:waitFor("beganDialog");
-end
-
-Dialog.beganDialog = function(self)
-	assert(self._scriptContext);
-	self._scriptContext:signal("beganDialog");
+	return self._dialogBox:open();
 end
 
 Dialog.sayLine = function(self, text)
 	assert(text);
-	assert(self._scriptContext);
-	self:getEntity():createEvent(DialogLineEvent, text);
-	self._scriptContext:waitFor("saidLine");
-end
+	local inputListener = self._inputListener;
+	local inputContext = self._inputContext;
+	local dialogBox = self._dialogBox;
+	local context = inputContext:getContext();
 
-Dialog.saidLine = function(self)
-	assert(self._scriptContext);
-	self._scriptContext:signal("saidLine");
+	dialogBox:sayLine(text);
+
+	local waitForInput = function(self)
+		if inputListener:isCommandActive("advanceDialog", inputContext) then
+			self:waitFor("-advanceDialog");
+		end
+		self:waitFor("+advanceDialog");
+	end
+
+	local fastForward = context:thread(function(self)
+		waitForInput(self);
+		dialogBox:fastForward(text);
+	end);
+
+	local waitForLineCompletion = context:thread(function(self)
+		while not dialogBox:isLineFullyPrinted() do
+			self:waitFrame();
+		end
+		waitForInput(self);
+		if not fastForward:isDead() then
+			fastForward:stop();
+		end
+	end);
+
+	context:join(waitForLineCompletion);
 end
 
 Dialog.endDialog = function(self)
 	assert(self._inputListener);
-	self._inputListener:enable();
-	self:getEntity():createEvent(DialogEndEvent);
+	assert(self._inputContext);
+	self._dialogBox:close();
+	self._inputListener:popContext(self._inputContext);
 	self._inputListener = nil;
-	self._scriptContext = nil;
+	self._inputContext = nil;
 end
 
 return Dialog;

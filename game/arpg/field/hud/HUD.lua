@@ -4,12 +4,13 @@ local Widget = require("engine/ui/Widget");
 
 local HUD = Class("HUD", Widget);
 
-HUD.init = function(self, field)
-	assert(field);
+HUD.init = function(self)
 	HUD.super.init(self);
-	self._field = field;
-	self._dialog = DialogBox:new(field); -- TODO decouple from field
-	self:addChild(self._dialog);
+	self._dialogBox = self:addChild(DialogBox:new());
+end
+
+HUD.getDialogBox = function(self)
+	return self._dialogBox;
 end
 
 return HUD;

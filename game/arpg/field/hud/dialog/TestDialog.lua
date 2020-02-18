@@ -5,13 +5,15 @@ local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local Entity = require("engine/ecs/Entity");
 local Dialog = require("arpg/field/hud/dialog/Dialog");
-local HUD = require("arpg/field/hud/HUD");
+local DialogBox = require("arpg/field/hud/dialog/DialogBox");
 
 local tests = {};
 
 tests[#tests + 1] = {name = "Blocks script during dialog"};
 tests[#tests].body = function()
 	local scene = MapScene:new("assets/map/test/empty.lua");
+
+	local dialogBox = DialogBox:new();
 
 	local player = scene:spawn(Entity);
 	player:addComponent(ScriptRunner:new());
@@ -20,9 +22,7 @@ tests[#tests].body = function()
 
 	local npc = scene:spawn(Entity);
 	npc:addComponent(ScriptRunner:new());
-	npc:addComponent(Dialog:new());
-
-	local hud = HUD:new(scene);
+	npc:addComponent(Dialog:new(dialogBox));
 
 	local a;
 	npc:addScript(Script:new(function(self)
@@ -32,16 +32,15 @@ tests[#tests].body = function()
 		a = 2;
 	end));
 
-	scene:update(0);
-	hud:update(0);
-	assert(a == 1);
-
 	local inputDevice = player:getInputDevice();
 	local frame = function(self)
 		scene:update(0);
-		hud:update(0);
+		dialogBox:update(0);
 		inputDevice:flushEvents();
 	end
+
+	frame();
+	assert(a == 1);
 
 	inputDevice:keyPressed("q");
 	frame();

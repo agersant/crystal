@@ -13,11 +13,12 @@ local NPC = Class("NPC", Entity);
 local script = function(self)
 	while true do
 		local player = self:waitFor("interact");
-		self:beginDialog(self, player);
-		self:sayLine(
-						"The harvest this year was meager, there is no spare bread for a stranger like you. If I cannot feed my children, why would I feed you? Extra lines of text to get to line four, come on just a little more.");
-		self:sayLine("Now leave this town before things go awry, please.");
-		self:endDialog();
+		if self:beginDialog(self, player) then
+			self:sayLine(
+							"The harvest this year was meager, there is no spare bread for a stranger like you. If I cannot feed my children, why would I feed you? Extra lines of text to get to line four, come on just a little more.");
+			self:sayLine("Now leave this town before things go awry, please.");
+			self:endDialog();
+		end
 	end
 end
 
@@ -30,7 +31,7 @@ NPC.init = function(self, scene)
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 	self:addComponent(Collision:new(4));
 	self:addComponent(ScriptRunner:new());
-	self:addComponent(Dialog:new());
+	self:addComponent(Dialog:new(scene:getHUD():getDialogBox()));
 	self:addScript(Script:new(script));
 end
 
