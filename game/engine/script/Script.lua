@@ -21,7 +21,6 @@ local newThread = function(self, parentThread, functionToThread, options)
 		endsOn = {},
 		joinedBy = {},
 		joiningOn = {},
-		allowOrphans = options.allowOrphans,
 		isDead = function(thread)
 			return coroutine.status(thread.coroutine) == "dead" or thread.isEnded;
 		end,
@@ -96,10 +95,8 @@ end
 
 markAsEnded = function(self, thread)
 	thread.isEnded = true;
-	if not thread.allowOrphans then
-		for childThread in pairs(thread.childThreads) do
-			markAsEnded(self, childThread);
-		end
+	for childThread in pairs(thread.childThreads) do
+		markAsEnded(self, childThread);
 	end
 end
 
@@ -113,14 +110,12 @@ endThread = function(self, thread, completedExecution)
 		thread.parentThread = nil;
 	end
 
-	if not thread.allowOrphans then
-		local childThreadsCopy = {};
-		for childThread in pairs(thread.childThreads) do
-			table.insert(childThreadsCopy, childThread);
-		end
-		for i, childThread in ipairs(childThreadsCopy) do
-			endThread(self, childThread, false);
-		end
+	local childThreadsCopy = {};
+	for childThread in pairs(thread.childThreads) do
+		table.insert(childThreadsCopy, childThread);
+	end
+	for i, childThread in ipairs(childThreadsCopy) do
+		endThread(self, childThread, false);
 	end
 
 	local joinedByCopy = TableUtils.shallowCopy(thread.joinedBy);
@@ -148,8 +143,7 @@ pumpThread = function(self, thread, resumeArgs)
 			local parentScript = b;
 			local functionToThread = c;
 			local parentThread = parentScript == self and thread or nil;
-			local childThread = newThread(parentScript, parentThread, functionToThread,
-                              			{pumpImmediately = true, allowOrphans = false});
+			local childThread = newThread(parentScript, parentThread, functionToThread, {pumpImmediately = true});
 			pumpThread(self, thread, childThread);
 		elseif a == "waitForSignals" then
 			blockThread(self, thread, b);
@@ -194,7 +188,7 @@ Script.init = function(self, scriptFunction)
 	self._endableThreads = {};
 	if scriptFunction then
 		assert(type(scriptFunction) == "function");
-		newThread(self, nil, scriptFunction, {pumpImmediately = false, allowOrphans = true});
+		newThread(self, nil, scriptFunction, {pumpImmediately = false});
 	end
 end
 
@@ -222,11 +216,11 @@ Script.update = function(self, dt)
 end
 
 Script.addThread = function(self, functionToThread)
-	return newThread(self, nil, functionToThread, {pumpImmediately = false, allowOrphans = false});
+	return newThread(self, nil, functionToThread, {pumpImmediately = false});
 end
 
 Script.addThreadAndRun = function(self, functionToThread)
-	return newThread(self, nil, functionToThread, {pumpImmediately = true, allowOrphans = false});
+	return newThread(self, nil, functionToThread, {pumpImmediately = true});
 end
 
 Script.signal = function(self, signal, ...)
