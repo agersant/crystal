@@ -10,6 +10,7 @@ local InputListenerSystem = require("engine/mapscene/behavior/InputListenerSyste
 local ScriptRunnerSystem = require("engine/mapscene/behavior/ScriptRunnerSystem");
 local SpriteSystem = require("engine/mapscene/display/SpriteSystem");
 local DrawableSystem = require("engine/mapscene/display/DrawableSystem");
+local WorldWidgetSystem = require("engine/mapscene/display/WorldWidgetSystem");
 local Collision = require("engine/mapscene/physics/Collision");
 local CollisionSystem = require("engine/mapscene/physics/CollisionSystem");
 local DebugDrawSystem = require("engine/mapscene/physics/DebugDrawSystem");
@@ -133,6 +134,7 @@ MapScene.addSystems = function(self)
 	ecs:addSystem(InputListenerSystem:new(ecs));
 
 	-- After scripts
+	ecs:addSystem(WorldWidgetSystem:new(ecs));
 
 	-- Before draw
 	ecs:addSystem(DebugDrawSystem:new(ecs));
