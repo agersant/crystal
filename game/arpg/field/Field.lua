@@ -1,20 +1,18 @@
 require("engine/utils/OOP");
+local AnimationSelectionSystem = require("arpg/field/animation/AnimationSelectionSystem");
 local CombatSystem = require("arpg/field/combat/CombatSystem");
+local GameOverSystem = require("arpg/field/combat/GameOverSystem");
 local SkillSystem = require("arpg/field/combat/skill/SkillSystem");
+local InteractionControls = require("arpg/field/controls/InteractionControls");
+local MovementControls = require("arpg/field/controls/MovementControls");
+local MovementControlsSystem = require("arpg/field/controls/MovementControlsSystem");
+local InteractionControlsSystem = require("arpg/field/controls/InteractionControlsSystem");
 local Teams = require("arpg/field/combat/Teams");
 local DamageNumbersSystem = require("arpg/field/hud/damage/DamageNumbersSystem");
 local HUD = require("arpg/field/hud/HUD");
-local AnimationSelectionSystem = require("arpg/field/animation/AnimationSelectionSystem");
-local InteractionControls = require("arpg/field/controls/InteractionControls");
-local InteractionControlsSystem = require("arpg/field/controls/InteractionControlsSystem");
-local MovementControls = require("arpg/field/controls/MovementControls");
-local MovementControlsSystem = require("arpg/field/controls/MovementControlsSystem");
-local TitleScreen = require("arpg/frontend/TitleScreen");
-local PartyMember = require("arpg/party/PartyMember");
+local PartyMember = require("arpg/persistence/party/PartyMember");
 local MapScene = require("engine/mapscene/MapScene");
 local Persistence = require("engine/persistence/Persistence");
-local Scene = require("engine/Scene");
-local UIScene = require("engine/ui/UIScene");
 local InputListener = require("engine/mapscene/behavior/InputListener");
 
 local Field = Class("Field", MapScene);
@@ -63,6 +61,7 @@ Field.addSystems = function(self)
 	ecs:addSystem(SkillSystem:new(ecs));
 	ecs:addSystem(CombatSystem:new(ecs));
 	ecs:addSystem(DamageNumbersSystem:new(ecs));
+	ecs:addSystem(GameOverSystem:new(ecs));
 end
 
 Field.update = function(self, dt)
@@ -77,15 +76,6 @@ end
 
 Field.getHUD = function(self)
 	return self._hud;
-end
-
-Field.checkLoseCondition = function(self) -- TODO
-	for _, partyEntity in ipairs(self._partyEntities) do
-		if not partyEntity:isDead() then
-			return;
-		end
-	end
-	Scene:setCurrent(UIScene:new(TitleScreen:new()));
 end
 
 return Field;

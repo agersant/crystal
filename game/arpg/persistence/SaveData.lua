@@ -1,8 +1,8 @@
 require("engine/utils/OOP");
 local Field = require("arpg/field/Field");
-local PartyData = require("arpg/party/PartyData");
-local PartyMember = require("arpg/party/PartyMember");
-local PartyMemberData = require("arpg/party/PartyMemberData");
+local PartyData = require("arpg/persistence/party/PartyData");
+local PartyMember = require("arpg/persistence/party/PartyMember");
+local PartyMemberData = require("arpg/persistence/party/PartyMemberData");
 local BaseSaveData = require("engine/persistence/BaseSaveData");
 local Scene = require("engine/Scene");
 

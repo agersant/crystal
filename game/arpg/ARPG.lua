@@ -11,8 +11,8 @@ ARPG.init = function(self)
 	self.testFiles = {
 		"arpg/field/combat/ai/TestTargetSelector",
 		"arpg/field/combat/TestCombatData",
-		"arpg/party/TestPartyData",
-		"arpg/party/TestPartyMemberData",
+		"arpg/persistence/party/TestPartyData",
+		"arpg/persistence/party/TestPartyMemberData",
 		"arpg/field/hud/dialog/TestDialog",
 	};
 	Content:requireAll("content");

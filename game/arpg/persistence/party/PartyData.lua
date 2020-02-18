@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local PartyMemberData = require("arpg/party/PartyMemberData");
+local PartyMemberData = require("arpg/persistence/party/PartyMemberData");
 local TableUtils = require("engine/utils/TableUtils");
 
 local Party = Class("Party");

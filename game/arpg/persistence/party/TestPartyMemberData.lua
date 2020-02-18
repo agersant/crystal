@@ -1,4 +1,4 @@
-local PartyMemberData = require("arpg/party/PartyMemberData");
+local PartyMemberData = require("arpg/persistence/party/PartyMemberData");
 
 local tests = {};
 

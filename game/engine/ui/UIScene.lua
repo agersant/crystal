@@ -3,8 +3,6 @@ local Scene = require("engine/Scene");
 
 local UIScene = Class("UIScene", Scene);
 
--- PUBLIC API
-
 UIScene.init = function(self, widget)
 	self._widget = widget;
 end
