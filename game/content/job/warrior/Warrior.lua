@@ -25,7 +25,7 @@ local hitReactions = function(self)
 		self:stopAction();
 		self:doAction(function(self)
 			self:setAnimation("death");
-			self:pause();
+			self:hang();
 		end);
 	end
 end
