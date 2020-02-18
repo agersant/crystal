@@ -1,148 +1,84 @@
 require("engine/utils/OOP");
 local Log = require("engine/dev/Log");
-local MathUtils = require("engine/utils/MathUtils");
+local Thread = require("engine/script/Thread");
 local TableUtils = require("engine/utils/TableUtils");
 
 local Script = Class("Script");
 
--- IMPLEMENTATION
-
-local pumpThread, endThread, markAsEnded;
-
--- TODO move thread to its own class and make them the self parameter in their runtime (instead of script)
-local newThread = function(self, parentThread, functionToThread)
-	assert(type(functionToThread) == "function");
-	local threadCoroutine = coroutine.create(functionToThread);
-
-	local thread = {
-		coroutine = threadCoroutine,
-		owner = self,
-		childThreads = {},
-		blockedBy = {},
-		endsOn = {},
-		joinedBy = {},
-		joiningOn = {},
-		isDead = function(thread)
-			return coroutine.status(thread.coroutine) == "dead" or thread.isEnded;
-		end,
-		stop = function(thread)
-			assert(not thread:isDead());
-			endThread(self, thread, false);
-		end,
-	};
-
-	if parentThread then
-		parentThread.childThreads[thread] = true;
-		thread.parentThread = parentThread;
-	end
-
-	table.insert(self._threads, thread);
-	return thread;
-end
+local pumpThread;
 
 local blockThread = function(self, thread, signals)
-	thread.isBlocked = true;
+	assert(self == thread:getOwner());
 	for _, signal in ipairs(signals) do
 		assert(type(signal) == "string");
+		thread:blockOnSignal(signal);
 		if not self._blockedThreads[signal] then
 			self._blockedThreads[signal] = {};
 		end
 		self._blockedThreads[signal][thread] = true;
-		thread.blockedBy[signal] = true;
 	end
 end
 
 local unblockThread = function(self, thread, signal, ...)
-	assert(thread.isBlocked);
-	for signal, _ in pairs(thread.blockedBy) do
+	assert(self == thread:getOwner());
+	assert(thread:isBlocked());
+	local blockedBySignals = thread:getBlockedBySignals();
+	for signal in pairs(blockedBySignals) do
 		self._blockedThreads[signal][thread] = nil;
 	end
 	local signalData = {...};
-	if TableUtils.countKeys(thread.blockedBy) > 1 then
+	if TableUtils.countKeys(blockedBySignals) > 1 then
 		table.insert(signalData, 1, signal);
 	end
-	thread.blockedBy = {};
-	thread.isBlocked = false;
-	pumpThread(thread.owner, thread, signalData);
+	thread:unblock();
+	pumpThread(thread:getOwner(), thread, signalData);
 end
 
 local endThreadOn = function(self, thread, signals)
+	assert(self == thread:getOwner());
 	for _, signal in ipairs(signals) do
 		assert(type(signal) == "string");
 		if not self._endableThreads[signal] then
 			self._endableThreads[signal] = {};
 		end
 		self._endableThreads[signal][thread] = true;
-		thread.endsOn[signal] = true;
+		thread:endOnSignal(signal);
 	end
 end
 
 local joinThreadOn = function(self, thread, threadsToJoin)
-	for _, t in ipairs(threadsToJoin) do
-		if not t.isEnded then
-			thread.isBlocked = true;
-			thread.joiningOn[t] = true;
-			t.joinedBy[thread] = true;
+	assert(self == thread:getOwner());
+	for _, otherThread in ipairs(threadsToJoin) do
+		if not otherThread:isEnded() then
+			thread:joinOnThread(otherThread);
 		end
 	end
-	if not thread.isBlocked then
-		pumpThread(thread.owner, thread, {false});
-	end
-end
-
-markAsEnded = function(self, thread)
-	thread.isEnded = true;
-	for childThread in pairs(thread.childThreads) do
-		markAsEnded(self, childThread);
-	end
-end
-
-endThread = function(self, thread, completedExecution)
-	if not thread.isEnded then
-		markAsEnded(self, thread);
-	end
-
-	if thread.parentThread then
-		thread.parentThread.childThreads[thread] = nil;
-		thread.parentThread = nil;
-	end
-
-	local childThreadsCopy = {};
-	for childThread in pairs(thread.childThreads) do
-		table.insert(childThreadsCopy, childThread);
-	end
-	for i, childThread in ipairs(childThreadsCopy) do
-		endThread(self, childThread, false);
-	end
-
-	local joinedByCopy = TableUtils.shallowCopy(thread.joinedBy);
-	thread.joinedBy = {};
-	for t in pairs(joinedByCopy) do
-		t.isBlocked = false;
-		pumpThread(t.owner, t, {completedExecution});
+	if not thread:isBlocked() then
+		pumpThread(thread:getOwner(), thread, {false});
 	end
 end
 
 pumpThread = function(self, thread, resumeArgs)
-	local status = coroutine.status(thread.coroutine);
+	assert(self == thread:getOwner());
+	local threadCoroutine = thread:getCoroutine();
+	local status = coroutine.status(threadCoroutine);
 	assert(status ~= "running");
-	if status == "suspended" and not thread.isEnded then
+	if status == "suspended" and not thread:isEnded() then
 		local success, a, b, c;
 		if resumeArgs ~= nil then
 			assert(type(resumeArgs) == "table");
-			success, a, b, c = coroutine.resume(thread.coroutine, resumeArgs);
+			success, a, b, c = coroutine.resume(threadCoroutine, resumeArgs);
 		else
-			success, a, b, c = coroutine.resume(thread.coroutine, self);
+			success, a, b, c = coroutine.resume(threadCoroutine, thread);
 		end
 		if not success then
 			Log:error(a);
 		elseif a == "fork" then
-			local parentScript = b;
-			local functionToThread = c;
-			assert(parentScript == self);
-			local childThread = newThread(parentScript, thread, functionToThread);
-			pumpThread(self, childThread);
-			pumpThread(self, thread, childThread);
+			local functionToThread = b;
+			local newThread = Thread:new(self, thread, functionToThread);
+			table.insert(self._threads, newThread);
+			pumpThread(self, newThread);
+			pumpThread(self, thread, newThread);
 		elseif a == "waitForSignals" then
 			blockThread(self, thread, b);
 		elseif a == "endOnSignals" then
@@ -151,28 +87,25 @@ pumpThread = function(self, thread, resumeArgs)
 		elseif a == "join" then
 			joinThreadOn(self, thread, b);
 		elseif a == "hang" then
-			thread.isBlocked = true;
+			thread:block();
 		end
 	end
 
-	status = coroutine.status(thread.coroutine);
-	if status == "dead" and not thread.isEnded then
-		endThread(self, thread, true);
+	status = coroutine.status(threadCoroutine);
+	if status == "dead" and not thread:isEnded() then
+		self:endThread(thread, true);
 	end
 end
 
 local cleanupThread = function(self, thread)
-	for signal, _ in pairs(thread.endsOn) do
+	for signal, _ in pairs(thread:getEndOnSignals()) do
 		self._endableThreads[signal][thread] = nil;
 	end
-	for signal, _ in pairs(thread.blockedBy) do
+	for signal, _ in pairs(thread:getBlockedBySignals()) do
 		self._blockedThreads[signal][thread] = nil;
 	end
-	for otherThread in pairs(thread.joiningOn) do
-		otherThread.joinedBy[thread] = nil;
-	end
-	for childThread, _ in pairs(thread.childThreads) do
-		childThread.parentThread = nil;
+	for otherThread in pairs(thread:getThreadsJoiningOn()) do
+		otherThread._joinedBy[thread] = nil;
 	end
 end
 
@@ -185,20 +118,18 @@ Script.init = function(self, scriptFunction)
 	self._blockedThreads = {};
 	self._endableThreads = {};
 	if scriptFunction then
-		assert(type(scriptFunction) == "function");
-		newThread(self, nil, scriptFunction);
+		self:addThread(scriptFunction);
 	end
 end
 
 Script.update = function(self, dt)
-
 	self._time = self._time + dt;
 	self._dt = dt;
 
 	-- Run existing threads
-	local threadsCopy = TableUtils.shallowCopy(self._threads);
-	for _, thread in ipairs(threadsCopy) do
-		if not thread.isBlocked then
+	for i = #self._threads, 1, -1 do
+		local thread = self._threads[i];
+		if not thread:isBlocked() then
 			pumpThread(self, thread);
 		end
 	end
@@ -213,21 +144,41 @@ Script.update = function(self, dt)
 	end
 end
 
+Script.getTime = function(self)
+	return self._time;
+end
+
 Script.addThread = function(self, functionToThread)
-	return newThread(self, nil, functionToThread);
+	local thread = Thread:new(self, nil, functionToThread);
+	table.insert(self._threads, thread);
+	return thread;
 end
 
 Script.addThreadAndRun = function(self, functionToThread)
-	local thread = newThread(self, nil, functionToThread);
+	local thread = self:addThread(functionToThread);
 	pumpThread(self, thread);
 	return thread;
+end
+
+Script.endThread = function(self, thread, completedExecution)
+	assert(self == thread:getOwner());
+	if not thread:isEnded() then
+		thread:markAsEnded();
+	end
+	for i, childThread in ipairs(thread:getChildThreads()) do
+		self:endThread(childThread, false);
+	end
+	for otherThread in pairs(thread:getThreadsJoiningOnMe()) do
+		otherThread:unblock();
+		pumpThread(otherThread:getOwner(), otherThread, {completedExecution});
+	end
 end
 
 Script.signal = function(self, signal, ...)
 	if self._endableThreads[signal] then
 		for thread, _ in pairs(self._endableThreads[signal]) do
-			if not thread.isEnded then
-				endThread(self, thread, false);
+			if not thread:isEnded() then
+				self:endThread(thread, false);
 			end
 		end
 	end
@@ -236,72 +187,6 @@ Script.signal = function(self, signal, ...)
 		for thread, _ in pairs(blockedThreadsCopy) do
 			unblockThread(self, thread, signal, ...);
 		end
-	end
-end
-
-Script.waitFrame = function(self)
-	coroutine.yield();
-end
-
-Script.wait = function(self, seconds)
-	local endTime = self._time + seconds;
-	while self._time < endTime do
-		coroutine.yield();
-	end
-end
-
-Script.thread = function(self, functionToThread)
-	assert(type(functionToThread) == "function");
-	return coroutine.yield("fork", self, functionToThread);
-end
-
-Script.waitFor = function(self, signal)
-	assert(type(signal) == "string");
-	return self:waitForAny({signal});
-end
-
-Script.waitForAny = function(self, signals)
-	assert(type(signals) == "table");
-	local returns = coroutine.yield("waitForSignals", signals);
-	return unpack(returns);
-end
-
-Script.endOn = function(self, signal)
-	assert(type(signal) == "string");
-	return self:endOnAny({signal});
-end
-
-Script.endOnAny = function(self, signals)
-	assert(type(signals) == "table");
-	coroutine.yield("endOnSignals", signals);
-end
-
-Script.join = function(self, thread)
-	return self:joinAny({thread});
-end
-
-Script.joinAny = function(self, threads)
-	local returns = coroutine.yield("join", threads);
-	return unpack(returns);
-end
-
-Script.hang = function(self)
-	coroutine.yield("hang");
-end
-
-Script.tween = function(self, from, to, duration, easing, set)
-	assert(duration >= 0);
-	if duration == 0 then
-		set(to);
-		return;
-	end
-	local startTime = self._time;
-	while self._time <= (startTime + duration) do
-		local t = (self._time - startTime) / duration;
-		local t = MathUtils.ease(t, easing);
-		local currentValue = from + t * (to - from);
-		set(currentValue);
-		self:waitFrame();
 	end
 end
 

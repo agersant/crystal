@@ -418,8 +418,9 @@ tests[#tests].body = function()
 
 	local scriptB = Script:new(function(self)
 		scriptA:addThreadAndRun(function(self)
-			assert(self == scriptA);
-			a = self.b;
+			local owner = self:getOwner();
+			assert(owner == scriptA);
+			a = owner.b;
 		end);
 	end);
 
