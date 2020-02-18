@@ -20,7 +20,7 @@ LocomotionSystem.beforePhysics = function(self, dt)
 		local speed = locomotion:getSpeed();
 		local angle = locomotion:getMovementAngle();
 		if angle then
-			physicsBody:setAngle(angle); -- TODO decouple this from locomotion?
+			physicsBody:setAngle(angle);
 			local dx = math.cos(angle);
 			local dy = math.sin(angle);
 			physicsBody:setLinearVelocity(speed * dx, speed * dy);
