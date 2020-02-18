@@ -9,6 +9,7 @@ local Script = Class("Script");
 
 local pumpThread, endThread, markAsEnded;
 
+-- TODO move thread to its own class and make them the self parameter in their runtime (instead of script)
 local newThread = function(self, parentThread, functionToThread)
 	assert(type(functionToThread) == "function");
 	local threadCoroutine = coroutine.create(functionToThread);
