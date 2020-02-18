@@ -2,6 +2,7 @@ require("engine/utils/OOP");
 local CombatSystem = require("arpg/field/combat/CombatSystem");
 local SkillSystem = require("arpg/field/combat/skill/SkillSystem");
 local Teams = require("arpg/field/combat/Teams");
+local DamageNumbersSystem = require("arpg/field/hud/damage/DamageNumbersSystem");
 local HUD = require("arpg/field/hud/HUD");
 local AnimationSelectionSystem = require("arpg/field/animation/AnimationSelectionSystem");
 local InteractionControls = require("arpg/field/controls/InteractionControls");
@@ -61,6 +62,7 @@ Field.addSystems = function(self)
 	ecs:addSystem(InteractionControlsSystem:new(ecs));
 	ecs:addSystem(SkillSystem:new(ecs));
 	ecs:addSystem(CombatSystem:new(ecs));
+	ecs:addSystem(DamageNumbersSystem:new(ecs));
 end
 
 Field.update = function(self, dt)
