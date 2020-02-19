@@ -23,7 +23,7 @@ local Sahagin = Class("Sahagin", Entity);
 local attack = function(self)
 	self:setMovementAngle(nil);
 	self:resetMultiHitTracking();
-	self:setDamageUnits({DamageUnit:new(10)});
+	self:setDamagePayload({DamageUnit:new(10)});
 	self:setAnimation("attack_" .. self:getDirection4(), true);
 	self:waitFor("animationEnd");
 end

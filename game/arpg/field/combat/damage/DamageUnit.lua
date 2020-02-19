@@ -1,7 +1,8 @@
 require("engine/utils/OOP");
 local DamageTypes = require("arpg/field/combat/damage/DamageTypes");
 local Elements = require("arpg/field/combat/damage/Elements");
-local DamageScalingSources = require("arpg/field/combat/damage/DamageScalingSources");
+local DamageScalingSource = require("arpg/field/combat/damage/DamageScalingSource");
+local ScalingSources = require("arpg/field/combat/stats/ScalingSources");
 
 local DamageUnit = Class("DamageUnit");
 
@@ -12,7 +13,7 @@ DamageUnit.init = function(self, flatAmount, damageType, element)
 	self._element = element or Elements.UNASPECTED;
 	self._flatAmount = flatAmount or 0;
 	self._scalingRatio = 0;
-	self._scalingSource = DamageScalingSources.ATTACKER_OFFENSE_PHYSICAL;
+	self._damageScalingSource = DamageScalingSource:new(ScalingSources.OFFENSE_PHYSICAL);
 end
 
 DamageUnit.getDamageType = function(self)
@@ -35,15 +36,16 @@ DamageUnit.getScalingRatio = function(self)
 	return self._scalingRatio;
 end
 
-DamageUnit.getScalingSource = function(self)
-	return self._scalingSource;
+DamageUnit.getDamageScalingSource = function(self)
+	return self._damageScalingSource;
 end
 
-DamageUnit.setScalingAmount = function(self, ratio, scalingSource)
+DamageUnit.setScalingAmount = function(self, ratio, damageScalingSource)
 	assert(ratio);
-	assert(scalingSource);
+	assert(damageScalingSource);
+	assert(damageScalingSource:isInstanceOf(DamageScalingSource));
 	self._scalingRatio = ratio;
-	self._scalingSource = scalingSource;
+	self._damageScalingSource = damageScalingSource;
 end
 
 return DamageUnit;

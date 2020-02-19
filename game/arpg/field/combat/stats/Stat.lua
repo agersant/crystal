@@ -5,13 +5,15 @@ local Stat = Class("Stat");
 
 -- PUBLIC API
 
-Stat.init = function(self, value, minValue, maxValue)
+Stat.init = function(self, baseValue, minValue, maxValue)
 	self._min = minValue;
 	self._max = maxValue;
-	self:setValue(value);
+	self._modifiers = {};
+	assert(baseValue);
+	self:setBaseValue(baseValue);
 end
 
-Stat.setValue = function(self, value)
+Stat.setBaseValue = function(self, value)
 	if self._min and self._max then
 		self._value = MathUtils.clamp(self._min, value, self._max);
 	elseif self._min then
@@ -23,7 +25,7 @@ Stat.setValue = function(self, value)
 	end
 end
 
-Stat.getValue = function(self)
+Stat.getBaseValue = function(self)
 	return self._value;
 end
 
@@ -36,11 +38,11 @@ Stat.getMaxValue = function(self)
 end
 
 Stat.substract = function(self, amount)
-	self:setValue(self._value - amount);
+	self:setBaseValue(self._value - amount);
 end
 
 Stat.add = function(self, amount)
-	self:setValue(self._value + amount);
+	self:setBaseValue(self._value + amount);
 end
 
 return Stat;

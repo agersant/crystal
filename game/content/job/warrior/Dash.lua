@@ -15,7 +15,7 @@ local action = function(self)
 	self._movementToken = self:disableMovementControls();
 
 	self:resetMultiHitTracking();
-	self:setDamageUnits({DamageUnit:new(10)});
+	self:setDamagePayload({DamageUnit:new(10)});
 
 	self:setAnimation("dash_" .. self:getDirection4());
 
