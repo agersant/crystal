@@ -27,14 +27,14 @@ end
 
 local performCombo = function(self)
 	self:endOn("disrupted");
-	self._comboCounter = 0;
-	while self:isIdle() and self._comboCounter < 4 do
-		local swing = self:doAction(getComboSwingAction(self._comboCounter));
-		self._comboCounter = self._comboCounter + 1;
-		self._didInputNextMove = false;
+	local comboCounter = 0;
+	while self:isIdle() and comboCounter < 4 do
+		local swing = self:doAction(getComboSwingAction(comboCounter));
+		comboCounter = comboCounter + 1;
+		local didInputNextMove = false;
 		local inputWatch = self:thread(function(self)
 			self:waitFor("+useSkill");
-			self._didInputNextMove = true;
+			didInputNextMove = true;
 		end);
 		if not self:join(swing) or not self:isIdle() then
 			break
@@ -42,7 +42,7 @@ local performCombo = function(self)
 		if not inputWatch:isDead() then
 			inputWatch:stop();
 		end
-		if not self._didInputNextMove then
+		if not didInputNextMove then
 			break
 		end
 	end
