@@ -36,7 +36,19 @@ local loadImage = function(self, path, origin)
 	return "image", image;
 end
 
-local unloadImage = function(self, path)
+local unloadImage = function(self, path, origin)
+	-- N/A
+end
+
+-- SHADER
+
+local loadShader = function(self, path, origin)
+	local shaderCode = love.filesystem.read(path);
+	local shader = love.graphics.newShader(shaderCode);
+	return "shader", shader;
+end
+
+local unloadShader = function(self, path, origin)
 	-- N/A
 end
 
@@ -171,6 +183,8 @@ loadAsset = function(self, path, origin)
 			assetType, assetData = loadImage(self, path, origin);
 		elseif extension == "lua" then
 			assetType, assetData = loadLuaFile(self, path, origin);
+		elseif extension == "glsl" then
+			assetType, assetData = loadShader(self, path, origin);
 		else
 			error("Unsupported asset file extension: " .. tostring(extension));
 		end
@@ -229,6 +243,8 @@ unloadAsset = function(self, path, origin)
 			unloadImage(self, path, origin);
 		elseif extension == "lua" then
 			unloadLuaFile(self, path, origin);
+		elseif extension == "glsl" then
+			unloadShader(self, path, origin);
 		else
 			error("Unsupported asset file extension: " .. tostring(extension));
 		end
@@ -285,6 +301,10 @@ end
 
 Assets.getSpritesheet = function(self, path)
 	return getAsset(self, "spritesheet", path);
+end
+
+Assets.getShader = function(self, path)
+	return getAsset(self, "shader", path);
 end
 
 local instance = Assets:new();
