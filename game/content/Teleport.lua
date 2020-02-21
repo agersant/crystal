@@ -1,4 +1,5 @@
 require("engine/utils/OOP");
+local PartyMember = require("arpg/persistence/party/PartyMember");
 local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/Scene");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
@@ -33,7 +34,7 @@ local teleportScript = function(self)
 		local watchDirectionThread = self:thread(function(self)
 			while true do
 				self:waitFrame();
-				if triggeredBy:getAssignedPlayer() then
+				if triggeredBy:getComponent(PartyMember) then
 					local teleportAngle = teleportEntity:getAngle();
 					local entityAngle = triggeredBy:getAngle();
 					local correctDirection = math.abs(teleportAngle - entityAngle) < math.pi / 2;
