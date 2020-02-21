@@ -2,8 +2,10 @@ require("engine/utils/OOP");
 local CombatData = require("arpg/field/combat/CombatData");
 local CombatHitbox = require("arpg/field/combat/CombatHitbox");
 local DamageIntent = require("arpg/field/combat/damage/DamageIntent");
+local HitBlink = require("arpg/field/combat/HitBlink");
 local IdleAnimation = require("arpg/field/animation/IdleAnimation");
 local WalkAnimation = require("arpg/field/animation/WalkAnimation");
+local CommonShader = require("arpg/graphics/CommonShader");
 local ComboAttack = require("content/job/warrior/ComboAttack");
 local Dash = require("content/job/warrior/Dash");
 local Assets = require("engine/resources/Assets");
@@ -32,20 +34,26 @@ end
 
 Warrior.init = function(self, scene)
 	Warrior.super.init(self, scene);
+
 	local sheet = Assets:getSpritesheet("assets/spritesheet/duran.lua");
 	self:addComponent(Sprite:new(sheet));
-	self:addComponent(Locomotion:new());
+	self:addComponent(CommonShader:new());
+	self:addComponent(IdleAnimation:new("idle"));
+	self:addComponent(WalkAnimation:new("walk"));
+
+	self:addComponent(ScriptRunner:new());
+	self:addComponent(Actor:new());
+
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	self:addComponent(Locomotion:new());
 	self:addComponent(Collision:new(6));
+
 	self:addComponent(CombatData:new());
 	self:addComponent(DamageIntent:new());
 	self:addComponent(CombatHitbox:new());
 	self:addComponent(Weakbox:new());
-	self:addComponent(ScriptRunner:new());
-	self:addComponent(Actor:new());
 
-	self:addComponent(IdleAnimation:new("idle"));
-	self:addComponent(WalkAnimation:new("walk"));
+	self:addComponent(HitBlink:new());
 
 	self:addComponent(ComboAttack:new(1));
 	self:addComponent(Dash:new(2));

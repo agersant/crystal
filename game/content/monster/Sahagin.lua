@@ -4,8 +4,10 @@ local CombatData = require("arpg/field/combat/CombatData");
 local DamageUnit = require("arpg/field/combat/damage/DamageUnit");
 local CombatHitbox = require("arpg/field/combat/CombatHitbox");
 local DamageIntent = require("arpg/field/combat/damage/DamageIntent");
+local HitBlink = require("arpg/field/combat/HitBlink");
 local IdleAnimation = require("arpg/field/animation/IdleAnimation");
 local WalkAnimation = require("arpg/field/animation/WalkAnimation");
+local CommonShader = require("arpg/graphics/CommonShader");
 local MovementAI = require("engine/mapscene/behavior/ai/movement/MovementAI");
 local Entity = require("engine/ecs/Entity");
 local Assets = require("engine/resources/Assets");
@@ -110,22 +112,28 @@ end
 
 Sahagin.init = function(self, scene)
 	Sahagin.super.init(self, scene);
+
 	local sheet = Assets:getSpritesheet("assets/spritesheet/sahagin.lua");
 	self:addComponent(Sprite:new(sheet));
+	self:addComponent(CommonShader:new());
+	self:addComponent(IdleAnimation:new("idle"));
+	self:addComponent(WalkAnimation:new("walk"));
+
+	self:addComponent(ScriptRunner:new());
+	self:addComponent(Actor:new());
+
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	self:addComponent(Locomotion:new());
 	self:addComponent(MovementAI:new());
-	self:addComponent(TargetSelector:new());
 	self:addComponent(Collision:new(4));
+
 	self:addComponent(CombatData:new());
 	self:addComponent(DamageIntent:new());
 	self:addComponent(CombatHitbox:new());
 	self:addComponent(Weakbox:new());
-	self:addComponent(ScriptRunner:new());
-	self:addComponent(Actor:new());
+	self:addComponent(TargetSelector:new());
 
-	self:addComponent(IdleAnimation:new("idle"));
-	self:addComponent(WalkAnimation:new("walk"));
+	self:addComponent(HitBlink:new());
 
 	local ai = self:addScript(Script:new(ai));
 	ai:addThread(handleDisruption);

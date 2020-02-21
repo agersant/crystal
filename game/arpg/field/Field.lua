@@ -3,6 +3,7 @@ local AnimationSelectionSystem = require("arpg/field/animation/AnimationSelectio
 local CombatSystem = require("arpg/field/combat/CombatSystem");
 local GameOverSystem = require("arpg/field/combat/GameOverSystem");
 local SkillSystem = require("arpg/field/combat/skill/SkillSystem");
+local HitBlinkSystem = require("arpg/field/combat/HitBlinkSystem");
 local InteractionControls = require("arpg/field/controls/InteractionControls");
 local MovementControls = require("arpg/field/controls/MovementControls");
 local MovementControlsSystem = require("arpg/field/controls/MovementControlsSystem");
@@ -60,6 +61,7 @@ Field.addSystems = function(self)
 	ecs:addSystem(InteractionControlsSystem:new(ecs));
 	ecs:addSystem(SkillSystem:new(ecs));
 	ecs:addSystem(CombatSystem:new(ecs));
+	ecs:addSystem(HitBlinkSystem:new(ecs));
 	ecs:addSystem(DamageNumbersSystem:new(ecs));
 	ecs:addSystem(GameOverSystem:new(ecs));
 end
