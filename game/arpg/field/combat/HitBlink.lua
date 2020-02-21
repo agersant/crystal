@@ -14,11 +14,10 @@ local script = function(self)
 		self:wait(2 * 1 / 60);
 		self:setHighlightColor(nil);
 		self:wait(2 * 1 / 60);
-		local fadeToNormal = self:tween(1, 0, 0.3, "inCubic", function(t)
+		self:tween(1, 0, 0.3, "inCubic", function(t)
 			local c = Colors.strawberry;
 			self:setHighlightColor({c[1] * t, c[2] * t, c[3] * t});
 		end);
-		self:join(fadeToNormal);
 		self:setHighlightColor(nil);
 	end
 end
