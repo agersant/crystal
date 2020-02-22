@@ -2,7 +2,7 @@ require("engine/utils/OOP");
 local CombatData = require("arpg/field/combat/CombatData");
 local CombatHitbox = require("arpg/field/combat/CombatHitbox");
 local DamageIntent = require("arpg/field/combat/damage/DamageIntent");
-local HitBlink = require("arpg/field/combat/HitBlink");
+local HitBlink = require("arpg/field/combat/hit-reactions/Hitblink");
 local IdleAnimation = require("arpg/field/animation/IdleAnimation");
 local WalkAnimation = require("arpg/field/animation/WalkAnimation");
 local CommonShader = require("arpg/graphics/CommonShader");
