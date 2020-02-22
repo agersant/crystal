@@ -16,7 +16,7 @@ CollisionSystem.beforePhysics = function(self, dt)
 	for entity in pairs(self._query:getAddedEntities()) do
 		local body = entity:getComponent(PhysicsBody):getBody();
 		local collision = entity:getComponent(Collision);
-		local fixture = love.physics.newFixture(body, collision:getShape());
+		local fixture = love.physics.newFixture(body, collision:getShape(), 0);
 		fixture:setFilterData(CollisionFilters.SOLID,
                       		CollisionFilters.GEO + CollisionFilters.SOLID + CollisionFilters.TRIGGER, 0);
 		fixture:setFriction(0);

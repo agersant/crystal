@@ -91,8 +91,8 @@ local handleDamage = function(self)
 				self:getComponent(Collision):getFixture():setRestitution(.8);
 				self:setAnimation("knockback_" .. self:getDirection4());
 				self:wait(12 * 1 / 60);
-				self:getBody():setLinearDamping(10, 0);
-				self:getBody():applyLinearImpulse(200, 0);
+				self:getBody():setLinearDamping(20, 0);
+				self:getBody():applyLinearImpulse(1000, 0);
 				self:wait(0.4);
 			end);
 		end

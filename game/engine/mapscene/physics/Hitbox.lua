@@ -14,7 +14,7 @@ Hitbox.setShape = function(self, body, shape)
 		self._fixture = nil;
 	end
 	if shape then
-		self._fixture = love.physics.newFixture(body, shape);
+		self._fixture = love.physics.newFixture(body, shape, 0);
 		self._fixture:setFilterData(CollisionFilters.HITBOX, CollisionFilters.WEAKBOX, 0);
 		self._fixture:setSensor(true);
 		self._fixture:setUserData(self);
