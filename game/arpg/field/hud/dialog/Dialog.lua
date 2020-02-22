@@ -13,8 +13,8 @@ Dialog.init = function(self, dialogBox)
 	self._inputContext = nil;
 end
 
-Dialog.beginDialog = function(self, script, player)
-	assert(script);
+Dialog.beginDialog = function(self, thread, player)
+	assert(thread);
 	assert(player);
 	assert(player:isInstanceOf(Entity));
 	assert(player:getComponent(InputListener));
@@ -22,7 +22,7 @@ Dialog.beginDialog = function(self, script, player)
 	assert(not self._inputListener);
 	assert(not self._inputContext);
 	self._inputListener = player:getComponent(InputListener);
-	self._inputContext = self._inputListener:pushContext(script);
+	self._inputContext = self._inputListener:pushContext(thread);
 
 	return self._dialogBox:open();
 end
