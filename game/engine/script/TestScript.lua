@@ -443,7 +443,7 @@ tests[#tests].body = function()
 	assert(a == 1);
 end
 
-tests[#tests + 1] = {name = "Succesive waits not treated as waitForAny"};
+tests[#tests + 1] = {name = "Successive waits not treated as waitForAny"};
 tests[#tests].body = function()
 	local sentinel = false;
 	local script = Script:new(function(self)
@@ -460,6 +460,38 @@ tests[#tests].body = function()
 	script:signal("s1", 1);
 	script:signal("s2", 2);
 	script:signal("s3", 3);
+	assert(sentinel);
+end
+
+tests[#tests + 1] = {name = "Scope cleanup functions run after thread finishes"};
+tests[#tests].body = function()
+	local sentinel = false;
+	local script = Script:new(function(self)
+		self:scope(function()
+			sentinel = true
+		end);
+		self:waitFor("s1");
+	end);
+
+	script:update(0);
+	assert(not sentinel);
+	script:signal("s1");
+	assert(sentinel);
+end
+
+tests[#tests + 1] = {name = "Scope cleanup functions run after thread is stopped"};
+tests[#tests].body = function()
+	local sentinel = false;
+	local script = Script:new();
+	local t = script:addThreadAndRun(function(self)
+		self:scope(function()
+			sentinel = true
+		end);
+		self:waitFor("s1");
+	end);
+
+	assert(not sentinel);
+	t:stop();
 	assert(sentinel);
 end
 

@@ -168,6 +168,10 @@ Script.endThread = function(self, thread, completedExecution)
 	for i, childThread in ipairs(thread:getChildThreads()) do
 		self:endThread(childThread, false);
 	end
+	local cleanupFunctions = thread:getCleanupFunctions();
+	for i = #cleanupFunctions, 1, -1 do
+		cleanupFunctions[i]();
+	end
 	for otherThread in pairs(thread:getThreadsJoiningOnMe()) do
 		otherThread:unblock();
 		pumpThread(otherThread:getOwner(), otherThread, {completedExecution});

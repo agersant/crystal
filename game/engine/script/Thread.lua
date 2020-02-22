@@ -15,6 +15,7 @@ Thread.init = function(self, owner, parentThread, functionToThread)
 	self._endsOn = {};
 	self._joinedBy = {};
 	self._joiningOn = {};
+	self._cleanupFunctions = {};
 
 	if parentThread then
 		parentThread._childThreads[self] = true;
@@ -97,6 +98,10 @@ Thread.getThreadsJoiningOn = function(self)
 	return self._joiningOn;
 end
 
+Thread.getCleanupFunctions = function(self)
+	return self._cleanupFunctions;
+end
+
 Thread.waitFrame = function(self)
 	coroutine.yield();
 end
@@ -150,6 +155,11 @@ end
 Thread.stop = function(self)
 	assert(not self:isDead());
 	self._owner:endThread(self, false);
+end
+
+Thread.scope = function(self, cleanupFunction)
+	assert(type(cleanupFunction) == "function");
+	table.insert(self._cleanupFunctions, cleanupFunction);
 end
 
 Thread.tween = function(self, from, to, duration, easing, set)
