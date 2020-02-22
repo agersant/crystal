@@ -13,25 +13,7 @@ MovementControls.init = function(self)
 	self._isInputtingDown = false;
 	self._lastXInput = nil;
 	self._lastYInput = nil;
-	self._disabledCount = 0;
 	self._disabledTokens = {};
-end
-
-MovementControls.enableMovementControls = function(self, token)
-	assert(self._disabledTokens[token]);
-	self._disabledCount = self._disabledCount - 1;
-	self._disabledTokens[token] = nil;
-end
-
-MovementControls.disableMovementControls = function(self)
-	local token = {};
-	self._disabledCount = self._disabledCount + 1;
-	self._disabledTokens[token] = true;
-	return token;
-end
-
-MovementControls.areMovementControlsEnabled = function(self)
-	return self._disabledCount == 0;
 end
 
 MovementControls.getLastXInput = function(self)

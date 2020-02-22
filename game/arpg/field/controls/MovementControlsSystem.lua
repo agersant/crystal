@@ -31,29 +31,27 @@ MovementControlsSystem.beforeScripts = function(self, dt)
 
 		local locomotion = entity:getComponent(Locomotion);
 
-		if movementControls:areMovementControlsEnabled() then
-			if left or right or up or down then
-				local xDir, yDir;
+		if left or right or up or down then
+			local xDir, yDir;
 
-				if left and right then
-					xDir = movementControls:getLastXInput() or 0;
-				else
-					xDir = left and -1 or right and 1 or 0;
-				end
-				assert(xDir);
-
-				if up and down then
-					yDir = movementControls:getLastYInput() or 0;
-				else
-					yDir = up and -1 or down and 1 or 0;
-				end
-				assert(yDir);
-
-				local angle = math.atan2(yDir, xDir);
-				locomotion:setMovementAngle(angle);
+			if left and right then
+				xDir = movementControls:getLastXInput() or 0;
 			else
-				locomotion:setMovementAngle(nil);
+				xDir = left and -1 or right and 1 or 0;
 			end
+			assert(xDir);
+
+			if up and down then
+				yDir = movementControls:getLastYInput() or 0;
+			else
+				yDir = up and -1 or down and 1 or 0;
+			end
+			assert(yDir);
+
+			local angle = math.atan2(yDir, xDir);
+			locomotion:setMovementAngle(angle);
+		else
+			locomotion:setMovementAngle(nil);
 		end
 	end
 end

@@ -87,9 +87,13 @@ local handleDamage = function(self)
 		self:waitFor("receivedDamage");
 		if self:isIdle() then
 			self:doAction(function(self)
-				self:setSpeed(0);
+				self:scope(self:disableLocomotion());
+				self:getComponent(Collision):getFixture():setRestitution(.8);
 				self:setAnimation("knockback_" .. self:getDirection4());
-				self:wait(1);
+				self:wait(12 * 1 / 60);
+				self:getBody():setLinearDamping(10, 0);
+				self:getBody():applyLinearImpulse(200, 0);
+				self:wait(0.4);
 			end);
 		end
 	end

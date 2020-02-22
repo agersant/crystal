@@ -12,7 +12,7 @@ local action = function(self)
 	local recoveryBeginSpeed = 60;
 	local recoveryDuration = 0.2;
 
-	self._movementToken = self:disableMovementControls();
+	self:scope(self:disableLocomotion());
 
 	self:resetMultiHitTracking();
 	self:setDamagePayload({DamageUnit:new(10)});
@@ -20,33 +20,28 @@ local action = function(self)
 	self:setAnimation("dash_" .. self:getDirection4());
 
 	local angle = self:getAngle();
-	self:setMovementAngle(angle + math.pi);
+	local dx = math.cos(angle);
+	local dy = math.sin(angle);
+
+	self:setAngle(angle + math.pi);
 
 	self:tween(buildupPeakSpeed, 0, buildupDuration, "outCubic", function(speed)
-		self:setSpeed(speed);
+		self:setLinearVelocity(-dx * speed, -dy * speed);
 	end);
 
-	self:setMovementAngle(angle);
 	self:tween(peakSpeed, recoveryBeginSpeed, dashDuration, "outQuartic", function(speed)
-		self:setSpeed(speed);
+		self:setLinearVelocity(dx * speed, dy * speed);
 	end);
 	self:tween(recoveryBeginSpeed, 0, recoveryDuration, "outQuadratic", function(speed)
-		self:setSpeed(speed);
+		self:setLinearVelocity(dx * speed, dy * speed);
 	end);
-end
-
-local cleanup = function(self)
-	if self._movementToken then
-		self:enableMovementControls(self._movementToken);
-		self._movementToken = nil;
-	end
 end
 
 local dashScript = function(self)
 	while true do
 		self:waitFor("+useSkill");
 		if self:isIdle() then
-			self:doAction(action, cleanup);
+			self:doAction(action);
 		end
 	end
 end

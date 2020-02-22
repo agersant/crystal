@@ -7,6 +7,23 @@ Locomotion.init = function(self, speed)
 	Locomotion.super.init(self);
 	self._speed = speed or 0;
 	self._movementAngle = nil;
+	self._disabledCount = 0;
+end
+
+Locomotion.isEnabled = function(self)
+	return self._disabledCount <= 0;
+end
+
+Locomotion.disableLocomotion = function(self)
+	self._disabledCount = self._disabledCount + 1;
+	return function()
+		self:enableLocomotion();
+	end
+end
+
+Locomotion.enableLocomotion = function(self)
+	assert(self._disabledCount > 0);
+	self._disabledCount = self._disabledCount - 1;
 end
 
 Locomotion.getSpeed = function(self)

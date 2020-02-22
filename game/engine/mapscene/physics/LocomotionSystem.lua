@@ -19,13 +19,15 @@ LocomotionSystem.beforePhysics = function(self, dt)
 		local physicsBody = entity:getComponent(PhysicsBody);
 		local speed = locomotion:getSpeed();
 		local angle = locomotion:getMovementAngle();
-		if angle then
-			physicsBody:setAngle(angle);
-			local dx = math.cos(angle);
-			local dy = math.sin(angle);
-			physicsBody:setLinearVelocity(speed * dx, speed * dy);
-		else
-			physicsBody:setLinearVelocity(0, 0);
+		if locomotion:isEnabled() then
+			if angle then
+				physicsBody:setAngle(angle);
+				local dx = math.cos(angle);
+				local dy = math.sin(angle);
+				physicsBody:setLinearVelocity(speed * dx, speed * dy);
+			else
+				physicsBody:setLinearVelocity(0, 0);
+			end
 		end
 	end
 end
