@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local HitBlink = require("arpg/field/combat/hit-reactions/Hitblink");
+local HitBlink = require("arpg/field/combat/hit-reactions/HitBlink");
 local CommonShader = require("arpg/graphics/CommonShader");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local AllComponents = require("engine/ecs/query/AllComponents");
