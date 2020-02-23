@@ -384,7 +384,23 @@
       },
       {
         "source": "knockback.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "weak",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -3,
+                  -6
+                ],
+                "size": [
+                  17,
+                  14
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "source": "smashed.png",
