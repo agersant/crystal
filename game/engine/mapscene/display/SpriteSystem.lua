@@ -38,7 +38,7 @@ SpriteSystem.afterScripts = function(self, dt)
 		local sprite = entity:getComponent(Sprite);
 		local physicsBody = entity:getComponent(PhysicsBody);
 		local x, y = physicsBody:getPosition();
-		sprite:setSpritePosition(x, y);
+		sprite:setSpritePosition(x, y - physicsBody:getAltitude());
 		sprite:setZOrder(y);
 	end
 end

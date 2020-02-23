@@ -28,6 +28,7 @@ local restorePhysics = function(self)
 			fixture:setRestitution(oldRestitution);
 		end
 		self:getBody():setLinearDamping(dampingX, dampingY);
+		self:setAltitude(0);
 	end
 end
 
@@ -46,10 +47,17 @@ local smallFlinch = function(self, direction)
 
 	local dx = math.cos(direction);
 	local dy = math.sin(direction);
-	self:getBody():setLinearDamping(60, 0);
-	self:getBody():applyLinearImpulse(800 * dx, 800 * dy);
+	self:getBody():setLinearDamping(20, 0);
+	self:getBody():applyLinearImpulse(300 * dx, 300 * dy);
 
-	self:wait(0.3);
+	self:tween(0, 3, 0.1, "outCubic", function(a)
+		self:setAltitude(a);
+	end);
+	self:tween(3, 0, 0.1, "inCubic", function(a)
+		self:setAltitude(a);
+	end);
+
+	self:wait(0.1);
 end
 
 local largeFlinch = function(self, direction)
@@ -59,20 +67,49 @@ local largeFlinch = function(self, direction)
 	self:scope(restorePhysics(self));
 
 	local collision = self:getComponent(Collision);
+	local oldMask;
 	if collision then
 		local fixture = collision:getFixture();
+		oldMask = {fixture:getMask()};
 		fixture:setMask(CollisionFilters.SOLID);
 		fixture:setRestitution(.4);
 	end
 
-	self:wait(5 * 1 / 60);
+	self:wait(6 * 1 / 60);
 
 	local dx = math.cos(direction);
 	local dy = math.sin(direction);
-	self:getBody():setLinearDamping(15, 0);
-	self:getBody():applyLinearImpulse(1200 * dx, 1200 * dy);
 
-	self:wait(0.4);
+	self:getBody():setLinearDamping(4, 0);
+	self:getBody():applyLinearImpulse(400 * dx, 400 * dy);
+
+	self:tween(0, 16, 0.15, "outQuadratic", function(a)
+		self:setAltitude(a);
+	end);
+	self:tween(16, 0, 0.15, "inQuadratic", function(a)
+		self:setAltitude(a);
+	end);
+
+	self:tween(0, 4, 0.1, "outQuadratic", function(a)
+		self:setAltitude(a);
+	end);
+	self:tween(4, 0, 0.1, "inQuadratic", function(a)
+		self:setAltitude(a);
+	end);
+
+	self:tween(0, 2, 0.08, "outQuadratic", function(a)
+		self:setAltitude(a);
+	end);
+	self:tween(2, 0, 0.08, "inQuadratic", function(a)
+		self:setAltitude(a);
+	end);
+
+	if collision then
+		local fixture = collision:getFixture();
+		fixture:setMask(unpack(oldMask));
+	end
+
+	self:wait(0.6);
 end
 
 Flinch.beginFlinch = function(self, direction, amount)

@@ -11,6 +11,7 @@ PhysicsBody.init = function(self, physicsWorld, bodyType)
 	self._body:setUserData(self);
 	self._body:setActive(false);
 	self:setDirection8(1, 0);
+	self._altitude = 0;
 end
 
 PhysicsBody.getBody = function(self)
@@ -103,6 +104,15 @@ end
 PhysicsBody.distance2To = function(self, targetX, targetY)
 	local x, y = self:getPosition();
 	return MathUtils.distance2(x, y, targetX, targetY);
+end
+
+PhysicsBody.setAltitude = function(self, altitude)
+	assert(altitude);
+	self._altitude = altitude;
+end
+
+PhysicsBody.getAltitude = function(self)
+	return self._altitude;
 end
 
 return PhysicsBody;
