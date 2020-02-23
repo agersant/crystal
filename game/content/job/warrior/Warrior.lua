@@ -63,8 +63,6 @@ Warrior.init = function(self, scene)
 	self:addComponent(Dash:new(2));
 
 	self:addScript(Script:new(hitReactions));
-
-	-- TODO reimplement knockback
 end
 
 return Warrior;
