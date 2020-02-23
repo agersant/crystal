@@ -1,5 +1,6 @@
 require("engine/utils/OOP");
-local DamageIntent = require("arpg/field/combat/damage/DamageIntent");
+local FlinchAmounts = require("arpg/field/combat/hit-reactions/FlinchAmounts");
+local FlinchEffect = require("arpg/field/combat/hit-reactions/FlinchEffect");
 local DamageUnit = require("arpg/field/combat/damage/DamageUnit");
 local Skill = require("arpg/field/combat/skill/Skill");
 
@@ -19,7 +20,10 @@ local getComboSwingAction = function(swingCount)
 		end
 
 		self:resetMultiHitTracking();
-		self:setDamagePayload({DamageUnit:new(1)});
+		local flinchAmount = swingCount == 3 and FlinchAmounts.LARGE or FlinchAmounts.SMALL;
+		local onHitEffects = {FlinchEffect:new(flinchAmount)};
+		self:setDamagePayload({DamageUnit:new(1)}, onHitEffects);
+
 		self:setAnimation("attack_" .. self:getDirection4() .. "_" .. swingCount, true);
 		self:waitFor("animationEnd");
 	end

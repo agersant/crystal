@@ -4,7 +4,10 @@ local CombatData = require("arpg/field/combat/CombatData");
 local DamageUnit = require("arpg/field/combat/damage/DamageUnit");
 local CombatHitbox = require("arpg/field/combat/CombatHitbox");
 local DamageIntent = require("arpg/field/combat/damage/DamageIntent");
+local Flinch = require("arpg/field/combat/hit-reactions/Flinch");
+local FlinchEffect = require("arpg/field/combat/hit-reactions/FlinchEffect");
 local HitBlink = require("arpg/field/combat/hit-reactions/Hitblink");
+local FlinchAnimation = require("arpg/field/animation/FlinchAnimation");
 local IdleAnimation = require("arpg/field/animation/IdleAnimation");
 local WalkAnimation = require("arpg/field/animation/WalkAnimation");
 local CommonShader = require("arpg/graphics/CommonShader");
@@ -23,9 +26,11 @@ local Script = require("engine/script/Script");
 local Sahagin = Class("Sahagin", Entity);
 
 local attack = function(self)
+	self:endOn("disrupted");
 	self:setMovementAngle(nil);
 	self:resetMultiHitTracking();
-	self:setDamagePayload({DamageUnit:new(10)});
+	local onHitEffects = {FlinchEffect:new()};
+	self:setDamagePayload({DamageUnit:new(10)}, onHitEffects);
 	self:setAnimation("attack_" .. self:getDirection4(), true);
 	self:waitFor("animationEnd");
 end
@@ -75,30 +80,6 @@ local ai = function(self)
 	end
 end
 
-local handleDisruption = function(self)
-	while true do
-		self:waitFor("disrupted");
-		self:stopAction();
-	end
-end
-
-local handleDamage = function(self)
-	while true do
-		self:waitFor("receivedDamage");
-		if self:isIdle() then
-			self:doAction(function(self)
-				self:scope(self:disableLocomotion());
-				self:getComponent(Collision):getFixture():setRestitution(.8);
-				self:setAnimation("knockback_" .. self:getDirection4());
-				self:wait(12 * 1 / 60);
-				self:getBody():setLinearDamping(20, 0);
-				self:getBody():applyLinearImpulse(1000, 0);
-				self:wait(0.4);
-			end);
-		end
-	end
-end
-
 local handleDeath = function(self)
 	while true do
 		self:waitFor("died");
@@ -120,6 +101,7 @@ Sahagin.init = function(self, scene)
 	local sheet = Assets:getSpritesheet("assets/spritesheet/sahagin.lua");
 	self:addComponent(Sprite:new(sheet));
 	self:addComponent(CommonShader:new());
+	self:addComponent(FlinchAnimation:new("knockback"));
 	self:addComponent(IdleAnimation:new("idle"));
 	self:addComponent(WalkAnimation:new("walk"));
 
@@ -137,11 +119,10 @@ Sahagin.init = function(self, scene)
 	self:addComponent(Weakbox:new());
 	self:addComponent(TargetSelector:new());
 
+	self:addComponent(Flinch:new());
 	self:addComponent(HitBlink:new());
 
 	local ai = self:addScript(Script:new(ai));
-	ai:addThread(handleDisruption);
-	ai:addThread(handleDamage);
 	ai:addThread(handleDeath);
 end
 

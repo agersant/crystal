@@ -2,7 +2,9 @@ require("engine/utils/OOP");
 local CombatData = require("arpg/field/combat/CombatData");
 local CombatHitbox = require("arpg/field/combat/CombatHitbox");
 local DamageIntent = require("arpg/field/combat/damage/DamageIntent");
+local Flinch = require("arpg/field/combat/hit-reactions/Flinch");
 local HitBlink = require("arpg/field/combat/hit-reactions/Hitblink");
+local FlinchAnimation = require("arpg/field/animation/FlinchAnimation");
 local IdleAnimation = require("arpg/field/animation/IdleAnimation");
 local WalkAnimation = require("arpg/field/animation/WalkAnimation");
 local CommonShader = require("arpg/graphics/CommonShader");
@@ -38,6 +40,7 @@ Warrior.init = function(self, scene)
 	local sheet = Assets:getSpritesheet("assets/spritesheet/duran.lua");
 	self:addComponent(Sprite:new(sheet));
 	self:addComponent(CommonShader:new());
+	self:addComponent(FlinchAnimation:new("knockback"));
 	self:addComponent(IdleAnimation:new("idle"));
 	self:addComponent(WalkAnimation:new("walk"));
 
@@ -54,6 +57,7 @@ Warrior.init = function(self, scene)
 	self:addComponent(Weakbox:new());
 
 	self:addComponent(HitBlink:new());
+	self:addComponent(Flinch:new());
 
 	self:addComponent(ComboAttack:new(1));
 	self:addComponent(Dash:new(2));

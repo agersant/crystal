@@ -184,23 +184,27 @@ CombatData.inflictDamage = function(self, intent, target)
 	assert(target:isInstanceOf(CombatData));
 	assert(intent:isInstanceOf(DamageIntent));
 	local damage = computeDamage(self, intent, target);
-	local effectiveDamage = target:receiveDamage(damage);
+	local onHitEffects = {};
 	for _, onHitEffect in ipairs(intent:getOnHitEffects()) do
-		onHitEffect:apply(self, target, effectiveDamage);
+		table.insert(onHitEffects, onHitEffect);
 	end
 	for onHitEffect in pairs(self._onHitEffects) do
-		onHitEffect:apply(self, target, effectiveDamage);
+		table.insert(onHitEffects, onHitEffect);
 	end
+	target:receiveDamage(self, damage, onHitEffects);
 end
 
-CombatData.receiveDamage = function(self, damage)
+CombatData.receiveDamage = function(self, attacker, damage, onHitEffects)
+	assert(attacker);
+	assert(damage);
+	assert(onHitEffects);
 	if self:isDead() then
 		return;
 	end
 	local effectiveDamage = mitigateDamage(self, damage);
 	local health = self:getStat(Stats.HEALTH);
 	health:substract(effectiveDamage:getTotal());
-	self:getEntity():createEvent(DamageEvent, effectiveDamage);
+	self:getEntity():createEvent(DamageEvent, attacker, effectiveDamage, onHitEffects);
 	if self:isDead() then
 		self:getEntity():createEvent(DeathEvent);
 	end

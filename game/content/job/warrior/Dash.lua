@@ -1,5 +1,7 @@
 require("engine/utils/OOP");
 local DamageUnit = require("arpg/field/combat/damage/DamageUnit");
+local FlinchAmounts = require("arpg/field/combat/hit-reactions/FlinchAmounts");
+local FlinchEffect = require("arpg/field/combat/hit-reactions/FlinchEffect");
 local Skill = require("arpg/field/combat/skill/Skill");
 
 local Dash = Class("Dash", Skill);
@@ -15,7 +17,8 @@ local action = function(self)
 	self:scope(self:disableLocomotion());
 
 	self:resetMultiHitTracking();
-	self:setDamagePayload({DamageUnit:new(10)});
+	local onHitEffects = {FlinchEffect:new(FlinchAmounts.LARGE)};
+	self:setDamagePayload({DamageUnit:new(10)}, onHitEffects);
 
 	self:setAnimation("dash_" .. self:getDirection4());
 

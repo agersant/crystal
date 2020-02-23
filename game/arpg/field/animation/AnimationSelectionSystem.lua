@@ -1,6 +1,8 @@
 require("engine/utils/OOP");
+local FlinchAnimation = require("arpg/field/animation/FlinchAnimation");
 local IdleAnimation = require("arpg/field/animation/IdleAnimation");
 local WalkAnimation = require("arpg/field/animation/WalkAnimation");
+local Flinch = require("arpg/field/combat/hit-reactions/Flinch");
 local System = require("engine/ecs/System");
 local AllComponents = require("engine/ecs/query/AllComponents");
 local Actor = require("engine/mapscene/behavior/Actor");
@@ -14,14 +16,36 @@ AnimationSelectionSystem.init = function(self, ecs)
 	AnimationSelectionSystem.super.init(self, ecs);
 	self._idles = AllComponents:new({Sprite, PhysicsBody, IdleAnimation});
 	self._walks = AllComponents:new({Sprite, PhysicsBody, Locomotion, WalkAnimation});
+	self._flinches = AllComponents:new({Sprite, PhysicsBody, Flinch, FlinchAnimation});
 	self:getECS():addQuery(self._idles);
 	self:getECS():addQuery(self._walks);
+	self:getECS():addQuery(self._flinches);
 end
 
 AnimationSelectionSystem.afterScripts = function(self)
 
 	local walkEntities = self._walks:getEntities();
 	local idleEntities = self._idles:getEntities();
+	local flinchEntities = self._flinches:getEntities();
+
+	-- TODO introduce the concept of directions in Tiger and let the sheet figure out the best direction for each animation
+
+	-- FLINCH
+	for entity in pairs(flinchEntities) do
+		local flinch = entity:getComponent(Flinch);
+		if flinch:getFlinchAmount() then
+			local actor = entity:getComponent(Actor);
+			local flinchAnimation = entity:getComponent(FlinchAnimation);
+			local animation = flinchAnimation:getFlinchAnimation();
+			if animation then
+				local sprite = entity:getComponent(Sprite);
+				local physicsBody = entity:getComponent(PhysicsBody);
+				sprite:setAnimation(animation .. "_" .. physicsBody:getDirection4());
+				walkEntities[entity] = nil;
+				idleEntities[entity] = nil;
+			end
+		end
+	end
 
 	-- WALK
 	for entity in pairs(walkEntities) do
@@ -34,7 +58,6 @@ AnimationSelectionSystem.afterScripts = function(self)
 				if animation then
 					local sprite = entity:getComponent(Sprite);
 					local physicsBody = entity:getComponent(PhysicsBody);
-					-- TODO introduce the concept of directions in Tiger and let the sheet figure out the best direction for our movement angle
 					sprite:setAnimation(animation .. "_" .. physicsBody:getDirection4());
 					idleEntities[entity] = nil;
 				end
@@ -51,7 +74,6 @@ AnimationSelectionSystem.afterScripts = function(self)
 			if animation then
 				local sprite = entity:getComponent(Sprite);
 				local physicsBody = entity:getComponent(PhysicsBody);
-				-- TODO introduce the concept of directions in Tiger and let the sheet figure out the best direction for our angle
 				sprite:setAnimation(animation .. "_" .. physicsBody:getDirection4());
 			end
 		end

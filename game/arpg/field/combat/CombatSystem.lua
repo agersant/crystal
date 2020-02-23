@@ -56,10 +56,15 @@ CombatSystem.duringScripts = function(self, dt)
 	for _, damageEvent in ipairs(damageEvents) do
 		local victim = damageEvent:getEntity();
 		if self._scriptRunnerQuery:contains(victim) then
-			local damage = damageEvent:getDamage();
-			assert(damage);
+			local attacker = damageEvent:getAttacker();
+			assert(attacker);
+			local effectiveDamage = damageEvent:getDamage();
+			assert(effectiveDamage);
 			victim:signalAllScripts("disrupted");
-			victim:signalAllScripts("receivedDamage", damage);
+			for _, onHitEffect in ipairs(damageEvent:getOnHitEffects()) do
+				onHitEffect:apply(attacker, victim, effectiveDamage);
+			end
+			victim:signalAllScripts("receivedDamage", effectiveDamage);
 		end
 	end
 
