@@ -25,6 +25,7 @@ DynamicLayer.spawnEntities = function(self, scene)
 	for i, tile in ipairs(self._tiles) do
 		scene:spawn(TileEntity, self._tileset:getImage(), tile.quad, tile.x, tile.y);
 	end
+	self._tiles = {};
 end
 
 return DynamicLayer;
