@@ -92,7 +92,6 @@ impl From<CollisionMesh> for CCollisionMesh {
 impl Drop for CCollisionMesh {
 	fn drop(&mut self) {
 		if !self.chains.is_null() && self.num_chains > 0 {
-			dbg!(self.num_chains);
 			let c_chains: &mut [CChain] =
 				unsafe { slice::from_raw_parts_mut(self.chains, self.num_chains as usize) };
 			for c_chain in c_chains.iter_mut() {
