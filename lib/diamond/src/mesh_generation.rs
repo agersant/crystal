@@ -1,4 +1,5 @@
 use crate::types::*;
+use geo::algorithm::simplify::Simplify;
 use geo_booleanop::boolean::BooleanOp;
 
 pub fn generate_mesh(polygons: &[Polygon]) -> CollisionMesh {
@@ -17,6 +18,7 @@ pub fn generate_mesh(polygons: &[Polygon]) -> CollisionMesh {
 		);
 		union_result = union_result.union(&polygon);
 	}
+	union_result = union_result.simplify(&0.5);
 
 	union_result.into()
 }

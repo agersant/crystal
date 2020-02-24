@@ -10,6 +10,7 @@ crate-type = ["cdylib"]
 [dependencies]
 geo-types = "0.4"
 geo-booleanop = { git="https://github.com/21re/rust-geo-booleanop" }
+geo = "0.12"
 
 [build-dependencies]
 moz-cheddar = "0.4.0"
