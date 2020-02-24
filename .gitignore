@@ -24,3 +24,4 @@ builddir/
 
 lib/**/target
 lib/**/ffi
+game/engine/ffi
