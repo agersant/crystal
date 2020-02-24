@@ -21,17 +21,26 @@ pub struct CollisionMesh {
 
 impl From<geo_types::MultiPolygon<f32>> for CollisionMesh {
 	fn from(multi_polygon: geo_types::MultiPolygon<f32>) -> CollisionMesh {
-		let chains: Vec<Chain> = multi_polygon
-			.into_iter()
-			.map(|p| Chain {
-				vertices: p
+		let mut chains: Vec<Chain> = Vec::new();
+		for polygon in multi_polygon.into_iter() {
+			chains.push(Chain {
+				vertices: polygon
 					.exterior()
 					.points_iter()
 					.into_iter()
 					.map(|p| Vertex { x: p.x(), y: p.y() })
 					.collect::<Vec<Vertex>>(),
-			})
-			.collect();
+			});
+			for interior in polygon.interiors().iter() {
+				chains.push(Chain {
+					vertices: interior
+						.points_iter()
+						.into_iter()
+						.map(|p| Vertex { x: p.x(), y: p.y() })
+						.collect::<Vec<Vertex>>(),
+				});
+			}
+		}
 		CollisionMesh { chains }
 	}
 }
