@@ -18,7 +18,7 @@ pub fn generate_mesh(polygons: &[Polygon]) -> CollisionMesh {
 		);
 		union_result = union_result.union(&polygon);
 	}
-	union_result = union_result.simplify(&0.5);
+	union_result = union_result.simplify(&0.1);
 
 	union_result.into()
 }
