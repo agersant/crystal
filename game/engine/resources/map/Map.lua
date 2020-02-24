@@ -3,8 +3,7 @@ local DebugFlags = require("engine/dev/DebugFlags");
 local Log = require("engine/dev/Log");
 local Colors = require("engine/resources/Colors");
 local DynamicLayer = require("engine/resources/map/DynamicLayer");
-local MapCollisionMesh = require("engine/resources/map/MapCollisionMesh");
-local MapCollisionMeshBuilder = require("engine/resources/map/collision/MapCollisionMeshBuilder");
+local CollisionMeshBuilder = require("engine/resources/map/collision/CollisionMeshBuilder");
 local MapEntity = require("engine/resources/map/MapEntity");
 local Navmesh = require("engine/mapscene/behavior/ai/navmesh/Navmesh");
 local StaticLayer = require("engine/resources/map/StaticLayer");
@@ -19,7 +18,6 @@ local parseTileLayer = function(self, layerData)
 	if sort ~= "above" and sort ~= "dynamic" then
 		sort = "below";
 	end
-	self._collisionMesh:processLayer(self._tileset, layerData);
 	if sort == "below" or sort == "above" then
 		local layer = StaticLayer:new(self, layerData, sort);
 		table.insert(self._staticLayers, 1, layer);
@@ -64,19 +62,21 @@ Map.init = function(self, mapData, tileset)
 	self._width = mapData.content.width;
 	self._height = mapData.content.height;
 	self._numTiles = self._width * self._height;
-	self._collisionMeshBuilder = MapCollisionMeshBuilder:new(self:getWidthInPixels(), self:getHeightInPixels());
-	self._collisionMesh = MapCollisionMesh:new(self:getWidthInPixels(), self:getHeightInPixels(), self:getHeightInTiles());
+
+	local collisionMeshBuilder = CollisionMeshBuilder:new();
 
 	local layers = mapData.content.layers;
 	for i = #layers, 1, -1 do
 		local layerData = layers[i];
 		if layerData.type == "tilelayer" then
+			collisionMeshBuilder:addLayer(self._tileset, layerData);
 			parseTileLayer(self, layerData);
 		elseif layerData.type == "objectgroup" then
 			parseObjectGroup(self, layerData);
 		end
 	end
 
+	self._collisionMesh = collisionMeshBuilder:buildMesh();
 	self._navmesh = Navmesh:new(self:getWidthInPixels(), self:getHeightInPixels(), self._collisionMesh, 6);
 end
 

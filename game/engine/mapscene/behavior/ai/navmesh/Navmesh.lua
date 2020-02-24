@@ -90,18 +90,18 @@ local generateBNavmesh = function(self, width, height, collisionMesh, padding)
 	bMap.height = height;
 
 	local obstacles = {};
-	for _, chain in collisionMesh:chains() do
-		if not chain:isOuter() then
-			local obstacle = FFI.new(FFI.typeof("BObstacle"));
-			local vertices = {};
-			for i, x, y in chain:vertices() do
-				local vertex = FFI.new(FFI.typeof("BVector"), {x = x, y = y});
-				table.insert(vertices, vertex);
-			end
-			obstacle.numVertices = #vertices;
-			obstacle.vertices = FFI.new(FFI.typeof("BVector[?]"), #vertices, vertices);
-			table.insert(obstacles, obstacle);
+	for _, chain in ipairs(collisionMesh:getChains()) do
+		local obstacle = FFI.new(FFI.typeof("BObstacle"));
+		local vertices = {};
+		for i = 1, #chain - 1, 2 do
+			local x = chain[i];
+			local y = chain[i + 1];
+			local vertex = FFI.new(FFI.typeof("BVector"), {x = x, y = y});
+			table.insert(vertices, vertex);
 		end
+		obstacle.numVertices = #vertices;
+		obstacle.vertices = FFI.new(FFI.typeof("BVector[?]"), #vertices, vertices);
+		table.insert(obstacles, obstacle);
 	end
 	bMap.numObstacles = #obstacles;
 	bMap.obstacles = FFI.new(FFI.typeof("BObstacle[?]"), #obstacles, obstacles);

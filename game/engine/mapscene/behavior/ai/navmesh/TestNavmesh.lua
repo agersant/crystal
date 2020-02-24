@@ -1,4 +1,4 @@
-local MapCollisionMesh = require("engine/resources/map/MapCollisionMesh");
+local CollisionMesh = require("engine/resources/map/collision/CollisionMesh");
 
 local tests = {};
 
@@ -16,14 +16,14 @@ end
 tests[#tests + 1] = {name = "Generate navmesh for empty map"};
 tests[#tests].body = function()
 	local Navmesh = require("engine/mapscene/behavior/ai/navmesh/Navmesh");
-	local collisionMesh = MapCollisionMesh:new(10, 10, 10);
+	local collisionMesh = CollisionMesh:new();
 	local navmesh = Navmesh:new(10, 10, collisionMesh, 0);
 end
 
 tests[#tests + 1] = {name = "Generate navmesh for empty map with padding"};
 tests[#tests].body = function()
 	local Navmesh = require("engine/mapscene/behavior/ai/navmesh/Navmesh");
-	local collisionMesh = MapCollisionMesh:new(10, 10, 10);
+	local collisionMesh = CollisionMesh:new();
 	local padding = 1;
 	local navmesh = Navmesh:new(10, 10, collisionMesh, padding);
 end
@@ -31,7 +31,7 @@ end
 tests[#tests + 1] = {name = "Generate navmesh for empty map with extreme padding"};
 tests[#tests].body = function()
 	local Navmesh = require("engine/mapscene/behavior/ai/navmesh/Navmesh");
-	local collisionMesh = MapCollisionMesh:new(10, 10, 10);
+	local collisionMesh = CollisionMesh:new();
 	local padding = 20;
 	local navmesh = Navmesh:new(10, 10, collisionMesh, padding);
 end
@@ -39,7 +39,7 @@ end
 tests[#tests + 1] = {name = "Find path in empty map"};
 tests[#tests].body = function()
 	local Navmesh = require("engine/mapscene/behavior/ai/navmesh/Navmesh");
-	local collisionMesh = MapCollisionMesh:new(10, 10, 10);
+	local collisionMesh = CollisionMesh:new();
 	local navmesh = Navmesh:new(10, 10, collisionMesh, 0);
 	local path = navmesh:findPath(1, 2, 8, 9);
 	assert(path:getNumVertices() == 2);
@@ -52,7 +52,7 @@ end
 tests[#tests + 1] = {name = "Find path from outside navmesh"};
 tests[#tests].body = function()
 	local Navmesh = require("engine/mapscene/behavior/ai/navmesh/Navmesh");
-	local collisionMesh = MapCollisionMesh:new(10, 10, 10);
+	local collisionMesh = CollisionMesh:new();
 	local navmesh = Navmesh:new(10, 10, collisionMesh, 0);
 	local path = navmesh:findPath(-4, 2, 8, 9);
 	assert(path:getNumVertices() == 3);
@@ -66,7 +66,7 @@ end
 tests[#tests + 1] = {name = "Find path to outside navmesh"};
 tests[#tests].body = function()
 	local Navmesh = require("engine/mapscene/behavior/ai/navmesh/Navmesh");
-	local collisionMesh = MapCollisionMesh:new(10, 10, 10);
+	local collisionMesh = CollisionMesh:new();
 	local navmesh = Navmesh:new(10, 10, collisionMesh, 0);
 	local path = navmesh:findPath(3, 5, 8, 14);
 	assert(path:getNumVertices() == 2);
@@ -79,7 +79,7 @@ end
 tests[#tests + 1] = {name = "Project point on navmesh"};
 tests[#tests].body = function()
 	local Navmesh = require("engine/mapscene/behavior/ai/navmesh/Navmesh");
-	local collisionMesh = MapCollisionMesh:new(10, 10, 10);
+	local collisionMesh = CollisionMesh:new();
 	local navmesh = Navmesh:new(10, 10, collisionMesh, 0);
 	local px, py = navmesh:getNearestPointOnNavmesh(-5, -5);
 	assert(px == 0);
