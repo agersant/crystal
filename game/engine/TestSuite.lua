@@ -12,7 +12,7 @@ local engineTestFiles = {
 	"engine/input/TestInputDevice",
 	"engine/resources/TestAssets",
 	"engine/resources/map/TestMapCollisionChainData",
-	"engine/resources/map/TestMapCollisionMeshBuilder",
+	"engine/resources/map/collision/TestMapCollisionMeshBuilder",
 	"engine/script/TestScript",
 	"engine/ui/TestTextInput",
 	"engine/ui/TestWidget",
