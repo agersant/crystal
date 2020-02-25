@@ -28,7 +28,9 @@ impl From<&TestInputVertex> for Vertex {
 
 impl From<&TestInputPolygon> for Polygon {
 	fn from(input: &TestInputPolygon) -> Polygon {
-		Polygon(input.0.iter().map(|v| v.into()).collect())
+		Polygon {
+			vertices: input.0.iter().map(|v| v.into()).collect(),
+		}
 	}
 }
 
@@ -55,9 +57,9 @@ fn draw_mesh(mesh: &CollisionMesh, out_file: &str) {
 		.draw_rect((0, 0), (width as i32 - 1, height as i32 - 1), &WHITE, true)
 		.unwrap();
 
-	for chain in mesh.polygons.iter() {
-		let vertices = &chain.0;
-		for i in 0..chain.0.len() {
+	for polygon in mesh.polygons.iter() {
+		let vertices = &polygon.vertices;
+		for i in 0..vertices.len() {
 			let vertex = &vertices[i];
 			let next_index = (i + 1) % vertices.len();
 			let next_vertex = &vertices[next_index];
@@ -94,8 +96,8 @@ fn test_sample_files(name: &str) {
 		polygons: input_mesh.iter().map(|c| c.into()).collect(),
 	};
 	for polygon in expected_mesh.polygons.iter_mut() {
-		assert!(polygon.0.len() > 0);
-		polygon.0.push(polygon.0[0].clone());
+		assert!(polygon.vertices.len() > 0);
+		polygon.vertices.push(polygon.vertices[0].clone());
 	}
 
 	let mut builder = CollisionMeshBuilder::new();

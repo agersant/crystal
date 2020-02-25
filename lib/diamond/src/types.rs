@@ -44,15 +44,17 @@ impl Hash for Vertex {
 }
 
 #[derive(Clone, Debug)]
-pub struct Polygon(pub Vec<Vertex>);
+pub struct Polygon {
+	pub vertices: Vec<Vertex>,
+}
 
 impl PartialEq for Polygon {
 	fn eq(&self, other: &Self) -> bool {
-		if self.0.len() != other.0.len() {
+		if self.vertices.len() != other.vertices.len() {
 			return false;
 		}
-		let self_vertices: HashSet<Vertex> = self.0.iter().cloned().collect();
-		let other_vertices: HashSet<Vertex> = other.0.iter().cloned().collect();
+		let self_vertices: HashSet<Vertex> = self.vertices.iter().cloned().collect();
+		let other_vertices: HashSet<Vertex> = other.vertices.iter().cloned().collect();
 		self_vertices == other_vertices
 	}
 }
@@ -61,11 +63,12 @@ impl Eq for Polygon {}
 
 impl Hash for Polygon {
 	fn hash<H: Hasher>(&self, state: &mut H) {
-		if self.0.len() > 0 {
-			assert!(self.0.len() > 1);
-			assert_eq!(self.0.first(), self.0.last());
+		if self.vertices.len() > 0 {
+			assert!(self.vertices.len() > 1);
+			assert_eq!(self.vertices.first(), self.vertices.last());
 		}
-		let mut sorted_vertices: Vec<&Vertex> = self.0.iter().take(self.0.len() - 1).collect();
+		let mut sorted_vertices: Vec<&Vertex> =
+			self.vertices.iter().take(self.vertices.len() - 1).collect();
 		sorted_vertices.sort();
 		sorted_vertices.hash(state);
 	}
@@ -73,13 +76,13 @@ impl Hash for Polygon {
 
 impl Ord for Polygon {
 	fn cmp(&self, other: &Self) -> Ordering {
-		if self.0.len() < other.0.len() {
+		if self.vertices.len() < other.vertices.len() {
 			Ordering::Less
-		} else if self.0.len() > other.0.len() {
+		} else if self.vertices.len() > other.vertices.len() {
 			Ordering::Greater
 		} else {
-			let mut self_sorted_vertices = self.0.clone();
-			let mut other_sorted_vertices = other.0.clone();
+			let mut self_sorted_vertices = self.vertices.clone();
+			let mut other_sorted_vertices = other.vertices.clone();
 			self_sorted_vertices.sort();
 			other_sorted_vertices.sort();
 			for (i, vertex) in self_sorted_vertices.iter().enumerate() {
@@ -118,22 +121,22 @@ impl From<geo_types::MultiPolygon<f32>> for CollisionMesh {
 	fn from(multi_polygon: geo_types::MultiPolygon<f32>) -> CollisionMesh {
 		let mut polygons: Vec<Polygon> = Vec::new();
 		for polygon in multi_polygon.into_iter() {
-			polygons.push(Polygon(
-				polygon
+			polygons.push(Polygon {
+				vertices: polygon
 					.exterior()
 					.points_iter()
 					.into_iter()
 					.map(|p| Vertex { x: p.x(), y: p.y() })
 					.collect::<Vec<Vertex>>(),
-			));
+			});
 			for interior in polygon.interiors().iter() {
-				polygons.push(Polygon(
-					interior
+				polygons.push(Polygon {
+					vertices: interior
 						.points_iter()
 						.into_iter()
 						.map(|p| Vertex { x: p.x(), y: p.y() })
 						.collect::<Vec<Vertex>>(),
-				));
+				});
 			}
 		}
 		CollisionMesh { polygons }
@@ -153,7 +156,7 @@ impl CollisionMesh {
 		};
 
 		for polygon in self.polygons.iter() {
-			for vertex in polygon.0.iter() {
+			for vertex in polygon.vertices.iter() {
 				top_left.x = vertex.x.min(top_left.x);
 				top_left.y = vertex.y.min(top_left.y);
 				bottom_right.x = vertex.x.max(bottom_right.x);
@@ -167,22 +170,26 @@ impl CollisionMesh {
 
 #[test]
 fn polygons_equal() {
-	let a = Polygon(vec![
-		Vertex { x: 16.0, y: 32.0 },
-		Vertex { x: 0.0, y: 0.0 },
-		Vertex { x: 128.0, y: 0.0 },
-		Vertex { x: 128.0, y: 16.0 },
-		Vertex { x: 16.0, y: 16.0 },
-		Vertex { x: 16.0, y: 32.0 },
-	]);
-	let b = Polygon(vec![
-		Vertex { x: 0.0, y: 0.0 },
-		Vertex { x: 128.0, y: 0.0 },
-		Vertex { x: 128.0, y: 16.0 },
-		Vertex { x: 16.0, y: 16.0 },
-		Vertex { x: 16.0, y: 32.0 },
-		Vertex { x: 0.0, y: 0.0 },
-	]);
+	let a = Polygon {
+		vertices: vec![
+			Vertex { x: 16.0, y: 32.0 },
+			Vertex { x: 0.0, y: 0.0 },
+			Vertex { x: 128.0, y: 0.0 },
+			Vertex { x: 128.0, y: 16.0 },
+			Vertex { x: 16.0, y: 16.0 },
+			Vertex { x: 16.0, y: 32.0 },
+		],
+	};
+	let b = Polygon {
+		vertices: vec![
+			Vertex { x: 0.0, y: 0.0 },
+			Vertex { x: 128.0, y: 0.0 },
+			Vertex { x: 128.0, y: 16.0 },
+			Vertex { x: 16.0, y: 16.0 },
+			Vertex { x: 16.0, y: 32.0 },
+			Vertex { x: 0.0, y: 0.0 },
+		],
+	};
 	assert_eq!(a, b);
 }
 
@@ -190,38 +197,46 @@ fn polygons_equal() {
 fn meshes_equal() {
 	let a = CollisionMesh {
 		polygons: vec![
-			Polygon(vec![
-				Vertex { x: 16.0, y: 32.0 },
-				Vertex { x: 0.0, y: 0.0 },
-				Vertex { x: 128.0, y: 0.0 },
-				Vertex { x: 128.0, y: 16.0 },
-				Vertex { x: 16.0, y: 16.0 },
-				Vertex { x: 16.0, y: 32.0 },
-			]),
-			Polygon(vec![
-				Vertex { x: 10.0, y: 10.0 },
-				Vertex { x: 20.0, y: 20.0 },
-				Vertex { x: 10.0, y: 20.0 },
-				Vertex { x: 10.0, y: 10.0 },
-			]),
+			Polygon {
+				vertices: vec![
+					Vertex { x: 16.0, y: 32.0 },
+					Vertex { x: 0.0, y: 0.0 },
+					Vertex { x: 128.0, y: 0.0 },
+					Vertex { x: 128.0, y: 16.0 },
+					Vertex { x: 16.0, y: 16.0 },
+					Vertex { x: 16.0, y: 32.0 },
+				],
+			},
+			Polygon {
+				vertices: vec![
+					Vertex { x: 10.0, y: 10.0 },
+					Vertex { x: 20.0, y: 20.0 },
+					Vertex { x: 10.0, y: 20.0 },
+					Vertex { x: 10.0, y: 10.0 },
+				],
+			},
 		],
 	};
 	let b = CollisionMesh {
 		polygons: vec![
-			Polygon(vec![
-				Vertex { x: 20.0, y: 20.0 },
-				Vertex { x: 10.0, y: 20.0 },
-				Vertex { x: 10.0, y: 10.0 },
-				Vertex { x: 20.0, y: 20.0 },
-			]),
-			Polygon(vec![
-				Vertex { x: 0.0, y: 0.0 },
-				Vertex { x: 128.0, y: 0.0 },
-				Vertex { x: 128.0, y: 16.0 },
-				Vertex { x: 16.0, y: 16.0 },
-				Vertex { x: 16.0, y: 32.0 },
-				Vertex { x: 0.0, y: 0.0 },
-			]),
+			Polygon {
+				vertices: vec![
+					Vertex { x: 20.0, y: 20.0 },
+					Vertex { x: 10.0, y: 20.0 },
+					Vertex { x: 10.0, y: 10.0 },
+					Vertex { x: 20.0, y: 20.0 },
+				],
+			},
+			Polygon {
+				vertices: vec![
+					Vertex { x: 0.0, y: 0.0 },
+					Vertex { x: 128.0, y: 0.0 },
+					Vertex { x: 128.0, y: 16.0 },
+					Vertex { x: 16.0, y: 16.0 },
+					Vertex { x: 16.0, y: 32.0 },
+					Vertex { x: 0.0, y: 0.0 },
+				],
+			},
 		],
 	};
 	assert_eq!(a, b);

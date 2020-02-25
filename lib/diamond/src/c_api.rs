@@ -59,7 +59,7 @@ impl From<&CVertex> for Vertex {
 
 impl From<Polygon> for CPolygon {
 	fn from(mut polygon: Polygon) -> CPolygon {
-		let vertices = mem::replace(&mut polygon.0, Vec::new());
+		let vertices = mem::replace(&mut polygon.vertices, Vec::new());
 		let mut c_vertices: Vec<CVertex> =
 			vertices.into_iter().map(|vertex| vertex.into()).collect();
 		let ptr = c_vertices.as_mut_ptr();
@@ -122,7 +122,7 @@ pub unsafe extern "C" fn mesh_builder_add_polygon(
 	}
 	let c_vertices: &[CVertex] = slice::from_raw_parts(vertices, num_vertices as usize);
 	let vertices: Vec<Vertex> = c_vertices.iter().map(|v| v.into()).collect();
-	let polygon = Polygon(vertices);
+	let polygon = Polygon { vertices };
 	(&mut *builder).0.add_polygon(polygon);
 }
 
@@ -155,21 +155,27 @@ pub unsafe extern "C" fn mesh_delete(mesh: *mut CCollisionMesh) {
 fn c_conversions() {
 	let mesh = CollisionMesh {
 		polygons: vec![
-			Polygon(vec![
-				Vertex { x: 0.0, y: 10.0 },
-				Vertex { x: 5.0, y: 15.0 },
-				Vertex { x: 8.0, y: 10.0 },
-			]),
-			Polygon(vec![
-				Vertex { x: 0.0, y: 10.0 },
-				Vertex { x: 5.0, y: 15.0 },
-				Vertex { x: 8.0, y: 10.0 },
-			]),
-			Polygon(vec![
-				Vertex { x: 0.0, y: 10.0 },
-				Vertex { x: 5.0, y: 15.0 },
-				Vertex { x: 8.0, y: 10.0 },
-			]),
+			Polygon {
+				vertices: vec![
+					Vertex { x: 0.0, y: 10.0 },
+					Vertex { x: 5.0, y: 15.0 },
+					Vertex { x: 8.0, y: 10.0 },
+				],
+			},
+			Polygon {
+				vertices: vec![
+					Vertex { x: 0.0, y: 10.0 },
+					Vertex { x: 5.0, y: 15.0 },
+					Vertex { x: 8.0, y: 10.0 },
+				],
+			},
+			Polygon {
+				vertices: vec![
+					Vertex { x: 0.0, y: 10.0 },
+					Vertex { x: 5.0, y: 15.0 },
+					Vertex { x: 8.0, y: 10.0 },
+				],
+			},
 		],
 	};
 	let c_mesh: CCollisionMesh = mesh.into();
