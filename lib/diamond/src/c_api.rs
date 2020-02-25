@@ -33,6 +33,10 @@ pub struct CCollisionMesh {
 	pub num_chains: i32,
 }
 
+#[repr(C)]
+#[derive(Debug)]
+pub struct CCollisionMeshBuilder(CollisionMeshBuilder);
+
 impl Default for CCollisionMesh {
 	fn default() -> CCollisionMesh {
 		CCollisionMesh {
@@ -62,7 +66,7 @@ impl From<&CVertex> for Vertex {
 
 impl From<Chain> for CChain {
 	fn from(mut chain: Chain) -> CChain {
-		let vertices = mem::replace(&mut chain.vertices, Vec::new());
+		let vertices = mem::replace(&mut (chain.0).0, Vec::new());
 		let mut c_vertices: Vec<CVertex> =
 			vertices.into_iter().map(|vertex| vertex.into()).collect();
 		let ptr = c_vertices.as_mut_ptr();
@@ -108,41 +112,44 @@ impl Drop for CCollisionMesh {
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn newCollisionMesh(
-	polygons_array: *const CPolygon,
-	num_polygons: i32,
-) -> *mut CCollisionMesh {
-	if polygons_array.is_null() || num_polygons < 1 {
-		return Box::into_raw(Box::new(CCollisionMesh::default()));
-	}
-	let c_polygons = slice::from_raw_parts(polygons_array, num_polygons as usize);
-
-	let polygons = c_polygons
-		.iter()
-		.filter_map(|c_polygon| {
-			if c_polygon.vertices.is_null() || c_polygon.num_vertices <= 2 {
-				return None;
-			}
-			Some(Polygon {
-				vertices: slice::from_raw_parts(
-					c_polygon.vertices,
-					c_polygon.num_vertices as usize,
-				)
-				.iter()
-				.map(|v| v.into())
-				.collect(),
-			})
-		})
-		.collect::<Vec<Polygon>>();
-
-	let mesh = generate_mesh(&polygons);
-
-	let c_mesh = mesh.into();
-	Box::into_raw(Box::new(c_mesh))
+pub unsafe extern "C" fn mesh_builder_new() -> *mut CCollisionMeshBuilder {
+	let builder = CCollisionMeshBuilder(CollisionMeshBuilder::new());
+	Box::into_raw(Box::new(builder))
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn deleteCollisionMesh(mesh: *mut CCollisionMesh) {
+pub unsafe extern "C" fn mesh_builder_add_polygon(
+	builder: *mut CCollisionMeshBuilder,
+	vertices: *const CVertex,
+	num_vertices: i32,
+) {
+	if builder.is_null() || vertices.is_null() || num_vertices < 3 {
+		return;
+	}
+	let c_vertices: &[CVertex] = slice::from_raw_parts(vertices, num_vertices as usize);
+	let vertices: Vec<Vertex> = c_vertices.iter().map(|v| v.into()).collect();
+	let polygon = Polygon(Vertices(vertices));
+	(&mut *builder).0.add_polygon(polygon);
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn mesh_builder_build_mesh(
+	builder: *mut CCollisionMeshBuilder,
+) -> *const CCollisionMesh {
+	if builder.is_null() {
+		return null();
+	}
+	let mesh = (&*builder).0.build();
+	let c_mesh = Box::into_raw(Box::new(mesh.into()));
+
+	let boxed_builder = Box::from_raw(builder);
+	drop(boxed_builder);
+
+	c_mesh
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn mesh_delete(mesh: *mut CCollisionMesh) {
 	if mesh.is_null() {
 		return;
 	}
@@ -154,27 +161,21 @@ pub unsafe extern "C" fn deleteCollisionMesh(mesh: *mut CCollisionMesh) {
 fn c_conversions() {
 	let mesh = CollisionMesh {
 		chains: vec![
-			Chain {
-				vertices: vec![
-					Vertex { x: 0.0, y: 10.0 },
-					Vertex { x: 5.0, y: 15.0 },
-					Vertex { x: 8.0, y: 10.0 },
-				],
-			},
-			Chain {
-				vertices: vec![
-					Vertex { x: 0.0, y: 10.0 },
-					Vertex { x: 5.0, y: 15.0 },
-					Vertex { x: 8.0, y: 10.0 },
-				],
-			},
-			Chain {
-				vertices: vec![
-					Vertex { x: 0.0, y: 10.0 },
-					Vertex { x: 5.0, y: 15.0 },
-					Vertex { x: 8.0, y: 10.0 },
-				],
-			},
+			Chain(Vertices(vec![
+				Vertex { x: 0.0, y: 10.0 },
+				Vertex { x: 5.0, y: 15.0 },
+				Vertex { x: 8.0, y: 10.0 },
+			])),
+			Chain(Vertices(vec![
+				Vertex { x: 0.0, y: 10.0 },
+				Vertex { x: 5.0, y: 15.0 },
+				Vertex { x: 8.0, y: 10.0 },
+			])),
+			Chain(Vertices(vec![
+				Vertex { x: 0.0, y: 10.0 },
+				Vertex { x: 5.0, y: 15.0 },
+				Vertex { x: 8.0, y: 10.0 },
+			])),
 		],
 	};
 	let c_mesh: CCollisionMesh = mesh.into();
