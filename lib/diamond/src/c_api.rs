@@ -21,16 +21,9 @@ pub struct CPolygon {
 
 #[repr(C)]
 #[derive(Debug)]
-pub struct CChain {
-	pub vertices: *mut CVertex,
-	pub num_vertices: i32,
-}
-
-#[repr(C)]
-#[derive(Debug)]
 pub struct CCollisionMesh {
-	pub chains: *mut CChain,
-	pub num_chains: i32,
+	pub polygons: *mut CPolygon,
+	pub num_polygons: i32,
 }
 
 #[repr(C)]
@@ -40,8 +33,8 @@ pub struct CCollisionMeshBuilder(CollisionMeshBuilder);
 impl Default for CCollisionMesh {
 	fn default() -> CCollisionMesh {
 		CCollisionMesh {
-			chains: null_mut(),
-			num_chains: 0,
+			polygons: null_mut(),
+			num_polygons: 0,
 		}
 	}
 }
@@ -64,15 +57,15 @@ impl From<&CVertex> for Vertex {
 	}
 }
 
-impl From<Chain> for CChain {
-	fn from(mut chain: Chain) -> CChain {
-		let vertices = mem::replace(&mut (chain.0).0, Vec::new());
+impl From<Polygon> for CPolygon {
+	fn from(mut polygon: Polygon) -> CPolygon {
+		let vertices = mem::replace(&mut polygon.0, Vec::new());
 		let mut c_vertices: Vec<CVertex> =
 			vertices.into_iter().map(|vertex| vertex.into()).collect();
 		let ptr = c_vertices.as_mut_ptr();
 		let len = c_vertices.len();
 		mem::forget(c_vertices);
-		CChain {
+		CPolygon {
 			vertices: ptr,
 			num_vertices: len as i32,
 		}
@@ -81,32 +74,33 @@ impl From<Chain> for CChain {
 
 impl From<CollisionMesh> for CCollisionMesh {
 	fn from(mut mesh: CollisionMesh) -> CCollisionMesh {
-		let chains = mem::replace(&mut mesh.chains, Vec::new());
-		let mut c_chains: Vec<CChain> = chains.into_iter().map(|chain| chain.into()).collect();
-		let ptr = c_chains.as_mut_ptr();
-		let len = c_chains.len();
-		mem::forget(c_chains);
+		let polygons = mem::replace(&mut mesh.polygons, Vec::new());
+		let mut c_polygons: Vec<CPolygon> =
+			polygons.into_iter().map(|polygon| polygon.into()).collect();
+		let ptr = c_polygons.as_mut_ptr();
+		let len = c_polygons.len();
+		mem::forget(c_polygons);
 		CCollisionMesh {
-			chains: ptr,
-			num_chains: len as i32,
+			polygons: ptr,
+			num_polygons: len as i32,
 		}
 	}
 }
 
 impl Drop for CCollisionMesh {
 	fn drop(&mut self) {
-		if !self.chains.is_null() && self.num_chains > 0 {
-			let c_chains: &mut [CChain] =
-				unsafe { slice::from_raw_parts_mut(self.chains, self.num_chains as usize) };
-			for c_chain in c_chains.iter_mut() {
-				if !c_chain.vertices.is_null() && c_chain.num_vertices > 0 {
+		if !self.polygons.is_null() && self.num_polygons > 0 {
+			let c_polygons: &mut [CPolygon] =
+				unsafe { slice::from_raw_parts_mut(self.polygons, self.num_polygons as usize) };
+			for c_polygon in c_polygons.iter_mut() {
+				if !c_polygon.vertices.is_null() && c_polygon.num_vertices > 0 {
 					let c_vertices: &[CVertex] = unsafe {
-						slice::from_raw_parts(c_chain.vertices, c_chain.num_vertices as usize)
+						slice::from_raw_parts(c_polygon.vertices, c_polygon.num_vertices as usize)
 					};
 					drop(c_vertices);
 				}
 			}
-			drop(c_chains);
+			drop(c_polygons);
 		}
 	}
 }
@@ -128,7 +122,7 @@ pub unsafe extern "C" fn mesh_builder_add_polygon(
 	}
 	let c_vertices: &[CVertex] = slice::from_raw_parts(vertices, num_vertices as usize);
 	let vertices: Vec<Vertex> = c_vertices.iter().map(|v| v.into()).collect();
-	let polygon = Polygon(Vertices(vertices));
+	let polygon = Polygon(vertices);
 	(&mut *builder).0.add_polygon(polygon);
 }
 
@@ -160,22 +154,22 @@ pub unsafe extern "C" fn mesh_delete(mesh: *mut CCollisionMesh) {
 #[test]
 fn c_conversions() {
 	let mesh = CollisionMesh {
-		chains: vec![
-			Chain(Vertices(vec![
+		polygons: vec![
+			Polygon(vec![
 				Vertex { x: 0.0, y: 10.0 },
 				Vertex { x: 5.0, y: 15.0 },
 				Vertex { x: 8.0, y: 10.0 },
-			])),
-			Chain(Vertices(vec![
+			]),
+			Polygon(vec![
 				Vertex { x: 0.0, y: 10.0 },
 				Vertex { x: 5.0, y: 15.0 },
 				Vertex { x: 8.0, y: 10.0 },
-			])),
-			Chain(Vertices(vec![
+			]),
+			Polygon(vec![
 				Vertex { x: 0.0, y: 10.0 },
 				Vertex { x: 5.0, y: 15.0 },
 				Vertex { x: 8.0, y: 10.0 },
-			])),
+			]),
 		],
 	};
 	let c_mesh: CCollisionMesh = mesh.into();

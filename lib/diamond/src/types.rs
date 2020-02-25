@@ -44,15 +44,9 @@ impl Hash for Vertex {
 }
 
 #[derive(Clone, Debug)]
-pub struct Vertices(pub Vec<Vertex>);
+pub struct Polygon(pub Vec<Vertex>);
 
-#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
-pub struct Polygon(pub Vertices);
-
-#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
-pub struct Chain(pub Vertices);
-
-impl PartialEq for Vertices {
+impl PartialEq for Polygon {
 	fn eq(&self, other: &Self) -> bool {
 		if self.0.len() != other.0.len() {
 			return false;
@@ -63,9 +57,9 @@ impl PartialEq for Vertices {
 	}
 }
 
-impl Eq for Vertices {}
+impl Eq for Polygon {}
 
-impl Hash for Vertices {
+impl Hash for Polygon {
 	fn hash<H: Hasher>(&self, state: &mut H) {
 		if self.0.len() > 0 {
 			assert!(self.0.len() > 1);
@@ -77,7 +71,7 @@ impl Hash for Vertices {
 	}
 }
 
-impl Ord for Vertices {
+impl Ord for Polygon {
 	fn cmp(&self, other: &Self) -> Ordering {
 		if self.0.len() < other.0.len() {
 			Ordering::Less
@@ -98,7 +92,7 @@ impl Ord for Vertices {
 	}
 }
 
-impl PartialOrd for Vertices {
+impl PartialOrd for Polygon {
 	fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
 		Some(self.cmp(other))
 	}
@@ -106,43 +100,43 @@ impl PartialOrd for Vertices {
 
 #[derive(Debug)]
 pub struct CollisionMesh {
-	pub chains: Vec<Chain>,
+	pub polygons: Vec<Polygon>,
 }
 
 impl PartialEq for CollisionMesh {
 	fn eq(&self, other: &Self) -> bool {
-		if self.chains.len() != other.chains.len() {
+		if self.polygons.len() != other.polygons.len() {
 			return false;
 		}
-		let self_chains: HashSet<Chain> = self.chains.iter().cloned().collect();
-		let other_chains: HashSet<Chain> = other.chains.iter().cloned().collect();
-		self_chains == other_chains
+		let self_polygons: HashSet<Polygon> = self.polygons.iter().cloned().collect();
+		let other_polygons: HashSet<Polygon> = other.polygons.iter().cloned().collect();
+		self_polygons == other_polygons
 	}
 }
 
 impl From<geo_types::MultiPolygon<f32>> for CollisionMesh {
 	fn from(multi_polygon: geo_types::MultiPolygon<f32>) -> CollisionMesh {
-		let mut chains: Vec<Chain> = Vec::new();
+		let mut polygons: Vec<Polygon> = Vec::new();
 		for polygon in multi_polygon.into_iter() {
-			chains.push(Chain(Vertices(
+			polygons.push(Polygon(
 				polygon
 					.exterior()
 					.points_iter()
 					.into_iter()
 					.map(|p| Vertex { x: p.x(), y: p.y() })
 					.collect::<Vec<Vertex>>(),
-			)));
+			));
 			for interior in polygon.interiors().iter() {
-				chains.push(Chain(Vertices(
+				polygons.push(Polygon(
 					interior
 						.points_iter()
 						.into_iter()
 						.map(|p| Vertex { x: p.x(), y: p.y() })
 						.collect::<Vec<Vertex>>(),
-				)));
+				));
 			}
 		}
-		CollisionMesh { chains }
+		CollisionMesh { polygons }
 	}
 }
 
@@ -158,8 +152,8 @@ impl CollisionMesh {
 			y: std::f32::NEG_INFINITY,
 		};
 
-		for chain in self.chains.iter() {
-			for vertex in (chain.0).0.iter() {
+		for polygon in self.polygons.iter() {
+			for vertex in polygon.0.iter() {
 				top_left.x = vertex.x.min(top_left.x);
 				top_left.y = vertex.y.min(top_left.y);
 				bottom_right.x = vertex.x.max(bottom_right.x);
@@ -172,62 +166,62 @@ impl CollisionMesh {
 }
 
 #[test]
-fn chains_equal() {
-	let a = Chain(Vertices(vec![
+fn polygons_equal() {
+	let a = Polygon(vec![
 		Vertex { x: 16.0, y: 32.0 },
 		Vertex { x: 0.0, y: 0.0 },
 		Vertex { x: 128.0, y: 0.0 },
 		Vertex { x: 128.0, y: 16.0 },
 		Vertex { x: 16.0, y: 16.0 },
 		Vertex { x: 16.0, y: 32.0 },
-	]));
-	let b = Chain(Vertices(vec![
+	]);
+	let b = Polygon(vec![
 		Vertex { x: 0.0, y: 0.0 },
 		Vertex { x: 128.0, y: 0.0 },
 		Vertex { x: 128.0, y: 16.0 },
 		Vertex { x: 16.0, y: 16.0 },
 		Vertex { x: 16.0, y: 32.0 },
 		Vertex { x: 0.0, y: 0.0 },
-	]));
+	]);
 	assert_eq!(a, b);
 }
 
 #[test]
 fn meshes_equal() {
 	let a = CollisionMesh {
-		chains: vec![
-			Chain(Vertices(vec![
+		polygons: vec![
+			Polygon(vec![
 				Vertex { x: 16.0, y: 32.0 },
 				Vertex { x: 0.0, y: 0.0 },
 				Vertex { x: 128.0, y: 0.0 },
 				Vertex { x: 128.0, y: 16.0 },
 				Vertex { x: 16.0, y: 16.0 },
 				Vertex { x: 16.0, y: 32.0 },
-			])),
-			Chain(Vertices(vec![
+			]),
+			Polygon(vec![
 				Vertex { x: 10.0, y: 10.0 },
 				Vertex { x: 20.0, y: 20.0 },
 				Vertex { x: 10.0, y: 20.0 },
 				Vertex { x: 10.0, y: 10.0 },
-			])),
+			]),
 		],
 	};
 	let b = CollisionMesh {
-		chains: vec![
-			Chain(Vertices(vec![
+		polygons: vec![
+			Polygon(vec![
 				Vertex { x: 20.0, y: 20.0 },
 				Vertex { x: 10.0, y: 20.0 },
 				Vertex { x: 10.0, y: 10.0 },
 				Vertex { x: 20.0, y: 20.0 },
-			])),
-			Chain(Vertices(vec![
+			]),
+			Polygon(vec![
 				Vertex { x: 0.0, y: 0.0 },
 				Vertex { x: 128.0, y: 0.0 },
 				Vertex { x: 128.0, y: 16.0 },
 				Vertex { x: 16.0, y: 16.0 },
 				Vertex { x: 16.0, y: 32.0 },
 				Vertex { x: 0.0, y: 0.0 },
-			])),
+			]),
 		],
 	};
 	assert_eq!(a, b);

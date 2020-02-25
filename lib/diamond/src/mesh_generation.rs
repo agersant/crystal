@@ -25,9 +25,7 @@ impl CollisionMeshBuilder {
 		for p in self.polygons.iter() {
 			let polygon = geo_types::Polygon::<f32>::new(
 				geo_types::LineString::from(
-					(p.0)
-						.0
-						.iter()
+					p.0.iter()
 						.map(|v| (v.x as f32, v.y as f32))
 						.collect::<Vec<(f32, f32)>>(),
 				),

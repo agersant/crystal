@@ -17,9 +17,6 @@ struct TestInputVertex {
 #[derive(Debug, Deserialize)]
 struct TestInputPolygon(Vec<TestInputVertex>);
 
-#[derive(Debug, Deserialize)]
-struct TestInputChain(Vec<TestInputVertex>);
-
 impl From<&TestInputVertex> for Vertex {
 	fn from(input: &TestInputVertex) -> Vertex {
 		Vertex {
@@ -31,17 +28,7 @@ impl From<&TestInputVertex> for Vertex {
 
 impl From<&TestInputPolygon> for Polygon {
 	fn from(input: &TestInputPolygon) -> Polygon {
-		Polygon(Vertices(input.0.iter().map(|v| v.into()).collect()))
-	}
-}
-
-impl From<&TestInputChain> for Chain {
-	fn from(input: &TestInputChain) -> Chain {
-		let mut vertices: Vec<Vertex> = input.0.iter().map(|v| v.into()).collect();
-		if input.0.len() > 0 {
-			vertices.push((&input.0[0]).into());
-		}
-		Chain(Vertices(vertices))
+		Polygon(input.0.iter().map(|v| v.into()).collect())
 	}
 }
 
@@ -68,9 +55,9 @@ fn draw_mesh(mesh: &CollisionMesh, out_file: &str) {
 		.draw_rect((0, 0), (width as i32 - 1, height as i32 - 1), &WHITE, true)
 		.unwrap();
 
-	for chain in mesh.chains.iter() {
-		let vertices = &((chain.0).0);
-		for i in 0..(chain.0).0.len() {
+	for chain in mesh.polygons.iter() {
+		let vertices = &chain.0;
+		for i in 0..chain.0.len() {
 			let vertex = &vertices[i];
 			let next_index = (i + 1) % vertices.len();
 			let next_vertex = &vertices[next_index];
@@ -97,15 +84,19 @@ fn test_sample_files(name: &str) {
 	};
 
 	let mesh_file = format!("test-data/{}-mesh.json", name);
-	let input_chains: Vec<TestInputChain> = {
+	let input_mesh: Vec<TestInputPolygon> = {
 		let file = File::open(mesh_file).unwrap();
 		let reader = BufReader::new(file);
 		serde_json::from_reader(reader).unwrap()
 	};
 
-	let expected_mesh = CollisionMesh {
-		chains: input_chains.iter().map(|c| c.into()).collect(),
+	let mut expected_mesh = CollisionMesh {
+		polygons: input_mesh.iter().map(|c| c.into()).collect(),
 	};
+	for polygon in expected_mesh.polygons.iter_mut() {
+		assert!(polygon.0.len() > 0);
+		polygon.0.push(polygon.0[0].clone());
+	}
 
 	let mut builder = CollisionMeshBuilder::new();
 	for polygon in input_polygons.iter() {
