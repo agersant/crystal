@@ -1,23 +1,33 @@
-use std::io::Write;
+use cbindgen::{Config, Language};
+use std::env;
+use std::path::PathBuf;
 
 fn main() {
-	let mut cheddar = cheddar::Cheddar::new().unwrap();
-	cheddar.module("c_api").unwrap();
-	cheddar.insert_code("local FFI = require(\"ffi\")\n");
-	cheddar.insert_code("FFI.cdef [[");
+	let crate_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
 
-	let mut out_file = std::path::PathBuf::new();
-	out_file.push("ffi");
-	out_file.push("Diamond.lua");
-	if let Some(dir) = out_file.parent() {
-		std::fs::create_dir_all(dir).unwrap();
+	let package_name = env::var("CARGO_PKG_NAME").unwrap();
+	let output_file = target_dir()
+		.join(format!("{}.lua", package_name))
+		.display()
+		.to_string();
+
+	let config = Config {
+		language: Language::C,
+		header: Some("local FFI = require(\"ffi\")\nFFI.cdef [[".to_string()),
+		trailer: Some("]]".to_string()),
+		no_includes: true,
+		..Default::default()
+	};
+
+	cbindgen::generate_with_config(&crate_dir, config)
+		.unwrap()
+		.write_to_file(&output_file);
+}
+
+fn target_dir() -> PathBuf {
+	if let Ok(target) = env::var("CARGO_TARGET_DIR") {
+		PathBuf::from(target)
+	} else {
+		PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap()).join("target")
 	}
-
-	let mut header = cheddar.compile_code().unwrap();
-	header.push_str("]]");
-
-	let bytes_buf = header.into_bytes();
-	std::fs::File::create(&out_file)
-		.and_then(|mut f| f.write_all(&bytes_buf))
-		.unwrap();
 }
