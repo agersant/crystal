@@ -101,6 +101,21 @@ impl PartialOrd for Polygon {
 	}
 }
 
+impl From<&Polygon> for geo_types::Polygon<f32> {
+	fn from(polygon: &Polygon) -> geo_types::Polygon<f32> {
+		geo_types::Polygon::<f32>::new(
+			geo_types::LineString::from(
+				polygon
+					.vertices
+					.iter()
+					.map(|v| (v.x as f32, v.y as f32))
+					.collect::<Vec<(f32, f32)>>(),
+			),
+			vec![],
+		)
+	}
+}
+
 #[derive(Debug)]
 pub struct CollisionMesh {
 	pub polygons: Vec<Polygon>,

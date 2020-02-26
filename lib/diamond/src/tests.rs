@@ -104,7 +104,14 @@ fn test_sample_files(name: &str) {
 	for polygon in input_polygons.iter() {
 		builder.add_polygon(polygon.into());
 	}
+
+	let start = std::time::SystemTime::now();
 	let mesh = builder.build();
+	println!(
+		"{} took {:?}",
+		name,
+		std::time::SystemTime::now().duration_since(start).unwrap()
+	);
 
 	std::fs::create_dir_all("test-output").unwrap();
 

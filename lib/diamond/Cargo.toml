@@ -11,6 +11,7 @@ crate-type = ["cdylib"]
 geo-types = "0.4"
 geo-booleanop = { git="https://github.com/21re/rust-geo-booleanop" }
 geo = "0.12"
+array2d = "0.2"
 
 [dev-dependencies]
 plotters = "0.2"
