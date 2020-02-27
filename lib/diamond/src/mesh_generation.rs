@@ -1,11 +1,16 @@
 use crate::types::*;
-use array2d::Array2D;
 use geo::algorithm::simplifyvw::SimplifyVW;
 use geo_booleanop::boolean::BooleanOp;
+use ndarray::parallel::prelude::*;
+use ndarray::Array;
+use ndarray::Array2;
+use ndarray::Axis;
+use rayon::iter::IndexedParallelIterator;
+use rayon::iter::IntoParallelIterator;
 
 #[derive(Debug)]
 pub struct CollisionMeshBuilder {
-	polygons: Array2D<Vec<geo_types::Polygon<f32>>>,
+	polygons: Array2<Vec<geo_types::Polygon<f32>>>,
 	map_width: usize,
 	map_height: usize,
 }
@@ -14,9 +19,9 @@ impl CollisionMeshBuilder {
 	pub fn new() -> CollisionMeshBuilder {
 		CollisionMeshBuilder {
 			// TODO map width and height as input
-			polygons: Array2D::filled_with(Vec::<geo_types::Polygon<f32>>::new(), 17, 30),
-			map_width: 30,
-			map_height: 17,
+			polygons: Array2::from_elem((40, 60), Vec::<geo_types::Polygon<f32>>::new()),
+			map_width: 60,
+			map_height: 40,
 		}
 	}
 
@@ -43,47 +48,50 @@ impl CollisionMeshBuilder {
 	}
 
 	pub fn build(&self) -> CollisionMesh {
+		type P = geo_types::Polygon<f32>;
+		type MP = geo_types::MultiPolygon<f32>;
+
 		let mut w = self.map_width;
 		let mut h = self.map_height;
 
-		let mut reduced_map: Array2D<geo_types::MultiPolygon<f32>> =
-			Array2D::filled_with(Vec::<geo_types::Polygon<f32>>::new().into(), h, w);
-		for y in 0..h {
-			for x in 0..w {
-				reduced_map
-					.set(y, x, self.polygons[(y, x)].clone().into())
-					.unwrap();
-			}
-		}
+		// Initial state
+		let mut reduced_map: Array2<MP> =
+			Array::from_shape_fn((h, w), |(y, x)| self.polygons[(y, x)].clone().into());
 
+		// Iterative collapse of 2x2 blocks
 		while w > 1 && h > 1 {
 			w = (w as f32 / 2.0).ceil() as usize;
 			h = (h as f32 / 2.0).ceil() as usize;
-			let mut new_map =
-				Array2D::filled_with(Vec::<geo_types::Polygon<f32>>::new().into(), h, w);
 
-			// TODO rayon tf out of this
-			for y in 0..h {
-				for x in 0..w {
-					let mut union: geo_types::MultiPolygon<f32> =
-						Vec::<geo_types::Polygon<f32>>::new().into();
-					for dx in 0..=1 {
-						for dy in 0..=1 {
-							if let Some(p) = reduced_map.get(y * 2 + dx, x * 2 + dy) {
-								let polygon: geo_types::MultiPolygon<f32> = p.clone().into();
-								union = union.union(&polygon);
+			let p: Vec<Vec<MP>> = reduced_map
+				.axis_chunks_iter(Axis(0), 2)
+				.into_par_iter()
+				.enumerate()
+				.map(|(y, y_view)| {
+					let polys: Vec<MP> = y_view
+						.axis_chunks_iter(Axis(1), 2)
+						.into_par_iter()
+						.enumerate()
+						.map(|(x, _x_view)| {
+							let mut union: MP = Vec::<P>::new().into();
+							for dx in 0..=1 {
+								for dy in 0..=1 {
+									if let Some(p) = reduced_map.get((y * 2 + dx, x * 2 + dy)) {
+										let polygon: MP = p.clone().into();
+										union = union.union(&polygon);
+									}
+								}
 							}
-						}
-					}
+							union.simplifyvw(&0.1)
+						})
+						.collect();
+					polys
+				})
+				.collect();
 
-					union = union.simplifyvw(&0.1);
-					new_map.set(y, x, union).unwrap();
-				}
-			}
-
-			reduced_map = new_map;
+			reduced_map = Array::from_shape_fn((h, w), |(y, x)| p[y][x].clone());
 		}
 
-		(reduced_map[(0, 0)].clone()).simplifyvw(&0.1).into()
+		reduced_map[(0, 0)].simplifyvw(&0.1).into()
 	}
 }
