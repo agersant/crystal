@@ -37,20 +37,18 @@ This screenshot illustrates usage of the dev CLI to spawn entities of various ty
 
 ## Windows
 
-### Dependencies
+### Install dependencies
 1. Install the 64-bit version of [Love2D](https://love2d.org/) (0.11.3 as of this writing)
 2. Install the [Visual C++ Build Tools](http://landinghub.visualstudio.com/visual-cpp-build-tools), selecting `Desktop Development With C++`
 3. Install [Meson](https://github.com/mesonbuild/meson/releases)
-4. Add `C:\Program Files\LOVE` to your path
-4. Add `C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build` to your path (this may be slightly inaccurate if you didn't install the community edition of the Visual C++ build tools)
+4. Install [Rust compiler](https://www.rust-lang.org/learn/get-started)
+5. Add `C:\Program Files\LOVE` to your path
+6. Add `C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build` to your path (this may be slightly inaccurate if you didn't install the community edition of the Visual C++ build tools)
 
-### Build and run without Visual Studio Code
+### Build native modules
 1. From the top level of this repository, execute the `build_beryl_windows.ps1` Powershell script
-2. From `crystal\game`, execute `love .`
-3. Game is running! Press ` to access the ingame CLI
+2. From the top level of this repository, execute the `build_diamond.sh` script
 
-### Build and run using Visual Studio Code
-1. Open this project in Visual Studio and run the task `Build Beryl`
-2. Run the task `Launch Game`
-3. Game is running! Press ` to access the ingame CLI
+### Run the game
+1. From `crystal\game`, execute `love .`, or run the `Launch Game` task from VSCode
 

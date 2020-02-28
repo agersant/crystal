@@ -18,6 +18,14 @@ jobs:
         curl -L -o love.zip https://bitbucket.org/rude/love/downloads/love-11.3-win64.zip
         unzip love.zip
         echo "##[add-path]${{ github.workspace }}\love-11.3-win64"
+    - name: Install Rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        minimal: true
+        default: true
+    - name: Build Diamond
+      run: .\build_diamond.sh
     - name: Install Meson
       run:  |
         curl -L -o meson.msi https://github.com/mesonbuild/meson/releases/download/0.53.1/meson-0.53.1-64.msi
@@ -40,6 +48,14 @@ jobs:
         curl -L -o love https://bitbucket.org/rude/love/downloads/love-11.3-x86_64.AppImage
         chmod +x love
         echo "::add-path::${{ github.workspace }}"
+    - name: Install Rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        minimal: true
+        default: true
+    - name: Build Diamond
+      run: .\build_diamond.sh
     - name: Install Meson
       run:  |
         sudo apt-get install python3 python3-pip python3-setuptools python3-wheel ninja-build

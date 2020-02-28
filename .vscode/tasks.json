@@ -57,24 +57,6 @@
 					"message": 3
 				}
 			}
-		},
-		{
-			"label": "Build Beryl",
-			"type": "shell",
-			"group": {
-				"kind": "build",
-				"isDefault": true
-			},
-			"options": {
-				"cwd": "${workspaceRoot}"
-			},
-			"command": ".\\build_beryl_windows.ps1",
-			"presentation": {
-				"reveal": "always",
-				"panel": "shared",
-				"clear": false
-			},
-			"problemMatcher": "$msCompile"
 		}
 	]
 }
