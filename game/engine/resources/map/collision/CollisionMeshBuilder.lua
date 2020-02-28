@@ -7,11 +7,17 @@ local MathUtils = require("engine/utils/MathUtils");
 
 local CollisionMeshBuilder = Class("CollisionMeshBuilder");
 
-CollisionMeshBuilder.init = function(self, width, height)
+CollisionMeshBuilder.init = function(self, width, height, tileWidth, tileHeight)
 	assert(width);
 	assert(width > 0);
 	assert(height);
 	assert(height > 0);
+	assert(tileWidth);
+	assert(tileWidth > 0);
+	assert(tileHeight);
+	assert(tileHeight > 0);
+	self._w = width * tileWidth;
+	self._h = height * tileHeight;
 	self._cBuilder = Diamond.mesh_builder_new(width, height);
 	assert(self._cBuilder);
 end
@@ -49,7 +55,8 @@ CollisionMeshBuilder.buildMesh = function(self)
 	assert(self._cBuilder);
 	local cMesh = Diamond.mesh_builder_build_mesh(self._cBuilder);
 
-	local mesh = CollisionMesh:new();
+	local mesh = CollisionMesh:new(self._w, self._h);
+
 	for chainIndex = 0, cMesh.num_polygons - 1 do
 		local chain = {};
 		local cPolygon = cMesh.polygons[chainIndex];

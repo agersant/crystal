@@ -4,13 +4,21 @@ local Colors = require("engine/resources/Colors");
 
 local CollisionMesh = Class("CollisionMesh");
 
-CollisionMesh.init = function(self)
+CollisionMesh.init = function(self, mapWidth, mapHeight)
+	assert(mapWidth);
+	assert(mapHeight);
 	self._chains = {};
+	self._outerChain = self:addChain({0, 0, mapWidth, 0, mapWidth, mapHeight, 0, mapHeight});
 end
 
 CollisionMesh.addChain = function(self, chain)
 	assert(chain);
 	table.insert(self._chains, chain);
+	return chain;
+end
+
+CollisionMesh.isOuterEdge = function(self, chain)
+	return chain == self._outerChain;
 end
 
 CollisionMesh.spawnBody = function(self, scene)
