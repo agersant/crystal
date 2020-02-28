@@ -25,7 +25,7 @@ jobs:
         minimal: true
         default: true
     - name: Build Diamond
-      run: .\build_diamond.sh
+      run: build_diamond.sh
       shell: bash
     - name: Install Meson
       run:  |
