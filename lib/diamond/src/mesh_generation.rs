@@ -25,25 +25,15 @@ impl CollisionMeshBuilder {
 		}
 	}
 
-	pub fn add_polygon(&mut self, polygon: Polygon) {
+	pub fn add_polygon(&mut self, tile_x: i32, tile_y: i32, polygon: Polygon) {
 		if polygon.vertices.len() == 0 {
 			return;
 		}
-		// TODO x and y as input
-		let x = (polygon
-			.vertices
-			.iter()
-			.min_by_key(|v| v.x.floor() as i32)
-			.unwrap()
-			.x / 16.0)
-			.floor() as usize;
-		let y = (polygon
-			.vertices
-			.iter()
-			.min_by_key(|v| v.y.floor() as i32)
-			.unwrap()
-			.y / 16.0)
-			.floor() as usize;
+		let x = tile_x as usize;
+		let y = tile_y as usize;
+		if x >= self.map_width || y >= self.map_height {
+			return;
+		}
 		self.polygons[(y, x)].push((&polygon).into());
 	}
 

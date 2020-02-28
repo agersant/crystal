@@ -15,7 +15,16 @@ struct TestInputVertex {
 }
 
 #[derive(Debug, Deserialize)]
-struct TestInputPolygon(Vec<TestInputVertex>);
+struct TestInputPolygon {
+	#[serde(rename(serialize = "tileX", deserialize = "tileX"))]
+	tile_x: i32,
+	#[serde(rename(serialize = "tileY", deserialize = "tileY"))]
+	tile_y: i32,
+	vertices: Vec<TestInputVertex>,
+}
+
+#[derive(Debug, Deserialize)]
+struct TestInputMesh(Vec<Vec<TestInputVertex>>);
 
 impl From<&TestInputVertex> for Vertex {
 	fn from(input: &TestInputVertex) -> Vertex {
@@ -26,10 +35,10 @@ impl From<&TestInputVertex> for Vertex {
 	}
 }
 
-impl From<&TestInputPolygon> for Polygon {
-	fn from(input: &TestInputPolygon) -> Polygon {
+impl From<&Vec<TestInputVertex>> for Polygon {
+	fn from(vertices: &Vec<TestInputVertex>) -> Polygon {
 		Polygon {
-			vertices: input.0.iter().map(|v| v.into()).collect(),
+			vertices: vertices.iter().map(|v| v.into()).collect(),
 		}
 	}
 }
@@ -86,14 +95,14 @@ fn test_sample_files(name: &str) {
 	};
 
 	let mesh_file = format!("test-data/{}-mesh.json", name);
-	let input_mesh: Vec<TestInputPolygon> = {
+	let input_mesh: TestInputMesh = {
 		let file = File::open(mesh_file).unwrap();
 		let reader = BufReader::new(file);
 		serde_json::from_reader(reader).unwrap()
 	};
 
 	let mut expected_mesh = CollisionMesh {
-		polygons: input_mesh.iter().map(|c| c.into()).collect(),
+		polygons: input_mesh.0.iter().map(|c| c.into()).collect(),
 	};
 	for polygon in expected_mesh.polygons.iter_mut() {
 		assert!(polygon.vertices.len() > 0);
@@ -102,7 +111,7 @@ fn test_sample_files(name: &str) {
 
 	let mut builder = CollisionMeshBuilder::new();
 	for polygon in input_polygons.iter() {
-		builder.add_polygon(polygon.into());
+		builder.add_polygon(polygon.tile_x, polygon.tile_y, (&polygon.vertices).into());
 	}
 
 	let start = std::time::SystemTime::now();

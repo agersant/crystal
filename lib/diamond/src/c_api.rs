@@ -114,6 +114,8 @@ pub unsafe extern "C" fn mesh_builder_new() -> *mut CCollisionMeshBuilder {
 #[no_mangle]
 pub unsafe extern "C" fn mesh_builder_add_polygon(
 	builder: *mut CCollisionMeshBuilder,
+	tile_x: i32,
+	tile_y: i32,
 	vertices: *const CVertex,
 	num_vertices: i32,
 ) {
@@ -123,7 +125,7 @@ pub unsafe extern "C" fn mesh_builder_add_polygon(
 	let c_vertices: &[CVertex] = slice::from_raw_parts(vertices, num_vertices as usize);
 	let vertices: Vec<Vertex> = c_vertices.iter().map(|v| v.into()).collect();
 	let polygon = Polygon { vertices };
-	(&mut *builder).0.add_polygon(polygon);
+	(&mut *builder).0.add_polygon(tile_x, tile_y, polygon);
 }
 
 #[no_mangle]
