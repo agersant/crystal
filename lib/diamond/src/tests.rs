@@ -24,6 +24,15 @@ struct TestInputPolygon {
 }
 
 #[derive(Debug, Deserialize)]
+struct TestInputMap {
+	#[serde(rename(serialize = "numTilesX", deserialize = "numTilesX"))]
+	num_tiles_x: i32,
+	#[serde(rename(serialize = "numTilesY", deserialize = "numTilesY"))]
+	num_tiles_y: i32,
+	polygons: Vec<TestInputPolygon>,
+}
+
+#[derive(Debug, Deserialize)]
 struct TestInputMesh(Vec<Vec<TestInputVertex>>);
 
 impl From<&TestInputVertex> for Vertex {
@@ -88,7 +97,7 @@ fn draw_mesh(mesh: &CollisionMesh, out_file: &str) {
 
 fn test_sample_files(name: &str) {
 	let polygons_file = format!("test-data/{}-polygons.json", name);
-	let input_polygons: Vec<TestInputPolygon> = {
+	let input_map: TestInputMap = {
 		let file = File::open(polygons_file).unwrap();
 		let reader = BufReader::new(file);
 		serde_json::from_reader(reader).unwrap()
@@ -109,8 +118,8 @@ fn test_sample_files(name: &str) {
 		polygon.vertices.push(polygon.vertices[0].clone());
 	}
 
-	let mut builder = CollisionMeshBuilder::new();
-	for polygon in input_polygons.iter() {
+	let mut builder = CollisionMeshBuilder::new(input_map.num_tiles_x, input_map.num_tiles_y);
+	for polygon in input_map.polygons.iter() {
 		builder.add_polygon(polygon.tile_x, polygon.tile_y, (&polygon.vertices).into());
 	}
 

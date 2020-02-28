@@ -11,17 +11,18 @@ use rayon::iter::IntoParallelIterator;
 #[derive(Debug)]
 pub struct CollisionMeshBuilder {
 	polygons: Array2<Vec<geo_types::Polygon<f32>>>,
-	map_width: usize,
-	map_height: usize,
+	num_tiles_x: usize,
+	num_tiles_y: usize,
 }
 
 impl CollisionMeshBuilder {
-	pub fn new() -> CollisionMeshBuilder {
+	pub fn new(num_tiles_x: i32, num_tiles_y: i32) -> CollisionMeshBuilder {
+		let w = num_tiles_x as usize;
+		let h = num_tiles_y as usize;
 		CollisionMeshBuilder {
-			// TODO map width and height as input
-			polygons: Array2::from_elem((40, 60), Vec::<geo_types::Polygon<f32>>::new()),
-			map_width: 60,
-			map_height: 40,
+			polygons: Array2::from_elem((h, w), Vec::<geo_types::Polygon<f32>>::new()),
+			num_tiles_x: w,
+			num_tiles_y: h,
 		}
 	}
 
@@ -31,7 +32,7 @@ impl CollisionMeshBuilder {
 		}
 		let x = tile_x as usize;
 		let y = tile_y as usize;
-		if x >= self.map_width || y >= self.map_height {
+		if x >= self.num_tiles_x || y >= self.num_tiles_y {
 			return;
 		}
 		self.polygons[(y, x)].push((&polygon).into());
@@ -41,8 +42,8 @@ impl CollisionMeshBuilder {
 		type P = geo_types::Polygon<f32>;
 		type MP = geo_types::MultiPolygon<f32>;
 
-		let mut w = self.map_width;
-		let mut h = self.map_height;
+		let mut w = self.num_tiles_x;
+		let mut h = self.num_tiles_y;
 
 		// Initial state
 		let mut reduced_map: Array2<MP> =

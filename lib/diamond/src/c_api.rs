@@ -106,8 +106,11 @@ impl Drop for CCollisionMesh {
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn mesh_builder_new() -> *mut CCollisionMeshBuilder {
-	let builder = CCollisionMeshBuilder(CollisionMeshBuilder::new());
+pub unsafe extern "C" fn mesh_builder_new(
+	num_tiles_x: i32,
+	num_tiles_y: i32,
+) -> *mut CCollisionMeshBuilder {
+	let builder = CCollisionMeshBuilder(CollisionMeshBuilder::new(num_tiles_x, num_tiles_y));
 	Box::into_raw(Box::new(builder))
 }
 
