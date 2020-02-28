@@ -19,8 +19,6 @@ Maps are authored using the [Tiled](http://www.mapeditor.org/) map-editor, which
 
 <img src="docs/readme/crystal_physics_overlay.gif?raw=true" height="429"/>
 
-Crystal is very accepting of elaborate collision data. A single tile can have multiple collision shapes, and they can be any polygonal shapes which isn't self-intersecting.
-
 ## Navmesh Generation
 
 Because the collision data is so free-form, we would be losing a lot of precision from using grid-based pathfinding. This was a great excuse to implement pathfinding using navmeshes. This project includes a C module called Beryl (under `lib/beryl`) whose sole responsabilities are generating and querying navmeshes. At the moment, the mesh generation is performed upon map load but could easily move to some offline build phase.
