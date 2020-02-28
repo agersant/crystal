@@ -7,15 +7,23 @@ local MathUtils = require("engine/utils/MathUtils");
 
 local CollisionMeshBuilder = Class("CollisionMeshBuilder");
 
-CollisionMeshBuilder.init = function(self)
-	self._polygons = {};
+CollisionMeshBuilder.init = function(self, width, height)
+	assert(width);
+	assert(width > 0);
+	assert(height);
+	assert(height > 0);
+	self._cBuilder = Diamond.mesh_builder_new(width, height);
+	assert(self._cBuilder);
 end
 
-CollisionMeshBuilder.addPolygon = function(self, vertices)
-	table.insert(self._polygons, vertices);
+CollisionMeshBuilder.addPolygon = function(self, tileX, tileY, vertices)
+	assert(self._cBuilder);
+	local cVertices = FFI.new(FFI.typeof("CVertex[?]"), #vertices, vertices);
+	Diamond.mesh_builder_add_polygon(self._cBuilder, tileX, tileY, cVertices, #vertices);
 end
 
 CollisionMeshBuilder.addLayer = function(self, tileset, layerData)
+	assert(self._cBuilder);
 	local tileWidth = tileset:getTileWidth();
 	local tileHeight = tileset:getTileHeight();
 	for tileNum, tileID in ipairs(layerData.data) do
@@ -31,44 +39,31 @@ CollisionMeshBuilder.addLayer = function(self, tileset, layerData)
 					local vertY = MathUtils.round(vert.y);
 					table.insert(polygon, {x = x + vertX, y = y + vertY});
 				end
-				self:addPolygon(polygon);
+				self:addPolygon(tileX, tileY, polygon);
 			end
 		end
 	end
 end
 
 CollisionMeshBuilder.buildMesh = function(self)
-
-	local polygons = {};
-	for _, sourceVertices in ipairs(self._polygons) do
-		local vertices = {};
-		for _, sourceVertex in ipairs(sourceVertices) do
-			local cVertex = FFI.new(FFI.typeof("CVertex"));
-			cVertex.x = sourceVertex.x;
-			cVertex.y = sourceVertex.y;
-			table.insert(vertices, cVertex);
-		end
-		local cPolygon = FFI.new(FFI.typeof("CPolygon"));
-		cPolygon.vertices = FFI.new(FFI.typeof("CVertex[?]"), #vertices, vertices);
-		cPolygon.num_vertices = #vertices;
-		table.insert(polygons, cPolygon);
-	end
-	local cPolygons = FFI.new(FFI.typeof("CPolygon[?]"), #polygons, polygons);
-	local cMesh = Diamond.newCollisionMesh(cPolygons, #self._polygons);
+	assert(self._cBuilder);
+	local cMesh = Diamond.mesh_builder_build_mesh(self._cBuilder);
 
 	local mesh = CollisionMesh:new();
-	for chainIndex = 0, cMesh.num_chains - 1 do
+	for chainIndex = 0, cMesh.num_polygons - 1 do
 		local chain = {};
-		local cChain = cMesh.chains[chainIndex];
-		for i = 0, cChain.num_vertices - 2 do
-			local cVertex = cChain.vertices[i];
+		local cPolygon = cMesh.polygons[chainIndex];
+		for i = 0, cPolygon.num_vertices - 2 do
+			local cVertex = cPolygon.vertices[i];
 			table.insert(chain, cVertex.x);
 			table.insert(chain, cVertex.y);
 		end
 		mesh:addChain(chain);
 	end
 
-	Diamond.deleteCollisionMesh(cMesh);
+	Diamond.mesh_delete(cMesh);
+	Diamond.mesh_builder_delete(self._cBuilder);
+	self._cBuilder = nil;
 
 	return mesh;
 end

@@ -63,7 +63,7 @@ Map.init = function(self, mapData, tileset)
 	self._height = mapData.content.height;
 	self._numTiles = self._width * self._height;
 
-	local collisionMeshBuilder = CollisionMeshBuilder:new();
+	local collisionMeshBuilder = CollisionMeshBuilder:new(self._width, self._height);
 
 	local layers = mapData.content.layers;
 	for i = #layers, 1, -1 do
