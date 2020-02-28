@@ -25,8 +25,7 @@ jobs:
         minimal: true
         default: true
     - name: Build Diamond
-      run: build_diamond.sh
-      shell: bash
+      run: bash build_diamond.sh
     - name: Install Meson
       run:  |
         curl -L -o meson.msi https://github.com/mesonbuild/meson/releases/download/0.53.1/meson-0.53.1-64.msi
