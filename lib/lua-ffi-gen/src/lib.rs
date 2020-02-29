@@ -26,10 +26,4 @@ pub fn generate_bindings() {
 
 fn target_dir() -> PathBuf {
     PathBuf::from(format!("../target/{}", env::var("PROFILE").unwrap()))
-    /*
-    if let Ok(target) = env::var("CARGO_TARGET_DIR") {
-        PathBuf::from(target)
-    } else {
-        PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap()).join("target")
-    }*/
 }
