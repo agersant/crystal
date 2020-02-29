@@ -45,7 +45,7 @@ This screenshot illustrates usage of the dev CLI to spawn entities of various ty
 
 ### Build native modules
 1. From the top level of this repository, execute the `build_beryl_windows.ps1` Powershell script
-2. From the top level of this repository, execute the `build_diamond.sh` script
+2. From the top level of this repository, execute the `build_diamond_windows.ps1` script
 
 ### Run the game
 1. From `crystal\game`, execute `love .`, or run the `Launch Game` task from VSCode
