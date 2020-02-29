@@ -4,4 +4,4 @@ cd ../..
 
 mkdir -p ./game/engine/ffi
 cp ./lib/target/release/libdiamond.so ./game
-cp ./lib/target/diamond.lua ./game/engine/ffi/Diamond.lua
+cp ./lib/target/release/diamond.lua ./game/engine/ffi/Diamond.lua
