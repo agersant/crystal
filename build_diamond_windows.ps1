@@ -1,5 +1,5 @@
 Push-Location -StackName 'DirStack'
-Set-Location .\lib\diamond
+Set-Location .\lib
 cargo build --release
 Pop-Location -StackName 'DirStack'
 New-Item -Type dir -Force .\game\engine\ffi | Out-Null

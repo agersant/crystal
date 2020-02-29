@@ -1,6 +1,6 @@
-cd lib/diamond
+cd lib
 cargo build --release
-cd ../..
+cd ..
 
 mkdir -p ./game/engine/ffi
 cp ./lib/target/release/libdiamond.so ./game
