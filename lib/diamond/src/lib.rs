@@ -1,7 +1,7 @@
 mod c_api;
-mod mesh_generation;
+mod geometry;
+mod mesh;
 #[cfg(test)]
 mod tests;
-mod types;
 
 pub use c_api::*;

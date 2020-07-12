@@ -7,6 +7,27 @@ local MathUtils = require("engine/utils/MathUtils");
 
 local CollisionMeshBuilder = Class("CollisionMeshBuilder");
 
+local newMeshBuilder = function(numTilesX, numTilesY)
+	local output = FFI.gc(Diamond.mesh_builder_new(numTilesX, numTilesY), function(builder)
+		Diamond.mesh_builder_delete(builder);
+	end);
+	return output;
+end
+
+local newMesh = function()
+	local output = FFI.gc(Diamond.mesh_new(), function(polygons)
+		Diamond.mesh_delete(polygons);
+	end);
+	return output;
+end
+
+local newPolygons = function()
+	local output = FFI.gc(FFI.new(FFI.typeof("CPolygons")), function(polygons)
+		Diamond.polygons_delete(polygons);
+	end);
+	return output;
+end
+
 CollisionMeshBuilder.init = function(self, width, height, tileWidth, tileHeight)
 	assert(width);
 	assert(width > 0);
@@ -18,7 +39,7 @@ CollisionMeshBuilder.init = function(self, width, height, tileWidth, tileHeight)
 	assert(tileHeight > 0);
 	self._w = width * tileWidth;
 	self._h = height * tileHeight;
-	self._cBuilder = Diamond.mesh_builder_new(width, height);
+	self._cBuilder = newMeshBuilder(width, height);
 	assert(self._cBuilder);
 end
 
@@ -53,13 +74,17 @@ end
 
 CollisionMeshBuilder.buildMesh = function(self)
 	assert(self._cBuilder);
-	local cMesh = Diamond.mesh_builder_build_mesh(self._cBuilder);
+
+	local cMesh = newMesh();
+	Diamond.mesh_builder_build_mesh(self._cBuilder, cMesh);
+
+	local obstacles = newPolygons();
+	Diamond.mesh_list_collision_polygons(cMesh, obstacles);
 
 	local mesh = CollisionMesh:new(self._w, self._h);
-
-	for chainIndex = 0, cMesh.num_polygons - 1 do
+	for chainIndex = 0, obstacles.num_polygons - 1 do
 		local chain = {};
-		local cPolygon = cMesh.polygons[chainIndex];
+		local cPolygon = obstacles.polygons[chainIndex];
 		for i = 0, cPolygon.num_vertices - 2 do
 			local cVertex = cPolygon.vertices[i];
 			table.insert(chain, cVertex.x);
@@ -68,8 +93,6 @@ CollisionMeshBuilder.buildMesh = function(self)
 		mesh:addChain(chain);
 	end
 
-	Diamond.mesh_delete(cMesh);
-	Diamond.mesh_builder_delete(self._cBuilder);
 	self._cBuilder = nil;
 
 	return mesh;

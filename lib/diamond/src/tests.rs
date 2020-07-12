@@ -1,12 +1,12 @@
+use crate::geometry::*;
+use crate::mesh::builder::MeshBuilder;
+use crate::mesh::collision::CollisionMesh;
 use plotters::drawing::backend::DrawingBackend;
 use plotters::drawing::BitMapBackend;
 use plotters::style::colors::*;
 use serde::Deserialize;
 use std::fs::File;
 use std::io::BufReader;
-
-use crate::mesh_generation::*;
-use crate::types::*;
 
 #[derive(Debug, Deserialize)]
 struct TestInputVertex {
@@ -118,7 +118,7 @@ fn test_sample_files(name: &str) {
 		polygon.vertices.push(polygon.vertices[0].clone());
 	}
 
-	let mut builder = CollisionMeshBuilder::new(input_map.num_tiles_x, input_map.num_tiles_y);
+	let mut builder = MeshBuilder::new(input_map.num_tiles_x, input_map.num_tiles_y);
 	for polygon in input_map.polygons.iter() {
 		builder.add_polygon(polygon.tile_x, polygon.tile_y, (&polygon.vertices).into());
 	}
@@ -137,9 +137,9 @@ fn test_sample_files(name: &str) {
 	draw_mesh(&expected_mesh, &expected_result_file);
 
 	let actual_result_file = format!("test-output/{}-result.png", name);
-	draw_mesh(&mesh, &actual_result_file);
+	draw_mesh(&mesh.collision, &actual_result_file);
 
-	assert_eq!(mesh, expected_mesh);
+	assert_eq!(mesh.collision, expected_mesh);
 }
 
 #[test]

@@ -116,73 +116,6 @@ impl From<&Polygon> for geo_types::Polygon<f32> {
 	}
 }
 
-#[derive(Debug)]
-pub struct CollisionMesh {
-	pub polygons: Vec<Polygon>,
-}
-
-impl PartialEq for CollisionMesh {
-	fn eq(&self, other: &Self) -> bool {
-		if self.polygons.len() != other.polygons.len() {
-			return false;
-		}
-		let self_polygons: HashSet<Polygon> = self.polygons.iter().cloned().collect();
-		let other_polygons: HashSet<Polygon> = other.polygons.iter().cloned().collect();
-		self_polygons == other_polygons
-	}
-}
-
-impl From<geo_types::MultiPolygon<f32>> for CollisionMesh {
-	fn from(multi_polygon: geo_types::MultiPolygon<f32>) -> CollisionMesh {
-		let mut polygons: Vec<Polygon> = Vec::new();
-		for polygon in multi_polygon.into_iter() {
-			polygons.push(Polygon {
-				vertices: polygon
-					.exterior()
-					.points_iter()
-					.into_iter()
-					.map(|p| Vertex { x: p.x(), y: p.y() })
-					.collect::<Vec<Vertex>>(),
-			});
-			for interior in polygon.interiors().iter() {
-				polygons.push(Polygon {
-					vertices: interior
-						.points_iter()
-						.into_iter()
-						.map(|p| Vertex { x: p.x(), y: p.y() })
-						.collect::<Vec<Vertex>>(),
-				});
-			}
-		}
-		CollisionMesh { polygons }
-	}
-}
-
-impl CollisionMesh {
-	pub fn bounding_box(&self) -> (Vertex, Vertex) {
-		let mut top_left = Vertex {
-			x: std::f32::INFINITY,
-			y: std::f32::INFINITY,
-		};
-
-		let mut bottom_right = Vertex {
-			x: std::f32::NEG_INFINITY,
-			y: std::f32::NEG_INFINITY,
-		};
-
-		for polygon in self.polygons.iter() {
-			for vertex in polygon.vertices.iter() {
-				top_left.x = vertex.x.min(top_left.x);
-				top_left.y = vertex.y.min(top_left.y);
-				bottom_right.x = vertex.x.max(bottom_right.x);
-				bottom_right.y = vertex.y.max(bottom_right.y);
-			}
-		}
-
-		(top_left, bottom_right)
-	}
-}
-
 #[test]
 fn polygons_equal() {
 	let a = Polygon {
@@ -203,55 +136,6 @@ fn polygons_equal() {
 			Vertex { x: 16.0, y: 16.0 },
 			Vertex { x: 16.0, y: 32.0 },
 			Vertex { x: 0.0, y: 0.0 },
-		],
-	};
-	assert_eq!(a, b);
-}
-
-#[test]
-fn meshes_equal() {
-	let a = CollisionMesh {
-		polygons: vec![
-			Polygon {
-				vertices: vec![
-					Vertex { x: 16.0, y: 32.0 },
-					Vertex { x: 0.0, y: 0.0 },
-					Vertex { x: 128.0, y: 0.0 },
-					Vertex { x: 128.0, y: 16.0 },
-					Vertex { x: 16.0, y: 16.0 },
-					Vertex { x: 16.0, y: 32.0 },
-				],
-			},
-			Polygon {
-				vertices: vec![
-					Vertex { x: 10.0, y: 10.0 },
-					Vertex { x: 20.0, y: 20.0 },
-					Vertex { x: 10.0, y: 20.0 },
-					Vertex { x: 10.0, y: 10.0 },
-				],
-			},
-		],
-	};
-	let b = CollisionMesh {
-		polygons: vec![
-			Polygon {
-				vertices: vec![
-					Vertex { x: 20.0, y: 20.0 },
-					Vertex { x: 10.0, y: 20.0 },
-					Vertex { x: 10.0, y: 10.0 },
-					Vertex { x: 20.0, y: 20.0 },
-				],
-			},
-			Polygon {
-				vertices: vec![
-					Vertex { x: 0.0, y: 0.0 },
-					Vertex { x: 128.0, y: 0.0 },
-					Vertex { x: 128.0, y: 16.0 },
-					Vertex { x: 16.0, y: 16.0 },
-					Vertex { x: 16.0, y: 32.0 },
-					Vertex { x: 0.0, y: 0.0 },
-				],
-			},
 		],
 	};
 	assert_eq!(a, b);
