@@ -33,6 +33,10 @@ CollisionMeshBuilder.init = function(self, width, height, tileWidth, tileHeight)
 	assert(width > 0);
 	assert(height);
 	assert(height > 0);
+	assert(tileWidth);
+	assert(tileWidth > 0);
+	assert(tileHeight);
+	assert(tileHeight > 0);
 	self._w = width * tileWidth;
 	self._h = height * tileHeight;
 	self._cBuilder = newMeshBuilder(width, height);
