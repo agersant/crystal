@@ -1,9 +1,9 @@
-use crate::mesh::collision;
+use crate::mesh::collision::CollisionMesh;
 
-pub struct Mesh {}
+pub struct NavigationMesh {}
 
-impl Mesh {
-	pub fn build(_collision_mesh: &collision::Mesh) -> Mesh {
-		Mesh {}
+impl NavigationMesh {
+	pub fn build(_collision_mesh: &CollisionMesh) -> NavigationMesh {
+		NavigationMesh {}
 	}
 }

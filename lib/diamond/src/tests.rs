@@ -1,6 +1,6 @@
 use crate::geometry::*;
 use crate::mesh::builder::MeshBuilder;
-use crate::mesh::collision;
+use crate::mesh::collision::CollisionMesh;
 use plotters::drawing::backend::DrawingBackend;
 use plotters::drawing::BitMapBackend;
 use plotters::style::colors::*;
@@ -52,7 +52,7 @@ impl From<&Vec<TestInputVertex>> for Polygon {
 	}
 }
 
-fn draw_mesh(mesh: &collision::Mesh, out_file: &str) {
+fn draw_mesh(mesh: &CollisionMesh, out_file: &str) {
 	let (mut top_left, mut bottom_right) = mesh.bounding_box();
 	if top_left.x.is_infinite() || top_left.x.is_nan() {
 		top_left.x = 0.0;
@@ -110,7 +110,7 @@ fn test_sample_files(name: &str) {
 		serde_json::from_reader(reader).unwrap()
 	};
 
-	let mut expected_mesh = collision::Mesh {
+	let mut expected_mesh = CollisionMesh {
 		polygons: input_mesh.0.iter().map(|c| c.into()).collect(),
 	};
 	for polygon in expected_mesh.polygons.iter_mut() {

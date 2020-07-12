@@ -10,11 +10,11 @@ use rayon::iter::IntoParallelIterator;
 use std::collections::HashSet;
 
 #[derive(Debug)]
-pub struct Mesh {
+pub struct CollisionMesh {
 	pub polygons: Vec<Polygon>,
 }
 
-impl PartialEq for Mesh {
+impl PartialEq for CollisionMesh {
 	fn eq(&self, other: &Self) -> bool {
 		if self.polygons.len() != other.polygons.len() {
 			return false;
@@ -25,8 +25,8 @@ impl PartialEq for Mesh {
 	}
 }
 
-impl From<geo_types::MultiPolygon<f32>> for Mesh {
-	fn from(multi_polygon: geo_types::MultiPolygon<f32>) -> Mesh {
+impl From<geo_types::MultiPolygon<f32>> for CollisionMesh {
+	fn from(multi_polygon: geo_types::MultiPolygon<f32>) -> CollisionMesh {
 		let mut polygons: Vec<Polygon> = Vec::new();
 		for polygon in multi_polygon.into_iter() {
 			polygons.push(Polygon {
@@ -47,16 +47,16 @@ impl From<geo_types::MultiPolygon<f32>> for Mesh {
 				});
 			}
 		}
-		Mesh { polygons }
+		CollisionMesh { polygons }
 	}
 }
 
-impl Mesh {
+impl CollisionMesh {
 	pub fn build(
 		num_tiles_x: usize,
 		num_tiles_y: usize,
 		polygons: &Array2<Vec<geo_types::Polygon<f32>>>,
-	) -> Mesh {
+	) -> CollisionMesh {
 		type P = geo_types::Polygon<f32>;
 		type MP = geo_types::MultiPolygon<f32>;
 
@@ -131,7 +131,7 @@ impl Mesh {
 
 #[test]
 fn meshes_equal() {
-	let a = Mesh {
+	let a = CollisionMesh {
 		polygons: vec![
 			Polygon {
 				vertices: vec![
@@ -153,7 +153,7 @@ fn meshes_equal() {
 			},
 		],
 	};
-	let b = Mesh {
+	let b = CollisionMesh {
 		polygons: vec![
 			Polygon {
 				vertices: vec![
