@@ -100,21 +100,15 @@ impl From<&Vec<Polygon>> for CPolygons {
 	}
 }
 
-impl Drop for CPolygons {
-	fn drop(&mut self) {
-		if !self.polygons.is_null() && self.num_polygons > 0 {
-			let c_polygons: &mut [CPolygon] =
-				unsafe { slice::from_raw_parts_mut(self.polygons, self.num_polygons as usize) };
-			drop(c_polygons);
-		}
-	}
-}
-
 #[no_mangle]
 pub unsafe extern "C" fn polygons_delete(c_polygons: *mut CPolygons) {
 	if c_polygons.is_null() {
 		return;
 	}
-	let boxed_polygons = Box::from_raw(c_polygons);
-	drop(boxed_polygons);
+	let c_polygons = &*c_polygons;
+	if !c_polygons.polygons.is_null() && c_polygons.num_polygons > 0 {
+		let polygons: &mut [CPolygon] =
+			slice::from_raw_parts_mut(c_polygons.polygons, c_polygons.num_polygons as usize);
+		drop(polygons);
+	}
 }
