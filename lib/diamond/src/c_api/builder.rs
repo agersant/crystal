@@ -42,5 +42,5 @@ pub unsafe extern "C" fn mesh_builder_build_mesh(builder: *mut MeshBuilder, out_
 		return;
 	}
 	let mesh = (&*builder).build();
-	*out_mesh = mesh.into();
+	*out_mesh = mesh;
 }

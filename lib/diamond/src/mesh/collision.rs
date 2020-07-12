@@ -14,6 +14,14 @@ pub struct CollisionMesh {
 	pub polygons: Vec<Polygon>,
 }
 
+impl Default for CollisionMesh {
+	fn default() -> Self {
+		CollisionMesh {
+			polygons: Vec::new(),
+		}
+	}
+}
+
 impl PartialEq for CollisionMesh {
 	fn eq(&self, other: &Self) -> bool {
 		if self.polygons.len() != other.polygons.len() {

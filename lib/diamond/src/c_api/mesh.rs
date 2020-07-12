@@ -2,6 +2,12 @@ use crate::c_api::geometry::*;
 use crate::mesh::Mesh;
 
 #[no_mangle]
+pub unsafe extern "C" fn mesh_new() -> *mut Mesh {
+	let mesh = Mesh::default();
+	Box::into_raw(Box::new(mesh))
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn mesh_delete(mesh: *mut Mesh) {
 	if mesh.is_null() {
 		return;
