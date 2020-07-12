@@ -19,8 +19,6 @@ Maps are authored using the [Tiled](http://www.mapeditor.org/) map-editor, which
 
 <img src="docs/readme/crystal_physics_overlay.gif?raw=true" height="429"/>
 
-Crystal is very accepting of elaborate collision data. A single tile can have multiple collision shapes, and they can be any polygonal shapes which isn't self-intersecting.
-
 ## Navmesh Generation
 
 Because the collision data is so free-form, we would be losing a lot of precision from using grid-based pathfinding. This was a great excuse to implement pathfinding using navmeshes. This project includes a C module called Beryl (under `lib/beryl`) whose sole responsabilities are generating and querying navmeshes. At the moment, the mesh generation is performed upon map load but could easily move to some offline build phase.
@@ -47,7 +45,7 @@ This screenshot illustrates usage of the dev CLI to spawn entities of various ty
 
 ### Build native modules
 1. From the top level of this repository, execute the `build_beryl_windows.ps1` Powershell script
-2. From the top level of this repository, execute the `build_diamond.sh` script
+2. From the top level of this repository, execute the `build_diamond_windows.ps1` script
 
 ### Run the game
 1. From `crystal\game`, execute `love .`, or run the `Launch Game` task from VSCode

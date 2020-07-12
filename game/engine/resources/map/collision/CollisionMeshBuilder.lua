@@ -28,11 +28,13 @@ local newPolygons = function()
 	return output;
 end
 
-CollisionMeshBuilder.init = function(self, width, height)
+CollisionMeshBuilder.init = function(self, width, height, tileWidth, tileHeight)
 	assert(width);
 	assert(width > 0);
 	assert(height);
 	assert(height > 0);
+	self._w = width * tileWidth;
+	self._h = height * tileHeight;
 	self._cBuilder = newMeshBuilder(width, height);
 	assert(self._cBuilder);
 end
@@ -75,7 +77,7 @@ CollisionMeshBuilder.buildMesh = function(self)
 	local obstacles = newPolygons();
 	Diamond.mesh_list_collision_polygons(cMesh, obstacles);
 
-	local mesh = CollisionMesh:new();
+	local mesh = CollisionMesh:new(self._w, self._h);
 	for chainIndex = 0, obstacles.num_polygons - 1 do
 		local chain = {};
 		local cPolygon = obstacles.polygons[chainIndex];
