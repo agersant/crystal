@@ -1,12 +1,12 @@
+use crate::geometry::*;
+use crate::mesh::builder::MeshBuilder;
+use crate::mesh::collision;
 use plotters::drawing::backend::DrawingBackend;
 use plotters::drawing::BitMapBackend;
 use plotters::style::colors::*;
 use serde::Deserialize;
 use std::fs::File;
 use std::io::BufReader;
-
-use crate::mesh_generation::*;
-use crate::types::*;
 
 #[derive(Debug, Deserialize)]
 struct TestInputVertex {
@@ -52,7 +52,7 @@ impl From<&Vec<TestInputVertex>> for Polygon {
 	}
 }
 
-fn draw_mesh(mesh: &CollisionMesh, out_file: &str) {
+fn draw_mesh(mesh: &collision::Mesh, out_file: &str) {
 	let (mut top_left, mut bottom_right) = mesh.bounding_box();
 	if top_left.x.is_infinite() || top_left.x.is_nan() {
 		top_left.x = 0.0;
@@ -110,7 +110,7 @@ fn test_sample_files(name: &str) {
 		serde_json::from_reader(reader).unwrap()
 	};
 
-	let mut expected_mesh = CollisionMesh {
+	let mut expected_mesh = collision::Mesh {
 		polygons: input_mesh.0.iter().map(|c| c.into()).collect(),
 	};
 	for polygon in expected_mesh.polygons.iter_mut() {
@@ -118,7 +118,7 @@ fn test_sample_files(name: &str) {
 		polygon.vertices.push(polygon.vertices[0].clone());
 	}
 
-	let mut builder = CollisionMeshBuilder::new(input_map.num_tiles_x, input_map.num_tiles_y);
+	let mut builder = MeshBuilder::new(input_map.num_tiles_x, input_map.num_tiles_y);
 	for polygon in input_map.polygons.iter() {
 		builder.add_polygon(polygon.tile_x, polygon.tile_y, (&polygon.vertices).into());
 	}
@@ -137,9 +137,9 @@ fn test_sample_files(name: &str) {
 	draw_mesh(&expected_mesh, &expected_result_file);
 
 	let actual_result_file = format!("test-output/{}-result.png", name);
-	draw_mesh(&mesh, &actual_result_file);
+	draw_mesh(&mesh.collision, &actual_result_file);
 
-	assert_eq!(mesh, expected_mesh);
+	assert_eq!(mesh.collision, expected_mesh);
 }
 
 #[test]
