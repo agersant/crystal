@@ -2,7 +2,6 @@ use crate::c_api::geometry::*;
 use crate::geometry::*;
 use crate::mesh::builder::MeshBuilder;
 use crate::mesh::Mesh;
-use std::ptr::*;
 use std::slice;
 
 #[no_mangle]
@@ -38,10 +37,10 @@ pub unsafe extern "C" fn mesh_builder_add_polygon(
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn mesh_builder_build(builder: *mut MeshBuilder) -> *mut Mesh {
+pub unsafe extern "C" fn mesh_builder_build_mesh(builder: *mut MeshBuilder, out_mesh: *mut Mesh) {
 	if builder.is_null() {
-		return null_mut();
+		return;
 	}
 	let mesh = (&*builder).build();
-	Box::into_raw(Box::new(mesh.into()))
+	*out_mesh = mesh.into();
 }
