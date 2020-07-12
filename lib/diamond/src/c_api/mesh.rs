@@ -1,16 +1,19 @@
 use crate::mesh::collision;
+use crate::mesh::navigation;
 use crate::mesh::Mesh;
 
 #[repr(C)]
 #[derive(Debug)]
 pub struct CMesh {
 	pub collision: *mut collision::Mesh,
+	pub navigation: *mut navigation::Mesh,
 }
 
 impl From<Mesh> for CMesh {
 	fn from(mesh: Mesh) -> CMesh {
 		CMesh {
 			collision: Box::into_raw(Box::new(mesh.collision)),
+			navigation: Box::into_raw(Box::new(mesh.navigation)),
 		}
 	}
 }

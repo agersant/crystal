@@ -1,5 +1,6 @@
 use crate::geometry::*;
 use crate::mesh::collision;
+use crate::mesh::navigation;
 use crate::mesh::Mesh;
 use ndarray::Array2;
 
@@ -34,8 +35,12 @@ impl MeshBuilder {
 	}
 
 	pub fn build(&self) -> Mesh {
+		let collision_mesh =
+			collision::Mesh::build(self.num_tiles_x, self.num_tiles_y, &self.polygons);
+		let navigation_mesh = navigation::Mesh::build(&collision_mesh);
 		Mesh {
-			collision: collision::Mesh::build(self.num_tiles_x, self.num_tiles_y, &self.polygons),
+			collision: collision_mesh,
+			navigation: navigation_mesh,
 		}
 	}
 }
