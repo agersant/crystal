@@ -1,7 +1,7 @@
 use crate::c_api::geometry::*;
-use crate::c_api::mesh::*;
 use crate::geometry::*;
 use crate::mesh::builder::MeshBuilder;
+use crate::mesh::Mesh;
 use std::ptr::*;
 use std::slice;
 
@@ -38,7 +38,7 @@ pub unsafe extern "C" fn mesh_builder_add_polygon(
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn mesh_builder_build(builder: *mut MeshBuilder) -> *mut CMesh {
+pub unsafe extern "C" fn mesh_builder_build(builder: *mut MeshBuilder) -> *mut Mesh {
 	if builder.is_null() {
 		return null_mut();
 	}
