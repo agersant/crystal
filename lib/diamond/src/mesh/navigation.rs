@@ -23,7 +23,6 @@ impl NavigationMesh {
 		triangulation.insert([width, height]);
 		triangulation.insert([0.0, height]);
 
-		// TODO This is a bad triangulation, has triangles intersecting obstacles!!
 		for polygon in &collision_mesh.polygons {
 			let num_vertices = polygon.vertices.len();
 			for (v0, v1) in polygon.vertices.iter().cycle().take(num_vertices).tuple_windows() {
@@ -34,6 +33,8 @@ impl NavigationMesh {
 				}
 			}
 		}
+
+		// TODO remove triangles within obstacles
 
 		NavigationMesh {
 			triangulation
