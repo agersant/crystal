@@ -2,13 +2,14 @@ require("engine/utils/OOP");
 require("engine/ffi/Diamond");
 local FFI = require("ffi");
 local Diamond = FFI.load("diamond");
-local CollisionMesh = require("engine/resources/map/collision/CollisionMesh");
+local CollisionMesh = require("engine/resources/map/CollisionMesh");
+local NavigationMesh = require("engine/resources/map/NavigationMesh");
 local MathUtils = require("engine/utils/MathUtils");
 
-local CollisionMeshBuilder = Class("CollisionMeshBuilder");
+local MeshBuilder = Class("MeshBuilder");
 
-local newMeshBuilder = function(numTilesX, numTilesY)
-	local output = FFI.gc(Diamond.mesh_builder_new(numTilesX, numTilesY), function(builder)
+local newMeshBuilder = function(numTilesX, numTilesY, tileWidth, tileHeight)
+	local output = FFI.gc(Diamond.mesh_builder_new(numTilesX, numTilesY, tileWidth, tileHeight), function(builder)
 		Diamond.mesh_builder_delete(builder);
 	end);
 	return output;
@@ -21,14 +22,7 @@ local newMesh = function()
 	return output;
 end
 
-local newPolygons = function()
-	local output = FFI.gc(FFI.new(FFI.typeof("CPolygons")), function(polygons)
-		Diamond.polygons_delete(polygons);
-	end);
-	return output;
-end
-
-CollisionMeshBuilder.init = function(self, width, height, tileWidth, tileHeight)
+MeshBuilder.init = function(self, width, height, tileWidth, tileHeight)
 	assert(width);
 	assert(width > 0);
 	assert(height);
@@ -39,17 +33,17 @@ CollisionMeshBuilder.init = function(self, width, height, tileWidth, tileHeight)
 	assert(tileHeight > 0);
 	self._w = width * tileWidth;
 	self._h = height * tileHeight;
-	self._cBuilder = newMeshBuilder(width, height);
+	self._cBuilder = newMeshBuilder(width, height, tileWidth, tileHeight);
 	assert(self._cBuilder);
 end
 
-CollisionMeshBuilder.addPolygon = function(self, tileX, tileY, vertices)
+MeshBuilder.addPolygon = function(self, tileX, tileY, vertices)
 	assert(self._cBuilder);
 	local cVertices = FFI.new(FFI.typeof("CVertex[?]"), #vertices, vertices);
 	Diamond.mesh_builder_add_polygon(self._cBuilder, tileX, tileY, cVertices, #vertices);
 end
 
-CollisionMeshBuilder.addLayer = function(self, tileset, layerData)
+MeshBuilder.addLayer = function(self, tileset, layerData)
 	assert(self._cBuilder);
 	local tileWidth = tileset:getTileWidth();
 	local tileHeight = tileset:getTileHeight();
@@ -72,30 +66,17 @@ CollisionMeshBuilder.addLayer = function(self, tileset, layerData)
 	end
 end
 
-CollisionMeshBuilder.buildMesh = function(self)
+MeshBuilder.buildMesh = function(self)
 	assert(self._cBuilder);
 
 	local cMesh = newMesh();
 	Diamond.mesh_builder_build_mesh(self._cBuilder, cMesh);
-
-	local obstacles = newPolygons();
-	Diamond.mesh_list_collision_polygons(cMesh, obstacles);
-
-	local mesh = CollisionMesh:new(self._w, self._h);
-	for chainIndex = 0, obstacles.num_polygons - 1 do
-		local chain = {};
-		local cPolygon = obstacles.polygons[chainIndex];
-		for i = 0, cPolygon.num_vertices - 2 do
-			local cVertex = cPolygon.vertices[i];
-			table.insert(chain, cVertex.x);
-			table.insert(chain, cVertex.y);
-		end
-		mesh:addChain(chain);
-	end
-
 	self._cBuilder = nil;
 
-	return mesh;
+	local collisionMesh = CollisionMesh:new(self._w, self._h, cMesh);
+	local navigationMesh = NavigationMesh:new(cMesh);
+
+	return collisionMesh, navigationMesh;
 end
 
-return CollisionMeshBuilder;
+return MeshBuilder;

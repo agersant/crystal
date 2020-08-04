@@ -29,6 +29,18 @@ pub unsafe extern "C" fn mesh_list_collision_polygons(
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn mesh_list_navigation_polygons(
+	mesh: *mut Mesh,
+	out_polygons: *mut CPolygons,
+) {
+	if mesh.is_null() {
+		return;
+	}
+	let mesh = &*mesh;
+	*out_polygons = (&mesh.navigation.get_triangles()).into();
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn mesh_plan_path(
 	mesh: *mut Mesh,
 	_start_x: f32,

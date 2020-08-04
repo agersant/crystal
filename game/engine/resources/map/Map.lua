@@ -3,9 +3,8 @@ local DebugFlags = require("engine/dev/DebugFlags");
 local Log = require("engine/dev/Log");
 local Colors = require("engine/resources/Colors");
 local DynamicLayer = require("engine/resources/map/DynamicLayer");
-local CollisionMeshBuilder = require("engine/resources/map/collision/CollisionMeshBuilder");
+local MeshBuilder = require("engine/resources/map/MeshBuilder");
 local MapEntity = require("engine/resources/map/MapEntity");
-local Navmesh = require("engine/mapscene/behavior/ai/navmesh/Navmesh");
 local StaticLayer = require("engine/resources/map/StaticLayer");
 local TableUtils = require("engine/utils/TableUtils");
 
@@ -65,21 +64,20 @@ Map.init = function(self, mapData, tileset)
 
 	local tileWidth = tileset:getTileWidth();
 	local tileHeight = tileset:getTileHeight();
-	local collisionMeshBuilder = CollisionMeshBuilder:new(self._width, self._height, tileWidth, tileHeight);
+	local MeshBuilder = MeshBuilder:new(self._width, self._height, tileWidth, tileHeight);
 
 	local layers = mapData.content.layers;
 	for i = #layers, 1, -1 do
 		local layerData = layers[i];
 		if layerData.type == "tilelayer" then
-			collisionMeshBuilder:addLayer(self._tileset, layerData);
+			MeshBuilder:addLayer(self._tileset, layerData);
 			parseTileLayer(self, layerData);
 		elseif layerData.type == "objectgroup" then
 			parseObjectGroup(self, layerData);
 		end
 	end
 
-	self._collisionMesh = collisionMeshBuilder:buildMesh();
-	self._navmesh = Navmesh:new(self:getWidthInPixels(), self:getHeightInPixels(), self._collisionMesh, 6);
+	self._collisionMesh, self._navigationMesh = MeshBuilder:buildMesh();
 end
 
 Map.spawnCollisionMeshBody = function(self, scene)
@@ -118,7 +116,7 @@ Map.drawDebug = function(self)
 		self._collisionMesh:draw();
 	end
 	if DebugFlags.drawNavmesh then
-		self._navmesh:draw();
+		self._navigationMesh:draw();
 	end
 end
 
@@ -155,11 +153,11 @@ Map.getAreaInTiles = function(self)
 end
 
 Map.findPath = function(self, startX, startY, targetX, targetY)
-	return self._navmesh:findPath(startX, startY, targetX, targetY);
+	return self._navigationMesh:findPath(startX, startY, targetX, targetY);
 end
 
 Map.getNearestPointOnNavmesh = function(self, x, y)
-	return self._navmesh:getNearestPointOnNavmesh(x, y);
+	return self._navigationMesh:getNearestPointOnNavmesh(x, y);
 end
 
 return Map;

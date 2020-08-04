@@ -1,15 +1,64 @@
 use crate::mesh::collision::CollisionMesh;
+use crate::geometry::{Polygon, Vertex};
+use spade::delaunay::FloatCDT;
+use spade::delaunay::ConstrainedDelaunayTriangulation;
+use spade::delaunay::DelaunayTreeLocate;
+use spade::kernels::FloatKernel;
+use itertools::Itertools;
 
-pub struct NavigationMesh {}
+type Triangulation = ConstrainedDelaunayTriangulation<[f32; 2], FloatKernel, DelaunayTreeLocate<[f32; 2]>>;
+
+pub struct NavigationMesh {
+	triangulation: Triangulation,
+}
 
 impl NavigationMesh {
-	pub fn build(_collision_mesh: &CollisionMesh) -> NavigationMesh {
-		NavigationMesh::default()
+	pub fn build(width: f32, height: f32, collision_mesh: &CollisionMesh) -> NavigationMesh {
+
+		// TODO pad obstacles
+
+		let mut triangulation = FloatCDT::with_tree_locate();
+		triangulation.insert([0.0, 0.0]);
+		triangulation.insert([width, 0.0]);
+		triangulation.insert([width, height]);
+		triangulation.insert([0.0, height]);
+
+		// TODO This is a bad triangulation, has triangles intersecting obstacles!!
+		for polygon in &collision_mesh.polygons {
+			let num_vertices = polygon.vertices.len();
+			for (v0, v1) in polygon.vertices.iter().cycle().take(num_vertices).tuple_windows() {
+				let handle0 = triangulation.insert([v0.x, v0.y]);
+				let handle1 = triangulation.insert([v1.x, v1.y]);
+				if triangulation.can_add_constraint(handle0, handle1) {
+					triangulation.add_constraint(handle0, handle1);
+				}
+			}
+		}
+
+		NavigationMesh {
+			triangulation
+		}
+	}
+
+	pub fn get_triangles(&self) -> Vec<Polygon> {
+		let mut polygons = Vec::new();
+		for face in self.triangulation.triangles() {
+			let triangle = face.as_triangle();
+			let mut vertices = Vec::new();
+			for i in 0..3 {
+				vertices.push(Vertex{ x: triangle[i][0], y: triangle[i][1]});
+			}
+			polygons.push(Polygon{ vertices });
+		}
+		polygons
 	}
 }
 
+
 impl Default for NavigationMesh {
 	fn default() -> Self {
-		NavigationMesh {}
+		NavigationMesh {
+			triangulation: FloatCDT::with_tree_locate(),
+		}
 	}
 }

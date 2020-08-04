@@ -5,8 +5,8 @@ use crate::mesh::Mesh;
 use std::slice;
 
 #[no_mangle]
-pub unsafe extern "C" fn mesh_builder_new(num_tiles_x: i32, num_tiles_y: i32) -> *mut MeshBuilder {
-	let builder = MeshBuilder::new(num_tiles_x, num_tiles_y);
+pub unsafe extern "C" fn mesh_builder_new(num_tiles_x: i32, num_tiles_y: i32, tile_width: f32, tile_height: f32) -> *mut MeshBuilder {
+	let builder = MeshBuilder::new(num_tiles_x, num_tiles_y, tile_width, tile_height);
 	Box::into_raw(Box::new(builder))
 }
 
