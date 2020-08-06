@@ -2,23 +2,19 @@
 local MeshBuilder = require("engine/resources/map/MeshBuilder");
 local tests = {};
 
--- tests[#tests + 1] = {name = "Load Beryl library"};
--- tests[#tests].body = function()
--- 	local FFI = require("ffi");
--- 	local Beryl = FFI.load("beryl");
--- end
+tests[#tests + 1] = {name = "Load Diamond library"};
+tests[#tests].body = function()
+	require("engine/ffi/Diamond");
+	local FFI = require("ffi");
+	local Diamond = FFI.load("diamond");
+end
 
--- tests[#tests + 1] = {name = "Load Navmesh Lua file"};
--- tests[#tests].body = function()
--- 	local Navmesh = require("engine/mapscene/behavior/ai/Navmesh");
--- end
-
--- tests[#tests + 1] = {name = "Generate navmesh for empty map"};
--- tests[#tests].body = function()
--- 	local Navmesh = require("engine/mapscene/behavior/ai/Navmesh");
--- 	local collisionMesh = CollisionMesh:new(10, 10, 5, 5);
--- 	local navmesh = Navmesh:new(10, 10, collisionMesh, 0);
--- end
+tests[#tests + 1] = {name = "Generate navmesh for empty map"};
+tests[#tests].body = function()
+	local builder = MeshBuilder:new(50, 50, 10, 10);
+	local _, navigationMesh = builder:buildMesh();
+	assert(navigationMesh);
+end
 
 -- tests[#tests + 1] = {name = "Generate navmesh for empty map with padding"};
 -- tests[#tests].body = function()
