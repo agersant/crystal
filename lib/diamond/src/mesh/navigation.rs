@@ -1,12 +1,13 @@
-use crate::mesh::collision::CollisionMesh;
 use crate::geometry::{Polygon, Vertex};
-use spade::delaunay::FloatCDT;
+use crate::mesh::collision::CollisionMesh;
+use itertools::Itertools;
 use spade::delaunay::ConstrainedDelaunayTriangulation;
 use spade::delaunay::DelaunayTreeLocate;
+use spade::delaunay::FloatCDT;
 use spade::kernels::FloatKernel;
-use itertools::Itertools;
 
-type Triangulation = ConstrainedDelaunayTriangulation<[f32; 2], FloatKernel, DelaunayTreeLocate<[f32; 2]>>;
+type Triangulation =
+	ConstrainedDelaunayTriangulation<[f32; 2], FloatKernel, DelaunayTreeLocate<[f32; 2]>>;
 
 pub struct NavigationMesh {
 	triangulation: Triangulation,
@@ -14,7 +15,6 @@ pub struct NavigationMesh {
 
 impl NavigationMesh {
 	pub fn build(width: f32, height: f32, collision_mesh: &CollisionMesh) -> NavigationMesh {
-
 		// TODO pad obstacles
 
 		let mut triangulation = FloatCDT::with_tree_locate();
@@ -24,8 +24,7 @@ impl NavigationMesh {
 		triangulation.insert([0.0, height]);
 
 		for polygon in &collision_mesh.polygons {
-			let num_vertices = polygon.vertices.len();
-			for (v0, v1) in polygon.vertices.iter().cycle().take(num_vertices).tuple_windows() {
+			for (v0, v1) in polygon.vertices.iter().tuple_windows() {
 				let handle0 = triangulation.insert([v0.x, v0.y]);
 				let handle1 = triangulation.insert([v1.x, v1.y]);
 				if triangulation.can_add_constraint(handle0, handle1) {
@@ -36,9 +35,7 @@ impl NavigationMesh {
 
 		// TODO remove triangles within obstacles
 
-		NavigationMesh {
-			triangulation
-		}
+		NavigationMesh { triangulation }
 	}
 
 	pub fn get_triangles(&self) -> Vec<Polygon> {
@@ -47,14 +44,16 @@ impl NavigationMesh {
 			let triangle = face.as_triangle();
 			let mut vertices = Vec::new();
 			for i in 0..3 {
-				vertices.push(Vertex{ x: triangle[i][0], y: triangle[i][1]});
+				vertices.push(Vertex {
+					x: triangle[i][0],
+					y: triangle[i][1],
+				});
 			}
-			polygons.push(Polygon{ vertices });
+			polygons.push(Polygon { vertices });
 		}
 		polygons
 	}
 }
-
 
 impl Default for NavigationMesh {
 	fn default() -> Self {
