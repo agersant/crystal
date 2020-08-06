@@ -1,4 +1,4 @@
-local PositionGoal = require("engine/mapscene/behavior/ai/movement/PositionGoal");
+local PositionGoal = require("engine/mapscene/behavior/ai/PositionGoal");
 
 local tests = {};
 

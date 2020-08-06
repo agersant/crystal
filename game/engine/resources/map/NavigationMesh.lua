@@ -1,7 +1,7 @@
 require("engine/utils/OOP");
 local FFI = require("ffi");
 local Diamond = FFI.load("diamond");
-local Path = require("engine/mapscene/behavior/ai/navmesh/Path");
+local Path = require("engine/mapscene/behavior/ai/Path");
 local Features = require("engine/dev/Features");
 local Colors = require("engine/resources/Colors");
 local Fonts = require("engine/resources/Fonts");

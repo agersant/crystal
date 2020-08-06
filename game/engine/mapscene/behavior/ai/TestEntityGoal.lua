@@ -1,4 +1,4 @@
-local EntityGoal = require("engine/mapscene/behavior/ai/movement/EntityGoal");
+local EntityGoal = require("engine/mapscene/behavior/ai/EntityGoal");
 local MapScene = require("engine/mapscene/MapScene");
 local Entity = require("engine/ecs/Entity");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");

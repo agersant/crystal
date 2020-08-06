@@ -1,4 +1,4 @@
-local AlignGoal = require("engine/mapscene/behavior/ai/movement/AlignGoal");
+local AlignGoal = require("engine/mapscene/behavior/ai/AlignGoal");
 local MapScene = require("engine/mapscene/MapScene");
 local Entity = require("engine/ecs/Entity");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");

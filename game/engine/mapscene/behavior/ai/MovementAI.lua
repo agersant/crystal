@@ -1,8 +1,8 @@
 require("engine/utils/OOP");
 local Component = require("engine/ecs/Component");
-local AlignGoal = require("engine/mapscene/behavior/ai/movement/AlignGoal");
-local EntityGoal = require("engine/mapscene/behavior/ai/movement/EntityGoal");
-local PositionGoal = require("engine/mapscene/behavior/ai/movement/PositionGoal");
+local AlignGoal = require("engine/mapscene/behavior/ai/AlignGoal");
+local EntityGoal = require("engine/mapscene/behavior/ai/EntityGoal");
+local PositionGoal = require("engine/mapscene/behavior/ai/PositionGoal");
 local Script = require("engine/script/Script");
 
 local MovementAI = Class("MovementAI", Component);

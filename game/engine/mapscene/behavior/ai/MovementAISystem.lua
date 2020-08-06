@@ -1,9 +1,9 @@
 require("engine/utils/OOP");
 local System = require("engine/ecs/System");
 local AllComponents = require("engine/ecs/query/AllComponents");
-local MovementAI = require("engine/mapscene/behavior/ai/movement/MovementAI");
-local NavigationFailureEvent = require("engine/mapscene/behavior/ai/movement/NavigationFailureEvent");
-local NavigationSuccessEvent = require("engine/mapscene/behavior/ai/movement/NavigationSuccessEvent");
+local MovementAI = require("engine/mapscene/behavior/ai/MovementAI");
+local NavigationFailureEvent = require("engine/mapscene/behavior/ai/NavigationFailureEvent");
+local NavigationSuccessEvent = require("engine/mapscene/behavior/ai/NavigationSuccessEvent");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local Locomotion = require("engine/mapscene/physics/Locomotion");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");

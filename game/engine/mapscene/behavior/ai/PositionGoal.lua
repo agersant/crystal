@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local Goal = require("engine/mapscene/behavior/ai/movement/Goal");
+local Goal = require("engine/mapscene/behavior/ai/Goal");
 
 local PositionGoal = Class("PositionGoal", Goal);
 

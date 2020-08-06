@@ -1,4 +1,4 @@
-local MovementAI = require("engine/mapscene/behavior/ai/movement/MovementAI");
+local MovementAI = require("engine/mapscene/behavior/ai/MovementAI");
 local MapScene = require("engine/mapscene/MapScene");
 local Entity = require("engine/ecs/Entity");
 local Locomotion = require("engine/mapscene/physics/Locomotion");

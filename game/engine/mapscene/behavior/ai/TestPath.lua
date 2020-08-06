@@ -1,4 +1,4 @@
-local Path = require("engine/mapscene/behavior/ai/navmesh/Path");
+local Path = require("engine/mapscene/behavior/ai/Path");
 
 local tests = {};
 
