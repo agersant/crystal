@@ -25,7 +25,8 @@ pub unsafe extern "C" fn mesh_list_collision_polygons(
 		return;
 	}
 	let mesh = &*mesh;
-	*out_polygons = (&mesh.collision.polygons).into();
+	let contours = mesh.collision.get_contours();
+	*out_polygons = (&contours).into();
 }
 
 #[no_mangle]

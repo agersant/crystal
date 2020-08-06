@@ -75,7 +75,8 @@ fn draw_mesh(mesh: &CollisionMesh, out_file: &str) {
 		.draw_rect((0, 0), (width as i32 - 1, height as i32 - 1), &WHITE, true)
 		.unwrap();
 
-	for polygon in mesh.polygons.iter() {
+	let contours = mesh.get_contours();
+	for polygon in &contours {
 		let vertices = &polygon.vertices;
 		for i in 0..vertices.len() {
 			let vertex = &vertices[i];
@@ -103,20 +104,13 @@ fn test_sample_files(name: &str) {
 		serde_json::from_reader(reader).unwrap()
 	};
 
-	let mesh_file = format!("test-data/{}-mesh.json", name);
-	let input_mesh: TestInputMesh = {
-		let file = File::open(mesh_file).unwrap();
+	let expected_collision_mesh_file = format!("test-data/{}-mesh.json", name);
+	let expected_mesh = {
+		let file = File::open(&expected_collision_mesh_file).unwrap();
 		let reader = BufReader::new(file);
-		serde_json::from_reader(reader).unwrap()
+		let obstacles = serde_json::from_reader(reader).unwrap();
+		CollisionMesh { obstacles }
 	};
-
-	let mut expected_mesh = CollisionMesh {
-		polygons: input_mesh.0.iter().map(|c| c.into()).collect(),
-	};
-	for polygon in expected_mesh.polygons.iter_mut() {
-		assert!(polygon.vertices.len() > 0);
-		polygon.vertices.push(polygon.vertices[0].clone());
-	}
 
 	let mut builder = MeshBuilder::new(input_map.num_tiles_x, input_map.num_tiles_y, 10.0, 10.0);
 	for polygon in input_map.polygons.iter() {

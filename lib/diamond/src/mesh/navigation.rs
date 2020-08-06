@@ -23,7 +23,8 @@ impl NavigationMesh {
 		triangulation.insert([width, height]);
 		triangulation.insert([0.0, height]);
 
-		for polygon in &collision_mesh.polygons {
+		let contours = collision_mesh.get_contours();
+		for polygon in &contours {
 			for (v0, v1) in polygon.vertices.iter().tuple_windows() {
 				let handle0 = triangulation.insert([v0.x, v0.y]);
 				let handle1 = triangulation.insert([v1.x, v1.y]);

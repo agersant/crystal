@@ -1,61 +1,34 @@
 use crate::geometry::*;
+use geo::algorithm::bounding_rect::BoundingRect;
 use geo::algorithm::simplifyvw::SimplifyVW;
 use geo_booleanop::boolean::BooleanOp;
+#[cfg(test)]
+use geo_types::polygon;
 use ndarray::parallel::prelude::*;
 use ndarray::Array;
 use ndarray::Array2;
 use ndarray::Axis;
 use rayon::iter::IndexedParallelIterator;
 use rayon::iter::IntoParallelIterator;
-use std::collections::HashSet;
 
 #[derive(Debug)]
 pub struct CollisionMesh {
-	pub polygons: Vec<Polygon>,
+	pub obstacles: geo_types::MultiPolygon<f32>,
 }
 
 impl Default for CollisionMesh {
 	fn default() -> Self {
+		let polygons: Vec<geo_types::Polygon<f32>> = Vec::new();
 		CollisionMesh {
-			polygons: Vec::new(),
+			obstacles: polygons.into(),
 		}
 	}
 }
 
 impl PartialEq for CollisionMesh {
 	fn eq(&self, other: &Self) -> bool {
-		if self.polygons.len() != other.polygons.len() {
-			return false;
-		}
-		let self_polygons: HashSet<Polygon> = self.polygons.iter().cloned().collect();
-		let other_polygons: HashSet<Polygon> = other.polygons.iter().cloned().collect();
-		self_polygons == other_polygons
-	}
-}
-
-impl From<geo_types::MultiPolygon<f32>> for CollisionMesh {
-	fn from(multi_polygon: geo_types::MultiPolygon<f32>) -> CollisionMesh {
-		let mut polygons: Vec<Polygon> = Vec::new();
-		for polygon in multi_polygon.into_iter() {
-			polygons.push(Polygon {
-				vertices: polygon
-					.exterior()
-					.points_iter()
-					.into_iter()
-					.map(|p| Vertex { x: p.x(), y: p.y() })
-					.collect::<Vec<Vertex>>(),
-			});
-			for interior in polygon.interiors().iter() {
-				polygons.push(Polygon {
-					vertices: interior
-						.points_iter()
-						.into_iter()
-						.map(|p| Vertex { x: p.x(), y: p.y() })
-						.collect::<Vec<Vertex>>(),
-				});
-			}
-		}
-		CollisionMesh { polygons }
+		let xor = self.obstacles.xor(&other.obstacles);
+		xor.bounding_rect().is_none()
 	}
 }
 
@@ -109,79 +82,149 @@ impl CollisionMesh {
 			reduced_map = Array::from_shape_fn((h, w), |(y, x)| p[y][x].clone());
 		}
 
-		reduced_map[(0, 0)].simplifyvw(&0.1).into()
+		CollisionMesh {
+			obstacles: reduced_map[(0, 0)].simplifyvw(&0.1),
+		}
+	}
+
+	pub fn get_contours(&self) -> Vec<Polygon> {
+		let mut polygons: Vec<Polygon> = Vec::new();
+		let obstacles = self.obstacles.clone(); // TODO Find a way to iterate on multipolygon without cloning
+		for polygon in obstacles {
+			polygons.push(Polygon {
+				vertices: polygon
+					.exterior()
+					.points_iter()
+					.into_iter()
+					.map(|p| Vertex { x: p.x(), y: p.y() })
+					.collect::<Vec<Vertex>>(),
+			});
+			for interior in polygon.interiors().iter() {
+				polygons.push(Polygon {
+					vertices: interior
+						.points_iter()
+						.into_iter()
+						.map(|p| Vertex { x: p.x(), y: p.y() })
+						.collect::<Vec<Vertex>>(),
+				});
+			}
+		}
+		polygons
 	}
 
 	#[cfg(test)]
 	pub fn bounding_box(&self) -> (Vertex, Vertex) {
-		let mut top_left = Vertex {
-			x: std::f32::INFINITY,
-			y: std::f32::INFINITY,
-		};
-
-		let mut bottom_right = Vertex {
-			x: std::f32::NEG_INFINITY,
-			y: std::f32::NEG_INFINITY,
-		};
-
-		for polygon in self.polygons.iter() {
-			for vertex in polygon.vertices.iter() {
-				top_left.x = vertex.x.min(top_left.x);
-				top_left.y = vertex.y.min(top_left.y);
-				bottom_right.x = vertex.x.max(bottom_right.x);
-				bottom_right.y = vertex.y.max(bottom_right.y);
-			}
+		match self.obstacles.bounding_rect() {
+			None => (Vertex { x: 0.0, y: 0.0 }, Vertex { x: 0.0, y: 0.0 }),
+			Some(r) => (
+				Vertex {
+					x: r.min().x,
+					y: r.min().y,
+				},
+				Vertex {
+					x: r.max().x,
+					y: r.max().y,
+				},
+			),
 		}
-
-		(top_left, bottom_right)
 	}
 }
 
 #[test]
-fn meshes_equal() {
+fn compare_meshes_equal_trivially_different() {
 	let a = CollisionMesh {
-		polygons: vec![
-			Polygon {
-				vertices: vec![
-					Vertex { x: 16.0, y: 32.0 },
-					Vertex { x: 0.0, y: 0.0 },
-					Vertex { x: 128.0, y: 0.0 },
-					Vertex { x: 128.0, y: 16.0 },
-					Vertex { x: 16.0, y: 16.0 },
-					Vertex { x: 16.0, y: 32.0 },
-				],
-			},
-			Polygon {
-				vertices: vec![
-					Vertex { x: 10.0, y: 10.0 },
-					Vertex { x: 20.0, y: 20.0 },
-					Vertex { x: 10.0, y: 20.0 },
-					Vertex { x: 10.0, y: 10.0 },
-				],
-			},
-		],
+		obstacles: vec![polygon![
+			(x: 16.0, y: 32.0),
+			(x: 0.0, y: 0.0),
+			(x: 128.0, y: 0.0),
+			(x: 128.0, y: 16.0),
+			(x: 16.0, y: 16.0),
+			(x: 16.0, y: 32.0),
+		]]
+		.into(),
 	};
+
 	let b = CollisionMesh {
-		polygons: vec![
-			Polygon {
-				vertices: vec![
-					Vertex { x: 20.0, y: 20.0 },
-					Vertex { x: 10.0, y: 20.0 },
-					Vertex { x: 10.0, y: 10.0 },
-					Vertex { x: 20.0, y: 20.0 },
-				],
-			},
-			Polygon {
-				vertices: vec![
-					Vertex { x: 0.0, y: 0.0 },
-					Vertex { x: 128.0, y: 0.0 },
-					Vertex { x: 128.0, y: 16.0 },
-					Vertex { x: 16.0, y: 16.0 },
-					Vertex { x: 16.0, y: 32.0 },
-					Vertex { x: 0.0, y: 0.0 },
-				],
-			},
-		],
+		obstacles: vec![polygon![
+			(x: 20.0, y: 20.0),
+			(x: 10.0, y: 20.0),
+			(x: 10.0, y: 10.0),
+			(x: 20.0, y: 20.0),
+		]]
+		.into(),
 	};
+
+	assert_ne!(a, b);
+}
+
+#[test]
+fn compare_meshes_different_but_overlapping() {
+	let a = CollisionMesh {
+		obstacles: vec![polygon![
+			(x: 0.0, y: 0.0),
+			(x: 10.0, y: 0.0),
+			(x: 10.0, y: 10.0),
+			(x: 0.0, y: 10.0),
+			(x: 0.0, y: 0.0),
+		]]
+		.into(),
+	};
+
+	let b = CollisionMesh {
+		obstacles: vec![polygon![
+			(x: 0.0, y: 0.0),
+			(x: 20.0, y: 0.0),
+			(x: 20.0, y: 10.0),
+			(x: 0.0, y: 10.0),
+			(x: 0.0, y: 0.0),
+		]]
+		.into(),
+	};
+
+	assert_ne!(a, b);
+}
+
+#[test]
+fn compare_meshes_cycled_vertices_and_polygons() {
+	let a = CollisionMesh {
+		obstacles: vec![
+			polygon![
+				(x: 16.0, y: 32.0),
+				(x: 0.0, y: 0.0),
+				(x: 128.0, y: 0.0),
+				(x: 128.0, y: 16.0),
+				(x: 16.0, y: 16.0),
+				(x: 16.0, y: 32.0),
+			],
+			polygon![
+				(x: 10.0, y: 10.0),
+				(x: 20.0, y: 20.0),
+				(x: 10.0, y: 20.0),
+				(x: 10.0, y: 10.0),
+			],
+		]
+		.into(),
+	};
+
+	let b = CollisionMesh {
+		obstacles: vec![
+			polygon![
+				(x: 20.0, y: 20.0),
+				(x: 10.0, y: 20.0),
+				(x: 10.0, y: 10.0),
+				(x: 20.0, y: 20.0),
+			],
+			polygon![
+				(x: 0.0, y: 0.0),
+				(x: 128.0, y: 0.0),
+				(x: 128.0, y: 16.0),
+				(x: 16.0, y: 16.0),
+				(x: 16.0, y: 32.0),
+				(x: 0.0, y: 0.0),
+			],
+		]
+		.into(),
+	};
+
 	assert_eq!(a, b);
 }
