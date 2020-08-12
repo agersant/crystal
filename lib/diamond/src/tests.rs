@@ -152,6 +152,11 @@ fn large() {
 }
 
 #[test]
+fn overlap() {
+	test_sample_files("overlap");
+}
+
+#[test]
 fn asymetric_collapse() {
 	test_sample_files("asymetric-collapse");
 }

@@ -45,8 +45,13 @@ impl CollisionMesh {
 		let mut h = num_tiles_y;
 
 		// Initial state
-		let mut reduced_map: Array2<MP> =
-			Array::from_shape_fn((h, w), |(y, x)| polygons[(y, x)].clone().into());
+		let mut reduced_map: Array2<MP> = Array::from_shape_fn((h, w), |(y, x)| {
+			let mut union: MP = Vec::<P>::new().into();
+			for polygon in &polygons[(y, x)] {
+				union = union.union(&polygon.clone());
+			}
+			union
+		});
 
 		// Iterative collapse of 2x2 blocks
 		while w > 1 || h > 1 {
@@ -67,8 +72,7 @@ impl CollisionMesh {
 							for dx in 0..=1 {
 								for dy in 0..=1 {
 									if let Some(p) = reduced_map.get((y * 2 + dx, x * 2 + dy)) {
-										let polygon: MP = p.clone().into();
-										union = union.union(&polygon);
+										union = union.union(&p.clone());
 									}
 								}
 							}
