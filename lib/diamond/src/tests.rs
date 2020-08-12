@@ -150,3 +150,8 @@ fn small() {
 fn large() {
 	test_sample_files("large");
 }
+
+#[test]
+fn asymetric_collapse() {
+	test_sample_files("asymetric-collapse");
+}

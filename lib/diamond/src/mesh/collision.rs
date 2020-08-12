@@ -49,7 +49,7 @@ impl CollisionMesh {
 			Array::from_shape_fn((h, w), |(y, x)| polygons[(y, x)].clone().into());
 
 		// Iterative collapse of 2x2 blocks
-		while w > 1 && h > 1 {
+		while w > 1 || h > 1 {
 			w = (w as f32 / 2.0).ceil() as usize;
 			h = (h as f32 / 2.0).ceil() as usize;
 
