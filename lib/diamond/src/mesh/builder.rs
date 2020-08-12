@@ -14,7 +14,12 @@ pub struct MeshBuilder {
 }
 
 impl MeshBuilder {
-	pub fn new(num_tiles_x: i32, num_tiles_y: i32, tile_width: f32, tile_height: f32) -> MeshBuilder {
+	pub fn new(
+		num_tiles_x: i32,
+		num_tiles_y: i32,
+		tile_width: f32,
+		tile_height: f32,
+	) -> MeshBuilder {
 		let w = num_tiles_x as usize;
 		let h = num_tiles_y as usize;
 		MeshBuilder {
