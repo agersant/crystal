@@ -99,7 +99,7 @@ impl CollisionMesh {
 					.map(|p| Vertex { x: p.x(), y: p.y() })
 					.collect::<Vec<Vertex>>(),
 			});
-			for interior in polygon.interiors().iter() {
+			for interior in polygon.interiors() {
 				polygons.push(Polygon {
 					vertices: interior
 						.points_iter()
