@@ -11,6 +11,9 @@ use spade::delaunay::{
 use spade::kernels::FloatKernel;
 use std::collections::HashSet;
 
+#[cfg(test)]
+mod tests;
+
 type Triangulation =
 	ConstrainedDelaunayTriangulation<[f32; 2], FloatKernel, DelaunayTreeLocate<[f32; 2]>>;
 
