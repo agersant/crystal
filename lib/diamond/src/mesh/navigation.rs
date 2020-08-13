@@ -1,6 +1,8 @@
 use crate::geometry::LineStringExt;
 use crate::mesh::collision::CollisionMesh;
+use geo::algorithm::closest_point::ClosestPoint;
 use geo::algorithm::intersects::Intersects;
+use geo::Closest;
 use geo_booleanop::boolean::BooleanOp;
 use geo_types::*;
 use spade::delaunay::{
@@ -15,6 +17,7 @@ type Triangulation =
 pub struct NavigationMesh {
 	triangulation: Triangulation,
 	navigable_triangles: HashSet<FixedFaceHandle>,
+	playable_space: MultiPolygon<f32>,
 }
 
 impl NavigationMesh {
@@ -43,7 +46,8 @@ impl NavigationMesh {
 
 		// Triangulate
 		let mut triangulation = FloatCDT::with_tree_locate();
-		for polygon in playable_space {
+		// TODO avoid cloning here
+		for polygon in playable_space.clone() {
 			for line in polygon.exterior().lines() {
 				let handle0 = triangulation.insert([line.start.x, line.start.y]);
 				let handle1 = triangulation.insert([line.end.x, line.end.y]);
@@ -79,6 +83,7 @@ impl NavigationMesh {
 		NavigationMesh {
 			triangulation,
 			navigable_triangles,
+			playable_space: playable_space,
 		}
 	}
 
@@ -107,6 +112,14 @@ impl NavigationMesh {
 		}
 		triangles
 	}
+
+	pub fn get_nearest_navigable_point(&self, from: &Point<f32>) -> Point<f32> {
+		match self.playable_space.closest_point(from) {
+			Closest::SinglePoint(p) => p,
+			Closest::Intersection(p) => p,
+			Closest::Indeterminate => from.clone(),
+		}
+	}
 }
 
 impl Default for NavigationMesh {
@@ -114,6 +127,7 @@ impl Default for NavigationMesh {
 		NavigationMesh {
 			triangulation: FloatCDT::with_tree_locate(),
 			navigable_triangles: HashSet::new(),
+			playable_space: Vec::<Polygon<f32>>::new().into(),
 		}
 	}
 }

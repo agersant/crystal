@@ -1,5 +1,6 @@
 use crate::c_api::geometry::*;
 use crate::mesh::Mesh;
+use geo_types::*;
 use std::iter::FromIterator;
 
 #[no_mangle]
@@ -62,13 +63,14 @@ pub unsafe extern "C" fn mesh_plan_path(
 #[no_mangle]
 pub unsafe extern "C" fn mesh_get_nearest_navigable_point(
 	mesh: *mut Mesh,
-	_x: f32,
-	_y: f32,
+	x: f32,
+	y: f32,
 ) -> CVertex {
 	if mesh.is_null() {
 		return CVertex::default();
 	}
-	let _mesh = &*mesh;
-	// TODO
-	CVertex::default()
+	let mesh = &*mesh;
+	mesh.navigation
+		.get_nearest_navigable_point(&Point::new(x, y))
+		.into()
 }
