@@ -1,4 +1,5 @@
 use crate::geometry::*;
+use geo_types::Point;
 use std::mem;
 use std::slice;
 
@@ -15,21 +16,18 @@ impl Default for CVertex {
 	}
 }
 
-impl From<&Vertex> for CVertex {
-	fn from(vertex: &Vertex) -> CVertex {
+impl From<&Point<f32>> for CVertex {
+	fn from(point: &Point<f32>) -> CVertex {
 		CVertex {
-			x: vertex.x,
-			y: vertex.y,
+			x: point.x(),
+			y: point.y(),
 		}
 	}
 }
 
-impl From<&CVertex> for Vertex {
-	fn from(vertex: &CVertex) -> Vertex {
-		Vertex {
-			x: vertex.x,
-			y: vertex.y,
-		}
+impl From<&CVertex> for Point<f32> {
+	fn from(vertex: &CVertex) -> Point<f32> {
+		Point::new(vertex.x, vertex.y)
 	}
 }
 

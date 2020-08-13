@@ -1,8 +1,8 @@
-use crate::geometry::{Polygon, Vertex};
+use crate::geometry::Polygon;
 use crate::mesh::collision::CollisionMesh;
 use geo::algorithm::intersects::Intersects;
 use geo_booleanop::boolean::BooleanOp;
-use geo_types::polygon;
+use geo_types::{polygon, Point};
 use spade::delaunay::{
 	ConstrainedDelaunayTriangulation, DelaunayTreeLocate, FaceHandle, FixedFaceHandle, FloatCDT,
 };
@@ -120,10 +120,7 @@ fn face_to_polygon(face: &FaceHandle<[f32; 2], spade::delaunay::CdtEdge>) -> Pol
 	let triangle = face.as_triangle();
 	let mut vertices = Vec::new();
 	for i in 0..3 {
-		vertices.push(Vertex {
-			x: triangle[i][0],
-			y: triangle[i][1],
-		});
+		vertices.push(Point::new(triangle[i][0], triangle[i][1]));
 	}
 	Polygon { vertices }
 }

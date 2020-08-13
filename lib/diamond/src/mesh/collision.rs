@@ -1,9 +1,11 @@
 use crate::geometry::*;
 use geo::algorithm::bounding_rect::BoundingRect;
+#[cfg(test)]
+use geo::algorithm::extremes::ExtremePoints;
 use geo::algorithm::simplifyvw::SimplifyVW;
 use geo_booleanop::boolean::BooleanOp;
 #[cfg(test)]
-use geo_types::polygon;
+use geo_types::{polygon, Point};
 use ndarray::parallel::prelude::*;
 use ndarray::Array;
 use ndarray::Array2;
@@ -96,20 +98,11 @@ impl CollisionMesh {
 		let obstacles = self.obstacles.clone(); // TODO Find a way to iterate on multipolygon without cloning
 		for polygon in obstacles {
 			polygons.push(Polygon {
-				vertices: polygon
-					.exterior()
-					.points_iter()
-					.into_iter()
-					.map(|p| Vertex { x: p.x(), y: p.y() })
-					.collect::<Vec<Vertex>>(),
+				vertices: polygon.exterior().points_iter().collect(),
 			});
 			for interior in polygon.interiors() {
 				polygons.push(Polygon {
-					vertices: interior
-						.points_iter()
-						.into_iter()
-						.map(|p| Vertex { x: p.x(), y: p.y() })
-						.collect::<Vec<Vertex>>(),
+					vertices: interior.points_iter().collect(),
 				});
 			}
 		}
@@ -117,20 +110,12 @@ impl CollisionMesh {
 	}
 
 	#[cfg(test)]
-	pub fn bounding_box(&self) -> (Vertex, Vertex) {
-		match self.obstacles.bounding_rect() {
-			None => (Vertex { x: 0.0, y: 0.0 }, Vertex { x: 0.0, y: 0.0 }),
-			Some(r) => (
-				Vertex {
-					x: r.min().x,
-					y: r.min().y,
-				},
-				Vertex {
-					x: r.max().x,
-					y: r.max().y,
-				},
-			),
-		}
+	pub fn bounding_box(&self) -> (Point<f32>, Point<f32>) {
+		let extremes = self.obstacles.extreme_points();
+		(
+			Point::new(extremes.xmin.x(), extremes.ymin.y()),
+			Point::new(extremes.xmax.x(), extremes.ymax.y()),
+		)
 	}
 }
 

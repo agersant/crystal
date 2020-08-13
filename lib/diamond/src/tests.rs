@@ -1,6 +1,7 @@
 use crate::geometry::*;
 use crate::mesh::builder::MeshBuilder;
 use crate::mesh::collision::CollisionMesh;
+use geo_types::Point;
 use plotters::drawing::backend::DrawingBackend;
 use plotters::drawing::BitMapBackend;
 use plotters::style::colors::*;
@@ -35,12 +36,9 @@ struct TestInputMap {
 #[derive(Debug, Deserialize)]
 struct TestInputMesh(Vec<Vec<TestInputVertex>>);
 
-impl From<&TestInputVertex> for Vertex {
-	fn from(input: &TestInputVertex) -> Vertex {
-		Vertex {
-			x: input.x,
-			y: input.y,
-		}
+impl From<&TestInputVertex> for Point<f32> {
+	fn from(input: &TestInputVertex) -> Point<f32> {
+		Point::new(input.x, input.y)
 	}
 }
 
@@ -54,21 +52,21 @@ impl From<&Vec<TestInputVertex>> for Polygon {
 
 fn draw_mesh(mesh: &CollisionMesh, out_file: &str) {
 	let (mut top_left, mut bottom_right) = mesh.bounding_box();
-	if top_left.x.is_infinite() || top_left.x.is_nan() {
-		top_left.x = 0.0;
+	if top_left.x().is_infinite() || top_left.x().is_nan() {
+		top_left.set_x(0.0);
 	}
-	if top_left.y.is_infinite() || top_left.y.is_nan() {
-		top_left.y = 0.0;
+	if top_left.y().is_infinite() || top_left.y().is_nan() {
+		top_left.set_y(0.0);
 	}
-	if bottom_right.x.is_infinite() || bottom_right.x.is_nan() {
-		bottom_right.x = 100.0;
+	if bottom_right.x().is_infinite() || bottom_right.x().is_nan() {
+		bottom_right.set_x(100.0);
 	}
-	if bottom_right.y.is_infinite() || bottom_right.y.is_nan() {
-		bottom_right.y = 100.0;
+	if bottom_right.y().is_infinite() || bottom_right.y().is_nan() {
+		bottom_right.set_y(100.0);
 	}
 	let padding = 20;
-	let width = 2 * padding + (bottom_right.x - top_left.x).abs().ceil() as u32;
-	let height = 2 * padding + (bottom_right.y - top_left.x).abs().ceil() as u32;
+	let width = 2 * padding + (bottom_right.x() - top_left.x()).abs().ceil() as u32;
+	let height = 2 * padding + (bottom_right.y() - top_left.x()).abs().ceil() as u32;
 
 	let mut backend = BitMapBackend::new(out_file, (width, height));
 	backend
@@ -83,12 +81,12 @@ fn draw_mesh(mesh: &CollisionMesh, out_file: &str) {
 			let next_index = (i + 1) % vertices.len();
 			let next_vertex = &vertices[next_index];
 			let start_point = (
-				(padding as f32 - top_left.x + vertex.x) as i32,
-				(padding as f32 - top_left.y + vertex.y) as i32,
+				(padding as f32 - top_left.x() + vertex.x()) as i32,
+				(padding as f32 - top_left.y() + vertex.y()) as i32,
 			);
 			let end_point = (
-				(padding as f32 - top_left.x + next_vertex.x) as i32,
-				(padding as f32 - top_left.y + next_vertex.y) as i32,
+				(padding as f32 - top_left.x() + next_vertex.x()) as i32,
+				(padding as f32 - top_left.y() + next_vertex.y()) as i32,
 			);
 			backend.draw_circle(start_point, 2, &RED, true).unwrap();
 			backend.draw_line(start_point, end_point, &RED).unwrap();
