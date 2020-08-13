@@ -10,8 +10,15 @@ pub unsafe extern "C" fn mesh_builder_new(
 	num_tiles_y: i32,
 	tile_width: f32,
 	tile_height: f32,
+	navigation_padding: f32,
 ) -> *mut MeshBuilder {
-	let builder = MeshBuilder::new(num_tiles_x, num_tiles_y, tile_width, tile_height);
+	let builder = MeshBuilder::new(
+		num_tiles_x,
+		num_tiles_y,
+		tile_width,
+		tile_height,
+		navigation_padding,
+	);
 	Box::into_raw(Box::new(builder))
 }
 

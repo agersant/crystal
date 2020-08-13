@@ -64,7 +64,8 @@ Map.init = function(self, mapData, tileset)
 
 	local tileWidth = tileset:getTileWidth();
 	local tileHeight = tileset:getTileHeight();
-	local MeshBuilder = MeshBuilder:new(self._width, self._height, tileWidth, tileHeight);
+	local navigationPadding = 4.0;
+	local MeshBuilder = MeshBuilder:new(self._width, self._height, tileWidth, tileHeight, navigationPadding);
 
 	local layers = mapData.content.layers;
 	for i = #layers, 1, -1 do

@@ -109,7 +109,13 @@ fn test_sample_files(name: &str) {
 		CollisionMesh { obstacles }
 	};
 
-	let mut builder = MeshBuilder::new(input_map.num_tiles_x, input_map.num_tiles_y, 10.0, 10.0);
+	let mut builder = MeshBuilder::new(
+		input_map.num_tiles_x,
+		input_map.num_tiles_y,
+		10.0,
+		10.0,
+		1.0,
+	);
 	for polygon in input_map.polygons.iter() {
 		builder.add_polygon(polygon.tile_x, polygon.tile_y, polygon.into());
 	}

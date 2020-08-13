@@ -18,8 +18,12 @@ pub struct NavigationMesh {
 }
 
 impl NavigationMesh {
-	pub fn build(width: f32, height: f32, collision_mesh: &CollisionMesh) -> NavigationMesh {
-		let padding = 4.0; // TODO builder input
+	pub fn build(
+		width: f32,
+		height: f32,
+		collision_mesh: &CollisionMesh,
+		padding: f32,
+	) -> NavigationMesh {
 		type MP = geo_types::MultiPolygon<f32>;
 
 		// Determine playable space

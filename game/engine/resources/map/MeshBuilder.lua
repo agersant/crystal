@@ -8,8 +8,9 @@ local MathUtils = require("engine/utils/MathUtils");
 
 local MeshBuilder = Class("MeshBuilder");
 
-local newMeshBuilder = function(numTilesX, numTilesY, tileWidth, tileHeight)
-	local output = FFI.gc(Diamond.mesh_builder_new(numTilesX, numTilesY, tileWidth, tileHeight), function(builder)
+local newMeshBuilder = function(numTilesX, numTilesY, tileWidth, tileHeight, navigationPadding)
+	local output = FFI.gc(Diamond.mesh_builder_new(numTilesX, numTilesY, tileWidth, tileHeight, navigationPadding),
+                      	function(builder)
 		Diamond.mesh_builder_delete(builder);
 	end);
 	return output;
@@ -22,7 +23,7 @@ local newMesh = function()
 	return output;
 end
 
-MeshBuilder.init = function(self, width, height, tileWidth, tileHeight)
+MeshBuilder.init = function(self, width, height, tileWidth, tileHeight, navigationPadding)
 	assert(width);
 	assert(width > 0);
 	assert(height);
@@ -31,9 +32,10 @@ MeshBuilder.init = function(self, width, height, tileWidth, tileHeight)
 	assert(tileWidth > 0);
 	assert(tileHeight);
 	assert(tileHeight > 0);
+	assert(navigationPadding >= 0);
 	self._w = width * tileWidth;
 	self._h = height * tileHeight;
-	self._cBuilder = newMeshBuilder(width, height, tileWidth, tileHeight);
+	self._cBuilder = newMeshBuilder(width, height, tileWidth, tileHeight, navigationPadding);
 	assert(self._cBuilder);
 end
 

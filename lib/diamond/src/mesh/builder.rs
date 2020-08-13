@@ -11,6 +11,7 @@ pub struct MeshBuilder {
 	num_tiles_y: usize,
 	tile_width: f32,
 	tile_height: f32,
+	navigation_padding: f32,
 }
 
 impl MeshBuilder {
@@ -19,6 +20,7 @@ impl MeshBuilder {
 		num_tiles_y: i32,
 		tile_width: f32,
 		tile_height: f32,
+		navigation_padding: f32,
 	) -> MeshBuilder {
 		let w = num_tiles_x as usize;
 		let h = num_tiles_y as usize;
@@ -28,6 +30,7 @@ impl MeshBuilder {
 			num_tiles_y: h,
 			tile_width,
 			tile_height,
+			navigation_padding,
 		}
 	}
 
@@ -49,7 +52,7 @@ impl MeshBuilder {
 
 		let w = self.num_tiles_x as f32 * self.tile_width;
 		let h = self.num_tiles_y as f32 * self.tile_height;
-		let navigation_mesh = NavigationMesh::build(w, h, &collision_mesh);
+		let navigation_mesh = NavigationMesh::build(w, h, &collision_mesh, self.navigation_padding);
 		Mesh {
 			collision: collision_mesh,
 			navigation: navigation_mesh,
