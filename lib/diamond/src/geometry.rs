@@ -2,31 +2,60 @@ use geo::algorithm::translate::Translate;
 use geo_types::{Line, LineString, Point};
 use itertools::Itertools;
 
-fn line_intersection(a: &Line<f32>, b: &Line<f32>) -> Option<Point<f32>> {
-	let x1 = a.start.x;
-	let y1 = a.start.y;
-	let x2 = a.end.x;
-	let y2 = a.end.y;
-	let x3 = b.start.x;
-	let y3 = b.start.y;
-	let x4 = b.end.x;
-	let y4 = b.end.y;
-	let det = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
-	if det == 0.0 {
-		None
-	} else {
-		let x = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / det;
-		let y = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / det;
-		Some((x, y).into())
+pub trait PointExt {
+	fn length(&self) -> f32;
+	fn normal(&self) -> Point<f32>;
+	fn normalize(&mut self);
+}
+
+impl PointExt for Point<f32> {
+	fn length(&self) -> f32 {
+		(self.x() * self.x() + self.y() * self.y()).sqrt()
+	}
+
+	fn normal(&self) -> Point<f32> {
+		Point::new(-self.y(), self.x())
+	}
+
+	fn normalize(&mut self) {
+		let length = self.length();
+		if length > 0.0 {
+			self.set_x(self.x() / length);
+			self.set_y(self.y() / length);
+		}
 	}
 }
 
-fn normalize(point: &Point<f32>) -> Point<f32> {
-	let length = (point.x() * point.x() + point.y() * point.y()).sqrt();
-	if length == 0.0 {
-		return point.clone();
+pub trait LineExt {
+	fn intersection(&self, other: &Line<f32>) -> Option<Point<f32>>;
+	fn normal(&self) -> Point<f32>;
+}
+
+impl LineExt for Line<f32> {
+	fn intersection(&self, other: &Line<f32>) -> Option<Point<f32>> {
+		let x1 = self.start.x;
+		let y1 = self.start.y;
+		let x2 = self.end.x;
+		let y2 = self.end.y;
+		let x3 = other.start.x;
+		let y3 = other.start.y;
+		let x4 = other.end.x;
+		let y4 = other.end.y;
+		let det = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+		if det == 0.0 {
+			None
+		} else {
+			let x = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / det;
+			let y = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / det;
+			Some((x, y).into())
+		}
 	}
-	Point::new(point.x() / length, point.y() / length)
+
+	fn normal(&self) -> Point<f32> {
+		let mut normal = Point::new(self.dx(), self.dy()).normal();
+		normal.normalize();
+		normal
+	}
 }
 
 pub trait LineStringExt {
@@ -58,13 +87,13 @@ impl LineStringExt for LineString<f32> {
 		for (a, b, c) in vertex_triplets {
 			let ab = Line::new((a.x(), a.y()), (b.x(), b.y()));
 			let bc = Line::new((b.x(), b.y()), (c.x(), c.y()));
-			let ab_normal = normalize(&Point::new(-ab.dy(), ab.dx()));
-			let bc_normal = normalize(&Point::new(-bc.dy(), bc.dx()));
+			let ab_normal = ab.normal();
+			let bc_normal = bc.normal();
 
 			// TODO use clockwise-ness instead of flipping normal arbitrarily
 			let padded_ab = ab.translate(-ab_normal.x() * amount, -ab_normal.y() * amount);
 			let padded_bc = bc.translate(-bc_normal.x() * amount, -bc_normal.y() * amount);
-			let intersection = line_intersection(&padded_ab, &padded_bc).unwrap();
+			let intersection = padded_ab.intersection(&padded_bc).unwrap();
 			vertices.push(intersection);
 		}
 
