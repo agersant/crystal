@@ -35,6 +35,7 @@ impl PointExt for Point<f32> {
 
 pub enum NormalDirection {
 	Left,
+	#[allow(dead_code)]
 	Right,
 }
 
