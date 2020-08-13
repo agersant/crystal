@@ -47,17 +47,20 @@ pub unsafe extern "C" fn mesh_list_navigation_polygons(
 #[no_mangle]
 pub unsafe extern "C" fn mesh_plan_path(
 	mesh: *mut Mesh,
-	_start_x: f32,
-	_start_y: f32,
-	_end_x: f32,
-	_end_y: f32,
-	_out_path: *mut CPolygon,
+	start_x: f32,
+	start_y: f32,
+	end_x: f32,
+	end_y: f32,
+	out_path: *mut CPolygon,
 ) {
 	if mesh.is_null() {
 		return;
 	}
-	let _mesh = &*mesh;
-	// TODO
+	let mesh = &*mesh;
+	let start = Point::new(start_x, start_y);
+	let end = Point::new(end_x, end_y);
+	let path = mesh.navigation.compute_path(&start, &end);
+	*out_path = (&path).into();
 }
 
 #[no_mangle]

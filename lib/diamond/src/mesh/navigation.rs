@@ -120,6 +120,11 @@ impl NavigationMesh {
 			Closest::Indeterminate => from.clone(),
 		}
 	}
+
+	pub fn compute_path(&self, from: &Point<f32>, to: &Point<f32>) -> LineString<f32> {
+		// TODO
+		line_string![]
+	}
 }
 
 impl Default for NavigationMesh {
