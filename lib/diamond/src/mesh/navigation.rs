@@ -118,6 +118,7 @@ impl Default for NavigationMesh {
 	}
 }
 
+// This assumes that offset is small enough to not change the topology of the polygon (does not create self-intersection, merge interiors, etc.)
 fn pad_obstacle(obstacle: &geo_types::Polygon<f32>, offset: f32) -> geo_types::Polygon<f32> {
 	let padded_exterior = obstacle.exterior().offset(offset);
 	let padded_interiors: Vec<LineString<f32>> = obstacle

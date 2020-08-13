@@ -2,10 +2,13 @@ use geo::algorithm::translate::Translate;
 use geo_types::{Line, LineString, Point};
 use itertools::Itertools;
 
+#[cfg(test)]
+mod tests;
+
 pub trait PointExt {
 	fn length(&self) -> f32;
-	fn normal(&self) -> Point<f32>;
-	fn normalize(&mut self);
+	fn normal(&self, direction: &NormalDirection) -> Point<f32>;
+	fn normalize(&self) -> Point<f32>;
 }
 
 impl PointExt for Point<f32> {
@@ -13,22 +16,31 @@ impl PointExt for Point<f32> {
 		(self.x() * self.x() + self.y() * self.y()).sqrt()
 	}
 
-	fn normal(&self) -> Point<f32> {
-		Point::new(-self.y(), self.x())
+	fn normal(&self, direction: &NormalDirection) -> Point<f32> {
+		match direction {
+			NormalDirection::Left => Point::new(-self.y(), self.x()),
+			NormalDirection::Right => Point::new(self.y(), -self.x()),
+		}
 	}
 
-	fn normalize(&mut self) {
+	fn normalize(&self) -> Point<f32> {
 		let length = self.length();
 		if length > 0.0 {
-			self.set_x(self.x() / length);
-			self.set_y(self.y() / length);
+			Point::new(self.x() / length, self.y() / length)
+		} else {
+			self.clone()
 		}
 	}
 }
 
+pub enum NormalDirection {
+	Left,
+	Right,
+}
+
 pub trait LineExt {
 	fn intersection(&self, other: &Line<f32>) -> Option<Point<f32>>;
-	fn normal(&self) -> Point<f32>;
+	fn normal(&self, direction: &NormalDirection) -> Point<f32>;
 }
 
 impl LineExt for Line<f32> {
@@ -51,10 +63,10 @@ impl LineExt for Line<f32> {
 		}
 	}
 
-	fn normal(&self) -> Point<f32> {
-		let mut normal = Point::new(self.dx(), self.dy()).normal();
-		normal.normalize();
-		normal
+	fn normal(&self, direction: &NormalDirection) -> Point<f32> {
+		Point::new(self.dx(), self.dy())
+			.normal(direction)
+			.normalize()
 	}
 }
 
@@ -73,6 +85,8 @@ impl LineStringExt for LineString<f32> {
 	}
 
 	fn offset(&self, amount: f32) -> LineString<f32> {
+		let amount = if self.is_clockwise() { amount } else { -amount };
+
 		let mut vertices: Vec<Point<f32>> = Vec::new();
 		vertices.reserve(self.num_coords());
 
@@ -87,12 +101,13 @@ impl LineStringExt for LineString<f32> {
 		for (a, b, c) in vertex_triplets {
 			let ab = Line::new((a.x(), a.y()), (b.x(), b.y()));
 			let bc = Line::new((b.x(), b.y()), (c.x(), c.y()));
-			let ab_normal = ab.normal();
-			let bc_normal = bc.normal();
 
-			// TODO use clockwise-ness instead of flipping normal arbitrarily
-			let padded_ab = ab.translate(-ab_normal.x() * amount, -ab_normal.y() * amount);
-			let padded_bc = bc.translate(-bc_normal.x() * amount, -bc_normal.y() * amount);
+			let ab_normal = ab.normal(&NormalDirection::Left);
+			let bc_normal = bc.normal(&NormalDirection::Left);
+
+			let padded_ab = ab.translate(ab_normal.x() * amount, ab_normal.y() * amount);
+			let padded_bc = bc.translate(bc_normal.x() * amount, bc_normal.y() * amount);
+
 			let intersection = padded_ab.intersection(&padded_bc).unwrap();
 			vertices.push(intersection);
 		}
