@@ -1,5 +1,6 @@
 use crate::c_api::geometry::*;
 use crate::mesh::Mesh;
+use std::iter::FromIterator;
 
 #[no_mangle]
 pub unsafe extern "C" fn mesh_new() -> *mut Mesh {
@@ -26,7 +27,7 @@ pub unsafe extern "C" fn mesh_list_collision_polygons(
 	}
 	let mesh = &*mesh;
 	let contours = mesh.collision.get_contours();
-	*out_polygons = (&contours).into();
+	*out_polygons = CPolygons::from_iter(contours.iter());
 }
 
 #[no_mangle]
@@ -38,7 +39,8 @@ pub unsafe extern "C" fn mesh_list_navigation_polygons(
 		return;
 	}
 	let mesh = &*mesh;
-	*out_polygons = (&mesh.navigation.get_triangles()).into();
+	let triangles = mesh.navigation.get_triangles();
+	*out_polygons = CPolygons::from_iter(triangles.iter());
 }
 
 #[no_mangle]

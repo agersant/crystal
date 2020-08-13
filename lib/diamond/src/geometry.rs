@@ -1,35 +1,6 @@
 use geo::algorithm::translate::Translate;
-use geo_types::{Line, Point};
+use geo_types::{Line, LineString, Point};
 use itertools::Itertools;
-
-#[derive(Clone, Debug)]
-pub struct Polygon {
-	// TODO replace with geo::LineString
-	// TODO enforce closed-ness or not consistently
-	pub vertices: Vec<Point<f32>>,
-}
-
-impl From<&Polygon> for geo_types::Polygon<f32> {
-	fn from(polygon: &Polygon) -> geo_types::Polygon<f32> {
-		geo_types::Polygon::<f32>::new(
-			geo_types::LineString::from(polygon.vertices.clone()),
-			vec![],
-		)
-	}
-}
-
-impl From<&geo_types::LineString<f32>> for Polygon {
-	fn from(line_string: &geo_types::LineString<f32>) -> Polygon {
-		let vertices = line_string.points_iter().collect();
-		Polygon { vertices }
-	}
-}
-
-impl From<&Polygon> for geo_types::LineString<f32> {
-	fn from(polygon: &Polygon) -> geo_types::LineString<f32> {
-		polygon.vertices.clone().into()
-	}
-}
 
 fn line_intersection(a: &Line<f32>, b: &Line<f32>) -> Option<Point<f32>> {
 	let x1 = a.start.x;
@@ -58,39 +29,33 @@ fn normalize(point: &Point<f32>) -> Point<f32> {
 	Point::new(point.x() / length, point.y() / length)
 }
 
-impl Polygon {
-	pub fn edges(&self) -> impl Iterator<Item = (&Point<f32>, &Point<f32>)> {
-		let num_vertices = self.vertices.len();
-		self.vertices
-			.iter()
-			.take(num_vertices - 1)
-			.cycle()
-			.tuple_windows()
-			.take(num_vertices - 1)
-	}
+pub trait LineStringExt {
+	fn offset(&self, amount: f32) -> LineString<f32>;
+	fn is_clockwise(&self) -> bool;
+}
 
-	pub fn is_clockwise(&self) -> bool {
+impl LineStringExt for LineString<f32> {
+	fn is_clockwise(&self) -> bool {
 		let mut sum = 0.0;
-		for (a, b) in self.edges() {
-			sum += (b.x() - a.x()) * (b.y() + a.y());
+		for line in self.lines() {
+			sum += (line.end.x - line.start.x) * (line.end.y + line.start.y);
 		}
 		sum > 0.0
 	}
 
-	fn vertex_triplets(&self) -> impl Iterator<Item = (&Point<f32>, &Point<f32>, &Point<f32>)> {
-		let num_vertices = self.vertices.len();
-		self.vertices
+	fn offset(&self, amount: f32) -> LineString<f32> {
+		let mut vertices: Vec<Point<f32>> = Vec::new();
+		vertices.reserve(self.num_coords());
+
+		let source_vertices = self.clone().into_points();
+		let vertex_triplets = source_vertices
 			.iter()
-			.take(num_vertices - 1)
+			.take(self.num_coords() - 1)
 			.cycle()
 			.tuple_windows()
-			.take(num_vertices - 1)
-	}
+			.take(self.num_coords() - 1);
 
-	pub fn offset(&self, amount: f32) -> Polygon {
-		let mut vertices: Vec<Point<f32>> = Vec::new();
-		vertices.reserve(self.vertices.len());
-		for (a, b, c) in self.vertex_triplets() {
+		for (a, b, c) in vertex_triplets {
 			let ab = Line::new((a.x(), a.y()), (b.x(), b.y()));
 			let bc = Line::new((b.x(), b.y()), (c.x(), c.y()));
 			let ab_normal = normalize(&Point::new(-ab.dy(), ab.dx()));
@@ -102,7 +67,8 @@ impl Polygon {
 			let intersection = line_intersection(&padded_ab, &padded_bc).unwrap();
 			vertices.push(intersection);
 		}
+
 		vertices.push(vertices[0].clone());
-		Polygon { vertices }
+		vertices.into()
 	}
 }

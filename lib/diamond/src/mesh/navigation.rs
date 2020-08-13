@@ -1,8 +1,8 @@
-use crate::geometry::Polygon;
+use crate::geometry::LineStringExt;
 use crate::mesh::collision::CollisionMesh;
 use geo::algorithm::intersects::Intersects;
 use geo_booleanop::boolean::BooleanOp;
-use geo_types::{polygon, Point};
+use geo_types::*;
 use spade::delaunay::{
 	ConstrainedDelaunayTriangulation, DelaunayTreeLocate, FaceHandle, FixedFaceHandle, FloatCDT,
 };
@@ -78,15 +78,30 @@ impl NavigationMesh {
 		}
 	}
 
-	pub fn get_triangles(&self) -> Vec<Polygon> {
-		let mut polygons = Vec::new();
+	pub fn get_triangles(&self) -> Vec<Triangle<f32>> {
+		let mut triangles = Vec::new();
 		for face in self.triangulation.triangles() {
 			if !self.navigable_triangles.contains(&face.fix()) {
 				continue;
 			}
-			polygons.push(face_to_polygon(&face));
+			let face = face.as_triangle();
+			let triangle = Triangle(
+				Coordinate {
+					x: face[0][0],
+					y: face[0][1],
+				},
+				Coordinate {
+					x: face[1][0],
+					y: face[1][1],
+				},
+				Coordinate {
+					x: face[2][0],
+					y: face[2][1],
+				},
+			);
+			triangles.push(triangle);
 		}
-		polygons
+		triangles
 	}
 }
 
@@ -100,31 +115,16 @@ impl Default for NavigationMesh {
 }
 
 fn pad_obstacle(obstacle: &geo_types::Polygon<f32>, offset: f32) -> geo_types::Polygon<f32> {
-	let exterior: Polygon = obstacle.exterior().into();
-	let padded_exterior = exterior.offset(offset);
-	let padded_interiors: Vec<Polygon> = obstacle
+	let padded_exterior = obstacle.exterior().offset(offset);
+	let padded_interiors: Vec<LineString<f32>> = obstacle
 		.interiors()
 		.iter()
-		.map(|interior| {
-			let interior: Polygon = interior.into();
-			interior.offset(-offset)
-		})
+		.map(|interior| interior.offset(-offset))
 		.collect();
-	geo_types::Polygon::new(
-		(&padded_exterior).into(),
-		padded_interiors.iter().map(|i| i.into()).collect(),
-	)
+	geo_types::Polygon::new(padded_exterior, padded_interiors)
 }
 
-fn face_to_polygon(face: &FaceHandle<[f32; 2], spade::delaunay::CdtEdge>) -> Polygon {
-	let triangle = face.as_triangle();
-	let mut vertices = Vec::new();
-	for i in 0..3 {
-		vertices.push(Point::new(triangle[i][0], triangle[i][1]));
-	}
-	Polygon { vertices }
-}
-
+// TODO revisit this?
 fn face_to_geo_polygon(
 	face: &FaceHandle<[f32; 2], spade::delaunay::CdtEdge>,
 ) -> geo_types::Polygon<f32> {

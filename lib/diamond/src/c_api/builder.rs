@@ -1,8 +1,7 @@
 use crate::c_api::geometry::*;
-use crate::geometry::*;
 use crate::mesh::builder::MeshBuilder;
 use crate::mesh::Mesh;
-use geo_types::Point;
+use geo_types::*;
 use std::slice;
 
 #[no_mangle]
@@ -37,9 +36,12 @@ pub unsafe extern "C" fn mesh_builder_add_polygon(
 		return;
 	}
 	let c_vertices: &[CVertex] = slice::from_raw_parts(vertices, num_vertices as usize);
-	let vertices: Vec<Point<f32>> = c_vertices.iter().map(|v| v.into()).collect();
-	let polygon = Polygon { vertices };
-	(&mut *builder).add_polygon(tile_x, tile_y, polygon);
+	let line_string = c_vertices
+		.iter()
+		.map(|v| v.into())
+		.collect::<Vec<Point<f32>>>()
+		.into();
+	(&mut *builder).add_polygon(tile_x, tile_y, line_string);
 }
 
 #[no_mangle]

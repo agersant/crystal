@@ -1,11 +1,9 @@
-use crate::geometry::*;
 use geo::algorithm::bounding_rect::BoundingRect;
 #[cfg(test)]
 use geo::algorithm::extremes::ExtremePoints;
 use geo::algorithm::simplifyvw::SimplifyVW;
 use geo_booleanop::boolean::BooleanOp;
-#[cfg(test)]
-use geo_types::{polygon, Point};
+use geo_types::*;
 use ndarray::parallel::prelude::*;
 use ndarray::Array;
 use ndarray::Array2;
@@ -15,12 +13,12 @@ use rayon::iter::IntoParallelIterator;
 
 #[derive(Debug)]
 pub struct CollisionMesh {
-	pub obstacles: geo_types::MultiPolygon<f32>,
+	pub obstacles: MultiPolygon<f32>,
 }
 
 impl Default for CollisionMesh {
 	fn default() -> Self {
-		let polygons: Vec<geo_types::Polygon<f32>> = Vec::new();
+		let polygons: Vec<Polygon<f32>> = Vec::new();
 		CollisionMesh {
 			obstacles: polygons.into(),
 		}
@@ -38,10 +36,10 @@ impl CollisionMesh {
 	pub fn build(
 		num_tiles_x: usize,
 		num_tiles_y: usize,
-		polygons: &Array2<Vec<geo_types::Polygon<f32>>>,
+		obstacles: &Array2<Vec<LineString<f32>>>,
 	) -> CollisionMesh {
-		type P = geo_types::Polygon<f32>;
-		type MP = geo_types::MultiPolygon<f32>;
+		type P = Polygon<f32>;
+		type MP = MultiPolygon<f32>;
 
 		let mut w = num_tiles_x;
 		let mut h = num_tiles_y;
@@ -49,7 +47,8 @@ impl CollisionMesh {
 		// Initial state
 		let mut reduced_map: Array2<MP> = Array::from_shape_fn((h, w), |(y, x)| {
 			let mut union: MP = Vec::<P>::new().into();
-			for polygon in &polygons[(y, x)] {
+			for obstacle in &obstacles[(y, x)] {
+				let polygon = Polygon::new(obstacle.clone(), Vec::new());
 				union = union.union(&polygon.clone());
 			}
 			union
@@ -93,17 +92,15 @@ impl CollisionMesh {
 		}
 	}
 
-	pub fn get_contours(&self) -> Vec<Polygon> {
-		let mut polygons: Vec<Polygon> = Vec::new();
+	pub fn get_contours(&self) -> Vec<LineString<f32>> {
+		let mut polygons: Vec<LineString<f32>> = Vec::new();
 		let obstacles = self.obstacles.clone(); // TODO Find a way to iterate on multipolygon without cloning
 		for polygon in obstacles {
-			polygons.push(Polygon {
-				vertices: polygon.exterior().points_iter().collect(),
-			});
+			let exterior_vertices = polygon.exterior().clone().into_points();
+			polygons.push(exterior_vertices.into());
 			for interior in polygon.interiors() {
-				polygons.push(Polygon {
-					vertices: interior.points_iter().collect(),
-				});
+				let interior_vertices = interior.clone().into_points();
+				polygons.push(interior_vertices.into());
 			}
 		}
 		polygons

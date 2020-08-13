@@ -1,7 +1,6 @@
-use crate::geometry::*;
 use crate::mesh::builder::MeshBuilder;
 use crate::mesh::collision::CollisionMesh;
-use geo_types::Point;
+use geo_types::*;
 use plotters::drawing::backend::DrawingBackend;
 use plotters::drawing::BitMapBackend;
 use plotters::style::colors::*;
@@ -42,11 +41,15 @@ impl From<&TestInputVertex> for Point<f32> {
 	}
 }
 
-impl From<&Vec<TestInputVertex>> for Polygon {
-	fn from(vertices: &Vec<TestInputVertex>) -> Polygon {
-		Polygon {
-			vertices: vertices.iter().map(|v| v.into()).collect(),
-		}
+impl From<&TestInputPolygon> for LineString<f32> {
+	fn from(input: &TestInputPolygon) -> LineString<f32> {
+		LineString::from(
+			input
+				.vertices
+				.iter()
+				.map(|v| v.into())
+				.collect::<Vec<Point<f32>>>(),
+		)
 	}
 }
 
@@ -74,19 +77,15 @@ fn draw_mesh(mesh: &CollisionMesh, out_file: &str) {
 		.unwrap();
 
 	let contours = mesh.get_contours();
-	for polygon in &contours {
-		let vertices = &polygon.vertices;
-		for i in 0..vertices.len() {
-			let vertex = &vertices[i];
-			let next_index = (i + 1) % vertices.len();
-			let next_vertex = &vertices[next_index];
+	for contour in &contours {
+		for line in contour.lines() {
 			let start_point = (
-				(padding as f32 - top_left.x() + vertex.x()) as i32,
-				(padding as f32 - top_left.y() + vertex.y()) as i32,
+				(padding as f32 - top_left.x() + line.start.x) as i32,
+				(padding as f32 - top_left.y() + line.start.y) as i32,
 			);
 			let end_point = (
-				(padding as f32 - top_left.x() + next_vertex.x()) as i32,
-				(padding as f32 - top_left.y() + next_vertex.y()) as i32,
+				(padding as f32 - top_left.x() + line.start.x) as i32,
+				(padding as f32 - top_left.y() + line.start.y) as i32,
 			);
 			backend.draw_circle(start_point, 2, &RED, true).unwrap();
 			backend.draw_line(start_point, end_point, &RED).unwrap();
@@ -112,7 +111,7 @@ fn test_sample_files(name: &str) {
 
 	let mut builder = MeshBuilder::new(input_map.num_tiles_x, input_map.num_tiles_y, 10.0, 10.0);
 	for polygon in input_map.polygons.iter() {
-		builder.add_polygon(polygon.tile_x, polygon.tile_y, (&polygon.vertices).into());
+		builder.add_polygon(polygon.tile_x, polygon.tile_y, polygon.into());
 	}
 
 	let start = std::time::SystemTime::now();
