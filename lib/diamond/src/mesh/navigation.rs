@@ -1,9 +1,8 @@
 use crate::geometry::{Polygon, Vertex};
 use crate::mesh::collision::CollisionMesh;
-use geo::algorithm::centroid::Centroid;
-use geo::algorithm::contains::Contains;
-use geo_types::{polygon, Geometry, GeometryCollection};
-use itertools::Itertools;
+use geo::algorithm::intersects::Intersects;
+use geo_booleanop::boolean::BooleanOp;
+use geo_types::polygon;
 use spade::delaunay::{
 	ConstrainedDelaunayTriangulation, DelaunayTreeLocate, FaceHandle, FixedFaceHandle, FloatCDT,
 };
@@ -20,39 +19,55 @@ pub struct NavigationMesh {
 
 impl NavigationMesh {
 	pub fn build(width: f32, height: f32, collision_mesh: &CollisionMesh) -> NavigationMesh {
-		// TODO pad obstacles
+		let padding = 4.0; // TODO builder input
+		type MP = geo_types::MultiPolygon<f32>;
 
-		let all_obstacles = GeometryCollection(
-			collision_mesh
-				.obstacles
-				.clone() // TODO avoid cloning
-				.into_iter()
-				.map(|p| Geometry::Polygon(p))
-				.collect(),
-		);
+		// Determine playable space
+		let mut playable_space: MP = polygon![
+			(x: padding, y: padding),
+			(x: width - padding, y: padding),
+			(x: width - padding, y: height - padding),
+			(x: padding, y: height - padding)
+		]
+		.into();
 
+		// TODO avoid cloning here
+		for obstacle in collision_mesh.obstacles.clone() {
+			let padded_obstacle = pad_obstacle(&obstacle, padding);
+			playable_space = playable_space.difference(&padded_obstacle);
+		}
+
+		// Triangulate
 		let mut triangulation = FloatCDT::with_tree_locate();
-		triangulation.insert([0.0, 0.0]);
-		triangulation.insert([width, 0.0]);
-		triangulation.insert([width, height]);
-		triangulation.insert([0.0, height]);
-
-		let contours = collision_mesh.get_contours();
-		for polygon in &contours {
-			for (v0, v1) in polygon.vertices.iter().tuple_windows() {
-				let handle0 = triangulation.insert([v0.x, v0.y]);
-				let handle1 = triangulation.insert([v1.x, v1.y]);
+		for polygon in playable_space {
+			for line in polygon.exterior().lines() {
+				let handle0 = triangulation.insert([line.start.x, line.start.y]);
+				let handle1 = triangulation.insert([line.end.x, line.end.y]);
 				if triangulation.can_add_constraint(handle0, handle1) {
 					triangulation.add_constraint(handle0, handle1);
 				}
 			}
+			for interior in polygon.interiors() {
+				for line in interior.lines() {
+					let handle0 = triangulation.insert([line.start.x, line.start.y]);
+					let handle1 = triangulation.insert([line.end.x, line.end.y]);
+					if triangulation.can_add_constraint(handle0, handle1) {
+						triangulation.add_constraint(handle0, handle1);
+					}
+				}
+			}
 		}
 
+		// Flag walkable triangles
 		let mut navigable_triangles = HashSet::new();
 		for face in triangulation.triangles() {
 			let triangle = face_to_geo_polygon(&face);
-			let triangle_center = triangle.centroid().unwrap();
-			if !all_obstacles.contains(&triangle_center) {
+			let is_walkable = !collision_mesh
+				.obstacles
+				.clone()
+				.into_iter()
+				.any(|p| p.intersects(&triangle));
+			if is_walkable {
 				navigable_triangles.insert(face.fix());
 			}
 		}
@@ -82,6 +97,23 @@ impl Default for NavigationMesh {
 			navigable_triangles: HashSet::new(),
 		}
 	}
+}
+
+fn pad_obstacle(obstacle: &geo_types::Polygon<f32>, offset: f32) -> geo_types::Polygon<f32> {
+	let exterior: Polygon = obstacle.exterior().into();
+	let padded_exterior = exterior.offset(offset);
+	let padded_interiors: Vec<Polygon> = obstacle
+		.interiors()
+		.iter()
+		.map(|interior| {
+			let interior: Polygon = interior.into();
+			interior.offset(-offset)
+		})
+		.collect();
+	geo_types::Polygon::new(
+		(&padded_exterior).into(),
+		padded_interiors.iter().map(|i| i.into()).collect(),
+	)
 }
 
 fn face_to_polygon(face: &FaceHandle<[f32; 2], spade::delaunay::CdtEdge>) -> Polygon {
