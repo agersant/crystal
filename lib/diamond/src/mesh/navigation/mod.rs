@@ -8,8 +8,7 @@ use spade::delaunay::*;
 use spade::kernels::FloatKernel;
 use std::collections::HashSet;
 
-mod a_star;
-mod smoothing;
+mod query;
 #[cfg(test)]
 mod tests;
 
@@ -179,18 +178,14 @@ impl NavigationMesh {
 		let to_projection = self.get_nearest_navigable_face(to);
 		match (from_projection, to_projection) {
 			(Some(from_projection), Some(to_projection)) => {
-				let triangle_path = a_star::compute_triangle_path(
+				let mut path = query::compute_path(
 					self,
+					from,
+					to,
 					from_projection.nearest_face,
 					to_projection.nearest_face,
-					to,
 				)
 				.unwrap(); // TODO no unwrap!!
-				let mut path = smoothing::funnel(
-					&from_projection.nearest_point,
-					&to_projection.nearest_point,
-					triangle_path,
-				);
 				if *from != from_projection.nearest_point {
 					path.insert(0, *from);
 				}

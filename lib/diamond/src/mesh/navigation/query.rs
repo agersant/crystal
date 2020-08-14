@@ -21,14 +21,33 @@ fn movement_cost(from: &FaceHandle<Vertex, CdtEdge>, to: &FaceHandle<Vertex, Cdt
 	line.length()
 }
 
-pub fn compute_triangle_path<'a>(
+// Based on:
+// http://digestingduck.blogspot.com/2010/03/simple-stupid-funnel-algorithm.html
+fn funnel(
+	mesh: &NavigationMesh,
+	from: &Point<f32>,
+	to: &Point<f32>,
+	triangle_path: Vec<FixedFaceHandle>,
+) -> Vec<Point<f32>> {
+	let mut path = Vec::new();
+	path.push(*from);
+	for face in triangle_path {
+		let face = mesh.triangulation.face(face);
+		path.push(face_center(&face));
+	}
+	path.push(*to);
+	path
+}
+
+pub fn compute_path<'a>(
 	mesh: &'a NavigationMesh,
-	from: FaceHandle<'a, Vertex, CdtEdge>,
-	to: FaceHandle<'a, Vertex, CdtEdge>,
-	exact_destination: &Point<f32>,
-) -> Option<Vec<FaceHandle<'a, Vertex, CdtEdge>>> {
-	let path = astar(
-		&from.fix(),
+	from_point: &Point<f32>,
+	to_point: &Point<f32>,
+	from_face: FaceHandle<'a, Vertex, CdtEdge>,
+	to_face: FaceHandle<'a, Vertex, CdtEdge>,
+) -> Option<Vec<Point<f32>>> {
+	astar(
+		&from_face.fix(),
 		|&face| {
 			let face = mesh.triangulation.face(face);
 			face.adjacent_edges()
@@ -41,15 +60,9 @@ pub fn compute_triangle_path<'a>(
 		},
 		|&face| {
 			let face = mesh.triangulation.face(face);
-			OrderedFloat(heuristic(&face, exact_destination))
+			OrderedFloat(heuristic(&face, to_point))
 		},
-		|&face| face == to.fix(),
-	);
-
-	path.map(|(fixed_handles, _)| {
-		fixed_handles
-			.into_iter()
-			.map(|f| mesh.triangulation.face(f))
-			.collect()
-	})
+		|&face| face == to_face.fix(),
+	)
+	.map(|(path, _length)| funnel(mesh, from_point, to_point, path))
 }
