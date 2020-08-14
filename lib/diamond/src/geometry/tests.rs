@@ -1,5 +1,4 @@
 use crate::geometry::*;
-use geo::algorithm::bounding_rect::BoundingRect;
 use geo_booleanop::boolean::BooleanOp;
 use geo_types::*;
 

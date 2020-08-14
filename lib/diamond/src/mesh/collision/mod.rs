@@ -1,7 +1,4 @@
-use geo::algorithm::bounding_rect::BoundingRect;
-#[cfg(test)]
-use geo::algorithm::extremes::ExtremePoints;
-use geo::algorithm::simplifyvw::SimplifyVW;
+use geo::prelude::*;
 use geo_booleanop::boolean::BooleanOp;
 use geo_types::*;
 use ndarray::parallel::prelude::*;
