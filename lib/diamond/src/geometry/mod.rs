@@ -1,4 +1,4 @@
-use geo::algorithm::translate::Translate;
+use geo::prelude::*;
 use geo_types::{Line, LineString, Point};
 use itertools::Itertools;
 
@@ -40,11 +40,16 @@ pub enum NormalDirection {
 }
 
 pub trait LineExt {
+	fn length_squared(&self) -> f32;
 	fn intersection(&self, other: &Line<f32>) -> Option<Point<f32>>;
 	fn normal(&self, direction: &NormalDirection) -> Point<f32>;
 }
 
 impl LineExt for Line<f32> {
+	fn length_squared(&self) -> f32 {
+		self.dx() * self.dx() + self.dy() * self.dy()
+	}
+
 	fn intersection(&self, other: &Line<f32>) -> Option<Point<f32>> {
 		let x1 = self.start.x;
 		let y1 = self.start.y;
