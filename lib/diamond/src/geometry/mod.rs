@@ -40,14 +40,14 @@ pub enum NormalDirection {
 }
 
 pub trait LineExt {
-	fn length_squared(&self) -> f32;
+	fn length(&self) -> f32;
 	fn intersection(&self, other: &Line<f32>) -> Option<Point<f32>>;
 	fn normal(&self, direction: &NormalDirection) -> Point<f32>;
 }
 
 impl LineExt for Line<f32> {
-	fn length_squared(&self) -> f32 {
-		self.dx() * self.dx() + self.dy() * self.dy()
+	fn length(&self) -> f32 {
+		(self.dx() * self.dx() + self.dy() * self.dy()).sqrt()
 	}
 
 	fn intersection(&self, other: &Line<f32>) -> Option<Point<f32>> {
