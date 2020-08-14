@@ -1,5 +1,6 @@
 use crate::geometry::LineExt;
 use crate::mesh::navigation::*;
+use ordered_float::OrderedFloat;
 use pathfinding::prelude::*;
 
 // TODO implement as FaceHandle extension?
@@ -35,12 +36,12 @@ pub fn compute_triangle_path<'a>(
 				.map(move |e| {
 					let neighbour = e.sym().face();
 					let cost = movement_cost(&face, &neighbour);
-					(neighbour.fix(), cost.ceil() as i32)
+					(neighbour.fix(), OrderedFloat(cost))
 				})
 		},
 		|&face| {
 			let face = mesh.triangulation.face(face);
-			heuristic(&face, exact_destination).ceil() as i32
+			OrderedFloat(heuristic(&face, exact_destination))
 		},
 		|&face| face == to.fix(),
 	);

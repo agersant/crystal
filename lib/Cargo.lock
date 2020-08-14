@@ -358,6 +358,7 @@ dependencies = [
  "itertools 0.9.0",
  "lua-ffi-gen",
  "ndarray",
+ "ordered-float 2.0.0",
  "pathfinding",
  "plotters",
  "rayon",
@@ -944,6 +945,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "ordered-float"
+version = "2.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9fe9037165d7023b1228bc4ae9a2fa1a2b0095eca6c2998c624723dfd01314a5"
+dependencies = [
+ "num-traits",
+]
+
+[[package]]
 name = "palette"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1303,7 +1313,7 @@ checksum = "14a911032fb5791ccbeec9f28fdcb9bf0983b81f227bafdfd227c658d0731c8a"
 dependencies = [
  "approx",
  "arrayvec 0.5.1",
- "ordered-float",
+ "ordered-float 1.0.2",
  "stb_truetype",
 ]
 
