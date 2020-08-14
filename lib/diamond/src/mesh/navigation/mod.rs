@@ -1,26 +1,32 @@
 use crate::geometry::LineStringExt;
 use crate::mesh::collision::CollisionMesh;
-use geo::algorithm::closest_point::ClosestPoint;
-use geo::algorithm::intersects::Intersects;
+use geo::prelude::*;
 use geo::Closest;
 use geo_booleanop::boolean::BooleanOp;
 use geo_types::*;
-use spade::delaunay::{
-	ConstrainedDelaunayTriangulation, DelaunayTreeLocate, FaceHandle, FixedFaceHandle, FloatCDT,
-};
+use spade::delaunay::*;
 use spade::kernels::FloatKernel;
 use std::collections::HashSet;
 
+mod a_star;
+mod smoothing;
 #[cfg(test)]
 mod tests;
 
+pub type Vertex = [f32; 2];
+
 type Triangulation =
-	ConstrainedDelaunayTriangulation<[f32; 2], FloatKernel, DelaunayTreeLocate<[f32; 2]>>;
+	ConstrainedDelaunayTriangulation<Vertex, FloatKernel, DelaunayTreeLocate<[f32; 2]>>;
 
 pub struct NavigationMesh {
 	triangulation: Triangulation,
-	navigable_triangles: HashSet<FixedFaceHandle>,
+	navigable_faces: HashSet<FixedFaceHandle>,
 	playable_space: MultiPolygon<f32>,
+}
+
+struct ProjectionResult<'a> {
+	nearest_point: Point<f32>,
+	nearest_face: FaceHandle<'a, Vertex, CdtEdge>,
 }
 
 impl NavigationMesh {
@@ -70,7 +76,7 @@ impl NavigationMesh {
 		}
 
 		// Flag walkable triangles
-		let mut navigable_triangles = HashSet::new();
+		let mut navigable_faces = HashSet::new();
 		for face in triangulation.triangles() {
 			let triangle = face_to_geo_polygon(&face);
 			let is_walkable = !collision_mesh
@@ -79,21 +85,25 @@ impl NavigationMesh {
 				.into_iter()
 				.any(|p| p.intersects(&triangle));
 			if is_walkable {
-				navigable_triangles.insert(face.fix());
+				navigable_faces.insert(face.fix());
 			}
 		}
 
 		NavigationMesh {
 			triangulation,
-			navigable_triangles,
+			navigable_faces,
 			playable_space: playable_space,
 		}
+	}
+
+	pub fn is_face_navigable(&self, face: &FaceHandle<Vertex, CdtEdge>) -> bool {
+		self.navigable_faces.contains(&face.fix())
 	}
 
 	pub fn get_triangles(&self) -> Vec<Triangle<f32>> {
 		let mut triangles = Vec::new();
 		for face in self.triangulation.triangles() {
-			if !self.navigable_triangles.contains(&face.fix()) {
+			if !self.navigable_faces.contains(&face.fix()) {
 				continue;
 			}
 			let face = face.as_triangle();
@@ -116,17 +126,81 @@ impl NavigationMesh {
 		triangles
 	}
 
-	pub fn get_nearest_navigable_point(&self, from: &Point<f32>) -> Point<f32> {
-		match self.playable_space.closest_point(from) {
-			Closest::SinglePoint(p) => p,
-			Closest::Intersection(p) => p,
-			Closest::Indeterminate => from.clone(),
+	fn get_nearest_navigable_face(&self, point: &Point<f32>) -> Option<ProjectionResult> {
+		let nearest_point = self.get_nearest_navigable_point(point);
+		if let Some(point) = nearest_point {
+			let face = match self.triangulation.locate(&[point.x(), point.y()]) {
+				PositionInTriangulation::NoTriangulationPresent => return None,
+				PositionInTriangulation::InTriangle(f) => f,
+
+				PositionInTriangulation::OnPoint(v) => {
+					match v.ccw_out_edges().into_iter().find_map(|edge| {
+						if self.is_face_navigable(&edge.face()) {
+							Some(edge.face())
+						} else {
+							None
+						}
+					}) {
+						Some(f) => f,
+						None => return None,
+					}
+				}
+
+				PositionInTriangulation::OutsideConvexHull(e)
+				| PositionInTriangulation::OnEdge(e) => {
+					let left = e.face();
+					let right = e.sym().face();
+					if self.is_face_navigable(&left) {
+						left
+					} else {
+						right
+					}
+				}
+			};
+
+			return Some(ProjectionResult {
+				nearest_face: face,
+				nearest_point: point,
+			});
+		}
+		None
+	}
+
+	pub fn get_nearest_navigable_point(&self, point: &Point<f32>) -> Option<Point<f32>> {
+		match self.playable_space.closest_point(point) {
+			Closest::SinglePoint(p) => Some(p),
+			Closest::Intersection(p) => Some(p),
+			Closest::Indeterminate => None,
 		}
 	}
 
 	pub fn compute_path(&self, from: &Point<f32>, to: &Point<f32>) -> LineString<f32> {
-		// TODO
-		line_string![]
+		let from_projection = self.get_nearest_navigable_face(from);
+		let to_projection = self.get_nearest_navigable_face(to);
+		match (from_projection, to_projection) {
+			(Some(from_projection), Some(to_projection)) => {
+				let triangle_path = a_star::compute_triangle_path(
+					self,
+					from_projection.nearest_face,
+					to_projection.nearest_face,
+					to,
+				)
+				.unwrap(); // TODO no unwrap!!
+				let mut path = smoothing::funnel(
+					&from_projection.nearest_point,
+					&to_projection.nearest_point,
+					triangle_path,
+				);
+				if *from != from_projection.nearest_point {
+					path.insert(0, *from);
+				}
+				if *to != to_projection.nearest_point {
+					path.push(*to);
+				}
+				path.into()
+			}
+			_ => vec![*from, *to].into(),
+		}
 	}
 }
 
@@ -134,7 +208,7 @@ impl Default for NavigationMesh {
 	fn default() -> Self {
 		NavigationMesh {
 			triangulation: FloatCDT::with_tree_locate(),
-			navigable_triangles: HashSet::new(),
+			navigable_faces: HashSet::new(),
 			playable_space: Vec::<Polygon<f32>>::new().into(),
 		}
 	}
