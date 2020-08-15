@@ -40,12 +40,13 @@ fn run_test_case(name: &str) {
 		mesh_painter.draw_line_string(line_string, &CYAN);
 	}
 
+	// Test many paths
 	let (top_left, bottom_right) = mesh.bounding_box();
 	let x_min = top_left.x() as i32;
 	let y_min = top_left.y() as i32;
 	let x_max = bottom_right.x() as i32;
 	let y_max = bottom_right.y() as i32;
-	let num_steps = 10;
+	let num_steps = 15;
 	let step_x = ((x_max - x_min) / num_steps) as usize;
 	let step_y = ((y_max - y_min) / num_steps) as usize;
 
