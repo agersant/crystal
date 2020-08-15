@@ -56,15 +56,15 @@ fn run_test_case(name: &str) {
 		(y_min..=y_max).step_by(step_y)
 	) {
 		let from = Point::new(from_x as f32, from_y as f32);
-		let to = Point::new(to_x as f32, to_y as f32);
-
 		if mesh.collision.obstacles.contains(&from) {
 			continue;
 		}
 
+		let to = Point::new(to_x as f32, to_y as f32);
 		if mesh.collision.obstacles.contains(&to) {
 			continue;
 		}
+
 		let path = mesh.navigation.compute_path(&from, &to);
 
 		assert!(path.num_coords() >= 2);
