@@ -67,8 +67,13 @@ impl NavigationMesh {
 
 	fn project_to_playable_space(&self, point: &Point<f32>) -> Option<ProjectionResult> {
 		let nearest_point = self.get_nearest_navigable_point(point);
-		if let Some(point) = nearest_point {
-			let face = match self.triangulation.locate(&[point.x(), point.y()]) {
+
+		if let Some(nearest_point) = nearest_point {
+			let locate = self
+				.triangulation
+				.locate(&[nearest_point.x(), nearest_point.y()]);
+
+			let nearest_face = match locate {
 				PositionInTriangulation::NoTriangulationPresent => return None,
 				PositionInTriangulation::InTriangle(f) => f,
 
@@ -98,8 +103,8 @@ impl NavigationMesh {
 			};
 
 			return Some(ProjectionResult {
-				nearest_face: face,
-				nearest_point: point,
+				nearest_face,
+				nearest_point,
 			});
 		}
 		None
@@ -114,6 +119,16 @@ impl NavigationMesh {
 			Closest::Intersection(p) => Some(p),
 			Closest::Indeterminate => None,
 		}
+		.and_then(|p| {
+			let deltas = [(0.0, 0.0), (1.0, 0.0), (-1.0, 0.0), (0.0, 1.0), (0.0, -1.0)];
+			for (dx, dy) in deltas.iter() {
+				let p = Point::new(p.x() + dx * f32::EPSILON, p.y() + dy * f32::EPSILON);
+				if self.playable_space.contains(&p) {
+					return Some(p);
+				}
+			}
+			None
+		})
 	}
 
 	// Based on:
