@@ -7,7 +7,7 @@ use serde::Deserialize;
 use std::fs::File;
 use std::io::BufReader;
 
-fn draw_mesh(mesh: &CollisionMesh, out_file: &str) {
+fn draw_collision_mesh(mesh: &CollisionMesh, out_file: &str) {
 	let (mut top_left, mut bottom_right) = mesh.bounding_box();
 	if top_left.x().is_infinite() || top_left.x().is_nan() {
 		top_left.set_x(0.0);
@@ -92,7 +92,7 @@ impl From<&TestInputPolygon> for LineString<f32> {
 	}
 }
 
-fn test_sample_files(name: &str) {
+fn run_test_case(name: &str) {
 	let input_file = format!("test-data/{}-input.json", name);
 	let input_map: TestInputMap = {
 		let file = File::open(input_file).unwrap();
@@ -124,10 +124,10 @@ fn test_sample_files(name: &str) {
 	std::fs::create_dir_all("test-output").unwrap();
 
 	let expected_result_file = format!("test-output/{}-collision-mesh-expected.png", name);
-	draw_mesh(&expected_mesh, &expected_result_file);
+	draw_collision_mesh(&expected_mesh, &expected_result_file);
 
 	let actual_result_file = format!("test-output/{}-collision-mesh-actual.png", name);
-	draw_mesh(&mesh.collision, &actual_result_file);
+	draw_collision_mesh(&mesh.collision, &actual_result_file);
 
 	assert_eq!(mesh.collision, expected_mesh);
 }
@@ -233,25 +233,25 @@ fn compare_meshes_cycled_vertices_and_polygons() {
 
 #[test]
 fn trivial() {
-	test_sample_files("trivial");
+	run_test_case("trivial");
 }
 
 #[test]
 fn small() {
-	test_sample_files("small");
+	run_test_case("small");
 }
 
 #[test]
 fn large() {
-	test_sample_files("large");
+	run_test_case("large");
 }
 
 #[test]
 fn overlap() {
-	test_sample_files("overlap");
+	run_test_case("overlap");
 }
 
 #[test]
 fn asymetric_collapse() {
-	test_sample_files("asymetric-collapse");
+	run_test_case("asymetric-collapse");
 }
