@@ -181,6 +181,15 @@ impl NavigationMesh {
 
 		vec![*from, *to].into()
 	}
+
+	#[cfg(test)]
+	pub fn bounding_box(&self) -> (Point<f32>, Point<f32>) {
+		let extremes = self.playable_space.extreme_points();
+		(
+			Point::new(extremes.xmin.x(), extremes.ymin.y()),
+			Point::new(extremes.xmax.x(), extremes.ymax.y()),
+		)
+	}
 }
 
 impl Default for NavigationMesh {

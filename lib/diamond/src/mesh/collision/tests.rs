@@ -1,5 +1,6 @@
 use crate::mesh::builder::MeshBuilder;
 use crate::mesh::collision::*;
+use crate::mesh::tests::*;
 use plotters::drawing::backend::DrawingBackend;
 use plotters::drawing::BitMapBackend;
 use plotters::style::colors::*;
@@ -8,80 +9,33 @@ use std::fs::File;
 use std::io::BufReader;
 
 fn draw_collision_mesh(mesh: &CollisionMesh, out_file: &str) {
-	let (mut top_left, mut bottom_right) = mesh.bounding_box();
-	if top_left.x().is_infinite() || top_left.x().is_nan() {
-		top_left.set_x(0.0);
-	}
-	if top_left.y().is_infinite() || top_left.y().is_nan() {
-		top_left.set_y(0.0);
-	}
-	if bottom_right.x().is_infinite() || bottom_right.x().is_nan() {
-		bottom_right.set_x(100.0);
-	}
-	if bottom_right.y().is_infinite() || bottom_right.y().is_nan() {
-		bottom_right.set_y(100.0);
-	}
-	let padding = 20;
-	let width = 2 * padding + (bottom_right.x() - top_left.x()).abs().ceil() as u32;
-	let height = 2 * padding + (bottom_right.y() - top_left.x()).abs().ceil() as u32;
+	let (top_left, bottom_right) = mesh.bounding_box();
+	let width = (bottom_right.x() - top_left.x()).abs().ceil() as u32;
+	let height = (bottom_right.y() - top_left.x()).abs().ceil() as u32;
+	let mut draw_surface = DrawSurface::new(out_file, width, height, top_left);
+	draw_surface.clear(&WHITE);
 
 	let mut backend = BitMapBackend::new(out_file, (width, height));
 	backend
 		.draw_rect((0, 0), (width as i32 - 1, height as i32 - 1), &WHITE, true)
 		.unwrap();
 
-	let contours = mesh.get_contours();
-	for contour in &contours {
-		for line in contour.lines() {
-			let start_point = (
-				(padding as f32 - top_left.x() + line.start.x) as i32,
-				(padding as f32 - top_left.y() + line.start.y) as i32,
-			);
-			let end_point = (
-				(padding as f32 - top_left.x() + line.end.x) as i32,
-				(padding as f32 - top_left.y() + line.end.y) as i32,
-			);
-			backend.draw_circle(start_point, 2, &RED, true).unwrap();
-			backend.draw_line(start_point, end_point, &RED).unwrap();
-		}
+	for contour in mesh.get_contours() {
+		draw_surface.draw_line_string(&contour, &RED);
 	}
 }
 
 #[derive(Debug, Deserialize)]
-struct TestInputVertex {
-	x: f32,
-	y: f32,
-}
+struct InputMesh(Vec<Vec<InputVertex>>);
 
-#[derive(Debug, Deserialize)]
-struct TestInputPolygon {
-	#[serde(rename(serialize = "tileX", deserialize = "tileX"))]
-	tile_x: i32,
-	#[serde(rename(serialize = "tileY", deserialize = "tileY"))]
-	tile_y: i32,
-	vertices: Vec<TestInputVertex>,
-}
-
-#[derive(Debug, Deserialize)]
-struct TestInputMap {
-	#[serde(rename(serialize = "numTilesX", deserialize = "numTilesX"))]
-	num_tiles_x: u32,
-	#[serde(rename(serialize = "numTilesY", deserialize = "numTilesY"))]
-	num_tiles_y: u32,
-	polygons: Vec<TestInputPolygon>,
-}
-
-#[derive(Debug, Deserialize)]
-struct TestInputMesh(Vec<Vec<TestInputVertex>>);
-
-impl From<&TestInputVertex> for Point<f32> {
-	fn from(input: &TestInputVertex) -> Point<f32> {
+impl From<&InputVertex> for Point<f32> {
+	fn from(input: &InputVertex) -> Point<f32> {
 		Point::new(input.x, input.y)
 	}
 }
 
-impl From<&TestInputPolygon> for LineString<f32> {
-	fn from(input: &TestInputPolygon) -> LineString<f32> {
+impl From<&InputPolygon> for LineString<f32> {
+	fn from(input: &InputPolygon) -> LineString<f32> {
 		LineString::from(
 			input
 				.vertices
@@ -94,7 +48,7 @@ impl From<&TestInputPolygon> for LineString<f32> {
 
 fn run_test_case(name: &str) {
 	let input_file = format!("test-data/{}-input.json", name);
-	let input_map: TestInputMap = {
+	let input_map: InputMap = {
 		let file = File::open(input_file).unwrap();
 		let reader = BufReader::new(file);
 		serde_json::from_reader(reader).unwrap()
