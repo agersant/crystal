@@ -1,15 +1,16 @@
 pub use self::builder::NavigationMeshBuilder;
-use crate::geometry::LineStringExt;
+use crate::geometry::*;
 use geo::prelude::*;
 use geo::Closest;
 use geo_booleanop::boolean::BooleanOp;
 use geo_types::*;
+use ordered_float::OrderedFloat;
+use pathfinding::prelude::*;
 use spade::delaunay::*;
 use spade::kernels::FloatKernel;
 use std::collections::HashSet;
 
 mod builder;
-mod query;
 #[cfg(test)]
 mod tests;
 
@@ -64,7 +65,7 @@ impl NavigationMesh {
 		triangles
 	}
 
-	fn get_nearest_navigable_face(&self, point: &Point<f32>) -> Option<ProjectionResult> {
+	fn project_to_playable_space(&self, point: &Point<f32>) -> Option<ProjectionResult> {
 		let nearest_point = self.get_nearest_navigable_point(point);
 		if let Some(point) = nearest_point {
 			let face = match self.triangulation.locate(&[point.x(), point.y()]) {
@@ -112,29 +113,73 @@ impl NavigationMesh {
 		}
 	}
 
+	// Based on:
+	// http://digestingduck.blogspot.com/2010/03/simple-stupid-funnel-algorithm.html
+	fn funnel(
+		&self,
+		from: &Point<f32>,
+		to: &Point<f32>,
+		triangle_path: Vec<FixedFaceHandle>,
+	) -> Vec<Point<f32>> {
+		let mut path = Vec::new();
+		path.push(*from);
+		for face in triangle_path {
+			let face = self.triangulation.face(face);
+			path.push(face.center());
+		}
+		path.push(*to);
+		path
+	}
+
 	pub fn compute_path(&self, from: &Point<f32>, to: &Point<f32>) -> LineString<f32> {
-		let from_projection = self.get_nearest_navigable_face(from);
-		let to_projection = self.get_nearest_navigable_face(to);
-		match (from_projection, to_projection) {
-			(Some(from_projection), Some(to_projection)) => {
-				let mut path = query::compute_path(
-					self,
-					from,
-					to,
-					from_projection.nearest_face,
-					to_projection.nearest_face,
+		// Project start and end to playable space
+		let from_projection = self.project_to_playable_space(from);
+		let to_projection = self.project_to_playable_space(to);
+
+		if let (Some(mesh_start), Some(mesh_end)) = (from_projection, to_projection) {
+			// Compute path
+			let path = astar(
+				&mesh_start.nearest_face.fix(),
+				|&face| {
+					let face = self.triangulation.face(face);
+					face.adjacent_edges()
+						.filter(|e| self.is_face_navigable(&e.sym().face()))
+						.map(move |e| {
+							let neighbour = e.sym().face();
+							let cost = movement_cost(&face, &neighbour);
+							(neighbour.fix(), OrderedFloat(cost))
+						})
+				},
+				|&face| {
+					let face = self.triangulation.face(face);
+					OrderedFloat(heuristic(&face, to))
+				},
+				|&face| face == mesh_end.nearest_face.fix(),
+			);
+
+			// Funnel
+			let path = path.map(|(triangle_path, _length)| {
+				self.funnel(
+					&mesh_start.nearest_point,
+					&mesh_end.nearest_point,
+					triangle_path,
 				)
-				.unwrap(); // TODO no unwrap!!
-				if *from != from_projection.nearest_point {
+			});
+
+			// Make sure start and end are in the path, in case they were outside of playable area
+			if let Some(mut path) = path {
+				if *from != mesh_start.nearest_point {
 					path.insert(0, *from);
 				}
-				if *to != to_projection.nearest_point {
+				if *to != mesh_end.nearest_point {
 					path.push(*to);
 				}
-				path.into()
+
+				return path.into();
 			}
-			_ => vec![*from, *to].into(),
 		}
+
+		vec![*from, *to].into()
 	}
 }
 
@@ -165,4 +210,14 @@ fn face_to_geo_polygon(
 ) -> geo_types::Polygon<f32> {
 	let triangle = face.as_triangle();
 	polygon![(x: triangle[0][0], y: triangle[0][1]), (x: triangle[1][0], y: triangle[1][1]),(x: triangle[2][0], y: triangle[2][1])]
+}
+
+fn heuristic(from: &FaceHandle<Vertex, CdtEdge>, to: &Point<f32>) -> f32 {
+	let line = Line::new(from.center(), to.clone());
+	line.length()
+}
+
+fn movement_cost(from: &FaceHandle<Vertex, CdtEdge>, to: &FaceHandle<Vertex, CdtEdge>) -> f32 {
+	let line = Line::new(from.center(), to.center());
+	line.length()
 }
