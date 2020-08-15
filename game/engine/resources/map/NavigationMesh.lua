@@ -58,15 +58,6 @@ NavigationMesh.draw = function(self)
 		love.graphics.polygon("line", triangle.vertices);
 		love.graphics.points(triangle);
 	end
-
-	love.graphics.setColor(Colors.oxfordBlue);
-	for i, triangle in ipairs(self._triangles) do
-		local text = tostring(i - 1);
-		local x = MathUtils.round(triangle.center.x - font:getWidth(text) / 2);
-		local y = MathUtils.round(triangle.center.y - font:getHeight() / 2);
-		love.graphics.setFont(self._font);
-		love.graphics.print(text, x, y);
-	end
 end
 
 return NavigationMesh;
