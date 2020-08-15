@@ -56,6 +56,8 @@ fn run_test_case(name: &str, from: &Point<f32>, to: &Point<f32>) {
 
 	let actual_result_file = format!("test-output/{}-pathing.png", name);
 	draw_path(&mesh, &path, &actual_result_file);
+
+	// TODO assertions on path validity
 }
 
 #[test]
