@@ -6,10 +6,10 @@ use std::slice;
 
 #[no_mangle]
 pub unsafe extern "C" fn mesh_builder_new(
-	num_tiles_x: i32,
-	num_tiles_y: i32,
-	tile_width: f32,
-	tile_height: f32,
+	num_tiles_x: u32,
+	num_tiles_y: u32,
+	tile_width: u32,
+	tile_height: u32,
 	navigation_padding: f32,
 ) -> *mut MeshBuilder {
 	let builder = MeshBuilder::new(

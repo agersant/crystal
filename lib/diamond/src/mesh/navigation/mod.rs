@@ -1,5 +1,5 @@
+pub use self::builder::NavigationMeshBuilder;
 use crate::geometry::LineStringExt;
-use crate::mesh::collision::CollisionMesh;
 use geo::prelude::*;
 use geo::Closest;
 use geo_booleanop::boolean::BooleanOp;
@@ -8,6 +8,7 @@ use spade::delaunay::*;
 use spade::kernels::FloatKernel;
 use std::collections::HashSet;
 
+mod builder;
 mod query;
 #[cfg(test)]
 mod tests;
@@ -29,70 +30,8 @@ struct ProjectionResult<'a> {
 }
 
 impl NavigationMesh {
-	pub fn build(
-		width: f32,
-		height: f32,
-		collision_mesh: &CollisionMesh,
-		padding: f32,
-	) -> NavigationMesh {
-		type MP = geo_types::MultiPolygon<f32>;
-
-		// Determine playable space
-		let mut playable_space: MP = polygon![
-			(x: padding, y: padding),
-			(x: width - padding, y: padding),
-			(x: width - padding, y: height - padding),
-			(x: padding, y: height - padding)
-		]
-		.into();
-
-		// TODO avoid cloning here
-		for obstacle in collision_mesh.obstacles.clone() {
-			let padded_obstacle = pad_obstacle(&obstacle, padding);
-			playable_space = playable_space.difference(&padded_obstacle);
-		}
-
-		// Triangulate
-		let mut triangulation = FloatCDT::with_tree_locate();
-		// TODO avoid cloning here
-		for polygon in playable_space.clone() {
-			for line in polygon.exterior().lines() {
-				let handle0 = triangulation.insert([line.start.x, line.start.y]);
-				let handle1 = triangulation.insert([line.end.x, line.end.y]);
-				if triangulation.can_add_constraint(handle0, handle1) {
-					triangulation.add_constraint(handle0, handle1);
-				}
-			}
-			for interior in polygon.interiors() {
-				for line in interior.lines() {
-					let handle0 = triangulation.insert([line.start.x, line.start.y]);
-					let handle1 = triangulation.insert([line.end.x, line.end.y]);
-					if triangulation.can_add_constraint(handle0, handle1) {
-						triangulation.add_constraint(handle0, handle1);
-					}
-				}
-			}
-		}
-
-		// Flag walkable triangles
-		let mut navigable_faces = HashSet::new();
-		for face in triangulation.triangles() {
-			let triangle = face_to_geo_polygon(&face);
-			let is_walkable = !collision_mesh
-				.obstacles
-				.clone()
-				.into_iter()
-				.any(|p| p.intersects(&triangle));
-			if is_walkable {
-				navigable_faces.insert(face.fix());
-			}
-		}
-
-		NavigationMesh {
-			triangulation,
-			navigable_faces,
-			playable_space: playable_space,
-		}
+	pub fn builder(width: f32, height: f32) -> NavigationMeshBuilder {
+		NavigationMeshBuilder::new(width, height)
 	}
 
 	pub fn is_face_navigable(&self, face: &FaceHandle<Vertex, CdtEdge>) -> bool {

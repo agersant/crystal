@@ -65,9 +65,9 @@ struct TestInputPolygon {
 #[derive(Debug, Deserialize)]
 struct TestInputMap {
 	#[serde(rename(serialize = "numTilesX", deserialize = "numTilesX"))]
-	num_tiles_x: i32,
+	num_tiles_x: u32,
 	#[serde(rename(serialize = "numTilesY", deserialize = "numTilesY"))]
-	num_tiles_y: i32,
+	num_tiles_y: u32,
 	polygons: Vec<TestInputPolygon>,
 }
 
@@ -108,13 +108,7 @@ fn test_sample_files(name: &str) {
 		CollisionMesh { obstacles }
 	};
 
-	let mut builder = MeshBuilder::new(
-		input_map.num_tiles_x,
-		input_map.num_tiles_y,
-		10.0,
-		10.0,
-		1.0,
-	);
+	let mut builder = MeshBuilder::new(input_map.num_tiles_x, input_map.num_tiles_y, 10, 10, 1.0);
 	for polygon in input_map.polygons.iter() {
 		builder.add_polygon(polygon.tile_x, polygon.tile_y, polygon.into());
 	}

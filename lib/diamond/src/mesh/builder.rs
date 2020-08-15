@@ -1,58 +1,45 @@
-use crate::mesh::collision::CollisionMesh;
-use crate::mesh::navigation::NavigationMesh;
+use crate::mesh::collision::*;
+use crate::mesh::navigation::*;
 use crate::mesh::Mesh;
 use geo_types::*;
-use ndarray::Array2;
 
 #[derive(Debug)]
 pub struct MeshBuilder {
-	obstacles: Array2<Vec<LineString<f32>>>,
-	num_tiles_x: usize,
-	num_tiles_y: usize,
-	tile_width: f32,
-	tile_height: f32,
-	navigation_padding: f32,
+	collision_mesh_builder: CollisionMeshBuilder,
+	navigation_mesh_builder: NavigationMeshBuilder,
 }
 
 impl MeshBuilder {
 	pub fn new(
-		num_tiles_x: i32,
-		num_tiles_y: i32,
-		tile_width: f32,
-		tile_height: f32,
+		num_tiles_x: u32,
+		num_tiles_y: u32,
+		tile_width: u32,
+		tile_height: u32,
 		navigation_padding: f32,
 	) -> MeshBuilder {
-		let w = num_tiles_x as usize;
-		let h = num_tiles_y as usize;
+		let collision_mesh_builder =
+			CollisionMesh::builder(num_tiles_x as usize, num_tiles_y as usize);
+
+		let map_width = num_tiles_x as f32 * tile_width as f32;
+		let map_height = num_tiles_y as f32 * tile_height as f32;
+		let navigation_mesh_builder =
+			NavigationMesh::builder(map_width, map_height).padding(navigation_padding);
+
 		MeshBuilder {
-			obstacles: Array2::from_elem((h, w), Vec::<LineString<f32>>::new()),
-			num_tiles_x: w,
-			num_tiles_y: h,
-			tile_width,
-			tile_height,
-			navigation_padding,
+			collision_mesh_builder,
+			navigation_mesh_builder,
 		}
 	}
 
 	pub fn add_polygon(&mut self, tile_x: i32, tile_y: i32, line_string: LineString<f32>) {
-		if line_string.num_coords() == 0 {
-			return;
-		}
-		let x = tile_x as usize;
-		let y = tile_y as usize;
-		if x >= self.num_tiles_x || y >= self.num_tiles_y {
-			return;
-		}
-		self.obstacles[(y, x)].push(line_string);
+		self.collision_mesh_builder
+			.add_polygon(tile_x, tile_y, line_string);
 	}
 
 	pub fn build(&self) -> Mesh {
-		let collision_mesh =
-			CollisionMesh::build(self.num_tiles_x, self.num_tiles_y, &self.obstacles);
+		let collision_mesh = self.collision_mesh_builder.build();
 
-		let w = self.num_tiles_x as f32 * self.tile_width;
-		let h = self.num_tiles_y as f32 * self.tile_height;
-		let navigation_mesh = NavigationMesh::build(w, h, &collision_mesh, self.navigation_padding);
+		let navigation_mesh = self.navigation_mesh_builder.build(&collision_mesh);
 		Mesh {
 			collision: collision_mesh,
 			navigation: navigation_mesh,
