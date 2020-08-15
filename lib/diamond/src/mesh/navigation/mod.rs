@@ -187,6 +187,9 @@ impl NavigationMesh {
 
 	#[cfg(test)]
 	pub fn bounding_box(&self) -> (Point<f32>, Point<f32>) {
+		if self.playable_space.unsigned_area() == 0.0 {
+			return (Point::new(0.0, 0.0), Point::new(0.0, 0.0));
+		}
 		let extremes = self.playable_space.extreme_points();
 		(
 			Point::new(extremes.xmin.x(), extremes.ymin.y()),

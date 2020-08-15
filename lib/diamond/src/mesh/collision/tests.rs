@@ -1,27 +1,17 @@
 use crate::mesh::builder::MeshBuilder;
 use crate::mesh::collision::*;
 use crate::mesh::tests::*;
-use plotters::drawing::backend::DrawingBackend;
-use plotters::drawing::BitMapBackend;
+use crate::mesh::Mesh;
 use plotters::style::colors::*;
 use serde::Deserialize;
 use std::fs::File;
 use std::io::BufReader;
 
-fn draw_collision_mesh(mesh: &CollisionMesh, out_file: &str) {
-	let (top_left, bottom_right) = mesh.bounding_box();
-	let width = (bottom_right.x() - top_left.x()).abs().ceil() as u32;
-	let height = (bottom_right.y() - top_left.x()).abs().ceil() as u32;
-	let mut draw_surface = DrawSurface::new(out_file, width, height, top_left);
-	draw_surface.clear(&WHITE);
-
-	let mut backend = BitMapBackend::new(out_file, (width, height));
-	backend
-		.draw_rect((0, 0), (width as i32 - 1, height as i32 - 1), &WHITE, true)
-		.unwrap();
-
-	for contour in mesh.get_contours() {
-		draw_surface.draw_line_string(&contour, &RED);
+fn draw_collision_mesh(mesh: &Mesh, out_file: &str) {
+	let mut mesh_painter = MeshPainter::new(mesh, out_file);
+	mesh_painter.clear(&WHITE);
+	for contour in mesh.collision.get_contours() {
+		mesh_painter.draw_line_string(&contour, &RED);
 	}
 }
 
@@ -55,25 +45,22 @@ fn run_test_case(name: &str) {
 	};
 
 	let expected_collision_mesh_file = format!("test-data/{}-collision-mesh.json", name);
-	let expected_mesh = {
+	let expected_collision_mesh = {
 		let file = File::open(&expected_collision_mesh_file).unwrap();
 		let reader = BufReader::new(file);
 		let obstacles = serde_json::from_reader(reader).unwrap();
 		CollisionMesh { obstacles }
+	};
+	let expected_mesh = Mesh {
+		collision: expected_collision_mesh,
+		..Default::default()
 	};
 
 	let mut builder = MeshBuilder::new(input_map.num_tiles_x, input_map.num_tiles_y, 16, 16, 4.0);
 	for polygon in input_map.polygons.iter() {
 		builder.add_polygon(polygon.tile_x, polygon.tile_y, polygon.into());
 	}
-
-	let start = std::time::SystemTime::now();
-	let mesh = builder.build();
-	println!(
-		"{} took {:?}",
-		name,
-		std::time::SystemTime::now().duration_since(start).unwrap()
-	);
+	let actual_mesh = builder.build();
 
 	std::fs::create_dir_all("test-output").unwrap();
 
@@ -81,9 +68,9 @@ fn run_test_case(name: &str) {
 	draw_collision_mesh(&expected_mesh, &expected_result_file);
 
 	let actual_result_file = format!("test-output/{}-collision-mesh-actual.png", name);
-	draw_collision_mesh(&mesh.collision, &actual_result_file);
+	draw_collision_mesh(&actual_mesh, &actual_result_file);
 
-	assert_eq!(mesh.collision, expected_mesh);
+	assert_eq!(actual_mesh.collision, expected_mesh.collision);
 }
 
 #[test]

@@ -1,3 +1,4 @@
+use crate::mesh::Mesh;
 use geo_types::*;
 use plotters::drawing::backend::DrawingBackend;
 use plotters::drawing::BitMapBackend;
@@ -28,17 +29,21 @@ pub struct InputMap {
 	pub polygons: Vec<InputPolygon>,
 }
 
-pub struct DrawSurface<'a> {
+pub struct MeshPainter<'a> {
 	backend: BitMapBackend<'a>,
 	padding: u32,
 	top_left: Point<f32>, // map coordinate corresponding lining up with the top-left corner of the draw surface (excluding padding)
 }
 
-impl<'a> DrawSurface<'a> {
-	pub fn new(out_file: &'a str, width: u32, height: u32, top_left: Point<f32>) -> Self {
+impl<'a> MeshPainter<'a> {
+	pub fn new(mesh: &Mesh, out_file: &'a str) -> Self {
+		let (top_left, bottom_right) = mesh.bounding_box();
+		let width = (bottom_right.x() - top_left.x()).abs().ceil() as u32;
+		let height = (bottom_right.y() - top_left.x()).abs().ceil() as u32;
+
 		let padding = 20;
 		let backend = BitMapBackend::new(out_file, (width + 2 * padding, height + 2 * padding));
-		DrawSurface {
+		MeshPainter {
 			backend,
 			top_left,
 			padding,
