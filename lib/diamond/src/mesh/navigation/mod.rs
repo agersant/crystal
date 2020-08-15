@@ -106,6 +106,9 @@ impl NavigationMesh {
 	}
 
 	pub fn get_nearest_navigable_point(&self, point: &Point<f32>) -> Option<Point<f32>> {
+		if self.playable_space.contains(point) {
+			return Some(point.clone());
+		}
 		match self.playable_space.closest_point(point) {
 			Closest::SinglePoint(p) => Some(p),
 			Closest::Intersection(p) => Some(p),
