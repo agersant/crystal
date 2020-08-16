@@ -69,6 +69,7 @@ impl NavigationMesh {
 	}
 
 	fn project_to_playable_space(&self, point: &Point<f32>) -> Option<ProjectionResult> {
+		// TODO Ideally we would not call get_nearest_navigable_point at all here. See https://github.com/Stoeoef/spade/issues/58
 		let nearest_point = self.get_nearest_navigable_point(point);
 
 		if let Some(nearest_point) = nearest_point {
@@ -113,6 +114,7 @@ impl NavigationMesh {
 		None
 	}
 
+	// TODO Ideally we would use triangulation.locate() for this, but this would required a resolution to https://github.com/Stoeoef/spade/issues/58
 	pub fn get_nearest_navigable_point(&self, point: &Point<f32>) -> Option<Point<f32>> {
 		if self.playable_space.contains(point) {
 			return Some(point.clone());
