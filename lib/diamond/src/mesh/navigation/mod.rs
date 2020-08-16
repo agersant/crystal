@@ -16,6 +16,8 @@ mod tests;
 
 pub type Vertex = [f32; 2];
 
+const EPSILON: f32 = 1.0 / 100.0;
+
 type Triangulation =
 	ConstrainedDelaunayTriangulation<Vertex, FloatKernel, DelaunayTreeLocate<[f32; 2]>>;
 
@@ -25,6 +27,7 @@ pub struct NavigationMesh {
 	playable_space: MultiPolygon<f32>,
 }
 
+#[derive(Debug)]
 struct ProjectionResult<'a> {
 	nearest_point: Point<f32>,
 	nearest_face: FaceHandle<'a, Vertex, CdtEdge>,
@@ -122,7 +125,7 @@ impl NavigationMesh {
 		.and_then(|p| {
 			let deltas = [(0.0, 0.0), (1.0, 0.0), (-1.0, 0.0), (0.0, 1.0), (0.0, -1.0)];
 			for (dx, dy) in deltas.iter() {
-				let p = Point::new(p.x() + dx * f32::EPSILON, p.y() + dy * f32::EPSILON);
+				let p = Point::new(p.x() + dx * EPSILON, p.y() + dy * EPSILON);
 				if self.playable_space.contains(&p) {
 					return Some(p);
 				}
@@ -154,7 +157,7 @@ impl NavigationMesh {
 		let from_projection = self.project_to_playable_space(from);
 		let to_projection = self.project_to_playable_space(to);
 
-		if let (Some(mesh_start), Some(mesh_end)) = (from_projection, to_projection) {
+		if let (Some(mesh_start), Some(mesh_end)) = (&from_projection, &to_projection) {
 			// Compute path
 			let path = astar(
 				&mesh_start.nearest_face.fix(),
@@ -194,7 +197,11 @@ impl NavigationMesh {
 				}
 
 				return path.into();
+			} else {
+				// TODO
 			}
+		} else {
+			// TODO
 		}
 
 		vec![*from, *to].into()
