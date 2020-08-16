@@ -11,6 +11,7 @@ use spade::kernels::FloatKernel;
 use std::collections::HashSet;
 
 mod builder;
+mod smoothing;
 #[cfg(test)]
 mod tests;
 
@@ -136,24 +137,6 @@ impl NavigationMesh {
 		})
 	}
 
-	// Based on:
-	// http://digestingduck.blogspot.com/2010/03/simple-stupid-funnel-algorithm.html
-	fn funnel(
-		&self,
-		from: &Point<f32>,
-		to: &Point<f32>,
-		triangle_path: Vec<FixedFaceHandle>,
-	) -> Vec<Point<f32>> {
-		let mut path = Vec::new();
-		path.push(*from);
-		for face in triangle_path {
-			let face = self.triangulation.face(face);
-			path.push(face.center());
-		}
-		path.push(*to);
-		path
-	}
-
 	pub fn compute_path(&self, from: &Point<f32>, to: &Point<f32>) -> LineString<f32> {
 		// Project start and end to playable space
 		let from_projection = self.project_to_playable_space(from);
@@ -182,7 +165,8 @@ impl NavigationMesh {
 
 			// Funnel
 			let path = path.map(|(triangle_path, _length)| {
-				self.funnel(
+				smoothing::funnel(
+					self,
 					&mesh_start.nearest_point,
 					&mesh_end.nearest_point,
 					triangle_path,

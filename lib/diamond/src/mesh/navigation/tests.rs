@@ -82,10 +82,6 @@ fn run_test_case(name: &str) {
 			continue;
 		}
 
-		if from != Point::new(480.0, 270.0) || to != Point::new(0.0, 36.0) {
-			continue;
-		}
-
 		let path = mesh.navigation.compute_path(&from, &to);
 
 		assert!(path.num_coords() >= 2);
