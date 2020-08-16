@@ -49,7 +49,7 @@ impl CollisionMeshBuilder {
 			let mut union: MP = Vec::<P>::new().into();
 			for obstacle in &self.obstacles[(y, x)] {
 				let polygon = Polygon::new(obstacle.clone(), Vec::new());
-				union = union.union(&polygon.clone());
+				union = union.union(&polygon);
 			}
 			union
 		});
@@ -73,7 +73,7 @@ impl CollisionMeshBuilder {
 							for dx in 0..=1 {
 								for dy in 0..=1 {
 									if let Some(p) = reduced_map.get((y * 2 + dx, x * 2 + dy)) {
-										union = union.union(&p.clone());
+										union = union.union(p);
 									}
 								}
 							}

@@ -35,8 +35,7 @@ impl CollisionMesh {
 
 	pub fn get_contours(&self) -> Vec<LineString<f32>> {
 		let mut polygons: Vec<LineString<f32>> = Vec::new();
-		let obstacles = self.obstacles.clone(); // TODO Find a way to iterate on multipolygon without cloning
-		for polygon in obstacles {
+		for polygon in &self.obstacles.0 {
 			let exterior_vertices = polygon.exterior().clone().into_points();
 			polygons.push(exterior_vertices.into());
 			for interior in polygon.interiors() {

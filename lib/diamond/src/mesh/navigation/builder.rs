@@ -34,16 +34,14 @@ impl NavigationMeshBuilder {
 		]
 		.into();
 
-		// TODO avoid cloning here
-		for obstacle in collision_mesh.obstacles.clone() {
+		for obstacle in &collision_mesh.obstacles.0 {
 			let padded_obstacle = pad_obstacle(&obstacle, self.padding);
 			playable_space = playable_space.difference(&padded_obstacle);
 		}
 
 		// Triangulate
 		let mut triangulation = FloatCDT::with_tree_locate();
-		// TODO avoid cloning here
-		for polygon in playable_space.clone() {
+		for polygon in &playable_space.0 {
 			for line in polygon.exterior().lines() {
 				let handle0 = triangulation.insert([line.start.x, line.start.y]);
 				let handle1 = triangulation.insert([line.end.x, line.end.y]);

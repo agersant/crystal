@@ -89,8 +89,7 @@ fn run_test_case(name: &str) {
 		assert_eq!(path[path.num_coords() - 1], to.into());
 		for line in path.lines() {
 			if line.start_point() != from && line.end_point() != to {
-				// TODO avoid cloning
-				for polygon in mesh.collision.obstacles.clone() {
+				for polygon in &mesh.collision.obstacles.0 {
 					let intersects = polygon.intersects(&line);
 					if intersects {
 						draw_test_case(name, &mesh, Some(&path));
