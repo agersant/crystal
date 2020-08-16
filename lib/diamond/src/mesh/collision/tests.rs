@@ -62,8 +62,6 @@ fn run_test_case(name: &str) {
 	}
 	let actual_mesh = builder.build();
 
-	std::fs::create_dir_all("test-output").unwrap();
-
 	let expected_result_file = format!("test-output/{}-collision-mesh-expected.png", name);
 	draw_collision_mesh(&expected_mesh, &expected_result_file);
 

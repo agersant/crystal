@@ -4,6 +4,7 @@ use plotters::drawing::backend::DrawingBackend;
 use plotters::drawing::BitMapBackend;
 use plotters::style::RGBColor;
 use serde::Deserialize;
+use std::path::Path;
 
 #[derive(Debug, Deserialize)]
 pub struct InputVertex {
@@ -37,12 +38,15 @@ pub struct MeshPainter<'a> {
 
 impl<'a> MeshPainter<'a> {
 	pub fn new(mesh: &Mesh, out_file: &'a str) -> Self {
+		let path = Path::new(out_file);
+		std::fs::create_dir_all(path.parent().unwrap()).unwrap();
+
 		let (top_left, bottom_right) = mesh.bounding_box();
 		let width = (bottom_right.x() - top_left.x()).abs().ceil() as u32;
 		let height = (bottom_right.y() - top_left.x()).abs().ceil() as u32;
 
 		let padding = 20;
-		let backend = BitMapBackend::new(out_file, (width + 2 * padding, height + 2 * padding));
+		let backend = BitMapBackend::new(path, (width + 2 * padding, height + 2 * padding));
 		MeshPainter {
 			backend,
 			top_left,

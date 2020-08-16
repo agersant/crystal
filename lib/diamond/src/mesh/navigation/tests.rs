@@ -1,10 +1,44 @@
 use crate::mesh::builder::MeshBuilder;
 use crate::mesh::navigation::*;
 use crate::mesh::tests::*;
+use crate::mesh::Mesh;
 use itertools::*;
 use plotters::style::colors::*;
 use std::fs::File;
 use std::io::BufReader;
+
+fn draw_test_case(name: &str, mesh: &Mesh, path: Option<&LineString<f32>>) {
+	let result_file = match path {
+		None => format!("test-output/{}-navigation-mesh-actual.png", name),
+		Some(path) => {
+			let from = path[0];
+			let to = path[path.num_coords() - 1];
+			format!(
+				"test-output/{}-path-from-({}, {})-to-({}, {}).png",
+				name, from.x, from.y, to.x, to.y
+			)
+		}
+	};
+	let mut mesh_painter = MeshPainter::new(mesh, &result_file);
+	mesh_painter.clear(&WHITE);
+
+	// Draw collisions
+	for contour in mesh.collision.get_contours() {
+		mesh_painter.draw_line_string(&contour, &RED);
+	}
+
+	// Draw navigation
+	let triangles = mesh.navigation.get_triangles();
+	for triangle in triangles {
+		let polygon = triangle.to_polygon();
+		let line_string = polygon.exterior();
+		mesh_painter.draw_line_string(line_string, &CYAN);
+	}
+
+	if let Some(path) = path {
+		mesh_painter.draw_line_string(&path, &MAGENTA);
+	}
+}
 
 fn run_test_case(name: &str) {
 	let input_file = format!("test-data/{}-input.json", name);
@@ -20,25 +54,7 @@ fn run_test_case(name: &str) {
 	}
 
 	let mesh = builder.build();
-
-	std::fs::create_dir_all("test-output").unwrap();
-	let result_file = format!("test-output/{}-pathing.png", name);
-
-	let mut mesh_painter = MeshPainter::new(&mesh, &result_file);
-	mesh_painter.clear(&WHITE);
-
-	// Draw collisions
-	for contour in mesh.collision.get_contours() {
-		mesh_painter.draw_line_string(&contour, &RED);
-	}
-
-	// Draw navigation
-	let triangles = mesh.navigation.get_triangles();
-	for triangle in triangles {
-		let polygon = triangle.to_polygon();
-		let line_string = polygon.exterior();
-		mesh_painter.draw_line_string(line_string, &CYAN);
-	}
+	draw_test_case(name, &mesh, None);
 
 	// Test many paths
 	let (top_left, bottom_right) = mesh.bounding_box();
@@ -66,6 +82,10 @@ fn run_test_case(name: &str) {
 			continue;
 		}
 
+		if from != Point::new(480.0, 270.0) || to != Point::new(0.0, 36.0) {
+			continue;
+		}
+
 		let path = mesh.navigation.compute_path(&from, &to);
 
 		assert!(path.num_coords() >= 2);
@@ -77,7 +97,7 @@ fn run_test_case(name: &str) {
 				for polygon in mesh.collision.obstacles.clone() {
 					let intersects = polygon.intersects(&line);
 					if intersects {
-						mesh_painter.draw_line_string(&path, &MAGENTA)
+						draw_test_case(name, &mesh, Some(&path));
 					}
 					assert!(!intersects);
 				}
