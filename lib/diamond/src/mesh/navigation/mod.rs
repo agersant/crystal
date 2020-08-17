@@ -42,22 +42,7 @@ impl NavigationMesh {
 			if !self.navigable_faces.contains(&face.fix()) {
 				continue;
 			}
-			let face = face.as_triangle();
-			let triangle = Triangle(
-				Coordinate {
-					x: face[0][0],
-					y: face[0][1],
-				},
-				Coordinate {
-					x: face[1][0],
-					y: face[1][1],
-				},
-				Coordinate {
-					x: face[2][0],
-					y: face[2][1],
-				},
-			);
-			triangles.push(triangle);
+			triangles.push(face.to_triangle());
 		}
 		triangles
 	}
@@ -67,12 +52,23 @@ impl NavigationMesh {
 		point: &Point<f32>,
 		candidates: &Vec<FaceHandle<'a, Vertex, CdtEdge>>,
 	) -> ProjectionResult<'a> {
-		candidates
+		let candidates = candidates
 			.iter()
 			.filter(|f| self.is_face_navigable(&f))
+			.collect::<Vec<_>>();
+
+		if let Some(face) = candidates.iter().find(|f| f.to_triangle().contains(point)) {
+			return ProjectionResult {
+				nearest_point: *point,
+				nearest_face: **face,
+			};
+		}
+
+		candidates
+			.iter()
 			.map(|f| ProjectionResult {
 				nearest_point: f.project_point(point),
-				nearest_face: *f,
+				nearest_face: **f,
 			})
 			.min_by(|a, b| {
 				OrderedFloat(a.nearest_point.euclidean_distance(point))
