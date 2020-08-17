@@ -52,15 +52,19 @@ pub unsafe extern "C" fn mesh_plan_path(
 	end_x: f32,
 	end_y: f32,
 	out_path: *mut CPolygon,
-) {
+) -> bool {
 	if mesh.is_null() {
-		return;
+		return false;
 	}
 	let mesh = &*mesh;
 	let start = Point::new(start_x, start_y);
 	let end = Point::new(end_x, end_y);
-	let path = mesh.navigation.compute_path(&start, &end);
-	*out_path = (&path).into();
+	if let Some(path) = mesh.navigation.compute_path(&start, &end) {
+		*out_path = (&path).into();
+		true
+	} else {
+		false
+	}
 }
 
 #[no_mangle]

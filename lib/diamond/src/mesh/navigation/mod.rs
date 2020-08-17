@@ -108,7 +108,7 @@ impl NavigationMesh {
 			.map(|p| p.nearest_point)
 	}
 
-	pub fn compute_path(&self, from: &Point<f32>, to: &Point<f32>) -> LineString<f32> {
+	pub fn compute_path(&self, from: &Point<f32>, to: &Point<f32>) -> Option<LineString<f32>> {
 		// Project start and end to playable space
 		let from_projection = self.project_point_to_playable_space(from);
 		let to_projection = self.project_point_to_playable_space(to);
@@ -153,15 +153,11 @@ impl NavigationMesh {
 					path.push(*to);
 				}
 
-				return path.into();
-			} else {
-				// TODO
+				return Some(path.into());
 			}
-		} else {
-			// TODO
 		}
 
-		vec![*from, *to].into()
+		None
 	}
 
 	#[cfg(test)]

@@ -83,7 +83,7 @@ fn run_test_case(name: &str) {
 			continue;
 		}
 
-		let path = mesh.navigation.compute_path(&from, &to);
+		let path = mesh.navigation.compute_path(&from, &to).unwrap();
 
 		assert!(path.num_coords() >= 2);
 		assert_eq!(path[0], from.into());
