@@ -2,7 +2,6 @@ pub use self::builder::NavigationMeshBuilder;
 use crate::geometry::*;
 use geo::prelude::*;
 use geo::Closest;
-use geo_booleanop::boolean::BooleanOp;
 use geo_types::*;
 use ordered_float::OrderedFloat;
 use pathfinding::prelude::*;
@@ -214,25 +213,6 @@ impl Default for NavigationMesh {
 			playable_space: Vec::<Polygon<f32>>::new().into(),
 		}
 	}
-}
-
-// This assumes that offset is small enough to not change the topology of the polygon (does not create self-intersection, merge interiors, etc.)
-fn pad_obstacle(obstacle: &geo_types::Polygon<f32>, offset: f32) -> geo_types::Polygon<f32> {
-	let padded_exterior = obstacle.exterior().offset(offset);
-	let padded_interiors: Vec<LineString<f32>> = obstacle
-		.interiors()
-		.iter()
-		.map(|interior| interior.offset(-offset))
-		.collect();
-	geo_types::Polygon::new(padded_exterior, padded_interiors)
-}
-
-// TODO revisit this?
-fn face_to_geo_polygon(
-	face: &FaceHandle<[f32; 2], spade::delaunay::CdtEdge>,
-) -> geo_types::Polygon<f32> {
-	let triangle = face.as_triangle();
-	polygon![(x: triangle[0][0], y: triangle[0][1]), (x: triangle[1][0], y: triangle[1][1]),(x: triangle[2][0], y: triangle[2][1])]
 }
 
 fn heuristic(from: &FaceHandle<Vertex, CdtEdge>, to: &Point<f32>) -> f32 {

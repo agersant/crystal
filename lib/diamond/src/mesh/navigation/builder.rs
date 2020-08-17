@@ -1,5 +1,10 @@
-use crate::mesh::collision::*;
-use crate::mesh::navigation::*;
+use crate::geometry::*;
+use crate::mesh::collision::CollisionMesh;
+use crate::mesh::navigation::{NavigationMesh, Triangulation};
+use geo_booleanop::boolean::BooleanOp;
+use geo_types::*;
+use spade::delaunay::*;
+use std::collections::HashSet;
 
 #[derive(Debug)]
 pub struct NavigationMeshBuilder {
@@ -40,6 +45,7 @@ impl NavigationMeshBuilder {
 		}
 
 		// Triangulate
+		let mut obstacle_edges = HashSet::new();
 		let mut triangulation = FloatCDT::with_tree_locate();
 		for polygon in &playable_space.0 {
 			for line in polygon.exterior().lines() {
@@ -47,6 +53,9 @@ impl NavigationMeshBuilder {
 				let handle1 = triangulation.insert([line.end.x, line.end.y]);
 				if triangulation.can_add_constraint(handle0, handle1) {
 					triangulation.add_constraint(handle0, handle1);
+					if let Some(edge) = triangulation.get_edge_from_neighbors(handle0, handle1) {
+						obstacle_edges.insert(edge.fix());
+					}
 				}
 			}
 			for interior in polygon.interiors() {
@@ -55,24 +64,16 @@ impl NavigationMeshBuilder {
 					let handle1 = triangulation.insert([line.end.x, line.end.y]);
 					if triangulation.can_add_constraint(handle0, handle1) {
 						triangulation.add_constraint(handle0, handle1);
+						if let Some(edge) = triangulation.get_edge_from_neighbors(handle0, handle1)
+						{
+							obstacle_edges.insert(edge.sym().fix());
+						}
 					}
 				}
 			}
 		}
 
-		// Flag walkable triangles
-		let mut navigable_faces = HashSet::new();
-		for face in triangulation.triangles() {
-			let triangle = face_to_geo_polygon(&face);
-			let is_walkable = !collision_mesh
-				.obstacles
-				.clone()
-				.into_iter()
-				.any(|p| p.intersects(&triangle));
-			if is_walkable {
-				navigable_faces.insert(face.fix());
-			}
-		}
+		let navigable_faces = self.compute_navigable_faces(&triangulation, &obstacle_edges);
 
 		NavigationMesh {
 			triangulation,
@@ -80,4 +81,39 @@ impl NavigationMeshBuilder {
 			playable_space: playable_space,
 		}
 	}
+
+	// Based on https://github.com/Stoeoef/spade/issues/58
+	fn compute_navigable_faces(
+		&self,
+		triangulation: &Triangulation,
+		obstacle_edges: &HashSet<usize>,
+	) -> HashSet<usize> {
+		let mut navigable_faces = HashSet::new();
+		'face_loop: for face in triangulation.triangles() {
+			if let Some(edge) = face.adjacent_edge() {
+				for edge in edge.ccw_iter().skip(1) {
+					let outgoing_obstacle = obstacle_edges.contains(&edge.fix());
+					let incoming_obstacle = obstacle_edges.contains(&edge.sym().fix());
+					if outgoing_obstacle != incoming_obstacle {
+						if incoming_obstacle {
+							navigable_faces.insert(face.fix());
+						}
+						continue 'face_loop;
+					}
+				}
+			}
+		}
+		navigable_faces
+	}
+}
+
+// This assumes that offset is small enough to not change the topology of the polygon (does not create self-intersection, merge interiors, etc.)
+fn pad_obstacle(obstacle: &geo_types::Polygon<f32>, offset: f32) -> geo_types::Polygon<f32> {
+	let padded_exterior = obstacle.exterior().offset(offset);
+	let padded_interiors: Vec<LineString<f32>> = obstacle
+		.interiors()
+		.iter()
+		.map(|interior| interior.offset(-offset))
+		.collect();
+	geo_types::Polygon::new(padded_exterior, padded_interiors)
 }
