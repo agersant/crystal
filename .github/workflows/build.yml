@@ -11,8 +11,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Add vcvars location to path
-      run: echo "##[add-path]C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\VC\Auxiliary\Build"
     - name: Install Love 2D
       run:  |
         curl -L -o love.zip https://bitbucket.org/rude/love/downloads/love-11.3-win64.zip
@@ -26,13 +24,6 @@ jobs:
         default: true
     - name: Build Diamond
       run: .\build_diamond_windows.ps1
-    - name: Install Meson
-      run:  |
-        curl -L -o meson.msi https://github.com/mesonbuild/meson/releases/download/0.53.1/meson-0.53.1-64.msi
-        msiexec.exe /i meson.msi /quiet
-        echo "##[add-path]C:\Program Files\Meson"
-    - name: Build Beryl
-      run: .\build_beryl_windows.ps1
     - name: Run Tests
       run: lovec . /test /coverage
       working-directory: ./game
@@ -56,12 +47,6 @@ jobs:
         default: true
     - name: Build Diamond
       run: ./build_diamond_linux.sh
-    - name: Install Meson
-      run:  |
-        sudo apt-get install python3 python3-pip python3-setuptools python3-wheel ninja-build
-        sudo pip3 install meson
-    - name: Build Beryl
-      run: ./build_beryl_linux.sh
     - name: Run Tests
       run: love . /test /coverage
       working-directory: ./game

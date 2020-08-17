@@ -15,13 +15,13 @@ Some code highlights:
 
 ## Collisions
 
-Maps are authored using the [Tiled](http://www.mapeditor.org/) map-editor, which can embed collision data per tile. Physics in Love 2D are implemented using Box2D, but it would be very inefficient to spawn a Box2D object for each collidable tile. Instead, Crystal joins tiles on the map into larger polygons, as illustrated below:
+Maps are authored using the [Tiled](http://www.mapeditor.org/) map-editor, which can embed collision data per tile. Physics in Love 2D are implemented using Box2D, but it would be very inefficient to spawn a Box2D object for each collidable tile. Instead, Crystal joins tiles on the map into larger polygons, as illustrated below. For performance, this merging of collision data is implemented in a Rust module called `Diamond`, located under `lib/diamond`.
 
 <img src="docs/readme/crystal_physics_overlay.gif?raw=true" height="429"/>
 
 ## Navmesh Generation
 
-Because the collision data is so free-form, we would be losing a lot of precision from using grid-based pathfinding. This was a great excuse to implement pathfinding using navmeshes. This project includes a C module called Beryl (under `lib/beryl`) whose sole responsabilities are generating and querying navmeshes. At the moment, the mesh generation is performed upon map load but could easily move to some offline build phase.
+Because the collision data is so free-form, we would be losing a lot of precision from using grid-based pathfinding. This was a great excuse to implement pathfinding using navmeshes. At the moment, the mesh generation is performed upon map load but could easily move to some offline build phase. Just like collision mesh generation, this is handled by the Rust module `Diamond`.
 
 <img src="docs/readme/crystal_navmesh_overlay.gif?raw=true" height="429"/>
 
@@ -44,8 +44,7 @@ This screenshot illustrates usage of the dev CLI to spawn entities of various ty
 6. Add `C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build` to your path (this may be slightly inaccurate if you didn't install the community edition of the Visual C++ build tools)
 
 ### Build native modules
-1. From the top level of this repository, execute the `build_beryl_windows.ps1` Powershell script
-2. From the top level of this repository, execute the `build_diamond_windows.ps1` script
+1. From the top level of this repository, execute the `build_diamond_windows.ps1` script
 
 ### Run the game
 1. From `crystal\game`, execute `love .`, or run the `Launch Game` task from VSCode
