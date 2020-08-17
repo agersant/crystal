@@ -1,5 +1,5 @@
 mod c_api;
-mod geometry;
+mod extensions;
 mod mesh;
 
 pub use c_api::*;

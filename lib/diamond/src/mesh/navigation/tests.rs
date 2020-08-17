@@ -1,7 +1,8 @@
 use crate::mesh::builder::MeshBuilder;
-use crate::mesh::navigation::*;
 use crate::mesh::tests::*;
 use crate::mesh::Mesh;
+use geo::prelude::*;
+use geo_types::*;
 use itertools::*;
 use plotters::style::colors::*;
 use std::fs::File;

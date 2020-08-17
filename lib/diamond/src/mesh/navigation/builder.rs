@@ -1,4 +1,4 @@
-use crate::geometry::*;
+use crate::extensions::*;
 use crate::mesh::collision::CollisionMesh;
 use crate::mesh::navigation::{NavigationMesh, Triangulation};
 use geo_booleanop::boolean::BooleanOp;
@@ -73,37 +73,13 @@ impl NavigationMeshBuilder {
 			}
 		}
 
-		let navigable_faces = self.compute_navigable_faces(&triangulation, &obstacle_edges);
+		let navigable_faces = compute_navigable_faces(&triangulation, &obstacle_edges);
 
 		NavigationMesh {
 			triangulation,
 			navigable_faces,
 			playable_space: playable_space,
 		}
-	}
-
-	// Based on https://github.com/Stoeoef/spade/issues/58
-	fn compute_navigable_faces(
-		&self,
-		triangulation: &Triangulation,
-		obstacle_edges: &HashSet<usize>,
-	) -> HashSet<usize> {
-		let mut navigable_faces = HashSet::new();
-		'face_loop: for face in triangulation.triangles() {
-			if let Some(edge) = face.adjacent_edge() {
-				for edge in edge.ccw_iter().skip(1) {
-					let outgoing_obstacle = obstacle_edges.contains(&edge.fix());
-					let incoming_obstacle = obstacle_edges.contains(&edge.sym().fix());
-					if outgoing_obstacle != incoming_obstacle {
-						if incoming_obstacle {
-							navigable_faces.insert(face.fix());
-						}
-						continue 'face_loop;
-					}
-				}
-			}
-		}
-		navigable_faces
 	}
 }
 
@@ -116,4 +92,27 @@ fn pad_obstacle(obstacle: &geo_types::Polygon<f32>, offset: f32) -> geo_types::P
 		.map(|interior| interior.offset(-offset))
 		.collect();
 	geo_types::Polygon::new(padded_exterior, padded_interiors)
+}
+
+// Based on https://github.com/Stoeoef/spade/issues/58
+fn compute_navigable_faces(
+	triangulation: &Triangulation,
+	obstacle_edges: &HashSet<usize>,
+) -> HashSet<usize> {
+	let mut navigable_faces = HashSet::new();
+	'face_loop: for face in triangulation.triangles() {
+		if let Some(edge) = face.adjacent_edge() {
+			for edge in edge.ccw_iter().skip(1) {
+				let outgoing_obstacle = obstacle_edges.contains(&edge.fix());
+				let incoming_obstacle = obstacle_edges.contains(&edge.sym().fix());
+				if outgoing_obstacle != incoming_obstacle {
+					if incoming_obstacle {
+						navigable_faces.insert(face.fix());
+					}
+					continue 'face_loop;
+				}
+			}
+		}
+	}
+	navigable_faces
 }

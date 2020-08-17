@@ -1,7 +1,6 @@
 use geo::prelude::*;
 use geo_types::{Line, LineString, Point};
 use itertools::Itertools;
-use spade::delaunay::*;
 
 #[cfg(test)]
 mod tests;
@@ -121,18 +120,5 @@ impl LineStringExt for LineString<f32> {
 
 		vertices.push(vertices[0].clone());
 		vertices.into()
-	}
-}
-
-pub trait FaceHandleExt {
-	fn center(self) -> Point<f32>;
-}
-
-impl FaceHandleExt for &FaceHandle<'_, [f32; 2], CdtEdge> {
-	fn center(self) -> Point<f32> {
-		let triangle = self.as_triangle();
-		let x = (triangle[0][0] + triangle[1][0] + triangle[2][0]) / 3.0;
-		let y = (triangle[0][1] + triangle[1][1] + triangle[2][1]) / 3.0;
-		Point::new(x, y)
 	}
 }

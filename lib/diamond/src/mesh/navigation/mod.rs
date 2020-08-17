@@ -1,7 +1,6 @@
 pub use self::builder::NavigationMeshBuilder;
-use crate::geometry::*;
+use crate::extensions::*;
 use geo::prelude::*;
-use geo::Closest;
 use geo_types::*;
 use ordered_float::OrderedFloat;
 use pathfinding::prelude::*;
@@ -13,10 +12,6 @@ mod builder;
 mod smoothing;
 #[cfg(test)]
 mod tests;
-
-pub type Vertex = [f32; 2];
-
-const EPSILON: f32 = 1.0 / 100.0;
 
 type Triangulation =
 	ConstrainedDelaunayTriangulation<Vertex, FloatKernel, DelaunayTreeLocate<[f32; 2]>>;
@@ -68,78 +63,55 @@ impl NavigationMesh {
 		triangles
 	}
 
-	fn project_to_playable_space(&self, point: &Point<f32>) -> Option<ProjectionResult> {
-		// TODO Ideally we would not call get_nearest_navigable_point at all here. See https://github.com/Stoeoef/spade/issues/58
-		let nearest_point = self.get_nearest_navigable_point(point);
-
-		if let Some(nearest_point) = nearest_point {
-			let locate = self
-				.triangulation
-				.locate(&[nearest_point.x(), nearest_point.y()]);
-
-			let nearest_face = match locate {
-				PositionInTriangulation::NoTriangulationPresent => return None,
-				PositionInTriangulation::InTriangle(f) => f,
-
-				PositionInTriangulation::OnPoint(v) => {
-					match v.ccw_out_edges().into_iter().find_map(|edge| {
-						if self.is_face_navigable(&edge.face()) {
-							Some(edge.face())
-						} else {
-							None
-						}
-					}) {
-						Some(f) => f,
-						None => return None,
-					}
-				}
-
-				PositionInTriangulation::OutsideConvexHull(e)
-				| PositionInTriangulation::OnEdge(e) => {
-					let left = e.face();
-					let right = e.sym().face();
-					if self.is_face_navigable(&left) {
-						left
-					} else {
-						right
-					}
-				}
-			};
-
-			return Some(ProjectionResult {
-				nearest_face,
-				nearest_point,
-			});
-		}
-		None
+	fn project_point_to_nearest_navigable_face<'a>(
+		&self,
+		point: &Point<f32>,
+		candidates: &Vec<FaceHandle<'a, Vertex, CdtEdge>>,
+	) -> ProjectionResult<'a> {
+		candidates
+			.iter()
+			.filter(|f| self.is_face_navigable(&f))
+			.map(|f| ProjectionResult {
+				nearest_point: f.project_point(point),
+				nearest_face: *f,
+			})
+			.min_by(|a, b| {
+				OrderedFloat(a.nearest_point.euclidean_distance(point))
+					.cmp(&OrderedFloat(b.nearest_point.euclidean_distance(point)))
+			})
+			.unwrap()
 	}
 
-	// TODO Ideally we would use triangulation.locate() for this, but this would required a resolution to https://github.com/Stoeoef/spade/issues/58
-	pub fn get_nearest_navigable_point(&self, point: &Point<f32>) -> Option<Point<f32>> {
-		if self.playable_space.contains(point) {
-			return Some(point.clone());
-		}
-		match self.playable_space.closest_point(point) {
-			Closest::SinglePoint(p) => Some(p),
-			Closest::Intersection(p) => Some(p),
-			Closest::Indeterminate => None,
-		}
-		.and_then(|p| {
-			let deltas = [(0.0, 0.0), (1.0, 0.0), (-1.0, 0.0), (0.0, 1.0), (0.0, -1.0)];
-			for (dx, dy) in deltas.iter() {
-				let p = Point::new(p.x() + dx * EPSILON, p.y() + dy * EPSILON);
-				if self.playable_space.contains(&p) {
-					return Some(p);
+	fn project_point_to_playable_space(&self, point: &Point<f32>) -> Option<ProjectionResult> {
+		let locate = self.triangulation.locate(&[point.x(), point.y()]);
+		let projection = match locate {
+			PositionInTriangulation::NoTriangulationPresent => return None,
+			PositionInTriangulation::InTriangle(f) => {
+				if self.is_face_navigable(&f) {
+					self.project_point_to_nearest_navigable_face(point, &vec![f])
+				} else {
+					self.project_point_to_nearest_navigable_face(point, &f.adjacent_faces())
 				}
 			}
-			None
-		})
+			PositionInTriangulation::OnPoint(v) => {
+				self.project_point_to_nearest_navigable_face(point, &v.adjacent_faces())
+			}
+			PositionInTriangulation::OutsideConvexHull(e) | PositionInTriangulation::OnEdge(e) => {
+				self.project_point_to_nearest_navigable_face(point, &e.adjacent_faces())
+			}
+		};
+		Some(projection)
+	}
+
+	pub fn get_nearest_navigable_point(&self, point: &Point<f32>) -> Option<Point<f32>> {
+		self.project_point_to_playable_space(point)
+			.map(|p| p.nearest_point)
 	}
 
 	pub fn compute_path(&self, from: &Point<f32>, to: &Point<f32>) -> LineString<f32> {
 		// Project start and end to playable space
-		let from_projection = self.project_to_playable_space(from);
-		let to_projection = self.project_to_playable_space(to);
+		let from_projection = self.project_point_to_playable_space(from);
+		let to_projection = self.project_point_to_playable_space(to);
 
 		if let (Some(mesh_start), Some(mesh_end)) = (&from_projection, &to_projection) {
 			// Compute path
@@ -194,6 +166,7 @@ impl NavigationMesh {
 
 	#[cfg(test)]
 	pub fn bounding_box(&self) -> (Point<f32>, Point<f32>) {
+		use geo::prelude::*;
 		if self.playable_space.unsigned_area() == 0.0 {
 			return (Point::new(0.0, 0.0), Point::new(0.0, 0.0));
 		}

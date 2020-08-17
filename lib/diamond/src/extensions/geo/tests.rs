@@ -1,4 +1,4 @@
-use crate::geometry::*;
+use crate::extensions::geo::*;
 use geo_booleanop::boolean::BooleanOp;
 use geo_types::*;
 
