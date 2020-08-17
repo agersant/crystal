@@ -11,7 +11,6 @@ local NavigationMesh = Class("NavigationMesh");
 
 local newPolygon = function()
 	local output = FFI.gc(FFI.new(FFI.typeof("CPolygon")), function(polygon)
-		print(polygon.num_vertices);
 		Diamond.polygon_delete(polygon);
 	end);
 	return output;
