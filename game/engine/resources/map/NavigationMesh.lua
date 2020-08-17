@@ -46,7 +46,6 @@ end
 NavigationMesh.findPath = function(self, startX, startY, endX, endY)
 	local cPath = newPolygon();
 	if not Diamond.mesh_plan_path(self._cMesh, startX, startY, endX, endY, cPath) then
-		print("bad path");
 		return false, nil;
 	end
 
@@ -55,8 +54,6 @@ NavigationMesh.findPath = function(self, startX, startY, endX, endY)
 		local vertex = cPath.vertices[v];
 		path:addVertex(vertex.x, vertex.y);
 	end
-
-	print("good path");
 
 	return true, path;
 end
