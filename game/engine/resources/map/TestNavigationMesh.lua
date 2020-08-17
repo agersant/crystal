@@ -1,4 +1,3 @@
--- TODO Update this file
 local MeshBuilder = require("engine/resources/map/MeshBuilder");
 local tests = {};
 
