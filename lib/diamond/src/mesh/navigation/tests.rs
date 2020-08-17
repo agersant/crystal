@@ -91,6 +91,7 @@ impl Context {
 		for line in path.lines() {
 			if line.start_point() != from && line.end_point() != to {
 				for polygon in &self.mesh.collision.obstacles.0 {
+					// TODO this breaks when running tests with 0 navigation padding
 					let intersects = polygon.intersects(&line);
 					if intersects {
 						self.draw_test_case(Some((&path, "actual", &from, &to)));
@@ -134,6 +135,17 @@ impl Context {
 			mesh_painter.draw_line_string(&path, &MAGENTA);
 		}
 	}
+}
+
+#[test]
+fn empty() {
+	let context = Context::new("empty");
+	context.draw_test_case(None);
+	context.test_specific_path(
+		Point::new(10.0, 20.0),
+		Point::new(40.0, 30.0),
+		Some(line_string![(x: 10.0, y: 20.0), (x: 40.0, y: 30.0)]),
+	);
 }
 
 #[test]
