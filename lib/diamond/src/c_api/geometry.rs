@@ -1,35 +1,28 @@
-use crate::geometry::*;
+use geo_types::*;
+use std::borrow::Borrow;
+use std::iter::FromIterator;
 use std::mem;
 use std::slice;
 
 #[repr(C)]
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct CVertex {
 	pub x: f32,
 	pub y: f32,
 }
 
-impl Default for CVertex {
-	fn default() -> CVertex {
-		CVertex { x: 0., y: 0. }
-	}
-}
-
-impl From<&Vertex> for CVertex {
-	fn from(vertex: &Vertex) -> CVertex {
+impl<P: Borrow<Point<f32>>> From<P> for CVertex {
+	fn from(point: P) -> CVertex {
 		CVertex {
-			x: vertex.x,
-			y: vertex.y,
+			x: point.borrow().x(),
+			y: point.borrow().y(),
 		}
 	}
 }
 
-impl From<&CVertex> for Vertex {
-	fn from(vertex: &CVertex) -> Vertex {
-		Vertex {
-			x: vertex.x,
-			y: vertex.y,
-		}
+impl From<&CVertex> for Point<f32> {
+	fn from(vertex: &CVertex) -> Point<f32> {
+		Point::new(vertex.x, vertex.y)
 	}
 }
 
@@ -42,13 +35,9 @@ pub struct CPolygon {
 	pub num_vertices: i32,
 }
 
-impl From<&Polygon> for CPolygon {
-	fn from(polygon: &Polygon) -> CPolygon {
-		let mut c_vertices: Vec<CVertex> = polygon
-			.vertices
-			.iter()
-			.map(|vertex| vertex.into())
-			.collect();
+impl From<&LineString<f32>> for CPolygon {
+	fn from(t: &LineString<f32>) -> CPolygon {
+		let mut c_vertices: Vec<CVertex> = t.points_iter().map(|vertex| (&vertex).into()).collect();
 		let ptr = c_vertices.as_mut_ptr();
 		let len = c_vertices.len();
 		mem::forget(c_vertices);
@@ -56,6 +45,12 @@ impl From<&Polygon> for CPolygon {
 			vertices: ptr,
 			num_vertices: len as i32,
 		}
+	}
+}
+
+impl From<&Triangle<f32>> for CPolygon {
+	fn from(t: &Triangle<f32>) -> CPolygon {
+		t.to_polygon().exterior().into()
 	}
 }
 
@@ -74,8 +69,8 @@ pub unsafe extern "C" fn polygon_delete(c_polygon: *mut CPolygon) {
 	if c_polygon.is_null() {
 		return;
 	}
-	let boxed_polygon = Box::from_raw(c_polygon);
-	drop(boxed_polygon);
+	let c_polygon = &*c_polygon;
+	drop(c_polygon);
 }
 
 // Polygons
@@ -87,9 +82,12 @@ pub struct CPolygons {
 	pub num_polygons: i32,
 }
 
-impl From<&Vec<Polygon>> for CPolygons {
-	fn from(polygons: &Vec<Polygon>) -> CPolygons {
-		let mut c_polygons: Vec<CPolygon> = polygons.iter().map(|polygon| polygon.into()).collect();
+impl<T> FromIterator<T> for CPolygons
+where
+	T: Into<CPolygon>,
+{
+	fn from_iter<I: IntoIterator<Item = T>>(iter: I) -> Self {
+		let mut c_polygons: Vec<CPolygon> = iter.into_iter().map(|s| s.into()).collect();
 		let ptr = c_polygons.as_mut_ptr();
 		let len = c_polygons.len();
 		mem::forget(c_polygons);

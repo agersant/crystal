@@ -1,12 +1,24 @@
 use crate::c_api::geometry::*;
-use crate::geometry::*;
 use crate::mesh::builder::MeshBuilder;
 use crate::mesh::Mesh;
+use geo_types::*;
 use std::slice;
 
 #[no_mangle]
-pub unsafe extern "C" fn mesh_builder_new(num_tiles_x: i32, num_tiles_y: i32) -> *mut MeshBuilder {
-	let builder = MeshBuilder::new(num_tiles_x, num_tiles_y);
+pub unsafe extern "C" fn mesh_builder_new(
+	num_tiles_x: u32,
+	num_tiles_y: u32,
+	tile_width: u32,
+	tile_height: u32,
+	navigation_padding: f32,
+) -> *mut MeshBuilder {
+	let builder = MeshBuilder::new(
+		num_tiles_x,
+		num_tiles_y,
+		tile_width,
+		tile_height,
+		navigation_padding,
+	);
 	Box::into_raw(Box::new(builder))
 }
 
@@ -31,9 +43,12 @@ pub unsafe extern "C" fn mesh_builder_add_polygon(
 		return;
 	}
 	let c_vertices: &[CVertex] = slice::from_raw_parts(vertices, num_vertices as usize);
-	let vertices: Vec<Vertex> = c_vertices.iter().map(|v| v.into()).collect();
-	let polygon = Polygon { vertices };
-	(&mut *builder).add_polygon(tile_x, tile_y, polygon);
+	let line_string = c_vertices
+		.iter()
+		.map(|v| v.into())
+		.collect::<Vec<Point<f32>>>()
+		.into();
+	(&mut *builder).add_polygon(tile_x, tile_y, line_string);
 }
 
 #[no_mangle]

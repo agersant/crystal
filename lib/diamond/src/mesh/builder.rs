@@ -1,43 +1,45 @@
-use crate::geometry::*;
-use crate::mesh::collision::CollisionMesh;
-use crate::mesh::navigation::NavigationMesh;
+use crate::mesh::collision::*;
+use crate::mesh::navigation::*;
 use crate::mesh::Mesh;
-use ndarray::Array2;
+use geo_types::*;
 
 #[derive(Debug)]
 pub struct MeshBuilder {
-	polygons: Array2<Vec<geo_types::Polygon<f32>>>,
-	num_tiles_x: usize,
-	num_tiles_y: usize,
+	collision_mesh_builder: CollisionMeshBuilder,
+	navigation_mesh_builder: NavigationMeshBuilder,
 }
 
 impl MeshBuilder {
-	pub fn new(num_tiles_x: i32, num_tiles_y: i32) -> MeshBuilder {
-		let w = num_tiles_x as usize;
-		let h = num_tiles_y as usize;
+	pub fn new(
+		num_tiles_x: u32,
+		num_tiles_y: u32,
+		tile_width: u32,
+		tile_height: u32,
+		navigation_padding: f32,
+	) -> MeshBuilder {
+		let collision_mesh_builder =
+			CollisionMesh::builder(num_tiles_x as usize, num_tiles_y as usize);
+
+		let map_width = num_tiles_x as f32 * tile_width as f32;
+		let map_height = num_tiles_y as f32 * tile_height as f32;
+		let navigation_mesh_builder =
+			NavigationMesh::builder(map_width, map_height).padding(navigation_padding);
+
 		MeshBuilder {
-			polygons: Array2::from_elem((h, w), Vec::<geo_types::Polygon<f32>>::new()),
-			num_tiles_x: w,
-			num_tiles_y: h,
+			collision_mesh_builder,
+			navigation_mesh_builder,
 		}
 	}
 
-	pub fn add_polygon(&mut self, tile_x: i32, tile_y: i32, polygon: Polygon) {
-		if polygon.vertices.len() == 0 {
-			return;
-		}
-		let x = tile_x as usize;
-		let y = tile_y as usize;
-		if x >= self.num_tiles_x || y >= self.num_tiles_y {
-			return;
-		}
-		self.polygons[(y, x)].push((&polygon).into());
+	pub fn add_polygon(&mut self, tile_x: i32, tile_y: i32, line_string: LineString<f32>) {
+		self.collision_mesh_builder
+			.add_polygon(tile_x, tile_y, line_string);
 	}
 
 	pub fn build(&self) -> Mesh {
-		let collision_mesh =
-			CollisionMesh::build(self.num_tiles_x, self.num_tiles_y, &self.polygons);
-		let navigation_mesh = NavigationMesh::build(&collision_mesh);
+		let collision_mesh = self.collision_mesh_builder.build();
+
+		let navigation_mesh = self.navigation_mesh_builder.build(&collision_mesh);
 		Mesh {
 			collision: collision_mesh,
 			navigation: navigation_mesh,
