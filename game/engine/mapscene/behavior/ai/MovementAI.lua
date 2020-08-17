@@ -93,6 +93,10 @@ MovementAI.setPath = function(self, path)
 	self._pathAge = 0;
 end
 
+MovementAI.getPath = function(self)
+	return self._path;
+end
+
 MovementAI.setPathAge = function(self, age)
 	self._pathAge = age;
 end

@@ -71,14 +71,15 @@ MovementAISystem.beforeScripts = function(self, dt)
 				if movementAI:needsRepath() then
 					local x, y = physicsBody:getPosition();
 					local targetX, targetY = goal:getPosition();
-					local newPath = self._map:findPath(x, y, targetX, targetY);
+					local _, newPath = self._map:findPath(x, y, targetX, targetY);
 					movementAI:setPath(newPath);
+				else
+					movementAI:setPathAge(movementAI:getPathAge() + dt);
 				end
-				movementAI:setPathAge(movementAI:getPathAge() + dt);
+			end
+
+			if movementAI:getPath() then
 				followPath(self, locomotion, physicsBody, movementAI, epsilon);
-			else
-				locomotion:setMovementAngle(nil);
-				movementAI:endNavigation();
 			end
 
 			local x, y = physicsBody:getPosition();
@@ -86,7 +87,9 @@ MovementAISystem.beforeScripts = function(self, dt)
 				locomotion:setMovementAngle(nil);
 				movementAI:endNavigation();
 				entity:createEvent(NavigationSuccessEvent, goal);
-			elseif not movementAI:getGoal() then
+			elseif not movementAI:getGoal() or not movementAI:getPath() then
+				locomotion:setMovementAngle(nil);
+				movementAI:endNavigation();
 				entity:createEvent(NavigationFailureEvent, goal);
 			end
 		end

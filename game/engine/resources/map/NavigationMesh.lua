@@ -9,6 +9,14 @@ local MathUtils = require("engine/utils/MathUtils");
 
 local NavigationMesh = Class("NavigationMesh");
 
+local newPolygon = function()
+	local output = FFI.gc(FFI.new(FFI.typeof("CPolygon")), function(polygon)
+		print(polygon.num_vertices);
+		Diamond.polygon_delete(polygon);
+	end);
+	return output;
+end
+
 local newPolygons = function()
 	local output = FFI.gc(FFI.new(FFI.typeof("CPolygons")), function(polygons)
 		Diamond.polygons_delete(polygons);
@@ -36,14 +44,26 @@ NavigationMesh.init = function(self, cMesh)
 end
 
 NavigationMesh.findPath = function(self, startX, startY, endX, endY)
+	local cPath = newPolygon();
+	if not Diamond.mesh_plan_path(self._cMesh, startX, startY, endX, endY, cPath) then
+		print("bad path");
+		return false, nil;
+	end
+
 	local path = Path:new();
-	-- TODO Call Diamond
-	return path;
+	for v = 0, cPath.num_vertices - 1 do
+		local vertex = cPath.vertices[v];
+		path:addVertex(vertex.x, vertex.y);
+	end
+
+	print("good path");
+
+	return true, path;
 end
 
 NavigationMesh.getNearestPointOnNavmesh = function(self, x, y)
-	-- TODO Call Diamond
-	return 0, 0;
+	local result = Diamond.mesh_get_nearest_navigable_point(self._cMesh, x, y);
+	return result.x, result.y;
 end
 
 NavigationMesh.draw = function(self)

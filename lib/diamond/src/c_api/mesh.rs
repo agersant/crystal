@@ -74,7 +74,7 @@ pub unsafe extern "C" fn mesh_get_nearest_navigable_point(
 	y: f32,
 ) -> CVertex {
 	if mesh.is_null() {
-		return CVertex::default();
+		return CVertex::default(); // TODO return failure flag
 	}
 	let mesh = &*mesh;
 	mesh.navigation

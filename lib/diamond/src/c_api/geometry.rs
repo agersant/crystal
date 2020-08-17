@@ -69,8 +69,8 @@ pub unsafe extern "C" fn polygon_delete(c_polygon: *mut CPolygon) {
 	if c_polygon.is_null() {
 		return;
 	}
-	let boxed_polygon = Box::from_raw(c_polygon);
-	drop(boxed_polygon);
+	let c_polygon = &*c_polygon;
+	drop(c_polygon);
 }
 
 // Polygons

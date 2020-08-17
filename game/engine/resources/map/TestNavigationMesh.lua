@@ -11,7 +11,7 @@ end
 
 tests[#tests + 1] = {name = "Generate navmesh for empty map"};
 tests[#tests].body = function()
-	local builder = MeshBuilder:new(50, 50, 10, 10);
+	local builder = MeshBuilder:new(50, 50, 10, 10, 4);
 	local _, navigationMesh = builder:buildMesh();
 	assert(navigationMesh);
 end

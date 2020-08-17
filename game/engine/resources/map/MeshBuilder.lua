@@ -17,8 +17,8 @@ local newMeshBuilder = function(numTilesX, numTilesY, tileWidth, tileHeight, nav
 end
 
 local newMesh = function()
-	local output = FFI.gc(Diamond.mesh_new(), function(polygons)
-		Diamond.mesh_delete(polygons);
+	local output = FFI.gc(Diamond.mesh_new(), function(mesh)
+		Diamond.mesh_delete(mesh);
 	end);
 	return output;
 end
