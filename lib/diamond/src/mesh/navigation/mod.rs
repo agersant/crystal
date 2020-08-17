@@ -19,7 +19,6 @@ type Triangulation =
 pub struct NavigationMesh {
 	triangulation: Triangulation,
 	navigable_faces: HashSet<FixedFaceHandle>,
-	playable_space: MultiPolygon<f32>,
 }
 
 #[derive(Debug)]
@@ -164,11 +163,17 @@ impl NavigationMesh {
 
 	#[cfg(test)]
 	pub fn bounding_box(&self) -> (Point<f32>, Point<f32>) {
-		use geo::prelude::*;
-		if self.playable_space.unsigned_area() == 0.0 {
+		let multi_point: MultiPoint<f32> = self
+			.triangulation
+			.infinite_face()
+			.adjacent_edges()
+			.map(|e| e.from().to_point())
+			.collect::<Vec<_>>()
+			.into();
+		if multi_point.0.len() == 0 {
 			return (Point::new(0.0, 0.0), Point::new(0.0, 0.0));
 		}
-		let extremes = self.playable_space.extreme_points();
+		let extremes = multi_point.extreme_points();
 		(
 			Point::new(extremes.xmin.x(), extremes.ymin.y()),
 			Point::new(extremes.xmax.x(), extremes.ymax.y()),
@@ -181,7 +186,6 @@ impl Default for NavigationMesh {
 		NavigationMesh {
 			triangulation: FloatCDT::with_tree_locate(),
 			navigable_faces: HashSet::new(),
-			playable_space: Vec::<Polygon<f32>>::new().into(),
 		}
 	}
 }

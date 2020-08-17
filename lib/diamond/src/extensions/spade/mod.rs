@@ -7,10 +7,15 @@ use spade::delaunay::*;
 pub type Vertex = [f32; 2];
 
 pub trait VertexHandleExt<'a> {
+	fn to_point(self) -> Point<f32>;
 	fn adjacent_faces(self) -> Vec<FaceHandle<'a, Vertex, CdtEdge>>;
 }
 
 impl<'a> VertexHandleExt<'a> for &VertexHandle<'a, [f32; 2], CdtEdge> {
+	fn to_point(self) -> Point<f32> {
+		Point::new(self[0], self[1])
+	}
+
 	fn adjacent_faces(self) -> Vec<FaceHandle<'a, Vertex, CdtEdge>> {
 		self.ccw_out_edges().map(|e| e.face()).collect()
 	}

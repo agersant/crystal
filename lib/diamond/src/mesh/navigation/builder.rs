@@ -78,7 +78,6 @@ impl NavigationMeshBuilder {
 		NavigationMesh {
 			triangulation,
 			navigable_faces,
-			playable_space: playable_space,
 		}
 	}
 }
