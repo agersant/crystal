@@ -83,19 +83,19 @@ fn run_test_case(name: &str) {
 			continue;
 		}
 
-		let path = mesh.navigation.compute_path(&from, &to).unwrap();
-
-		assert!(path.num_coords() >= 2);
-		assert_eq!(path[0], from.into());
-		assert_eq!(path[path.num_coords() - 1], to.into());
-		for line in path.lines() {
-			if line.start_point() != from && line.end_point() != to {
-				for polygon in &mesh.collision.obstacles.0 {
-					let intersects = polygon.intersects(&line);
-					if intersects {
-						draw_test_case(name, &mesh, Some(&path));
+		if let Some(path) = mesh.navigation.compute_path(&from, &to) {
+			assert!(path.num_coords() >= 2);
+			assert_eq!(path[0], from.into());
+			assert_eq!(path[path.num_coords() - 1], to.into());
+			for line in path.lines() {
+				if line.start_point() != from && line.end_point() != to {
+					for polygon in &mesh.collision.obstacles.0 {
+						let intersects = polygon.intersects(&line);
+						if intersects {
+							draw_test_case(name, &mesh, Some(&path));
+						}
+						assert!(!intersects);
 					}
-					assert!(!intersects);
 				}
 			}
 		}

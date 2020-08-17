@@ -110,7 +110,6 @@ impl NavigationMesh {
 
 	pub fn compute_path(&self, from: &Point<f32>, to: &Point<f32>) -> Option<LineString<f32>> {
 		// Project start and end to playable space
-		// TODO project to same connected component
 		let from_projection = self.project_point_to_playable_space(from);
 		let to_projection = self.project_point_to_playable_space(to);
 
