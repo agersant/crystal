@@ -25,9 +25,7 @@ jobs:
     - name: Build Diamond
       run: .\build_diamond_windows.ps1
     - name: Run Diamond tests
-      uses: actions-rs/cargo@v1
-      with:
-        command: test --release
+      run: cargo test --release
       working-directory: ./lib/diamond
     - name: Run Crystal Tests
       run: lovec . /test /coverage
@@ -53,9 +51,7 @@ jobs:
     - name: Build Diamond
       run: ./build_diamond_linux.sh
     - name: Run Diamond tests
-      uses: actions-rs/cargo@v1
-      with:
-        command: test --release
+      run: cargo test --release
       working-directory: ./lib/diamond
     - name: Run Crystal Tests
       run: love . /test /coverage
