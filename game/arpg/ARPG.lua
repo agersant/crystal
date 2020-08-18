@@ -21,7 +21,7 @@ ARPG.init = function(self)
 		body = "arpg/assets/font/karen2black.ttf",
 		fat = "arpg/assets/font/karenfat.ttf",
 	};
-	Content:requireAll("content");
+	Content:requireAll("arpg/content");
 end
 
 return ARPG;
