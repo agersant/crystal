@@ -68,7 +68,6 @@ end
 
 return {
 	execute = function()
-		Module:setCurrent(require(MODULE):new());
 		local testFiles = {};
 		for _, file in ipairs(engineTestFiles) do
 			table.insert(testFiles, file);

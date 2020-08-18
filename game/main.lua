@@ -1,10 +1,14 @@
 local Features = require("engine/dev/Features");
+local Module = require("engine/Module");
 
-MODULE = "arpg/ARPG";
+Module:setCurrent(require("arpg/ARPG"):new());
 
 if Features.unitTesting then
 	if Features.codeCoverage then
-		require("external/luacov/runner").init({runreport = true, exclude = {"^assets/.*$", "^main$", "Test"}});
+		local engineAssets = "^engine/assets/.*$";
+		local moduleAssets = "^" .. Module:getCurrent().assetsDirectory .. "/.*$";
+		local luacovExcludes = {engineAssets, moduleAssets, "^main$", "Test"};
+		require("external/luacov/runner").init({runreport = true, exclude = luacovExcludes});
 	end
 	require("engine/dev/mock/love/graphics");
 	local TestSuite = require("engine/TestSuite");
