@@ -24,7 +24,12 @@ jobs:
         default: true
     - name: Build Diamond
       run: .\build_diamond_windows.ps1
-    - name: Run Tests
+    - name: Run Diamond tests
+      uses: actions-rs/cargo@v1
+      with:
+        command: test --release
+      working-directory: ./lib/diamond
+    - name: Run Crystal Tests
       run: lovec . /test /coverage
       working-directory: ./game
 
@@ -47,7 +52,12 @@ jobs:
         default: true
     - name: Build Diamond
       run: ./build_diamond_linux.sh
-    - name: Run Tests
+    - name: Run Diamond tests
+      uses: actions-rs/cargo@v1
+      with:
+        command: test --release
+      working-directory: ./lib/diamond
+    - name: Run Crystal Tests
       run: love . /test /coverage
       working-directory: ./game
     - name: Upload Test Coverage Results
