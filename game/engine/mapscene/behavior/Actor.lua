@@ -36,7 +36,6 @@ Actor.stopAction = function(self)
 	end
 	self._actionThread:stop();
 	self._actionThread = nil;
-	self._cleanupFunction = nil;
 end
 
 return Actor;
