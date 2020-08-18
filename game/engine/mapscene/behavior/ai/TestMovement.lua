@@ -8,7 +8,7 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Walk to point"};
 tests[#tests].body = function()
-	local scene = MapScene:new("assets/map/test/empty.lua");
+	local scene = MapScene:new("engine/assets/empty_map.lua");
 
 	local startX, startY = 20, 20;
 	local endX, endY = 300, 200;

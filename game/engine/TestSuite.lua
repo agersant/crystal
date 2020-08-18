@@ -49,7 +49,6 @@ local runTestFile = function(source)
 end
 
 local printResults = function(numSuccess, numTests)
-	local successRate = numTests > 0 and numSuccess / numTests or 1;
 	print("");
 	print("Grand total: " .. numSuccess .. "/" .. numTests .. " tests passed");
 end

@@ -98,7 +98,7 @@ end
 Sahagin.init = function(self, scene)
 	Sahagin.super.init(self, scene);
 
-	local sheet = Assets:getSpritesheet("assets/spritesheet/sahagin.lua");
+	local sheet = Assets:getSpritesheet("arpg/assets/spritesheet/sahagin.lua");
 	self:addComponent(Sprite:new(sheet));
 	self:addComponent(CommonShader:new());
 	self:addComponent(FlinchAnimation:new("knockback"));

@@ -26,7 +26,7 @@ end
 
 NPC.init = function(self, scene)
 	NPC.super.init(self, scene);
-	local sheet = Assets:getSpritesheet("assets/spritesheet/Sahagin.lua");
+	local sheet = Assets:getSpritesheet("arpg/assets/spritesheet/Sahagin.lua");
 	self:addComponent(Sprite:new(sheet));
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 	self:addComponent(Collision:new(4));

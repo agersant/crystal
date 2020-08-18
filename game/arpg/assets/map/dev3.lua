@@ -1,30 +1,37 @@
 return {
-  version = "1.1",
+  version = "1.2",
   luaversion = "5.1",
-  tiledversion = "0.16.0",
+  tiledversion = "1.3.1",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 60,
   height = 40,
   tilewidth = 16,
   tileheight = 16,
+  nextlayerid = 3,
   nextobjectid = 1,
   properties = {},
   tilesets = {
     {
       name = "dev",
       firstgid = 1,
-      filename = "../../../source/tileset/dev.tsx",
+      filename = "../../../../source/tileset/dev.tsx",
       tilewidth = 16,
       tileheight = 16,
       spacing = 0,
       margin = 0,
-      image = "../texture/tileset/dev.png",
+      columns = 8,
+      image = "../../../engine/assets/tileset.png",
       imagewidth = 128,
       imageheight = 128,
       tileoffset = {
         x = 0,
         y = 0
+      },
+      grid = {
+        orientation = "orthogonal",
+        width = 16,
+        height = 16
       },
       properties = {},
       terrains = {},
@@ -39,6 +46,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -66,6 +74,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -98,6 +107,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -130,6 +140,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -162,6 +173,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -194,6 +206,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -226,6 +239,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -258,6 +272,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -290,6 +305,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -322,6 +338,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -349,6 +366,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -376,6 +394,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -403,6 +422,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -430,6 +450,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -457,6 +478,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -484,6 +506,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -511,6 +534,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -538,6 +562,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -565,6 +590,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -598,6 +624,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -625,6 +652,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -649,6 +677,7 @@ return {
   layers = {
     {
       type = "tilelayer",
+      id = 1,
       name = "Tile Layer 1",
       x = 0,
       y = 0,
@@ -705,6 +734,7 @@ return {
     },
     {
       type = "tilelayer",
+      id = 2,
       name = "Tile Layer 2",
       x = 0,
       y = 0,

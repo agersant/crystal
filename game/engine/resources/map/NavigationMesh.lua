@@ -4,8 +4,6 @@ local Diamond = FFI.load("diamond");
 local Path = require("engine/mapscene/behavior/ai/Path");
 local Features = require("engine/dev/Features");
 local Colors = require("engine/resources/Colors");
-local Fonts = require("engine/resources/Fonts");
-local MathUtils = require("engine/utils/MathUtils");
 
 local NavigationMesh = Class("NavigationMesh");
 
@@ -27,8 +25,6 @@ NavigationMesh.init = function(self, cMesh)
 	assert(cMesh);
 	self._cMesh = cMesh;
 	if Features.debugDraw then
-		self._font = Fonts:get("dev", 12);
-
 		self._triangles = {};
 		local triangles = newPolygons();
 		Diamond.mesh_list_navigation_polygons(cMesh, triangles);
@@ -64,7 +60,6 @@ end
 
 NavigationMesh.draw = function(self)
 	assert(self._triangles);
-	local font = self._font;
 	love.graphics.setLineWidth(0.2);
 	love.graphics.setPointSize(3);
 	for i, triangle in ipairs(self._triangles) do

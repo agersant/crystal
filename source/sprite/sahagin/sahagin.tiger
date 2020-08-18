@@ -971,8 +971,8 @@
       "format": {
         "Template": "..\\crystal.liquid"
       },
-      "texture_destination": "..\\..\\..\\game\\assets\\texture\\sprite\\sahagin.png",
-      "metadata_destination": "..\\..\\..\\game\\assets\\spritesheet\\sahagin.lua",
+      "texture_destination": "..\\..\\..\\game\\arpg\\assets\\texture\\sprite\\sahagin.png",
+      "metadata_destination": "..\\..\\..\\game\\arpg\\assets\\spritesheet\\sahagin.lua",
       "metadata_paths_root": "..\\..\\..\\game"
     }
   }

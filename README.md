@@ -8,7 +8,7 @@ This project uses Love 2D to access SDL's rendering and input polling capabiliti
 Some code highlights:
 
 - Ref-counted [asset loading/unloading system](game/engine/resources/Assets.lua) with support for hot-reload
-- Co-routine based [scripting system](game/engine/script/Script.lua) which makes it easy to write gameplay features synchronously (example: [Basic NPC](game/content/NPC.lua), [Dash skill](game/content/job/warrior/Dash.lua))
+- Co-routine based [scripting system](game/engine/script/Script.lua) which makes it easy to write gameplay features synchronously (example: [Basic NPC](game/arpg/content/NPC.lua), [Dash skill](game/arpg/content/job/warrior/Dash.lua))
 - 'Many to Many' [keybinding system](game/engine/input/InputDevice.lua)
 
 # Feature Screenshots

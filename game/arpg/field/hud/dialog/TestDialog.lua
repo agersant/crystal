@@ -11,7 +11,7 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Blocks script during dialog"};
 tests[#tests].body = function()
-	local scene = MapScene:new("assets/map/test/empty.lua");
+	local scene = MapScene:new("engine/assets/empty_map.lua");
 
 	local dialogBox = DialogBox:new();
 

@@ -10,7 +10,7 @@ local tests = {};
 tests[#tests + 1] = {name = "Get Nearest Enemy"};
 tests[#tests].body = function()
 
-	local scene = MapScene:new("assets/map/test/empty.lua");
+	local scene = MapScene:new("engine/assets/empty_map.lua");
 
 	local me = scene:spawn(Entity);
 	local friend = scene:spawn(Entity);
@@ -40,7 +40,7 @@ end
 tests[#tests + 1] = {name = "Get Nearest Ally"};
 tests[#tests].body = function()
 
-	local scene = MapScene:new("assets/map/test/empty.lua");
+	local scene = MapScene:new("engine/assets/empty_map.lua");
 
 	local me = scene:spawn(Entity);
 	local friendA = scene:spawn(Entity);

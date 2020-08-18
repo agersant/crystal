@@ -8,6 +8,8 @@ ARPG.init = function(self)
 	ARPG.super.init(self);
 	self.classes.MapScene = require("arpg/field/Field");
 	self.classes.SaveData = require("arpg/persistence/SaveData");
+	self.assetsDirectory = "arpg/assets";
+	self.mapDirectory = "arpg/assets/map";
 	self.testFiles = {
 		"arpg/field/combat/ai/TestTargetSelector",
 		"arpg/field/combat/TestCombatData",
@@ -15,7 +17,12 @@ ARPG.init = function(self)
 		"arpg/persistence/party/TestPartyMemberData",
 		"arpg/field/hud/dialog/TestDialog",
 	};
-	Content:requireAll("content");
+	self.fonts = {
+		small = "arpg/assets/font/16bfZX.ttf",
+		body = "arpg/assets/font/karen2black.ttf",
+		fat = "arpg/assets/font/karenfat.ttf",
+	};
+	Content:requireAll("arpg/content");
 end
 
 return ARPG;
