@@ -20,7 +20,7 @@ jobs:
       uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
-        minimal: true
+        profile: minimal
         default: true
     - name: Build Diamond
       run: .\build_diamond_windows.ps1
@@ -46,7 +46,7 @@ jobs:
       uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
-        minimal: true
+        profile: minimal
         default: true
     - name: Build Diamond
       run: ./build_diamond_linux.sh
