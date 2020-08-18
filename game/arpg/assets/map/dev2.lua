@@ -15,13 +15,13 @@ return {
     {
       name = "dev",
       firstgid = 1,
-      filename = "../../../source/tileset/dev.tsx",
+      filename = "../../../../source/tileset/dev.tsx",
       tilewidth = 16,
       tileheight = 16,
       spacing = 0,
       margin = 0,
       columns = 8,
-      image = "../texture/tileset/dev.png",
+      image = "../../../engine/assets/tileset.png",
       imagewidth = 128,
       imageheight = 128,
       tileoffset = {
@@ -806,7 +806,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["targetMap"] = "assets/map/dev.lua",
+            ["targetMap"] = "dev.lua",
             ["targetX"] = "160",
             ["targetY"] = "232"
           }

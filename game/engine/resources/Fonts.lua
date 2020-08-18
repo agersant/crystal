@@ -6,7 +6,7 @@ local Fonts = Class("Fonts");
 
 local pickFont = function(name)
 	if name == "dev" then
-		return "engine/assets/font/source_code_pro_medium.otf";
+		return "engine/assets/source_code_pro_medium.otf";
 	end
 	local font = Module:getCurrent().fonts[name];
 	return font or error("Unknown font: " .. tostring(name));

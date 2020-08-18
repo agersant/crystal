@@ -1,4 +1,5 @@
 require("engine/utils/OOP");
+local Module = require("engine/Module");
 local PartyMember = require("arpg/persistence/party/PartyMember");
 local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/Scene");
@@ -16,13 +17,11 @@ local TeleportTouchTrigger = Class("TeleportTouchTrigger", TouchTrigger);
 
 local doTeleport = function(self, triggeredBy)
 	local teleportEntity = self:getEntity();
-	local x, y = self:getPosition();
-	local px, py = triggeredBy:getPosition();
-	local dx, dy = px - x, py - y;
 	local finalX, finalY = teleportEntity._targetX, teleportEntity._targetY;
 
 	Persistence:getSaveData():save();
-	local newScene = Field:new(teleportEntity._targetMap, finalX, finalY, self:getAngle());
+	local targetMap = Module:getCurrent().mapDirectory .. "/" .. teleportEntity._targetMap;
+	local newScene = Field:new(targetMap, finalX, finalY, self:getAngle());
 	Scene:setCurrent(newScene);
 end
 

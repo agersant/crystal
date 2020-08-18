@@ -1,14 +1,15 @@
 return {
-  version = "1.1",
+  version = "1.2",
   luaversion = "5.1",
-  tiledversion = "0.16.0",
+  tiledversion = "1.3.1",
   orientation = "orthogonal",
   renderorder = "right-down",
   width = 20,
   height = 15,
   tilewidth = 16,
   tileheight = 16,
-  nextobjectid = 1,
+  nextlayerid = 8,
+  nextobjectid = 10,
   properties = {},
   tilesets = {
     {
@@ -19,12 +20,18 @@ return {
       tileheight = 16,
       spacing = 0,
       margin = 0,
-      image = "../../texture/tileset/dev.png",
+      columns = 8,
+      image = "../../../engine/assets/tileset.png",
       imagewidth = 128,
       imageheight = 128,
       tileoffset = {
         x = 0,
         y = 0
+      },
+      grid = {
+        orientation = "orthogonal",
+        width = 16,
+        height = 16
       },
       properties = {},
       terrains = {},
@@ -39,6 +46,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -66,6 +74,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -98,6 +107,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -130,6 +140,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -162,6 +173,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -194,6 +206,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -226,6 +239,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -258,6 +272,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -290,6 +305,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -322,6 +338,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -349,6 +366,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -376,6 +394,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -403,6 +422,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -430,6 +450,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -457,6 +478,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -484,6 +506,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -511,6 +534,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -538,6 +562,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -565,6 +590,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -598,6 +624,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -625,6 +652,7 @@ return {
             opacity = 1,
             offsetx = 0,
             offsety = 0,
+            draworder = "index",
             properties = {},
             objects = {
               {
@@ -649,7 +677,8 @@ return {
   layers = {
     {
       type = "tilelayer",
-      name = "Tile Layer 1",
+      id = 1,
+      name = "bg",
       x = 0,
       y = 0,
       width = 20,
@@ -658,7 +687,111 @@ return {
       opacity = 1,
       offsetx = 0,
       offsety = 0,
-      properties = {},
+      properties = {
+        ["sort"] = "below"
+      },
+      encoding = "lua",
+      data = {
+        3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
+        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
+        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
+        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
+        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
+        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
+        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
+        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
+        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
+        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
+        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
+        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
+        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
+        3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3,
+        3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3
+      }
+    },
+    {
+      type = "tilelayer",
+      id = 2,
+      name = "walls",
+      x = 0,
+      y = 0,
+      width = 20,
+      height = 15,
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      properties = {
+        ["sort"] = "below"
+      },
+      encoding = "lua",
+      data = {
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 21, 0, 0, 0, 0, 0, 14, 18, 0, 0,
+        0, 0, 0, 0, 4, 3, 5, 0, 0, 0, 0, 18, 19, 20, 7, 7, 0, 26, 0, 0,
+        0, 0, 4, 3, 3, 3, 3, 5, 0, 0, 0, 26, 27, 28, 15, 15, 0, 0, 0, 0,
+        0, 0, 12, 3, 3, 3, 3, 3, 0, 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 12, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 12, 3, 4, 5, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 12, 13, 12, 13, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+      }
+    },
+    {
+      type = "tilelayer",
+      id = 3,
+      name = "dynamic",
+      x = 0,
+      y = 0,
+      width = 20,
+      height = 15,
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      properties = {
+        ["sort"] = "dynamic"
+      },
+      encoding = "lua",
+      data = {
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+      }
+    },
+    {
+      type = "tilelayer",
+      id = 4,
+      name = "above",
+      x = 0,
+      y = 0,
+      width = 20,
+      height = 15,
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      properties = {
+        ["sort"] = "above"
+      },
       encoding = "lua",
       data = {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -671,11 +804,127 @@ return {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+      }
+    },
+    {
+      type = "tilelayer",
+      id = 5,
+      name = "morewalls",
+      x = 0,
+      y = 0,
+      width = 20,
+      height = 15,
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      properties = {
+        ["sort"] = "below"
+      },
+      encoding = "lua",
+      data = {
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 4, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 12, 13, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+      }
+    },
+    {
+      type = "objectgroup",
+      id = 6,
+      name = "monsters",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
+      properties = {},
+      objects = {
+        {
+          id = 5,
+          name = "",
+          type = "Sahagin",
+          shape = "rectangle",
+          x = 208,
+          y = 32,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 7,
+          name = "",
+          type = "Sahagin",
+          shape = "rectangle",
+          x = 272,
+          y = 112,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 8,
+          name = "",
+          type = "Sahagin",
+          shape = "rectangle",
+          x = 48,
+          y = 32,
+          width = 16,
+          height = 16,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      id = 7,
+      name = "teleports",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      draworder = "topdown",
+      properties = {},
+      objects = {
+        {
+          id = 9,
+          name = "",
+          type = "Teleport",
+          shape = "rectangle",
+          x = 128,
+          y = 224,
+          width = 64,
+          height = 16,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["targetMap"] = "dev2.lua",
+            ["targetX"] = "160",
+            ["targetY"] = "8"
+          }
+        }
       }
     }
   }

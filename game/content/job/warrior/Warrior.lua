@@ -37,7 +37,7 @@ end
 Warrior.init = function(self, scene)
 	Warrior.super.init(self, scene);
 
-	local sheet = Assets:getSpritesheet("assets/spritesheet/duran.lua");
+	local sheet = Assets:getSpritesheet("arpg/assets/spritesheet/duran.lua");
 	self:addComponent(Sprite:new(sheet));
 	self:addComponent(CommonShader:new());
 	self:addComponent(FlinchAnimation:new("knockback"));

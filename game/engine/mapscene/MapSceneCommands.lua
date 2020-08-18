@@ -9,8 +9,9 @@ local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 
 local loadMap = function(mapName)
 	Persistence:getSaveData():save();
-	local sceneClass = Module:getCurrent().classes.MapScene;
-	local newScene = sceneClass:new("assets/map/" .. mapName .. ".lua");
+	local module = Module:getCurrent();
+	local sceneClass = module.classes.MapScene;
+	local newScene = sceneClass:new(module.mapDirectory .. "/" .. mapName .. ".lua");
 	Scene:setCurrent(newScene);
 end
 

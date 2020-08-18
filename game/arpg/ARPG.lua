@@ -8,6 +8,7 @@ ARPG.init = function(self)
 	ARPG.super.init(self);
 	self.classes.MapScene = require("arpg/field/Field");
 	self.classes.SaveData = require("arpg/persistence/SaveData");
+	self.mapDirectory = "arpg/assets/map";
 	self.testFiles = {
 		"arpg/field/combat/ai/TestTargetSelector",
 		"arpg/field/combat/TestCombatData",

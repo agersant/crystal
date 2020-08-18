@@ -1,7 +1,7 @@
 return {
 	type = "spritesheet",
 	content = {
-		texture = "assets/texture/sprite/duran.png",
+		texture = "arpg/assets/texture/sprite/duran.png",
 		frames = {
 			frame_0 = { x = 0, y = 0, w = 33, h = 27, },
 			frame_1 = { x = 33, y = 0, w = 25, h = 44, },

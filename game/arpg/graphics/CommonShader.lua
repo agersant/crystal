@@ -7,7 +7,7 @@ local CommonShader = Class("CommonShader", Shader);
 
 CommonShader.init = function(self)
 	Shader.super.init(self);
-	self:setShaderResource(Assets:getShader("assets/shader/common.glsl"));
+	self:setShaderResource(Assets:getShader("arpg/assets/shader/common.glsl"));
 	self:setHighlightColor();
 end
 
