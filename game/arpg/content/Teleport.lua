@@ -8,6 +8,7 @@ local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local TouchTrigger = require("engine/mapscene/physics/TouchTrigger");
 local Entity = require("engine/ecs/Entity");
 local Script = require("engine/script/Script");
+local StringUtils = require("engine/utils/StringUtils");
 local Field = require("arpg/field/Field");
 
 local Teleport = Class("Teleport", Entity);
@@ -20,7 +21,7 @@ local doTeleport = function(self, triggeredBy)
 	local finalX, finalY = teleportEntity._targetX, teleportEntity._targetY;
 
 	Persistence:getSaveData():save();
-	local targetMap = Module:getCurrent().mapDirectory .. "/" .. teleportEntity._targetMap;
+	local targetMap = StringUtils.mergePaths(Module:getCurrent().mapDirectory, teleportEntity._targetMap);
 	local newScene = Field:new(targetMap, finalX, finalY, self:getAngle());
 	Scene:setCurrent(newScene);
 end

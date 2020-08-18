@@ -6,12 +6,14 @@ local Entity = require("engine/ecs/Entity");
 local Module = require("engine/Module");
 local InputListener = require("engine/mapscene/behavior/InputListener");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
+local StringUtils = require("engine/utils/StringUtils");
 
 local loadMap = function(mapName)
 	Persistence:getSaveData():save();
 	local module = Module:getCurrent();
 	local sceneClass = module.classes.MapScene;
-	local newScene = sceneClass:new(module.mapDirectory .. "/" .. mapName .. ".lua");
+	local sceneFile = StringUtils.mergePaths(module.mapDirectory, mapName .. ".lua");
+	local newScene = sceneClass:new(sceneFile);
 	Scene:setCurrent(newScene);
 end
 
