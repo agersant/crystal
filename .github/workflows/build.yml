@@ -48,10 +48,12 @@ jobs:
         toolchain: stable
         profile: minimal
         default: true
+    - name: Install Tarpaulin
+      run: cargo install cargo-tarpaulin
     - name: Build Diamond
       run: ./build_diamond_linux.sh
-    - name: Run Diamond tests
-      run: cargo test --release
+    - name: Run Diamond tests w/ code coverage measurements
+      run: cargo tarpaulin --release --out Xml
       working-directory: ./lib/diamond
     - name: Run Crystal Tests
       run: love . /test /coverage
@@ -61,4 +63,3 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         fail_ci_if_error: true
-
