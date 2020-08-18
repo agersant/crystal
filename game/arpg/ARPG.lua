@@ -15,6 +15,11 @@ ARPG.init = function(self)
 		"arpg/persistence/party/TestPartyMemberData",
 		"arpg/field/hud/dialog/TestDialog",
 	};
+	self.fonts = {
+		small = "arpg/assets/font/16bfZX.ttf",
+		body = "arpg/assets/font/karen2black.ttf",
+		fat = "arpg/assets/font/karenfat.ttf",
+	};
 	Content:requireAll("content");
 end
 

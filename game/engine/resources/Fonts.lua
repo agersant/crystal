@@ -1,19 +1,15 @@
 require("engine/utils/OOP");
 local Log = require("engine/dev/Log");
+local Module = require("engine/Module");
 
 local Fonts = Class("Fonts");
 
 local pickFont = function(name)
 	if name == "dev" then
-		return "assets/font/source_code_pro_medium.otf";
-	elseif name == "small" then
-		return "assets/font/16bfZX.ttf";
-	elseif name == "body" then
-		return "assets/font/karen2black.ttf";
-	elseif name == "fat" then
-		return "assets/font/karenfat.ttf";
+		return "engine/assets/font/source_code_pro_medium.otf";
 	end
-	error("Unknown font: " .. tostring(name));
+	local font = Module:getCurrent().fonts[name];
+	return font or error("Unknown font: " .. tostring(name));
 end
 
 -- PUBLIC API
