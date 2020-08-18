@@ -53,7 +53,7 @@ jobs:
     - name: Build Diamond
       run: ./build_diamond_linux.sh
     - name: Run Diamond tests
-      run: cargo tarpaulin --release --out Xml
+      run: cargo tarpaulin --ignore-tests --out Xml
       working-directory: ./lib/diamond
     - name: Run Crystal Tests
       run: love . /test /coverage
