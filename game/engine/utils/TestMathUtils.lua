@@ -119,4 +119,21 @@ tests[#tests].body = function()
 	assert(1 == MathUtils.ease(1, "outQuintic"));
 end
 
+tests[#tests + 1] = {name = "Bounce easing"};
+tests[#tests].body = function()
+	assert(0 == MathUtils.ease(0, "inBounce"));
+	for i = 1, 20 do
+		assert(0 <= MathUtils.ease(1 / i, "inBounce"));
+		assert(1 >= MathUtils.ease(1 / i, "inBounce"));
+	end
+	assert(1 == MathUtils.ease(1, "inBounce"));
+
+	assert(0 == MathUtils.ease(0, "outBounce"));
+	for i = 1, 20 do
+		assert(0 <= MathUtils.ease(1 / i, "outBounce"));
+		assert(1 >= MathUtils.ease(1 / i, "outBounce"));
+	end
+	assert(1 == MathUtils.ease(1, "outBounce"));
+end
+
 return tests;
