@@ -16,12 +16,6 @@ jobs:
         curl -L -o love.zip https://github.com/love2d/love/releases/download/11.3/love-11.3-win64.zip
         unzip love.zip
         echo "##[add-path]${{ github.workspace }}\love-11.3-win64"
-    - name: Install Rust toolchain
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        profile: minimal
-        default: true
     - name: Build Diamond
       run: .\build_diamond_windows.ps1
     - name: Run Diamond tests
@@ -42,12 +36,6 @@ jobs:
         curl -L -o love https://github.com/love2d/love/releases/download/11.3/love-11.3-x86_64.AppImage
         chmod +x love
         echo "::add-path::${{ github.workspace }}"
-    - name: Install Rust toolchain
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        profile: minimal
-        default: true
     - name: Install Tarpaulin
       run: cargo install cargo-tarpaulin
     - name: Build Diamond
