@@ -5,7 +5,7 @@ use std::mem;
 use std::slice;
 
 #[repr(C)]
-#[derive(Debug, Default)]
+#[derive(Debug, Default, PartialEq)]
 pub struct CVertex {
 	pub x: f32,
 	pub y: f32,
