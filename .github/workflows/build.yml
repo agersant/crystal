@@ -13,7 +13,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install Love 2D
       run:  |
-        curl -L -o love.zip https://bitbucket.org/rude/love/downloads/love-11.3-win64.zip
+        curl -L -o love.zip https://github.com/love2d/love/releases/download/11.3/love-11.3-win64.zip
         unzip love.zip
         echo "##[add-path]${{ github.workspace }}\love-11.3-win64"
     - name: Install Rust toolchain
@@ -39,7 +39,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install Love 2D
       run:  |
-        curl -L -o love https://bitbucket.org/rude/love/downloads/love-11.3-x86_64.AppImage
+        curl -L -o love https://github.com/love2d/love/releases/download/11.3/love-11.3-x86_64.AppImage
         chmod +x love
         echo "::add-path::${{ github.workspace }}"
     - name: Install Rust toolchain
