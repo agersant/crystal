@@ -41,6 +41,11 @@ fn build_and_query_mesh() {
 		assert_eq!((*polygons).num_polygons, 1);
 		polygons_delete(polygons);
 
+		let polygons = Box::into_raw(Box::new(mem::zeroed::<CPolygons>()));
+		mesh_list_navigation_polygons(mesh, polygons);
+		assert_eq!((*polygons).num_polygons, 8);
+		polygons_delete(polygons);
+
 		mesh_delete(mesh);
 	}
 }
