@@ -16,8 +16,11 @@ love.load = function()
 	require("engine/persistence/PersistenceCommands");
 	require("engine/mapscene/MapSceneCommands");
 
-	Module:setCurrent(require(MODULE):new());
-	Persistence:init();
+	local module = require(MODULE):new();
+	Module:setCurrent(module);
+
+	Persistence:init(module.classes.SaveData);
+
 	Log:info("Completed startup");
 end
 

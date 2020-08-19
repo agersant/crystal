@@ -1,14 +1,15 @@
 local Module = require("engine/Module");
 
 local engineTestFiles = {
+	"engine/dev/cli/TestCLI",
+	"engine/ecs/TestECS",
+	"engine/input/TestInputDevice",
 	"engine/mapscene/behavior/ai/TestAlignGoal",
 	"engine/mapscene/behavior/ai/TestEntityGoal",
 	"engine/mapscene/behavior/ai/TestMovement",
 	"engine/mapscene/behavior/ai/TestPath",
 	"engine/mapscene/behavior/ai/TestPositionGoal",
-	"engine/dev/cli/TestCLI",
-	"engine/ecs/TestECS",
-	"engine/input/TestInputDevice",
+	"engine/persistence/TestPersistence",
 	"engine/resources/TestAssets",
 	"engine/resources/map/TestCollisionMesh",
 	"engine/resources/map/TestNavigationMesh",

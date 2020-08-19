@@ -6,18 +6,14 @@ local StringUtils = require("engine/utils/StringUtils");
 
 local Persistence = Class("Persistence");
 
--- IMPLEMENTATION
-
-local getSaveDataClass = function(self)
-	return Module:getCurrent().classes.SaveData;
-end
-
 -- STATIC
 
 local saveData = nil;
 
-Persistence.init = function(self)
-	saveData = getSaveDataClass(self):new();
+Persistence.init = function(self, saveDataClass)
+	assert(saveDataClass);
+	self._saveDataClass = saveDataClass;
+	saveData = saveDataClass:new();
 end
 
 Persistence.getSaveData = function(self)
@@ -35,7 +31,7 @@ end
 Persistence.loadFromDisk = function(self, path)
 	local fileContent = love.filesystem.read(path);
 	local pod = TableUtils.unserialize(fileContent);
-	local newSaveData = getSaveDataClass(self):fromPOD(pod);
+	local newSaveData = self._saveDataClass:fromPOD(pod);
 	local fullPath = StringUtils.mergePaths(love.filesystem.getRealDirectory(path), path);
 	Log:info("Loaded player save from " .. fullPath);
 	saveData = newSaveData;
