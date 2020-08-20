@@ -7,7 +7,7 @@ local Colors = require("engine/resources/Colors");
 local CollisionMesh = Class("CollisionMesh");
 
 local newPolygons = function()
-	local output = FFI.gc(FFI.new(FFI.typeof("CPolygons")), function(polygons)
+	local output = FFI.gc(Diamond.polygons_new(), function(polygons)
 		Diamond.polygons_delete(polygons);
 	end);
 	return output;

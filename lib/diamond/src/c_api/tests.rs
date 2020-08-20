@@ -1,7 +1,7 @@
 use crate::c_api::builder::*;
 use crate::c_api::geometry::*;
 use crate::c_api::mesh::*;
-use std::{mem, slice};
+use std::slice;
 
 #[test]
 fn build_and_query_mesh() {
@@ -27,7 +27,7 @@ fn build_and_query_mesh() {
 		assert_eq!(nearest.x, 64.0);
 		assert_eq!(nearest.y, 40.0);
 
-		let path = Box::into_raw(Box::new(mem::zeroed::<CPolygon>()));
+		let path = polygon_new();
 		assert!(mesh_plan_path(mesh, 0.0, 0.0, 20.0, 20.0, path));
 		assert_eq!((*path).num_vertices, 2);
 		let path_vertices: &[CVertex] =
@@ -36,12 +36,12 @@ fn build_and_query_mesh() {
 		assert_eq!(path_vertices[1], CVertex { x: 20.0, y: 20.0 });
 		polygon_delete(path);
 
-		let polygons = Box::into_raw(Box::new(mem::zeroed::<CPolygons>()));
+		let polygons = polygons_new();
 		mesh_list_collision_polygons(mesh, polygons);
 		assert_eq!((*polygons).num_polygons, 1);
 		polygons_delete(polygons);
 
-		let polygons = Box::into_raw(Box::new(mem::zeroed::<CPolygons>()));
+		let polygons = polygons_new();
 		mesh_list_navigation_polygons(mesh, polygons);
 		assert_eq!((*polygons).num_polygons, 8);
 		polygons_delete(polygons);

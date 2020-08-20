@@ -8,14 +8,14 @@ local Colors = require("engine/resources/Colors");
 local NavigationMesh = Class("NavigationMesh");
 
 local newPolygon = function()
-	local output = FFI.gc(FFI.new(FFI.typeof("CPolygon")), function(polygon)
+	local output = FFI.gc(Diamond.polygon_new(), function(polygon)
 		Diamond.polygon_delete(polygon);
 	end);
 	return output;
 end
 
 local newPolygons = function()
-	local output = FFI.gc(FFI.new(FFI.typeof("CPolygons")), function(polygons)
+	local output = FFI.gc(Diamond.polygons_new(), function(polygons)
 		Diamond.polygons_delete(polygons);
 	end);
 	return output;
