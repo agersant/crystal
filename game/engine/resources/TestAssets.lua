@@ -27,7 +27,7 @@ tests[#tests].body = function()
 	local animationFrame = animation:getFrameAtTime(0);
 	assert(animationFrame:getSheetFrame());
 	assert(animationFrame:getDuration());
-	assert(animationFrame:getTagShape("test") == nil);
+	assert(animationFrame:getTagShape("test"));
 	local ox, oy = animationFrame:getOrigin();
 	assert(ox);
 	assert(oy);

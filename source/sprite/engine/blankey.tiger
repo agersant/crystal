@@ -20,7 +20,23 @@
       },
       {
         "source": "blankey_hurt_0.png",
-        "hitboxes": []
+        "hitboxes": [
+          {
+            "name": "test",
+            "geometry": {
+              "Rectangle": {
+                "top_left": [
+                  -5,
+                  -6
+                ],
+                "size": [
+                  11,
+                  11
+                ]
+              }
+            }
+          }
+        ]
       }
     ],
     "animations": [
