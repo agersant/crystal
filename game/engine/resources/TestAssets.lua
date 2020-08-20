@@ -11,4 +11,28 @@ tests[#tests].body = function()
 	Assets:unload(mapName);
 end
 
+tests[#tests + 1] = {name = "Load spritesheet"};
+tests[#tests].body = function()
+	local sheetName = "engine/assets/blankey.lua";
+	Assets:load(sheetName);
+
+	local sheet = Assets:getSpritesheet(sheetName);
+	assert(sheet);
+	assert(sheet:getImage());
+	assert(sheet:getFrame("frame_0"));
+
+	local animation = sheet:getAnimation(sheet:getDefaultAnimationName());
+	assert(animation:getDuration());
+
+	local animationFrame = animation:getFrameAtTime(0);
+	assert(animationFrame:getSheetFrame());
+	assert(animationFrame:getDuration());
+	assert(animationFrame:getTagShape("test") == nil);
+	local ox, oy = animationFrame:getOrigin();
+	assert(ox);
+	assert(oy);
+
+	Assets:unload(sheetName);
+end
+
 return tests;
