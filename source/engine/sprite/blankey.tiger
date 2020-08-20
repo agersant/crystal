@@ -95,7 +95,7 @@
     ],
     "export_settings": {
       "format": {
-        "Template": "..\\crystal.liquid"
+        "Template": "..\\..\\crystal.liquid"
       },
       "texture_destination": "..\\..\\..\\game\\engine\\assets\\blankey.png",
       "metadata_destination": "..\\..\\..\\game\\engine\\assets\\blankey.lua",

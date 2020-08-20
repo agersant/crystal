@@ -15,7 +15,7 @@ return {
     {
       name = "dev",
       firstgid = 1,
-      filename = "../../../../source/tileset/dev.tsx",
+      filename = "../../../../source/engine/tileset/dev.tsx",
       tilewidth = 16,
       tileheight = 16,
       spacing = 0,

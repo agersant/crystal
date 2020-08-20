@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tileset name="dev" tilewidth="16" tileheight="16" tilecount="64" columns="8">
- <image source="../../game/engine/assets/tileset.png" width="128" height="128"/>
+ <image source="../../../game/engine/assets/tileset.png" width="128" height="128"/>
  <tile id="2">
   <objectgroup draworder="index">
    <object id="0" x="0" y="0" width="16" height="16"/>
