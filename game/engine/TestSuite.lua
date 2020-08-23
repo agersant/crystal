@@ -10,6 +10,7 @@ local engineTestFiles = {
 	"engine/mapscene/behavior/ai/TestPath",
 	"engine/mapscene/behavior/ai/TestPositionGoal",
 	"engine/mapscene/physics/TestContacts",
+	"engine/mapscene/physics/TestPhysicsBody",
 	"engine/persistence/TestPersistence",
 	"engine/resources/TestAssets",
 	"engine/resources/map/TestCollisionMesh",
