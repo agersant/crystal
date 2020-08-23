@@ -9,6 +9,8 @@ Hitbox.init = function(self)
 end
 
 Hitbox.setShape = function(self, body, shape)
+	assert(body);
+	assert(shape);
 	if self._fixture then
 		self._fixture:destroy();
 		self._fixture = nil;
@@ -21,10 +23,10 @@ Hitbox.setShape = function(self, body, shape)
 	end
 end
 
-Hitbox.onBeginTouch = function(self, otherEntity)
+Hitbox.onBeginTouch = function(self, otherComponent)
 end
 
-Hitbox.onEndTouch = function(self, otherEntity)
+Hitbox.onEndTouch = function(self, otherComponent)
 end
 
 return Hitbox;
