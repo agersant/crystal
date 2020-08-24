@@ -31,8 +31,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Install xvfb
-      run: sudo apt-get install Xvfb
+    - name: Install Xvfb
+      run: sudo apt-get install xvfb
     - name: Install Love 2D
       run:  |
         curl -L -o love https://github.com/love2d/love/releases/download/11.3/love-11.3-x86_64.AppImage
