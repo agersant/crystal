@@ -44,8 +44,10 @@ jobs:
       run: cargo tarpaulin --ignore-tests --out Xml -t 600
       working-directory: ./lib/diamond
     - name: Run Crystal Tests
-      run: love . /test-unit /test-gfx /coverage
-      working-directory: ./game
+        uses: GabrielBB/xvfb-action@v1.2
+        with:
+          working-directory: ./game
+          run: love . /test-unit /test-gfx /coverage
     - name: Upload Test Coverage Results
       uses: codecov/codecov-action@v1
       with:
