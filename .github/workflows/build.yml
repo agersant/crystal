@@ -22,7 +22,7 @@ jobs:
       run: cargo test --release
       working-directory: ./lib/diamond
     - name: Run Crystal Tests
-      run: lovec . /test-unit /coverage
+      run: lovec . /test-unit
       working-directory: ./game
 
   tests-linux:
