@@ -7,7 +7,7 @@ local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Get Nearest Enemy"};
+tests[#tests + 1] = {name = "Get Nearest Enemy", gfx = "mock"};
 tests[#tests].body = function()
 
 	local scene = MapScene:new("engine/assets/empty_map.lua");
@@ -37,7 +37,7 @@ tests[#tests].body = function()
 	assert(nearest == enemyB);
 end
 
-tests[#tests + 1] = {name = "Get Nearest Ally"};
+tests[#tests + 1] = {name = "Get Nearest Ally", gfx = "mock"};
 tests[#tests].body = function()
 
 	local scene = MapScene:new("engine/assets/empty_map.lua");

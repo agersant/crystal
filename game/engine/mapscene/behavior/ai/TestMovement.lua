@@ -6,7 +6,7 @@ local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Walk to point"};
+tests[#tests + 1] = {name = "Walk to point", gfx = "mock"};
 tests[#tests].body = function()
 	local scene = MapScene:new("engine/assets/empty_map.lua");
 

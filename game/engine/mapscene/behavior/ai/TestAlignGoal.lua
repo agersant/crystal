@@ -5,7 +5,7 @@ local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Get position"};
+tests[#tests + 1] = {name = "Get position", gfx = "mock"};
 tests[#tests].body = function()
 	local scene = MapScene:new("engine/assets/empty_map.lua");
 
@@ -22,7 +22,7 @@ tests[#tests].body = function()
 	assert(y == 0);
 end
 
-tests[#tests + 1] = {name = "Accept"};
+tests[#tests + 1] = {name = "Accept", gfx = "mock"};
 tests[#tests].body = function()
 	local scene = MapScene:new("engine/assets/empty_map.lua");
 
@@ -41,7 +41,7 @@ tests[#tests].body = function()
 	assert(goal:isPositionAcceptable(0, .5));
 end
 
-tests[#tests + 1] = {name = "Reject"};
+tests[#tests + 1] = {name = "Reject", gfx = "mock"};
 tests[#tests].body = function()
 	local scene = MapScene:new("engine/assets/empty_map.lua");
 

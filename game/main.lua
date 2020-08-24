@@ -1,3 +1,5 @@
+_G["love"] = love or {};
+
 local Features = require("engine/dev/Features");
 
 MODULE = "arpg/ARPG"
@@ -8,7 +10,6 @@ if Features.unitTesting then
 		local luacovExcludes = {"assets/.*$", "^main$", "Test"};
 		luacov.init({runreport = true, exclude = luacovExcludes});
 	end
-	require("engine/dev/mock/love/graphics");
 	local TestSuite = require("engine/TestSuite");
 	local success = TestSuite.execute();
 	love.event.quit(success and 0 or 1);

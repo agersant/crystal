@@ -1,4 +1,3 @@
-local CLI = require("engine/dev/cli/CLI");
 local GFXConfig = require("engine/graphics/GFXConfig");
 
 local setZoom = function(zoom)
@@ -13,6 +12,12 @@ local disableFullscreen = function()
 	GFXConfig:setFullscreenEnabled(false);
 end
 
-CLI:addCommand("setZoom zoom:number", setZoom);
-CLI:addCommand("enableFullscreen", enableFullscreen);
-CLI:addCommand("disableFullscreen", disableFullscreen);
+local GFXCommands = {};
+
+GFXCommands.registerCommands = function(self, cli)
+	cli:addCommand("setZoom zoom:number", setZoom);
+	cli:addCommand("enableFullscreen", enableFullscreen);
+	cli:addCommand("disableFullscreen", disableFullscreen);
+end
+
+return GFXCommands;

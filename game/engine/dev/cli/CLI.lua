@@ -20,7 +20,6 @@ local maxHistory = 20;
 local maxUndo = 20;
 local fontSize = 20;
 local marginX = 20;
-local marginY = 20;
 local inputBoxPaddingX = 10;
 local inputBoxPaddingY = 4;
 local autoCompleteMargin = 16;
@@ -108,16 +107,31 @@ CLI.init = function(self)
 end
 
 CLI.toggle = function(self)
-	self._isActive = not self._isActive;
 	if self._isActive then
-		self._textInputWasOn = love.keyboard.hasTextInput();
-		self._keyRepeatWasOn = love.keyboard.hasKeyRepeat();
-		love.keyboard.setTextInput(true);
-		love.keyboard.setKeyRepeat(true);
+		self:disable();
 	else
-		love.keyboard.setTextInput(self._textInputWasOn);
-		love.keyboard.setKeyRepeat(self._keyRepeatWasOn);
+		self:enable();
 	end
+end
+
+CLI.enable = function(self)
+	if self._isActive then
+		return;
+	end
+	self._isActive = true;
+	self._textInputWasOn = love.keyboard.hasTextInput();
+	self._keyRepeatWasOn = love.keyboard.hasKeyRepeat();
+	love.keyboard.setTextInput(true);
+	love.keyboard.setKeyRepeat(true);
+end
+
+CLI.disable = function(self)
+	if not self._isActive then
+		return;
+	end
+	self._isActive = false;
+	love.keyboard.setTextInput(self._textInputWasOn);
+	love.keyboard.setKeyRepeat(self._keyRepeatWasOn);
 end
 
 CLI.isActive = function(self)
@@ -315,6 +329,7 @@ CLI.keyPressed = function(self, key, scanCode, ctrl)
 end
 
 CLI.addCommand = function(self, description, func)
+	-- TODO make command store a singleton so it can be talked to without CLI instance
 	self._commandStore:addCommand(description, func);
 end
 
@@ -322,5 +337,4 @@ CLI.removeCommand = function(self, name)
 	self._commandStore:removeCommand(name);
 end
 
-local instance = CLI:new();
-return instance;
+return CLI;

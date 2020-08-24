@@ -1,6 +1,5 @@
 require("engine/utils/OOP");
 local Log = require("engine/dev/Log");
-local Module = require("engine/Module");
 local TableUtils = require("engine/utils/TableUtils");
 local StringUtils = require("engine/utils/StringUtils");
 
@@ -35,6 +34,17 @@ Persistence.loadFromDisk = function(self, path)
 	local fullPath = StringUtils.mergePaths(love.filesystem.getRealDirectory(path), path);
 	Log:info("Loaded player save from " .. fullPath);
 	saveData = newSaveData;
+end
+
+Persistence.registerCommands = function(self, cli)
+	cli:addCommand("save fileName:string", function(fileName)
+		Persistence:getSaveData():save();
+		Persistence:writeToDisk(fileName);
+	end);
+	cli:addCommand("load fileName:string", function(fileName)
+		Persistence:loadFromDisk(fileName);
+		Persistence:getSaveData():load();
+	end);
 end
 
 return Persistence;

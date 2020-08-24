@@ -11,7 +11,7 @@ end
 
 -- STATIC
 
-local currentModule = Module:new();
+local currentModule;
 
 Module.getCurrent = function(self)
 	return currentModule;

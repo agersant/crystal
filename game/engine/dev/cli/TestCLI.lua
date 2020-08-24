@@ -2,106 +2,104 @@ local CLI = require("engine/dev/cli/CLI");
 
 local tests = {};
 
-local enableCLI = function()
-	if not CLI:isActive() then
-		CLI:toggle();
-	end
+tests[#tests + 1] = {name = "Toggling", gfx = "mock"};
+tests[#tests].body = function()
+	local cli = CLI:new();
+	local wasActive = cli:isActive();
+	cli:toggle();
+	assert(cli:isActive() ~= wasActive);
+	cli:toggle();
+	assert(cli:isActive() == wasActive);
 end
 
-tests[#tests + 1] = {name = "Toggling"};
+tests[#tests + 1] = {name = "Run command", gfx = "mock"};
 tests[#tests].body = function()
-	local wasActive = CLI:isActive();
-	CLI:toggle();
-	assert(CLI:isActive() ~= wasActive);
-	CLI:toggle();
-	assert(CLI:isActive() == wasActive);
-end
-
-tests[#tests + 1] = {name = "Run command"};
-tests[#tests].body = function()
-	enableCLI();
+	local cli = CLI:new();
+	cli:enable();
 	local sentinel = 0;
-	CLI:addCommand("testCommand", function()
+	cli:addCommand("testCommand", function()
 		sentinel = 1;
 	end);
-	CLI:textInput("testCommand");
-	CLI:keyPressed("return");
+	cli:textInput("testCommand");
+	cli:keyPressed("return");
 	assert(sentinel == 1);
-	CLI:removeCommand("testCommand");
 end
 
-tests[#tests + 1] = {name = "Number argument"};
+tests[#tests + 1] = {name = "Number argument", gfx = "mock"};
 tests[#tests].body = function()
-	enableCLI();
+	local cli = CLI:new();
+	cli:enable();
 	local sentinel = 0;
-	CLI:addCommand("testCommand value:number", function(value)
+	cli:addCommand("testCommand value:number", function(value)
 		sentinel = value;
 	end);
-	CLI:textInput("testCommand 2");
-	CLI:keyPressed("return");
+	cli:textInput("testCommand 2");
+	cli:keyPressed("return");
 	assert(sentinel == 2);
-	CLI:removeCommand("testCommand");
 end
 
-tests[#tests + 1] = {name = "String argument"};
+tests[#tests + 1] = {name = "String argument", gfx = "mock"};
 tests[#tests].body = function()
-	enableCLI();
+	local cli = CLI:new();
+	cli:enable();
 	local sentinel = "";
-	CLI:addCommand("testCommand value:string", function(value)
+	cli:addCommand("testCommand value:string", function(value)
 		sentinel = value;
 	end);
-	CLI:textInput("testCommand oink");
-	CLI:keyPressed("return");
+	cli:textInput("testCommand oink");
+	cli:keyPressed("return");
 	assert(sentinel == "oink");
-	CLI:removeCommand("testCommand");
 end
 
-tests[#tests + 1] = {name = "Execute from code"};
+tests[#tests + 1] = {name = "Execute from code", gfx = "mock"};
 tests[#tests].body = function()
+	local cli = CLI:new();
 	local sentinel = "";
-	CLI:addCommand("testCommand value:string", function(value)
+	cli:addCommand("testCommand value:string", function(value)
 		sentinel = value;
 	end);
-	CLI:execute("testCommand oink");
+	cli:execute("testCommand oink");
 	assert(sentinel == "oink");
-	CLI:removeCommand("testCommand");
 end
 
-tests[#tests + 1] = {name = "Execute from history"};
+tests[#tests + 1] = {name = "Execute from history", gfx = "mock"};
 tests[#tests].body = function()
+	local cli = CLI:new();
+	cli:enable();
+
 	local sentinel = "";
-	CLI:addCommand("testCommand value:string", function(value)
+	cli:addCommand("testCommand value:string", function(value)
 		sentinel = value;
 	end);
 
-	CLI:textInput("testCommand oink");
-	CLI:keyPressed("return");
+	cli:textInput("testCommand oink");
+	cli:keyPressed("return");
 	assert(sentinel == "oink");
 
-	CLI:keyPressed("up");
-	CLI:textInput("k");
-	CLI:keyPressed("return");
+	cli:keyPressed("up");
+	cli:textInput("k");
+	cli:keyPressed("return");
 	assert(sentinel == "oinkk");
 
-	CLI:keyPressed("up");
-	CLI:keyPressed("up");
-	CLI:keyPressed("return");
+	cli:keyPressed("up");
+	cli:keyPressed("up");
+	cli:keyPressed("return");
 	assert(sentinel == "oink");
-
-	CLI:removeCommand("testCommand");
 end
 
-tests[#tests + 1] = {name = "Autocomplete"};
+tests[#tests + 1] = {name = "Autocomplete", gfx = "mock"};
 tests[#tests].body = function()
+	local cli = CLI:new();
+	cli:enable();
+
 	local sentinel = "";
-	CLI:addCommand("testCommand", function(value)
+	cli:addCommand("testCommand", function(value)
 		sentinel = "oink";
 	end);
-	CLI:textInput("testcomm");
-	CLI:keyPressed("tab");
-	CLI:keyPressed("return");
+	cli:textInput("testcomm");
+	cli:keyPressed("tab");
+	cli:keyPressed("return");
 	assert(sentinel == "oink");
-	CLI:removeCommand("testCommand");
 end
 
 return tests;

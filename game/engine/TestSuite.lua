@@ -1,4 +1,6 @@
+local Assets = require("engine/resources/Assets");
 local Module = require("engine/Module");
+local MockGraphics = require("engine/dev/mock/love/graphics");
 
 local engineTestFiles = {
 	"engine/dev/cli/TestCLI",
@@ -25,6 +27,15 @@ local engineTestFiles = {
 	"engine/utils/TestTableUtils",
 };
 
+local resetGlobalContext = function(test)
+	Assets:unloadAll();
+	if test.gfx == "mock" then
+		MockGraphics:enable();
+	else
+		MockGraphics:disable();
+	end
+end
+
 local runTestFile = function(source)
 
 	print("");
@@ -35,6 +46,7 @@ local runTestFile = function(source)
 	for i, test in ipairs(tests) do
 		assert(type(test.name) == "string");
 		assert(type(test.body) == "function");
+		resetGlobalContext(test);
 		local success, errorText = xpcall(test.body, function(err)
 			print("    " .. test.name .. ": FAIL (see error output below)");
 			print(err);
