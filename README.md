@@ -36,7 +36,7 @@ This screenshot illustrates usage of the dev CLI to spawn entities of various ty
 ## Windows
 
 ### Install dependencies
-1. Install the 64-bit version of [Love2D](https://love2d.org/) (0.11.3 as of this writing)
+1. Install the 64-bit version of [Love2D](https://love2d.org/) (11.3 as of this writing)
 2. Install the stable version of the [Rust compiler](https://www.rust-lang.org/learn/get-started)
 3. Add `C:\Program Files\LOVE` to your path
 
