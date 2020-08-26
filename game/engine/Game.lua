@@ -1,9 +1,9 @@
+require("engine/dev/HotReload");
 local GFXConfig = require("engine/graphics/GFXConfig");
 local FPSCounter = require("engine/dev/FPSCounter");
-local HotReload = require("engine/dev/HotReload");
 local Log = require("engine/dev/Log");
 local CLI = require("engine/dev/cli/CLI");
-local GFXCommands = require("engine/graphics/GFXCommands");
+local CommandStore = require("engine/dev/cli/CommandStore");
 local Input = require("engine/input/Input");
 local MapScene = require("engine/mapscene/MapScene");
 local Persistence = require("engine/persistence/Persistence");
@@ -11,18 +11,13 @@ local Scene = require("engine/Scene");
 local Module = require("engine/Module");
 
 local cli;
+local fpsCounter;
 
 love.load = function()
 	love.keyboard.setTextInput(false);
 
-	cli = CLI:new();
-
-	-- TODO revisit?
-	FPSCounter:registerCommands(cli);
-	HotReload:registerCommands(cli);
-	GFXCommands:registerCommands(cli);
-	Persistence:registerCommands(cli);
-	MapScene:registerCommands(cli);
+	cli = CLI:new(CommandStore:getGlobalStore());
+	fpsCounter = FPSCounter:new();
 
 	local module = require(MODULE):new();
 	Module:setCurrent(module);
@@ -33,7 +28,7 @@ love.load = function()
 end
 
 love.update = function(dt)
-	FPSCounter:update(dt);
+	fpsCounter:update(dt);
 
 	local scene;
 	local newScene = Scene:getCurrent();
@@ -53,7 +48,7 @@ love.draw = function()
 	Scene:getCurrent():draw();
 
 	love.graphics.reset();
-	FPSCounter:draw();
+	fpsCounter:draw();
 	cli:draw();
 end
 

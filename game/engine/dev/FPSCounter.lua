@@ -1,17 +1,19 @@
+require("engine/utils/OOP");
 local Features = require("engine/dev/Features");
+local CLI = require("engine/dev/cli/CLI");
 local Log = require("engine/dev/Log");
 local Colors = require("engine/resources/Colors");
 local Fonts = require("engine/resources/Fonts");
 
-local FPSCounter = {};
+local FPSCounter = Class("FPSCounter");
 
 if not Features.fpsCounter then
 	Features.stub(FPSCounter);
 end
 
 local numFramesRecorded = 255;
-local targetFPS = 60;
-local maxFPSDisplay = 80;
+local targetFPS = 144;
+local maxFPSDisplay = 200;
 
 local fontSize = 16;
 local height = math.ceil(numFramesRecorded * 9 / 16);
@@ -20,12 +22,12 @@ local paddingY = 20;
 local textPaddingX = 10;
 local textPaddingY = 5;
 
-local state = {isActive = false, frameDurations = {}, font = nil};
+local state = {isActive = false, frameDurations = {}};
 
 -- PUBLIC API
 
 FPSCounter.init = function(self)
-	state.font = Fonts:get("dev", fontSize);
+	self.font = Fonts:get("dev", fontSize);
 end
 
 FPSCounter.update = function(self, dt)
@@ -70,19 +72,18 @@ FPSCounter.draw = function(self)
 	x = paddingX + textPaddingX;
 	y = paddingY + textPaddingY;
 	love.graphics.setColor(Colors.nightSkyBlue);
-	love.graphics.setFont(state.font);
+	love.graphics.setFont(self.font);
 	love.graphics.print(self._text, x + 1, y + 1);
 	love.graphics.setColor(Colors.white);
 	love.graphics.print(self._text, x, y);
 end
 
-FPSCounter.registerCommands = function(self, cli)
-	cli:addCommand("showFPSCounter", function()
-		state.isActive = true;
-	end);
-	cli:addCommand("hideFPSCounter", function()
-		state.isActive = false;
-	end);
-end
+CLI:registerCommand("showFPSCounter", function()
+	state.isActive = true;
+end);
+
+CLI:registerCommand("hideFPSCounter", function()
+	state.isActive = false;
+end);
 
 return FPSCounter;

@@ -94,8 +94,8 @@ end
 
 -- PUBLIC API
 
-CLI.init = function(self)
-	self._commandStore = CommandStore:new();
+CLI.init = function(self, commandStore)
+	self._commandStore = commandStore or CommandStore:new();
 	self._autoComplete = AutoComplete:new(self._commandStore);
 	self._inputs = {TextInput:new(maxUndo)};
 	self._inputCursor = 1;
@@ -329,12 +329,16 @@ CLI.keyPressed = function(self, key, scanCode, ctrl)
 end
 
 CLI.addCommand = function(self, description, func)
-	-- TODO make command store a singleton so it can be talked to without CLI instance
 	self._commandStore:addCommand(description, func);
 end
 
 CLI.removeCommand = function(self, name)
 	self._commandStore:removeCommand(name);
+end
+
+CLI.registerCommand = function(self, description, func)
+	local store = CommandStore:getGlobalStore();
+	store:addCommand(description, func);
 end
 
 return CLI;

@@ -1,7 +1,8 @@
 require("engine/utils/OOP");
-local ECS = require("engine/ecs/ECS");
+local CLI = require("engine/dev/cli/CLI");
 local DebugFlags = require("engine/dev/DebugFlags");
 local Log = require("engine/dev/Log");
+local ECS = require("engine/ecs/ECS");
 local Assets = require("engine/resources/Assets");
 local Camera = require("engine/mapscene/Camera");
 local ActorSystem = require("engine/mapscene/behavior/ActorSystem");
@@ -210,69 +211,70 @@ MapScene.getMapName = function(self)
 	return self._mapName;
 end
 
-MapScene.registerCommands = function(self, cli)
+CLI:registerCommand("loadMap mapName:string", function(mapName)
+	Persistence:getSaveData():save();
+	local module = Module:getCurrent();
+	local sceneClass = module.classes.MapScene;
+	local sceneFile = StringUtils.mergePaths(module.mapDirectory, mapName .. ".lua");
+	local newScene = sceneClass:new(sceneFile);
+	Scene:setCurrent(newScene);
+end);
 
-	cli:addCommand("loadMap mapName:string", function(mapName)
-		Persistence:getSaveData():save();
-		local module = Module:getCurrent();
-		local sceneClass = module.classes.MapScene;
-		local sceneFile = StringUtils.mergePaths(module.mapDirectory, mapName .. ".lua");
-		local newScene = sceneClass:new(sceneFile);
-		Scene:setCurrent(newScene);
-	end);
-
-	local setDrawPhysicsOverlay = function(draw)
-		DebugFlags.drawPhysics = draw;
-	end
-	cli:addCommand("showPhysicsOverlay", function()
-		setDrawPhysicsOverlay(true);
-	end);
-	cli:addCommand("hidePhysicsOverlay", function()
-		setDrawPhysicsOverlay(false);
-	end);
-
-	local setDrawNavmeshOverlay = function(draw)
-		DebugFlags.drawNavmesh = draw;
-	end
-	cli:addCommand("showNavmeshOverlay", function()
-		setDrawNavmeshOverlay(true);
-	end);
-	cli:addCommand("hideNavmeshOverlay", function()
-		setDrawNavmeshOverlay(false);
-	end);
-
-	local spawn = function(className)
-		local currentScene = Scene:getCurrent();
-
-		local player;
-		local players = currentScene:getECS():getAllEntitiesWith(InputListener);
-		for entity in pairs(players) do
-			player = entity;
-			break
-		end
-		assert(player);
-
-		local map = currentScene:getMap();
-		assert(map);
-
-		local class = Class:getByName(className);
-		assert(class);
-		assert(class:isInstanceOf(Entity));
-		local entity = currentScene:spawn(class);
-
-		local physicsBody = entity:getComponent(PhysicsBody);
-		if physicsBody then
-			local x, y = player:getPosition();
-			local angle = math.random(2 * math.pi);
-			local radius = 40;
-			x = x + radius * math.cos(angle);
-			y = y + radius * math.sin(angle);
-			x, y = map:getNearestPointOnNavmesh(x, y);
-			physicsBody:setPosition(x, y);
-		end
-	end
-
-	cli:addCommand("spawn className:string", spawn);
+local setDrawPhysicsOverlay = function(draw)
+	DebugFlags.drawPhysics = draw;
 end
+
+CLI:registerCommand("showPhysicsOverlay", function()
+	setDrawPhysicsOverlay(true);
+end);
+
+CLI:registerCommand("hidePhysicsOverlay", function()
+	setDrawPhysicsOverlay(false);
+end);
+
+local setDrawNavmeshOverlay = function(draw)
+	DebugFlags.drawNavmesh = draw;
+end
+
+CLI:registerCommand("showNavmeshOverlay", function()
+	setDrawNavmeshOverlay(true);
+end);
+
+CLI:registerCommand("hideNavmeshOverlay", function()
+	setDrawNavmeshOverlay(false);
+end);
+
+local spawn = function(className)
+	local currentScene = Scene:getCurrent();
+
+	local player;
+	local players = currentScene:getECS():getAllEntitiesWith(InputListener);
+	for entity in pairs(players) do
+		player = entity;
+		break
+	end
+	assert(player);
+
+	local map = currentScene:getMap();
+	assert(map);
+
+	local class = Class:getByName(className);
+	assert(class);
+	assert(class:isInstanceOf(Entity));
+	local entity = currentScene:spawn(class);
+
+	local physicsBody = entity:getComponent(PhysicsBody);
+	if physicsBody then
+		local x, y = player:getPosition();
+		local angle = math.random(2 * math.pi);
+		local radius = 40;
+		x = x + radius * math.cos(angle);
+		y = y + radius * math.sin(angle);
+		x, y = map:getNearestPointOnNavmesh(x, y);
+		physicsBody:setPosition(x, y);
+	end
+end
+
+CLI:registerCommand("spawn className:string", spawn);
 
 return MapScene;

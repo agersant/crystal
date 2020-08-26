@@ -1,4 +1,5 @@
 require("engine/utils/OOP");
+local CLI = require("engine/dev/cli/CLI");
 local Log = require("engine/dev/Log");
 local TableUtils = require("engine/utils/TableUtils");
 local StringUtils = require("engine/utils/StringUtils");
@@ -36,15 +37,14 @@ Persistence.loadFromDisk = function(self, path)
 	saveData = newSaveData;
 end
 
-Persistence.registerCommands = function(self, cli)
-	cli:addCommand("save fileName:string", function(fileName)
-		Persistence:getSaveData():save();
-		Persistence:writeToDisk(fileName);
-	end);
-	cli:addCommand("load fileName:string", function(fileName)
-		Persistence:loadFromDisk(fileName);
-		Persistence:getSaveData():load();
-	end);
-end
+CLI:registerCommand("save fileName:string", function(fileName)
+	Persistence:getSaveData():save();
+	Persistence:writeToDisk(fileName);
+end);
+
+CLI:registerCommand("load fileName:string", function(fileName)
+	Persistence:loadFromDisk(fileName);
+	Persistence:getSaveData():load();
+end);
 
 return Persistence;

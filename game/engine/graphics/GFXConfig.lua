@@ -1,4 +1,5 @@
 require("engine/utils/OOP");
+local CLI = require("engine/dev/cli/CLI");
 
 local GFXConfig = Class("GFXConfig");
 local instance;
@@ -88,4 +89,21 @@ GFXConfig.applyTransforms = function(self)
 end
 
 instance = GFXConfig:new();
+
+local setZoom = function(zoom)
+	instance:setZoom(zoom);
+end
+
+local enableFullscreen = function()
+	instance:setFullscreenEnabled(true);
+end
+
+local disableFullscreen = function()
+	instance:setFullscreenEnabled(false);
+end
+
+CLI:registerCommand("setZoom zoom:number", setZoom);
+CLI:registerCommand("enableFullscreen", enableFullscreen);
+CLI:registerCommand("disableFullscreen", disableFullscreen);
+
 return instance;

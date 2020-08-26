@@ -71,10 +71,4 @@ local reloadChangedFiles = function()
 	CLI:execute("load hot_reload");
 end
 
-local HotReload = {};
-
-HotReload.registerCommands = function(self, cli)
-	cli:addCommand("hotReload", reloadChangedFiles);
-end
-
-return HotReload;
+CLI:registerCommand("hotReload", reloadChangedFiles);
