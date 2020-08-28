@@ -42,7 +42,7 @@
 			"command": "lovec",
 			"args": [
 				".",
-				"/test-unit",
+				"/test-unit"
 			],
 			"problemMatcher": {
 				"owner": "lua",
