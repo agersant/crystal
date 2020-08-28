@@ -12,7 +12,9 @@ if Features.testing then
 	end
 	local TestSuite = require("engine/dev/TestSuite");
 	local success = TestSuite:execute();
-	love.event.quit(success and 0 or 1);
+	local exitCode = success and 0 or 1;
+	print("exitCode " .. exitCode);
+	love.event.quit(exitCode);
 else
 	require("engine/Game");
 end
