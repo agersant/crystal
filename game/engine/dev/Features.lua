@@ -6,11 +6,12 @@ local Features = Class("Features");
 Features.init = function(self)
 	local release = love.filesystem.isFused();
 	self.unitTesting = TableUtils.contains(arg, "/test-unit");
-	self.gfxTesting = TableUtils.contains(arg, "/test-gfx") and self.unitTesting;
+	self.gfxTesting = TableUtils.contains(arg, "/test-gfx");
+	self.testing = self.unitTesting or self.gfxTesting;
 	self.codeCoverage = TableUtils.contains(arg, "/coverage");
-	self.audioOutput = not self.unitTesting;
-	self.display = self.gfxTesting or not self.unitTesting;
-	self.logging = not release and not self.unitTesting;
+	self.audioOutput = not self.testing;
+	self.display = self.gfxTesting or not self.testing;
+	self.logging = not release and not self.testing;
 	-- TODO adjustable logging level so warnings and errors appear during unit tests
 	self.cli = not release;
 	self.fpsCounter = not release;
