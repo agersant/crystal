@@ -22,7 +22,7 @@ jobs:
       run: cargo test --release
       working-directory: ./lib/diamond
     - name: Run Crystal Tests
-      run: lovec . /test /coverage
+      run: lovec . /test-unit
       working-directory: ./game
 
   tests-linux:
@@ -44,8 +44,13 @@ jobs:
       run: cargo tarpaulin --ignore-tests --out Xml -t 600
       working-directory: ./lib/diamond
     - name: Run Crystal Tests
-      run: love . /test /coverage
+      run: xvfb-run --auto-servernum love . /test-unit /test-gfx /coverage
       working-directory: ./game
+    - uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: test-output
+        path: game/test-output
     - name: Upload Test Coverage Results
       uses: codecov/codecov-action@v1
       with:

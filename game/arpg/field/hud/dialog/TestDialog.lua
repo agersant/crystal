@@ -9,7 +9,7 @@ local DialogBox = require("arpg/field/hud/dialog/DialogBox");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Blocks script during dialog"};
+tests[#tests + 1] = {name = "Blocks script during dialog", gfx = "mock"};
 tests[#tests].body = function()
 	local scene = MapScene:new("engine/assets/empty_map.lua");
 

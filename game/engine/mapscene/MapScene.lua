@@ -1,11 +1,14 @@
 require("engine/utils/OOP");
+local CLI = require("engine/dev/cli/CLI");
+local DebugFlags = require("engine/dev/DebugFlags");
 local Log = require("engine/dev/Log");
-local Assets = require("engine/resources/Assets");
 local ECS = require("engine/ecs/ECS");
+local Assets = require("engine/resources/Assets");
 local Camera = require("engine/mapscene/Camera");
-local Scene = require("engine/Scene");
 local ActorSystem = require("engine/mapscene/behavior/ActorSystem");
 local MovementAISystem = require("engine/mapscene/behavior/ai/MovementAISystem");
+local Entity = require("engine/ecs/Entity");
+local InputListener = require("engine/mapscene/behavior/InputListener");
 local InputListenerSystem = require("engine/mapscene/behavior/InputListenerSystem");
 local ScriptRunnerSystem = require("engine/mapscene/behavior/ScriptRunnerSystem");
 local SpriteSystem = require("engine/mapscene/display/SpriteSystem");
@@ -18,12 +21,17 @@ local Hitbox = require("engine/mapscene/physics/Hitbox");
 local HitboxSystem = require("engine/mapscene/physics/HitboxSystem");
 local LocomotionSystem = require("engine/mapscene/physics/LocomotionSystem");
 local ParentSystem = require("engine/mapscene/physics/ParentSystem");
+local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local PhysicsBodySystem = require("engine/mapscene/physics/PhysicsBodySystem");
 local TouchTrigger = require("engine/mapscene/physics/TouchTrigger");
 local TouchTriggerSystem = require("engine/mapscene/physics/TouchTriggerSystem");
 local Weakbox = require("engine/mapscene/physics/Weakbox");
 local WeakboxSystem = require("engine/mapscene/physics/WeakboxSystem");
+local Module = require("engine/Module");
+local Persistence = require("engine/persistence/Persistence");
+local Scene = require("engine/Scene");
 local Alias = require("engine/utils/Alias");
+local StringUtils = require("engine/utils/StringUtils");
 
 local MapScene = Class("MapScene", Scene);
 
@@ -202,5 +210,71 @@ end
 MapScene.getMapName = function(self)
 	return self._mapName;
 end
+
+CLI:registerCommand("loadMap mapName:string", function(mapName)
+	Persistence:getSaveData():save();
+	local module = Module:getCurrent();
+	local sceneClass = module.classes.MapScene;
+	local sceneFile = StringUtils.mergePaths(module.mapDirectory, mapName .. ".lua");
+	local newScene = sceneClass:new(sceneFile);
+	Scene:setCurrent(newScene);
+end);
+
+local setDrawPhysicsOverlay = function(draw)
+	DebugFlags.drawPhysics = draw;
+end
+
+CLI:registerCommand("showPhysicsOverlay", function()
+	setDrawPhysicsOverlay(true);
+end);
+
+CLI:registerCommand("hidePhysicsOverlay", function()
+	setDrawPhysicsOverlay(false);
+end);
+
+local setDrawNavmeshOverlay = function(draw)
+	DebugFlags.drawNavmesh = draw;
+end
+
+CLI:registerCommand("showNavmeshOverlay", function()
+	setDrawNavmeshOverlay(true);
+end);
+
+CLI:registerCommand("hideNavmeshOverlay", function()
+	setDrawNavmeshOverlay(false);
+end);
+
+local spawn = function(className)
+	local currentScene = Scene:getCurrent();
+
+	local player;
+	local players = currentScene:getECS():getAllEntitiesWith(InputListener);
+	for entity in pairs(players) do
+		player = entity;
+		break
+	end
+	assert(player);
+
+	local map = currentScene:getMap();
+	assert(map);
+
+	local class = Class:getByName(className);
+	assert(class);
+	assert(class:isInstanceOf(Entity));
+	local entity = currentScene:spawn(class);
+
+	local physicsBody = entity:getComponent(PhysicsBody);
+	if physicsBody then
+		local x, y = player:getPosition();
+		local angle = math.random(2 * math.pi);
+		local radius = 40;
+		x = x + radius * math.cos(angle);
+		y = y + radius * math.sin(angle);
+		x, y = map:getNearestPointOnNavmesh(x, y);
+		physicsBody:setPosition(x, y);
+	end
+end
+
+CLI:registerCommand("spawn className:string", spawn);
 
 return MapScene;

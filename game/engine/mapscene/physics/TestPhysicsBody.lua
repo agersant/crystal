@@ -4,7 +4,7 @@ local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "LookAt turns to correct direction"};
+tests[#tests + 1] = {name = "LookAt turns to correct direction", gfx = "mock"};
 tests[#tests].body = function()
 	local scene = MapScene:new("engine/assets/empty_map.lua");
 	local entity = scene:spawn(Entity);
@@ -27,7 +27,7 @@ tests[#tests].body = function()
 	assert(entity:getDirection4() == "up");
 end
 
-tests[#tests + 1] = {name = "Distance measurements"};
+tests[#tests + 1] = {name = "Distance measurements", gfx = "mock"};
 tests[#tests].body = function()
 	local scene = MapScene:new("engine/assets/empty_map.lua");
 	local entity = scene:spawn(Entity);
@@ -43,7 +43,7 @@ tests[#tests].body = function()
 	assert(entity:distance2To(target:getPosition()) == 100);
 end
 
-tests[#tests + 1] = {name = "Stores altitude"};
+tests[#tests + 1] = {name = "Stores altitude", gfx = "mock"};
 tests[#tests].body = function()
 	local scene = MapScene:new("engine/assets/empty_map.lua");
 	local entity = scene:spawn(Entity);

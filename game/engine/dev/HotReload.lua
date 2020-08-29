@@ -71,4 +71,4 @@ local hotReload = function()
 	CLI:execute("load hot_reload");
 end
 
-CLI:addCommand("hotReload", hotReload);
+CLI:registerCommand("hotReload", hotReload);

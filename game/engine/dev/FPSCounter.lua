@@ -11,11 +11,9 @@ if not Features.fpsCounter then
 	Features.stub(FPSCounter);
 end
 
-local instance;
-
 local numFramesRecorded = 255;
-local targetFPS = 60;
-local maxFPSDisplay = 80;
+local targetFPS = 144;
+local maxFPSDisplay = 200;
 
 local fontSize = 16;
 local height = math.ceil(numFramesRecorded * 9 / 16);
@@ -24,12 +22,12 @@ local paddingY = 20;
 local textPaddingX = 10;
 local textPaddingY = 5;
 
+local state = {isActive = false, frameDurations = {}};
+
 -- PUBLIC API
 
 FPSCounter.init = function(self)
-	self._frameDurations = {};
-	self._isActive = false;
-	self._font = Fonts:get("dev", fontSize);
+	self.font = Fonts:get("dev", fontSize);
 end
 
 FPSCounter.update = function(self, dt)
@@ -37,9 +35,9 @@ FPSCounter.update = function(self, dt)
 	if dt > 1 / 50 then
 		Log:warning("Previous frame took " .. math.ceil(dt * 1000) .. "ms");
 	end
-	table.insert(self._frameDurations, dt);
-	while #self._frameDurations > numFramesRecorded do
-		table.remove(self._frameDurations, 1);
+	table.insert(state.frameDurations, dt);
+	while #state.frameDurations > numFramesRecorded do
+		table.remove(state.frameDurations, 1);
 	end
 
 	local delta = love.timer.getAverageDelta();
@@ -49,7 +47,7 @@ end
 
 FPSCounter.draw = function(self)
 
-	if not self._isActive then
+	if not state.isActive then
 		return;
 	end
 
@@ -62,8 +60,8 @@ FPSCounter.draw = function(self)
 	local y = paddingY + height;
 
 	love.graphics.setColor(Colors.cyan);
-	for i = #self._frameDurations, 1, -1 do
-		local fps = math.min(1 / self._frameDurations[i], maxFPSDisplay);
+	for i = #state.frameDurations, 1, -1 do
+		local fps = math.min(1 / state.frameDurations[i], maxFPSDisplay);
 		love.graphics.rectangle("fill", x, y, 1, -height * fps / maxFPSDisplay);
 		x = x - 1;
 	end
@@ -74,33 +72,18 @@ FPSCounter.draw = function(self)
 	x = paddingX + textPaddingX;
 	y = paddingY + textPaddingY;
 	love.graphics.setColor(Colors.nightSkyBlue);
-	love.graphics.setFont(self._font);
+	love.graphics.setFont(self.font);
 	love.graphics.print(self._text, x + 1, y + 1);
 	love.graphics.setColor(Colors.white);
 	love.graphics.print(self._text, x, y);
 end
 
-FPSCounter.show = function(self)
-	self._isActive = true;
-end
+CLI:registerCommand("showFPSCounter", function()
+	state.isActive = true;
+end);
 
-FPSCounter.hide = function(self)
-	self._isActive = false;
-end
+CLI:registerCommand("hideFPSCounter", function()
+	state.isActive = false;
+end);
 
--- COMMANDS
-
-local showFPSCounter = function()
-	instance:show();
-end
-
-CLI:addCommand("showFPSCounter", showFPSCounter);
-
-local hideFPSCounter = function()
-	instance:hide();
-end
-
-CLI:addCommand("hideFPSCounter", hideFPSCounter);
-
-instance = FPSCounter:new();
-return instance;
+return FPSCounter;

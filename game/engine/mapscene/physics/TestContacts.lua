@@ -8,9 +8,9 @@ local Weakbox = require("engine/mapscene/physics/Weakbox");
 
 local tests = {};
 
--- TODO Duplicate world update are used in this file as a workaround to https://github.com/love2d/love/issues/1617
+-- TODO Duplicate calls to scene:update() are used in this file as a workaround to https://github.com/love2d/love/issues/1617
 
-tests[#tests + 1] = {name = "Hitbox components register contacts against weakbox components"};
+tests[#tests + 1] = {name = "Hitbox components register contacts against weakbox components", gfx = "mock"};
 tests[#tests].body = function()
 
 	local scene = MapScene:new("engine/assets/empty_map.lua");
@@ -55,7 +55,7 @@ tests[#tests].body = function()
 	assert(not touching);
 end
 
-tests[#tests + 1] = {name = "Collision components register contacts against trigger components"};
+tests[#tests + 1] = {name = "Collision components register contacts against trigger components", gfx = "mock"};
 tests[#tests].body = function()
 
 	local scene = MapScene:new("engine/assets/empty_map.lua");
@@ -98,7 +98,7 @@ tests[#tests].body = function()
 	assert(not touching);
 end
 
-tests[#tests + 1] = {name = "Collision components register contacts against each other"};
+tests[#tests + 1] = {name = "Collision components register contacts against each other", gfx = "mock"};
 tests[#tests].body = function()
 
 	local scene = MapScene:new("engine/assets/empty_map.lua");

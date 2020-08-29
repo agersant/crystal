@@ -1,6 +1,6 @@
 require("engine/utils/OOP");
+local CLI = require("engine/dev/cli/CLI");
 local Log = require("engine/dev/Log");
-local Module = require("engine/Module");
 local TableUtils = require("engine/utils/TableUtils");
 local StringUtils = require("engine/utils/StringUtils");
 
@@ -36,5 +36,15 @@ Persistence.loadFromDisk = function(self, path)
 	Log:info("Loaded player save from " .. fullPath);
 	saveData = newSaveData;
 end
+
+CLI:registerCommand("save fileName:string", function(fileName)
+	Persistence:getSaveData():save();
+	Persistence:writeToDisk(fileName);
+end);
+
+CLI:registerCommand("load fileName:string", function(fileName)
+	Persistence:loadFromDisk(fileName);
+	Persistence:getSaveData():load();
+end);
 
 return Persistence;

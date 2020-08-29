@@ -26,7 +26,7 @@
 			}
 		},
 		{
-			"label": "Run Test Suite",
+			"label": "Run Unit Tests",
 			"type": "shell",
 			"group": {
 				"kind": "test",
@@ -42,7 +42,38 @@
 			"command": "lovec",
 			"args": [
 				".",
-				"/test"
+				"/test-unit"
+			],
+			"problemMatcher": {
+				"owner": "lua",
+				"fileLocation": [
+					"relative",
+					"${workspaceRoot}\\game"
+				],
+				"pattern": {
+					"regexp": "^Error:\\s*([^\\s]*):(\\d+):\\s+(.*)$",
+					"file": 1,
+					"line": 2,
+					"message": 3
+				}
+			}
+		},
+		{
+			"label": "Run All Tests",
+			"type": "shell",
+			"group": "test",
+			"presentation": {
+				"reveal": "always",
+				"clear": true
+			},
+			"options": {
+				"cwd": "${workspaceRoot}\\game"
+			},
+			"command": "lovec",
+			"args": [
+				".",
+				"/test-unit",
+				"/test-gfx"
 			],
 			"problemMatcher": {
 				"owner": "lua",

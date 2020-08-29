@@ -2,7 +2,7 @@ local Assets = require("engine/resources/Assets");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Load empty map"};
+tests[#tests + 1] = {name = "Load empty map", gfx = "mock"};
 tests[#tests].body = function()
 	local mapName = "engine/assets/empty_map.lua";
 	Assets:load(mapName);
@@ -11,7 +11,7 @@ tests[#tests].body = function()
 	Assets:unload(mapName);
 end
 
-tests[#tests + 1] = {name = "Load spritesheet"};
+tests[#tests + 1] = {name = "Load spritesheet", gfx = "mock"};
 tests[#tests].body = function()
 	local sheetName = "engine/assets/blankey.lua";
 	Assets:load(sheetName);

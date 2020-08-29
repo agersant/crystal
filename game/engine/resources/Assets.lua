@@ -10,22 +10,22 @@ local Assets = Class("Assets");
 local loadAsset, unloadAsset, isAssetLoaded, getAsset, getAssetType, refreshAsset;
 local loadPackage, unloadPackage;
 
-local getPathAndExtension = function(rawPath)
-	assert(type(rawPath) == "string");
-	assert(#rawPath > 0);
+local getPathAndExtension = function(path)
+	assert(type(path) == "string");
+	assert(#path > 0);
 
-	local extension = StringUtils.fileExtension(rawPath);
+	local extension = StringUtils.fileExtension(path);
 	if not extension or #extension == 0 then
-		error("Asset " .. rawPath .. " has no file extension");
+		error("Asset " .. path .. " has no file extension");
 	end
 
-	local path = rawPath;
+	local pathWithoutExtension = path;
 	if extension == "lua" then
-		path = StringUtils.stripFileExtension(rawPath);
+		pathWithoutExtension = StringUtils.stripFileExtension(path);
 	end
-	assert(path and #path > 0);
+	assert(pathWithoutExtension and #pathWithoutExtension > 0);
 
-	return path, extension;
+	return pathWithoutExtension, extension;
 end
 
 -- IMAGE
@@ -125,9 +125,12 @@ end
 -- LUA FILE
 
 local requireLuaAsset = function(path)
-	assert(not package.loaded[path]);
-	local rawData = require(path);
+	local pathWithoutExtension, _ = getPathAndExtension(path);
+	assert(not package.loaded[pathWithoutExtension]);
+	local rawData = require(pathWithoutExtension);
+	package.loaded[pathWithoutExtension] = false;
 	assert(type(rawData) == "table");
+
 	if rawData.type and rawData.content then
 		return rawData;
 	else
@@ -150,7 +153,6 @@ local loadLuaFile = function(self, path, origin)
 	else
 		error("Unsupported Lua asset type: " .. luaFile.type);
 	end
-	package.loaded[path] = false;
 	return assetType, assetData;
 end
 
@@ -167,7 +169,6 @@ local unloadLuaFile = function(self, path, origin)
 	else
 		error("Unsupported Lua asset type: " .. luaFile.type);
 	end
-	package.loaded[path] = false;
 end
 
 -- ASSET
@@ -175,7 +176,7 @@ end
 loadAsset = function(self, path, origin)
 	assert(type(origin) == "string");
 	origin = string.lower(origin);
-	local path, extension = getPathAndExtension(path);
+	local _, extension = getPathAndExtension(path);
 
 	if not isAssetLoaded(self, path) then
 		local assetData, assetType;
@@ -206,14 +207,13 @@ loadAsset = function(self, path, origin)
 	return self._loadedAssets[path].raw;
 end
 
-refreshAsset = function(self, rawPath)
-	local path, extension = getPathAndExtension(rawPath);
+refreshAsset = function(self, path)
 	if not isAssetLoaded(self, path) then
 		return;
 	end
 	local oldAsset = self._loadedAssets[path];
 	self._loadedAssets[path] = nil;
-	loadAsset(self, rawPath, "refresh");
+	loadAsset(self, path, "refresh");
 	self._loadedAssets[path].sources = oldAsset.sources;
 	self._loadedAssets[path].numSources = oldAsset.numSources;
 	for source, _ in pairs(self._loadedAssets[path].sources) do
@@ -228,7 +228,7 @@ end
 
 unloadAsset = function(self, path, origin)
 	origin = string.lower(origin);
-	local path, extension = getPathAndExtension(path);
+	local _, extension = getPathAndExtension(path);
 	if not isAssetLoaded(self, path) then
 		return;
 	end
@@ -264,13 +264,12 @@ getAssetType = function(self, path)
 	return self._loadedAssets[path].type;
 end
 
-getAsset = function(self, assetType, rawPath)
-	assert(type(rawPath) == "string");
-	rawPath = string.lower(rawPath);
-	local path, extension = getPathAndExtension(rawPath);
+getAsset = function(self, assetType, path)
+	assert(type(path) == "string");
+	path = string.lower(path);
 	if not isAssetLoaded(self, path) then
 		Log:warning("Requested missing asset, loading at runtime: " .. path);
-		loadAsset(self, rawPath, "emergency");
+		loadAsset(self, path, "emergency");
 	end
 	assert(isAssetLoaded(self, path));
 	assert(self._loadedAssets[path].type == assetType);
@@ -293,6 +292,13 @@ end
 
 Assets.unload = function(self, path)
 	unloadAsset(self, path, "user");
+end
+
+Assets.unloadAll = function(self)
+	for path in pairs(self._loadedAssets) do
+		unloadAsset(self, path, "user");
+		unloadAsset(self, path, "emergency");
+	end
 end
 
 Assets.getMap = function(self, path)
