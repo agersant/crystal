@@ -46,6 +46,11 @@ jobs:
     - name: Run Crystal Tests
       run: xvfb-run --auto-servernum love . /test-unit /test-gfx /coverage
       working-directory: ./game
+    - uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: test-output
+        path: game/test-output
     - name: Upload Test Coverage Results
       uses: codecov/codecov-action@v1
       with:
