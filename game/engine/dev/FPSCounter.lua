@@ -1,6 +1,6 @@
 require("engine/utils/OOP");
-local Features = require("engine/dev/Features");
 local CLI = require("engine/dev/cli/CLI");
+local Features = require("engine/dev/Features");
 local Log = require("engine/dev/Log");
 local Colors = require("engine/resources/Colors");
 local Fonts = require("engine/resources/Fonts");

@@ -39,7 +39,8 @@ Context.runTestSuite = function(self, testFiles)
 		totalNumSuccess = totalNumSuccess + numSuccess;
 		totalNumTests = totalNumTests + numTests;
 	end
-	self:printResults(totalNumSuccess, totalNumTests);
+	print("");
+	print("Grand total: " .. totalNumSuccess .. "/" .. totalNumTests .. " tests passed");
 	return totalNumSuccess == totalNumTests;
 end
 
@@ -78,12 +79,7 @@ Context.runTestFile = function(self, source)
 	return numSuccess, #tests;
 end
 
-Context.printResults = function(self, numSuccess, numTests)
-	print("");
-	print("Grand total: " .. numSuccess .. "/" .. numTests .. " tests passed");
-end
-
-Context.writeTestFrame = function(self, imageData, test)
+Context.saveTestFrame = function(self, imageData, test)
 	local separator = "/";
 	if love.system.getOS() == "Windows" then
 		separator = "\\";
@@ -119,7 +115,7 @@ Context.compareFrame = function(self, referenceImagePath)
 			end
 		end
 		if not sameWidth or not sameHeight or not sameContent then
-			local capturedImagePath = self:writeTestFrame(self.currentTest, capturedImageData);
+			local capturedImagePath = self:saveTestFrame(self.currentTest, capturedImageData);
 			assert(false, string.format("Screenshot did not match reference image. Target: %s, actual: %s", referenceImagePath,
                             			capturedImagePath));
 		end

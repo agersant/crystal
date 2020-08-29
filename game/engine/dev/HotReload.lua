@@ -53,7 +53,7 @@ local reloadModule = function(moduleName)
 	package.loaded[moduleName] = false;
 end
 
-local reloadChangedFiles = function()
+local hotReload = function()
 	local handle = io.popen("git status");
 	local gitStatus = handle:read("*a");
 	handle:close();
@@ -71,4 +71,4 @@ local reloadChangedFiles = function()
 	CLI:execute("load hot_reload");
 end
 
-CLI:registerCommand("hotReload", reloadChangedFiles);
+CLI:registerCommand("hotReload", hotReload);

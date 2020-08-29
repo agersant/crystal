@@ -8,7 +8,7 @@ local Weakbox = require("engine/mapscene/physics/Weakbox");
 
 local tests = {};
 
--- TODO Duplicate world update are used in this file as a workaround to https://github.com/love2d/love/issues/1617
+-- TODO Duplicate calls to scene:update() are used in this file as a workaround to https://github.com/love2d/love/issues/1617
 
 tests[#tests + 1] = {name = "Hitbox components register contacts against weakbox components", gfx = "mock"};
 tests[#tests].body = function()
