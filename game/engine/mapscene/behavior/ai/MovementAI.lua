@@ -30,7 +30,7 @@ end
 MovementAI.beginNavigationToPoint = function(self, x, y, targetRadius)
 	assert(x);
 	assert(y);
-	assert(targetRadius >= 0);
+	assert(targetRadius and targetRadius >= 0);
 	self._repathDelay = 2;
 	self:setNavigationGoal(PositionGoal:new(x, y, targetRadius));
 end
