@@ -140,6 +140,7 @@ Thread.endOnAny = function(self, signals)
 end
 
 Thread.join = function(self, thread)
+	assert(thread);
 	return self:joinAny({thread});
 end
 
