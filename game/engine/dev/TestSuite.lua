@@ -153,7 +153,7 @@ Context.compareFrame = function(self, referenceImagePath)
 	end);
 
 	love.graphics.present();
-	love.graphics.origin();
+	love.graphics.reset();
 	love.graphics.clear(love.graphics.getBackgroundColor());
 end
 
@@ -172,7 +172,7 @@ Context.resetGlobalState = function(self, test)
 				GFXConfig:setResolution(test.resolution[1], test.resolution[2]);
 				self.resolution = test.resolution;
 			end
-			love.graphics.origin();
+			love.graphics.reset();
 			love.graphics.clear(love.graphics.getBackgroundColor());
 		end
 	end
