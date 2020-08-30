@@ -65,7 +65,7 @@ Context.runTestFile = function(self, source)
 		self:resetGlobalState(test);
 
 		self.currentTest = test;
-		local success, errorText = xpcall(function()
+		local success = xpcall(function()
 			test.body(self)
 		end, function(err)
 			print("    " .. test.name .. ": FAIL (see error output below)");
@@ -107,6 +107,7 @@ end
 Context.compareFrame = function(self, referenceImagePath)
 	assert(referenceImagePath);
 
+	local errorMessage;
 	love.graphics.captureScreenshot(function(capturedImageData)
 		local expectedImageData = love.image.newImageData(referenceImagePath);
 		assert(expectedImageData);
@@ -126,8 +127,8 @@ Context.compareFrame = function(self, referenceImagePath)
 		end
 		if not sameWidth or not sameHeight or not sameContent then
 			local capturedImagePath = self:saveTestFrame(capturedImageData, self.currentTest);
-			assert(false, string.format("Screenshot did not match reference image. Target: %s, actual: %s", referenceImagePath,
-                            			capturedImagePath));
+			error(string.format("Screenshot did not match reference image.\n\tTarget: %s\n\tActual: %s", referenceImagePath,
+                    			capturedImagePath));
 		end
 	end);
 
