@@ -119,30 +119,31 @@ Context.compareFrame = function(self, referenceImagePath)
 		assert(expectedImageData);
 		local sameWidth = expectedImageData:getWidth() == capturedImageData:getWidth();
 		local sameHeight = expectedImageData:getHeight() == capturedImageData:getHeight();
-		local sameContent = true;
 		local badPixel;
 		if sameWidth and sameHeight then
 			for y = 0, capturedImageData:getHeight() - 1 do
 				for x = 0, capturedImageData:getWidth() - 1 do
-					local r1, g1, b1, a1 = expectedImageData:getPixel(x, y);
-					local r2, g2, b2, a2 = capturedImageData:getPixel(x, y);
-					if r1 ~= r2 or g1 ~= g2 or b1 ~= b2 or a1 ~= a2 then
-						sameContent = false;
-						badPixel = {x = x, y = y, expected = {r1, g1, b1, a1}, actual = {r2, g2, b2, a2}};
+					if not badPixel then
+						local expectedColor = {expectedImageData:getPixel(x, y)};
+						local actualColor = {capturedImageData:getPixel(x, y)};
+						for i = 1, 4 do
+							if math.abs(expectedColor[i] - actualColor[i]) > 1 / 255 then
+								badPixel = {x = x, y = y, expected = expectedColor, actual = actualColor};
+							end
+						end
 					end
 				end
 			end
 		end
-		if not sameWidth or not sameHeight or not sameContent then
+		if not sameWidth or not sameHeight or badPixel then
 			local name = string.gsub(string.lower(self.currentTest.name), "%s+", "-");
 			local capturedImagePath = self:saveScreenshot(capturedImageData, name);
 			local errorMessage = string.format("Screenshot did not match reference image.\n\tTarget: %s\n\tActual: %s",
                                    			referenceImagePath, capturedImagePath);
 			if badPixel then
-				errorMessage = errorMessage .. "\n\t";
 				errorMessage = errorMessage ..
                								string.format(
-               												"Pixel at (x: %d, y: %d) is (R: %f, G: %f, B: %f, A: %g) but should be (R: %f, G: %f, B: %f, A: %f)",
+               												"\n\tPixel at (x: %d, y: %d) is (R: %f, G: %f, B: %f, A: %g) but should be (R: %f, G: %f, B: %f, A: %f)",
                												badPixel.x, badPixel.y, badPixel.actual[1], badPixel.actual[2], badPixel.actual[3],
                												badPixel.actual[4], badPixel.expected[1], badPixel.expected[2], badPixel.expected[3],
                												badPixel.expected[4]);
