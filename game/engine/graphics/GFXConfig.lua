@@ -66,6 +66,11 @@ GFXConfig.getZoom = function(self)
 	return self._zoom;
 end
 
+GFXConfig.setNativeSize = function(self, width, height)
+	self._nativeWidth = width;
+	self._nativeHeight = height;
+end
+
 GFXConfig.getNativeSize = function(self)
 	return self._nativeWidth, self._nativeHeight;
 end

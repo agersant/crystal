@@ -1,6 +1,7 @@
 local Features = require("engine/dev/Features");
 local Log = require("engine/dev/Log");
 local LogLevels = require("engine/dev/LogLevels");
+local GFXConfig = require("engine/graphics/GFXConfig");
 local Assets = require("engine/resources/Assets");
 local Module = require("engine/Module");
 local MockGraphics = require("engine/dev/mock/love/graphics");
@@ -16,6 +17,7 @@ local engineTestFiles = {
 	"engine/mapscene/behavior/ai/TestPositionGoal",
 	"engine/mapscene/display/TestSprite",
 	"engine/mapscene/physics/TestContacts",
+	"engine/mapscene/physics/TestDebugDraw",
 	"engine/mapscene/physics/TestPhysicsBody",
 	"engine/persistence/TestPersistence",
 	"engine/resources/TestAssets",
@@ -82,13 +84,19 @@ Context.runTestFile = function(self, source)
 end
 
 Context.saveTestFrame = function(self, imageData, test)
+	assert(imageData);
+	assert(test);
 	local separator = "/";
 	if love.system.getOS() == "Windows" then
 		separator = "\\";
 	end
 	local dir = string.format("test-output%sscreenshots", separator);
-	os.execute("mkdir " .. dir);
-	local name = string.gsub(string.lower(self.currentTest.name), "%s+", "-");
+	if love.system.getOS() == "Windows" then
+		os.execute("mkdir " .. dir .. " 2> NUL");
+	else
+		os.execute("mkdir -p " .. dir);
+	end
+	local name = string.gsub(string.lower(test.name), "%s+", "-");
 	local path = string.format("%s%s%s.png", dir, separator, name);
 	local file = io.open(path, "wb+");
 	file:write(imageData:encode("png"):getString());
@@ -117,7 +125,7 @@ Context.compareFrame = function(self, referenceImagePath)
 			end
 		end
 		if not sameWidth or not sameHeight or not sameContent then
-			local capturedImagePath = self:saveTestFrame(self.currentTest, capturedImageData);
+			local capturedImagePath = self:saveTestFrame(capturedImageData, self.currentTest);
 			assert(false, string.format("Screenshot did not match reference image. Target: %s, actual: %s", referenceImagePath,
                             			capturedImagePath));
 		end
@@ -137,7 +145,8 @@ Context.resetGlobalState = function(self, test)
 		if test.gfx == "on" then
 			test.resolution = test.resolution or {200, 200};
 			if test.resolution[1] ~= self.resolution[1] or test.resolution[2] ~= self.resolution[2] then
-				love.window.setMode(test.resolution[1], test.resolution[2], {vsync = 0});
+				GFXConfig:setNativeSize(test.resolution[1], test.resolution[2]);
+				GFXConfig:setResolution(test.resolution[1], test.resolution[2]);
 				self.resolution = test.resolution;
 			end
 			love.graphics.origin();

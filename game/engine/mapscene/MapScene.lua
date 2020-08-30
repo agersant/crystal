@@ -190,6 +190,7 @@ MapScene.draw = function(self)
 	self._map:drawBelowEntities();
 	self._ecs:runFramePortion("draw");
 	self._map:drawAboveEntities();
+	self._ecs:runFramePortion("afterDraw");
 	self._map:drawDebug();
 
 	love.graphics.pop();
