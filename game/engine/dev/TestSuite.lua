@@ -36,6 +36,8 @@ local engineTestFiles = {
 local Context = {currentTest = "", resolution = {}};
 
 Context.runTestSuite = function(self, testFiles)
+	self:createOutputDirectories();
+
 	local totalNumSuccess = 0;
 	local totalNumTests = 0;
 	for i, testFile in ipairs(testFiles) do
@@ -43,6 +45,7 @@ Context.runTestSuite = function(self, testFiles)
 		totalNumSuccess = totalNumSuccess + numSuccess;
 		totalNumTests = totalNumTests + numTests;
 	end
+
 	print("");
 	print("Grand total: " .. totalNumSuccess .. "/" .. totalNumTests .. " tests passed");
 	return totalNumSuccess == totalNumTests;
@@ -83,21 +86,24 @@ Context.runTestFile = function(self, source)
 	return numSuccess, #tests;
 end
 
-Context.saveTestFrame = function(self, imageData, test)
-	assert(imageData);
-	assert(test);
-	local separator = "/";
-	if love.system.getOS() == "Windows" then
-		separator = "\\";
-	end
-	local dir = string.format("test-output%sscreenshots", separator);
-	if love.system.getOS() == "Windows" then
-		os.execute("mkdir " .. dir .. " 2> NUL");
+Context.createOutputDirectories = function(self)
+	local isWindows = love.system.getOS() == "Windows";
+	self._fileSeparator = isWindows and "\\" or "/";
+	self._screenshotDirectory = string.format("test-output%sscreenshots", self._fileSeparator);
+	if isWindows then
+		io.popen("mkdir " .. self._screenshotDirectory .. ">nul 2>nul"):close();
 	else
-		os.execute("mkdir -p " .. dir);
+		io.popen("mkdir -p " .. self._screenshotDirectory):close();
 	end
-	local name = string.gsub(string.lower(test.name), "%s+", "-");
-	local path = string.format("%s%s%s.png", dir, separator, name);
+	love.timer.sleep(0.1); -- Give the `mkdir` process some time to complete
+end
+
+Context.saveScreenshot = function(self, imageData, name)
+	assert(imageData);
+	assert(name);
+	assert(self._screenshotDirectory);
+	assert(self._fileSeparator);
+	local path = string.format("%s%s%s.png", self._screenshotDirectory, self._fileSeparator, name);
 	local file = io.open(path, "wb+");
 	file:write(imageData:encode("png"):getString());
 	file:close();
@@ -126,7 +132,8 @@ Context.compareFrame = function(self, referenceImagePath)
 			end
 		end
 		if not sameWidth or not sameHeight or not sameContent then
-			local capturedImagePath = self:saveTestFrame(capturedImageData, self.currentTest);
+			local name = string.gsub(string.lower(self.currentTest.name), "%s+", "-");
+			local capturedImagePath = self:saveScreenshot(capturedImageData, name);
 			error(string.format("Screenshot did not match reference image.\n\tTarget: %s\n\tActual: %s", referenceImagePath,
                     			capturedImagePath));
 		end
