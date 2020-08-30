@@ -73,6 +73,7 @@ pumpThread = function(self, thread, resumeArgs)
 		end
 		if not success then
 			Log:error(a);
+			Log:error(debug.traceback(threadCoroutine));
 		elseif a == "fork" then
 			local functionToThread = b;
 			local newThread = Thread:new(self, thread, functionToThread);
