@@ -37,7 +37,6 @@ end
 -- PUBLIC API
 
 Log.init = function(self)
-
 	self._verbosity = LogLevels.DEBUG;
 
 	local errorMessage;
@@ -57,8 +56,6 @@ Log.init = function(self)
 	if not success then
 		error(errorMessage);
 	end
-
-	self:info("Initialized log system");
 end
 
 Log.setVerbosity = function(self, verbosity)
