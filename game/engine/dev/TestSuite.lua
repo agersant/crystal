@@ -120,6 +120,7 @@ Context.compareFrame = function(self, referenceImagePath)
 		local sameWidth = expectedImageData:getWidth() == capturedImageData:getWidth();
 		local sameHeight = expectedImageData:getHeight() == capturedImageData:getHeight();
 		local sameContent = true;
+		local badPixel;
 		if sameWidth and sameHeight then
 			for y = 0, capturedImageData:getHeight() - 1 do
 				for x = 0, capturedImageData:getWidth() - 1 do
@@ -127,6 +128,7 @@ Context.compareFrame = function(self, referenceImagePath)
 					local r2, g2, b2, a2 = capturedImageData:getPixel(x, y);
 					if r1 ~= r2 or g1 ~= g2 or b1 ~= b2 or a1 ~= a2 then
 						sameContent = false;
+						badPixel = {x = x, y = y, expected = {r1, g1, b1, a1}, actual = {r2, g2, b2, a2}};
 					end
 				end
 			end
@@ -134,8 +136,18 @@ Context.compareFrame = function(self, referenceImagePath)
 		if not sameWidth or not sameHeight or not sameContent then
 			local name = string.gsub(string.lower(self.currentTest.name), "%s+", "-");
 			local capturedImagePath = self:saveScreenshot(capturedImageData, name);
-			error(string.format("Screenshot did not match reference image.\n\tTarget: %s\n\tActual: %s", referenceImagePath,
-                    			capturedImagePath));
+			local errorMessage = string.format("Screenshot did not match reference image.\n\tTarget: %s\n\tActual: %s",
+                                   			referenceImagePath, capturedImagePath);
+			if badPixel then
+				errorMessage = errorMessage .. "\n\t";
+				errorMessage = errorMessage ..
+               								string.format(
+               												"Pixel at (x: %d, y: %d) is (R: %f, G: %f, B: %f, A: %g) but should be (R: %f, G: %f, B: %f, A: %f)",
+               												badPixel.x, badPixel.y, badPixel.actual[1], badPixel.actual[2], badPixel.actual[3],
+               												badPixel.actual[4], badPixel.expected[1], badPixel.expected[2], badPixel.expected[3],
+               												badPixel.expected[4]);
+			end
+			error(errorMessage);
 		end
 	end);
 
