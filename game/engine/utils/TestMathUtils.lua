@@ -122,16 +122,16 @@ end
 tests[#tests + 1] = {name = "Bounce easing"};
 tests[#tests].body = function()
 	assert(0 == MathUtils.ease(0, "inBounce"));
-	for i = 1, 20 do
-		assert(0 <= MathUtils.ease(1 / i, "inBounce"));
-		assert(1 >= MathUtils.ease(1 / i, "inBounce"));
+	for i = 0, 100 do
+		assert(0 <= MathUtils.ease(i / 100, "inBounce"));
+		assert(1 >= MathUtils.ease(i / 100, "inBounce"));
 	end
 	assert(1 == MathUtils.ease(1, "inBounce"));
 
 	assert(0 == MathUtils.ease(0, "outBounce"));
-	for i = 1, 20 do
-		assert(0 <= MathUtils.ease(1 / i, "outBounce"));
-		assert(1 >= MathUtils.ease(1 / i, "outBounce"));
+	for i = 0, 100 do
+		assert(0 <= MathUtils.ease(i / 100, "outBounce"));
+		assert(1 >= MathUtils.ease(i / 100, "outBounce"));
 	end
 	assert(1 == MathUtils.ease(1, "outBounce"));
 end
