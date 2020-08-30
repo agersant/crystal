@@ -146,14 +146,16 @@ end
 
 Context.resetGlobalState = function(self, test)
 	Assets:unloadAll();
+
+	test.resolution = test.resolution or {200, 200};
+	GFXConfig:setNativeSize(test.resolution[1], test.resolution[2]);
+
 	if test.gfx == "mock" then
 		MockGraphics:enable();
 	else
 		MockGraphics:disable();
 		if test.gfx == "on" then
-			test.resolution = test.resolution or {200, 200};
 			if test.resolution[1] ~= self.resolution[1] or test.resolution[2] ~= self.resolution[2] then
-				GFXConfig:setNativeSize(test.resolution[1], test.resolution[2]);
 				GFXConfig:setResolution(test.resolution[1], test.resolution[2]);
 				self.resolution = test.resolution;
 			end

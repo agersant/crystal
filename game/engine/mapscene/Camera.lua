@@ -33,7 +33,10 @@ end
 local computeAverageVelocity = function(self)
 	local vx, vy = 0, 0;
 	for _, trackedEntity in ipairs(self._trackedEntities) do
-		local evx, evy = trackedEntity:getVelocity();
+		local evx, evy = 0, 0;
+		if trackedEntity.getVelocity then
+			evx, evy = trackedEntity:getVelocity();
+		end
 		vx = vx + evx;
 		vy = vy + evy;
 	end
