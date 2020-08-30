@@ -1,4 +1,6 @@
 local Features = require("engine/dev/Features");
+local Log = require("engine/dev/Log");
+local LogLevels = require("engine/dev/LogLevels");
 local Assets = require("engine/resources/Assets");
 local Module = require("engine/Module");
 local MockGraphics = require("engine/dev/mock/love/graphics");
@@ -166,6 +168,7 @@ end
 
 return {
 	execute = function(self)
+		Log:setVerbosity(LogLevels.ERROR);
 		Module:setCurrent(require(MODULE):new());
 		local testFiles = {};
 		for _, file in ipairs(engineTestFiles) do
