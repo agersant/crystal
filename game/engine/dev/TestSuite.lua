@@ -110,49 +110,59 @@ Context.saveScreenshot = function(self, imageData, name)
 	return path;
 end
 
-Context.compareFrame = function(self, referenceImagePath)
-	assert(referenceImagePath);
+Context.takeScreenshot = function(self)
+	local screenshot;
+	love.graphics.captureScreenshot(function(imageData)
+		screenshot = imageData;
+	end);
 
-	local errorMessage;
-	love.graphics.captureScreenshot(function(capturedImageData)
-		local expectedImageData = love.image.newImageData(referenceImagePath);
-		assert(expectedImageData);
-		local sameWidth = expectedImageData:getWidth() == capturedImageData:getWidth();
-		local sameHeight = expectedImageData:getHeight() == capturedImageData:getHeight();
-		local badPixel;
-		if sameWidth and sameHeight then
-			for y = 0, capturedImageData:getHeight() - 1 do
-				for x = 0, capturedImageData:getWidth() - 1 do
-					if not badPixel then
-						local expectedColor = {expectedImageData:getPixel(x, y)};
-						local actualColor = {capturedImageData:getPixel(x, y)};
-						for i = 1, 4 do
-							if math.abs(expectedColor[i] - actualColor[i]) > 1 / 255 then
-								badPixel = {x = x, y = y, expected = expectedColor, actual = actualColor};
-							end
+	love.graphics.present();
+	return screenshot;
+end
+
+Context.diffScreenshots = function(self, actual, expected)
+	local sameWidth = expected:getWidth() == actual:getWidth();
+	local sameHeight = expected:getHeight() == actual:getHeight();
+	local badPixel;
+	if sameWidth and sameHeight then
+		for y = 0, actual:getHeight() - 1 do
+			for x = 0, actual:getWidth() - 1 do
+				if not badPixel then
+					local expectedColor = {expected:getPixel(x, y)};
+					local actualColor = {actual:getPixel(x, y)};
+					for i = 1, 4 do
+						if math.abs(expectedColor[i] - actualColor[i]) > 1 / 255 then
+							badPixel = {x = x, y = y, expected = expectedColor, actual = actualColor};
 						end
 					end
 				end
 			end
 		end
-		if not sameWidth or not sameHeight or badPixel then
-			local name = string.gsub(string.lower(self.currentTest.name), "%s+", "-");
-			local capturedImagePath = self:saveScreenshot(capturedImageData, name);
-			local errorMessage = string.format("Screenshot did not match reference image.\n\tTarget: %s\n\tActual: %s",
-                                   			referenceImagePath, capturedImagePath);
-			if badPixel then
-				errorMessage = errorMessage ..
-               								string.format(
-               												"\n\tPixel at (x: %d, y: %d) is (R: %f, G: %f, B: %f, A: %g) but should be (R: %f, G: %f, B: %f, A: %f)",
-               												badPixel.x, badPixel.y, badPixel.actual[1], badPixel.actual[2], badPixel.actual[3],
-               												badPixel.actual[4], badPixel.expected[1], badPixel.expected[2], badPixel.expected[3],
-               												badPixel.expected[4]);
-			end
-			error(errorMessage);
-		end
-	end);
+	end
+	local identical = sameWidth and sameHeight and not badPixel;
+	return identical, badPixel;
+end
 
-	love.graphics.present();
+Context.compareFrame = function(self, referenceImagePath)
+	assert(referenceImagePath);
+	local actualImageData = self:takeScreenshot();
+	local expectedImageData = love.image.newImageData(referenceImagePath);
+	local identical, badPixel = self:diffScreenshots(actualImageData, expectedImageData);
+	if not identical then
+		local name = string.gsub(string.lower(self.currentTest.name), "%s+", "-");
+		local capturedImagePath = self:saveScreenshot(actualImageData, name);
+		local errorMessage = string.format("Screenshot did not match reference image.\n\tTarget: %s\n\tActual: %s",
+                                   		referenceImagePath, capturedImagePath);
+		if badPixel then
+			errorMessage = errorMessage ..
+               							string.format(
+               											"\n\tPixel at (x: %d, y: %d) is (R: %f, G: %f, B: %f, A: %g) but should be (R: %f, G: %f, B: %f, A: %f)",
+               											badPixel.x, badPixel.y, badPixel.actual[1], badPixel.actual[2], badPixel.actual[3],
+               											badPixel.actual[4], badPixel.expected[1], badPixel.expected[2], badPixel.expected[3],
+               											badPixel.expected[4]);
+		end
+		error(errorMessage);
+	end
 	love.graphics.reset();
 	love.graphics.clear(love.graphics.getBackgroundColor());
 end
