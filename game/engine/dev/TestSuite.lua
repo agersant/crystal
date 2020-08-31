@@ -158,7 +158,7 @@ Context.compareFrame = function(self, referenceImagePath)
 		if badPixel then
 			errorMessage = errorMessage ..
                							string.format(
-               											"\n\tPixel at (x: %d, y: %d) is (R: %f, G: %f, B: %f, A: %g) but should be (R: %f, G: %f, B: %f, A: %f)",
+               											"\n\tPixel at (x: %d, y: %d) is (R: %f, G: %f, B: %f, A: %f) but should be (R: %f, G: %f, B: %f, A: %f)",
                											badPixel.x, badPixel.y, badPixel.actual[1], badPixel.actual[2], badPixel.actual[3],
                											badPixel.actual[4], badPixel.expected[1], badPixel.expected[2], badPixel.expected[3],
                											badPixel.expected[4]);
