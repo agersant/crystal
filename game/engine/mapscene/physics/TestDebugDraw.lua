@@ -47,7 +47,7 @@ tests[#tests].body = function(context)
 	cli:execute("hidePhysicsOverlay");
 
 	-- TODO Test disabled due to https://github.com/love2d/love/issues/1618
-	context:compareFrame("engine/test-data/TestDebugDraw/draws-physics-objects.png");
+	-- context:compareFrame("engine/test-data/TestDebugDraw/draws-physics-objects.png");
 end
 
 return tests;
