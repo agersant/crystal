@@ -1,4 +1,5 @@
 local CLI = require("engine/dev/cli/CLI");
+local CommandStore = require("engine/dev/cli/CommandStore");
 
 local tests = {};
 
@@ -100,6 +101,14 @@ tests[#tests].body = function()
 	cli:keyPressed("tab");
 	cli:keyPressed("return");
 	assert(sentinel == "oink");
+end
+
+tests[#tests + 1] = {name = "Can draw CLI", gfx = "mock"};
+tests[#tests].body = function(context)
+	local cli = CLI:new(CommandStore:getGlobalStore());
+	cli:enable();
+	cli:textInput("show");
+	cli:draw();
 end
 
 return tests;

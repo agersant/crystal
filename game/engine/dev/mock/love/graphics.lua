@@ -11,22 +11,45 @@ local image = {
 	end,
 };
 
-local font = {setFilter = noop};
+local font = {
+	getHeight = function()
+		return 1;
+	end,
+	getWidth = function()
+		return 1;
+	end,
+	setFilter = noop,
+};
+
+mockAPI.getWidth = function()
+	return 1;
+end
+
+mockAPI.getHeight = function()
+	return 1;
+end
 
 mockAPI.newFont = function()
 	return font;
 end
+
 mockAPI.newImage = function()
 	return image;
 end
+
 mockAPI.newSpriteBatch = noop;
+
 mockAPI.newQuad = noop;
-mockAPI.getWidth = function()
-	return 1;
-end
-mockAPI.getHeight = function()
-	return 1;
-end
+
+mockAPI.polygon = noop;
+
+mockAPI.print = noop;
+
+mockAPI.rectangle = noop;
+
+mockAPI.setColor = noop;
+
+mockAPI.setFont = noop;
 
 local Mocking = {};
 
