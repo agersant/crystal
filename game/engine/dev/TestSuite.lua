@@ -133,7 +133,7 @@ Context.diffScreenshots = function(self, actual, expected)
 					for i = 1, 4 do
 						-- TODO Ideally we would check for perfectly identical colors (or less than 1/255 away)
 						-- This is a workaround for https://github.com/love2d/love/issues/1618
-						if math.abs(expectedColor[i] - actualColor[i]) > 2 / 255 then
+						if math.abs(expectedColor[i] - actualColor[i]) > 10 / 255 then
 							badPixel = {x = x, y = y, expected = expectedColor, actual = actualColor};
 						end
 					end
