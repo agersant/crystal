@@ -10,7 +10,6 @@ end
 
 Weakbox.setShape = function(self, body, shape)
 	assert(body);
-	assert(shape);
 	if self._fixture then
 		self._fixture:destroy();
 		self._fixture = nil;
