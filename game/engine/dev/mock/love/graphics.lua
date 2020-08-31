@@ -4,12 +4,7 @@ local mockAPI = {};
 local noop = function()
 end
 
-local image = {
-	setFilter = noop,
-	getDimensions = function()
-		return 1, 1;
-	end,
-};
+local spriteBatch = {add = noop};
 
 local font = {
 	getHeight = function()
@@ -19,6 +14,20 @@ local font = {
 		return 1;
 	end,
 	setFilter = noop,
+};
+
+local image = {
+	setFilter = noop,
+	getDimensions = function()
+		return 1, 1;
+	end,
+};
+
+local quad = {
+	setViewport = noop,
+	getViewport = function()
+		return 0, 0, 1, 1;
+	end,
 };
 
 mockAPI.getWidth = function()
@@ -37,9 +46,13 @@ mockAPI.newImage = function()
 	return image;
 end
 
-mockAPI.newSpriteBatch = noop;
+mockAPI.newSpriteBatch = function()
+	return spriteBatch;
+end
 
-mockAPI.newQuad = noop;
+mockAPI.newQuad = function()
+	return quad;
+end
 
 mockAPI.polygon = noop;
 
