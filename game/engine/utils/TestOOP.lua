@@ -2,10 +2,9 @@ local tests = {};
 
 tests[#tests + 1] = {name = "To string"};
 tests[#tests].body = function()
-	Class:resetIndex();
-	local Fruit = Class("Fruit");
-	local Peach = Class("Peach", Fruit);
-	local Bird = Class("Bird");
+	local Fruit = Class:test("Fruit");
+	local Peach = Class:test("Peach", Fruit);
+	local Bird = Class:test("Bird");
 	assert(tostring(Fruit));
 	assert(#tostring(Fruit) > 0);
 	assert(tostring(Fruit) ~= tostring(Bird));
@@ -14,9 +13,8 @@ end
 
 tests[#tests + 1] = {name = "Get class"};
 tests[#tests].body = function()
-	Class:resetIndex();
-	local Fruit = Class("Fruit");
-	local Peach = Class("Peach", Fruit);
+	local Fruit = Class:test("Fruit");
+	local Peach = Class:test("Peach", Fruit);
 	local myFruit = Fruit:new();
 	local myPeach = Peach:new();
 	assert(myFruit:getClass() == Fruit);
@@ -25,9 +23,8 @@ end
 
 tests[#tests + 1] = {name = "Get class name"};
 tests[#tests].body = function()
-	Class:resetIndex();
-	local Fruit = Class("Fruit");
-	local Peach = Class("Peach", Fruit);
+	local Fruit = Class:test("Fruit");
+	local Peach = Class:test("Peach", Fruit);
 	local myFruit = Fruit:new();
 	local myPeach = Peach:new();
 	assert(myFruit:getClassName() == "Fruit");
@@ -36,22 +33,19 @@ end
 
 tests[#tests + 1] = {name = "Is instance of"};
 tests[#tests].body = function()
-	Class:resetIndex();
-
-	local Fruit = Class("Fruit");
+	local Fruit = Class:test("Fruit");
 	local myFruit = Fruit:new();
 	assert(myFruit:isInstanceOf(Fruit));
 
-	local Bird = Class("Bird");
+	local Bird = Class:test("Bird");
 	assert(not myFruit:isInstanceOf(Bird));
 end
 
 tests[#tests + 1] = {name = "Is instance of inheritance"};
 tests[#tests].body = function()
-	Class:resetIndex();
-	local Fruit = Class("Fruit");
-	local Peach = Class("Peach", Fruit);
-	local Apple = Class("Apple", Fruit);
+	local Fruit = Class:test("Fruit");
+	local Peach = Class:test("Peach", Fruit);
+	local Apple = Class:test("Apple", Fruit);
 
 	local myPeach = Peach:new();
 	assert(myPeach:isInstanceOf(Fruit));
@@ -65,18 +59,16 @@ end
 
 tests[#tests + 1] = {name = "Get by name"};
 tests[#tests].body = function()
-	Class:resetIndex();
-	local Fruit = Class("Fruit");
-	local Peach = Class("Peach", Fruit);
-	assert(Class:getByName("Fruit") == Fruit);
-	assert(Class:getByName("Peach") == Peach);
+	local Fruit = Class("MostUniqueFruit");
+	local Peach = Class("VeryUniqueDerivedPeach", Fruit);
+	assert(Class:getByName("MostUniqueFruit") == Fruit);
+	assert(Class:getByName("VeryUniqueDerivedPeach") == Peach);
 	assert(Class:getByName("Berry") == nil);
 end
 
 tests[#tests + 1] = {name = "Placement new"};
 tests[#tests].body = function()
-	Class:resetIndex();
-	local Fruit = Class("Fruit");
+	local Fruit = Class:test("Fruit");
 	local fruit = {};
 	Fruit:placementNew(fruit);
 	assert(fruit:getClass() == Fruit);

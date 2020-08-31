@@ -4,9 +4,8 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Basic usage"};
 tests[#tests].body = function()
-	Class:resetIndex();
-	local From = Class("From");
-	local To = Class("To");
+	local From = Class:test("From");
+	local To = Class:test("To");
 	To.method = function()
 		return true;
 	end
@@ -19,10 +18,9 @@ end
 
 tests[#tests + 1] = {name = "Transitive"};
 tests[#tests].body = function()
-	Class:resetIndex();
-	local From = Class("From");
-	local Middle = Class("Middle");
-	local To = Class("To");
+	local From = Class:test("From");
+	local Middle = Class:test("Middle");
+	local To = Class:test("To");
 	To.method = function()
 		return true;
 	end
@@ -36,10 +34,9 @@ end
 
 tests[#tests + 1] = {name = "Works for inherited methods"};
 tests[#tests].body = function()
-	Class:resetIndex();
-	local From = Class("From");
-	local Base = Class("Base");
-	local To = Class("To", Base);
+	local From = Class:test("From");
+	local Base = Class:test("Base");
+	local To = Class:test("To", Base);
 	Base.method = function()
 		return true;
 	end
@@ -52,9 +49,8 @@ end
 
 tests[#tests + 1] = {name = "Does not alias variables"};
 tests[#tests].body = function()
-	Class:resetIndex();
-	local From = Class("From");
-	local To = Class("To");
+	local From = Class:test("From");
+	local To = Class:test("To");
 	local from = From:new();
 	local to = To:new();
 	to.member = true;
@@ -64,9 +60,8 @@ end
 
 tests[#tests + 1] = {name = "Overrides self parameter"};
 tests[#tests].body = function()
-	Class:resetIndex();
-	local From = Class("From");
-	local To = Class("To");
+	local From = Class:test("From");
+	local To = Class:test("To");
 	To.getMyClass = function(self)
 		return self:getClass();
 	end
@@ -78,10 +73,9 @@ end
 
 tests[#tests + 1] = {name = "Errors on ambiguous call"};
 tests[#tests].body = function()
-	Class:resetIndex();
-	local From = Class("From");
-	local ToA = Class("ToA");
-	local ToB = Class("ToB");
+	local From = Class:test("From");
+	local ToA = Class:test("ToA");
+	local ToB = Class:test("ToB");
 	ToA.example = function()
 	end
 	ToB.example = function()
@@ -101,11 +95,10 @@ end
 
 tests[#tests + 1] = {name = "Shared base methods are not ambiguous"};
 tests[#tests].body = function()
-	Class:resetIndex();
-	local From = Class("From");
-	local Base = Class("Base");
-	local DerivedA = Class("DerivedA", Base);
-	local DerivedB = Class("DerivedB", Base);
+	local From = Class:test("From");
+	local Base = Class:test("Base");
+	local DerivedA = Class:test("DerivedA", Base);
+	local DerivedB = Class:test("DerivedB", Base);
 	Base.example = function()
 	end
 	local from = From:new();

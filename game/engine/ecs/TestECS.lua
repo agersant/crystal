@@ -46,13 +46,11 @@ end
 
 tests[#tests + 1] = {name = "Add and remove component"};
 tests[#tests].body = function()
-	Class:resetIndex();
-
 	local ecs = ECS:new();
 
 	local a = ecs:spawn(Entity);
 
-	local Snoot = Class("Snoot", Component);
+	local Snoot = Class:test("Snoot", Component);
 	local snoot = Snoot:new();
 	a:addComponent(snoot);
 	assert(snoot:getEntity() == a);
@@ -67,10 +65,8 @@ end
 
 tests[#tests + 1] = {name = "Add and remove component between updates"};
 tests[#tests].body = function()
-	Class:resetIndex();
-
 	local ecs = ECS:new();
-	local Snoot = Class("Snoot", Component);
+	local Snoot = Class:test("Snoot", Component);
 
 	local a = ecs:spawn(Entity);
 	local snoot = Snoot:new();
@@ -96,13 +92,11 @@ end
 
 tests[#tests + 1] = {name = "Prevent duplicate components"};
 tests[#tests].body = function()
-	Class:resetIndex();
-
 	local ecs = ECS:new();
 
 	local a = ecs:spawn(Entity);
 
-	local Snoot = Class("Snoot", Component);
+	local Snoot = Class:test("Snoot", Component);
 	a:addComponent(Snoot:new());
 
 	local success = pcall(function()
@@ -120,14 +114,12 @@ end
 
 tests[#tests + 1] = {name = "Get component"};
 tests[#tests].body = function()
-	Class:resetIndex();
-
 	local ecs = ECS:new();
 	local a = ecs:spawn(Entity);
 
-	local Snoot = Class("Snoot", Component);
-	local Boop = Class("Boop", Snoot);
-	local Bonk = Class("Bonk", Snoot);
+	local Snoot = Class:test("Snoot", Component);
+	local Boop = Class:test("Boop", Snoot);
+	local Bonk = Class:test("Bonk", Snoot);
 	local boop = Boop:new();
 	local bonk = Bonk:new();
 
@@ -158,14 +150,12 @@ end
 
 tests[#tests + 1] = {name = "Get components"};
 tests[#tests].body = function()
-	Class:resetIndex();
-
 	local ecs = ECS:new();
 
 	local a = ecs:spawn(Entity);
 
-	local Snoot = Class("Snoot", Component);
-	local Boop = Class("Boop", Snoot);
+	local Snoot = Class:test("Snoot", Component);
+	local Boop = Class:test("Boop", Snoot);
 	local boop = Boop:new();
 	a:addComponent(boop);
 	assert(not a:getComponents(Snoot)[boop]);
@@ -179,14 +169,12 @@ end
 
 tests[#tests + 1] = {name = "Get all entities with component"};
 tests[#tests].body = function()
-	Class:resetIndex();
-
 	local ecs = ECS:new();
 
 	local a = ecs:spawn(Entity);
 
-	local Snoot = Class("Snoot", Component);
-	local Boop = Class("Boop", Snoot);
+	local Snoot = Class:test("Snoot", Component);
+	local Boop = Class:test("Boop", Snoot);
 	local boop = Boop:new();
 	a:addComponent(boop);
 	ecs:update();
@@ -198,14 +186,12 @@ end
 
 tests[#tests + 1] = {name = "Get all components"};
 tests[#tests].body = function()
-	Class:resetIndex();
-
 	local ecs = ECS:new();
 
 	local a = ecs:spawn(Entity);
 
-	local Snoot = Class("Snoot", Component);
-	local Boop = Class("Boop", Snoot);
+	local Snoot = Class:test("Snoot", Component);
+	local Boop = Class:test("Boop", Snoot);
 	local snoot = Snoot:new();
 	local boop = Boop:new();
 	a:addComponent(boop);
@@ -262,10 +248,8 @@ end
 
 tests[#tests + 1] = {name = "Query maintains list of entities"};
 tests[#tests].body = function()
-	Class:resetIndex();
-
 	local ecs = ECS:new();
-	local Snoot = Class("Snoot", Component);
+	local Snoot = Class:test("Snoot", Component);
 	local query = AllComponents:new({Snoot});
 	ecs:addQuery(query);
 
@@ -299,11 +283,9 @@ end
 
 tests[#tests + 1] = {name = "Query entity list captures derived components"};
 tests[#tests].body = function()
-	Class:resetIndex();
-
 	local ecs = ECS:new();
-	local Snoot = Class("Snoot", Component);
-	local Boop = Class("Boop", Snoot);
+	local Snoot = Class:test("Snoot", Component);
+	local Boop = Class:test("Boop", Snoot);
 	local query = AllComponents:new({Snoot});
 	ecs:addQuery(query);
 
@@ -320,10 +302,8 @@ end
 
 tests[#tests + 1] = {name = "Query maintains changelog of entities"};
 tests[#tests].body = function()
-	Class:resetIndex();
-
 	local ecs = ECS:new();
-	local Snoot = Class("Snoot", Component);
+	local Snoot = Class:test("Snoot", Component);
 	local query = AllComponents:new({Snoot});
 	ecs:addQuery(query);
 
@@ -351,16 +331,14 @@ end
 
 tests[#tests + 1] = {name = "Query maintains changelog of components"};
 tests[#tests].body = function()
-	Class:resetIndex();
-
 	local ecs = ECS:new();
-	local BaseComp = Class("BaseComp", Component);
+	local BaseComp = Class:test("BaseComp", Component);
 	local query = AllComponents:new({BaseComp});
 	ecs:addQuery(query);
 
-	local CompA = Class("CompA", BaseComp);
-	local CompB = Class("CompB", BaseComp);
-	local CompC = Class("CompC", BaseComp);
+	local CompA = Class:test("CompA", BaseComp);
+	local CompB = Class:test("CompB", BaseComp);
+	local CompC = Class:test("CompC", BaseComp);
 	local compA = CompA:new();
 	local compB = CompB:new();
 	local compC = CompC:new();
@@ -390,13 +368,11 @@ end
 
 tests[#tests + 1] = {name = "Query component changelog works for intersection query"};
 tests[#tests].body = function()
-	Class:resetIndex();
-
 	local ecs = ECS:new();
-	local BaseComp = Class("BaseComp", Component);
-	local CompA = Class("CompA", BaseComp);
-	local CompB = Class("CompB", BaseComp);
-	local CompC = Class("CompC", BaseComp);
+	local BaseComp = Class:test("BaseComp", Component);
+	local CompA = Class:test("CompA", BaseComp);
+	local CompB = Class:test("CompB", BaseComp);
+	local CompC = Class:test("CompC", BaseComp);
 	local query = AllComponents:new({CompA, CompB, CompC});
 	ecs:addQuery(query);
 
@@ -426,13 +402,11 @@ end
 
 tests[#tests + 1] = {name = "Query component changelog works for union query"};
 tests[#tests].body = function()
-	Class:resetIndex();
-
 	local ecs = ECS:new();
-	local BaseComp = Class("BaseComp", Component);
-	local CompA = Class("CompA", BaseComp);
-	local CompB = Class("CompB", BaseComp);
-	local CompC = Class("CompC", BaseComp);
+	local BaseComp = Class:test("BaseComp", Component);
+	local CompA = Class:test("CompA", BaseComp);
+	local CompB = Class:test("CompB", BaseComp);
+	local CompC = Class:test("CompC", BaseComp);
 	local query = EitherComponent:new({CompA, CompB, CompC});
 	ecs:addQuery(query);
 
@@ -476,10 +450,8 @@ end
 
 tests[#tests + 1] = {name = "Events can be retrieved by base class"};
 tests[#tests].body = function()
-	Class:resetIndex();
-
-	local MyEvent = Class("MyEvent", Event);
-	local MyOtherEvent = Class("MyOtherEvent", Event);
+	local MyEvent = Class:test("MyEvent", Event);
+	local MyOtherEvent = Class:test("MyOtherEvent", Event);
 
 	local ecs = ECS:new();
 	local entity = ecs:spawn(Entity);

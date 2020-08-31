@@ -29,10 +29,6 @@ local makeIsInstanceOf = function(class)
 	end
 end
 
-local resetIndex = function(self)
-	classIndex = {};
-end
-
 local getClass = function(self)
 	return self._class;
 end
@@ -41,7 +37,7 @@ local getClassName = function(self)
 	return self._class._name;
 end
 
-local declareClass = function(self, name, baseClass)
+local declareClass = function(self, name, baseClass, options)
 
 	local classMetaTable = {};
 	classMetaTable.__index = baseClass;
@@ -67,7 +63,9 @@ local declareClass = function(self, name, baseClass)
 	class.getClassName = getClassName;
 	class.isInstanceOf = makeIsInstanceOf(class);
 
-	assert(not classIndex[name]);
+	if not options or not options.allowRedefinition then
+		assert(not classIndex[name]);
+	end
 	classIndex[name] = class;
 
 	return class;
@@ -75,4 +73,6 @@ end
 
 Class = setmetatable({}, {__call = declareClass});
 Class.getByName = getClassByName;
-Class.resetIndex = resetIndex;
+Class.test = function(self, name, baseClass)
+	return declareClass(self, name, baseClass, {allowRedefinition = true});
+end;
