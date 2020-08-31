@@ -12,7 +12,6 @@ Features.init = function(self)
 	self.audioOutput = not self.testing;
 	self.display = self.gfxTesting or not self.testing;
 	self.logging = not release;
-	-- TODO adjustable logging level so warnings and errors appear during unit tests
 	self.cli = not release;
 	self.fpsCounter = not release;
 	self.debugDraw = not release and self.display;
