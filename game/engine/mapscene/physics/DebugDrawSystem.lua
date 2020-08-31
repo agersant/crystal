@@ -36,6 +36,10 @@ end
 local drawShape = function(self, x, y, shape, color)
 	love.graphics.push();
 	love.graphics.translate(x, y);
+	love.graphics.setLineJoin("miter");
+	love.graphics.setLineStyle("rough");
+	love.graphics.setLineWidth(1);
+
 	love.graphics.setColor(color:alpha(.6));
 	if shape:getType() == "polygon" then
 		love.graphics.polygon("fill", shape:getPoints());
@@ -43,6 +47,7 @@ local drawShape = function(self, x, y, shape, color)
 		local x, y = shape:getPoint();
 		love.graphics.circle("fill", x, y, shape:getRadius(), 16);
 	end
+
 	love.graphics.setColor(color);
 	if shape:getType() == "polygon" then
 		love.graphics.polygon("line", shape:getPoints());
@@ -50,6 +55,7 @@ local drawShape = function(self, x, y, shape, color)
 		local x, y = shape:getPoint();
 		love.graphics.circle("line", x, y, shape:getRadius(), 16);
 	end
+
 	love.graphics.pop();
 end
 
