@@ -9,7 +9,7 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Sprites can draw", gfx = "on"};
 tests[#tests].body = function(context)
-	local sheet = Assets:getSpritesheet("engine/assets/blankey.lua");
+	local sheet = Assets:getSpritesheet("engine/test-data/blankey.lua");
 	local sprite = Sprite:new(sheet);
 	sprite:setSpritePosition(100, 100);
 	sprite:setAnimation("floating");
@@ -19,10 +19,10 @@ end
 
 tests[#tests + 1] = {name = "Emits animationEnd signal", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/assets/empty_map.lua");
+	local scene = MapScene:new("engine/test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);
 
-	local sheet = Assets:getSpritesheet("engine/assets/blankey.lua");
+	local sheet = Assets:getSpritesheet("engine/test-data/blankey.lua");
 	local sprite = Sprite:new(sheet);
 	entity:addComponent(sprite);
 	sprite:setAnimation("floating");

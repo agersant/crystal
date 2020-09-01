@@ -13,7 +13,7 @@ local tests = {};
 tests[#tests + 1] = {name = "Hitbox components register contacts against weakbox components", gfx = "mock"};
 tests[#tests].body = function()
 
-	local scene = MapScene:new("engine/assets/empty_map.lua");
+	local scene = MapScene:new("engine/test-data/empty_map.lua");
 
 	local hitbox = Hitbox:new();
 	local weakbox = Weakbox:new();
@@ -58,7 +58,7 @@ end
 tests[#tests + 1] = {name = "Collision components register contacts against trigger components", gfx = "mock"};
 tests[#tests].body = function()
 
-	local scene = MapScene:new("engine/assets/empty_map.lua");
+	local scene = MapScene:new("engine/test-data/empty_map.lua");
 
 	local collision = Collision:new(5);
 	local trigger = TouchTrigger:new(love.physics.newRectangleShape(10, 10));
@@ -101,7 +101,7 @@ end
 tests[#tests + 1] = {name = "Collision components register contacts against each other", gfx = "mock"};
 tests[#tests].body = function()
 
-	local scene = MapScene:new("engine/assets/empty_map.lua");
+	local scene = MapScene:new("engine/test-data/empty_map.lua");
 
 	local collisionA = Collision:new(5);
 	local collisionB = Collision:new(5);

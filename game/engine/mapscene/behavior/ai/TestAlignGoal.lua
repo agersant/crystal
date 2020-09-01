@@ -7,7 +7,7 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Get position", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/assets/empty_map.lua");
+	local scene = MapScene:new("engine/test-data/empty_map.lua");
 
 	local me = scene:spawn(Entity);
 	me:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
@@ -24,7 +24,7 @@ end
 
 tests[#tests + 1] = {name = "Accept", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/assets/empty_map.lua");
+	local scene = MapScene:new("engine/test-data/empty_map.lua");
 
 	local me = scene:spawn(Entity);
 	me:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
@@ -43,7 +43,7 @@ end
 
 tests[#tests + 1] = {name = "Reject", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/assets/empty_map.lua");
+	local scene = MapScene:new("engine/test-data/empty_map.lua");
 
 	local me = scene:spawn(Entity);
 	me:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));

@@ -13,7 +13,7 @@ local tests = {};
 tests[#tests + 1] = {name = "Draws physics objects", gfx = "on"};
 tests[#tests].body = function(context)
 	local cli = CLI:new(CommandStore:getGlobalStore());
-	local scene = MapScene:new("engine/assets/empty_map.lua");
+	local scene = MapScene:new("engine/test-data/empty_map.lua");
 
 	local entityA = scene:spawn(Entity);
 	entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));

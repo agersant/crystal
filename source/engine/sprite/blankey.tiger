@@ -97,8 +97,8 @@
       "format": {
         "Template": "..\\..\\crystal.liquid"
       },
-      "texture_destination": "..\\..\\..\\game\\engine\\assets\\blankey.png",
-      "metadata_destination": "..\\..\\..\\game\\engine\\assets\\blankey.lua",
+      "texture_destination": "..\\..\\..\\game\\engine\\test-data\\blankey.png",
+      "metadata_destination": "..\\..\\..\\game\\engine\\test-data\\blankey.lua",
       "metadata_paths_root": "..\\..\\..\\game"
     }
   }

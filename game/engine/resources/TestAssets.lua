@@ -4,7 +4,7 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Load empty map", gfx = "mock"};
 tests[#tests].body = function()
-	local mapName = "engine/assets/empty_map.lua";
+	local mapName = "engine/test-data/empty_map.lua";
 	Assets:load(mapName);
 	local map = Assets:getMap(mapName);
 	assert(map);
@@ -13,7 +13,7 @@ end
 
 tests[#tests + 1] = {name = "Load spritesheet", gfx = "mock"};
 tests[#tests].body = function()
-	local sheetName = "engine/assets/blankey.lua";
+	local sheetName = "engine/test-data/blankey.lua";
 	Assets:load(sheetName);
 
 	local sheet = Assets:getSpritesheet(sheetName);
