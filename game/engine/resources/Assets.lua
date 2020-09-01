@@ -198,7 +198,7 @@ loadAsset = function(self, path, source)
 		assert(assetType);
 
 		assert(not self._loadedAssets[assetID]);
-		self._loadedAssets[assetID] = {raw = assetData, type = assetType, sources = {}, numSources = 0};
+		self._loadedAssets[assetID] = {path = path, raw = assetData, type = assetType, sources = {}, numSources = 0};
 		Log:info("Loaded asset: " .. path);
 	end
 
@@ -308,9 +308,10 @@ Assets.unload = function(self, path)
 end
 
 Assets.unloadAll = function(self)
-	for path in pairs(self._loadedAssets) do
-		unloadAsset(self, path, "user");
-		unloadAsset(self, path, "emergency");
+	for _, asset in pairs(self._loadedAssets) do
+		assert(asset);
+		unloadAsset(self, asset.path, "user");
+		unloadAsset(self, asset.path, "emergency");
 	end
 end
 
