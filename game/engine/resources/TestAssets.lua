@@ -35,4 +35,47 @@ tests[#tests].body = function()
 	Assets:unload(sheetName);
 end
 
+tests[#tests + 1] = {name = "Load package", gfx = "mock"};
+tests[#tests].body = function()
+	local packageName = "engine/test-data/TestAssets/package.lua";
+	local sheetName = "engine/test-data/blankey.lua";
+	assert(not Assets:isAssetLoaded(packageName));
+	assert(not Assets:isAssetLoaded(sheetName));
+	Assets:load(packageName);
+	assert(Assets:isAssetLoaded(packageName));
+	assert(Assets:isAssetLoaded(sheetName));
+	Assets:unload(packageName);
+	assert(not Assets:isAssetLoaded(packageName));
+	assert(not Assets:isAssetLoaded(sheetName));
+end
+
+tests[#tests + 1] = {name = "Nested packages work", gfx = "mock"};
+tests[#tests].body = function()
+	local wrapperPackageName = "engine/test-data/TestAssets/wrapper_package.lua";
+	local packageName = "engine/test-data/TestAssets/package.lua";
+	local sheetName = "engine/test-data/blankey.lua";
+	assert(not Assets:isAssetLoaded(packageName));
+	assert(not Assets:isAssetLoaded(sheetName));
+	Assets:load(wrapperPackageName);
+	assert(Assets:isAssetLoaded(packageName));
+	assert(Assets:isAssetLoaded(sheetName));
+	Assets:unload(wrapperPackageName);
+	assert(not Assets:isAssetLoaded(packageName));
+	assert(not Assets:isAssetLoaded(sheetName));
+end
+
+tests[#tests + 1] = {name = "A single reference keeps assets loaded", gfx = "mock"};
+tests[#tests].body = function()
+	local wrapperPackageName = "engine/test-data/TestAssets/wrapper_package.lua";
+	local packageName = "engine/test-data/TestAssets/package.lua";
+	local sheetName = "engine/test-data/blankey.lua";
+	assert(not Assets:isAssetLoaded(sheetName));
+	Assets:load(wrapperPackageName);
+	Assets:load(packageName);
+	Assets:unload(wrapperPackageName);
+	assert(Assets:isAssetLoaded(sheetName));
+	Assets:unload(packageName);
+	assert(not Assets:isAssetLoaded(sheetName));
+end
+
 return tests;

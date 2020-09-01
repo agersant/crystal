@@ -286,6 +286,10 @@ Assets.load = function(self, path)
 	loadAsset(self, path, "user");
 end
 
+Assets.isAssetLoaded = function(self, path)
+	return isAssetLoaded(self, path);
+end
+
 Assets.refresh = function(self, path)
 	refreshAsset(self, path);
 end
