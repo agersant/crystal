@@ -7,7 +7,7 @@ MODULE = "arpg/ARPG"
 if Features.testing then
 	if Features.codeCoverage then
 		local luacov = require("external/luacov/runner");
-		local luacovExcludes = {"assets/.*$", "^main$", "Test", "test-data/.*$"};
+		local luacovExcludes = {"assets/.*$", "^main$", "Test", "test-data"};
 		luacov.init({runreport = true, exclude = luacovExcludes});
 	end
 	local TestSuite = require("engine/dev/TestSuite");
