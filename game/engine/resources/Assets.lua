@@ -34,25 +34,25 @@ end
 
 -- IMAGE
 
-local loadImage = function(self, path, origin)
+local loadImage = function(self, path)
 	local image = love.graphics.newImage(path);
 	image:setFilter("nearest");
 	return "image", image;
 end
 
-local unloadImage = function(self, path, origin)
+local unloadImage = function(self, path)
 	-- N/A
 end
 
 -- SHADER
 
-local loadShader = function(self, path, origin)
+local loadShader = function(self, path)
 	local shaderCode = love.filesystem.read(path);
 	local shader = love.graphics.newShader(shaderCode);
 	return "shader", shader;
 end
 
-local unloadShader = function(self, path, origin)
+local unloadShader = function(self, path)
 	-- N/A
 end
 
@@ -74,7 +74,7 @@ end
 
 -- MAP
 
-local loadMap = function(self, path, origin, mapData)
+local loadMap = function(self, path, mapData)
 	assert(mapData.type == "map");
 	assert(mapData.content.orientation == "orthogonal");
 	local tilesetData = mapData.content.tilesets[1];
@@ -84,14 +84,14 @@ local loadMap = function(self, path, origin, mapData)
 	return "map", map;
 end
 
-local unloadMap = function(self, path, origin, mapData)
+local unloadMap = function(self, path, mapData)
 	assert(mapData.type == "map");
 	unloadTileset(self, path, mapData.content.tilesets[1]);
 end
 
 -- SPRITESHEET
 
-local loadSpritesheet = function(self, path, origin, sheetData)
+local loadSpritesheet = function(self, path, sheetData)
 	assert(sheetData.type == "spritesheet");
 	local texturePath = sheetData.content.texture;
 	local textureImage = loadAsset(self, texturePath, path);
@@ -99,7 +99,7 @@ local loadSpritesheet = function(self, path, origin, sheetData)
 	return "spritesheet", spritesheet;
 end
 
-local unloadSpritesheet = function(self, path, origin, sheetData)
+local unloadSpritesheet = function(self, path, sheetData)
 	assert(sheetData.type == "spritesheet");
 	local texturePath = sheetData.content.texture;
 	unloadAsset(self, texturePath, path);
@@ -107,7 +107,7 @@ end
 
 -- PACKAGE
 
-loadPackage = function(self, path, origin, packageData)
+loadPackage = function(self, path, packageData)
 	assert(type(packageData) == "table");
 	assert(packageData.type == "package");
 	assert(type(packageData.content) == "table");
@@ -117,7 +117,7 @@ loadPackage = function(self, path, origin, packageData)
 	return "package", nil;
 end
 
-unloadPackage = function(self, path, origin, packageData)
+unloadPackage = function(self, path, packageData)
 	assert(type(packageData) == "table");
 	assert(packageData.type == "package");
 	assert(type(packageData.content) == "table");
@@ -143,33 +143,33 @@ local requireLuaAsset = function(path)
 	end
 end
 
-local loadLuaFile = function(self, path, origin)
+local loadLuaFile = function(self, path)
 	local luaFile = requireLuaAsset(path);
 	local assetType, assetData;
 	assert(type(luaFile.content) == "table");
 	assert(type(luaFile.type) == "string");
 	if luaFile.type == "package" then
-		assetType, assetData = loadPackage(self, path, origin, luaFile);
+		assetType, assetData = loadPackage(self, path, luaFile);
 	elseif luaFile.type == "map" then
-		assetType, assetData = loadMap(self, path, origin, luaFile);
+		assetType, assetData = loadMap(self, path, luaFile);
 	elseif luaFile.type == "spritesheet" then
-		assetType, assetData = loadSpritesheet(self, path, origin, luaFile);
+		assetType, assetData = loadSpritesheet(self, path, luaFile);
 	else
 		error("Unsupported Lua asset type: " .. luaFile.type);
 	end
 	return assetType, assetData;
 end
 
-local unloadLuaFile = function(self, path, origin)
+local unloadLuaFile = function(self, path)
 	local luaFile = requireLuaAsset(path);
 	assert(type(luaFile.content) == "table");
 	assert(type(luaFile.type) == "string");
 	if luaFile.type == "package" then
-		unloadPackage(self, path, origin, luaFile);
+		unloadPackage(self, path, luaFile);
 	elseif luaFile.type == "map" then
-		unloadMap(self, path, origin, luaFile);
+		unloadMap(self, path, luaFile);
 	elseif luaFile.type == "spritesheet" then
-		unloadSpritesheet(self, path, origin, luaFile);
+		unloadSpritesheet(self, path, luaFile);
 	else
 		error("Unsupported Lua asset type: " .. luaFile.type);
 	end
@@ -177,20 +177,20 @@ end
 
 -- ASSET
 
-loadAsset = function(self, path, origin)
-	assert(type(origin) == "string");
-	local origin = string.lower(origin);
+loadAsset = function(self, path, source)
+	assert(type(source) == "string");
+	local source = string.lower(source);
 	local assetID = getAssetID(path);
 	local _, extension = getPathAndExtension(path);
 
 	if not isAssetLoaded(self, path) then
 		local assetData, assetType;
 		if extension == "png" then
-			assetType, assetData = loadImage(self, path, origin);
+			assetType, assetData = loadImage(self, path);
 		elseif extension == "lua" then
-			assetType, assetData = loadLuaFile(self, path, origin);
+			assetType, assetData = loadLuaFile(self, path);
 		elseif extension == "glsl" then
-			assetType, assetData = loadShader(self, path, origin);
+			assetType, assetData = loadShader(self, path);
 		else
 			error("Unsupported asset file extension: " .. tostring(extension));
 		end
@@ -203,8 +203,8 @@ loadAsset = function(self, path, origin)
 	end
 
 	assert(self._loadedAssets[assetID]);
-	if not self._loadedAssets[assetID].sources[origin] then
-		self._loadedAssets[assetID].sources[origin] = true;
+	if not self._loadedAssets[assetID].sources[source] then
+		self._loadedAssets[assetID].sources[source] = true;
 		self._loadedAssets[assetID].numSources = self._loadedAssets[assetID].numSources + 1;
 	end
 
@@ -232,26 +232,26 @@ refreshAsset = function(self, path)
 	end
 end
 
-unloadAsset = function(self, path, origin)
-	local origin = string.lower(origin);
+unloadAsset = function(self, path, source)
+	local source = string.lower(source);
 	local assetID = getAssetID(path);
 	local _, extension = getPathAndExtension(path);
 	if not isAssetLoaded(self, path) then
 		return;
 	end
 
-	if self._loadedAssets[assetID].sources[origin] then
-		self._loadedAssets[assetID].sources[origin] = nil;
+	if self._loadedAssets[assetID].sources[source] then
+		self._loadedAssets[assetID].sources[source] = nil;
 		self._loadedAssets[assetID].numSources = self._loadedAssets[assetID].numSources - 1;
 	end
 
 	if self._loadedAssets[assetID].numSources == 0 then
 		if extension == "png" then
-			unloadImage(self, path, origin);
+			unloadImage(self, path);
 		elseif extension == "lua" then
-			unloadLuaFile(self, path, origin);
+			unloadLuaFile(self, path);
 		elseif extension == "glsl" then
-			unloadShader(self, path, origin);
+			unloadShader(self, path);
 		else
 			error("Unsupported asset file extension: " .. tostring(extension));
 		end
