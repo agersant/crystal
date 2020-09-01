@@ -10,6 +10,10 @@ local Assets = Class("Assets");
 local loadAsset, unloadAsset, isAssetLoaded, getAsset, getAssetType, refreshAsset;
 local loadPackage, unloadPackage;
 
+local getAssetID = function(path)
+	return string.lower(path);
+end
+
 local getPathAndExtension = function(path)
 	assert(type(path) == "string");
 	assert(#path > 0);
@@ -175,7 +179,8 @@ end
 
 loadAsset = function(self, path, origin)
 	assert(type(origin) == "string");
-	origin = string.lower(origin);
+	local origin = string.lower(origin);
+	local assetID = getAssetID(path);
 	local _, extension = getPathAndExtension(path);
 
 	if not isAssetLoaded(self, path) then
@@ -192,31 +197,32 @@ loadAsset = function(self, path, origin)
 
 		assert(assetType);
 
-		assert(not self._loadedAssets[path]);
-		self._loadedAssets[path] = {raw = assetData, type = assetType, sources = {}, numSources = 0};
+		assert(not self._loadedAssets[assetID]);
+		self._loadedAssets[assetID] = {raw = assetData, type = assetType, sources = {}, numSources = 0};
 		Log:info("Loaded asset: " .. path);
 	end
 
-	assert(self._loadedAssets[path]);
-	if not self._loadedAssets[path].sources[origin] then
-		self._loadedAssets[path].sources[origin] = true;
-		self._loadedAssets[path].numSources = self._loadedAssets[path].numSources + 1;
+	assert(self._loadedAssets[assetID]);
+	if not self._loadedAssets[assetID].sources[origin] then
+		self._loadedAssets[assetID].sources[origin] = true;
+		self._loadedAssets[assetID].numSources = self._loadedAssets[assetID].numSources + 1;
 	end
 
 	assert(isAssetLoaded(self, path));
-	return self._loadedAssets[path].raw;
+	return self._loadedAssets[assetID].raw;
 end
 
 refreshAsset = function(self, path)
 	if not isAssetLoaded(self, path) then
 		return;
 	end
-	local oldAsset = self._loadedAssets[path];
-	self._loadedAssets[path] = nil;
+	local assetID = getAssetID(path);
+	local oldAsset = self._loadedAssets[assetID];
+	self._loadedAssets[assetID] = nil;
 	loadAsset(self, path, "refresh");
-	self._loadedAssets[path].sources = oldAsset.sources;
-	self._loadedAssets[path].numSources = oldAsset.numSources;
-	for source, _ in pairs(self._loadedAssets[path].sources) do
+	self._loadedAssets[assetID].sources = oldAsset.sources;
+	self._loadedAssets[assetID].numSources = oldAsset.numSources;
+	for source, _ in pairs(self._loadedAssets[assetID].sources) do
 		if isAssetLoaded(self, source) then
 			local assetType = getAssetType(self, source);
 			if assetType ~= "package" then
@@ -227,18 +233,19 @@ refreshAsset = function(self, path)
 end
 
 unloadAsset = function(self, path, origin)
-	origin = string.lower(origin);
+	local origin = string.lower(origin);
+	local assetID = getAssetID(path);
 	local _, extension = getPathAndExtension(path);
 	if not isAssetLoaded(self, path) then
 		return;
 	end
 
-	if self._loadedAssets[path].sources[origin] then
-		self._loadedAssets[path].sources[origin] = nil;
-		self._loadedAssets[path].numSources = self._loadedAssets[path].numSources - 1;
+	if self._loadedAssets[assetID].sources[origin] then
+		self._loadedAssets[assetID].sources[origin] = nil;
+		self._loadedAssets[assetID].numSources = self._loadedAssets[assetID].numSources - 1;
 	end
 
-	if self._loadedAssets[path].numSources == 0 then
+	if self._loadedAssets[assetID].numSources == 0 then
 		if extension == "png" then
 			unloadImage(self, path, origin);
 		elseif extension == "lua" then
@@ -249,31 +256,33 @@ unloadAsset = function(self, path, origin)
 			error("Unsupported asset file extension: " .. tostring(extension));
 		end
 
-		self._loadedAssets[path] = nil;
+		self._loadedAssets[assetID] = nil;
 		Log:info("Unloaded asset: " .. path);
 	end
 end
 
 isAssetLoaded = function(self, path)
-	return self._loadedAssets[path] ~= nil;
+	local assetID = getAssetID(path);
+	return self._loadedAssets[assetID] ~= nil;
 end
 
 getAssetType = function(self, path)
 	assert(type(path) == "string");
 	assert(isAssetLoaded(self, path));
-	return self._loadedAssets[path].type;
+	local assetID = getAssetID(path);
+	return self._loadedAssets[assetID].type;
 end
 
 getAsset = function(self, assetType, path)
 	assert(type(path) == "string");
-	path = string.lower(path);
 	if not isAssetLoaded(self, path) then
 		Log:warning("Requested missing asset, loading at runtime: " .. path);
 		loadAsset(self, path, "emergency");
 	end
 	assert(isAssetLoaded(self, path));
-	assert(self._loadedAssets[path].type == assetType);
-	return self._loadedAssets[path].raw;
+	local assetID = getAssetID(path);
+	assert(self._loadedAssets[assetID].type == assetType);
+	return self._loadedAssets[assetID].raw;
 end
 
 -- PUBLIC API
