@@ -63,7 +63,7 @@ end
 Wrapper.update = function(self, dt)
 	Wrapper.super.update(self, dt);
 	if self._child then
-		return self._child:update();
+		return self._child:update(dt);
 	end
 end
 
