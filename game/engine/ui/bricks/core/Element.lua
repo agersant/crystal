@@ -63,7 +63,7 @@ Element.updateColor = function(self)
 	self._finalColor = self._color;
 	if self._parent then
 		for i = 1, 3 do
-			self._finalColor[i] = self._parent._finalColor[i];
+			self._finalColor[i] = self._finalColor[i] * self._parent._finalColor[i];
 		end
 	end
 end
