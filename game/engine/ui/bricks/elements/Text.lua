@@ -1,7 +1,7 @@
 require("engine/utils/OOP");
 local Fonts = require("engine/resources/Fonts");
 local Element = require("engine/ui/bricks/core/Element");
-local TextAlignment = require("engine/ui/bricks/element/TextAlignment");
+local TextAlignment = require("engine/ui/bricks/elements/TextAlignment");
 
 local Text = Class("Text", Element);
 
@@ -22,6 +22,11 @@ end
 Text.setContent = function(self, content)
 	assert(content);
 	self._content = content;
+end
+
+Text.setFont = function(self, font)
+	assert(font);
+	self._font = font;
 end
 
 Text.getDesiredSize = function(self)
