@@ -78,4 +78,18 @@ TableUtils.contains = function(t, value)
 	return false;
 end
 
+TableUtils.equals = function(t, u)
+	for k, v in pairs(t) do
+		if t[k] ~= u[k] then
+			return false;
+		end
+	end
+	for k, v in pairs(u) do
+		if t[k] ~= u[k] then
+			return false;
+		end
+	end
+	return true;
+end
+
 return TableUtils;

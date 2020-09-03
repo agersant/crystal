@@ -1,1 +1,1 @@
-return {TOP = 0, BOTTOM = 1, CENTER = 2, STRETCH = 3}
+return {TOP = 0, CENTER = 1, BOTTOM = 2, STRETCH = 3}

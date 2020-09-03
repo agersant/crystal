@@ -27,6 +27,7 @@ local engineTestFiles = {
 	"engine/script/TestScript",
 	"engine/ui/bricks/core/TestContainer",
 	"engine/ui/bricks/core/TestWrapper",
+	"engine/ui/bricks/elements/TestHorizontalBox",
 	"engine/ui/TestTextInput",
 	"engine/ui/TestWidget",
 	"engine/utils/TestAlias",
