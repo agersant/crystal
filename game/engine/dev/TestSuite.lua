@@ -25,6 +25,8 @@ local engineTestFiles = {
 	"engine/resources/map/TestCollisionMesh",
 	"engine/resources/map/TestNavigationMesh",
 	"engine/script/TestScript",
+	"engine/ui/bricks/core/TestContainer",
+	"engine/ui/bricks/core/TestWrapper",
 	"engine/ui/TestTextInput",
 	"engine/ui/TestWidget",
 	"engine/utils/TestAlias",
