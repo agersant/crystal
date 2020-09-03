@@ -12,6 +12,7 @@ local Teams = require("arpg/field/combat/Teams");
 local DamageNumbersSystem = require("arpg/field/hud/damage/DamageNumbersSystem");
 local HUD = require("arpg/field/hud/HUD");
 local PartyMember = require("arpg/persistence/party/PartyMember");
+local GFXConfig = require("engine/graphics/GFXConfig");
 local MapScene = require("engine/mapscene/MapScene");
 local Persistence = require("engine/persistence/Persistence");
 local InputListener = require("engine/mapscene/behavior/InputListener");
@@ -69,6 +70,9 @@ end
 Field.update = function(self, dt)
 	Field.super.update(self, dt);
 	self._hud:update(dt);
+	local w, h = GFXConfig:getNativeSize();
+	self._hud:setLocalPosition(0, w, 0, h);
+	self._hud:layout();
 end
 
 Field.draw = function(self)

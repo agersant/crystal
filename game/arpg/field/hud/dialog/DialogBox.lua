@@ -1,9 +1,13 @@
 require("engine/utils/OOP");
 local Log = require("engine/dev/Log");
 local Colors = require("engine/resources/Colors");
-local Image = require("engine/ui/core/Image");
-local Text = require("engine/ui/core/Text");
-local Widget = require("engine/ui/Widget");
+local Fonts = require("engine/resources/Fonts");
+local HorizontalAlignment = require("engine/ui/bricks/core/HorizontalAlignment");
+local VerticalAlignment = require("engine/ui/bricks/core/VerticalAlignment");
+local Image = require("engine/ui/bricks/elements/Image");
+local Overlay = require("engine/ui/bricks/elements/Overlay");
+local Text = require("engine/ui/bricks/elements/Text");
+local Widget = require("engine/ui/bricks/elements/Widget");
 
 local DialogBox = Class("DialogBox", Widget);
 
@@ -18,18 +22,24 @@ DialogBox.init = function(self)
 	self._revealAll = false;
 
 	self:setAlpha(0);
-	self:alignBottomCenter(424, 80);
-	self:offset(0, -8);
 
-	local box = Image:new();
-	box:setColor(Colors.black6C);
-	box:setAlpha(.8);
-	self:addChild(box);
+	local overlay = Overlay:new();
+	self:setRoot(overlay);
 
-	self._textWidget = Text:new("body", 16);
-	self._textWidget:setPadding(8);
-	self._textWidget:setLeftOffset(80);
-	self:addChild(self._textWidget);
+	local background = Image:new();
+	overlay:addChild(background);
+	background:setColor(Colors.black6C);
+	background:setAlpha(.8);
+	background:setHeight(80);
+	background:setHorizontalAlignment(HorizontalAlignment.STRETCH);
+
+	self._textWidget = Text:new();
+	overlay:addChild(self._textWidget);
+	self._textWidget:setFont(Fonts:get("body", 16));
+	self._textWidget:setAllPadding(8);
+	self._textWidget:setLeftPadding(80);
+	self._textWidget:setHorizontalAlignment(HorizontalAlignment.STRETCH);
+	self._textWidget:setVerticalAlignment(VerticalAlignment.STRETCH);
 end
 
 DialogBox.update = function(self, dt)
@@ -46,7 +56,7 @@ DialogBox.update = function(self, dt)
 				self._currentText = "";
 			end
 		end
-		self._textWidget:setText(self._currentText);
+		self._textWidget:setContent(self._currentText);
 	end
 	DialogBox.super.update(self, dt);
 end
