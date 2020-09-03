@@ -29,12 +29,57 @@ tests[#tests + 1] = {name = "Can nest containers"};
 tests[#tests].body = function()
 	local a = Container:new(Joint);
 	local b = Container:new(Joint);
-	local c = Container:new(Joint);
+	local c = Element:new(Joint);
 	a:addChild(b);
 	b:addChild(c);
 	assert(a:getParent() == nil);
 	assert(b:getParent() == a);
 	assert(c:getParent() == b);
+end
+
+tests[#tests + 1] = {name = "Calls update on children"};
+tests[#tests].body = function()
+	local a = Element:new(Joint);
+	local b = Element:new(Joint);
+	local sentinel = 0;
+	a.update = function()
+		sentinel = sentinel + 1;
+	end
+	b.update = function()
+		sentinel = sentinel + 10;
+	end
+	local container = Container:new(Joint);
+	container:addChild(a);
+	container:addChild(b);
+	container:update(0);
+	assert(sentinel == 11)
+end
+
+tests[#tests + 1] = {name = "Layouts and draws children", gfx = "mock"};
+tests[#tests].body = function()
+	local a = Element:new(Joint);
+	local b = Element:new(Joint);
+	local sentinel = 0;
+	a.draw = function()
+		sentinel = sentinel + 1;
+	end
+	b.draw = function()
+		sentinel = sentinel + 10;
+	end
+	local container = Container:new(Joint);
+	container.arrangeChildren = function(self)
+		for _, child in ipairs(self._children) do
+			child:setLocalPosition(0, 0, 0, 0);
+		end
+		sentinel = 1;
+	end;
+	container:addChild(a);
+	container:addChild(b);
+	container:setLocalPosition(0, 0, 0, 0);
+	container:layout();
+	assert(sentinel == 1)
+	container:draw();
+	assert(sentinel == 12)
 end
 
 return tests;
