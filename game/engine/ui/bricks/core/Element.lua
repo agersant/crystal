@@ -104,7 +104,7 @@ Element.draw = function(self)
 		return;
 	end
 	love.graphics.push();
-	love.graphics.translate(-self._left, -self._top);
+	love.graphics.translate(self._left, self._top);
 	love.graphics.setColor(self._finalColor[1], self._finalColor[2], self._finalColor[3], self._finalAlpha);
 	self._transform:apply(self:getSize());
 	self:drawSelf();
