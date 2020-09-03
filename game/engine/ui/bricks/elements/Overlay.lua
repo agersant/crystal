@@ -88,9 +88,9 @@ Overlay.arrangeChildren = function(self)
 		if verticalAlignment == VerticalAlignment.TOP then
 			y = paddingTop;
 		elseif verticalAlignment == VerticalAlignment.CENTER then
-			y = (width - childHeight) / 2 + paddingTop - paddingBottom;
+			y = (height - childHeight) / 2 + paddingTop - paddingBottom;
 		elseif verticalAlignment == VerticalAlignment.BOTTOM then
-			y = width - childHeight - paddingBottom;
+			y = height - childHeight - paddingBottom;
 		elseif verticalAlignment == VerticalAlignment.STRETCH then
 			y = paddingTop;
 		end
