@@ -31,6 +31,13 @@ Wrapper.setChild = function(self, child)
 	child:setJoint(self._joint);
 end
 
+Wrapper.removeChild = function(self, child)
+	assert(self._child == child);
+	self._child:setJoint(nil);
+	self._child = nil;
+	self._joint = nil;
+end
+
 Wrapper.getDesiredSize = function(self)
 	if self._child then
 		return self._child:getDesiredSize();
@@ -57,20 +64,6 @@ Wrapper.update = function(self, dt)
 	Wrapper.super.update(self, dt);
 	if self._child then
 		return self._child:update();
-	end
-end
-
-Wrapper.removeChild = function(self, child)
-	assert(self._child == child);
-	self._child:setJoint(nil);
-	self._child = nil;
-	self._joint = nil;
-end
-
-Wrapper.update = function(self, dt)
-	Wrapper.super.update(self, dt);
-	if self._child then
-		self._child:update(dt);
 	end
 end
 
