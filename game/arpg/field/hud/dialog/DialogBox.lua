@@ -2,6 +2,7 @@ require("engine/utils/OOP");
 local Log = require("engine/dev/Log");
 local Colors = require("engine/resources/Colors");
 local Fonts = require("engine/resources/Fonts");
+local Script = require("engine/script/Script");
 local HorizontalAlignment = require("engine/ui/bricks/core/HorizontalAlignment");
 local VerticalAlignment = require("engine/ui/bricks/core/VerticalAlignment");
 local Image = require("engine/ui/bricks/elements/Image");
@@ -16,10 +17,7 @@ DialogBox.init = function(self)
 	self._textSpeed = 25;
 	self._owner = nil;
 	self._player = nil;
-	self._targetText = nil;
-	self._currentText = nil;
-	self._currentGlyphCount = nil;
-	self._revealAll = false;
+	self._script = self:addScript(Script:new());
 
 	self:setAlpha(0);
 
@@ -39,25 +37,6 @@ DialogBox.init = function(self)
 	self._textWidget:setVerticalAlignment(VerticalAlignment.STRETCH);
 end
 
-DialogBox.update = function(self, dt)
-	if self._targetText and self._currentText ~= self._targetText then
-		if self._revealAll then
-			self._currentText = self._targetText;
-		else
-			self._currentGlyphCount = self._currentGlyphCount + dt * self._textSpeed;
-			self._currentGlyphCount = math.min(self._currentGlyphCount, #self._targetText);
-			if math.floor(self._currentGlyphCount) > 1 then
-				-- TODO: This assumes each glyph is one byte, not UTF-8 aware
-				self._currentText = string.sub(self._targetText, 1, self._currentGlyphCount);
-			else
-				self._currentText = "";
-			end
-		end
-		self._textWidget:setContent(self._currentText);
-	end
-	DialogBox.super.update(self, dt);
-end
-
 DialogBox.open = function(self)
 	if self._active then
 		return false;
@@ -67,27 +46,42 @@ DialogBox.open = function(self)
 	return true;
 end
 
-DialogBox.sayLine = function(self, text)
-	Log:info("Displaying dialogbox: " .. text);
-	self._targetText = text;
-	self._currentText = "";
-	self._revealAll = false;
-	self._currentGlyphCount = 0;
-end
+DialogBox.sayLine = function(self, targetText)
+	assert(targetText);
+	Log:info("Displaying dialogbox: " .. targetText);
 
-DialogBox.isLineFullyPrinted = function(self)
-	return self._currentText == self._targetText;
+	local widget = self;
+	self._script:signal("sayLine");
+	return self._script:addThread(function(self)
+		self:endOn("sayLine");
+		self:endOn("skipped");
+
+		self:thread(function(self)
+			self:waitFor("fastForward");
+			widget._textWidget:setContent(targetText);
+			self:signal("skipped");
+		end);
+
+		widget._textWidget:setContent("");
+		local duration = #targetText / widget._textSpeed;
+		self:waitTween(0, #targetText, duration, "linear", function(numGlyphs)
+			local numGlyphs = math.floor(numGlyphs);
+			if numGlyphs > 1 then
+				-- TODO: This assumes each glyph is one byte, not UTF-8 aware (so does the duration calculation above)
+				widget._textWidget:setContent(string.sub(targetText, 1, numGlyphs));
+			else
+				widget._textWidget:setContent("");
+			end
+		end);
+	end);
 end
 
 DialogBox.fastForward = function(self)
-	self._revealAll = true;
+	self._script:signal("fastForward");
 end
 
 DialogBox.close = function(self)
 	self._active = false;
-
-	self._targetText = nil;
-	self._currentText = nil;
 	self:setAlpha(0);
 end
 
