@@ -19,7 +19,6 @@ Thread.init = function(self, owner, parentThread, functionToThread)
 
 	if parentThread then
 		parentThread._childThreads[self] = true;
-		self._parentThread = parentThread;
 	end
 
 	Alias:add(self, owner);
