@@ -1,5 +1,6 @@
 require("engine/utils/OOP");
 local DialogBox = require("arpg/field/hud/dialog/DialogBox");
+local GFXConfig = require("engine/graphics/GFXConfig");
 local HorizontalAlignment = require("engine/ui/bricks/core/HorizontalAlignment");
 local VerticalAlignment = require("engine/ui/bricks/core/VerticalAlignment");
 local Overlay = require("engine/ui/bricks/elements/Overlay");
@@ -18,6 +19,14 @@ HUD.init = function(self)
 	self._dialogBox:setBottomPadding(8);
 	self._dialogBox:setHorizontalAlignment(HorizontalAlignment.STRETCH);
 	self._dialogBox:setVerticalAlignment(VerticalAlignment.BOTTOM);
+end
+
+HUD.update = function(self, dt)
+	HUD.super.update(self, dt);
+	local w, h = GFXConfig:getNativeSize();
+	assert(not self:getParent());
+	self:setLocalPosition(0, w, 0, h);
+	self:layout();
 end
 
 HUD.getDialogBox = function(self)
