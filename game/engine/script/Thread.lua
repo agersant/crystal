@@ -173,7 +173,7 @@ Thread.waitTween = function(self, from, to, duration, easing, callback, arg)
 	assert(duration >= 0);
 	if duration == 0 then
 		if arg then
-			callback(unpack(arg), to);
+			callback(arg, to);
 		else
 			callback(to);
 		end
