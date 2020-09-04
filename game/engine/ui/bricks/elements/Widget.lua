@@ -3,6 +3,7 @@ local Script = require("engine/script/Script");
 local Joint = require("engine/ui/bricks/core/Joint");
 local Wrapper = require("engine/ui/bricks/core/Wrapper");
 local TableUtils = require("engine/utils/TableUtils");
+local Alias = require("engine/utils/Alias");
 
 local WidgetJoint = Class("WidgetJoint", Joint);
 local Widget = Class("Widget", Wrapper);
@@ -18,12 +19,14 @@ Widget.addScript = function(self, script)
 	assert(script);
 	assert(script:isInstanceOf(Script));
 	self._scripts[script] = true;
+	Alias:add(script, self);
 	return script;
 end
 
 Widget.removeScript = function(self, script)
 	assert(script);
 	assert(script:isInstanceOf(Script));
+	Alias:remove(script, self);
 	self._scripts[script] = nil;
 end
 

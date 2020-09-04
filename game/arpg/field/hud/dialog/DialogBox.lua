@@ -37,6 +37,10 @@ DialogBox.init = function(self)
 	self._textWidget:setVerticalAlignment(VerticalAlignment.STRETCH);
 end
 
+DialogBox.setContent = function(self, text)
+	self._textWidget:setContent(text);
+end
+
 DialogBox.open = function(self)
 	if self._active then
 		return false;
@@ -50,7 +54,8 @@ DialogBox.sayLine = function(self, targetText)
 	assert(targetText);
 	Log:info("Displaying dialogbox: " .. targetText);
 
-	local widget = self;
+	local duration = #targetText / self._textSpeed;
+
 	self._script:signal("sayLine");
 	return self._script:addThread(function(self)
 		self:endOn("sayLine");
@@ -58,19 +63,18 @@ DialogBox.sayLine = function(self, targetText)
 
 		self:thread(function(self)
 			self:waitFor("fastForward");
-			widget._textWidget:setContent(targetText);
+			self:setContent(targetText);
 			self:signal("skipped");
 		end);
 
-		widget._textWidget:setContent("");
-		local duration = #targetText / widget._textSpeed;
+		self:setContent("");
 		self:waitTween(0, #targetText, duration, "linear", function(numGlyphs)
 			local numGlyphs = math.floor(numGlyphs);
 			if numGlyphs > 1 then
 				-- TODO: This assumes each glyph is one byte, not UTF-8 aware (so does the duration calculation above)
-				widget._textWidget:setContent(string.sub(targetText, 1, numGlyphs));
+				self:setContent(string.sub(targetText, 1, numGlyphs));
 			else
-				widget._textWidget:setContent("");
+				self:setContent("");
 			end
 		end);
 	end);
