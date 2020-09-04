@@ -38,15 +38,13 @@ end
 Text.drawSelf = function(self)
 	local width, _ = self:getSize();
 	local alignment = "left";
-	local x = 0;
 	if self._alignment == TextAlignment.CENTER then
 		alignment = "center";
-		x = -width / 2;
 	elseif self._alignment == TextAlignment.RIGHT then
 		alignment = "right";
 	end
 	love.graphics.setFont(self._font);
-	love.graphics.printf(self._content, x, 0, width, alignment);
+	love.graphics.printf(self._content, 0, 0, width, alignment);
 end
 
 return Text;

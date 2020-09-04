@@ -47,6 +47,22 @@ Element.setColor = function(self, color)
 	self._color = color;
 end
 
+Element.setXTranslation = function(self, amount)
+	self._transform:setXTranslation(amount);
+end
+
+Element.setYTranslation = function(self, amount)
+	self._transform:setYTranslation(amount);
+end
+
+Element.setXScale = function(self, amount)
+	self._transform:setXScale(amount);
+end
+
+Element.setYScale = function(self, amount)
+	self._transform:setYScale(amount);
+end
+
 Element.getLocalPosition = function(self)
 	return self._left, self._right, self._top, self._bottom;
 end

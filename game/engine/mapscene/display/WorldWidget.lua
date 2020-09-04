@@ -20,6 +20,9 @@ end
 WorldWidget.updateWidget = function(self, dt)
 	if self._widget then
 		self._widget:update(dt);
+		local width, height = self._widget:getDesiredSize();
+		self._widget:setLocalPosition(0, width, 0, height);
+		self._widget:layout();
 	end
 end
 
@@ -29,8 +32,9 @@ WorldWidget.draw = function(self)
 		local snapTo = 1 / GFXConfig:getZoom();
 		local x = MathUtils.roundTo(self._x, snapTo);
 		local y = MathUtils.roundTo(self._y, snapTo);
+		local width, height = self._widget:getSize();
 		love.graphics.push();
-		love.graphics.translate(x, y);
+		love.graphics.translate(x - width / 2, y - height / 2);
 		self._widget:draw();
 		love.graphics.pop();
 	end
