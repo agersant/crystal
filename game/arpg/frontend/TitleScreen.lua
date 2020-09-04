@@ -13,8 +13,7 @@ local TitleScreen = Class("TitleScreen", UIScene);
 TitleScreenWidget.init = function(self)
 	TitleScreenWidget.super.init(self);
 
-	local overlay = Overlay:new();
-	self:setRoot(overlay);
+	local overlay = self:setRoot(Overlay:new());
 
 	local text = overlay:addChild(Text:new());
 	text:setFont(Fonts:get("fat", 16));

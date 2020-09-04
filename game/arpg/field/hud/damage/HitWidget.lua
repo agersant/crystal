@@ -49,8 +49,7 @@ HitWidget.init = function(self, amount)
 	HitWidget.super.init(self);
 	assert(amount);
 
-	local overlay = Overlay:new();
-	self:setRoot(overlay);
+	local overlay = self:setRoot(Overlay:new());
 
 	local outline = overlay:addChild(Text:new());
 	outline:setFont(Fonts:get("small", 16));

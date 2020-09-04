@@ -23,8 +23,7 @@ DialogBox.init = function(self)
 
 	self:setAlpha(0);
 
-	local overlay = Overlay:new();
-	self:setRoot(overlay);
+	local overlay = self:setRoot(Overlay:new());
 
 	local background = overlay:addChild(Image:new());
 	background:setColor(Colors.black6C);

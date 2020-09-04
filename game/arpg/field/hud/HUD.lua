@@ -10,8 +10,7 @@ local HUD = Class("HUD", Widget);
 HUD.init = function(self)
 	HUD.super.init(self);
 
-	local overlay = Overlay:new();
-	self:setRoot(overlay);
+	local overlay = self:setRoot(Overlay:new());
 
 	self._dialogBox = overlay:addChild(DialogBox:new());
 	self._dialogBox:setLeftPadding(28);
