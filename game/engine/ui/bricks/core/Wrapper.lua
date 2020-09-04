@@ -13,14 +13,14 @@ end
 
 Wrapper.setChild = function(self, child)
 	if self._child == child then
-		return;
+		return child;
 	end
 
 	if not child then
 		if self._child then
 			self:removeChild(self._child);
 		end
-		return;
+		return nil;
 	end
 
 	if child:getParent() then
@@ -29,6 +29,7 @@ Wrapper.setChild = function(self, child)
 	self._child = child;
 	self._joint = self._jointClass:new(self, child);
 	child:setJoint(self._joint);
+	return child;
 end
 
 Wrapper.removeChild = function(self, child)

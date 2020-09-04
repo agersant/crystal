@@ -25,6 +25,13 @@ tests[#tests].body = function()
 	assert(b:getParent() == otherContainer);
 end
 
+tests[#tests + 1] = {name = "Add child returns newly added child"};
+tests[#tests].body = function()
+	local a = Element:new();
+	local container = Container:new(Joint);
+	assert(container:addChild(a) == a);
+end
+
 tests[#tests + 1] = {name = "Can nest containers"};
 tests[#tests].body = function()
 	local a = Container:new(Joint);

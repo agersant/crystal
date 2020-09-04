@@ -14,6 +14,13 @@ tests[#tests].body = function()
 	assert(a:getParent() == nil);
 end
 
+tests[#tests + 1] = {name = "Set child returns child"};
+tests[#tests].body = function()
+	local a = Element:new();
+	local wrapper = Wrapper:new(Joint);
+	assert(wrapper:setChild(a) == a);
+end
+
 tests[#tests + 1] = {name = "Can nest wrappers"};
 tests[#tests].body = function()
 	local a = Wrapper:new(Joint);

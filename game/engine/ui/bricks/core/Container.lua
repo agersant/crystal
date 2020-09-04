@@ -22,6 +22,7 @@ Container.addChild = function(self, child)
 	local joint = self._jointClass:new(self, child);
 	self._joints[child] = joint;
 	child:setJoint(joint);
+	return child;
 end
 
 Container.removeChild = function(self, child)
