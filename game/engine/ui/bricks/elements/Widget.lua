@@ -18,6 +18,7 @@ Widget.addScript = function(self, script)
 	assert(script);
 	assert(script:isInstanceOf(Script));
 	self._scripts[script] = true;
+	return script;
 end
 
 Widget.removeScript = function(self, script)

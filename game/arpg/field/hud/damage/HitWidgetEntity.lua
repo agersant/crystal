@@ -19,11 +19,8 @@ HitWidgetEntity.init = function(self, scene, victim, amount)
 	self:addComponent(Parent:new(victim));
 	self:addComponent(ScriptRunner:new());
 
-	hitWidget:animateIn();
 	self:addScript(Script:new(function(self)
-		self:wait(0.8);
-		hitWidget:animateOut();
-		self:wait(0.5);
+		self:join(hitWidget:animate());
 		self:despawn();
 	end));
 end

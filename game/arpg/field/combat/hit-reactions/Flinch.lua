@@ -50,12 +50,8 @@ local smallFlinch = function(self, direction)
 	self:getBody():setLinearDamping(20, 0);
 	self:getBody():applyLinearImpulse(300 * dx, 300 * dy);
 
-	self:tween(0, 3, 0.1, "outCubic", function(a)
-		self:setAltitude(a);
-	end);
-	self:tween(3, 0, 0.1, "inCubic", function(a)
-		self:setAltitude(a);
-	end);
+	self:waitTween(0, 6, 0.1, "outCubic", self.setAltitude, self);
+	self:waitTween(6, 0, 0.1, "inCubic", self.setAltitude, self);
 
 	self:wait(0.1);
 end
@@ -83,26 +79,12 @@ local largeFlinch = function(self, direction)
 	self:getBody():setLinearDamping(4, 0);
 	self:getBody():applyLinearImpulse(400 * dx, 400 * dy);
 
-	self:tween(0, 16, 0.15, "outQuadratic", function(a)
-		self:setAltitude(a);
-	end);
-	self:tween(16, 0, 0.15, "inQuadratic", function(a)
-		self:setAltitude(a);
-	end);
-
-	self:tween(0, 4, 0.1, "outQuadratic", function(a)
-		self:setAltitude(a);
-	end);
-	self:tween(4, 0, 0.1, "inQuadratic", function(a)
-		self:setAltitude(a);
-	end);
-
-	self:tween(0, 2, 0.08, "outQuadratic", function(a)
-		self:setAltitude(a);
-	end);
-	self:tween(2, 0, 0.08, "inQuadratic", function(a)
-		self:setAltitude(a);
-	end);
+	self:waitTween(0, 16, 0.15, "outQuadratic", self.setAltitude, self);
+	self:waitTween(16, 0, 0.15, "inQuadratic", self.setAltitude, self);
+	self:waitTween(0, 4, 0.1, "outQuadratic", self.setAltitude, self);
+	self:waitTween(4, 0, 0.1, "inQuadratic", self.setAltitude, self);
+	self:waitTween(0, 2, 0.08, "outQuadratic", self.setAltitude, self);
+	self:waitTween(2, 0, 0.08, "inQuadratic", self.setAltitude, self);
 
 	if collision then
 		local fixture = collision:getFixture();

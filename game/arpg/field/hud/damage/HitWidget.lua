@@ -9,42 +9,6 @@ local Script = require("engine/script/Script");
 
 local HitWidget = Class("HitWidget", Widget);
 
-local animateIn = function(self, widget)
-	self:thread(function(self)
-		self:tween(0, -8 + 16 * math.random(), .6, "linear", function(xOffset)
-			widget:setXTranslation(xOffset);
-		end);
-	end);
-	local flyUp = self:thread(function(self)
-		self:tween(0, -15, .2, "outQuadratic", function(yOffset)
-			widget:setYTranslation(yOffset);
-		end);
-	end);
-	self:join(flyUp);
-	local bounce = self:thread(function(self)
-		self:tween(-15, 0, .4, "outBounce", function(yOffset)
-			widget:setYTranslation(yOffset);
-		end);
-	end);
-	self:join(bounce);
-end
-
-local animateOut = function(self, widget)
-	local shrink = self:thread(function(self)
-		widget._pivotY = 1;
-		self:tween(1, 0, 0.2, "inQuadratic", function(s)
-			widget:setXScale(s);
-		end);
-	end);
-	local flyOut = self:thread(function(self)
-		self:tween(0, -15, 0.2, "inQuartic", function(yOffset)
-			widget:setYTranslation(yOffset);
-		end);
-	end);
-	self:join(flyOut);
-	self:join(shrink);
-end
-
 HitWidget.init = function(self, amount)
 	HitWidget.super.init(self);
 	assert(amount);
@@ -64,20 +28,24 @@ HitWidget.init = function(self, amount)
 	self._textWidget:setColor(Colors.barbadosCherry);
 	self._textWidget:setAlignment(TextAlignment.CENTER);
 	self._textWidget:setContent(amount);
+
+	self._animation = self:addScript(Script:new());
 end
 
-HitWidget.animateIn = function(self)
+HitWidget.animate = function(self)
 	local widget = self;
-	self:addScript(Script:new(function(self)
-		animateIn(self, widget);
-	end));
-end
-
-HitWidget.animateOut = function(self)
-	local widget = self;
-	self:addScript(Script:new(function(self)
-		animateOut(self, widget);
-	end));
+	self._animation:signal("animate");
+	return self._animation:addThread(function(self)
+		self:endOn("animate");
+		self:tween(0, -8 + 16 * math.random(), .6, "linear", widget.setXTranslation, widget);
+		self:waitTween(0, -15, .2, "outQuadratic", widget.setYTranslation, widget);
+		self:waitTween(-15, 0, .4, "outBounce", widget.setYTranslation, widget);
+		self:wait(0.5);
+		local shrink = self:tween(1, 0, 0.2, "inQuadratic", widget.setXScale, widget);
+		local flyOut = self:tween(0, -15, 0.2, "inQuartic", widget.setYTranslation, widget);
+		self:join(flyOut);
+		self:join(shrink);
+	end);
 end
 
 return HitWidget;

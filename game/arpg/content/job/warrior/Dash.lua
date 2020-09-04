@@ -26,14 +26,13 @@ local action = function(self)
 	local dx = math.cos(angle);
 	local dy = math.sin(angle);
 
-	self:tween(buildupPeakSpeed, 0, buildupDuration, "outCubic", function(speed)
+	self:waitTween(buildupPeakSpeed, 0, buildupDuration, "outCubic", function(speed)
 		self:setLinearVelocity(-dx * speed, -dy * speed);
 	end);
-
-	self:tween(peakSpeed, recoveryBeginSpeed, dashDuration, "outQuartic", function(speed)
+	self:waitTween(peakSpeed, recoveryBeginSpeed, dashDuration, "outQuartic", function(speed)
 		self:setLinearVelocity(dx * speed, dy * speed);
 	end);
-	self:tween(recoveryBeginSpeed, 0, recoveryDuration, "outQuadratic", function(speed)
+	self:waitTween(recoveryBeginSpeed, 0, recoveryDuration, "outQuadratic", function(speed)
 		self:setLinearVelocity(dx * speed, dy * speed);
 	end);
 end
