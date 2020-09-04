@@ -30,11 +30,11 @@ WorldWidget.draw = function(self)
 	WorldWidget.super.draw();
 	if self._widget then
 		local snapTo = 1 / GFXConfig:getZoom();
-		local x = MathUtils.roundTo(self._x, snapTo);
-		local y = MathUtils.roundTo(self._y, snapTo);
 		local width, height = self._widget:getSize();
+		local x = MathUtils.roundTo(self._x - width / 2, snapTo);
+		local y = MathUtils.roundTo(self._y - height / 2, snapTo);
 		love.graphics.push();
-		love.graphics.translate(x - width / 2, y - height / 2);
+		love.graphics.translate(x, y);
 		self._widget:draw();
 		love.graphics.pop();
 	end
