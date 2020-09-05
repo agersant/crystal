@@ -219,7 +219,7 @@ ECS.addComponent = function(self, entity, component)
 	if graveyard and graveyard[component:getClass()] then
 		graveyard[component:getClass()] = nil;
 	else
-		assert(not entity:getComponent(component:getClass()));
+		assert(not entity:getExactComponent(component:getClass()));
 		local nursery = self._componentNursery[entity];
 		if not nursery then
 			nursery = {};
@@ -238,7 +238,7 @@ ECS.removeComponent = function(self, entity, component)
 	if nursery and nursery[component:getClass()] then
 		nursery[component:getClass()] = nil;
 	else
-		assert(entity:getComponent(component:getClass()) == component);
+		assert(entity:getExactComponent(component:getClass()) == component);
 		local graveyard = self._componentGraveyard[entity];
 		if not graveyard then
 			graveyard = {};
@@ -299,7 +299,7 @@ ECS.getAllEntitiesWith = function(self, class)
 	return output;
 end
 
-ECS.getComponent = function(self, entity, class)
+ECS.getExactComponent = function(self, entity, class)
 	assert(entity);
 	assert(class);
 
@@ -323,16 +323,38 @@ ECS.getComponent = function(self, entity, class)
 	end
 end
 
+ECS.getComponent = function(self, entity, class)
+	assert(entity);
+	assert(class);
+	local matches = self:getComponents(entity, class);
+	for match in pairs(matches) do
+		return match;
+	end
+end
+
 ECS.getComponents = function(self, entity, baseClass)
-	local allComponents = self._entityToComponents[entity];
-	if not allComponents then
-		return {};
+	local candidates = {};
+	if self._entityToComponents[entity] then
+		if self._entityToComponents[entity][baseClass] then
+			candidates = TableUtils.shallowCopy(self._entityToComponents[entity][baseClass]);
+		end
 	end
-	local components = allComponents[baseClass];
-	if not components then
-		return {};
+	if self._componentNursery[entity] then
+		for _, component in pairs(self._componentNursery[entity]) do
+			if component:isInstanceOf(baseClass) then
+				candidates[component] = true;
+			end
+		end
 	end
-	return TableUtils.shallowCopy(components);
+
+	local output = {};
+	local graveyard = self._componentGraveyard[entity] or {};
+	for component in pairs(candidates) do
+		if graveyard[component:getClass()] ~= component then
+			output[component] = true;
+		end
+	end
+	return output;
 end
 
 ECS.getAllComponents = function(self, class)

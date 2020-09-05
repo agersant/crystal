@@ -25,6 +25,10 @@ Entity.removeComponent = function(self, component)
 	Alias:remove(self, component);
 end
 
+Entity.getExactComponent = function(self, class)
+	return self._ecs:getExactComponent(self, class);
+end
+
 Entity.getComponent = function(self, class)
 	return self._ecs:getComponent(self, class);
 end

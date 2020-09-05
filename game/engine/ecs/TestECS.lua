@@ -161,29 +161,29 @@ tests[#tests].body = function()
 	a:addComponent(boop);
 	assert(a:getComponent(Boop) == boop);
 	assert(a:getComponent(Bonk) == nil);
-	assert(a:getComponent(Snoot) == nil);
+	assert(a:getComponent(Snoot) == boop);
 	ecs:update();
 	assert(a:getComponent(Boop) == boop);
 	assert(a:getComponent(Bonk) == nil);
-	assert(a:getComponent(Snoot) == nil);
+	assert(a:getComponent(Snoot) == boop);
 
 	a:addComponent(bonk);
 	assert(a:getComponent(Boop) == boop);
 	assert(a:getComponent(Bonk) == bonk);
-	assert(a:getComponent(Snoot) == nil);
+	assert(a:getComponent(Snoot) ~= nil);
 	ecs:update();
 	assert(a:getComponent(Boop) == boop);
 	assert(a:getComponent(Bonk) == bonk);
-	assert(a:getComponent(Snoot) == nil);
+	assert(a:getComponent(Snoot) ~= nil);
 
 	a:removeComponent(boop);
 	assert(a:getComponent(Boop) == nil);
 	assert(a:getComponent(Bonk) == bonk);
-	assert(a:getComponent(Snoot) == nil);
+	assert(a:getComponent(Snoot) == bonk);
 	ecs:update();
 	assert(a:getComponent(Boop) == nil);
 	assert(a:getComponent(Bonk) == bonk);
-	assert(a:getComponent(Snoot) == nil);
+	assert(a:getComponent(Snoot) == bonk);
 end
 
 tests[#tests + 1] = {name = "Get components"};
@@ -196,13 +196,13 @@ tests[#tests].body = function()
 	local Boop = Class:test("Boop", Snoot);
 	local boop = Boop:new();
 	a:addComponent(boop);
-	assert(not a:getComponents(Snoot)[boop]);
+	assert(TableUtils.equals({[boop] = true}, a:getComponents(Snoot)));
 	ecs:update();
-	assert(a:getComponents(Snoot)[boop]);
+	assert(TableUtils.equals({[boop] = true}, a:getComponents(Snoot)));
 	a:removeComponent(boop);
-	assert(a:getComponents(Snoot)[boop]);
+	assert(TableUtils.equals({}, a:getComponents(Snoot)));
 	ecs:update();
-	assert(not a:getComponents(Snoot)[boop]);
+	assert(TableUtils.equals({}, a:getComponents(Snoot)));
 end
 
 tests[#tests + 1] = {name = "Get all entities with component"};
@@ -216,10 +216,10 @@ tests[#tests].body = function()
 	local boop = Boop:new();
 	a:addComponent(boop);
 	ecs:update();
-	assert(ecs:getAllEntitiesWith(Snoot)[a]);
+	assert(TableUtils.equals({[a] = true}, ecs:getAllEntitiesWith(Snoot)));
 	a:removeComponent(boop);
 	ecs:update();
-	assert(not ecs:getAllEntitiesWith(Snoot)[a]);
+	assert(TableUtils.equals({}, ecs:getAllEntitiesWith(Snoot)));
 end
 
 tests[#tests + 1] = {name = "Get all components"};
