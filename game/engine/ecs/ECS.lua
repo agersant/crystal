@@ -93,56 +93,6 @@ local unregisterEntity = function(self, entity)
 	entity:setIsValid(false);
 end
 
-local updateQueries = function(self, entityNursery, entityGraveyard, componentNursery, componentGraveyard)
-	for query in pairs(self._queries) do
-		query:flush();
-	end
-
-	for entity in pairs(entityGraveyard) do
-		for query in pairs(self._queries) do
-			query:onEntityRemoved(entity);
-		end
-	end
-
-	for entity in pairs(entityNursery) do
-		for query in pairs(self._queries) do
-			query:onEntityAdded(entity);
-		end
-	end
-
-	for entity, components in pairs(componentGraveyard) do
-		if not entityGraveyard[entity] then
-			for class, component in pairs(components) do
-				local baseClass = class;
-				while baseClass ~= Component do
-					if self._componentClassToQueries[baseClass] then
-						for query in pairs(self._componentClassToQueries[baseClass]) do
-							query:onComponentRemoved(entity, component);
-						end
-					end
-					baseClass = baseClass.super;
-				end
-			end
-		end
-	end
-
-	for entity, components in pairs(componentNursery) do
-		if not entityNursery[entity] then
-			for class, component in pairs(components) do
-				local baseClass = class;
-				while baseClass ~= Component do
-					if self._componentClassToQueries[baseClass] then
-						for query in pairs(self._componentClassToQueries[baseClass]) do
-							query:onComponentAdded(entity, component);
-						end
-					end
-					baseClass = baseClass.super;
-				end
-			end
-		end
-	end
-end
-
 ECS.init = function(self)
 	self._entities = {};
 	self._entityToComponent = {};
@@ -162,38 +112,76 @@ ECS.init = function(self)
 end
 
 ECS.update = function(self)
-	local entityGraveyard = TableUtils.shallowCopy(self._entityGraveyard);
-	local componentGraveyard = TableUtils.shallowCopy(self._componentGraveyard);
-	local entityNursery = TableUtils.shallowCopy(self._entityNursery);
-	local componentNursery = TableUtils.shallowCopy(self._componentNursery);
+	for query in pairs(self._queries) do
+		query:flush();
+	end
 
+	-- Destroy components
+
+	for entity, components in pairs(self._componentGraveyard) do
+		for class, component in pairs(components) do
+			unregisterComponent(self, entity, component);
+			if not self._entityGraveyard[entity] then
+				local baseClass = class;
+				while baseClass ~= Component do
+					if self._componentClassToQueries[baseClass] then
+						for query in pairs(self._componentClassToQueries[baseClass]) do
+							query:onComponentRemoved(entity, component);
+						end
+					end
+					baseClass = baseClass.super;
+				end
+			end
+		end
+	end
+
+	-- Destroy entities
+
+	for entity in pairs(self._entityGraveyard) do
+		for query in pairs(self._queries) do
+			query:onEntityRemoved(entity);
+		end
+		unregisterEntity(self, entity);
+	end
+
+	-- Create entities
+
+	for entity in pairs(self._entityNursery) do
+		registerEntity(self, entity);
+	end
+
+	-- Create components
+
+	for entity, components in pairs(self._componentNursery) do
+		for class, component in pairs(components) do
+			registerComponent(self, entity, component);
+			if not self._entityNursery[entity] then
+				local baseClass = class;
+				while baseClass ~= Component do
+					if self._componentClassToQueries[baseClass] then
+						for query in pairs(self._componentClassToQueries[baseClass]) do
+							query:onComponentAdded(entity, component);
+						end
+					end
+					baseClass = baseClass.super;
+				end
+			end
+		end
+	end
+
+	-- Ideally this would be part of the 'Create entities' loop above, but we cannot update queries
+	-- until components have been added to entities
+	for entity in pairs(self._entityNursery) do
+		for query in pairs(self._queries) do
+			query:onEntityAdded(entity);
+		end
+	end
+
+	self._events = {};
 	self._entityGraveyard = {};
 	self._componentGraveyard = {};
 	self._entityNursery = {};
 	self._componentNursery = {};
-
-	for entity, components in pairs(componentGraveyard) do
-		for class, component in pairs(components) do
-			unregisterComponent(self, entity, component);
-		end
-	end
-
-	for entity in pairs(entityGraveyard) do
-		unregisterEntity(self, entity);
-	end
-
-	for entity in pairs(entityNursery) do
-		registerEntity(self, entity);
-	end
-
-	for entity, components in pairs(componentNursery) do
-		for class, component in pairs(components) do
-			registerComponent(self, entity, component);
-		end
-	end
-
-	updateQueries(self, entityNursery, entityGraveyard, componentNursery, componentGraveyard);
-	self._events = {};
 end
 
 ECS.runFramePortion = function(self, framePortion, ...)

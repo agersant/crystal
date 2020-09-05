@@ -209,6 +209,22 @@ tests[#tests].body = function()
 	assert(#ecs:getAllComponents(Boop) == 0);
 end
 
+tests[#tests + 1] = {name = "Despawned entities don't leave components behind"};
+tests[#tests].body = function()
+	local ecs = ECS:new();
+
+	local a = ecs:spawn(Entity);
+
+	local Comp = Class:test("Comp", Component);
+	local comp = Comp:new();
+	a:addComponent(comp);
+	ecs:update();
+	assert(#ecs:getAllComponents(Comp) == 1);
+	a:despawn();
+	ecs:update();
+	assert(#ecs:getAllComponents(Comp) == 0);
+end
+
 tests[#tests + 1] = {name = "Systems update in correct order"};
 tests[#tests].body = function()
 	local ecs = ECS:new();
@@ -364,6 +380,26 @@ tests[#tests].body = function()
 	assert(query:getRemovedComponents(BaseComp)[compA]);
 	assert(not query:getRemovedComponents(BaseComp)[compB]);
 	assert(not query:getRemovedComponents(BaseComp)[compC]);
+
+end
+
+tests[#tests + 1] = {name = "Changelog of components is updated when entity despawns"};
+tests[#tests].body = function()
+	local ecs = ECS:new();
+	local Comp = Class:test("Comp", Component);
+	local query = AllComponents:new({Comp});
+	ecs:addQuery(query);
+
+	local comp = Comp:new();
+
+	local a = ecs:spawn(Entity);
+	a:addComponent(comp);
+	ecs:update();
+	assert(query:getAddedComponents(Comp)[comp]);
+
+	a:despawn();
+	ecs:update();
+	assert(query:getRemovedComponents(Comp)[comp]);
 end
 
 tests[#tests + 1] = {name = "Query component changelog works for intersection query"};
