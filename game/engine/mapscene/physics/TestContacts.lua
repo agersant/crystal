@@ -141,6 +141,36 @@ tests[#tests].body = function()
 	assert(not touching);
 end
 
+tests[#tests + 1] = {name = "Trigger components stop generating contacts when removed", gfx = "mock"};
+tests[#tests].body = function()
+
+	local scene = MapScene:new("engine/test-data/empty_map.lua");
+
+	local collision = Collision:new(5);
+	local trigger = TouchTrigger:new(love.physics.newRectangleShape(10, 10));
+
+	local touching = false;
+	trigger.onBeginTouch = function(self, other)
+		touching = true;
+	end
+
+	local entityA = scene:spawn(Entity);
+	entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	entityA:addComponent(collision);
+
+	local entityB = scene:spawn(Entity);
+	entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	entityB:addComponent(trigger);
+
+	entityA:setPosition(40, 0);
+	scene:update(1);
+	entityB:removeComponent(trigger);
+	entityA:setPosition(5, 5);
+	scene:update(1);
+	scene:update(1);
+	assert(not touching);
+end
+
 tests[#tests + 1] = {name = "Collision components register contacts against each other", gfx = "mock"};
 tests[#tests].body = function()
 

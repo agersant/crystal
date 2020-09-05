@@ -23,8 +23,7 @@ TouchTriggerSystem.beforePhysics = function(self, dt)
 		touchTrigger:setFixture(fixture);
 	end
 
-	for entity in pairs(self._query:getRemovedEntities()) do
-		local touchTrigger = entity:getComponent(TouchTrigger);
+	for touchTrigger in pairs(self._query:getRemovedComponents(TouchTrigger)) do
 		touchTrigger:getFixture():destroy();
 		touchTrigger:setFixture(nil);
 	end
