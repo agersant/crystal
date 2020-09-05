@@ -55,6 +55,49 @@ tests[#tests].body = function()
 	assert(not touching);
 end
 
+tests[#tests + 1] = {name = "Hitbox components stop generating contacts when removed", gfx = "mock"};
+tests[#tests].body = function()
+
+	local scene = MapScene:new("engine/test-data/empty_map.lua");
+
+	local hitbox = Hitbox:new();
+	local weakbox = Weakbox:new();
+
+	local touching = false;
+	hitbox.onBeginTouch = function(self, other)
+		assert(self == hitbox);
+		assert(other == weakbox);
+		touching = true;
+	end
+	hitbox.onEndTouch = function(self, other)
+		assert(self == hitbox);
+		assert(other == weakbox);
+		touching = false;
+	end
+
+	local entityA = scene:spawn(Entity);
+	entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	entityA:addComponent(hitbox);
+	hitbox:setShape(entityA:getBody(), love.physics.newRectangleShape(10, 10));
+
+	local entityB = scene:spawn(Entity);
+	entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	entityB:addComponent(weakbox);
+	weakbox:setShape(entityB:getBody(), love.physics.newRectangleShape(5, 5));
+
+	entityA:setPosition(40, 0);
+	assert(not touching);
+	scene:update(1);
+	assert(not touching);
+
+	entityA:removeComponent(hitbox);
+	entityA:setPosition(3, 1);
+	scene:update(1);
+	scene:update(1);
+	assert(not touching);
+	assert(not touching);
+end
+
 tests[#tests + 1] = {name = "Collision components register contacts against trigger components", gfx = "mock"};
 tests[#tests].body = function()
 

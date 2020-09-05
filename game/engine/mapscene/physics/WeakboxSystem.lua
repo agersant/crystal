@@ -9,25 +9,28 @@ local WeakboxSystem = Class("WeakboxSystem", System);
 
 WeakboxSystem.init = function(self, ecs)
 	WeakboxSystem.super.init(self, ecs);
-	self._query = AllComponents:new({Weakbox, PhysicsBody, Sprite});
+	self._query = AllComponents:new({Weakbox, PhysicsBody});
+	self._withSprite = AllComponents:new({Weakbox, PhysicsBody, Sprite});
 	self:getECS():addQuery(self._query);
+	self:getECS():addQuery(self._withSprite);
 end
 
 WeakboxSystem.beforePhysics = function(self, dt)
-	for entity in pairs(self._query:getRemovedEntities()) do
-		local weakbox = entity:getComponent(Weakbox);
-		if weakbox then
-			weakbox:setShape(nil);
-		end
+	for weakbox in pairs(self._query:getRemovedComponents(Weakbox)) do
+		weakbox:clearShape();
 	end
 
-	local entities = self._query:getEntities();
+	local entities = self._withSprite:getEntities();
 	for entity in pairs(entities) do
 		local body = entity:getComponent(PhysicsBody):getBody();
 		local weakbox = entity:getComponent(Weakbox);
 		local sprite = entity:getComponent(Sprite);
 		local shape = sprite:getTagShape("weak");
-		weakbox:setShape(body, shape);
+		if shape then
+			weakbox:setShape(body, shape);
+		else
+			weakbox:clearShape();
+		end
 	end
 end
 

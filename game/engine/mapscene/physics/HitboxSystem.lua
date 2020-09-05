@@ -9,25 +9,28 @@ local HitboxSystem = Class("HitboxSystem", System);
 
 HitboxSystem.init = function(self, ecs)
 	HitboxSystem.super.init(self, ecs);
-	self._query = AllComponents:new({Hitbox, PhysicsBody, Sprite});
+	self._query = AllComponents:new({Hitbox, PhysicsBody});
+	self._withSprite = AllComponents:new({Hitbox, PhysicsBody, Sprite});
 	self:getECS():addQuery(self._query);
+	self:getECS():addQuery(self._withSprite);
 end
 
 HitboxSystem.beforePhysics = function(self, dt)
-	for entity in pairs(self._query:getRemovedEntities()) do
-		local hitbox = entity:getComponent(Hitbox);
-		if hitbox then
-			hitbox:setShape(nil);
-		end
+	for hitbox in pairs(self._query:getRemovedComponents(Hitbox)) do
+		hitbox:clearShape();
 	end
 
-	local entities = self._query:getEntities();
+	local entities = self._withSprite:getEntities();
 	for entity in pairs(entities) do
 		local body = entity:getComponent(PhysicsBody):getBody();
 		local hitbox = entity:getComponent(Hitbox);
 		local sprite = entity:getComponent(Sprite);
 		local shape = sprite:getTagShape("hit");
-		hitbox:setShape(body, shape);
+		if shape then
+			hitbox:setShape(body, shape);
+		else
+			hitbox:clearShape();
+		end
 	end
 end
 

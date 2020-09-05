@@ -10,15 +10,21 @@ end
 
 Weakbox.setShape = function(self, body, shape)
 	assert(body);
+	assert(shape);
 	if self._fixture then
 		self._fixture:destroy();
 		self._fixture = nil;
 	end
-	if shape then
-		self._fixture = love.physics.newFixture(body, shape, 0);
-		self._fixture:setFilterData(CollisionFilters.WEAKBOX, CollisionFilters.HITBOX, 0);
-		self._fixture:setSensor(true);
-		self._fixture:setUserData(self);
+	self._fixture = love.physics.newFixture(body, shape, 0);
+	self._fixture:setFilterData(CollisionFilters.WEAKBOX, CollisionFilters.HITBOX, 0);
+	self._fixture:setSensor(true);
+	self._fixture:setUserData(self);
+end
+
+Weakbox.clearShape = function(self)
+	if self._fixture then
+		self._fixture:destroy();
+		self._fixture = nil;
 	end
 end
 
