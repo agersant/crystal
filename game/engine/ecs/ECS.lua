@@ -214,14 +214,19 @@ ECS.addComponent = function(self, entity, component)
 	assert(component);
 	assert(component:isInstanceOf(Component));
 	assert(not component:getEntity());
-	assert(not entity:getComponent(component:getClass()));
 	component:setEntity(entity);
-	local nursery = self._componentNursery[entity];
-	if not nursery then
-		nursery = {};
-		self._componentNursery[entity] = nursery;
+	local graveyard = self._componentGraveyard[entity];
+	if graveyard and graveyard[component:getClass()] then
+		graveyard[component:getClass()] = nil;
+	else
+		assert(not entity:getComponent(component:getClass()));
+		local nursery = self._componentNursery[entity];
+		if not nursery then
+			nursery = {};
+			self._componentNursery[entity] = nursery;
+		end
+		nursery[component:getClass()] = component;
 	end
-	nursery[component:getClass()] = component;
 end
 
 ECS.removeComponent = function(self, entity, component)
@@ -233,6 +238,7 @@ ECS.removeComponent = function(self, entity, component)
 	if nursery and nursery[component:getClass()] then
 		nursery[component:getClass()] = nil;
 	else
+		assert(entity:getComponent(component:getClass()) == component);
 		local graveyard = self._componentGraveyard[entity];
 		if not graveyard then
 			graveyard = {};

@@ -442,14 +442,11 @@ tests[#tests].body = function()
 	local query = EitherComponent:new({CompA, CompB});
 	ecs:addQuery(query);
 
-	local compA1 = CompA:new();
-	local compA2 = CompA:new();
+	local compA = CompA:new();
 	local compB = CompB:new();
 
 	local a = ecs:spawn(Entity);
-	local b = ecs:spawn(Entity);
-	a:addComponent(compA1);
-	b:addComponent(compA2);
+	a:addComponent(compA);
 	ecs:update();
 
 	a:addComponent(compB);
@@ -457,11 +454,10 @@ tests[#tests].body = function()
 	ecs:update();
 	assert(TableUtils.equals({}, query:getAddedComponents(CompB)));
 
-	a:addComponent(compB);
-	a:removeComponent(compB);
-	b:addComponent(compB);
+	a:removeComponent(compA);
+	a:addComponent(compA);
 	ecs:update();
-	assert(TableUtils.equals({[compB] = b}, query:getAddedComponents(CompB)));
+	assert(TableUtils.equals({}, query:getAddedComponents(CompA)));
 end
 
 tests[#tests + 1] = {name = "Query component changelog works for intersection query"};
