@@ -34,8 +34,6 @@ Dialog.sayLine = function(self, text)
 	local dialogBox = self._dialogBox;
 	local context = inputContext:getContext();
 
-	dialogBox:sayLine(text);
-
 	local waitForInput = function(self)
 		if inputListener:isCommandActive("advanceDialog", inputContext) then
 			self:waitFor("-advanceDialog");
@@ -43,22 +41,17 @@ Dialog.sayLine = function(self, text)
 		self:waitFor("+advanceDialog");
 	end
 
-	local fastForward = context:thread(function(self)
+	local lineDelivery = context:thread(function(self)
+		self:thread(function()
+			waitForInput(self);
+			dialogBox:fastForward(text);
+		end);
+
+		self:join(dialogBox:sayLine(text));
 		waitForInput(self);
-		dialogBox:fastForward(text);
 	end);
 
-	local waitForLineCompletion = context:thread(function(self)
-		while not dialogBox:isLineFullyPrinted() do
-			self:waitFrame();
-		end
-		waitForInput(self);
-		if not fastForward:isDead() then
-			fastForward:stop();
-		end
-	end);
-
-	context:join(waitForLineCompletion);
+	context:join(lineDelivery);
 end
 
 Dialog.endDialog = function(self)

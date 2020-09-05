@@ -58,11 +58,19 @@ mockAPI.polygon = noop;
 
 mockAPI.print = noop;
 
+mockAPI.pop = noop;
+
+mockAPI.push = noop;
+
 mockAPI.rectangle = noop;
+
+mockAPI.scale = noop;
 
 mockAPI.setColor = noop;
 
 mockAPI.setFont = noop;
+
+mockAPI.translate = noop;
 
 local Mocking = {};
 

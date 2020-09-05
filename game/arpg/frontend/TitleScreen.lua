@@ -1,16 +1,29 @@
 require("engine/utils/OOP");
-local Widget = require("engine/ui/Widget");
-local Text = require("engine/ui/core/Text");
+local Fonts = require("engine/resources/Fonts");
+local HorizontalAlignment = require("engine/ui/bricks/core/HorizontalAlignment");
+local VerticalAlignment = require("engine/ui/bricks/core/VerticalAlignment");
+local Overlay = require("engine/ui/bricks/elements/Overlay");
+local Widget = require("engine/ui/bricks/elements/Widget");
+local Text = require("engine/ui/bricks/elements/Text");
+local UIScene = require("engine/ui/UIScene");
 
-local TitleScreen = Class("TitleScreen", Widget);
+local TitleScreenWidget = Class("TitleScreenWidget", Widget);
+local TitleScreen = Class("TitleScreen", UIScene);
 
--- PUBLIC API
+TitleScreenWidget.init = function(self)
+	TitleScreenWidget.super.init(self);
+
+	local overlay = self:setRoot(Overlay:new());
+
+	local text = overlay:addChild(Text:new());
+	text:setFont(Fonts:get("fat", 16));
+	text:setContent("Project Crystal");
+	text:setHorizontalAlignment(HorizontalAlignment.CENTER);
+	text:setVerticalAlignment(VerticalAlignment.CENTER);
+end
 
 TitleScreen.init = function(self)
-	TitleScreen.super.init(self);
-	local text = Text:new("fat", 16);
-	text:setText("Project Crystal");
-	self:addChild(text);
+	TitleScreen.super.init(self, TitleScreenWidget:new());
 end
 
 return TitleScreen;

@@ -19,7 +19,6 @@ Thread.init = function(self, owner, parentThread, functionToThread)
 
 	if parentThread then
 		parentThread._childThreads[self] = true;
-		self._parentThread = parentThread;
 	end
 
 	Alias:add(self, owner);
@@ -163,10 +162,20 @@ Thread.scope = function(self, cleanupFunction)
 	table.insert(self._cleanupFunctions, cleanupFunction);
 end
 
-Thread.tween = function(self, from, to, duration, easing, set)
+Thread.tween = function(self, from, to, duration, easing, callback, arg)
+	return self:thread(function(self)
+		self:waitTween(from, to, duration, easing, callback, arg);
+	end);
+end
+
+Thread.waitTween = function(self, from, to, duration, easing, callback, arg)
 	assert(duration >= 0);
 	if duration == 0 then
-		set(to);
+		if arg then
+			callback(arg, to);
+		else
+			callback(to);
+		end
 		return;
 	end
 	local startTime = self._owner:getTime();
@@ -174,7 +183,11 @@ Thread.tween = function(self, from, to, duration, easing, set)
 		local t = (self._owner:getTime() - startTime) / duration;
 		local t = MathUtils.ease(t, easing);
 		local currentValue = from + t * (to - from);
-		set(currentValue);
+		if arg then
+			callback(arg, currentValue);
+		else
+			callback(currentValue);
+		end
 		self:waitFrame();
 	end
 end

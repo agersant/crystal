@@ -14,7 +14,7 @@ local script = function(self)
 		self:wait(2 * 1 / 60);
 		self:setHighlightColor(nil);
 		self:wait(2 * 1 / 60);
-		self:tween(1, 0, 0.3, "inCubic", function(t)
+		self:waitTween(1, 0, 0.3, "inCubic", function(t)
 			local c = Colors.strawberry;
 			self:setHighlightColor({c[1] * t, c[2] * t, c[3] * t});
 		end);

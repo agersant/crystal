@@ -58,4 +58,15 @@ tests[#tests].body = function()
 	assert(copy.d.b == "gruik");
 end
 
+tests[#tests + 1] = {name = "Equality"};
+tests[#tests].body = function()
+	assert(TableUtils.equals({}, {}));
+	assert(TableUtils.equals({1, 2, 3}, {1, 2, 3}));
+	assert(not TableUtils.equals({1, 2}, {1, 2, 3}));
+	assert(not TableUtils.equals({1, 3, 2}, {1, 2, 3}));
+	assert(TableUtils.equals({a = 0, b = 1}, {a = 0, b = 1}));
+	assert(not TableUtils.equals({a = 0, b = 1}, {a = 1, b = 0}));
+	assert(not TableUtils.equals({a = 0}, {a = 1}));
+end
+
 return tests;
