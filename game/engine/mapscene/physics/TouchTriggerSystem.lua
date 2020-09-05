@@ -13,9 +13,8 @@ TouchTriggerSystem.init = function(self, ecs)
 end
 
 TouchTriggerSystem.beforePhysics = function(self, dt)
-	for entity in pairs(self._query:getAddedEntities()) do
+	for touchTrigger, entity in pairs(self._query:getAddedComponents(TouchTrigger)) do
 		local body = entity:getComponent(PhysicsBody):getBody();
-		local touchTrigger = entity:getComponent(TouchTrigger);
 		local fixture = love.physics.newFixture(body, touchTrigger:getShape(), 0);
 		fixture:setFilterData(CollisionFilters.TRIGGER, CollisionFilters.SOLID, 0);
 		fixture:setSensor(true);
