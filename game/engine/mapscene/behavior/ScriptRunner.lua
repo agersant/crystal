@@ -22,6 +22,7 @@ ScriptRunner.addScript = function(self, script)
 end
 
 ScriptRunner.removeScript = function(self, script)
+	assert(script:isInstanceOf(Script));
 	for i, activeScript in ipairs(self._scripts) do
 		if activeScript == script then
 			table.remove(self._scripts, i);
