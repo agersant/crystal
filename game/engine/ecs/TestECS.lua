@@ -5,6 +5,7 @@ local Event = require("engine/ecs/Event");
 local System = require("engine/ecs/System");
 local EitherComponent = require("engine/ecs/query/EitherComponent");
 local AllComponents = require("engine/ecs/query/AllComponents");
+local TableUtils = require("engine/utils/TableUtils");
 
 local tests = {};
 
@@ -88,6 +89,43 @@ tests[#tests].body = function()
 	assert(a:getComponent(Snoot) == snoot);
 	ecs:update();
 	assert(a:getComponent(Snoot) == snoot);
+end
+
+tests[#tests + 1] = {name = "Transfer component"};
+tests[#tests].body = function()
+	local ecs = ECS:new();
+
+	local a = ecs:spawn(Entity);
+	local b = ecs:spawn(Entity);
+
+	local Snoot = Class:test("Snoot", Component);
+	local snoot = Snoot:new();
+
+	a:addComponent(snoot);
+	assert(snoot:getEntity() == a);
+	ecs:update();
+	assert(snoot:getEntity() == a);
+
+	local success, errorMessage = pcall(function()
+		b:addComponent(snoot);
+	end);
+	assert(not success);
+	assert(#errorMessage > 1);
+
+	a:removeComponent(snoot);
+	assert(snoot:getEntity() == nil);
+	assert(a:getComponent(Snoot) == snoot);
+
+	ecs:update();
+	assert(snoot:getEntity() == nil);
+	assert(a:getComponent(Snoot) == nil);
+
+	b:addComponent(snoot);
+	assert(snoot:getEntity() == b);
+	assert(b:getComponent(Snoot) == nil);
+	ecs:update();
+	assert(snoot:getEntity() == b);
+	assert(b:getComponent(Snoot) == snoot);
 end
 
 tests[#tests + 1] = {name = "Prevent duplicate components"};
@@ -362,25 +400,18 @@ tests[#tests].body = function()
 	local a = ecs:spawn(Entity);
 	a:addComponent(compA);
 	a:addComponent(compB);
-	assert(not query:getAddedComponents(BaseComp)[compA]);
-	assert(not query:getAddedComponents(BaseComp)[compB]);
+	assert(TableUtils.equals({}, query:getAddedComponents(BaseComp)));
 
 	ecs:update();
-	assert(query:getAddedComponents(BaseComp)[compA]);
-	assert(query:getAddedComponents(BaseComp)[compB]);
+	assert(TableUtils.equals({[compA] = a, [compB] = a}, query:getAddedComponents(BaseComp)));
 
 	a:addComponent(compC);
 	ecs:update();
-	assert(not query:getAddedComponents(BaseComp)[compA]);
-	assert(not query:getAddedComponents(BaseComp)[compB]);
-	assert(query:getAddedComponents(BaseComp)[compC]);
+	assert(TableUtils.equals({[compC] = a}, query:getAddedComponents(BaseComp)));
 
 	a:removeComponent(compA);
 	ecs:update();
-	assert(query:getRemovedComponents(BaseComp)[compA]);
-	assert(not query:getRemovedComponents(BaseComp)[compB]);
-	assert(not query:getRemovedComponents(BaseComp)[compC]);
-
+	assert(TableUtils.equals({[compA] = a}, query:getRemovedComponents(BaseComp)));
 end
 
 tests[#tests + 1] = {name = "Changelog of components is updated when entity despawns"};
@@ -395,11 +426,42 @@ tests[#tests].body = function()
 	local a = ecs:spawn(Entity);
 	a:addComponent(comp);
 	ecs:update();
-	assert(query:getAddedComponents(Comp)[comp]);
+	assert(query:getAddedComponents(Comp)[comp] == a);
 
 	a:despawn();
 	ecs:update();
-	assert(query:getRemovedComponents(Comp)[comp]);
+	assert(query:getRemovedComponents(Comp)[comp] == a);
+end
+
+tests[#tests + 1] = {name = "Query component changelog works when component is added and removed between updates"};
+tests[#tests].body = function()
+	local ecs = ECS:new();
+	local BaseComp = Class:test("BaseComp", Component);
+	local CompA = Class:test("CompA", BaseComp);
+	local CompB = Class:test("CompB", BaseComp);
+	local query = EitherComponent:new({CompA, CompB});
+	ecs:addQuery(query);
+
+	local compA1 = CompA:new();
+	local compA2 = CompA:new();
+	local compB = CompB:new();
+
+	local a = ecs:spawn(Entity);
+	local b = ecs:spawn(Entity);
+	a:addComponent(compA1);
+	b:addComponent(compA2);
+	ecs:update();
+
+	a:addComponent(compB);
+	a:removeComponent(compB);
+	ecs:update();
+	assert(TableUtils.equals({}, query:getAddedComponents(CompB)));
+
+	a:addComponent(compB);
+	a:removeComponent(compB);
+	b:addComponent(compB);
+	ecs:update();
+	assert(TableUtils.equals({[compB] = b}, query:getAddedComponents(CompB)));
 end
 
 tests[#tests + 1] = {name = "Query component changelog works for intersection query"};

@@ -36,7 +36,7 @@ Query.onEntityAdded = function(self, entity)
 			self._addedComponents[class] = {};
 		end
 		for component in pairs(entity:getComponents(class)) do
-			self._addedComponents[class][component] = true;
+			self._addedComponents[class][component] = entity;
 		end
 	end
 end
@@ -51,7 +51,7 @@ Query.onEntityRemoved = function(self, entity)
 	for _, class in ipairs(self._classes) do
 		self._removedComponents[class] = {};
 		for component in pairs(entity:getComponents(class)) do
-			self._removedComponents[class][component] = true;
+			self._removedComponents[class][component] = entity;
 		end
 	end
 end
@@ -71,7 +71,7 @@ Query.onComponentAdded = function(self, entity, component)
 				if not self._addedComponents[class] then
 					self._addedComponents[class] = {};
 				end
-				self._addedComponents[class][component] = true;
+				self._addedComponents[class][component] = entity;
 			end
 		end
 	elseif self:matches(entity) then
@@ -83,7 +83,7 @@ Query.onComponentAdded = function(self, entity, component)
 				self._addedComponents[class] = {};
 			end
 			for component in pairs(entity:getComponents(class)) do
-				self._addedComponents[class][component] = true;
+				self._addedComponents[class][component] = entity;
 			end
 		end
 	end
@@ -99,7 +99,7 @@ Query.onComponentRemoved = function(self, entity, component)
 				if not self._removedComponents[class] then
 					self._removedComponents[class] = {};
 				end
-				self._removedComponents[class][component] = true;
+				self._removedComponents[class][component] = entity;
 			end
 		end
 	else
@@ -111,10 +111,10 @@ Query.onComponentRemoved = function(self, entity, component)
 				self._removedComponents[class] = {};
 			end
 			if component:isInstanceOf(class) then
-				self._removedComponents[class][component] = true;
+				self._removedComponents[class][component] = entity;
 			end
 			for component in pairs(entity:getComponents(class)) do
-				self._removedComponents[class][component] = true;
+				self._removedComponents[class][component] = entity;
 			end
 		end
 	end
