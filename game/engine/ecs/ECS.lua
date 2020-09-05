@@ -9,14 +9,20 @@ local ECS = Class("ECS");
 
 local registerComponent = function(self, entity, component)
 	assert(entity);
-	assert(entity:isValid());
 	assert(component);
 	assert(component:isInstanceOf(Component));
 
 	local class = component:getClass();
 
+	if not self._entityToComponent[entity] then
+		self._entityToComponent[entity] = {};
+	end
 	assert(not self._entityToComponent[entity][class]);
 	self._entityToComponent[entity][class] = component;
+
+	if not self._entityToComponents[entity] then
+		self._entityToComponents[entity] = {};
+	end
 
 	local baseClass = class;
 	while baseClass ~= Component do
@@ -76,15 +82,14 @@ local registerEntity = function(self, entity)
 	entity:setIsValid(true);
 	assert(not self._entities[entity]);
 	self._entities[entity] = true;
-	self._entityToComponent[entity] = {};
-	self._entityToComponents[entity] = {};
 end
 
 local unregisterEntity = function(self, entity)
-	assert(self._entityToComponent[entity]);
-	local components = TableUtils.shallowCopy(self._entityToComponent[entity]);
-	for _, component in pairs(components) do
-		unregisterComponent(self, entity, component);
+	if self._entityToComponent[entity] then
+		local components = TableUtils.shallowCopy(self._entityToComponent[entity]);
+		for _, component in pairs(components) do
+			unregisterComponent(self, entity, component);
+		end
 	end
 	assert(self._entities[entity]);
 	self._entities[entity] = nil;
@@ -116,7 +121,7 @@ ECS.update = function(self)
 		query:flush();
 	end
 
-	-- Destroy components
+	-- Remove components
 
 	for entity, components in pairs(self._componentGraveyard) do
 		for class, component in pairs(components) do
@@ -135,7 +140,7 @@ ECS.update = function(self)
 		end
 	end
 
-	-- Destroy entities
+	-- Remove entities
 
 	for entity in pairs(self._entityGraveyard) do
 		for query in pairs(self._queries) do
@@ -144,13 +149,7 @@ ECS.update = function(self)
 		unregisterEntity(self, entity);
 	end
 
-	-- Create entities
-
-	for entity in pairs(self._entityNursery) do
-		registerEntity(self, entity);
-	end
-
-	-- Create components
+	-- Add components
 
 	for entity, components in pairs(self._componentNursery) do
 		for class, component in pairs(components) do
@@ -169,9 +168,10 @@ ECS.update = function(self)
 		end
 	end
 
-	-- Ideally this would be part of the 'Create entities' loop above, but we cannot update queries
-	-- until components have been added to entities
+	-- Add entities
+
 	for entity in pairs(self._entityNursery) do
+		registerEntity(self, entity);
 		for query in pairs(self._queries) do
 			query:onEntityAdded(entity);
 		end
@@ -302,20 +302,24 @@ end
 ECS.getComponent = function(self, entity, class)
 	assert(entity);
 	assert(class);
+
+	if self._componentNursery[entity] then
+		if self._componentNursery[entity][class] then
+			return self._componentNursery[entity][class];
+		end
+	end
+
+	if self._componentGraveyard[entity] then
+		if self._componentGraveyard[entity][class] then
+			return nil;
+		end
+	end
+
 	if self._entityToComponent[entity] then
 		local exactMatch = self._entityToComponent[entity][class];
 		if exactMatch then
 			return exactMatch;
 		end
-		local derivedMatches = self._entityToComponents[entity][class];
-		if derivedMatches then
-			assert(TableUtils.countKeys(self._entityToComponents[entity][class]) <= 1); -- Ambiguous call
-			for component in pairs(derivedMatches) do
-				return component;
-			end
-		end
-	elseif self._componentNursery[entity] then
-		return self._componentNursery[entity][class];
 	end
 end
 

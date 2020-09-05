@@ -102,9 +102,7 @@ tests[#tests].body = function()
 	local snoot = Snoot:new();
 
 	a:addComponent(snoot);
-	assert(snoot:getEntity() == a);
 	ecs:update();
-	assert(snoot:getEntity() == a);
 
 	local success, errorMessage = pcall(function()
 		b:addComponent(snoot);
@@ -114,15 +112,14 @@ tests[#tests].body = function()
 
 	a:removeComponent(snoot);
 	assert(snoot:getEntity() == nil);
-	assert(a:getComponent(Snoot) == snoot);
-
+	assert(a:getComponent(Snoot) == nil);
 	ecs:update();
 	assert(snoot:getEntity() == nil);
 	assert(a:getComponent(Snoot) == nil);
 
 	b:addComponent(snoot);
 	assert(snoot:getEntity() == b);
-	assert(b:getComponent(Snoot) == nil);
+	assert(b:getComponent(Snoot) == snoot);
 	ecs:update();
 	assert(snoot:getEntity() == b);
 	assert(b:getComponent(Snoot) == snoot);
@@ -163,27 +160,30 @@ tests[#tests].body = function()
 
 	a:addComponent(boop);
 	assert(a:getComponent(Boop) == boop);
+	assert(a:getComponent(Bonk) == nil);
 	assert(a:getComponent(Snoot) == nil);
-
 	ecs:update();
 	assert(a:getComponent(Boop) == boop);
-	assert(a:getComponent(Snoot) == boop);
+	assert(a:getComponent(Bonk) == nil);
+	assert(a:getComponent(Snoot) == nil);
 
 	a:addComponent(bonk);
 	assert(a:getComponent(Boop) == boop);
-	assert(a:getComponent(Snoot) == boop);
-
+	assert(a:getComponent(Bonk) == bonk);
+	assert(a:getComponent(Snoot) == nil);
 	ecs:update();
-	local success = pcall(function()
-		a:getComponent(Snoot);
-	end);
-	assert(not success);
 	assert(a:getComponent(Boop) == boop);
+	assert(a:getComponent(Bonk) == bonk);
+	assert(a:getComponent(Snoot) == nil);
 
 	a:removeComponent(boop);
+	assert(a:getComponent(Boop) == nil);
+	assert(a:getComponent(Bonk) == bonk);
+	assert(a:getComponent(Snoot) == nil);
 	ecs:update();
 	assert(a:getComponent(Boop) == nil);
-	assert(a:getComponent(Snoot) == bonk);
+	assert(a:getComponent(Bonk) == bonk);
+	assert(a:getComponent(Snoot) == nil);
 end
 
 tests[#tests + 1] = {name = "Get components"};
