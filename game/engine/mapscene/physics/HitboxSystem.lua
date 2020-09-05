@@ -23,13 +23,14 @@ HitboxSystem.beforePhysics = function(self, dt)
 	local entities = self._withSprite:getEntities();
 	for entity in pairs(entities) do
 		local body = entity:getComponent(PhysicsBody):getBody();
-		local hitbox = entity:getComponent(Hitbox);
 		local sprite = entity:getComponent(Sprite);
-		local shape = sprite:getTagShape("hit");
-		if shape then
-			hitbox:setShape(body, shape);
-		else
-			hitbox:clearShape();
+		for hitbox in pairs(entity:getComponents(Hitbox)) do
+			local shape = sprite:getTagShape("hit");
+			if shape then
+				hitbox:setShape(body, shape);
+			else
+				hitbox:clearShape();
+			end
 		end
 	end
 end

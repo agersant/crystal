@@ -23,13 +23,14 @@ WeakboxSystem.beforePhysics = function(self, dt)
 	local entities = self._withSprite:getEntities();
 	for entity in pairs(entities) do
 		local body = entity:getComponent(PhysicsBody):getBody();
-		local weakbox = entity:getComponent(Weakbox);
 		local sprite = entity:getComponent(Sprite);
-		local shape = sprite:getTagShape("weak");
-		if shape then
-			weakbox:setShape(body, shape);
-		else
-			weakbox:clearShape();
+		for weakbox in pairs(entity:getComponents(Weakbox)) do
+			local shape = sprite:getTagShape("weak");
+			if shape then
+				weakbox:setShape(body, shape);
+			else
+				weakbox:clearShape();
+			end
 		end
 	end
 end
