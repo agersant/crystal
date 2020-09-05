@@ -1,19 +1,15 @@
 require("engine/utils/OOP");
-local Component = require("engine/ecs/Component");
+local Behavior = require("engine/mapscene/behavior/Behavior");
 local Script = require("engine/script/Script");
 
-local Skill = Class("Skill", Component);
-
--- PUBLIC API
+local Skill = Class("Skill", Behavior);
 
 Skill.init = function(self, skillSlot, scriptContent)
 	assert(skillSlot);
 	assert(scriptContent);
-	Skill.super.init(self);
+	Skill.super.init(self, scriptContent);
 
 	local command = "useSkill" .. skillSlot
-
-	self._script = Script:new(scriptContent);
 
 	self._script:addThread(function(self)
 		while true do
@@ -28,10 +24,6 @@ Skill.init = function(self, skillSlot, scriptContent)
 			self:signal("-useSkill");
 		end
 	end);
-end
-
-Skill.getScript = function(self)
-	return self._script;
 end
 
 return Skill;

@@ -1,9 +1,8 @@
 require("engine/utils/OOP");
-local Component = require("engine/ecs/Component");
+local Behavior = require("engine/mapscene/behavior/Behavior");
 local Colors = require("engine/resources/Colors");
-local Script = require("engine/script/Script");
 
-local HitBlink = Class("HitBlink", Component);
+local HitBlink = Class("HitBlink", Behavior);
 
 local script = function(self)
 	while true do
@@ -23,12 +22,7 @@ local script = function(self)
 end
 
 HitBlink.init = function(self)
-	HitBlink.super.init(self);
-	self._script = Script:new(script);
-end
-
-HitBlink.getScript = function(self)
-	return self._script;
+	HitBlink.super.init(self, script);
 end
 
 return HitBlink;

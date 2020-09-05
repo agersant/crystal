@@ -5,7 +5,7 @@ local Log = require("engine/dev/Log");
 local ECS = require("engine/ecs/ECS");
 local Assets = require("engine/resources/Assets");
 local Camera = require("engine/mapscene/Camera");
-local ActorSystem = require("engine/mapscene/behavior/ActorSystem");
+local BehaviorSystem = require("engine/mapscene/behavior/BehaviorSystem");
 local MovementAISystem = require("engine/mapscene/behavior/ai/MovementAISystem");
 local Entity = require("engine/ecs/Entity");
 local InputListener = require("engine/mapscene/behavior/InputListener");
@@ -133,7 +133,7 @@ MapScene.addSystems = function(self)
 	-- After physics
 
 	-- Before scripts
-	ecs:addSystem(ActorSystem:new(ecs));
+	ecs:addSystem(BehaviorSystem:new(ecs));
 	ecs:addSystem(SpriteSystem:new(ecs)); -- (also has some duringScripts and afterScripts logic)
 	ecs:addSystem(MovementAISystem:new(ecs, self._map)); -- (also has some duringScripts logic)
 

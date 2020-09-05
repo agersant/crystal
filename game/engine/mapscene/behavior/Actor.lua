@@ -1,19 +1,12 @@
 require("engine/utils/OOP");
-local Component = require("engine/ecs/Component");
-local Script = require("engine/script/Script");
+local Behavior = require("engine/mapscene/behavior/Behavior");
 
-local Actor = Class("Actor", Component);
-
--- PUBLIC API
+local Actor = Class("Actor", Behavior);
 
 Actor.init = function(self)
-	Actor.super.init(self);
+	Actor.super.init(self, nil);
+	assert(self._script);
 	self._actionThread = nil;
-	self._script = Script:new();
-end
-
-Actor.getScript = function(self)
-	return self._script;
 end
 
 Actor.isIdle = function(self)
