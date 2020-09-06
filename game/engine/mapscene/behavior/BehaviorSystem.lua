@@ -31,15 +31,10 @@ BehaviorSystem.beforeScripts = function(self, dt)
 		local activeEntity = self._activeEntities[entity];
 		assert(activeEntity);
 		assert(activeEntity.behaviors[behavior]);
-		activeEntity.scriptRunner:removeScript(activeEntity.behaviors[behavior]);
-		activeEntity.behaviors[behavior] = nil;
-	end
-
-	for entity in pairs(self._query:getRemovedEntities()) do
-		for behavior, script in pairs(self._activeEntities[entity].behaviors) do
-			self._activeEntities[entity].scriptRunner:removeScript(script);
+		if entity:getComponent(ScriptRunner) == activeEntity.scriptRunner then
+			activeEntity.scriptRunner:removeScript(activeEntity.behaviors[behavior]);
 		end
-		self._activeEntities[entity] = nil;
+		activeEntity.behaviors[behavior] = nil;
 	end
 end
 
