@@ -48,6 +48,13 @@ ScriptRunner.runScripts = function(self, dt)
 	end
 end
 
+ScriptRunner.stopAllScripts = function(self)
+	local scriptsCopy = TableUtils.shallowCopy(self._scripts);
+	for _, script in ipairs(scriptsCopy) do
+		script:stop();
+	end
+end
+
 ScriptRunner.signalAllScripts = function(self, signal, ...)
 	local scriptsCopy = TableUtils.shallowCopy(self._scripts);
 	for _, script in ipairs(scriptsCopy) do
