@@ -27,8 +27,8 @@ tests[#tests].body = function()
 	local a;
 	npc:addScript(Script:new(function(self)
 		a = 1;
-		self:beginDialog(self, player);
-		self:sayLine("Test dialog.");
+		self:beginDialog(player);
+		self:join(self:sayLine("Test dialog."));
 		a = 2;
 	end));
 
@@ -44,17 +44,89 @@ tests[#tests].body = function()
 
 	inputDevice:keyPressed("q");
 	frame();
-
 	inputDevice:keyReleased("q");
 	frame();
-
 	inputDevice:keyPressed("q");
 	frame();
-
 	inputDevice:keyReleased("q");
 	frame();
 
 	assert(a == 2);
+end
+
+tests[#tests + 1] = {name = "Can't start concurrent dialogs", gfx = "mock"};
+tests[#tests].body = function()
+	local scene = MapScene:new("engine/test-data/empty_map.lua");
+
+	local dialogBox = DialogBox:new();
+
+	local player = scene:spawn(Entity);
+	player:addComponent(ScriptRunner:new());
+	player:addComponent(InputListener:new(1));
+	player:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+
+	local npc = scene:spawn(Entity);
+	npc:addComponent(ScriptRunner:new());
+	npc:addComponent(Dialog:new(dialogBox));
+
+	npc:addScript(Script:new(function(self)
+		self:beginDialog(player);
+		self:join(self:sayLine("Test dialog."));
+		self:endDialog();
+	end));
+
+	local inputDevice = player:getInputDevice();
+	local frame = function(self)
+		scene:update(0);
+		dialogBox:update(0);
+		inputDevice:flushEvents();
+	end
+
+	frame();
+	assert(not Dialog:new(dialogBox):beginDialog(player));
+	inputDevice:keyPressed("q");
+	frame();
+	inputDevice:keyReleased("q");
+	frame();
+	inputDevice:keyPressed("q");
+	frame();
+	inputDevice:keyReleased("q");
+	frame();
+	assert(Dialog:new(dialogBox):beginDialog(player));
+end
+
+tests[#tests + 1] = {name = "Dialog is cleaned up if entity despawns while speaking", gfx = "mock"};
+tests[#tests].body = function()
+	local scene = MapScene:new("engine/test-data/empty_map.lua");
+
+	local dialogBox = DialogBox:new();
+
+	local player = scene:spawn(Entity);
+	player:addComponent(ScriptRunner:new());
+	player:addComponent(InputListener:new(1));
+	player:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+
+	local npc = scene:spawn(Entity);
+	npc:addComponent(ScriptRunner:new());
+	npc:addComponent(Dialog:new(dialogBox));
+
+	npc:addScript(Script:new(function(self)
+		self:beginDialog(player);
+		self:join(self:sayLine("Test dialog."));
+	end));
+
+	local inputDevice = player:getInputDevice();
+	local frame = function(self)
+		scene:update(0);
+		dialogBox:update(0);
+		inputDevice:flushEvents();
+	end
+
+	frame();
+	assert(not Dialog:new(dialogBox):beginDialog(player));
+	npc:despawn();
+	frame();
+	assert(Dialog:new(dialogBox):beginDialog(player));
 end
 
 return tests;
