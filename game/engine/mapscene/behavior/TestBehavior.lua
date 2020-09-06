@@ -44,4 +44,19 @@ tests[#tests].body = function()
 	assert(sentinel2 == 1);
 end
 
+tests[#tests + 1] = {name = "Can despawn entities", gfx = "mock"};
+tests[#tests].body = function()
+	local scene = MapScene:new("engine/test-data/empty_map.lua");
+
+	local Behavior1 = Class:test("Behavior1", Behavior);
+	local behavior1 = Behavior1:new();
+
+	local entity = scene:spawn(Entity);
+	entity:addComponent(ScriptRunner:new());
+	entity:addComponent(behavior1);
+	scene:update(0);
+	entity:despawn();
+	scene:update(0);
+end
+
 return tests;

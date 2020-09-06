@@ -3,6 +3,7 @@ local AllComponents = require("engine/ecs/query/AllComponents");
 local System = require("engine/ecs/System");
 local Behavior = require("engine/mapscene/behavior/Behavior");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
+local Script = require("engine/script/Script");
 
 local BehaviorSystem = Class("BehaviorSystem", System);
 
@@ -18,24 +19,24 @@ BehaviorSystem.beforeScripts = function(self, dt)
 		local scriptRunner = entity:getComponent(ScriptRunner);
 		assert(scriptRunner);
 		local script = behavior:getScript();
-		assert(script);
+		assert(script:isInstanceOf(Script));
 		scriptRunner:addScript(script);
 		if not self._activeEntities[entity] then
-			self._activeEntities[entity] = {scriptRunner = scriptRunner};
+			self._activeEntities[entity] = {scriptRunner = scriptRunner, behaviors = {}};
 		end
-		self._activeEntities[entity][behavior] = script;
+		self._activeEntities[entity].behaviors[behavior] = script;
 	end
 
 	for behavior, entity in pairs(self._query:getRemovedComponents(Behavior)) do
-		assert(self._activeEntities[entity]);
-		assert(self._activeEntities[entity][behavior]);
 		local activeEntity = self._activeEntities[entity];
-		activeEntity.scriptRunner:removeScript(activeEntity[behavior]);
-		self._activeEntities[entity][behavior] = nil;
+		assert(activeEntity);
+		assert(activeEntity.behaviors[behavior]);
+		activeEntity.scriptRunner:removeScript(activeEntity.behaviors[behavior]);
+		activeEntity.behaviors[behavior] = nil;
 	end
 
 	for entity in pairs(self._query:getRemovedEntities()) do
-		for _, script in pairs(self._activeEntities[entity]) do
+		for behavior, script in pairs(self._activeEntities[entity].behaviors) do
 			self._activeEntities[entity].scriptRunner:removeScript(script);
 		end
 		self._activeEntities[entity] = nil;
