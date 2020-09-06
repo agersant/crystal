@@ -21,10 +21,31 @@ ScriptRunner.addScript = function(self, script)
 	return script;
 end
 
+ScriptRunner.promoteNewScripts = function(self)
+	for i, newScript in ipairs(self._newScripts) do
+		table.insert(self._scripts, newScript);
+	end
+	self._newScripts = {};
+end
+
+ScriptRunner.runScripts = function(self, dt)
+	for i, script in ipairs(self._scripts) do
+		script:update(dt);
+	end
+end
+
+ScriptRunner.signalAllScripts = function(self, signal, ...)
+	local scriptsCopy = TableUtils.shallowCopy(self._scripts);
+	for _, script in ipairs(scriptsCopy) do
+		script:signal(signal, ...);
+	end
+end
+
 ScriptRunner.removeScript = function(self, script)
 	assert(script:isInstanceOf(Script));
 	for i, activeScript in ipairs(self._scripts) do
 		if activeScript == script then
+			script:stop();
 			table.remove(self._scripts, i);
 			return;
 		end
@@ -37,29 +58,12 @@ ScriptRunner.removeScript = function(self, script)
 	end
 end
 
-ScriptRunner.runScripts = function(self, dt)
-	for i, newScript in ipairs(self._newScripts) do
-		table.insert(self._scripts, newScript);
-	end
-	self._newScripts = {};
-
-	for i, script in ipairs(self._scripts) do
-		script:update(dt);
-	end
-end
-
-ScriptRunner.stopAllScripts = function(self)
-	local scriptsCopy = TableUtils.shallowCopy(self._scripts);
-	for _, script in ipairs(scriptsCopy) do
+ScriptRunner.removeAllScripts = function(self)
+	for _, script in ipairs(self._scripts) do
 		script:stop();
 	end
-end
-
-ScriptRunner.signalAllScripts = function(self, signal, ...)
-	local scriptsCopy = TableUtils.shallowCopy(self._scripts);
-	for _, script in ipairs(scriptsCopy) do
-		script:signal(signal, ...);
-	end
+	self._scripts = {};
+	self._newScripts = {};
 end
 
 return ScriptRunner;

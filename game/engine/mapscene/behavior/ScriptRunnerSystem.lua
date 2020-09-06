@@ -13,7 +13,13 @@ end
 
 ScriptRunnerSystem.beforeScripts = function(self, dt)
 	for scriptRunner in pairs(self._query:getRemovedComponents(ScriptRunner)) do
-		scriptRunner:stopAllScripts();
+		scriptRunner:removeAllScripts();
+	end
+
+	local ecs = self:getECS();
+	local scriptRunners = ecs:getAllComponents(ScriptRunner);
+	for _, scriptRunner in ipairs(scriptRunners) do
+		scriptRunner:promoteNewScripts();
 	end
 end
 
