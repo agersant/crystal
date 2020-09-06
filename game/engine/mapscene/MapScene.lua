@@ -138,7 +138,7 @@ MapScene.addSystems = function(self)
 	ecs:addSystem(MovementAISystem:new(ecs, self._map)); -- (also has some duringScripts logic)
 
 	-- During scripts
-	ecs:addSystem(ScriptRunnerSystem:new(ecs));
+	ecs:addSystem(ScriptRunnerSystem:new(ecs)); -- (also has dome beforeScripts logic)
 	ecs:addSystem(InputListenerSystem:new(ecs));
 
 	-- After scripts
