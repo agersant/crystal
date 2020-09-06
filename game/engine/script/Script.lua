@@ -63,7 +63,7 @@ pumpThread = function(self, thread, resumeArgs)
 	local threadCoroutine = thread:getCoroutine();
 	local status = coroutine.status(threadCoroutine);
 	assert(status ~= "running");
-	if status == "suspended" and not thread:isEnded() then
+	if status == "suspended" and not thread:isEnded() and not self._stopping then
 		local success, a, b, c;
 		if resumeArgs ~= nil then
 			assert(type(resumeArgs) == "table");
@@ -145,13 +145,23 @@ Script.update = function(self, dt)
 	end
 end
 
+Script.stop = function(self)
+	self._stopping = true;
+	for _, thread in ipairs(self._threads) do
+		self:endThread(thread, false);
+	end
+	self._stopping = false;
+end
+
 Script.getTime = function(self)
 	return self._time;
 end
 
 Script.addThread = function(self, functionToThread)
 	local thread = Thread:new(self, nil, functionToThread);
-	table.insert(self._threads, thread);
+	if not self._stopping then
+		table.insert(self._threads, thread);
+	end
 	return thread;
 end
 

@@ -495,4 +495,55 @@ tests[#tests].body = function()
 	assert(sentinel);
 end
 
+tests[#tests + 1] = {name = "Can stop all threads"};
+tests[#tests].body = function()
+	local sentinel = 0;
+
+	local script = Script:new();
+	script:addThread(function(self)
+		while true do
+			sentinel = sentinel + 1;
+			self:waitFrame();
+		end
+	end);
+	script:addThread(function(self)
+		while true do
+			sentinel = sentinel + 10;
+			self:waitFrame();
+		end
+	end);
+
+	assert(sentinel == 0);
+	script:update(0);
+	assert(sentinel == 11);
+
+	script:stop();
+	script:update(0);
+	script:update(0);
+	assert(sentinel == 11);
+end
+
+tests[#tests + 1] = {name = "No threads can be added while stopping"};
+tests[#tests].body = function()
+	local script1 = Script:new();
+	local thread = script1:addThreadAndRun(function(self)
+		self:hang();
+	end);
+
+	local sentinel = false;
+	local unblocked = false;
+	local script2 = Script:new();
+	script2:addThreadAndRun(function(self)
+		self:join(thread);
+		unblocked = true;
+		script1:addThreadAndRun(function()
+			sentinel = true;
+		end);
+	end);
+
+	script1:stop();
+	assert(unblocked);
+	assert(not sentinel);
+end
+
 return tests;
