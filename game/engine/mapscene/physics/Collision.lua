@@ -1,26 +1,76 @@
 require("engine/utils/OOP");
 local Component = require("engine/ecs/Component");
+local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local TableUtils = require("engine/utils/TableUtils");
 
 local Collision = Class("Collision", Component);
 
-Collision.init = function(self, radius)
+local updateFilterData = function(self)
+	local collideWith = 0;
+	if self._enabled then
+		collideWith = collideWith + CollisionFilters.GEO;
+		if not self._ignoreOthers then
+			collideWith = collideWith + CollisionFilters.SOLID;
+		end
+		collideWith = collideWith + CollisionFilters.TRIGGER;
+	end
+	self._fixture:setFilterData(CollisionFilters.SOLID, collideWith, 0);
+end
+
+local getState = function(self)
+	return {
+		ignoreOthers = self._ignoreOthers,
+		friction = self._fixture:getFriction(),
+		restitution = self._fixture:getRestitution(),
+	};
+end
+
+local setState = function(self, state)
+	self:setIgnoreOthers(state.ignoreOthers);
+	self:setFriction(state.friction);
+	self:setRestitution(state.restitution);
+end
+
+Collision.init = function(self, physicsBody, radius)
 	Collision.super.init(self);
+	assert(physicsBody);
+	assert(physicsBody:isInstanceOf(PhysicsBody));
 	assert(radius);
-	self._shape = love.physics.newCircleShape(radius);
 	self._contactEntities = {};
+	self._enabled = false;
+	self._ignoreOthers = false;
+
+	local shape = love.physics.newCircleShape(radius);
+	self._fixture = love.physics.newFixture(physicsBody:getBody(), shape, 0);
+	self._fixture:setUserData(self);
+	self._fixture:setFriction(0);
+	self._fixture:setRestitution(0);
+	updateFilterData(self);
 end
 
-Collision.getFixture = function(self)
-	return self._fixture;
+Collision.pushCollisionState = function(self)
+	local state = getState(self);
+	return function()
+		setState(self, state);
+	end
 end
 
-Collision.setFixture = function(self, fixture)
-	self._fixture = fixture;
+Collision.setEnabled = function(self, enabled)
+	self._enabled = enabled;
+	updateFilterData(self);
 end
 
-Collision.getShape = function(self)
-	return self._shape;
+Collision.setIgnoreOthers = function(self, ignore)
+	self._ignoreOthers = ignore;
+	updateFilterData(self);
+end
+
+Collision.setFriction = function(self, friction)
+	self._fixture:setFriction(friction);
+end
+
+Collision.setRestitution = function(self, restitution)
+	self._fixture:setRestitution(restitution);
 end
 
 Collision.onBeginTouch = function(self, otherComponent)

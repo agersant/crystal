@@ -29,7 +29,7 @@ NPC.init = function(self, scene)
 	local sheet = Assets:getSpritesheet("arpg/assets/spritesheet/Sahagin.lua");
 	self:addComponent(Sprite:new(sheet));
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
-	self:addComponent(Collision:new(4));
+	self:addComponent(Collision:new(self:getComponent(PhysicsBody), 4));
 	self:addComponent(ScriptRunner:new());
 	self:addComponent(Dialog:new(scene:getHUD():getDialogBox()));
 	self:addScript(Script:new(script));

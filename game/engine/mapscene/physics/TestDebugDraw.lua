@@ -19,7 +19,7 @@ tests[#tests].body = function(context)
 	local entityA = scene:spawn(Entity);
 	entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	entityA:setPosition(40, 40);
-	entityA:addComponent(Collision:new(10));
+	entityA:addComponent(Collision:new(entityA:getComponent(PhysicsBody), 10));
 
 	local entityB = scene:spawn(Entity);
 	entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));

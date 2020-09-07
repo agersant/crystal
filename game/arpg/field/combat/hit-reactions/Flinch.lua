@@ -14,19 +14,8 @@ Flinch.init = function(self)
 end
 
 local restorePhysics = function(self)
-	local collision = self:getComponent(Collision);
-	local fixture, oldMask, oldRestitution;
-	if collision then
-		fixture = collision:getFixture();
-		oldMask = {fixture:getMask()};
-		oldRestitution = fixture:getRestitution();
-	end
 	local dampingX, dampingY = self:getBody():getLinearDamping();
 	return function()
-		if fixture then
-			fixture:setMask(unpack(oldMask));
-			fixture:setRestitution(oldRestitution);
-		end
 		self:getBody():setLinearDamping(dampingX, dampingY);
 		self:setAltitude(0);
 	end
@@ -36,13 +25,12 @@ local smallFlinch = function(self, direction)
 	if self:getComponent(Locomotion) then
 		self:scope(self:disableLocomotion());
 	end
-	self:scope(restorePhysics(self));
 
 	local collision = self:getComponent(Collision);
 	if collision then
-		local fixture = collision:getFixture();
-		fixture:setMask(CollisionFilters.SOLID); -- TODO don't poke around fixture internals from outside Collision component
-		fixture:setRestitution(.4);
+		self:scope(self:pushCollisionState());
+		collision:setIgnoreOthers(true);
+		collision:setRestitution(.4);
 	end
 
 	local dx = math.cos(direction);
@@ -63,12 +51,10 @@ local largeFlinch = function(self, direction)
 	self:scope(restorePhysics(self));
 
 	local collision = self:getComponent(Collision);
-	local oldMask;
 	if collision then
-		local fixture = collision:getFixture();
-		oldMask = {fixture:getMask()};
-		fixture:setMask(CollisionFilters.SOLID);
-		fixture:setRestitution(.4);
+		self:scope(self:pushCollisionState());
+		collision:setIgnoreOthers(true);
+		collision:setRestitution(.4);
 	end
 
 	self:wait(6 * 1 / 60);
@@ -85,11 +71,6 @@ local largeFlinch = function(self, direction)
 	self:waitTween(4, 0, 0.1, "inQuadratic", self.setAltitude, self);
 	self:waitTween(0, 2, 0.08, "outQuadratic", self.setAltitude, self);
 	self:waitTween(2, 0, 0.08, "inQuadratic", self.setAltitude, self);
-
-	if collision then
-		local fixture = collision:getFixture();
-		fixture:setMask(unpack(oldMask));
-	end
 
 	self:wait(0.6);
 end

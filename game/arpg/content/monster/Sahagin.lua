@@ -111,7 +111,7 @@ Sahagin.init = function(self, scene)
 	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	self:addComponent(Locomotion:new());
 	self:addComponent(MovementAI:new());
-	self:addComponent(Collision:new(4));
+	self:addComponent(Collision:new(self:getComponent(PhysicsBody), 4));
 
 	self:addComponent(CombatData:new());
 	self:addComponent(DamageIntent:new());

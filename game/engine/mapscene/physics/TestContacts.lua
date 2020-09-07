@@ -103,8 +103,12 @@ tests[#tests].body = function()
 
 	local scene = MapScene:new("engine/test-data/empty_map.lua");
 
-	local collision = Collision:new(5);
 	local trigger = TouchTrigger:new(love.physics.newRectangleShape(10, 10));
+
+	local entityA = scene:spawn(Entity);
+	entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local collision = Collision:new(entityA:getComponent(PhysicsBody), 5);
+	entityA:addComponent(collision);
 
 	local touching = false;
 	trigger.onBeginTouch = function(self, other)
@@ -117,10 +121,6 @@ tests[#tests].body = function()
 		assert(other == collision);
 		touching = false;
 	end
-
-	local entityA = scene:spawn(Entity);
-	entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	entityA:addComponent(collision);
 
 	local entityB = scene:spawn(Entity);
 	entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
@@ -146,7 +146,6 @@ tests[#tests].body = function()
 
 	local scene = MapScene:new("engine/test-data/empty_map.lua");
 
-	local collision = Collision:new(5);
 	local trigger = TouchTrigger:new(love.physics.newRectangleShape(10, 10));
 
 	local touching = false;
@@ -156,7 +155,7 @@ tests[#tests].body = function()
 
 	local entityA = scene:spawn(Entity);
 	entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	entityA:addComponent(collision);
+	entityA:addComponent(Collision:new(entityA:getComponent(PhysicsBody), 5));
 
 	local entityB = scene:spawn(Entity);
 	entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
@@ -176,8 +175,15 @@ tests[#tests].body = function()
 
 	local scene = MapScene:new("engine/test-data/empty_map.lua");
 
-	local collisionA = Collision:new(5);
-	local collisionB = Collision:new(5);
+	local entityA = scene:spawn(Entity);
+	entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local collisionA = Collision:new(entityA:getComponent(PhysicsBody), 5);
+	entityA:addComponent(collisionA);
+
+	local entityB = scene:spawn(Entity);
+	entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local collisionB = Collision:new(entityB:getComponent(PhysicsBody), 5);
+	entityB:addComponent(collisionB);
 
 	local touching = false;
 	collisionA.onBeginTouch = function(self, other)
@@ -190,14 +196,6 @@ tests[#tests].body = function()
 		assert(other == collisionB);
 		touching = false;
 	end
-
-	local entityA = scene:spawn(Entity);
-	entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	entityA:addComponent(collisionA);
-
-	local entityB = scene:spawn(Entity);
-	entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	entityB:addComponent(collisionB);
 
 	entityA:setPosition(40, 0);
 	assert(not touching);
