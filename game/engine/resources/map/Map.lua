@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local DebugFlags = require("engine/dev/DebugFlags");
 local Log = require("engine/dev/Log");
 local Colors = require("engine/resources/Colors");
 local DynamicLayer = require("engine/resources/map/DynamicLayer");
@@ -122,13 +121,12 @@ Map.drawAboveEntities = function(self)
 	end
 end
 
-Map.drawDebug = function(self)
-	if DebugFlags.drawPhysics then
-		self._collisionMesh:draw();
-	end
-	if DebugFlags.drawNavmesh then
-		self._navigationMesh:draw();
-	end
+Map.drawCollisionMesh = function(self)
+	self._collisionMesh:draw();
+end
+
+Map.drawNavigationMesh = function(self)
+	self._navigationMesh:draw();
 end
 
 Map.getTileset = function(self)

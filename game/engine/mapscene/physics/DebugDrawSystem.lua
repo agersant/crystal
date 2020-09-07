@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local DebugFlags = require("engine/dev/DebugFlags");
+local CLI = require("engine/dev/cli/CLI");
 local Features = require("engine/dev/Features");
 local System = require("engine/ecs/System");
 local AllComponents = require("engine/ecs/query/AllComponents");
@@ -12,6 +12,9 @@ local DebugDrawSystem = Class("DebugDrawSystem", System);
 if not Features.debugDraw then
 	Features.stub(DebugDrawSystem);
 end
+
+local drawPhysics = false;
+local drawNavigation = false;
 
 DebugDrawSystem.init = function(self, ecs)
 	DebugDrawSystem.super.init(self, ecs);
@@ -60,18 +63,42 @@ local drawShape = function(self, x, y, shape, color)
 end
 
 DebugDrawSystem.afterDraw = function(self, dt)
-	if not DebugFlags.drawPhysics then
-		return;
+
+	local map = self._ecs:getMap();
+	assert(map);
+
+	if drawNavigation then
+		map:drawNavigationMesh();
 	end
 
-	for entity in pairs(self._query:getEntities()) do
-		local physicsBody = entity:getComponent(PhysicsBody):getBody();
-		local x, y = physicsBody:getX(), physicsBody:getY();
-		for _, fixture in ipairs(physicsBody:getFixtures()) do
-			local color = pickFixtureColor(self, fixture);
-			drawShape(self, x, y, fixture:getShape(), color);
+	if drawPhysics then
+		map:drawCollisionMesh();
+		for entity in pairs(self._query:getEntities()) do
+			local physicsBody = entity:getComponent(PhysicsBody):getBody();
+			local x, y = physicsBody:getX(), physicsBody:getY();
+			for _, fixture in ipairs(physicsBody:getFixtures()) do
+				local color = pickFixtureColor(self, fixture);
+				drawShape(self, x, y, fixture:getShape(), color);
+			end
 		end
 	end
+
 end
+
+CLI:registerCommand("showNavmeshOverlay", function()
+	drawNavigation = true;
+end);
+
+CLI:registerCommand("hideNavmeshOverlay", function()
+	drawNavigation = false;
+end);
+
+CLI:registerCommand("showPhysicsOverlay", function()
+	drawPhysics = true;
+end);
+
+CLI:registerCommand("hidePhysicsOverlay", function()
+	drawPhysics = false;
+end);
 
 return DebugDrawSystem;

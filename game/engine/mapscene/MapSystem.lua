@@ -26,7 +26,6 @@ end
 
 MapSystem.afterDraw = function(self)
 	self._map:drawAboveEntities();
-	self._map:drawDebug();
 end
 
 return MapSystem;

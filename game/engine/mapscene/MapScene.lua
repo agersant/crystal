@@ -1,6 +1,5 @@
 require("engine/utils/OOP");
 local CLI = require("engine/dev/cli/CLI");
-local DebugFlags = require("engine/dev/DebugFlags");
 local Log = require("engine/dev/Log");
 local ECS = require("engine/ecs/ECS");
 local Assets = require("engine/resources/Assets");
@@ -142,30 +141,6 @@ CLI:registerCommand("loadMap mapName:string", function(mapName)
 	local sceneFile = StringUtils.mergePaths(module.mapDirectory, mapName .. ".lua");
 	local newScene = sceneClass:new(sceneFile);
 	Scene:setCurrent(newScene);
-end);
-
-local setDrawPhysicsOverlay = function(draw)
-	DebugFlags.drawPhysics = draw;
-end
-
-CLI:registerCommand("showPhysicsOverlay", function()
-	setDrawPhysicsOverlay(true);
-end);
-
-CLI:registerCommand("hidePhysicsOverlay", function()
-	setDrawPhysicsOverlay(false);
-end);
-
-local setDrawNavmeshOverlay = function(draw)
-	DebugFlags.drawNavmesh = draw;
-end
-
-CLI:registerCommand("showNavmeshOverlay", function()
-	setDrawNavmeshOverlay(true);
-end);
-
-CLI:registerCommand("hideNavmeshOverlay", function()
-	setDrawNavmeshOverlay(false);
 end);
 
 local spawn = function(className)
