@@ -15,18 +15,15 @@ local CameraSystem = require("engine/mapscene/display/CameraSystem");
 local SpriteSystem = require("engine/mapscene/display/SpriteSystem");
 local DrawableSystem = require("engine/mapscene/display/DrawableSystem");
 local WorldWidgetSystem = require("engine/mapscene/display/WorldWidgetSystem");
-local Collision = require("engine/mapscene/physics/Collision");
 local CollisionSystem = require("engine/mapscene/physics/CollisionSystem");
 local DebugDrawSystem = require("engine/mapscene/physics/DebugDrawSystem");
-local Hitbox = require("engine/mapscene/physics/Hitbox");
 local HitboxSystem = require("engine/mapscene/physics/HitboxSystem");
 local LocomotionSystem = require("engine/mapscene/physics/LocomotionSystem");
 local ParentSystem = require("engine/mapscene/physics/ParentSystem");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local PhysicsBodySystem = require("engine/mapscene/physics/PhysicsBodySystem");
-local TouchTrigger = require("engine/mapscene/physics/TouchTrigger");
+local PhysicsSystem = require("engine/mapscene/physics/PhysicsSystem");
 local TouchTriggerSystem = require("engine/mapscene/physics/TouchTriggerSystem");
-local Weakbox = require("engine/mapscene/physics/Weakbox");
 local WeakboxSystem = require("engine/mapscene/physics/WeakboxSystem");
 local Module = require("engine/Module");
 local Persistence = require("engine/persistence/Persistence");
@@ -35,50 +32,6 @@ local Alias = require("engine/utils/Alias");
 local StringUtils = require("engine/utils/StringUtils");
 
 local MapScene = Class("MapScene", Scene);
-
--- IMPLEMENTATION
-
-local beginContact = function(self, fixtureA, fixtureB, contact)
-	local objectA = fixtureA:getUserData();
-	local objectB = fixtureB:getUserData();
-	if not objectA or not objectB then
-		return;
-	end
-	if objectA:isInstanceOf(Hitbox) and objectB:isInstanceOf(Weakbox) then
-		table.insert(self._contactCallbacks, {func = objectA.onBeginTouch, args = {objectA, objectB}});
-	elseif objectA:isInstanceOf(Weakbox) and objectB:isInstanceOf(Hitbox) then
-		table.insert(self._contactCallbacks, {func = objectB.onBeginTouch, args = {objectB, objectA}});
-	elseif objectA:isInstanceOf(Collision) and objectB:isInstanceOf(Collision) then
-		table.insert(self._contactCallbacks, {func = objectA.onBeginTouch, args = {objectA, objectB}});
-		table.insert(self._contactCallbacks, {func = objectB.onBeginTouch, args = {objectB, objectA}});
-	elseif objectA:isInstanceOf(TouchTrigger) and objectB:isInstanceOf(Collision) then
-		table.insert(self._contactCallbacks, {func = objectA.onBeginTouch, args = {objectA, objectB}});
-	elseif objectA:isInstanceOf(Collision) and objectB:isInstanceOf(TouchTrigger) then
-		table.insert(self._contactCallbacks, {func = objectB.onBeginTouch, args = {objectB, objectA}});
-	end
-end
-
-local endContact = function(self, fixtureA, fixtureB, contact)
-	local objectA = fixtureA:getUserData();
-	local objectB = fixtureB:getUserData();
-	if not objectA or not objectB then
-		return;
-	end
-	if objectA:isInstanceOf(Hitbox) and objectB:isInstanceOf(Weakbox) then
-		table.insert(self._contactCallbacks, {func = objectA.onEndTouch, args = {objectA, objectB}});
-	elseif objectA:isInstanceOf(Weakbox) and objectB:isInstanceOf(Hitbox) then
-		table.insert(self._contactCallbacks, {func = objectB.onEndTouch, args = {objectB, objectA}});
-	elseif objectA:isInstanceOf(Collision) and objectB:isInstanceOf(Collision) then
-		table.insert(self._contactCallbacks, {func = objectA.onEndTouch, args = {objectA, objectB}});
-		table.insert(self._contactCallbacks, {func = objectB.onEndTouch, args = {objectB, objectA}});
-	elseif objectA:isInstanceOf(TouchTrigger) and objectB:isInstanceOf(Collision) then
-		table.insert(self._contactCallbacks, {func = objectA.onEndTouch, args = {objectA, objectB}});
-	elseif objectA:isInstanceOf(Collision) and objectB:isInstanceOf(TouchTrigger) then
-		table.insert(self._contactCallbacks, {func = objectB.onEndTouch, args = {objectB, objectA}});
-	end
-end
-
--- PUBLIC API
 
 MapScene.init = function(self, mapName)
 	Log:info("Instancing scene for map: " .. tostring(mapName));
@@ -90,14 +43,6 @@ MapScene.init = function(self, mapName)
 	self._ecs = ecs;
 	Alias:add(ecs, self);
 
-	self._world = love.physics.newWorld(0, 0, false);
-	self._contactCallbacks = {};
-	self._world:setCallbacks(function(...)
-		beginContact(self, ...);
-	end, function(...)
-		endContact(self, ...);
-	end);
-
 	-- Before physics
 	ecs:addSystem(PhysicsBodySystem:new(ecs));
 	ecs:addSystem(TouchTriggerSystem:new(ecs));
@@ -106,6 +51,9 @@ MapScene.init = function(self, mapName)
 	ecs:addSystem(HitboxSystem:new(ecs));
 	ecs:addSystem(WeakboxSystem:new(ecs));
 	ecs:addSystem(ParentSystem:new(ecs));
+
+	-- During Physics
+	ecs:addSystem(PhysicsSystem:new(ecs));
 
 	-- After physics
 
@@ -126,7 +74,7 @@ MapScene.init = function(self, mapName)
 	ecs:addSystem(MapSystem:new(ecs, map));
 	ecs:addSystem(DebugDrawSystem:new(ecs));
 
-	-- Draw
+	-- During draw
 	ecs:addSystem(DrawableSystem:new(ecs));
 
 	-- After Draw
@@ -140,6 +88,10 @@ end
 
 MapScene.getECS = function(self)
 	return self._ecs;
+end
+
+MapScene.getPhysicsWorld = function(self)
+	return self._ecs:getSystem(PhysicsSystem):getWorld();
 end
 
 MapScene.spawn = function(self, ...)
@@ -159,19 +111,11 @@ MapScene.update = function(self, dt)
 	self._ecs:update();
 
 	self._ecs:notifySystems("beforePhysics", dt);
-
-	self._world:update(dt);
-	for _, callback in ipairs(self._contactCallbacks) do
-		callback.func(unpack(callback.args));
-	end
-	self._contactCallbacks = {};
-
+	self._ecs:notifySystems("duringPhysics", dt);
 	self._ecs:notifySystems("afterPhysics", dt);
 
 	self._ecs:notifySystems("beforeScripts", dt);
-
 	self._ecs:notifySystems("duringScripts", dt);
-
 	self._ecs:notifySystems("afterScripts", dt);
 end
 
@@ -185,10 +129,6 @@ MapScene.draw = function(self)
 	self._ecs:notifySystems("afterDraw");
 
 	love.graphics.pop();
-end
-
-MapScene.getPhysicsWorld = function(self)
-	return self._world;
 end
 
 CLI:registerCommand("loadMap mapName:string", function(mapName)
