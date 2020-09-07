@@ -4,7 +4,6 @@ local DebugFlags = require("engine/dev/DebugFlags");
 local Log = require("engine/dev/Log");
 local ECS = require("engine/ecs/ECS");
 local Assets = require("engine/resources/Assets");
-local Camera = require("engine/mapscene/Camera");
 local MapSystem = require("engine/mapscene/MapSystem");
 local BehaviorSystem = require("engine/mapscene/behavior/BehaviorSystem");
 local MovementAISystem = require("engine/mapscene/behavior/ai/MovementAISystem");
@@ -12,6 +11,7 @@ local Entity = require("engine/ecs/Entity");
 local InputListener = require("engine/mapscene/behavior/InputListener");
 local InputListenerSystem = require("engine/mapscene/behavior/InputListenerSystem");
 local ScriptRunnerSystem = require("engine/mapscene/behavior/ScriptRunnerSystem");
+local CameraSystem = require("engine/mapscene/display/CameraSystem");
 local SpriteSystem = require("engine/mapscene/display/SpriteSystem");
 local DrawableSystem = require("engine/mapscene/display/DrawableSystem");
 local WorldWidgetSystem = require("engine/mapscene/display/WorldWidgetSystem");
@@ -120,6 +120,7 @@ MapScene.init = function(self, mapName)
 
 	-- After scripts
 	ecs:addSystem(WorldWidgetSystem:new(ecs));
+	ecs:addSystem(CameraSystem:new(ecs, self)); -- (also has beforeDraw and afterDraw logic)
 
 	-- Before draw
 	ecs:addSystem(MapSystem:new(ecs, map));
@@ -129,8 +130,6 @@ MapScene.init = function(self, mapName)
 	ecs:addSystem(DrawableSystem:new(ecs));
 
 	-- After Draw
-
-	self._camera = Camera:new(self);
 
 	self:addSystems();
 
@@ -174,19 +173,12 @@ MapScene.update = function(self, dt)
 	self._ecs:runFramePortion("duringScripts", dt);
 
 	self._ecs:runFramePortion("afterScripts", dt);
-
-	self._camera:update(dt);
 end
 
 MapScene.draw = function(self)
 	MapScene.super.draw(self);
 
-	local ecs = self._ecs;
-
 	love.graphics.push();
-
-	local ox, oy = self._camera:getRenderOffset();
-	love.graphics.translate(ox, oy);
 
 	self._ecs:runFramePortion("beforeDraw");
 	self._ecs:runFramePortion("draw");
@@ -197,10 +189,6 @@ end
 
 MapScene.getPhysicsWorld = function(self)
 	return self._world;
-end
-
-MapScene.getCamera = function(self)
-	return self._camera;
 end
 
 CLI:registerCommand("loadMap mapName:string", function(mapName)
