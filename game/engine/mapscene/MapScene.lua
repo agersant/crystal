@@ -120,7 +120,7 @@ MapScene.init = function(self, mapName)
 
 	-- After scripts
 	ecs:addSystem(WorldWidgetSystem:new(ecs));
-	ecs:addSystem(CameraSystem:new(ecs, self)); -- (also has beforeDraw and afterDraw logic)
+	ecs:addSystem(CameraSystem:new(ecs, self)); -- (also has beforeDraw logic)
 
 	-- Before draw
 	ecs:addSystem(MapSystem:new(ecs, map));
