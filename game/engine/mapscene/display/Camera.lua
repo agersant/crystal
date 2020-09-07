@@ -13,7 +13,7 @@ local Camera = Class("Camera");
 local epsilon = 0.001;
 
 local getMapSize = function(self)
-	local map = self._scene:getECS():getSystem(MapSystem):getMap();
+	local map = self._scene:getMap();
 	local mapWidth = map:getWidthInPixels();
 	local mapHeight = map:getHeightInPixels();
 	return mapWidth, mapHeight;

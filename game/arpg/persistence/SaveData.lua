@@ -76,9 +76,7 @@ SaveData.save = function(self)
 		local x, y = partyLeader:getPosition();
 		assert(x);
 		assert(y);
-		local mapSystem = field:getECS():getSystem(MapSystem);
-		assert(mapSystem);
-		self:setLocation(mapSystem:getMap():getName(), x, y);
+		self:setLocation(field:getMap():getName(), x, y);
 	end
 end
 

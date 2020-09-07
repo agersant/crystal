@@ -43,7 +43,7 @@ Field.init = function(self, mapName, startX, startY, startAngle)
 
 	Field.super.init(self, mapName);
 
-	local map = self:getECS():getSystem(MapSystem):getMap();
+	local map = self:getMap();
 	local mapWidth = map:getWidthInPixels();
 	local mapHeight = map:getHeightInPixels();
 	startX = startX or mapWidth / 2;

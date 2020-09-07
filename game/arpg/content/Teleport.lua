@@ -87,7 +87,7 @@ Teleport.init = function(self, scene, options)
 	self._targetX = options.targetX;
 	self._targetY = options.targetY;
 
-	local map = scene:getECS():getSystem(MapSystem):getMap();
+	local map = scene:getMap();
 	local mapWidth = map:getWidthInPixels();
 	local mapHeight = map:getHeightInPixels();
 

@@ -90,6 +90,10 @@ MapScene.getECS = function(self)
 	return self._ecs;
 end
 
+MapScene.getMap = function(self)
+	return self._ecs:getSystem(MapSystem):getMap();
+end
+
 MapScene.getPhysicsWorld = function(self)
 	return self._ecs:getSystem(PhysicsSystem):getWorld();
 end
@@ -175,7 +179,7 @@ local spawn = function(className)
 	end
 	assert(player);
 
-	local map = currentScene:getECS():getSystem(MapSystem):getMap();
+	local map = currentScene:getMap();
 	assert(map);
 	local navigationMesh = map:getNavigationMesh();
 	assert(navigationMesh);
