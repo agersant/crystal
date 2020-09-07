@@ -34,7 +34,6 @@ AnimationSelectionSystem.afterScripts = function(self)
 	for entity in pairs(flinchEntities) do
 		local flinch = entity:getComponent(Flinch);
 		if flinch:getFlinchAmount() then
-			local actor = entity:getComponent(Actor);
 			local flinchAnimation = entity:getComponent(FlinchAnimation);
 			local animation = flinchAnimation:getFlinchAnimation();
 			if animation then
