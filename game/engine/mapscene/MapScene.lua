@@ -133,7 +133,7 @@ MapScene.init = function(self, mapName)
 
 	self:addSystems();
 
-	ecs:runFramePortion("sceneInit");
+	ecs:notifySystems("sceneInit");
 
 	self:update(0);
 end
@@ -158,7 +158,7 @@ MapScene.update = function(self, dt)
 
 	self._ecs:update();
 
-	self._ecs:runFramePortion("beforePhysics", dt);
+	self._ecs:notifySystems("beforePhysics", dt);
 
 	self._world:update(dt);
 	for _, callback in ipairs(self._contactCallbacks) do
@@ -166,13 +166,13 @@ MapScene.update = function(self, dt)
 	end
 	self._contactCallbacks = {};
 
-	self._ecs:runFramePortion("afterPhysics", dt);
+	self._ecs:notifySystems("afterPhysics", dt);
 
-	self._ecs:runFramePortion("beforeScripts", dt);
+	self._ecs:notifySystems("beforeScripts", dt);
 
-	self._ecs:runFramePortion("duringScripts", dt);
+	self._ecs:notifySystems("duringScripts", dt);
 
-	self._ecs:runFramePortion("afterScripts", dt);
+	self._ecs:notifySystems("afterScripts", dt);
 end
 
 MapScene.draw = function(self)
@@ -180,9 +180,9 @@ MapScene.draw = function(self)
 
 	love.graphics.push();
 
-	self._ecs:runFramePortion("beforeDraw");
-	self._ecs:runFramePortion("draw");
-	self._ecs:runFramePortion("afterDraw");
+	self._ecs:notifySystems("beforeDraw");
+	self._ecs:notifySystems("draw");
+	self._ecs:notifySystems("afterDraw");
 
 	love.graphics.pop();
 end

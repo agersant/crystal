@@ -281,7 +281,7 @@ tests[#tests].body = function()
 	assert(ecs:getSystem(SystemB) == systemB);
 end
 
-tests[#tests + 1] = {name = "Systems update in correct order"};
+tests[#tests + 1] = {name = "Systems run when notified"};
 tests[#tests].body = function()
 	local ecs = ECS:new();
 
@@ -296,9 +296,9 @@ tests[#tests].body = function()
 		ecs:addSystem(system);
 	end
 	assert(sentinel == 0);
-	ecs:runFramePortion("randomEvent");
+	ecs:notifySystems("randomEvent");
 	assert(sentinel == 0);
-	ecs:runFramePortion("update");
+	ecs:notifySystems("update");
 	assert(sentinel == 10);
 end
 
@@ -314,7 +314,7 @@ tests[#tests].body = function()
 		ran = true;
 	end
 	ecs:addSystem(system);
-	ecs:runFramePortion("update", true);
+	ecs:notifySystems("update", true);
 	assert(ran);
 end
 

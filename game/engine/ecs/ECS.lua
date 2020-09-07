@@ -184,10 +184,10 @@ ECS.update = function(self)
 	self._componentNursery = {};
 end
 
-ECS.runFramePortion = function(self, framePortion, ...)
+ECS.notifySystems = function(self, notification, ...)
 	for _, system in ipairs(self._systems) do
-		if system[framePortion] then
-			system[framePortion](system, ...);
+		if system[notification] then
+			system[notification](system, ...);
 		end
 	end
 end
