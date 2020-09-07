@@ -285,6 +285,15 @@ end
 
 -- ACCESSORS
 
+ECS.getSystem = function(self, class)
+	for _, system in ipairs(self._systems) do
+		if system:isInstanceOf(class) then
+			return system;
+		end
+	end
+	return nil;
+end
+
 ECS.getAllEntities = function(self)
 	return TableUtils.shallowCopy(self._entities);
 end

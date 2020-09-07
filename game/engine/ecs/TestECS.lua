@@ -263,6 +263,24 @@ tests[#tests].body = function()
 	assert(#ecs:getAllComponents(Comp) == 0);
 end
 
+tests[#tests + 1] = {name = "Get system"};
+tests[#tests].body = function()
+	local ecs = ECS:new();
+
+	local SystemA = Class:test("SystemA", System);
+	local SystemB = Class:test("SystemB", System);
+
+	local systemA = SystemA:new(ecs);
+	ecs:addSystem(systemA);
+	assert(ecs:getSystem(SystemA) == systemA);
+	assert(ecs:getSystem(SystemB) == nil);
+
+	local systemB = SystemB:new(ecs);
+	ecs:addSystem(systemB);
+	assert(ecs:getSystem(SystemA) == systemA);
+	assert(ecs:getSystem(SystemB) == systemB);
+end
+
 tests[#tests + 1] = {name = "Systems update in correct order"};
 tests[#tests].body = function()
 	local ecs = ECS:new();
