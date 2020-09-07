@@ -1,24 +1,29 @@
 require("engine/utils/OOP");
 local Component = require("engine/ecs/Component");
+local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 
 local TouchTrigger = Class("TouchTrigger", Component);
 
-TouchTrigger.init = function(self, shape)
+local updateFilterData = function(self)
+	local collideWith = self._enabled and CollisionFilters.SOLID or 0;
+	self._fixture:setFilterData(CollisionFilters.TRIGGER, collideWith, 0);
+end
+
+TouchTrigger.init = function(self, physicsBody, shape)
 	TouchTrigger.super.init(self);
+	assert(physicsBody);
+	assert(physicsBody:isInstanceOf(PhysicsBody));
 	assert(shape);
-	self._shape = shape;
+	self._enabled = false;
+	self._fixture = love.physics.newFixture(physicsBody:getBody(), shape, 0);
+	self._fixture:setSensor(true);
+	self._fixture:setUserData(self);
+	updateFilterData(self);
 end
 
-TouchTrigger.getFixture = function(self)
-	return self._fixture;
-end
-
-TouchTrigger.setFixture = function(self, fixture)
-	self._fixture = fixture;
-end
-
-TouchTrigger.getShape = function(self)
-	return self._shape;
+TouchTrigger.setEnabled = function(self, enabled)
+	self._enabled = enabled;
+	updateFilterData(self);
 end
 
 TouchTrigger.onBeginTouch = function(self, otherEntity)

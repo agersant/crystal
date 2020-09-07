@@ -58,8 +58,8 @@ local teleportScript = function(self)
 	end
 end
 
-TeleportTouchTrigger.init = function(self, shape)
-	TeleportTouchTrigger.super.init(self, shape);
+TeleportTouchTrigger.init = function(self, physicsBody, shape)
+	TeleportTouchTrigger.super.init(self, physicsBody, shape);
 end
 
 TeleportTouchTrigger.onBeginTouch = function(self, component)
@@ -78,8 +78,8 @@ Teleport.init = function(self, scene, options)
 	assert(options.targetY);
 
 	Teleport.super.init(self, scene);
-	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
-	self:addComponent(TeleportTouchTrigger:new(options.shape));
+	local physicsBody = self:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+	self:addComponent(TeleportTouchTrigger:new(physicsBody, options.shape));
 	self:addComponent(ScriptRunner:new());
 	self:addScript(Script:new(teleportScript));
 

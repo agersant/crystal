@@ -38,7 +38,7 @@ tests[#tests].body = function(context)
 	local entityD = scene:spawn(Entity);
 	entityD:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	entityD:setPosition(160, 40);
-	local touchTrigger = TouchTrigger:new(love.physics.newCircleShape(10));
+	local touchTrigger = TouchTrigger:new(entityD:getComponent(PhysicsBody), love.physics.newCircleShape(10));
 	entityD:addComponent(touchTrigger);
 
 	cli:execute("showPhysicsOverlay");

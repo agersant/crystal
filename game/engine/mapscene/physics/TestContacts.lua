@@ -103,12 +103,14 @@ tests[#tests].body = function()
 
 	local scene = MapScene:new("engine/test-data/empty_map.lua");
 
-	local trigger = TouchTrigger:new(love.physics.newRectangleShape(10, 10));
-
 	local entityA = scene:spawn(Entity);
 	entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	local collision = Collision:new(entityA:getComponent(PhysicsBody), 5);
 	entityA:addComponent(collision);
+
+	local entityB = scene:spawn(Entity);
+	local physicsBody = entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local trigger = entityB:addComponent(TouchTrigger:new(physicsBody, love.physics.newRectangleShape(10, 10)));
 
 	local touching = false;
 	trigger.onBeginTouch = function(self, other)
@@ -121,10 +123,6 @@ tests[#tests].body = function()
 		assert(other == collision);
 		touching = false;
 	end
-
-	local entityB = scene:spawn(Entity);
-	entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	entityB:addComponent(trigger);
 
 	entityA:setPosition(40, 0);
 	assert(not touching);
@@ -146,20 +144,18 @@ tests[#tests].body = function()
 
 	local scene = MapScene:new("engine/test-data/empty_map.lua");
 
-	local trigger = TouchTrigger:new(love.physics.newRectangleShape(10, 10));
-
-	local touching = false;
-	trigger.onBeginTouch = function(self, other)
-		touching = true;
-	end
-
 	local entityA = scene:spawn(Entity);
 	entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	entityA:addComponent(Collision:new(entityA:getComponent(PhysicsBody), 5));
 
 	local entityB = scene:spawn(Entity);
-	entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	entityB:addComponent(trigger);
+	local physicsBody = entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local trigger = entityB:addComponent(TouchTrigger:new(physicsBody, love.physics.newRectangleShape(10, 10)));
+
+	local touching = false;
+	trigger.onBeginTouch = function(self, other)
+		touching = true;
+	end
 
 	entityA:setPosition(40, 0);
 	scene:update(1);

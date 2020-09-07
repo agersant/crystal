@@ -13,18 +13,12 @@ TouchTriggerSystem.init = function(self, ecs)
 end
 
 TouchTriggerSystem.beforePhysics = function(self, dt)
-	for touchTrigger, entity in pairs(self._query:getAddedComponents(TouchTrigger)) do
-		local body = entity:getComponent(PhysicsBody):getBody();
-		local fixture = love.physics.newFixture(body, touchTrigger:getShape(), 0);
-		fixture:setFilterData(CollisionFilters.TRIGGER, CollisionFilters.SOLID, 0);
-		fixture:setSensor(true);
-		fixture:setUserData(touchTrigger);
-		touchTrigger:setFixture(fixture);
+	for touchTrigger in pairs(self._query:getAddedComponents(TouchTrigger)) do
+		touchTrigger:setEnabled(true);
 	end
 
 	for touchTrigger in pairs(self._query:getRemovedComponents(TouchTrigger)) do
-		touchTrigger:getFixture():destroy();
-		touchTrigger:setFixture(nil);
+		touchTrigger:setEnabled(false);
 	end
 end
 
