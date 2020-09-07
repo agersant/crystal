@@ -19,14 +19,14 @@ end
 
 local getState = function(self)
 	return {
-		ignoreOthers = self._ignoreOthers,
+		collideWithOthers = self._collideWithOthers,
 		friction = self._fixture:getFriction(),
 		restitution = self._fixture:getRestitution(),
 	};
 end
 
 local setState = function(self, state)
-	self:setIgnoreOthers(state.ignoreOthers);
+	self:setCollideWithOthers(state.collideWithOthers);
 	self:setFriction(state.friction);
 	self:setRestitution(state.restitution);
 end
@@ -38,7 +38,7 @@ Collision.init = function(self, physicsBody, radius)
 	assert(radius);
 	self._contactEntities = {};
 	self._enabled = false;
-	self._ignoreOthers = false;
+	self._collideWithOthers = true;
 
 	local shape = love.physics.newCircleShape(radius);
 	self._fixture = love.physics.newFixture(physicsBody:getBody(), shape, 0);
@@ -60,8 +60,8 @@ Collision.setEnabled = function(self, enabled)
 	updateFilterData(self);
 end
 
-Collision.setIgnoreOthers = function(self, ignore)
-	self._ignoreOthers = ignore;
+Collision.setCollideWithOthers = function(self, collide)
+	self._collideWithOthers = collide;
 	updateFilterData(self);
 end
 

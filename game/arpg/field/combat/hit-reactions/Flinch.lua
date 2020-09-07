@@ -20,7 +20,7 @@ local smallFlinch = function(self, direction)
 
 	if self:getComponent(Collision) then
 		self:scope(self:pushCollisionState());
-		self:setIgnoreOthers(true);
+		self:setCollideWithOthers(false);
 		self:setRestitution(.4);
 	end
 
@@ -44,7 +44,7 @@ local largeFlinch = function(self, direction)
 
 	if self:getComponent(Collision) then
 		self:scope(self:pushCollisionState());
-		self:setIgnoreOthers(true);
+		self:setCollideWithOthers(false);
 		self:setRestitution(.4);
 	end
 
