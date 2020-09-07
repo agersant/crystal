@@ -10,6 +10,7 @@ local DamageNumbersSystem = require("arpg/field/hud/damage/DamageNumbersSystem")
 local HUD = require("arpg/field/hud/HUD");
 local PartyMember = require("arpg/persistence/party/PartyMember");
 local MapScene = require("engine/mapscene/MapScene");
+local MapSystem = require("engine/mapscene/MapSystem");
 local Persistence = require("engine/persistence/Persistence");
 local InputListener = require("engine/mapscene/behavior/InputListener");
 
@@ -42,8 +43,9 @@ Field.init = function(self, mapName, startX, startY, startAngle)
 
 	Field.super.init(self, mapName);
 
-	local mapWidth = self._map:getWidthInPixels();
-	local mapHeight = self._map:getHeightInPixels();
+	local map = self:getECS():getSystem(MapSystem):getMap();
+	local mapWidth = map:getWidthInPixels();
+	local mapHeight = map:getHeightInPixels();
 	startX = startX or mapWidth / 2;
 	startY = startY or mapHeight / 2;
 	startAngle = startAngle or 0;

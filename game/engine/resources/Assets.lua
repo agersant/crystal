@@ -80,7 +80,7 @@ local loadMap = function(self, path, mapData)
 	local tilesetData = mapData.content.tilesets[1];
 	assert(tilesetData);
 	local tileset = loadTileset(self, path, tilesetData);
-	local map = Map:new(mapData, tileset);
+	local map = Map:new(path, mapData, tileset);
 	return "map", map;
 end
 

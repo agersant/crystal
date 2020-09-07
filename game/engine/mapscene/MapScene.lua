@@ -5,6 +5,7 @@ local Log = require("engine/dev/Log");
 local ECS = require("engine/ecs/ECS");
 local Assets = require("engine/resources/Assets");
 local Camera = require("engine/mapscene/Camera");
+local MapSystem = require("engine/mapscene/MapSystem");
 local BehaviorSystem = require("engine/mapscene/behavior/BehaviorSystem");
 local MovementAISystem = require("engine/mapscene/behavior/ai/MovementAISystem");
 local Entity = require("engine/ecs/Entity");
@@ -83,8 +84,11 @@ MapScene.init = function(self, mapName)
 	Log:info("Instancing scene for map: " .. tostring(mapName));
 	MapScene.super.init(self);
 
-	self._ecs = ECS:new();
-	Alias:add(self._ecs, self);
+	local ecs = ECS:new();
+	local map = Assets:getMap(mapName);
+
+	self._ecs = ecs;
+	Alias:add(ecs, self);
 
 	self._world = love.physics.newWorld(0, 0, false);
 	self._contactCallbacks = {};
@@ -94,14 +98,43 @@ MapScene.init = function(self, mapName)
 		endContact(self, ...);
 	end);
 
-	self._mapName = mapName;
-	self._map = Assets:getMap(mapName);
-	self._map:spawnCollisionMeshBody(self);
-	self._map:spawnEntities(self);
+	-- Before physics
+	ecs:addSystem(PhysicsBodySystem:new(ecs));
+	ecs:addSystem(TouchTriggerSystem:new(ecs));
+	ecs:addSystem(CollisionSystem:new(ecs));
+	ecs:addSystem(LocomotionSystem:new(ecs));
+	ecs:addSystem(HitboxSystem:new(ecs));
+	ecs:addSystem(WeakboxSystem:new(ecs));
+	ecs:addSystem(ParentSystem:new(ecs));
+
+	-- After physics
+
+	-- Before scripts
+	ecs:addSystem(BehaviorSystem:new(ecs));
+	ecs:addSystem(SpriteSystem:new(ecs)); -- (also has some duringScripts and afterScripts logic)
+	ecs:addSystem(MovementAISystem:new(ecs, map:getNavigationMesh())); -- (also has some duringScripts logic)
+
+	-- During scripts
+	ecs:addSystem(ScriptRunnerSystem:new(ecs)); -- (also has dome beforeScripts logic)
+	ecs:addSystem(InputListenerSystem:new(ecs));
+
+	-- After scripts
+	ecs:addSystem(WorldWidgetSystem:new(ecs));
+
+	-- Before draw
+	ecs:addSystem(MapSystem:new(ecs, map));
+	ecs:addSystem(DebugDrawSystem:new(ecs));
+
+	-- Draw
+	ecs:addSystem(DrawableSystem:new(ecs));
+
+	-- After Draw
 
 	self._camera = Camera:new(self);
 
 	self:addSystems();
+
+	ecs:runFramePortion("sceneInit");
 
 	self:update(0);
 end
@@ -119,36 +152,6 @@ MapScene.despawn = function(self, ...)
 end
 
 MapScene.addSystems = function(self)
-	local ecs = self:getECS();
-
-	-- Before physics
-	ecs:addSystem(PhysicsBodySystem:new(ecs));
-	ecs:addSystem(TouchTriggerSystem:new(ecs));
-	ecs:addSystem(CollisionSystem:new(ecs));
-	ecs:addSystem(LocomotionSystem:new(ecs));
-	ecs:addSystem(HitboxSystem:new(ecs));
-	ecs:addSystem(WeakboxSystem:new(ecs));
-	ecs:addSystem(ParentSystem:new(ecs));
-
-	-- After physics
-
-	-- Before scripts
-	ecs:addSystem(BehaviorSystem:new(ecs));
-	ecs:addSystem(SpriteSystem:new(ecs)); -- (also has some duringScripts and afterScripts logic)
-	ecs:addSystem(MovementAISystem:new(ecs, self._map:getNavigationMesh())); -- (also has some duringScripts logic)
-
-	-- During scripts
-	ecs:addSystem(ScriptRunnerSystem:new(ecs)); -- (also has dome beforeScripts logic)
-	ecs:addSystem(InputListenerSystem:new(ecs));
-
-	-- After scripts
-	ecs:addSystem(WorldWidgetSystem:new(ecs));
-
-	-- Before draw
-	ecs:addSystem(DebugDrawSystem:new(ecs));
-
-	-- Draw
-	ecs:addSystem(DrawableSystem:new(ecs));
 end
 
 MapScene.update = function(self, dt)
@@ -172,8 +175,6 @@ MapScene.update = function(self, dt)
 
 	self._ecs:runFramePortion("afterScripts", dt);
 
-	self._ecs:runFramePortion("beforeDraw", dt);
-
 	self._camera:update(dt);
 end
 
@@ -187,11 +188,9 @@ MapScene.draw = function(self)
 	local ox, oy = self._camera:getRenderOffset();
 	love.graphics.translate(ox, oy);
 
-	self._map:drawBelowEntities();
+	self._ecs:runFramePortion("beforeDraw");
 	self._ecs:runFramePortion("draw");
-	self._map:drawAboveEntities();
 	self._ecs:runFramePortion("afterDraw");
-	self._map:drawDebug();
 
 	love.graphics.pop();
 end
@@ -202,14 +201,6 @@ end
 
 MapScene.getCamera = function(self)
 	return self._camera;
-end
-
-MapScene.getMap = function(self)
-	return self._map;
-end
-
-MapScene.getMapName = function(self)
-	return self._mapName;
 end
 
 CLI:registerCommand("loadMap mapName:string", function(mapName)
@@ -256,7 +247,7 @@ local spawn = function(className)
 	end
 	assert(player);
 
-	local map = currentScene:getMap();
+	local map = currentScene:getECS():getSystem(MapSystem):getMap();
 	assert(map);
 	local navigationMesh = map:getNavigationMesh();
 	assert(navigationMesh);

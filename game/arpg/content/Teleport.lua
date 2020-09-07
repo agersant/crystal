@@ -3,6 +3,7 @@ local Module = require("engine/Module");
 local PartyMember = require("arpg/persistence/party/PartyMember");
 local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/Scene");
+local MapSystem = require("engine/mapscene/MapSystem");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local TouchTrigger = require("engine/mapscene/physics/TouchTrigger");
@@ -86,8 +87,10 @@ Teleport.init = function(self, scene, options)
 	self._targetX = options.targetX;
 	self._targetY = options.targetY;
 
-	local mapWidth = scene:getMap():getWidthInPixels();
-	local mapHeight = scene:getMap():getHeightInPixels();
+	local map = scene:getECS():getSystem(MapSystem):getMap();
+	local mapWidth = map:getWidthInPixels();
+	local mapHeight = map:getHeightInPixels();
+
 	local left = math.abs(options.x);
 	local top = math.abs(options.y);
 	local right = math.abs(mapWidth - options.x);

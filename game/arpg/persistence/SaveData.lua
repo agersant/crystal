@@ -5,6 +5,7 @@ local PartyMember = require("arpg/persistence/party/PartyMember");
 local PartyMemberData = require("arpg/persistence/party/PartyMemberData");
 local BaseSaveData = require("engine/persistence/BaseSaveData");
 local Scene = require("engine/Scene");
+local MapSystem = require("engine/mapscene/MapSystem");
 
 local SaveData = Class("SaveData", BaseSaveData);
 
@@ -75,7 +76,9 @@ SaveData.save = function(self)
 		local x, y = partyLeader:getPosition();
 		assert(x);
 		assert(y);
-		self:setLocation(field:getMapName(), x, y);
+		local mapSystem = field:getECS():getSystem(MapSystem);
+		assert(mapSystem);
+		self:setLocation(mapSystem:getMap():getName(), x, y);
 	end
 end
 

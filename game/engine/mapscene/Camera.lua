@@ -1,5 +1,6 @@
 require("engine/utils/OOP");
 local GFXConfig = require("engine/graphics/GFXConfig");
+local MapSystem = require("engine/mapscene/MapSystem");
 local InputListener = require("engine/mapscene/behavior/InputListener");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local MathUtils = require("engine/utils/MathUtils");
@@ -12,7 +13,7 @@ local Camera = Class("Camera");
 local epsilon = 0.001;
 
 local getMapSize = function(self)
-	local map = self._scene:getMap();
+	local map = self._scene:getECS():getSystem(MapSystem):getMap();
 	local mapWidth = map:getWidthInPixels();
 	local mapHeight = map:getHeightInPixels();
 	return mapWidth, mapHeight;

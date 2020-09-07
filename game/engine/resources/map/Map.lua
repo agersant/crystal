@@ -52,7 +52,13 @@ end
 
 -- PUBLIC API
 
-Map.init = function(self, mapData, tileset)
+Map.init = function(self, mapName, mapData, tileset)
+
+	assert(mapName);
+	assert(mapData);
+	assert(tileset);
+
+	self._mapName = mapName;
 	self._tileset = tileset;
 	self._staticLayers = {};
 	self._dynamicLayers = {};
@@ -79,6 +85,10 @@ Map.init = function(self, mapData, tileset)
 	end
 
 	self._collisionMesh, self._navigationMesh = MeshBuilder:buildMesh();
+end
+
+Map.getName = function(self)
+	return self._mapName;
 end
 
 Map.spawnCollisionMeshBody = function(self, scene)
