@@ -120,9 +120,9 @@ MapScene.init = function(self, mapName)
 
 	-- After scripts
 	ecs:addSystem(WorldWidgetSystem:new(ecs));
-	ecs:addSystem(CameraSystem:new(ecs, self)); -- (also has beforeDraw logic)
 
 	-- Before draw
+	ecs:addSystem(CameraSystem:new(ecs, self)); -- (also has afterScripts logic)
 	ecs:addSystem(MapSystem:new(ecs, map));
 	ecs:addSystem(DebugDrawSystem:new(ecs));
 
@@ -181,7 +181,7 @@ MapScene.draw = function(self)
 	love.graphics.push();
 
 	self._ecs:notifySystems("beforeDraw");
-	self._ecs:notifySystems("draw");
+	self._ecs:notifySystems("duringDraw");
 	self._ecs:notifySystems("afterDraw");
 
 	love.graphics.pop();

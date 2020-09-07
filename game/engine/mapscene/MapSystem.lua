@@ -20,7 +20,7 @@ MapSystem.sceneInit = function(self)
 	self._map:spawnEntities(self._ecs);
 end
 
-MapSystem.draw = function(self)
+MapSystem.beforeDraw = function(self)
 	self._map:drawBelowEntities();
 end
 
