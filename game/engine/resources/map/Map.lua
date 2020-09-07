@@ -153,12 +153,8 @@ Map.getAreaInTiles = function(self)
 	return self._width * self._height;
 end
 
-Map.findPath = function(self, startX, startY, targetX, targetY)
-	return self._navigationMesh:findPath(startX, startY, targetX, targetY);
-end
-
-Map.getNearestPointOnNavmesh = function(self, x, y)
-	return self._navigationMesh:getNearestPointOnNavmesh(x, y);
+Map.getNavigationMesh = function(self)
+	return self._navigationMesh;
 end
 
 return Map;

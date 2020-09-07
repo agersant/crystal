@@ -7,14 +7,16 @@ local NavigationSuccessEvent = require("engine/mapscene/behavior/ai/NavigationSu
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local Locomotion = require("engine/mapscene/physics/Locomotion");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
+local NavigationMesh = require("engine/resources/map/NavigationMesh");
 local MathUtils = require("engine/utils/MathUtils");
 
 local MovementAISystem = Class("MovementAISystem", System);
 
-MovementAISystem.init = function(self, ecs, map)
-	assert(map);
+MovementAISystem.init = function(self, ecs, navigationMesh)
+	assert(navigationMesh);
+	assert(navigationMesh:isInstanceOf(NavigationMesh));
 	MovementAISystem.super.init(self, ecs);
-	self._map = map;
+	self._navigationMesh = navigationMesh;
 	self._query = AllComponents:new({Locomotion, PhysicsBody, MovementAI});
 	self._withScriptRunner = AllComponents:new({MovementAI, ScriptRunner});
 	self:getECS():addQuery(self._query);
@@ -57,7 +59,7 @@ MovementAISystem.beforeScripts = function(self, dt)
 				if movementAI:needsRepath() then
 					local x, y = physicsBody:getPosition();
 					local targetX, targetY = goal:getPosition();
-					local _, newPath = self._map:findPath(x, y, targetX, targetY);
+					local _, newPath = self._navigationMesh:findPath(x, y, targetX, targetY);
 					movementAI:setPath(newPath);
 				else
 					movementAI:setPathAge(movementAI:getPathAge() + dt);

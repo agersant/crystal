@@ -135,7 +135,7 @@ MapScene.addSystems = function(self)
 	-- Before scripts
 	ecs:addSystem(BehaviorSystem:new(ecs));
 	ecs:addSystem(SpriteSystem:new(ecs)); -- (also has some duringScripts and afterScripts logic)
-	ecs:addSystem(MovementAISystem:new(ecs, self._map)); -- (also has some duringScripts logic)
+	ecs:addSystem(MovementAISystem:new(ecs, self._map:getNavigationMesh())); -- (also has some duringScripts logic)
 
 	-- During scripts
 	ecs:addSystem(ScriptRunnerSystem:new(ecs)); -- (also has dome beforeScripts logic)
@@ -258,6 +258,8 @@ local spawn = function(className)
 
 	local map = currentScene:getMap();
 	assert(map);
+	local navigationMesh = map:getNavigationMesh();
+	assert(navigationMesh);
 
 	local class = Class:getByName(className);
 	assert(class);
@@ -271,7 +273,7 @@ local spawn = function(className)
 		local radius = 40;
 		x = x + radius * math.cos(angle);
 		y = y + radius * math.sin(angle);
-		x, y = map:getNearestPointOnNavmesh(x, y);
+		x, y = navigationMesh:getNearestPointOnNavmesh(x, y);
 		physicsBody:setPosition(x, y);
 	end
 end
