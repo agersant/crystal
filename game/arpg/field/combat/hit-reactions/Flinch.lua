@@ -13,25 +13,18 @@ Flinch.init = function(self)
 	Flinch.super.init(self);
 end
 
-local restorePhysics = function(self)
-	local dampingX, dampingY = self:getBody():getLinearDamping();
-	return function()
-		self:getBody():setLinearDamping(dampingX, dampingY);
-		self:setAltitude(0);
-	end
-end
-
 local smallFlinch = function(self, direction)
 	if self:getComponent(Locomotion) then
 		self:scope(self:disableLocomotion());
 	end
 
-	local collision = self:getComponent(Collision);
-	if collision then
+	if self:getComponent(Collision) then
 		self:scope(self:pushCollisionState());
-		collision:setIgnoreOthers(true);
-		collision:setRestitution(.4);
+		self:setIgnoreOthers(true);
+		self:setRestitution(.4);
 	end
+
+	self:scope(self:pushPhysicsBodyState());
 
 	local dx = math.cos(direction);
 	local dy = math.sin(direction);
@@ -48,14 +41,14 @@ local largeFlinch = function(self, direction)
 	if self:getComponent(Locomotion) then
 		self:scope(self:disableLocomotion());
 	end
-	self:scope(restorePhysics(self));
 
-	local collision = self:getComponent(Collision);
-	if collision then
+	if self:getComponent(Collision) then
 		self:scope(self:pushCollisionState());
-		collision:setIgnoreOthers(true);
-		collision:setRestitution(.4);
+		self:setIgnoreOthers(true);
+		self:setRestitution(.4);
 	end
+
+	self:scope(self:pushPhysicsBodyState());
 
 	self:wait(6 * 1 / 60);
 

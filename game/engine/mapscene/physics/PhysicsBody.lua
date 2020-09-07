@@ -4,6 +4,31 @@ local MathUtils = require("engine/utils/MathUtils");
 
 local PhysicsBody = Class("PhysicsBody", Component);
 
+local getState = function(self)
+	local x, y = self:getPosition();
+	local vx, vy = self:getLinearVelocity();
+	local dampingX, dampingY = self:getLinearDamping();
+	return {
+		x = x,
+		y = y,
+		vx = vx,
+		vy = vy,
+		dampingX = dampingX,
+		dampingY = dampingY,
+		altitude = self:getAltitude(),
+		angle = self:getAngle(),
+	};
+end
+
+local setState = function(self, state)
+	if state.x and state.y then
+		self:setPosition(state.x, state.y);
+	end
+	self:setLinearVelocity(state.vx, state.vy);
+	self:setAltitude(state.altitude);
+	self:setAngle(state.angle);
+end
+
 PhysicsBody.init = function(self, physicsWorld, bodyType)
 	PhysicsBody.super.init(self);
 	self._body = love.physics.newBody(physicsWorld, 0, 0, bodyType);
@@ -12,6 +37,17 @@ PhysicsBody.init = function(self, physicsWorld, bodyType)
 	self._body:setActive(false);
 	self:setDirection8(1, 0);
 	self._altitude = 0;
+end
+
+PhysicsBody.pushPhysicsBodyState = function(self, options)
+	local state = getState(self);
+	if not options or not options.includePosition then
+		state.x = nil;
+		state.y = nil;
+	end
+	return function()
+		setState(self, state);
+	end
 end
 
 PhysicsBody.getBody = function(self)
@@ -84,6 +120,18 @@ end
 
 PhysicsBody.setLinearVelocity = function(self, x, y)
 	self._body:setLinearVelocity(x, y);
+end
+
+PhysicsBody.getLinearVelocity = function(self)
+	return self._body:getLinearVelocity();
+end
+
+PhysicsBody.setLinearDamping = function(self, x, y)
+	self._body:setLinearDamping(x, y);
+end
+
+PhysicsBody.getLinearDamping = function(self)
+	return self._body:getLinearDamping();
 end
 
 PhysicsBody.distanceToEntity = function(self, entity)
