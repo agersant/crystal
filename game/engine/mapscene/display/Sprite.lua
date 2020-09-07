@@ -23,6 +23,7 @@ Sprite.setSpritePosition = function(self, x, y)
 	self._y = y;
 end
 
+-- TODO support blocking version for usage in scripts
 Sprite.setAnimation = function(self, animationName, forceRestart)
 	local animation = self._sheet:getAnimation(animationName);
 	if not animation then

@@ -41,7 +41,7 @@ local smallFlinch = function(self, direction)
 	local collision = self:getComponent(Collision);
 	if collision then
 		local fixture = collision:getFixture();
-		fixture:setMask(CollisionFilters.SOLID);
+		fixture:setMask(CollisionFilters.SOLID); -- TODO don't poke around fixture internals from outside Collision component
 		fixture:setRestitution(.4);
 	end
 
