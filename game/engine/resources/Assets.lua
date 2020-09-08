@@ -61,8 +61,8 @@ end
 local loadTileset = function(self, mapPath, tilesetData)
 	local tilesetPath = tilesetData.image;
 	tilesetPath = StringUtils.mergePaths(StringUtils.stripFileFromPath(mapPath), tilesetPath);
-	local tilesetImage = loadAsset(self, tilesetPath, mapPath);
-	local tileset = Tileset:new(tilesetData, tilesetImage);
+	local image = loadAsset(self, tilesetPath, mapPath);
+	local tileset = Tileset:new(tilesetData, image);
 	return tileset;
 end
 
@@ -93,16 +93,16 @@ end
 
 local loadSpritesheet = function(self, path, sheetData)
 	assert(sheetData.type == "spritesheet");
-	local texturePath = sheetData.content.texture;
-	local textureImage = loadAsset(self, texturePath, path);
-	local spritesheet = Spritesheet:new(sheetData, textureImage);
+	local imagePath = sheetData.content.texture;
+	local image = loadAsset(self, imagePath, path);
+	local spritesheet = Spritesheet:new(sheetData, image);
 	return "spritesheet", spritesheet;
 end
 
 local unloadSpritesheet = function(self, path, sheetData)
 	assert(sheetData.type == "spritesheet");
-	local texturePath = sheetData.content.texture;
-	unloadAsset(self, texturePath, path);
+	local imagePath = sheetData.content.texture;
+	unloadAsset(self, imagePath, path);
 end
 
 -- PACKAGE
@@ -317,6 +317,10 @@ end
 
 Assets.getMap = function(self, path)
 	return getAsset(self, "map", path);
+end
+
+Assets.getImage = function(self, path)
+	return getAsset(self, "image", path);
 end
 
 Assets.getSpritesheet = function(self, path)

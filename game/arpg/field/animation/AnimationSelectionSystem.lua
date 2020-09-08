@@ -6,7 +6,7 @@ local Flinch = require("arpg/field/combat/hit-reactions/Flinch");
 local System = require("engine/ecs/System");
 local AllComponents = require("engine/ecs/query/AllComponents");
 local Actor = require("engine/mapscene/behavior/Actor");
-local Sprite = require("engine/mapscene/display/Sprite");
+local SpriteAnimator = require("engine/mapscene/display/SpriteAnimator");
 local Locomotion = require("engine/mapscene/physics/Locomotion");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 
@@ -14,9 +14,9 @@ local AnimationSelectionSystem = Class("AnimationSelectionSystem", System);
 
 AnimationSelectionSystem.init = function(self, ecs)
 	AnimationSelectionSystem.super.init(self, ecs);
-	self._idles = AllComponents:new({Sprite, PhysicsBody, IdleAnimation});
-	self._walks = AllComponents:new({Sprite, PhysicsBody, Locomotion, WalkAnimation});
-	self._flinches = AllComponents:new({Sprite, PhysicsBody, Flinch, FlinchAnimation});
+	self._idles = AllComponents:new({SpriteAnimator, PhysicsBody, IdleAnimation});
+	self._walks = AllComponents:new({SpriteAnimator, PhysicsBody, Locomotion, WalkAnimation});
+	self._flinches = AllComponents:new({SpriteAnimator, PhysicsBody, Flinch, FlinchAnimation});
 	self:getECS():addQuery(self._idles);
 	self:getECS():addQuery(self._walks);
 	self:getECS():addQuery(self._flinches);
@@ -37,9 +37,9 @@ AnimationSelectionSystem.afterScripts = function(self)
 			local flinchAnimation = entity:getComponent(FlinchAnimation);
 			local animation = flinchAnimation:getFlinchAnimation();
 			if animation then
-				local sprite = entity:getComponent(Sprite);
+				local animator = entity:getComponent(SpriteAnimator);
 				local physicsBody = entity:getComponent(PhysicsBody);
-				sprite:setAnimation(animation .. "_" .. physicsBody:getDirection4());
+				animator:setAnimation(animation .. "_" .. physicsBody:getDirection4());
 				walkEntities[entity] = nil;
 				idleEntities[entity] = nil;
 			end
@@ -55,9 +55,9 @@ AnimationSelectionSystem.afterScripts = function(self)
 			if not actor or actor:isIdle() then
 				local animation = walkAnimation:getWalkAnimation();
 				if animation then
-					local sprite = entity:getComponent(Sprite);
+					local animator = entity:getComponent(SpriteAnimator);
 					local physicsBody = entity:getComponent(PhysicsBody);
-					sprite:setAnimation(animation .. "_" .. physicsBody:getDirection4());
+					animator:setAnimation(animation .. "_" .. physicsBody:getDirection4());
 					idleEntities[entity] = nil;
 				end
 			end
@@ -71,9 +71,9 @@ AnimationSelectionSystem.afterScripts = function(self)
 		if not actor or actor:isIdle() then
 			local animation = idleAnimation:getIdleAnimation();
 			if animation then
-				local sprite = entity:getComponent(Sprite);
+				local animator = entity:getComponent(SpriteAnimator);
 				local physicsBody = entity:getComponent(PhysicsBody);
-				sprite:setAnimation(animation .. "_" .. physicsBody:getDirection4());
+				animator:setAnimation(animation .. "_" .. physicsBody:getDirection4());
 			end
 		end
 	end

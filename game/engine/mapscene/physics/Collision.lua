@@ -9,7 +9,7 @@ local updateFilterData = function(self)
 	local collideWith = 0;
 	if self._enabled then
 		collideWith = collideWith + CollisionFilters.GEO;
-		if not self._ignoreOthers then
+		if self._collideWithOthers then
 			collideWith = collideWith + CollisionFilters.SOLID;
 		end
 		collideWith = collideWith + CollisionFilters.TRIGGER;

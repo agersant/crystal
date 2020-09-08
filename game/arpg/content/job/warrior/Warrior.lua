@@ -14,6 +14,7 @@ local Assets = require("engine/resources/Assets");
 local Actor = require("engine/mapscene/behavior/Actor");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local Sprite = require("engine/mapscene/display/Sprite");
+local SpriteAnimator = require("engine/mapscene/display/SpriteAnimator");
 local Locomotion = require("engine/mapscene/physics/Locomotion");
 local Collision = require("engine/mapscene/physics/Collision");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
@@ -38,7 +39,8 @@ Warrior.init = function(self, scene)
 	Warrior.super.init(self, scene);
 
 	local sheet = Assets:getSpritesheet("arpg/assets/spritesheet/duran.lua");
-	self:addComponent(Sprite:new(sheet));
+	local sprite = self:addComponent(Sprite:new());
+	self:addComponent(SpriteAnimator:new(sprite, sheet));
 	self:addComponent(CommonShader:new());
 	self:addComponent(FlinchAnimation:new("knockback"));
 	self:addComponent(IdleAnimation:new("idle"));

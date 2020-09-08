@@ -22,8 +22,7 @@ local getComboSwingAction = function(swingCount)
 		local onHitEffects = {FlinchEffect:new(flinchAmount)};
 		self:setDamagePayload({DamageUnit:new(1)}, onHitEffects);
 
-		self:setAnimation("attack_" .. self:getDirection4() .. "_" .. swingCount, true);
-		self:waitFor("animationEnd");
+		self:join(self:playAnimation("attack_" .. self:getDirection4() .. "_" .. swingCount, true));
 	end
 end
 
