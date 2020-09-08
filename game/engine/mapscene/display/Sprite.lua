@@ -23,6 +23,10 @@ Sprite.setFrame = function(self, frame)
 	self._frame = frame;
 end
 
+Sprite.getFrame = function(self)
+	return self._frame;
+end
+
 Sprite.draw = function(self)
 	Sprite.super.draw();
 	if not self._frame then

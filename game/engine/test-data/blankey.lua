@@ -33,7 +33,7 @@ return {
 			},
 
 			["hurt"] = {
-				loop = true,
+				loop = false,
 				frames = {
 
 					{id = "frame_4", duration = 0.1, ox = 16, oy = 16, tags = {["test"] = {rect = {x = -5, y = -6, w = 11, h = 11}}}},

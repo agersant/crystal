@@ -90,7 +90,7 @@
             ]
           }
         ],
-        "is_looping": true
+        "is_looping": false
       }
     ],
     "export_settings": {
