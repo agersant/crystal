@@ -47,9 +47,9 @@ Warrior.init = function(self, scene)
 	self:addComponent(ScriptRunner:new());
 	self:addComponent(Actor:new());
 
-	self:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local physicsBody = self:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	self:addComponent(Locomotion:new());
-	self:addComponent(Collision:new(self:getComponent(PhysicsBody), 6));
+	self:addComponent(Collision:new(physicsBody, 6));
 
 	self:addComponent(CombatData:new());
 	self:addComponent(DamageIntent:new());

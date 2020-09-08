@@ -17,9 +17,9 @@ tests[#tests].body = function(context)
 	local scene = MapScene:new("engine/test-data/empty_map.lua");
 
 	local entityA = scene:spawn(Entity);
-	entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local physicsBodyA = entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	entityA:setPosition(40, 40);
-	entityA:addComponent(Collision:new(entityA:getComponent(PhysicsBody), 10));
+	entityA:addComponent(Collision:new(physicsBodyA, 10));
 
 	local entityB = scene:spawn(Entity);
 	entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
@@ -36,9 +36,9 @@ tests[#tests].body = function(context)
 	entityC:addComponent(weakbox);
 
 	local entityD = scene:spawn(Entity);
-	entityD:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local physicsBodyD = entityD:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	entityD:setPosition(160, 40);
-	local touchTrigger = TouchTrigger:new(entityD:getComponent(PhysicsBody), love.physics.newCircleShape(10));
+	local touchTrigger = TouchTrigger:new(physicsBodyD, love.physics.newCircleShape(10));
 	entityD:addComponent(touchTrigger);
 
 	cli:execute("showPhysicsOverlay");
