@@ -30,6 +30,8 @@ local quad = {
 	end,
 };
 
+local shader = {send = noop, sendColor = noop};
+
 mockAPI.getWidth = function()
 	return 1;
 end
@@ -44,6 +46,10 @@ end
 
 mockAPI.newImage = function()
 	return image;
+end
+
+mockAPI.newShader = function()
+	return shader;
 end
 
 mockAPI.newSpriteBatch = function()

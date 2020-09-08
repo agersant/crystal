@@ -11,7 +11,16 @@ tests[#tests].body = function()
 	Assets:unload(mapName);
 end
 
-tests[#tests + 1] = {name = "Load spritesheet", gfx = "mock"};
+tests[#tests + 1] = {name = "Load shader", gfx = "on"};
+tests[#tests].body = function()
+	local shaderPath = "engine/test-data/TestAssets/shader.glsl";
+	Assets:load(shaderPath);
+	local shader = Assets:getShader(shaderPath);
+	assert(shader);
+	Assets:unload(shaderPath);
+end
+
+tests[#tests + 1] = {name = "Load spritesheet", gfx = "on"};
 tests[#tests].body = function()
 	local sheetName = "engine/test-data/blankey.lua";
 	Assets:load(sheetName);

@@ -48,6 +48,7 @@ end
 
 local loadShader = function(self, path)
 	local shaderCode = love.filesystem.read(path);
+	assert(shaderCode);
 	local shader = love.graphics.newShader(shaderCode);
 	return "shader", shader;
 end
@@ -292,18 +293,22 @@ Assets.init = function(self)
 end
 
 Assets.load = function(self, path)
+	assert(type(path) == "string")
 	loadAsset(self, path, "user");
 end
 
 Assets.isAssetLoaded = function(self, path)
+	assert(type(path) == "string");
 	return isAssetLoaded(self, path);
 end
 
 Assets.refresh = function(self, path)
+	assert(type(path) == "string");
 	refreshAsset(self, path);
 end
 
 Assets.unload = function(self, path)
+	assert(type(path) == "string");
 	unloadAsset(self, path, "user");
 end
 
@@ -316,18 +321,22 @@ Assets.unloadAll = function(self)
 end
 
 Assets.getMap = function(self, path)
+	assert(type(path) == "string");
 	return getAsset(self, "map", path);
 end
 
 Assets.getImage = function(self, path)
+	assert(type(path) == "string");
 	return getAsset(self, "image", path);
 end
 
 Assets.getSpritesheet = function(self, path)
+	assert(type(path) == "string");
 	return getAsset(self, "spritesheet", path);
 end
 
 Assets.getShader = function(self, path)
+	assert(type(path) == "string");
 	return getAsset(self, "shader", path);
 end
 
