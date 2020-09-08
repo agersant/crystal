@@ -18,6 +18,27 @@ tests[#tests].body = function()
 	assert(sprite:getFrame());
 end
 
+tests[#tests + 1] = {name = "Cycles through animation frames", gfx = "mock"};
+tests[#tests].body = function()
+	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local sheet = Assets:getSpritesheet("engine/test-data/blankey.lua");
+
+	local entity = scene:spawn(Entity);
+	local sprite = entity:addComponent(Sprite:new());
+	local animator = entity:addComponent(SpriteAnimator:new(sprite, sheet));
+	entity:addComponent(ScriptRunner:new());
+
+	animator:playAnimation("floating");
+
+	local animation = sheet:getAnimation("floating");
+	assert(animation:getFrameAtTime(0) ~= animation:getFrameAtTime(0.5));
+
+	for t = 0, 500 do
+		assert(sprite:getFrame() == animation:getFrameAtTime(t * 1 / 60):getFrame());
+		scene:update(1 / 60);
+	end
+end
+
 tests[#tests + 1] = {name = "Animation blocks script", gfx = "mock"};
 tests[#tests].body = function()
 	local scene = MapScene:new("engine/test-data/empty_map.lua");
