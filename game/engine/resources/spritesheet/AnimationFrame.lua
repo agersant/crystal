@@ -2,12 +2,10 @@ require("engine/utils/OOP");
 
 local AnimationFrame = Class("AnimationFrame");
 
--- PUBLIC API
-
-AnimationFrame.init = function(self, sheetFrame, animationFrameData)
+AnimationFrame.init = function(self, image, animationFrameData)
 	assert(animationFrameData.ox);
 	assert(animationFrameData.oy);
-	self._sheetFrame = sheetFrame;
+	self._image = image;
 	self._duration = animationFrameData.duration;
 	self._ox = animationFrameData.ox;
 	self._oy = animationFrameData.oy;
@@ -49,8 +47,8 @@ AnimationFrame.getDuration = function(self)
 	return self._duration;
 end
 
-AnimationFrame.getSheetFrame = function(self)
-	return self._sheetFrame;
+AnimationFrame.getImage = function(self)
+	return self._image;
 end
 
 AnimationFrame.getTagShape = function(self, tagName)

@@ -18,14 +18,12 @@ tests[#tests].body = function()
 
 	local sheet = Assets:getSpritesheet(sheetName);
 	assert(sheet);
-	assert(sheet:getImage());
-	assert(sheet:getFrame("frame_0"));
 
-	local animation = sheet:getAnimation(sheet:getDefaultAnimationName());
+	local animation = sheet:getAnimation("hurt");
 	assert(animation:getDuration());
 
 	local animationFrame = animation:getFrameAtTime(0);
-	assert(animationFrame:getSheetFrame());
+	assert(animationFrame:getImage());
 	assert(animationFrame:getDuration());
 	assert(animationFrame:getTagShape("test"));
 	local ox, oy = animationFrame:getOrigin();

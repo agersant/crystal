@@ -3,16 +3,15 @@ local AnimationFrame = require("engine/resources/spritesheet/AnimationFrame");
 
 local Animation = Class("Animation");
 
--- PUBLIC API
-
-Animation.init = function(self, sheet, animationData)
+Animation.init = function(self, frames, animationData)
 	self._loop = animationData.loop;
 	self._animationFrames = {};
 	self._duration = 0;
 	for k, frameData in pairs(animationData.frames) do
 		frameData.duration = frameData.duration or 1;
-		local sheetFrame = sheet:getFrame(frameData.id);
-		local animationFrame = AnimationFrame:new(sheetFrame, frameData);
+		local image = frames[frameData.id];
+		assert(image);
+		local animationFrame = AnimationFrame:new(image, frameData);
 		table.insert(self._animationFrames, animationFrame);
 		self._duration = self._duration + frameData.duration;
 	end
@@ -21,6 +20,10 @@ end
 
 Animation.getDuration = function(self)
 	return self._duration;
+end
+
+Animation.isLooping = function(self)
+	return self._loop;
 end
 
 Animation.getFrameAtTime = function(self, t)
