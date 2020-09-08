@@ -22,18 +22,14 @@ tests[#tests].body = function(context)
 	entityA:addComponent(Collision:new(physicsBodyA, 10));
 
 	local entityB = scene:spawn(Entity);
-	entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local physicsBodyB = entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	entityB:setPosition(80, 40);
-	local hitbox = Hitbox:new();
-	hitbox:setShape(entityB:getBody(), love.physics.newRectangleShape(20, 20));
-	entityB:addComponent(hitbox);
+	entityB:addComponent(Hitbox:new(physicsBodyB, love.physics.newRectangleShape(20, 20)));
 
 	local entityC = scene:spawn(Entity);
-	entityC:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local physicsBodyC = entityC:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	entityC:setPosition(120, 40);
-	local weakbox = Weakbox:new();
-	weakbox:setShape(entityC:getBody(), love.physics.newRectangleShape(20, 20));
-	entityC:addComponent(weakbox);
+	entityC:addComponent(Weakbox:new(physicsBodyC, love.physics.newRectangleShape(20, 20)));
 
 	local entityD = scene:spawn(Entity);
 	local physicsBodyD = entityD:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));

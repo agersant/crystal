@@ -1,31 +1,48 @@
 require("engine/utils/OOP");
 local Component = require("engine/ecs/Component");
+local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 
 local Hitbox = Class("Hitbox", Component);
 
-Hitbox.init = function(self)
+local updateFilterData = function(self)
+	if self._fixture then
+		local collideWith = self._enabled and CollisionFilters.WEAKBOX or 0;
+		self._fixture:setFilterData(CollisionFilters.HITBOX, collideWith, 0);
+	end
+end
+
+local updateFixture = function(self)
+	assert(self._body);
+	if self._fixture then
+		self._fixture:destroy();
+		self._fixture = nil;
+	end
+	if self._shape then
+		self._fixture = love.physics.newFixture(self._body, self._shape, 0);
+		self._fixture:setSensor(true);
+		self._fixture:setUserData(self);
+		updateFilterData(self);
+	end
+end
+
+Hitbox.init = function(self, physicsBody, shape)
 	Hitbox.super.init(self);
-	self._shape = nil;
+	assert(physicsBody);
+	assert(physicsBody:isInstanceOf(PhysicsBody));
+	self._enabled = false;
+	self._body = physicsBody:getBody();
+	self._shape = shape;
+	updateFixture(self);
 end
 
-Hitbox.setShape = function(self, body, shape)
-	assert(body);
-	assert(shape);
-	if self._fixture then
-		self._fixture:destroy();
-		self._fixture = nil;
-	end
-	self._fixture = love.physics.newFixture(body, shape, 0);
-	self._fixture:setFilterData(CollisionFilters.HITBOX, CollisionFilters.WEAKBOX, 0);
-	self._fixture:setSensor(true);
-	self._fixture:setUserData(self);
+Hitbox.setEnabled = function(self, enabled)
+	self._enabled = enabled;
+	updateFilterData(self);
 end
 
-Hitbox.clearShape = function(self)
-	if self._fixture then
-		self._fixture:destroy();
-		self._fixture = nil;
-	end
+Hitbox.setShape = function(self, shape)
+	self._shape = shape;
+	updateFixture(self);
 end
 
 Hitbox.onBeginTouch = function(self, otherComponent)

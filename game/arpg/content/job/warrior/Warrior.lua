@@ -53,8 +53,8 @@ Warrior.init = function(self, scene)
 
 	self:addComponent(CombatData:new());
 	self:addComponent(DamageIntent:new());
-	self:addComponent(CombatHitbox:new());
-	self:addComponent(Weakbox:new());
+	self:addComponent(CombatHitbox:new(physicsBody));
+	self:addComponent(Weakbox:new(physicsBody));
 
 	self:addComponent(HitBlink:new());
 	self:addComponent(Flinch:new());

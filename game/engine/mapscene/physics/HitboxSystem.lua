@@ -16,21 +16,20 @@ HitboxSystem.init = function(self, ecs)
 end
 
 HitboxSystem.beforePhysics = function(self, dt)
+	for hitbox in pairs(self._query:getAddedComponents(Hitbox)) do
+		hitbox:setEnabled(true);
+	end
+
 	for hitbox in pairs(self._query:getRemovedComponents(Hitbox)) do
-		hitbox:clearShape();
+		hitbox:setEnabled(false);
 	end
 
 	local entities = self._withSprite:getEntities();
 	for entity in pairs(entities) do
-		local body = entity:getComponent(PhysicsBody):getBody();
 		local sprite = entity:getComponent(Sprite);
 		for hitbox in pairs(entity:getComponents(Hitbox)) do
 			local shape = sprite:getTagShape("hit");
-			if shape then
-				hitbox:setShape(body, shape);
-			else
-				hitbox:clearShape();
-			end
+			hitbox:setShape(shape);
 		end
 	end
 end

@@ -4,8 +4,8 @@ local Hitbox = require("engine/mapscene/physics/Hitbox");
 
 local CombatHitbox = Class("CombatHitbox", Hitbox);
 
-CombatHitbox.init = function(self)
-	CombatHitbox.super.init(self);
+CombatHitbox.init = function(self, physicsBody)
+	CombatHitbox.super.init(self, physicsBody);
 	self._targetsHit = {};
 end
 

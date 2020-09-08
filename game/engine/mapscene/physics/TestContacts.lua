@@ -15,8 +15,15 @@ tests[#tests].body = function()
 
 	local scene = MapScene:new("engine/test-data/empty_map.lua");
 
-	local hitbox = Hitbox:new();
-	local weakbox = Weakbox:new();
+	local entityA = scene:spawn(Entity);
+	local physicsBodyA = entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local hitbox = entityA:addComponent(Hitbox:new(physicsBodyA));
+	hitbox:setShape(love.physics.newRectangleShape(10, 10));
+
+	local entityB = scene:spawn(Entity);
+	local physicsBodyB = entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local weakbox = entityB:addComponent(Weakbox:new(physicsBodyB));
+	weakbox:setShape(love.physics.newRectangleShape(5, 5));
 
 	local touching = false;
 	hitbox.onBeginTouch = function(self, other)
@@ -29,16 +36,6 @@ tests[#tests].body = function()
 		assert(other == weakbox);
 		touching = false;
 	end
-
-	local entityA = scene:spawn(Entity);
-	entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	entityA:addComponent(hitbox);
-	hitbox:setShape(entityA:getBody(), love.physics.newRectangleShape(10, 10));
-
-	local entityB = scene:spawn(Entity);
-	entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	entityB:addComponent(weakbox);
-	weakbox:setShape(entityB:getBody(), love.physics.newRectangleShape(5, 5));
 
 	entityA:setPosition(40, 0);
 	assert(not touching);
@@ -60,8 +57,15 @@ tests[#tests].body = function()
 
 	local scene = MapScene:new("engine/test-data/empty_map.lua");
 
-	local hitbox = Hitbox:new();
-	local weakbox = Weakbox:new();
+	local entityA = scene:spawn(Entity);
+	local physicsBodyA = entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local hitbox = entityA:addComponent(Hitbox:new(physicsBodyA));
+	hitbox:setShape(love.physics.newRectangleShape(10, 10));
+
+	local entityB = scene:spawn(Entity);
+	local physicsBodyB = entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local weakbox = entityB:addComponent(Weakbox:new(physicsBodyB));
+	weakbox:setShape(love.physics.newRectangleShape(5, 5));
 
 	local touching = false;
 	hitbox.onBeginTouch = function(self, other)
@@ -74,16 +78,6 @@ tests[#tests].body = function()
 		assert(other == weakbox);
 		touching = false;
 	end
-
-	local entityA = scene:spawn(Entity);
-	entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	entityA:addComponent(hitbox);
-	hitbox:setShape(entityA:getBody(), love.physics.newRectangleShape(10, 10));
-
-	local entityB = scene:spawn(Entity);
-	entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	entityB:addComponent(weakbox);
-	weakbox:setShape(entityB:getBody(), love.physics.newRectangleShape(5, 5));
 
 	entityA:setPosition(40, 0);
 	assert(not touching);
