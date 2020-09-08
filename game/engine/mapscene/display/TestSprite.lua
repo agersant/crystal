@@ -14,10 +14,9 @@ end
 tests[#tests + 1] = {name = "Sprites can draw", gfx = "on"};
 tests[#tests].body = function(context)
 	local image = Assets:getImage("engine/test-data/blankey.png");
-	local frame = Frame:new(image);
 	local sprite = Sprite:new();
 	sprite:setSpritePosition(10, 10);
-	sprite:setFrame(frame);
+	sprite:setFrame(Frame:new(image));
 	sprite:draw();
 	context:compareFrame("engine/test-data/TestSprite/sprites-can-draw.png");
 end
