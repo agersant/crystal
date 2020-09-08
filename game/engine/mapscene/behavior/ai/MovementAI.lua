@@ -6,6 +6,7 @@ local Behavior = require("engine/mapscene/behavior/Behavior");
 
 local MovementAI = Class("MovementAI", Behavior);
 
+-- TODO rename to Navigation
 MovementAI.init = function(self)
 	MovementAI.super.init(self);
 	assert(self._script);
@@ -70,6 +71,7 @@ MovementAI.navigateToGoal = function(self)
 	end
 	local myGoal = self._goal;
 	self._navigationThread = self._script:addThreadAndRun(function(self)
+		-- TODO move actual work here instead of inside system
 		local result, resultGoal = self:waitForAny({"navigationSuccess", "navigationFailure"});
 		assert(resultGoal);
 		return resultGoal == myGoal and result == "navigationSuccess";
