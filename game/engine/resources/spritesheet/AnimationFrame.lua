@@ -2,17 +2,15 @@ require("engine/utils/OOP");
 
 local AnimationFrame = Class("AnimationFrame");
 
-AnimationFrame.init = function(self, image, animationFrameData)
-	assert(animationFrameData.ox);
-	assert(animationFrameData.oy);
-	self._image = image;
-	self._duration = animationFrameData.duration;
-	self._ox = animationFrameData.ox;
-	self._oy = animationFrameData.oy;
+AnimationFrame.init = function(self, frame, duration, tags)
+	assert(frame);
+	assert(duration);
+	self._frame = frame;
+	self._duration = duration;
 	self._tags = {};
 
-	if animationFrameData.tags then
-		for tagName, tagData in pairs(animationFrameData.tags) do
+	if tags then
+		for tagName, tagData in pairs(tags) do
 			assert(tagData.rect);
 			assert(type(tagData.rect.x) == "number");
 			assert(type(tagData.rect.y) == "number");
@@ -39,16 +37,12 @@ AnimationFrame.init = function(self, image, animationFrameData)
 
 end
 
-AnimationFrame.getOrigin = function(self)
-	return self._ox, self._oy;
-end
-
 AnimationFrame.getDuration = function(self)
 	return self._duration;
 end
 
-AnimationFrame.getImage = function(self)
-	return self._image;
+AnimationFrame.getFrame = function(self)
+	return self._frame;
 end
 
 AnimationFrame.getTagShape = function(self, tagName)

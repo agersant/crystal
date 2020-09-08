@@ -32,15 +32,15 @@ local getPathAndExtension = function(path)
 	return pathWithoutExtension, extension;
 end
 
--- TEXTURE
+-- IMAGE
 
-local loadTexture = function(self, path)
-	local texture = love.graphics.newImage(path);
-	texture:setFilter("nearest");
-	return "texture", texture;
+local loadImage = function(self, path)
+	local image = love.graphics.newImage(path);
+	image:setFilter("nearest");
+	return "image", image;
 end
 
-local unloadTexture = function(self, path)
+local unloadImage = function(self, path)
 	-- N/A
 end
 
@@ -61,8 +61,8 @@ end
 local loadTileset = function(self, mapPath, tilesetData)
 	local tilesetPath = tilesetData.image;
 	tilesetPath = StringUtils.mergePaths(StringUtils.stripFileFromPath(mapPath), tilesetPath);
-	local texture = loadAsset(self, tilesetPath, mapPath);
-	local tileset = Tileset:new(tilesetData, texture);
+	local image = loadAsset(self, tilesetPath, mapPath);
+	local tileset = Tileset:new(tilesetData, image);
 	return tileset;
 end
 
@@ -93,16 +93,16 @@ end
 
 local loadSpritesheet = function(self, path, sheetData)
 	assert(sheetData.type == "spritesheet");
-	local texturePath = sheetData.content.texture;
-	local texture = loadAsset(self, texturePath, path);
-	local spritesheet = Spritesheet:new(sheetData, texture);
+	local imagePath = sheetData.content.texture;
+	local image = loadAsset(self, imagePath, path);
+	local spritesheet = Spritesheet:new(sheetData, image);
 	return "spritesheet", spritesheet;
 end
 
 local unloadSpritesheet = function(self, path, sheetData)
 	assert(sheetData.type == "spritesheet");
-	local texturePath = sheetData.content.texture;
-	unloadAsset(self, texturePath, path);
+	local imagePath = sheetData.content.texture;
+	unloadAsset(self, imagePath, path);
 end
 
 -- PACKAGE
@@ -186,7 +186,7 @@ loadAsset = function(self, path, source)
 	if not isAssetLoaded(self, path) then
 		local assetData, assetType;
 		if extension == "png" then
-			assetType, assetData = loadTexture(self, path);
+			assetType, assetData = loadImage(self, path);
 		elseif extension == "lua" then
 			assetType, assetData = loadLuaFile(self, path);
 		elseif extension == "glsl" then
@@ -247,7 +247,7 @@ unloadAsset = function(self, path, source)
 
 	if self._loadedAssets[assetID].numSources == 0 then
 		if extension == "png" then
-			unloadTexture(self, path);
+			unloadImage(self, path);
 		elseif extension == "lua" then
 			unloadLuaFile(self, path);
 		elseif extension == "glsl" then
@@ -319,8 +319,8 @@ Assets.getMap = function(self, path)
 	return getAsset(self, "map", path);
 end
 
-Assets.getTexture = function(self, path)
-	return getAsset(self, "texture", path);
+Assets.getImage = function(self, path)
+	return getAsset(self, "image", path);
 end
 
 Assets.getSpritesheet = function(self, path)

@@ -1,19 +1,29 @@
 require("engine/utils/OOP");
 local AnimationFrame = require("engine/resources/spritesheet/AnimationFrame");
+local Frame = require("engine/resources/Frame");
 
 local Animation = Class("Animation");
 
-Animation.init = function(self, frames, animationData)
+Animation.init = function(self, texture, framesData, animationData)
 	self._loop = animationData.loop;
 	self._animationFrames = {};
 	self._duration = 0;
-	for k, frameData in pairs(animationData.frames) do
-		frameData.duration = frameData.duration or 1;
-		local image = frames[frameData.id];
-		assert(image);
-		local animationFrame = AnimationFrame:new(image, frameData);
+	for k, animationFrameData in pairs(animationData.frames) do
+		assert(animationFrameData.duration);
+		assert(animationFrameData.ox);
+		assert(animationFrameData.oy);
+		local ox = animationFrameData.ox;
+		local oy = animationFrameData.oy;
+		local frameData = framesData[animationFrameData.id];
+		assert(frameData);
+		assert(frameData.x);
+		assert(frameData.y);
+		assert(frameData.w);
+		assert(frameData.h);
+		local frame = Frame:new(texture, frameData.x, frameData.y, frameData.w, frameData.h, ox, oy);
+		local animationFrame = AnimationFrame:new(frame, animationFrameData.duration, animationFrameData.tags);
 		table.insert(self._animationFrames, animationFrame);
-		self._duration = self._duration + frameData.duration;
+		self._duration = self._duration + animationFrameData.duration;
 	end
 	assert(#self._animationFrames > 0);
 end

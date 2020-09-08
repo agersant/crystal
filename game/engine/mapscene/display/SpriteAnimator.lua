@@ -7,9 +7,8 @@ local SpriteAnimator = Class("SpriteAnimator", Behavior);
 local jumpToFrame = function(self, animationFrame)
 	assert(animationFrame);
 	self._animationFrame = animationFrame;
-	local image = animationFrame:getImage();
-	local originX, originY = animationFrame:getOrigin();
-	self._sprite:setImage(image, originX, originY);
+	local frame = animationFrame:getFrame();
+	self._sprite:setFrame(frame);
 end
 
 local playback = function(self, animation)

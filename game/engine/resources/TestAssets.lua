@@ -23,10 +23,10 @@ tests[#tests].body = function()
 	assert(animation:getDuration());
 
 	local animationFrame = animation:getFrameAtTime(0);
-	assert(animationFrame:getImage());
+	assert(animationFrame:getFrame());
 	assert(animationFrame:getDuration());
 	assert(animationFrame:getTagShape("test"));
-	local ox, oy = animationFrame:getOrigin();
+	local ox, oy = animationFrame:getFrame():getOrigin();
 	assert(ox);
 	assert(oy);
 

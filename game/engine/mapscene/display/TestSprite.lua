@@ -1,4 +1,4 @@
-local Image = require("engine/resources/Image");
+local Frame = require("engine/resources/Frame");
 local Sprite = require("engine/mapscene/display/Sprite");
 local Assets = require("engine/resources/Assets");
 
@@ -13,11 +13,11 @@ end
 
 tests[#tests + 1] = {name = "Sprites can draw", gfx = "on"};
 tests[#tests].body = function(context)
-	local texture = Assets:getTexture("engine/test-data/blankey.png");
-	local image = Image:new(texture);
+	local image = Assets:getImage("engine/test-data/blankey.png");
+	local frame = Frame:new(image);
 	local sprite = Sprite:new();
 	sprite:setSpritePosition(10, 10);
-	sprite:setImage(image);
+	sprite:setFrame(frame);
 	sprite:draw();
 	context:compareFrame("engine/test-data/TestSprite/sprites-can-draw.png");
 end

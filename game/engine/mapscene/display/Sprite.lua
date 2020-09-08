@@ -9,7 +9,7 @@ Sprite.init = function(self)
 	Sprite.super.init(self);
 	self._x = 0;
 	self._y = 0;
-	self._image = nil;
+	self._frame = nil;
 	self._originX = nil;
 	self._originY = nil;
 end
@@ -19,21 +19,20 @@ Sprite.setSpritePosition = function(self, x, y)
 	self._y = y;
 end
 
-Sprite.setImage = function(self, image, originX, originY)
-	self._image = image;
-	self._originX = originX;
-	self._originY = originY;
+Sprite.setFrame = function(self, frame)
+	self._frame = frame;
 end
 
 Sprite.draw = function(self)
 	Sprite.super.draw();
-	if not self._image then
+	if not self._frame then
 		return;
 	end
 	local snapTo = 1 / GFXConfig:getZoom();
 	local x = MathUtils.roundTo(self._x, snapTo);
 	local y = MathUtils.roundTo(self._y, snapTo);
-	love.graphics.draw(self._image:getTexture(), self._image:getQuad(), x, y, 0, 1, 1, self._originX, self._originY);
+	local originX, originY = self._frame:getOrigin();
+	love.graphics.draw(self._frame:getImage(), self._frame:getQuad(), x, y, 0, 1, 1, originX, originY);
 end
 
 return Sprite;
