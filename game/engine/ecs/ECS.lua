@@ -205,12 +205,15 @@ ECS.despawn = function(self, entity)
 		assert(self._entities[entity]);
 		self._entityGraveyard[entity] = true;
 	end
+	self._componentNursery[entity] = nil;
+	self._componentGraveyard[entity] = nil;
 end
 
 ECS.addComponent = function(self, entity, component)
 	assert(component);
 	assert(component:isInstanceOf(Component));
 	assert(not component:getEntity());
+	assert(entity:isValid());
 	component:setEntity(entity);
 	local graveyard = self._componentGraveyard[entity];
 	if graveyard and graveyard[component:getClass()] then
@@ -230,6 +233,7 @@ ECS.removeComponent = function(self, entity, component)
 	assert(component);
 	assert(component:isInstanceOf(Component));
 	assert(component:getEntity() == entity);
+	assert(entity:isValid());
 	component:setEntity(nil);
 	local nursery = self._componentNursery[entity];
 	if nursery and nursery[component:getClass()] then
@@ -267,6 +271,7 @@ end
 ECS.addEvent = function(self, event)
 	assert(event);
 	assert(event:isInstanceOf(Event));
+	assert(event:getEntity():isValid());
 	local baseClass = event:getClass();
 	while baseClass do
 		local events = self._events[baseClass];

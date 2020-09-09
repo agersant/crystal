@@ -91,6 +91,18 @@ tests[#tests].body = function()
 	assert(a:getComponent(Snoot) == snoot);
 end
 
+tests[#tests + 1] = {name = "Cannot add component to despawned entity"};
+tests[#tests].body = function()
+	local ecs = ECS:new();
+	local a = ecs:spawn(Entity);
+	ecs:update(0);
+	a:addComponent(Component:new());
+	a:despawn();
+	ecs:update(0);
+	assert(not ecs:getAllEntities()[a]);
+	assert(not a:getExactComponent(Component));
+end
+
 tests[#tests + 1] = {name = "Transfer component"};
 tests[#tests].body = function()
 	local ecs = ECS:new();
