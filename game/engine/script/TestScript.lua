@@ -287,6 +287,28 @@ tests[#tests].body = function()
 	assert(completed == false);
 end
 
+tests[#tests + 1] = {name = "Join returns thread output"};
+tests[#tests].body = function()
+	local completed, sentinel;
+	local script = Script:new();
+	local t1 = script:addThreadAndRun(function(self)
+		self:waitFor("s1");
+		return 10;
+	end);
+	local t2 = script:addThreadAndRun(function(self)
+		completed, sentinel = self:join(t1);
+	end);
+
+	assert(completed == nil);
+	assert(sentinel == nil);
+	script:update(0);
+	assert(completed == nil);
+	assert(sentinel == nil);
+	script:signal("s1");
+	assert(completed == true);
+	assert(sentinel == 10);
+end
+
 tests[#tests + 1] = {name = "Join doesn't unblock when parent thread is in the process of stopping"};
 tests[#tests].body = function()
 	local sentinel;

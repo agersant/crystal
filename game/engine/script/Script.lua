@@ -48,14 +48,19 @@ end
 
 local joinThreadOn = function(self, thread, threadsToJoin)
 	assert(self == thread:getOwner());
+	assert(#threadsToJoin > 0);
+	for _, otherThread in ipairs(threadsToJoin) do
+		if otherThread:isEnded() then
+			pumpThread(thread:getOwner(), thread, otherThread:getOutput());
+			return;
+		end
+	end
 	for _, otherThread in ipairs(threadsToJoin) do
 		if not otherThread:isEnded() then
 			thread:joinOnThread(otherThread);
 		end
 	end
-	if not thread:isBlocked() then
-		pumpThread(thread:getOwner(), thread, {false});
-	end
+	assert(thread:isBlocked());
 end
 
 pumpThread = function(self, thread, resumeArgs)
@@ -102,7 +107,8 @@ pumpThread = function(self, thread, resumeArgs)
 
 	status = coroutine.status(threadCoroutine);
 	if status == "dead" and not thread:isEnded() then
-		self:endThread(thread, true);
+		thread:setOutput(results);
+		self:endThread(thread);
 	end
 end
 
@@ -179,7 +185,7 @@ Script.addThreadAndRun = function(self, functionToThread)
 	return thread;
 end
 
-Script.endThread = function(self, thread, completedExecution)
+Script.endThread = function(self, thread)
 	assert(self == thread:getOwner());
 	if not thread:isEnded() then
 		thread:markAsEnded();
@@ -193,7 +199,8 @@ Script.endThread = function(self, thread, completedExecution)
 	end
 	for otherThread in pairs(thread:getThreadsJoiningOnMe()) do
 		otherThread:unblock();
-		pumpThread(otherThread:getOwner(), otherThread, {completedExecution});
+		-- TODO what happens in the unblocked thread tries to create a child of this one?
+		pumpThread(otherThread:getOwner(), otherThread, thread:getOutput() or {false});
 	end
 end
 
@@ -201,7 +208,7 @@ Script.signal = function(self, signal, ...)
 	if self._endableThreads[signal] then
 		for thread, _ in pairs(self._endableThreads[signal]) do
 			if not thread:isEnded() then
-				self:endThread(thread, false);
+				self:endThread(thread);
 			end
 		end
 	end
