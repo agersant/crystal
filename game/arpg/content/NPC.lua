@@ -1,8 +1,10 @@
 require("engine/utils/OOP");
+local IdleAnimation = require("arpg/field/animation/IdleAnimation");
 local Dialog = require("arpg/field/hud/dialog/Dialog");
 local Assets = require("engine/resources/Assets");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local Sprite = require("engine/mapscene/display/Sprite");
+local SpriteAnimator = require("engine/mapscene/display/SpriteAnimator");
 local Collision = require("engine/mapscene/physics/Collision");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local Entity = require("engine/ecs/Entity");
@@ -26,8 +28,11 @@ end
 
 NPC.init = function(self, scene)
 	NPC.super.init(self, scene);
-	local sheet = Assets:getSpritesheet("arpg/assets/spritesheet/Sahagin.lua");
-	self:addComponent(Sprite:new(sheet));
+	local sheet = Assets:getSpritesheet("arpg/assets/spritesheet/sahagin.lua");
+	local sprite = self:addComponent(Sprite:new());
+	self:addComponent(SpriteAnimator:new(sprite, sheet));
+	self:addComponent(IdleAnimation:new("idle"));
+
 	local physicsBody = self:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 	self:addComponent(Collision:new(physicsBody, 4));
 	self:addComponent(ScriptRunner:new());
