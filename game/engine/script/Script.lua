@@ -63,32 +63,40 @@ pumpThread = function(self, thread, resumeArgs)
 	local threadCoroutine = thread:getCoroutine();
 	local status = coroutine.status(threadCoroutine);
 	assert(status ~= "running");
-	if status == "suspended" and not thread:isEnded() and not self._stopping then
-		local success, a, b, c;
+	local results;
+	if status == "suspended" and not thread:isEnded() and not thread:isBlocked() then
 		if resumeArgs ~= nil then
 			assert(type(resumeArgs) == "table");
-			success, a, b, c = coroutine.resume(threadCoroutine, resumeArgs);
+			results = {coroutine.resume(threadCoroutine, resumeArgs)};
 		else
-			success, a, b, c = coroutine.resume(threadCoroutine, thread);
+			results = {coroutine.resume(threadCoroutine, thread)};
 		end
+		local success = results[1];
 		if not success then
-			Log:error(a);
+			local errorText = results[2];
+			Log:error(errorText);
 			Log:error(debug.traceback(threadCoroutine));
-		elseif a == "fork" then
-			local functionToThread = b;
-			local newThread = Thread:new(self, thread, functionToThread);
-			table.insert(self._threads, newThread);
-			pumpThread(self, newThread);
-			pumpThread(self, thread, newThread);
-		elseif a == "waitForSignals" then
-			blockThread(self, thread, b);
-		elseif a == "endOnSignals" then
-			endThreadOn(self, thread, b);
-			pumpThread(self, thread);
-		elseif a == "join" then
-			joinThreadOn(self, thread, b);
-		elseif a == "hang" then
-			thread:block();
+		else
+			local instruction = results[2];
+			if instruction == "fork" then
+				local functionToThread = results[3];
+				local newThread = Thread:new(self, thread, functionToThread);
+				self._threads[newThread] = true;
+				pumpThread(self, newThread);
+				pumpThread(self, thread, newThread);
+			elseif instruction == "waitForSignals" then
+				local signals = results[3];
+				blockThread(self, thread, signals);
+			elseif instruction == "endOnSignals" then
+				local signals = results[3];
+				endThreadOn(self, thread, signals);
+				pumpThread(self, thread);
+			elseif instruction == "join" then
+				local threads = results[3];
+				joinThreadOn(self, thread, threads);
+			elseif instruction == "hang" then
+				thread:block();
+			end
 		end
 	end
 
