@@ -17,6 +17,7 @@ Thread.init = function(self, owner, parentThread, functionToThread)
 	self._joiningOn = {};
 	self._cleanupFunctions = {};
 
+	-- TODO do this from parent thread and remove parentThread arg
 	if parentThread then
 		parentThread._childThreads[self] = true;
 	end
