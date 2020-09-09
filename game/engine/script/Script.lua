@@ -31,7 +31,7 @@ local unblockThread = function(self, thread, signal, ...)
 		table.insert(signalData, 1, signal);
 	end
 	thread:unblock();
-	pumpThread(thread:getOwner(), thread, signalData);
+	pumpThread(thread, signalData);
 end
 
 local endThreadOn = function(self, thread, signals)
@@ -51,7 +51,7 @@ local joinThreadOn = function(self, thread, threadsToJoin)
 	assert(#threadsToJoin > 0);
 	for _, otherThread in ipairs(threadsToJoin) do
 		if otherThread:isEnded() then
-			pumpThread(thread:getOwner(), thread, otherThread:getOutput());
+			pumpThread(thread, otherThread:getOutput());
 			return;
 		end
 	end
@@ -63,9 +63,8 @@ local joinThreadOn = function(self, thread, threadsToJoin)
 	assert(thread:isBlocked());
 end
 
--- TODO remove self arg as it is always thread:getOwner()
-pumpThread = function(self, thread, resumeArgs)
-	assert(self == thread:getOwner());
+pumpThread = function(thread, resumeArgs)
+	local self = thread:getOwner();
 	local threadCoroutine = thread:getCoroutine();
 	local status = coroutine.status(threadCoroutine);
 	assert(status ~= "running");
@@ -88,15 +87,15 @@ pumpThread = function(self, thread, resumeArgs)
 				local functionToThread = results[3];
 				local newThread = Thread:new(self, thread, functionToThread);
 				self._threads[newThread] = true;
-				pumpThread(self, newThread);
-				pumpThread(self, thread, newThread);
+				pumpThread(newThread);
+				pumpThread(thread, newThread);
 			elseif instruction == "waitForSignals" then
 				local signals = results[3];
 				blockThread(self, thread, signals);
 			elseif instruction == "endOnSignals" then
 				local signals = results[3];
 				endThreadOn(self, thread, signals);
-				pumpThread(self, thread);
+				pumpThread(thread);
 			elseif instruction == "join" then
 				local threads = results[3];
 				joinThreadOn(self, thread, threads);
@@ -142,7 +141,7 @@ Script.update = function(self, dt)
 	self._time = self._time + dt;
 	local threads = TableUtils.shallowCopy(self._threads);
 	for thread in pairs(threads) do
-		pumpThread(self, thread);
+		pumpThread(thread);
 	end
 end
 
@@ -165,7 +164,7 @@ end
 
 Script.addThreadAndRun = function(self, functionToThread)
 	local thread = self:addThread(functionToThread);
-	pumpThread(self, thread);
+	pumpThread(thread);
 	return thread;
 end
 
@@ -185,7 +184,7 @@ Script.endThread = function(self, thread)
 	for otherThread in pairs(thread:getThreadsJoiningOnMe()) do
 		otherThread:unblock();
 		-- TODO what happens in the unblocked thread tries to create a child of this one?
-		pumpThread(otherThread:getOwner(), otherThread, thread:getOutput() or {false});
+		pumpThread(otherThread, thread:getOutput() or {false});
 	end
 end
 
