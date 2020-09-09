@@ -121,42 +121,50 @@ Thread.wait = function(self, seconds)
 end
 
 Thread.thread = function(self, functionToThread)
+	assert(not self:isDead());
 	assert(type(functionToThread) == "function");
 	return coroutine.yield("fork", functionToThread);
 end
 
 Thread.waitFor = function(self, signal)
+	assert(not self:isDead());
 	assert(type(signal) == "string");
 	return self:waitForAny({signal});
 end
 
 Thread.waitForAny = function(self, signals)
+	assert(not self:isDead());
 	assert(type(signals) == "table");
 	local returns = coroutine.yield("waitForSignals", signals);
 	return unpack(returns);
 end
 
 Thread.endOn = function(self, signal)
+	assert(not self:isDead());
 	assert(type(signal) == "string");
 	return self:endOnAny({signal});
 end
 
 Thread.endOnAny = function(self, signals)
+	assert(not self:isDead());
 	assert(type(signals) == "table");
 	coroutine.yield("endOnSignals", signals);
 end
 
 Thread.join = function(self, thread)
+	assert(not self:isDead());
 	assert(thread);
 	return self:joinAny({thread});
 end
 
 Thread.joinAny = function(self, threads)
+	assert(not self:isDead());
 	local returns = coroutine.yield("join", threads);
 	return unpack(returns);
 end
 
 Thread.hang = function(self)
+	assert(not self:isDead());
 	coroutine.yield("hang");
 end
 
@@ -166,6 +174,7 @@ Thread.stop = function(self)
 end
 
 Thread.scope = function(self, cleanupFunction)
+	assert(not self:isDead());
 	assert(type(cleanupFunction) == "function");
 	table.insert(self._cleanupFunctions, cleanupFunction);
 end

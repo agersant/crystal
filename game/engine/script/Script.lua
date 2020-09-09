@@ -183,7 +183,6 @@ Script.endThread = function(self, thread)
 	cleanupThread(self, thread);
 	for otherThread in pairs(thread:getThreadsJoiningOnMe()) do
 		otherThread:unblock();
-		-- TODO what happens in the unblocked thread tries to create a child of this one?
 		pumpThread(otherThread, thread:getOutput() or {false});
 	end
 end

@@ -127,6 +127,19 @@ tests[#tests].body = function()
 	assert(a == 0);
 end
 
+tests[#tests + 1] = {name = "Cannot start thread from stopped thread"};
+tests[#tests].body = function()
+	local script = Script:new();
+	local t0 = script:addThreadAndRun(function()
+	end);
+	local success = pcall(function()
+		t0:thread(function()
+		end);
+	end);
+	assert(not success);
+
+end
+
 tests[#tests + 1] = {name = "Signal additional data"};
 tests[#tests].body = function()
 	local a = 0;
