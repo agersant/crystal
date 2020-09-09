@@ -36,6 +36,14 @@ Thread.isDead = function(self)
 	return coroutine.status(self._coroutine) == "dead" or self._isEnded;
 end
 
+Thread.setOutput = function(self, output)
+	self._output = output;
+end
+
+Thread.getOutput = function(self, output)
+	return self._output;
+end
+
 Thread.isBlocked = function(self)
 	return self._isBlocked;
 end
