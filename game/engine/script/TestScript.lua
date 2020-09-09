@@ -545,7 +545,7 @@ tests[#tests].body = function()
 	assert(sentinel == 11);
 end
 
-tests[#tests + 1] = {name = "No threads can be added while stopping"};
+tests[#tests + 1] = {name = "Threads can be added after stopping"};
 tests[#tests].body = function()
 	local script1 = Script:new();
 	local thread = script1:addThreadAndRun(function(self)
@@ -553,19 +553,41 @@ tests[#tests].body = function()
 	end);
 
 	local sentinel = false;
-	local unblocked = false;
 	local script2 = Script:new();
 	script2:addThreadAndRun(function(self)
 		self:join(thread);
-		unblocked = true;
 		script1:addThreadAndRun(function()
 			sentinel = true;
 		end);
 	end);
 
-	script1:stop();
-	assert(unblocked);
 	assert(not sentinel);
+	script1:stop();
+	assert(sentinel);
+end
+
+tests[#tests + 1] = {name = "Recursive stops don't re-trigger join"};
+tests[#tests].body = function()
+	local sentinel = 0;
+
+	local scriptA = Script:new();
+	local threadA = scriptA:addThread(function(self)
+		self:hang();
+	end);
+
+	local scriptB = Script:new();
+	scriptB:addThread(function(self)
+		self:join(threadA);
+		sentinel = sentinel + 1;
+		scriptA:stop();
+	end);
+
+	assert(sentinel == 0);
+	scriptA:update(0);
+	scriptB:update(0);
+	assert(sentinel == 0);
+	scriptA:stop();
+	assert(sentinel == 1);
 end
 
 return tests;

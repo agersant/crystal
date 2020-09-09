@@ -123,6 +123,7 @@ local cleanupThread = function(self, thread)
 	for otherThread in pairs(thread:getThreadsJoiningOn()) do
 		otherThread._joinedBy[thread] = nil;
 	end
+	self._threads[thread] = nil;
 end
 
 -- PUBLIC API
@@ -139,32 +140,17 @@ end
 
 Script.update = function(self, dt)
 	self._time = self._time + dt;
-	self._dt = dt;
-
-	-- Run existing threads
-	for i = #self._threads, 1, -1 do
-		local thread = self._threads[i];
-		if not thread:isBlocked() then
-			pumpThread(self, thread);
-		end
-	end
-
-	-- Remove dead threads
-	for i = #self._threads, 1, -1 do
-		local thread = self._threads[i];
-		if thread:isDead() then
-			cleanupThread(self, thread);
-			table.remove(self._threads, i);
-		end
+	local threads = TableUtils.shallowCopy(self._threads);
+	for thread in pairs(threads) do
+		pumpThread(self, thread);
 	end
 end
 
 Script.stop = function(self)
-	self._stopping = true;
-	for _, thread in ipairs(self._threads) do
-		self:endThread(thread, false);
+	local threads = TableUtils.shallowCopy(self._threads);
+	for thread in pairs(threads) do
+		self:endThread(thread);
 	end
-	self._stopping = false;
 end
 
 Script.getTime = function(self)
@@ -173,9 +159,7 @@ end
 
 Script.addThread = function(self, functionToThread)
 	local thread = Thread:new(self, nil, functionToThread);
-	if not self._stopping then
-		table.insert(self._threads, thread);
-	end
+	self._threads[thread] = true;
 	return thread;
 end
 
@@ -191,12 +175,13 @@ Script.endThread = function(self, thread)
 		thread:markAsEnded();
 	end
 	for i, childThread in ipairs(thread:getChildThreads()) do
-		self:endThread(childThread, false);
+		self:endThread(childThread);
 	end
 	local cleanupFunctions = thread:getCleanupFunctions();
 	for i = #cleanupFunctions, 1, -1 do
 		cleanupFunctions[i]();
 	end
+	cleanupThread(self, thread);
 	for otherThread in pairs(thread:getThreadsJoiningOnMe()) do
 		otherThread:unblock();
 		-- TODO what happens in the unblocked thread tries to create a child of this one?
