@@ -5,7 +5,6 @@ local ECS = require("engine/ecs/ECS");
 local Assets = require("engine/resources/Assets");
 local MapSystem = require("engine/mapscene/MapSystem");
 local BehaviorSystem = require("engine/mapscene/behavior/BehaviorSystem");
-local MovementAISystem = require("engine/mapscene/behavior/ai/MovementAISystem");
 local Entity = require("engine/ecs/Entity");
 local InputListener = require("engine/mapscene/behavior/InputListener");
 local InputListenerSystem = require("engine/mapscene/behavior/InputListenerSystem");
@@ -59,7 +58,6 @@ MapScene.init = function(self, mapName)
 	-- Before scripts
 	ecs:addSystem(BehaviorSystem:new(ecs));
 	ecs:addSystem(SpriteSystem:new(ecs)); -- (also has some duringScripts and afterScripts logic)
-	ecs:addSystem(MovementAISystem:new(ecs, map:getNavigationMesh())); -- (also has some duringScripts logic)
 
 	-- During scripts
 	ecs:addSystem(ScriptRunnerSystem:new(ecs)); -- (also has dome beforeScripts logic)

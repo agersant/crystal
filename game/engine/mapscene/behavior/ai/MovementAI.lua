@@ -3,8 +3,50 @@ local AlignGoal = require("engine/mapscene/behavior/ai/AlignGoal");
 local EntityGoal = require("engine/mapscene/behavior/ai/EntityGoal");
 local PositionGoal = require("engine/mapscene/behavior/ai/PositionGoal");
 local Behavior = require("engine/mapscene/behavior/Behavior");
+local Locomotion = require("engine/mapscene/physics/Locomotion");
+local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
+local MathUtils = require("engine/utils/MathUtils");
 
 local MovementAI = Class("MovementAI", Behavior);
+
+local navigate = function(self, navigationMesh, goal, physicsBody, locomotion)
+	if not goal:isValid() then
+		return false;
+	end
+
+	local x, y = physicsBody:getPosition();
+	local targetX, targetY = goal:getPosition();
+	local _, path = navigationMesh:findPath(x, y, targetX, targetY);
+	if not path then
+		return false;
+	end
+
+	local vertexIndex = 1;
+	while true do
+		if goal:isValid() and goal:isPositionAcceptable(physicsBody:getPosition()) then
+			return true;
+		end
+
+		local waypointX, waypointY = path:getVertex(vertexIndex);
+		if not waypointX or not waypointY then
+			break
+		end
+		local x, y = physicsBody:getPosition();
+		local distToWaypoint2 = MathUtils.distance2(x, y, waypointX, waypointY);
+		local epsilon = locomotion:getSpeed() * 1 / 60; -- TODO framerate dependent
+		if distToWaypoint2 >= epsilon * epsilon then
+			local deltaX, deltaY = waypointX - x, waypointY - y;
+			local angle = math.atan2(deltaY, deltaX);
+			locomotion:setMovementAngle(angle);
+			self:waitFrame();
+		else
+			physicsBody:setPosition(waypointX, waypointY);
+			vertexIndex = vertexIndex + 1;
+		end
+	end
+
+	return false;
+end
 
 -- TODO rename to Navigation
 MovementAI.init = function(self)
@@ -12,114 +54,73 @@ MovementAI.init = function(self)
 	assert(self._script);
 end
 
-MovementAI.setNavigationGoal = function(self, goal)
-	assert(goal);
-	self._goal = goal;
-	self._path = nil;
-	self._waypointIndex = nil;
-	self._pathAge = nil;
-end
-
-MovementAI.endNavigation = function(self)
-	self._path = nil;
-	self._waypointIndex = nil;
-	self._goal = nil;
-	self._pathAge = nil;
-end
-
-MovementAI.beginNavigationToPoint = function(self, x, y, targetRadius)
+MovementAI.navigateToPoint = function(self, x, y, targetRadius)
 	assert(x);
 	assert(y);
 	assert(targetRadius and targetRadius >= 0);
-	self._repathDelay = 2;
-	self:setNavigationGoal(PositionGoal:new(x, y, targetRadius));
-end
-
-MovementAI.beginNavigationToEntity = function(self, targetEntity, targetRadius)
-	assert(targetEntity);
-	assert(targetRadius >= 0);
-	self._repathDelay = 0.5;
-	self:setNavigationGoal(EntityGoal:new(targetEntity, targetRadius));
-end
-
-MovementAI.beginAlignmentToEntity = function(self, targetEntity, targetRadius)
-	assert(targetEntity);
-	assert(targetRadius >= 0);
-	self._repathDelay = 0.5;
-	self:setNavigationGoal(AlignGoal:new(self:getEntity(), targetEntity, targetRadius));
-end
-
-MovementAI.navigateToPoint = function(self, x, y, targetRadius)
-	self:beginNavigationToPoint(x, y, targetRadius);
-	return self:navigateToGoal();
+	local repathDelay = 2;
+	return self:navigateToGoal(PositionGoal:new(x, y, targetRadius), repathDelay);
 end
 
 MovementAI.navigateToEntity = function(self, targetEntity, targetRadius)
-	self:beginNavigationToEntity(targetEntity, targetRadius);
-	return self:navigateToGoal();
+	assert(targetEntity);
+	assert(targetRadius >= 0);
+	local repathDelay = 0.5;
+	return self:navigateToGoal(EntityGoal:new(targetEntity, targetRadius), repathDelay);
 end
 
 MovementAI.alignWithEntity = function(self, targetEntity, targetRadius)
-	self:beginAlignmentToEntity(targetEntity, targetRadius);
-	return self:navigateToGoal();
+	assert(targetEntity);
+	assert(targetRadius >= 0);
+	local repathDelay = 0.5;
+	return self:navigateToGoal(AlignGoal:new(self:getEntity(), targetEntity, targetRadius), repathDelay);
 end
 
-MovementAI.navigateToGoal = function(self)
-	assert(self._goal);
-	if self._navigationThread and not self._navigationThread:isDead() then
-		self._navigationThread:stop();
-	end
-	local myGoal = self._goal;
-	self._navigationThread = self._script:addThreadAndRun(function(self)
-		-- TODO move actual work here instead of inside system
-		local result, resultGoal = self:waitForAny({"navigationSuccess", "navigationFailure"});
-		assert(resultGoal);
-		return resultGoal == myGoal and result == "navigationSuccess";
+MovementAI.navigateToGoal = function(self, goal, repathDelay)
+	assert(goal);
+
+	local physicsBody = self:getEntity():getComponent(PhysicsBody);
+	local locomotion = self:getEntity():getComponent(Locomotion);
+	local navigationMesh = self:getEntity():getECS():getMap():getNavigationMesh();
+	assert(physicsBody);
+	assert(locomotion);
+	assert(navigationMesh);
+
+	self._script:stop();
+	return self._script:addThreadAndRun(function(self)
+
+		self:scope(function()
+			locomotion:setMovementAngle(nil);
+		end);
+
+		local completion = self:thread(function(self)
+			local signal = self:waitForAny({"success", "failure"});
+			return signal == "success";
+		end);
+
+		self:thread(function(self)
+			while true do
+				self:wait(repathDelay);
+				self:signal("repath");
+			end
+		end);
+
+		self:thread(function(self)
+			while true do
+				self:thread(function(self)
+					self:endOn("repath");
+					if navigate(self, navigationMesh, goal, physicsBody, locomotion) then
+						self:signal("success");
+					else
+						self:signal("failure");
+					end
+				end);
+				self:waitFor("repath");
+			end
+		end);
+
+		return self:join(completion);
 	end);
-	return self._navigationThread;
-end
-
-MovementAI.needsRepath = function(self)
-	assert(self._goal);
-	assert(self._repathDelay);
-	if not self._pathAge then
-		return true;
-	end
-	return self._pathAge > self._repathDelay;
-end
-
-MovementAI.setPath = function(self, path)
-	self._path = path;
-	self._waypointIndex = 1;
-	self._pathAge = 0;
-end
-
-MovementAI.getPath = function(self)
-	return self._path;
-end
-
-MovementAI.setPathAge = function(self, age)
-	self._pathAge = age;
-end
-
-MovementAI.getPathAge = function(self)
-	return self._pathAge;
-end
-
-MovementAI.getGoal = function(self)
-	return self._goal;
-end
-
-MovementAI.getCurrentWaypoint = function(self)
-	return self._path:getVertex(self._waypointIndex);
-end
-
-MovementAI.nextWaypoint = function(self)
-	self._waypointIndex = self._waypointIndex + 1;
-end
-
-MovementAI.getScript = function(self)
-	return self._script;
 end
 
 return MovementAI;

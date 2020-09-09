@@ -21,8 +21,9 @@ tests[#tests].body = function()
 	subject:addComponent(Locomotion:new(50));
 	subject:setPosition(startX, startY);
 	subject:addComponent(MovementAI:new());
+	subject:addComponent(ScriptRunner:new());
 
-	subject:beginNavigationToPoint(endX, endY, acceptanceRadius);
+	subject:navigateToPoint(endX, endY, acceptanceRadius);
 
 	for i = 1, 1000 do
 		scene:update(16 / 1000);
@@ -43,12 +44,13 @@ tests[#tests].body = function()
 	subject:addComponent(Locomotion:new(50));
 	subject:setPosition(startX, startY);
 	subject:addComponent(MovementAI:new());
+	subject:addComponent(ScriptRunner:new());
 
 	local target = scene:spawn(Entity);
 	target:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	target:setPosition(endX, endY);
 
-	subject:beginNavigationToEntity(target, acceptanceRadius);
+	subject:navigateToEntity(target, acceptanceRadius);
 
 	for i = 1, 1000 do
 		scene:update(16 / 1000);
