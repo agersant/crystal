@@ -129,7 +129,6 @@ end
 
 Script.init = function(self, scriptFunction)
 	self._time = 0;
-	self._dt = 0;
 	self._threads = {};
 	self._blockedThreads = {};
 	self._endableThreads = {};
