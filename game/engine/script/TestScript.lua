@@ -315,13 +315,13 @@ tests[#tests].body = function()
 	local script = Script:new();
 	local t0 = script:addThreadAndRun(function(self)
 		local t01 = self:thread(function(self)
-			self:waitFor("s01");
+			self:hang();
 		end);
-		local t02 = self:thread(function(self)
+		self:thread(function(self)
 			self:join(t01);
 			sentinel = false;
 		end);
-		self:waitFor("s0");
+		self:hang();
 	end);
 	local t1 = script:addThreadAndRun(function(self)
 		self:waitFor("s1");
