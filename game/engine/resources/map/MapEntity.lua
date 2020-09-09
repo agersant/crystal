@@ -5,8 +5,6 @@ local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 
 local MapEntity = Class("MapEntity");
 
--- PUBLIC API
-
 MapEntity.init = function(self, class, options)
 	assert(type(class) == "string");
 	assert(type(options) == "table");

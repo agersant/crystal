@@ -9,8 +9,6 @@ local TableUtils = require("engine/utils/TableUtils");
 
 local Map = Class("Map");
 
--- IMPLEMENTATION
-
 local parseTileLayer = function(self, layerData)
 	local sort = layerData.properties.sort;
 	if sort ~= "above" and sort ~= "dynamic" then
@@ -48,8 +46,6 @@ local parseObjectGroup = function(self, layerData)
 		parseEntity(self, object);
 	end
 end
-
--- PUBLIC API
 
 Map.init = function(self, mapName, mapData, tileset)
 

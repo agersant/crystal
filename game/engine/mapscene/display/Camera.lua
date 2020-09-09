@@ -8,8 +8,6 @@ local TableUtils = require("engine/utils/TableUtils");
 
 local Camera = Class("Camera");
 
--- IMPLEMENTATION
-
 local epsilon = 0.001;
 
 local getMapSize = function(self)
@@ -103,8 +101,6 @@ local computeTargetPosition = function(self)
 
 	return tx, ty;
 end
-
--- PUBLIC API
 
 Camera.init = function(self, scene)
 	self:setAutopilotEnabled(true);

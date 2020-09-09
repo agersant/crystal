@@ -3,8 +3,6 @@ local MathUtils = require("engine/utils/MathUtils");
 
 local Stat = Class("Stat");
 
--- PUBLIC API
-
 Stat.init = function(self, baseValue, minValue, maxValue)
 	self._min = minValue;
 	self._max = maxValue;

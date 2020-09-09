@@ -93,8 +93,6 @@ local handleDeath = function(self)
 	end
 end
 
--- PUBLIC API
-
 Sahagin.init = function(self, scene)
 	Sahagin.super.init(self, scene);
 

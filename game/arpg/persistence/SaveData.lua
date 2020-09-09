@@ -87,8 +87,6 @@ SaveData.load = function(self)
 	Scene:setCurrent(scene);
 end
 
--- STATIC
-
 SaveData.fromPOD = function(self, pod)
 	local playerSave = SaveData:new();
 	assert(pod.party);

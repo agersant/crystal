@@ -4,8 +4,6 @@ local MathUtils = require("engine/utils/MathUtils");
 
 local StaticLayer = Class("StaticLayer");
 
--- PUBLIC API
-
 StaticLayer.init = function(self, map, layerData, sort)
 
 	local tileset = map:getTileset();

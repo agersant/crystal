@@ -6,8 +6,6 @@ local ScalingSources = require("arpg/field/combat/stats/ScalingSources");
 
 local DamageUnit = Class("DamageUnit");
 
--- PUBLIC API
-
 DamageUnit.init = function(self, flatAmount, damageType, element)
 	self._damageType = damageType or DamageTypes.PHYSICAL;
 	self._element = element or Elements.UNASPECTED;

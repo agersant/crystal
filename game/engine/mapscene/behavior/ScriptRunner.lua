@@ -6,8 +6,6 @@ local Alias = require("engine/utils/Alias");
 
 local ScriptRunner = Class("ScriptRunner", Component);
 
--- PUBLIC API
-
 ScriptRunner.init = function(self)
 	ScriptRunner.super.init(self);
 	self._scripts = {};

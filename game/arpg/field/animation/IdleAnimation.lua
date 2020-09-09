@@ -3,8 +3,6 @@ local Component = require("engine/ecs/Component");
 
 local IdleAnimation = Class("IdleAnimation", Component);
 
--- PUBLIC API
-
 IdleAnimation.init = function(self, animationName)
 	IdleAnimation.super.init(self);
 	self._animationName = animationName;

@@ -8,8 +8,6 @@ if not Features.cli then
 	Features.stub(Command);
 end
 
--- PUBLIC API
-
 Command.init = function(self, description, func)
 	assert(type(description) == "string");
 	assert(type(func) == "function");

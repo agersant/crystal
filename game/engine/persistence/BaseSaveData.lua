@@ -2,8 +2,6 @@ require("engine/utils/OOP");
 
 local BaseSaveData = Class("BaseSaveData");
 
--- PUBLIC API
-
 BaseSaveData.init = function(self)
 end
 

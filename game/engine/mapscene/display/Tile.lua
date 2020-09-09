@@ -3,8 +3,6 @@ local Drawable = require("engine/mapscene/display/Drawable");
 
 local Tile = Class("Tile", Drawable);
 
--- PUBLIC API
-
 Tile.init = function(self, tilesetImage, quad, x, y)
 	assert(tilesetImage);
 	assert(quad);

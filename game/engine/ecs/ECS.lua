@@ -284,8 +284,6 @@ ECS.addEvent = function(self, event)
 	end
 end
 
--- ACCESSORS
-
 ECS.getSystem = function(self, class)
 	for _, system in ipairs(self._systems) do
 		if system:isInstanceOf(class) then

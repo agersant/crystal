@@ -3,8 +3,6 @@ local UndoStack = require("engine/ui/UndoStack");
 
 local TextInput = Class("TextInput");
 
--- IMPLEMENTATION
-
 local findLeftWord = function(self)
 	local out = self._cursor - 1;
 	while out > 0 do
@@ -85,8 +83,6 @@ end
 local redo = function(self)
 	self._text, self._cursor = self._undoStack:redo();
 end
-
--- PUBLIC API
 
 TextInput.init = function(self, maxUndo)
 	self._undoStack = UndoStack:new(maxUndo);

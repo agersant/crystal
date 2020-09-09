@@ -14,8 +14,6 @@ local TableUtils = require("engine/utils/TableUtils");
 
 local CombatData = Class("CombatData", Component);
 
--- IMPLEMENTATION
-
 local computeScalingSourceAmount, computeScalingSourceAmountInternal;
 
 local evaluateStatInternal = function(self, statObject, guards)
@@ -132,8 +130,6 @@ local addStat = function(self, stat, statObject)
 	self._statsReverseLookups[statObject] = stat;
 	return statObject;
 end
-
--- PUBLIC API
 
 CombatData.init = function(self)
 	CombatData.super.init(self);

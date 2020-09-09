@@ -4,8 +4,6 @@ local CLI = require("engine/dev/cli/CLI");
 local GFXConfig = Class("GFXConfig");
 local instance;
 
--- IMPLEMENTATION
-
 local setMode = function(self)
 	if not love.window then
 		return;
@@ -20,8 +18,6 @@ local refreshZoom = function(self)
 	local zy = self._windowHeight / self._renderHeight;
 	self._zoom = math.max(1, math.min(math.floor(zx), math.floor(zy)));
 end
-
--- PUBLIC API
 
 love.resize = function(width, height)
 	instance._windowWidth = width;

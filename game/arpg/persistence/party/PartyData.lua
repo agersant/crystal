@@ -4,8 +4,6 @@ local TableUtils = require("engine/utils/TableUtils");
 
 local Party = Class("Party");
 
--- PUBLIC API
-
 Party.init = function(self)
 	self._members = {};
 end
@@ -36,8 +34,6 @@ Party.toPOD = function(self)
 	end
 	return pod;
 end
-
--- STATIC
 
 Party.fromPOD = function(self, pod)
 	local party = Party:new();

@@ -34,8 +34,6 @@ local append = function(self, level, text)
 	self._fileHandle:write("\r\n");
 end
 
--- PUBLIC API
-
 Log.init = function(self)
 	self._verbosity = LogLevels.DEBUG;
 

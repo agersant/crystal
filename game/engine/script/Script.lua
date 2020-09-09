@@ -125,8 +125,6 @@ local cleanupThread = function(self, thread)
 	self._threads[thread] = nil;
 end
 
--- PUBLIC API
-
 Script.init = function(self, scriptFunction)
 	self._time = 0;
 	self._threads = {};

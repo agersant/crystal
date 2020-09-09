@@ -3,8 +3,6 @@ local Component = require("engine/ecs/Component");
 
 local WalkAnimation = Class("WalkAnimation", Component);
 
--- PUBLIC API
-
 WalkAnimation.init = function(self, animationName)
 	WalkAnimation.super.init(self);
 	self._animationName = animationName;

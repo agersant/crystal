@@ -15,8 +15,6 @@ local Field = require("arpg/field/Field");
 local Teleport = Class("Teleport", Entity);
 local TeleportTouchTrigger = Class("TeleportTouchTrigger", TouchTrigger);
 
--- IMPLEMENTATION
-
 local doTeleport = function(self, triggeredBy)
 	local teleportEntity = self:getEntity();
 	local finalX, finalY = teleportEntity._targetX, teleportEntity._targetY;
@@ -69,8 +67,6 @@ end
 TeleportTouchTrigger.onEndTouch = function(self, component)
 	self:getEntity():signalAllScripts("-trigger", component:getEntity());
 end
-
--- PUBLIC API
 
 Teleport.init = function(self, scene, options)
 	assert(options.targetMap);

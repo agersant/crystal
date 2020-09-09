@@ -24,8 +24,6 @@ local textPaddingY = 5;
 
 local state = {isActive = false, frameDurations = {}};
 
--- PUBLIC API
-
 FPSCounter.init = function(self)
 	self.font = Fonts:get("dev", fontSize);
 end

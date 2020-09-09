@@ -14,8 +14,6 @@ if not Features.cli then
 	Features.stub(CLI);
 end
 
--- IMPLEMENTATION
-
 local maxHistory = 20;
 local maxUndo = 20;
 local fontSize = 20;
@@ -91,8 +89,6 @@ local submitInput = function(self)
 	self._inputCursor = 1;
 	updateAutoComplete(self);
 end
-
--- PUBLIC API
 
 CLI.init = function(self, commandStore)
 	self._commandStore = commandStore or CommandStore:new();

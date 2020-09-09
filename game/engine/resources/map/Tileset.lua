@@ -3,8 +3,6 @@ local MathUtils = require("engine/utils/MathUtils");
 
 local Tileset = Class("Tileset");
 
--- PUBLIC API
-
 Tileset.init = function(self, tilesetData, image)
 	self._image = image;
 	self._tileWidth = tilesetData.tilewidth;

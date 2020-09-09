@@ -9,8 +9,6 @@ Module.init = function(self)
 	self.fonts = {};
 end
 
--- STATIC
-
 local currentModule;
 
 Module.getCurrent = function(self)

@@ -3,8 +3,6 @@ local Component = require("engine/ecs/Component");
 
 local MovementControls = Class("MovementControls", Component);
 
--- PUBLIC API
-
 MovementControls.init = function(self)
 	MovementControls.super.init(self);
 	self._isInputtingLeft = false;

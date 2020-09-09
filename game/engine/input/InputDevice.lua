@@ -2,8 +2,6 @@ require("engine/utils/OOP");
 
 local InputDevice = Class("InputDevice");
 
--- IMPLEMENTATION
-
 local buildBindingTables = function(self)
 	self._keyBindings = {};
 	self._commandBindings = {};
@@ -18,8 +16,6 @@ local buildBindingTables = function(self)
 		table.insert(self._commandBindings[command].keys, key);
 	end
 end
-
--- PUBLIC API
 
 InputDevice.init = function(self)
 	self._bindingPairs = {};

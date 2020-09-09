@@ -2,8 +2,6 @@ require("engine/utils/OOP");
 
 local UndoStack = Class("UndoStack");
 
--- PUBLIC API
-
 UndoStack.init = function(self, maxUndo)
 	self._maxUndo = maxUndo or 20;
 	self:clear();

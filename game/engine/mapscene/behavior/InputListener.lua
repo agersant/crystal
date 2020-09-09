@@ -5,8 +5,6 @@ local InputContext = require("engine/mapscene/behavior/InputContext");
 
 local InputListener = Class("InputListener", Component);
 
--- PUBLIC API
-
 InputListener.init = function(self, playerIndex)
 	assert(playerIndex);
 	InputListener.super.init(self);

@@ -3,8 +3,6 @@ local Component = require("engine/ecs/Component");
 
 local Drawable = Class("Drawable", Component);
 
--- PUBLIC API
-
 Drawable.init = function(self)
 	Drawable.super.init(self);
 	self._zOrder = 0;

@@ -3,8 +3,6 @@ local InputDevice = require("engine/input/InputDevice");
 
 local Input = Class("Input");
 
--- PUBLIC API
-
 local maxLocalPlayers = 8;
 
 Input.init = function(self)

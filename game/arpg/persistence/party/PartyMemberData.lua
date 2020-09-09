@@ -4,8 +4,6 @@ local InputListener = require("engine/mapscene/behavior/InputListener");
 
 local PartyMemberData = Class("PartyMemberData");
 
--- PUBLIC API
-
 PartyMemberData.init = function(self, instanceClass)
 	self._instanceClass = instanceClass;
 end
@@ -26,8 +24,6 @@ end
 PartyMemberData.toPOD = function(self)
 	return {instanceClass = self:getInstanceClass(), assignedPlayer = self:getAssignedPlayer()};
 end
-
--- STATIC
 
 PartyMemberData.fromPOD = function(self, pod)
 	assert(pod.instanceClass);

@@ -286,8 +286,6 @@ getAsset = function(self, assetType, path)
 	return self._loadedAssets[assetID].raw;
 end
 
--- PUBLIC API
-
 Assets.init = function(self)
 	self._loadedAssets = {};
 end

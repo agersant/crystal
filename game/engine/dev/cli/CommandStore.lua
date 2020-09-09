@@ -9,8 +9,6 @@ if not Features.cli then
 	Features.stub(CommandStore);
 end
 
--- PUBLIC API
-
 CommandStore.init = function(self)
 	self._commands = {};
 end

@@ -12,8 +12,6 @@ local pickFont = function(name)
 	return font or error("Unknown font: " .. tostring(name));
 end
 
--- PUBLIC API
-
 Fonts.init = function(self)
 	self._fontObjects = {};
 end

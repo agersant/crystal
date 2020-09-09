@@ -24,8 +24,6 @@ local script = function(self)
 	end
 end
 
--- PUBLIC API
-
 NPC.init = function(self, scene)
 	NPC.super.init(self, scene);
 	local sheet = Assets:getSpritesheet("arpg/assets/spritesheet/sahagin.lua");

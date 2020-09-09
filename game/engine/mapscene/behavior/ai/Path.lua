@@ -2,8 +2,6 @@ require("engine/utils/OOP");
 
 local Path = Class("Path");
 
--- IMPLEMENTATION
-
 local getVertex = function(self, i)
 	return self._vertices[2 * i - 1], self._vertices[2 * i];
 end
@@ -17,8 +15,6 @@ local vertexIter = function(self, i)
 	local x, y = getVertex(self, i);
 	return i, x, y;
 end
-
--- PUBLIC API
 
 Path.init = function(self)
 	self._vertices = {};

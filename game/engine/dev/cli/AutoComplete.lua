@@ -4,15 +4,13 @@ local StringUtils = require("engine/utils/StringUtils");
 
 local AutoComplete = Class("AutoComplete");
 
--- IMPLEMENTATION
-
 local getSuggestionsForCommand = function(self, input)
 	local matches = self._commandStore:search(input.fullText);
 	table.sort(matches, function(a, b)
 		return a.command:getName() < b.command:getName();
 	end);
 
-	-- Colorize!
+	-- Colorize
 	local lines = {};
 	for i, match in ipairs(matches) do
 		local textChunks = {};
@@ -70,8 +68,6 @@ local updateSuggestions = function(self, input)
 		self._suggestions = {lines = getSuggestionsForArguments(self, input), state = "args"};
 	end
 end
-
--- PUBLIC API
 
 AutoComplete.init = function(self, commandStore)
 	self._suggestions = {lines = {}, state = "command"};

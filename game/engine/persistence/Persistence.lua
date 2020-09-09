@@ -6,8 +6,6 @@ local StringUtils = require("engine/utils/StringUtils");
 
 local Persistence = Class("Persistence");
 
--- STATIC
-
 local saveData = nil;
 
 Persistence.init = function(self, saveDataClass)
