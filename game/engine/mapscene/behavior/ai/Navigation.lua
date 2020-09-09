@@ -7,7 +7,7 @@ local Locomotion = require("engine/mapscene/physics/Locomotion");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local MathUtils = require("engine/utils/MathUtils");
 
-local MovementAI = Class("MovementAI", Behavior);
+local Navigation = Class("Navigation", Behavior);
 
 local navigate = function(self, navigationMesh, goal, physicsBody, locomotion)
 	if not goal:isValid() then
@@ -48,13 +48,12 @@ local navigate = function(self, navigationMesh, goal, physicsBody, locomotion)
 	return false;
 end
 
--- TODO rename to Navigation
-MovementAI.init = function(self)
-	MovementAI.super.init(self);
+Navigation.init = function(self)
+	Navigation.super.init(self);
 	assert(self._script);
 end
 
-MovementAI.navigateToPoint = function(self, x, y, targetRadius)
+Navigation.navigateToPoint = function(self, x, y, targetRadius)
 	assert(x);
 	assert(y);
 	assert(targetRadius and targetRadius >= 0);
@@ -62,21 +61,21 @@ MovementAI.navigateToPoint = function(self, x, y, targetRadius)
 	return self:navigateToGoal(PositionGoal:new(x, y, targetRadius), repathDelay);
 end
 
-MovementAI.navigateToEntity = function(self, targetEntity, targetRadius)
+Navigation.navigateToEntity = function(self, targetEntity, targetRadius)
 	assert(targetEntity);
 	assert(targetRadius >= 0);
 	local repathDelay = 0.5;
 	return self:navigateToGoal(EntityGoal:new(targetEntity, targetRadius), repathDelay);
 end
 
-MovementAI.alignWithEntity = function(self, targetEntity, targetRadius)
+Navigation.alignWithEntity = function(self, targetEntity, targetRadius)
 	assert(targetEntity);
 	assert(targetRadius >= 0);
 	local repathDelay = 0.5;
 	return self:navigateToGoal(AlignGoal:new(self:getEntity(), targetEntity, targetRadius), repathDelay);
 end
 
-MovementAI.navigateToGoal = function(self, goal, repathDelay)
+Navigation.navigateToGoal = function(self, goal, repathDelay)
 	assert(goal);
 
 	local physicsBody = self:getEntity():getComponent(PhysicsBody);
@@ -123,4 +122,4 @@ MovementAI.navigateToGoal = function(self, goal, repathDelay)
 	end);
 end
 
-return MovementAI;
+return Navigation;

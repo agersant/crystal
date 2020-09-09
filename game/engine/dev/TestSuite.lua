@@ -12,7 +12,7 @@ local engineTestFiles = {
 	"engine/input/TestInputDevice",
 	"engine/mapscene/behavior/ai/TestAlignGoal",
 	"engine/mapscene/behavior/ai/TestEntityGoal",
-	"engine/mapscene/behavior/ai/TestMovement",
+	"engine/mapscene/behavior/ai/TestNavigation",
 	"engine/mapscene/behavior/ai/TestPath",
 	"engine/mapscene/behavior/ai/TestPositionGoal",
 	"engine/mapscene/behavior/TestBehavior",

@@ -1,5 +1,5 @@
 local Entity = require("engine/ecs/Entity");
-local MovementAI = require("engine/mapscene/behavior/ai/MovementAI");
+local Navigation = require("engine/mapscene/behavior/ai/Navigation");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local MapScene = require("engine/mapscene/MapScene");
 local Locomotion = require("engine/mapscene/physics/Locomotion");
@@ -20,7 +20,7 @@ tests[#tests].body = function()
 	subject:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	subject:addComponent(Locomotion:new(50));
 	subject:setPosition(startX, startY);
-	subject:addComponent(MovementAI:new());
+	subject:addComponent(Navigation:new());
 	subject:addComponent(ScriptRunner:new());
 
 	subject:navigateToPoint(endX, endY, acceptanceRadius);
@@ -43,7 +43,7 @@ tests[#tests].body = function()
 	subject:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	subject:addComponent(Locomotion:new(50));
 	subject:setPosition(startX, startY);
-	subject:addComponent(MovementAI:new());
+	subject:addComponent(Navigation:new());
 	subject:addComponent(ScriptRunner:new());
 
 	local target = scene:spawn(Entity);
@@ -72,7 +72,7 @@ tests[#tests].body = function()
 	subject:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	subject:addComponent(Locomotion:new(50));
 	subject:setPosition(startX, startY);
-	subject:addComponent(MovementAI:new());
+	subject:addComponent(Navigation:new());
 
 	local scriptRunner = ScriptRunner:new();
 	subject:addComponent(scriptRunner);

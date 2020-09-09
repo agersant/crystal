@@ -11,7 +11,7 @@ local FlinchAnimation = require("arpg/field/animation/FlinchAnimation");
 local IdleAnimation = require("arpg/field/animation/IdleAnimation");
 local WalkAnimation = require("arpg/field/animation/WalkAnimation");
 local CommonShader = require("arpg/graphics/CommonShader");
-local MovementAI = require("engine/mapscene/behavior/ai/MovementAI");
+local Navigation = require("engine/mapscene/behavior/ai/Navigation");
 local Entity = require("engine/ecs/Entity");
 local Assets = require("engine/resources/Assets");
 local Actor = require("engine/mapscene/behavior/Actor");
@@ -111,7 +111,7 @@ Sahagin.init = function(self, scene)
 
 	local physicsBody = self:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	self:addComponent(Locomotion:new());
-	self:addComponent(MovementAI:new());
+	self:addComponent(Navigation:new());
 	self:addComponent(Collision:new(physicsBody, 4));
 
 	self:addComponent(CombatData:new());
