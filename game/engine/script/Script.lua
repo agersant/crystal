@@ -63,6 +63,7 @@ local joinThreadOn = function(self, thread, threadsToJoin)
 	assert(thread:isBlocked());
 end
 
+-- TODO remove self arg as it is always thread:getOwner()
 pumpThread = function(self, thread, resumeArgs)
 	assert(self == thread:getOwner());
 	local threadCoroutine = thread:getCoroutine();
