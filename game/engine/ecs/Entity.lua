@@ -6,6 +6,7 @@ local Entity = Class("Entity");
 Entity.init = function(self, ecs)
 	assert(ecs);
 	self._ecs = ecs;
+	self._isValid = true;
 end
 
 Entity.getECS = function(self)
@@ -43,11 +44,8 @@ Entity.createEvent = function(self, class, ...)
 end
 
 Entity.despawn = function(self)
+	self._isValid = false;
 	self._ecs:despawn(self);
-end
-
-Entity.setIsValid = function(self, isValid)
-	self._isValid = isValid;
 end
 
 Entity.isValid = function(self)

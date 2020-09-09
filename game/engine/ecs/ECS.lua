@@ -49,7 +49,6 @@ end
 
 local unregisterComponent = function(self, entity, component)
 	assert(entity);
-	assert(entity:isValid());
 	assert(component);
 	assert(component:isInstanceOf(Component));
 
@@ -79,7 +78,6 @@ local unregisterComponent = function(self, entity, component)
 end
 
 local registerEntity = function(self, entity)
-	entity:setIsValid(true);
 	assert(not self._entities[entity]);
 	self._entities[entity] = true;
 end
@@ -95,7 +93,6 @@ local unregisterEntity = function(self, entity)
 	self._entities[entity] = nil;
 	self._entityToComponent[entity] = nil;
 	self._entityToComponents[entity] = nil;
-	entity:setIsValid(false);
 end
 
 ECS.init = function(self)
@@ -270,7 +267,6 @@ end
 ECS.addEvent = function(self, event)
 	assert(event);
 	assert(event:isInstanceOf(Event));
-	assert(event:getEntity():isValid());
 	local baseClass = event:getClass();
 	while baseClass do
 		local events = self._events[baseClass];
