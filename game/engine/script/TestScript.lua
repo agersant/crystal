@@ -395,7 +395,7 @@ tests[#tests].body = function()
 	assert(sentinel);
 end
 
-tests[#tests + 1] = {name = "End child threads after main thread ends"};
+tests[#tests + 1] = {name = "End child threads after thread ends"};
 tests[#tests].body = function()
 	local a = 0;
 	local script = Script:new(function(self)
@@ -410,7 +410,7 @@ tests[#tests].body = function()
 	assert(a == 0);
 end
 
-tests[#tests + 1] = {name = "End grand-child threads after owner ends"};
+tests[#tests + 1] = {name = "End grand-child threads after thread ends"};
 tests[#tests].body = function()
 	local a = 0;
 	local script = Script:new(function(self)
@@ -453,9 +453,9 @@ tests[#tests].body = function()
 
 	local scriptB = Script:new(function(self)
 		scriptA:addThreadAndRun(function(self)
-			local owner = self:getOwner();
-			assert(owner == scriptA);
-			a = owner.b;
+			local script = self:getScript();
+			assert(script == scriptA);
+			a = script.b;
 		end);
 	end);
 

@@ -4,12 +4,12 @@ local MathUtils = require("engine/utils/MathUtils");
 
 local Thread = Class("Thread");
 
-Thread.init = function(self, owner, parentThread, functionToThread)
+Thread.init = function(self, script, parentThread, functionToThread)
 	assert(type(functionToThread) == "function");
 	local threadCoroutine = coroutine.create(functionToThread);
 
 	self._coroutine = threadCoroutine;
-	self._owner = owner;
+	self._script = script;
 	self._childThreads = {};
 	self._blockedBy = {};
 	self._endsOn = {};
@@ -21,11 +21,11 @@ Thread.init = function(self, owner, parentThread, functionToThread)
 		parentThread._childThreads[self] = true;
 	end
 
-	Alias:add(self, owner);
+	Alias:add(self, script);
 end
 
-Thread.getOwner = function(self)
-	return self._owner;
+Thread.getScript = function(self)
+	return self._script;
 end
 
 Thread.getCoroutine = function(self)
@@ -114,8 +114,8 @@ Thread.waitFrame = function(self)
 end
 
 Thread.wait = function(self, seconds)
-	local endTime = self._owner:getTime() + seconds;
-	while self._owner:getTime() < endTime do
+	local endTime = self._script:getTime() + seconds;
+	while self._script:getTime() < endTime do
 		coroutine.yield();
 	end
 end
@@ -170,7 +170,7 @@ end
 
 Thread.stop = function(self)
 	assert(not self:isDead());
-	self._owner:endThread(self, false);
+	self._script:endThread(self, false);
 end
 
 Thread.scope = function(self, cleanupFunction)
@@ -195,9 +195,9 @@ Thread.waitTween = function(self, from, to, duration, easing, callback, arg)
 		end
 		return;
 	end
-	local startTime = self._owner:getTime();
-	while self._owner:getTime() <= startTime + duration do
-		local t = (self._owner:getTime() - startTime) / duration;
+	local startTime = self._script:getTime();
+	while self._script:getTime() <= startTime + duration do
+		local t = (self._script:getTime() - startTime) / duration;
 		local t = MathUtils.ease(t, easing);
 		local currentValue = from + t * (to - from);
 		if arg then

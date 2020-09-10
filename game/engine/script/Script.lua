@@ -8,7 +8,7 @@ local Script = Class("Script");
 local pumpThread;
 
 local blockThread = function(self, thread, signals)
-	assert(self == thread:getOwner());
+	assert(self == thread:getScript());
 	for _, signal in ipairs(signals) do
 		assert(type(signal) == "string");
 		thread:blockOnSignal(signal);
@@ -20,7 +20,7 @@ local blockThread = function(self, thread, signals)
 end
 
 local unblockThread = function(self, thread, signal, ...)
-	assert(self == thread:getOwner());
+	assert(self == thread:getScript());
 	assert(thread:isBlocked());
 	local blockedBySignals = thread:getBlockedBySignals();
 	for signal in pairs(blockedBySignals) do
@@ -35,7 +35,7 @@ local unblockThread = function(self, thread, signal, ...)
 end
 
 local endThreadOn = function(self, thread, signals)
-	assert(self == thread:getOwner());
+	assert(self == thread:getScript());
 	for _, signal in ipairs(signals) do
 		assert(type(signal) == "string");
 		if not self._endingSignals[signal] then
@@ -47,7 +47,7 @@ local endThreadOn = function(self, thread, signals)
 end
 
 local joinThreadOn = function(self, thread, threadsToJoin)
-	assert(self == thread:getOwner());
+	assert(self == thread:getScript());
 	assert(#threadsToJoin > 0);
 	for _, otherThread in ipairs(threadsToJoin) do
 		if otherThread:isEnded() then
@@ -64,7 +64,7 @@ local joinThreadOn = function(self, thread, threadsToJoin)
 end
 
 pumpThread = function(thread, resumeArgs)
-	local self = thread:getOwner();
+	local self = thread:getScript();
 	local threadCoroutine = thread:getCoroutine();
 	local status = coroutine.status(threadCoroutine);
 	assert(status ~= "running");
@@ -167,7 +167,7 @@ Script.addThreadAndRun = function(self, functionToThread)
 end
 
 Script.endThread = function(self, thread)
-	assert(self == thread:getOwner());
+	assert(self == thread:getScript());
 	if not thread:isEnded() then
 		thread:markAsEnded();
 	end
