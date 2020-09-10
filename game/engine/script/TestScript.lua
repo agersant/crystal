@@ -530,7 +530,7 @@ tests[#tests].body = function()
 	assert(sentinel);
 end
 
-tests[#tests + 1] = {name = "Can stop all threads"};
+tests[#tests + 1] = {name = "Script can be stopped"};
 tests[#tests].body = function()
 	local sentinel = 0;
 
@@ -601,6 +601,34 @@ tests[#tests].body = function()
 	assert(sentinel == 0);
 	scriptA:stop();
 	assert(sentinel == 1);
+end
+
+tests[#tests + 1] = {name = "Thread can stop itself"};
+tests[#tests].body = function()
+	local sentinel = 0;
+
+	local script = Script:new();
+	script:addThreadAndRun(function(self)
+		sentinel = 1;
+		self:stop();
+		sentinel = 2;
+	end);
+
+	assert(sentinel == 1)
+end
+
+tests[#tests + 1] = {name = "Thread can stop its own script"};
+tests[#tests].body = function()
+	local sentinel = 0;
+
+	local script = Script:new();
+	script:addThreadAndRun(function(self)
+		sentinel = 1;
+		script:stop();
+		sentinel = 2;
+	end);
+
+	assert(sentinel == 1)
 end
 
 return tests;

@@ -167,6 +167,13 @@ Thread.stop = function(self)
 	self._script:endThread(self, false);
 end
 
+Thread.abort = function(self)
+	assert(self:isEnded());
+	if coroutine.running() == self._coroutine then
+		coroutine.yield("abort");
+	end
+end
+
 Thread.scope = function(self, cleanupFunction)
 	assert(not self:isDead());
 	assert(type(cleanupFunction) == "function");

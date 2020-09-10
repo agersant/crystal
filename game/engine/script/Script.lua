@@ -101,6 +101,8 @@ pumpThread = function(thread, resumeArgs)
 				joinThreadOn(self, thread, threads);
 			elseif instruction == "hang" then
 				thread:block();
+			elseif instruction == "abort" then
+				assert(thread:isEnded());
 			end
 		end
 	end
@@ -180,6 +182,7 @@ Script.endThread = function(self, thread)
 		otherThread:unblock();
 		pumpThread(otherThread, thread:getOutput() or {false});
 	end
+	thread:abort();
 end
 
 Script.signal = function(self, signal, ...)
