@@ -10,10 +10,9 @@ Thread.init = function(self, script, parentThread, functionToThread)
 	self._coroutine = coroutine.create(functionToThread);
 	self._script = script;
 	self._childThreads = {};
-	self._blockedBy = {};
+	self._blockingSignals = {};
 	self._endsOn = {};
 	self._joinedBy = {};
-	self._joiningOn = {};
 	self._cleanupFunctions = {};
 
 	if parentThread then
@@ -53,24 +52,23 @@ end
 
 Thread.blockOnSignal = function(self, signal)
 	self._isBlocked = true;
-	self._blockedBy[signal] = true;
+	self._blockingSignals[signal] = true;
+end
+
+Thread.blockOnThread = function(self, otherThread)
+	assert(not otherThread._isEnded);
+	self._isBlocked = true;
+	otherThread._joinedBy[self] = true;
 end
 
 Thread.unblock = function(self)
 	assert(self.isBlocked);
 	self._isBlocked = false;
-	self._blockedBy = {};
+	self._blockingSignals = {};
 end
 
 Thread.endOnSignal = function(self, signal)
 	self._endsOn[signal] = true;
-end
-
-Thread.joinOnThread = function(self, otherThread)
-	assert(not otherThread._isEnded);
-	self._isBlocked = true;
-	self._joiningOn[otherThread] = true;
-	otherThread._joinedBy[self] = true;
 end
 
 Thread.markAsEnded = function(self)
@@ -78,6 +76,10 @@ Thread.markAsEnded = function(self)
 	for childThread in pairs(self._childThreads) do
 		childThread:markAsEnded();
 	end
+end
+
+Thread.isEnded = function(self)
+	return self._isEnded;
 end
 
 Thread.getChildThreads = function(self)
@@ -92,16 +94,8 @@ Thread.getEndOnSignals = function(self)
 	return self._endsOn;
 end
 
-Thread.getBlockedBySignals = function(self)
-	return self._blockedBy;
-end
-
-Thread.isEnded = function(self)
-	return self._isEnded;
-end
-
-Thread.getThreadsJoiningOn = function(self)
-	return self._joiningOn;
+Thread.getBlockingSignals = function(self)
+	return self._blockingSignals;
 end
 
 Thread.getCleanupFunctions = function(self)

@@ -22,12 +22,12 @@ end
 local unblockThread = function(self, thread, signal, ...)
 	assert(self == thread:getScript());
 	assert(thread:isBlocked());
-	local blockedBySignals = thread:getBlockedBySignals();
-	for signal in pairs(blockedBySignals) do
+	local signals = thread:getBlockingSignals();
+	for signal in pairs(signals) do
 		self._blockingSignals[signal][thread] = nil;
 	end
 	local signalData = {...};
-	if TableUtils.countKeys(blockedBySignals) > 1 then
+	if TableUtils.countKeys(signals) > 1 then
 		table.insert(signalData, 1, signal);
 	end
 	thread:unblock();
@@ -57,7 +57,7 @@ local joinThreadOn = function(self, thread, threadsToJoin)
 	end
 	for _, otherThread in ipairs(threadsToJoin) do
 		if not otherThread:isEnded() then
-			thread:joinOnThread(otherThread);
+			thread:blockOnThread(otherThread);
 		end
 	end
 	assert(thread:isBlocked());
@@ -116,11 +116,8 @@ local cleanupThread = function(self, thread)
 	for signal, _ in pairs(thread:getEndOnSignals()) do
 		self._endingSignals[signal][thread] = nil;
 	end
-	for signal, _ in pairs(thread:getBlockedBySignals()) do
+	for signal, _ in pairs(thread:getBlockingSignals()) do
 		self._blockingSignals[signal][thread] = nil;
-	end
-	for otherThread in pairs(thread:getThreadsJoiningOn()) do
-		otherThread._joinedBy[thread] = nil;
 	end
 	self._threads[thread] = nil;
 end
