@@ -6,9 +6,8 @@ local Thread = Class("Thread");
 
 Thread.init = function(self, script, parentThread, functionToThread)
 	assert(type(functionToThread) == "function");
-	local threadCoroutine = coroutine.create(functionToThread);
 
-	self._coroutine = threadCoroutine;
+	self._coroutine = coroutine.create(functionToThread);
 	self._script = script;
 	self._childThreads = {};
 	self._blockedBy = {};
@@ -123,7 +122,8 @@ end
 Thread.thread = function(self, functionToThread)
 	assert(not self:isDead());
 	assert(type(functionToThread) == "function");
-	return coroutine.yield("fork", functionToThread);
+	local newThread = Thread:new(self._script, self, functionToThread)
+	return coroutine.yield("fork", newThread);
 end
 
 Thread.waitFor = function(self, signal)

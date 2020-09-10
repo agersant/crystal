@@ -84,8 +84,8 @@ pumpThread = function(thread, resumeArgs)
 		else
 			local instruction = results[2];
 			if instruction == "fork" then
-				local functionToThread = results[3];
-				local newThread = Thread:new(self, thread, functionToThread);
+				local newThread = results[3];
+				assert(newThread:isInstanceOf(Thread));
 				self._threads[newThread] = true;
 				pumpThread(newThread);
 				pumpThread(thread, newThread);
