@@ -115,7 +115,7 @@ pumpThread = function(thread, resumeArgs)
 end
 
 local cleanupThread = function(self, thread)
-	for signal, _ in pairs(thread:getEndOnSignals()) do
+	for signal, _ in pairs(thread:getEndingSignals()) do
 		self._endingSignals[signal][thread] = nil;
 	end
 	for signal, _ in pairs(thread:getBlockingSignals()) do

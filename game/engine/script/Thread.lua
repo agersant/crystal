@@ -11,7 +11,7 @@ Thread.init = function(self, script, parentThread, functionToThread)
 	self._script = script;
 	self._childThreads = {};
 	self._blockingSignals = {};
-	self._endsOn = {};
+	self._endingSignals = {};
 	self._joinedBy = {};
 	self._cleanupFunctions = {};
 
@@ -68,7 +68,7 @@ Thread.unblock = function(self)
 end
 
 Thread.endOnSignal = function(self, signal)
-	self._endsOn[signal] = true;
+	self._endingSignals[signal] = true;
 end
 
 Thread.markAsEnded = function(self)
@@ -90,8 +90,8 @@ Thread.getThreadsJoiningOnMe = function(self)
 	return self._joinedBy;
 end
 
-Thread.getEndOnSignals = function(self)
-	return self._endsOn;
+Thread.getEndingSignals = function(self)
+	return self._endingSignals;
 end
 
 Thread.getBlockingSignals = function(self)
