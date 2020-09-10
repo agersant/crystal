@@ -12,10 +12,10 @@ local blockThread = function(self, thread, signals)
 	for _, signal in ipairs(signals) do
 		assert(type(signal) == "string");
 		thread:blockOnSignal(signal);
-		if not self._blockedThreads[signal] then
-			self._blockedThreads[signal] = {};
+		if not self._blockingSignals[signal] then
+			self._blockingSignals[signal] = {};
 		end
-		self._blockedThreads[signal][thread] = true;
+		self._blockingSignals[signal][thread] = true;
 	end
 end
 
@@ -24,7 +24,7 @@ local unblockThread = function(self, thread, signal, ...)
 	assert(thread:isBlocked());
 	local blockedBySignals = thread:getBlockedBySignals();
 	for signal in pairs(blockedBySignals) do
-		self._blockedThreads[signal][thread] = nil;
+		self._blockingSignals[signal][thread] = nil;
 	end
 	local signalData = {...};
 	if TableUtils.countKeys(blockedBySignals) > 1 then
@@ -38,10 +38,10 @@ local endThreadOn = function(self, thread, signals)
 	assert(self == thread:getOwner());
 	for _, signal in ipairs(signals) do
 		assert(type(signal) == "string");
-		if not self._endableThreads[signal] then
-			self._endableThreads[signal] = {};
+		if not self._endingSignals[signal] then
+			self._endingSignals[signal] = {};
 		end
-		self._endableThreads[signal][thread] = true;
+		self._endingSignals[signal][thread] = true;
 		thread:endOnSignal(signal);
 	end
 end
@@ -114,10 +114,10 @@ end
 
 local cleanupThread = function(self, thread)
 	for signal, _ in pairs(thread:getEndOnSignals()) do
-		self._endableThreads[signal][thread] = nil;
+		self._endingSignals[signal][thread] = nil;
 	end
 	for signal, _ in pairs(thread:getBlockedBySignals()) do
-		self._blockedThreads[signal][thread] = nil;
+		self._blockingSignals[signal][thread] = nil;
 	end
 	for otherThread in pairs(thread:getThreadsJoiningOn()) do
 		otherThread._joinedBy[thread] = nil;
@@ -128,8 +128,8 @@ end
 Script.init = function(self, scriptFunction)
 	self._time = 0;
 	self._threads = {};
-	self._blockedThreads = {};
-	self._endableThreads = {};
+	self._blockingSignals = {};
+	self._endingSignals = {};
 	if scriptFunction then
 		self:addThread(scriptFunction);
 	end
@@ -186,15 +186,15 @@ Script.endThread = function(self, thread)
 end
 
 Script.signal = function(self, signal, ...)
-	if self._endableThreads[signal] then
-		for thread, _ in pairs(self._endableThreads[signal]) do
+	if self._endingSignals[signal] then
+		for thread, _ in pairs(self._endingSignals[signal]) do
 			if not thread:isEnded() then
 				self:endThread(thread);
 			end
 		end
 	end
-	if self._blockedThreads[signal] then
-		local blockedThreadsCopy = TableUtils.shallowCopy(self._blockedThreads[signal]);
+	if self._blockingSignals[signal] then
+		local blockedThreadsCopy = TableUtils.shallowCopy(self._blockingSignals[signal]);
 		for thread, _ in pairs(blockedThreadsCopy) do
 			unblockThread(self, thread, signal, ...);
 		end
