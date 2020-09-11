@@ -103,13 +103,13 @@ Thread.getCleanupFunctions = function(self)
 end
 
 Thread.waitFrame = function(self)
-	coroutine.yield();
+	coroutine.yield("waitFrame");
 end
 
 Thread.wait = function(self, seconds)
 	local endTime = self._script:getTime() + seconds;
 	while self._script:getTime() < endTime do
-		coroutine.yield();
+		coroutine.yield("wait");
 	end
 end
 
