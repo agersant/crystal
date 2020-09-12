@@ -2631,7 +2631,7 @@
             ]
           }
         ],
-        "is_looping": true
+        "is_looping": false
       },
       {
         "name": "attack_up_1",
