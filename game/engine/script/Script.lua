@@ -5,7 +5,15 @@ local TableUtils = require("engine/utils/TableUtils");
 
 local Script = Class("Script");
 
-local pumpThread;
+local endThread, pumpThread;
+
+local runningThreads = {};
+local healthCheck = function()
+	local runningThread = runningThreads[#runningThreads];
+	if runningThread and runningThread:isEnded() then
+		runningThread:abort();
+	end
+end
 
 local blockThread = function(self, thread, signals)
 	assert(self == thread:getScript());
@@ -70,12 +78,14 @@ pumpThread = function(thread, resumeArgs)
 	assert(status ~= "running");
 	local results;
 	if status == "suspended" and not thread:isEnded() and not thread:isBlocked() then
+		table.insert(runningThreads, thread);
 		if resumeArgs ~= nil then
 			assert(type(resumeArgs) == "table");
 			results = {coroutine.resume(threadCoroutine, resumeArgs)};
 		else
 			results = {coroutine.resume(threadCoroutine, thread)};
 		end
+		table.remove(runningThreads);
 		local success = results[1];
 		if not success then
 			local errorText = results[2];
@@ -110,7 +120,7 @@ pumpThread = function(thread, resumeArgs)
 	status = coroutine.status(threadCoroutine);
 	if status == "dead" and not thread:isEnded() then
 		thread:setOutput(results);
-		self:endThread(thread);
+		endThread(self, thread);
 	end
 end
 
@@ -122,6 +132,25 @@ local cleanupThread = function(self, thread)
 		self._blockingSignals[signal][thread] = nil;
 	end
 	self._threads[thread] = nil;
+end
+
+endThread = function(self, thread)
+	assert(self == thread:getScript());
+	if not thread:isEnded() then
+		thread:markAsEnded();
+	end
+	for i, childThread in ipairs(thread:getChildThreads()) do
+		endThread(self, childThread);
+	end
+	local cleanupFunctions = thread:getCleanupFunctions();
+	for i = #cleanupFunctions, 1, -1 do
+		cleanupFunctions[i]();
+	end
+	cleanupThread(self, thread);
+	for otherThread in pairs(thread:getThreadsJoiningOnMe()) do
+		otherThread:unblock();
+		pumpThread(otherThread, thread:getOutput() or {false});
+	end
 end
 
 Script.init = function(self, scriptFunction)
@@ -142,11 +171,17 @@ Script.update = function(self, dt)
 	end
 end
 
+Script.stopThread = function(self, thread)
+	endThread(self, thread);
+	healthCheck();
+end
+
 Script.stop = function(self)
 	local threads = TableUtils.shallowCopy(self._threads);
 	for thread in pairs(threads) do
-		self:endThread(thread);
+		endThread(self, thread);
 	end
+	healthCheck();
 end
 
 Script.getTime = function(self)
@@ -162,34 +197,15 @@ end
 Script.addThreadAndRun = function(self, functionToThread)
 	local thread = self:addThread(functionToThread);
 	pumpThread(thread);
+	healthCheck();
 	return thread;
-end
-
-Script.endThread = function(self, thread)
-	assert(self == thread:getScript());
-	if not thread:isEnded() then
-		thread:markAsEnded();
-	end
-	for i, childThread in ipairs(thread:getChildThreads()) do
-		self:endThread(childThread);
-	end
-	local cleanupFunctions = thread:getCleanupFunctions();
-	for i = #cleanupFunctions, 1, -1 do
-		cleanupFunctions[i]();
-	end
-	cleanupThread(self, thread);
-	for otherThread in pairs(thread:getThreadsJoiningOnMe()) do
-		otherThread:unblock();
-		pumpThread(otherThread, thread:getOutput() or {false});
-	end
-	thread:abort();
 end
 
 Script.signal = function(self, signal, ...)
 	if self._endingSignals[signal] then
 		for thread, _ in pairs(self._endingSignals[signal]) do
 			if not thread:isEnded() then
-				self:endThread(thread);
+				endThread(self, thread);
 			end
 		end
 	end
@@ -199,6 +215,7 @@ Script.signal = function(self, signal, ...)
 			unblockThread(self, thread, signal, ...);
 		end
 	end
+	healthCheck();
 end
 
 return Script;

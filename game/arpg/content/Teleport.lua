@@ -38,8 +38,8 @@ local teleportScript = function(self)
 					local entityAngle = triggeredBy:getAngle();
 					local correctDirection = math.abs(teleportAngle - entityAngle) < math.pi / 2;
 					if correctDirection then
-						self:signal("teleportActivated");
 						doTeleport(self, triggeredBy);
+						self:signal("teleportActivated");
 					end
 				end
 			end

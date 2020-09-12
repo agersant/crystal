@@ -631,4 +631,42 @@ tests[#tests].body = function()
 	assert(sentinel == 1)
 end
 
+tests[#tests + 1] = {name = "Cross-script stop using addThreadAndRun"};
+tests[#tests].body = function()
+	local sentinel = 0;
+
+	local scriptA = Script:new();
+	local scriptB = Script:new();
+	scriptA:addThreadAndRun(function(self)
+		sentinel = 1;
+		scriptB:addThreadAndRun(function(self)
+			scriptA:stop();
+		end);
+		sentinel = 2;
+	end);
+
+	scriptA:update(0);
+	assert(sentinel == 1)
+end
+
+tests[#tests + 1] = {name = "Cross-script stop using a signal"};
+tests[#tests].body = function()
+	local sentinel = 0;
+
+	local scriptA = Script:new();
+	local scriptB = Script:new();
+	scriptA:addThreadAndRun(function(self)
+		sentinel = sentinel + 1;
+		self:waitFor("signal");
+		scriptB:stop();
+	end);
+	scriptB:addThreadAndRun(function(self)
+		scriptA:signal("signal");
+		sentinel = sentinel + 10;
+	end);
+
+	scriptA:update(0);
+	assert(sentinel == 1)
+end
+
 return tests;

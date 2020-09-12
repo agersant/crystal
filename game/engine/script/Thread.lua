@@ -164,7 +164,7 @@ end
 
 Thread.stop = function(self)
 	assert(not self:isDead());
-	self._script:endThread(self, false);
+	self._script:stopThread(self, false);
 end
 
 Thread.abort = function(self)
