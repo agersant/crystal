@@ -122,14 +122,11 @@ end
 
 MapScene.draw = function(self)
 	MapScene.super.draw(self);
-
-	love.graphics.push();
-
 	self._ecs:notifySystems("beforeDraw");
-	self._ecs:notifySystems("duringDraw");
+	self._ecs:notifySystems("beforeEntitiesDraw");
+	self._ecs:notifySystems("duringEntitiesDraw");
+	self._ecs:notifySystems("afterEntitiesDraw");
 	self._ecs:notifySystems("afterDraw");
-
-	love.graphics.pop();
 end
 
 CLI:registerCommand("loadMap mapName:string", function(mapName)

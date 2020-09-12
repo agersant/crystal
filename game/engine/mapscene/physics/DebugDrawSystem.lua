@@ -62,7 +62,7 @@ local drawShape = function(self, x, y, shape, color)
 	love.graphics.pop();
 end
 
-DebugDrawSystem.afterDraw = function(self, dt)
+DebugDrawSystem.afterEntitiesDraw = function(self, dt)
 
 	local map = self._ecs:getMap();
 	assert(map);

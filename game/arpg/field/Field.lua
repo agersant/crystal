@@ -7,10 +7,9 @@ local MovementControls = require("arpg/field/controls/MovementControls");
 local MovementControlsSystem = require("arpg/field/controls/MovementControlsSystem");
 local Teams = require("arpg/field/combat/Teams");
 local DamageNumbersSystem = require("arpg/field/hud/damage/DamageNumbersSystem");
-local HUD = require("arpg/field/hud/HUD");
+local HUDSystem = require("arpg/field/hud/HUDSystem");
 local PartyMember = require("arpg/persistence/party/PartyMember");
 local MapScene = require("engine/mapscene/MapScene");
-local MapSystem = require("engine/mapscene/MapSystem");
 local Persistence = require("engine/persistence/Persistence");
 local InputListener = require("engine/mapscene/behavior/InputListener");
 
@@ -39,8 +38,6 @@ local spawnParty = function(self, x, y, startAngle)
 end
 
 Field.init = function(self, mapName, startX, startY, startAngle)
-	self._hud = HUD:new(self);
-
 	Field.super.init(self, mapName);
 
 	local map = self:getMap();
@@ -60,20 +57,19 @@ Field.addSystems = function(self)
 	ecs:addSystem(CombatSystem:new(ecs));
 	ecs:addSystem(DamageNumbersSystem:new(ecs));
 	ecs:addSystem(GameOverSystem:new(ecs));
+	ecs:addSystem(HUDSystem:new(ecs));
 end
 
 Field.update = function(self, dt)
 	Field.super.update(self, dt);
-	self._hud:update(dt);
 end
 
 Field.draw = function(self)
 	Field.super.draw(self);
-	self._hud:draw();
 end
 
 Field.getHUD = function(self)
-	return self._hud;
+	return self._ecs:getSystem(HUDSystem):getHUD();
 end
 
 return Field;

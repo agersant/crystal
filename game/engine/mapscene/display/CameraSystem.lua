@@ -19,8 +19,13 @@ CameraSystem.afterScripts = function(self, dt)
 end
 
 CameraSystem.beforeDraw = function(self)
+	love.graphics.push();
 	local ox, oy = self._camera:getRenderOffset();
 	love.graphics.translate(ox, oy);
+end
+
+CameraSystem.afterDraw = function(self)
+	love.graphics.pop();
 end
 
 return CameraSystem;

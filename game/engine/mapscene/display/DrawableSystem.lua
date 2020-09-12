@@ -13,7 +13,7 @@ DrawableSystem.init = function(self, ecs)
 	DrawableSystem.super.init(self, ecs);
 end
 
-DrawableSystem.duringDraw = function(self)
+DrawableSystem.duringEntitiesDraw = function(self)
 	local ecs = self:getECS();
 	local drawables = ecs:getAllComponents(Drawable);
 	table.sort(drawables, sortDrawables);
