@@ -1,9 +1,7 @@
 require("engine/utils/OOP");
 local GFXConfig = require("engine/graphics/GFXConfig");
 local InputListener = require("engine/mapscene/behavior/InputListener");
-local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local MathUtils = require("engine/utils/MathUtils");
-local TableUtils = require("engine/utils/TableUtils");
 
 local Camera = Class("Camera");
 
@@ -16,53 +14,15 @@ local getMapSize = function(self)
 	return mapWidth, mapHeight;
 end
 
-local computeAveragePosition = function(self)
+local computeAveragePosition = function(self, trackedEntities)
 	local tx, ty = 0, 0;
-	for _, entity in ipairs(self._trackedEntities) do
+	for _, entity in ipairs(trackedEntities) do
 		local x, y = entity:getPosition();
 		tx = tx + x;
 		ty = ty + y;
 	end
-	tx = tx / #self._trackedEntities;
-	ty = ty / #self._trackedEntities;
-	return tx, ty;
-end
-
-local computeAverageVelocity = function(self)
-	local vx, vy = 0, 0;
-	for _, trackedEntity in ipairs(self._trackedEntities) do
-		local evx, evy = 0, 0;
-		if trackedEntity.getVelocity then
-			evx, evy = trackedEntity:getVelocity();
-		end
-		vx = vx + evx;
-		vy = vy + evy;
-	end
-	vx = vx / #self._trackedEntities;
-	vy = vy / #self._trackedEntities;
-	return vx, vy;
-end
-
-local computeLookAheadPosition = function(self, screenW, screenH)
-	local tx, ty;
-	local trackedEntity = self._trackedEntities[1];
-	assert(trackedEntity);
-	local physicsBody = trackedEntity:getComponent(PhysicsBody);
-	local ex, ey = physicsBody:getPosition();
-	local angle = physicsBody:getAngle();
-	local vx, vy = math.cos(angle), math.sin(angle);
-	if math.abs(vx) <= epsilon then
-		tx = ex;
-	else
-		local sign = vx / math.abs(vx);
-		tx = ex + self._lookAhead * screenW * sign;
-	end
-	if math.abs(vy) <= epsilon then
-		ty = ey;
-	else
-		local sign = vy / math.abs(vy);
-		ty = ey + self._lookAhead * screenH * sign;
-	end
+	tx = tx / #trackedEntities;
+	ty = ty / #trackedEntities;
 	return tx, ty;
 end
 
@@ -82,18 +42,22 @@ local clampPosition = function(self, tx, ty, screenW, screenH)
 end
 
 local computeTargetPosition = function(self)
+
 	local tx, ty;
 	local screenW, screenH = GFXConfig:getNativeSize();
 	local mapWidth, mapHeight = getMapSize(self);
 
-	if #self._trackedEntities == 0 then
+	local trackedEntities = {};
+	for entity in pairs(self._scene:getECS():getAllEntitiesWith(InputListener)) do
+		table.insert(trackedEntities, entity);
+	end
+
+	if #trackedEntities == 0 then
 		tx = mapWidth / 2;
 		ty = mapHeight / 2;
 		-- TODO These cases will error when tracking entities that despawn
-	elseif #self._trackedEntities > 1 then
-		tx, ty = computeAveragePosition(self);
 	else
-		tx, ty = computeLookAheadPosition(self, screenW, screenH);
+		tx, ty = computeAveragePosition(self, trackedEntities);
 	end
 
 	tx, ty = clampPosition(self, tx, ty, screenW, screenH);
@@ -102,38 +66,9 @@ local computeTargetPosition = function(self)
 end
 
 Camera.init = function(self, scene)
-	self:setAutopilotEnabled(true);
 	self:setPosition(0, 0);
 	self._scene = scene;
-	self._trackedEntities = {};
-	self._speed = 60;
-	self._lookAhead = 0.05; -- Relative to screen size
-end
-
-Camera.snap = function(self)
-	if self._auto then
-		local tx, ty = computeTargetPosition(self);
-		self:setPosition(tx, ty);
-	end
-end
-
-Camera.addTrackedEntity = function(self, entity)
-	assert(not TableUtils.contains(self._trackedEntities, entity));
-	table.insert(self._trackedEntities, entity);
-end
-
-Camera.removeTrackedEntity = function(self, entity)
-	assert(TableUtils.contains(self._trackedEntities, entity));
-	for i, trackedEntity in ipairs(self._trackedEntities) do
-		if entity == trackedEntity then
-			table.remove(self._trackedEntities, i);
-			return;
-		end
-	end
-end
-
-Camera.setAutopilotEnabled = function(self, enabled)
-	self._auto = enabled;
+	self._smoothing = 0.002;
 end
 
 Camera.getRenderOffset = function(self)
@@ -163,56 +98,19 @@ end
 
 Camera.update = function(self, dt)
 
-	if not self._auto then
-		return;
-	end
-
-	local trackedEntities = self._scene:getECS():getAllEntitiesWith(InputListener);
-	self._trackedEntities = {};
-	for entity in pairs(trackedEntities) do
-		table.insert(self._trackedEntities, entity);
-	end
-
 	local z = GFXConfig:getZoom();
-	if z ~= self._previousZoom then
-		self:snap();
-		self._previousZoom = z;
-		return;
-	end
-
 	local tx, ty = computeTargetPosition(self);
-	local dx, dy = tx - self._x, ty - self._y;
-	if dx == 0 and dy == 0 then
-		return;
+
+	local newX, newY;
+	if z ~= self._previousZoom then
+		newX, newY = tx, ty;
+		self._previousZoom = z;
+	else
+		newX = MathUtils.damp(self._x, tx, self._smoothing, dt);
+		newY = MathUtils.damp(self._y, ty, self._smoothing, dt);
 	end
 
-	if #self._trackedEntities == 0 then
-		self._x = tx;
-		self._y = ty;
-		return;
-	end
-
-	local vx, vy = computeAverageVelocity(self);
-
-	if math.abs(vx) > epsilon and dx ~= 0 then
-		vx = (dx / math.abs(dx)) * (math.abs(vx) + self._speed);
-		local newX = self._x + dt * vx;
-		if (self._x - tx) * (newX - tx) <= 0 then
-			self._x = tx;
-		else
-			self._x = newX;
-		end
-	end
-
-	if math.abs(vy) > epsilon and dy ~= 0 then
-		vy = (dy / math.abs(dy)) * (math.abs(vy) + self._speed);
-		local newY = self._y + dt * vy;
-		if (self._y - ty) * (newY - ty) <= 0 then
-			self._y = ty;
-		else
-			self._y = newY;
-		end
-	end
+	self:setPosition(newX, newY);
 end
 
 return Camera;
