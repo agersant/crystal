@@ -1,6 +1,5 @@
 require("engine/utils/OOP");
 local GFXConfig = require("engine/graphics/GFXConfig");
-local MapSystem = require("engine/mapscene/MapSystem");
 local InputListener = require("engine/mapscene/behavior/InputListener");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local MathUtils = require("engine/utils/MathUtils");
