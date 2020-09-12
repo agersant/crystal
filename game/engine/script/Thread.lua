@@ -1,6 +1,7 @@
 require("engine/utils/OOP");
 local Alias = require("engine/utils/Alias");
 local MathUtils = require("engine/utils/MathUtils");
+local TableUtils = require("engine/utils/TableUtils");
 
 local Thread = Class("Thread");
 
@@ -98,8 +99,11 @@ Thread.getBlockingSignals = function(self)
 	return self._blockingSignals;
 end
 
-Thread.getCleanupFunctions = function(self)
-	return self._cleanupFunctions;
+Thread.runCleanupFunctions = function(self)
+	local cleanupFunctions = TableUtils.shallowCopy(self._cleanupFunctions);
+	for i = #cleanupFunctions, 1, -1 do
+		cleanupFunctions[i]();
+	end
 end
 
 Thread.waitFrame = function(self)

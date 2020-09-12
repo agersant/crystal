@@ -142,10 +142,7 @@ endThread = function(self, thread)
 	for i, childThread in ipairs(thread:getChildThreads()) do
 		endThread(self, childThread);
 	end
-	local cleanupFunctions = thread:getCleanupFunctions();
-	for i = #cleanupFunctions, 1, -1 do
-		cleanupFunctions[i]();
-	end
+	thread:runCleanupFunctions();
 	cleanupThread(self, thread);
 	for otherThread in pairs(thread:getThreadsJoiningOnMe()) do
 		otherThread:unblock();
