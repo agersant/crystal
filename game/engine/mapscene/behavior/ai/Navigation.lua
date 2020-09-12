@@ -33,7 +33,7 @@ local navigate = function(self, navigationMesh, goal, physicsBody, locomotion)
 		end
 		local x, y = physicsBody:getPosition();
 		local distToWaypoint2 = MathUtils.distance2(x, y, waypointX, waypointY);
-		local epsilon = locomotion:getSpeed() * 1 / 60; -- TODO framerate dependent
+		local epsilon = locomotion:getSpeed() * self:getDeltaTime();
 		if distToWaypoint2 >= epsilon * epsilon then
 			local deltaX, deltaY = waypointX - x, waypointY - y;
 			local angle = math.atan2(deltaY, deltaX);

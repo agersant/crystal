@@ -149,6 +149,7 @@ endThread = function(self, thread)
 end
 
 Script.init = function(self, scriptFunction)
+	self._dt = 0;
 	self._time = 0;
 	self._threads = {};
 	self._blockingSignals = {};
@@ -159,6 +160,7 @@ Script.init = function(self, scriptFunction)
 end
 
 Script.update = function(self, dt)
+	self._dt = dt;
 	self._time = self._time + dt;
 	local threads = TableUtils.shallowCopy(self._threads);
 	for thread in pairs(threads) do
@@ -181,6 +183,10 @@ end
 
 Script.getTime = function(self)
 	return self._time;
+end
+
+Script.getDeltaTime = function(self)
+	return self._dt;
 end
 
 Script.addThread = function(self, functionToThread)
