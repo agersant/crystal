@@ -47,10 +47,6 @@ Thread.isBlocked = function(self)
 	return self._isBlocked;
 end
 
-Thread.block = function(self)
-	self._isBlocked = true;
-end
-
 Thread.blockOnSignal = function(self, signal)
 	self._isBlocked = true;
 	self._blockingSignals[signal] = true;
@@ -163,6 +159,7 @@ end
 
 Thread.hang = function(self)
 	assert(not self:isDead());
+	self._isBlocked = true;
 	coroutine.yield("hang");
 end
 

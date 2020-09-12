@@ -109,8 +109,6 @@ pumpThread = function(thread, resumeArgs)
 			elseif instruction == "join" then
 				local threads = results[3];
 				joinThreadOn(self, thread, threads);
-			elseif instruction == "hang" then
-				thread:block();
 			elseif instruction == "abort" then
 				assert(thread:isEnded());
 			end
