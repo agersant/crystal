@@ -55,7 +55,6 @@ local computeTargetPosition = function(self)
 	if #trackedEntities == 0 then
 		tx = mapWidth / 2;
 		ty = mapHeight / 2;
-		-- TODO These cases will error when tracking entities that despawn
 	else
 		tx, ty = computeAveragePosition(self, trackedEntities);
 	end
