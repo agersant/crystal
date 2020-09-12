@@ -5,8 +5,6 @@ local MathUtils = require("engine/utils/MathUtils");
 
 local Camera = Class("Camera");
 
-local epsilon = 0.001;
-
 local getMapSize = function(self)
 	local map = self._scene:getMap();
 	local mapWidth = map:getWidthInPixels();
