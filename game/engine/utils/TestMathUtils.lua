@@ -54,6 +54,24 @@ tests[#tests].body = function()
 	assert(1, 0 == MathUtils.angleToDir8(math.rad(350)));
 end
 
+tests[#tests + 1] = {name = "Damping"};
+tests[#tests].body = function()
+	assert(10 == MathUtils.damp(10, 20, 0, 0));
+	assert(20 == MathUtils.damp(10, 20, 0, 0.5));
+	assert(20 == MathUtils.damp(10, 20, 0, 1));
+
+	assert(10 == MathUtils.damp(10, 20, 1, 0));
+	assert(10 == MathUtils.damp(10, 20, 1, 0.5));
+	assert(10 == MathUtils.damp(10, 20, 1, 1));
+
+	assert(10 == MathUtils.damp(10, 20, 0.5, 0));
+	assert(15 == MathUtils.damp(10, 20, 0.5, 1));
+	assert(17.5 == MathUtils.damp(10, 20, 0.5, 2));
+
+	assert(10 == MathUtils.damp(10, 20, 0.75, 0));
+	assert(12.5 == MathUtils.damp(10, 20, 0.75, 1));
+end
+
 tests[#tests + 1] = {name = "Linear easing"};
 tests[#tests].body = function()
 	assert(0, 0 == MathUtils.ease(0, "linear"));

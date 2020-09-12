@@ -90,6 +90,13 @@ MathUtils.lerp = function(t, a, b)
 	return a + t * (b - a);
 end
 
+MathUtils.damp = function(from, to, smoothing, dt)
+	assert(smoothing >= 0);
+	assert(smoothing <= 1);
+	assert(dt >= 0);
+	return MathUtils.lerp(1 - math.pow(smoothing, dt), from, to);
+end
+
 MathUtils.ease = function(t, easing)
 	local pow = math.pow;
 	assert(t >= 0);
