@@ -1,68 +1,54 @@
 require("engine/utils/OOP");
-local TableUtils = require("engine/utils/TableUtils");
 local Component = require("engine/ecs/Component");
 local Script = require("engine/script/Script");
 local Alias = require("engine/utils/Alias");
+local TableUtils = require("engine/utils/TableUtils");
 
 local ScriptRunner = Class("ScriptRunner", Component);
 
 ScriptRunner.init = function(self)
 	ScriptRunner.super.init(self);
 	self._scripts = {};
-	self._newScripts = {};
 end
 
 ScriptRunner.addScript = function(self, script)
 	assert(script:isInstanceOf(Script));
 	Alias:add(script, self:getEntity());
-	table.insert(self._newScripts, script);
+	table.insert(self._scripts, script);
 	return script;
 end
 
-ScriptRunner.promoteNewScripts = function(self)
-	for i, newScript in ipairs(self._newScripts) do
-		table.insert(self._scripts, newScript);
-	end
-	self._newScripts = {};
-end
-
 ScriptRunner.runScripts = function(self, dt)
-	for i, script in ipairs(self._scripts) do
+	local scripts = TableUtils.shallowCopy(self._scripts);
+	for i, script in ipairs(scripts) do
 		script:update(dt);
 	end
 end
 
 ScriptRunner.signalAllScripts = function(self, signal, ...)
-	local scriptsCopy = TableUtils.shallowCopy(self._scripts);
-	for _, script in ipairs(scriptsCopy) do
+	local scripts = TableUtils.shallowCopy(self._scripts);
+	for _, script in ipairs(scripts) do
 		script:signal(signal, ...);
 	end
 end
 
-ScriptRunner.removeScript = function(self, script)
-	assert(script:isInstanceOf(Script));
-	for i, newScript in ipairs(self._newScripts) do
-		if newScript == script then
-			table.remove(self._newScripts, i);
-			return;
-		end
-	end
-
-	for i, activeScript in ipairs(self._scripts) do
-		if activeScript == script then
+ScriptRunner.removeScript = function(self, scriptToRemove)
+	assert(scriptToRemove:isInstanceOf(Script));
+	for i, script in ipairs(self._scripts) do
+		if script == scriptToRemove then
 			table.remove(self._scripts, i);
 			script:stopAllThreads();
-			break
+			return;
 		end
 	end
 end
 
 ScriptRunner.removeAllScripts = function(self)
-	for _, script in ipairs(self._scripts) do
+	local scripts = TableUtils.shallowCopy(self._scripts);
+	self._scripts = {};
+	for _, script in ipairs(scripts) do
 		script:stopAllThreads();
 	end
-	self._scripts = {};
-	self._newScripts = {};
 end
 
 return ScriptRunner;
