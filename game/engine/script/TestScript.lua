@@ -552,7 +552,7 @@ tests[#tests].body = function()
 	script:update(0);
 	assert(sentinel == 11);
 
-	script:stop();
+	script:stopAllThreads();
 	script:update(0);
 	script:update(0);
 	assert(sentinel == 11);
@@ -575,7 +575,7 @@ tests[#tests].body = function()
 	end);
 
 	assert(not sentinel);
-	script1:stop();
+	script1:stopAllThreads();
 	assert(sentinel);
 end
 
@@ -592,14 +592,14 @@ tests[#tests].body = function()
 	scriptB:addThread(function(self)
 		self:join(threadA);
 		sentinel = sentinel + 1;
-		scriptA:stop();
+		scriptA:stopAllThreads();
 	end);
 
 	assert(sentinel == 0);
 	scriptA:update(0);
 	scriptB:update(0);
 	assert(sentinel == 0);
-	scriptA:stop();
+	scriptA:stopAllThreads();
 	assert(sentinel == 1);
 end
 
@@ -610,7 +610,7 @@ tests[#tests].body = function()
 	local script = Script:new();
 	script:addThreadAndRun(function(self)
 		sentinel = 1;
-		self:stop();
+		self:stopAllThreads();
 		sentinel = 2;
 	end);
 
@@ -624,7 +624,7 @@ tests[#tests].body = function()
 	local script = Script:new();
 	script:addThreadAndRun(function(self)
 		sentinel = 1;
-		script:stop();
+		script:stopAllThreads();
 		sentinel = 2;
 	end);
 
@@ -640,7 +640,7 @@ tests[#tests].body = function()
 	scriptA:addThreadAndRun(function(self)
 		sentinel = 1;
 		scriptB:addThreadAndRun(function(self)
-			scriptA:stop();
+			scriptA:stopAllThreads();
 		end);
 		sentinel = 2;
 	end);
@@ -658,7 +658,7 @@ tests[#tests].body = function()
 	scriptA:addThreadAndRun(function(self)
 		sentinel = sentinel + 1;
 		self:waitFor("signal");
-		scriptB:stop();
+		scriptB:stopAllThreads();
 	end);
 	scriptB:addThreadAndRun(function(self)
 		scriptA:signal("signal");

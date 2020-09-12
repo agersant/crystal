@@ -85,7 +85,7 @@ Navigation.navigateToGoal = function(self, goal, repathDelay)
 	assert(locomotion);
 	assert(navigationMesh);
 
-	self._script:stop();
+	self._script:stopAllThreads();
 	return self._script:addThreadAndRun(function(self)
 
 		self:scope(function()

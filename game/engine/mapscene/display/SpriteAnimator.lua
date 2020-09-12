@@ -34,7 +34,7 @@ local playAnimationInternal = function(self, animationName, forceRestart)
 		return;
 	end
 	self._animation = animation;
-	self._script:stop();
+	self._script:stopAllThreads();
 	return self._script:addThreadAndRun(playback(self, animation));
 end
 

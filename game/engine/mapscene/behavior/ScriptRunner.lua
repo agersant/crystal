@@ -43,7 +43,7 @@ ScriptRunner.removeScript = function(self, script)
 	assert(script:isInstanceOf(Script));
 	for i, activeScript in ipairs(self._scripts) do
 		if activeScript == script then
-			script:stop();
+			script:stopAllThreads();
 			table.remove(self._scripts, i);
 			return;
 		end
@@ -58,7 +58,7 @@ end
 
 ScriptRunner.removeAllScripts = function(self)
 	for _, script in ipairs(self._scripts) do
-		script:stop();
+		script:stopAllThreads();
 	end
 	self._scripts = {};
 	self._newScripts = {};

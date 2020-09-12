@@ -176,7 +176,7 @@ Script.stopThread = function(self, thread)
 	healthCheck();
 end
 
-Script.stop = function(self)
+Script.stopAllThreads = function(self)
 	local threads = TableUtils.shallowCopy(self._threads);
 	for thread in pairs(threads) do
 		endThread(self, thread);
