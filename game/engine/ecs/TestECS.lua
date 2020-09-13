@@ -159,6 +159,45 @@ tests[#tests].body = function()
 	assert(not success);
 end
 
+tests[#tests + 1] = {name = "Get exact component"};
+tests[#tests].body = function()
+	local ecs = ECS:new();
+	local a = ecs:spawn(Entity);
+
+	local Snoot = Class:test("Snoot", Component);
+	local Boop = Class:test("Boop", Snoot);
+	local Bonk = Class:test("Bonk", Snoot);
+	local boop = Boop:new();
+	local bonk = Bonk:new();
+
+	a:addComponent(boop);
+	assert(a:getExactComponent(Boop) == boop);
+	assert(a:getExactComponent(Bonk) == nil);
+	assert(a:getExactComponent(Snoot) == nil);
+	ecs:update();
+	assert(a:getExactComponent(Boop) == boop);
+	assert(a:getExactComponent(Bonk) == nil);
+	assert(a:getExactComponent(Snoot) == nil);
+
+	a:addComponent(bonk);
+	assert(a:getExactComponent(Boop) == boop);
+	assert(a:getExactComponent(Bonk) == bonk);
+	assert(a:getExactComponent(Snoot) == nil);
+	ecs:update();
+	assert(a:getExactComponent(Boop) == boop);
+	assert(a:getExactComponent(Bonk) == bonk);
+	assert(a:getExactComponent(Snoot) == nil);
+
+	a:removeComponent(boop);
+	assert(a:getExactComponent(Boop) == nil);
+	assert(a:getExactComponent(Bonk) == bonk);
+	assert(a:getExactComponent(Snoot) == nil);
+	ecs:update();
+	assert(a:getExactComponent(Boop) == nil);
+	assert(a:getExactComponent(Bonk) == bonk);
+	assert(a:getExactComponent(Snoot) == nil);
+end
+
 tests[#tests + 1] = {name = "Get component"};
 tests[#tests].body = function()
 	local ecs = ECS:new();
