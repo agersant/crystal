@@ -137,7 +137,7 @@ endThread = function(self, thread)
 	if not thread:isEnded() then
 		thread:markAsEnded();
 	end
-	for i, childThread in ipairs(thread:getChildThreads()) do
+	for childThread in pairs(thread:getChildThreads()) do
 		endThread(self, childThread);
 	end
 	thread:runCleanupFunctions();
@@ -204,7 +204,7 @@ end
 
 Script.signal = function(self, signal, ...)
 	if self._endingSignals[signal] then
-		for thread, _ in pairs(self._endingSignals[signal]) do
+		for thread in pairs(self._endingSignals[signal]) do
 			if not thread:isEnded() then
 				endThread(self, thread);
 			end
@@ -212,7 +212,7 @@ Script.signal = function(self, signal, ...)
 	end
 	if self._blockingSignals[signal] then
 		local blockedThreadsCopy = TableUtils.shallowCopy(self._blockingSignals[signal]);
-		for thread, _ in pairs(blockedThreadsCopy) do
+		for thread in pairs(blockedThreadsCopy) do
 			unblockThread(self, thread, signal, ...);
 		end
 	end

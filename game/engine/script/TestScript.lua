@@ -530,6 +530,26 @@ tests[#tests].body = function()
 	assert(sentinel);
 end
 
+tests[#tests + 1] = {name = "Scope cleanup functions from child threads also run"};
+tests[#tests].body = function()
+	local sentinel = false;
+	local script = Script:new(function(self)
+		self:endOn("s1");
+		self:thread(function(self)
+			self:scope(function()
+				sentinel = true
+			end);
+			self:hang();
+		end);
+		self:hang();
+	end);
+
+	script:update(0);
+	assert(not sentinel);
+	script:signal("s1");
+	assert(sentinel);
+end
+
 tests[#tests + 1] = {name = "Script can be stopped"};
 tests[#tests].body = function()
 	local sentinel = 0;
