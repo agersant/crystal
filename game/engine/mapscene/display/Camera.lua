@@ -96,8 +96,10 @@ Camera.update = function(self, dt)
 		newX, newY = tx, ty;
 		self._previousZoom = z;
 	else
-		newX = MathUtils.damp(self._x, tx, self._smoothing, dt);
-		newY = MathUtils.damp(self._y, ty, self._smoothing, dt);
+		-- TODO revisit camera smoothing, this version below makes the player sprite jitter during scrolling
+		-- newX = MathUtils.damp(self._x, tx, self._smoothing, dt);
+		-- newY = MathUtils.damp(self._y, ty, self._smoothing, dt);
+		newX, newY = tx, ty;
 	end
 
 	self:setPosition(newX, newY);
