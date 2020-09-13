@@ -85,4 +85,17 @@ tests[#tests].body = function()
 	assert(not Assets:isAssetLoaded(sheetName));
 end
 
+tests[#tests + 1] = {name = "Assets can be reloaded", gfx = "mock"};
+tests[#tests].body = function()
+	local sheetName = "engine/test-data/blankey.lua";
+	Assets:load(sheetName);
+	local sheet = Assets:getSpritesheet(sheetName);
+	sheet.pollution = true;
+	local sheet = Assets:getSpritesheet(sheetName);
+	assert(sheet.pollution);
+	Assets:refresh(sheetName);
+	local sheet = Assets:getSpritesheet(sheetName);
+	assert(not sheet.pollution);
+end
+
 return tests;
