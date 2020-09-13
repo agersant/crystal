@@ -60,14 +60,6 @@ Field.addSystems = function(self)
 	ecs:addSystem(HUDSystem:new(ecs));
 end
 
-Field.update = function(self, dt)
-	Field.super.update(self, dt);
-end
-
-Field.draw = function(self)
-	Field.super.draw(self);
-end
-
 Field.getHUD = function(self)
 	return self._ecs:getSystem(HUDSystem):getHUD();
 end
