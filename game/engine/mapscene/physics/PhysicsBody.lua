@@ -35,7 +35,7 @@ PhysicsBody.init = function(self, physicsWorld, bodyType)
 	self._body:setFixedRotation(true);
 	self._body:setUserData(self);
 	self._body:setActive(false);
-	self:setDirection8(1, 0);
+	self:setAngle(0);
 	self._altitude = 0;
 end
 
@@ -108,8 +108,6 @@ PhysicsBody.setDirection8 = function(self, xDir8, yDir8)
 
 	self._xDir8 = xDir8;
 	self._yDir8 = yDir8;
-	self._xDir4 = self._dir4 == "left" and -1 or self._dir4 == "right" and 1 or 0;
-	self._yDir4 = self._dir4 == "up" and -1 or self._dir4 == "down" and 1 or 0;
 
 	self._angle = math.atan2(yDir8, xDir8);
 end
