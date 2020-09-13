@@ -56,6 +56,7 @@ Renderer.draw = function(self, drawFunction, options)
 		love.graphics.scale(zoom, zoom);
 		love.graphics.translate(subpixelOffsetX, subpixelOffsetY);
 		if upscale then
+			love.graphics.translate(-self._padding, -self._padding);
 			love.graphics.draw(self._canvas);
 		else
 			drawFunction();
