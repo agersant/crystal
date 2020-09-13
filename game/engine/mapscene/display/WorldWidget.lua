@@ -31,7 +31,7 @@ WorldWidget.draw = function(self)
 		local width, height = self._widget:getSize();
 		local x = MathUtils.round(self._x - width / 2);
 		local y = MathUtils.round(self._y - height / 2);
-		love.graphics.push();
+		love.graphics.push("all");
 		love.graphics.translate(x, y);
 		self._widget:draw();
 		love.graphics.pop();

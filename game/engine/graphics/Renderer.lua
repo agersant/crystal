@@ -3,7 +3,7 @@ local GFXConfig = require("engine/graphics/GFXConfig");
 
 local Renderer = Class("Renderer");
 
-local letterbox = function(self, draw)
+local letterbox = function(self, drawFunction)
 	local windowWidth, windowHeight = GFXConfig:getWindowSize();
 	local renderWidth, renderHeight = GFXConfig:getRenderSize();
 	local nativeWidth, nativeHeight = GFXConfig:getNativeSize();
@@ -18,7 +18,7 @@ local letterbox = function(self, draw)
 	love.graphics.setScissor(letterboxX, letterboxY, letterboxWidth, letterboxHeight);
 	love.graphics.translate(letterboxX, letterboxY);
 	love.graphics.translate(zoom * (renderWidth - nativeWidth) / 2, zoom * (renderHeight - nativeHeight) / 2);
-	draw();
+	drawFunction();
 	love.graphics.pop();
 end
 

@@ -37,7 +37,7 @@ local pickFixtureColor = function(self, fixture)
 end
 
 local drawShape = function(self, x, y, shape, color)
-	love.graphics.push();
+	love.graphics.push("all");
 	love.graphics.translate(x, y);
 	love.graphics.setLineJoin("miter");
 	love.graphics.setLineStyle("rough");
