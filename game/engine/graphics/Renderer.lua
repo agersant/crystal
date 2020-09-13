@@ -6,7 +6,6 @@ local Renderer = Class("Renderer");
 local letterbox = function(self, drawFunction)
 	local windowWidth, windowHeight = GFXConfig:getWindowSize();
 	local renderWidth, renderHeight = GFXConfig:getRenderSize();
-	local nativeWidth, nativeHeight = GFXConfig:getGameSize();
 	local zoom = GFXConfig:getZoom();
 
 	local letterboxWidth = renderWidth * zoom;
@@ -17,26 +16,25 @@ local letterbox = function(self, drawFunction)
 	love.graphics.push("all");
 	love.graphics.setScissor(letterboxX, letterboxY, letterboxWidth, letterboxHeight);
 	love.graphics.translate(letterboxX, letterboxY);
-	love.graphics.translate(zoom * (renderWidth - nativeWidth) / 2, zoom * (renderHeight - nativeHeight) / 2);
 	drawFunction();
 	love.graphics.pop();
 end
 
 Renderer.init = function(self)
 	local renderWidth, renderHeight = GFXConfig:getRenderSize();
-	local nativeWidth, nativeHeight = GFXConfig:getGameSize();
-	assert(nativeWidth >= renderWidth);
-	assert(nativeHeight >= renderHeight);
 	self._padding = 1; -- Additional pixels rendered so that we have adjacent data when offsetting the scene by (unzoomed) subpixel amounts
-	self._canvas = love.graphics.newCanvas(nativeWidth + 2 * self._padding, nativeHeight + 2 * self._padding);
+	self._canvas = love.graphics.newCanvas(renderWidth + 2 * self._padding, renderHeight + 2 * self._padding);
 	self._canvas:setFilter("nearest");
 end
 
 Renderer.draw = function(self, drawFunction, options)
-	options = options or {};
+	local renderWidth, renderHeight = GFXConfig:getRenderSize();
 
+	options = options or {};
 	local subpixelOffsetX = options.subpixelOffsetX or 0;
 	local subpixelOffsetY = options.subpixelOffsetY or 0;
+	local sceneSizeX = options.sceneSizeX or renderWidth;
+	local sceneSizeY = options.sceneSizeY or renderHeight;
 	local upscale = not options.nativeResolution;
 
 	assert(math.abs(subpixelOffsetX) <= 1);
@@ -55,6 +53,7 @@ Renderer.draw = function(self, drawFunction, options)
 		local zoom = GFXConfig:getZoom();
 		love.graphics.scale(zoom, zoom);
 		love.graphics.translate(subpixelOffsetX, subpixelOffsetY);
+		love.graphics.translate((renderWidth - sceneSizeX) / 2, (renderHeight - sceneSizeY) / 2);
 		if upscale then
 			love.graphics.translate(-self._padding, -self._padding);
 			love.graphics.draw(self._canvas);

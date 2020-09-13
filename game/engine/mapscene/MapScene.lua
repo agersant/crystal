@@ -129,18 +129,24 @@ MapScene.draw = function(self)
 	local camera = self._ecs:getSystem(CameraSystem):getCamera();
 	assert(camera);
 	local subpixelOffsetX, subpixelOffsetY = camera:getSubpixelOffset();
+	local sceneSizeX, sceneSizeY = camera:getScreenSize();
 
 	self._renderer:draw(function()
 		self._ecs:notifySystems("beforeEntitiesDraw");
 		self._ecs:notifySystems("duringEntitiesDraw");
 		self._ecs:notifySystems("afterEntitiesDraw");
-	end, {subpixelOffsetX = subpixelOffsetX, subpixelOffsetY = subpixelOffsetY});
+	end, {
+		subpixelOffsetX = subpixelOffsetX,
+		subpixelOffsetY = subpixelOffsetY,
+		sceneSizeX = sceneSizeX,
+		sceneSizeY = sceneSizeY,
+	});
 
 	self._renderer:draw(function()
 		self._ecs:notifySystems("beforeDebugDraw");
 		self._ecs:notifySystems("duringDebugDraw");
 		self._ecs:notifySystems("afterDebugDraw");
-	end, {nativeResolution = true});
+	end, {nativeResolution = true, sceneSizeX = sceneSizeX, sceneSizeY = sceneSizeY});
 
 	self._renderer:draw(function()
 		self._ecs:notifySystems("drawOverlay");

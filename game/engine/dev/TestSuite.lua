@@ -180,7 +180,6 @@ Context.resetGlobalState = function(self, test)
 	Scene:setCurrent(Scene:new());
 
 	test.resolution = test.resolution or {200, 200};
-	GFXConfig:setGameSize(test.resolution[1], test.resolution[2]);
 	GFXConfig:setRenderSize(test.resolution[1], test.resolution[2]);
 
 	if test.gfx == "mock" then

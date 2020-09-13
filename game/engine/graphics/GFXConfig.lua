@@ -60,15 +60,6 @@ GFXConfig.getZoom = function(self)
 	return self._zoom;
 end
 
-GFXConfig.setGameSize = function(self, width, height)
-	self._gameWidth = width;
-	self._gameHeight = height;
-end
-
-GFXConfig.getGameSize = function(self)
-	return self._gameWidth, self._gameHeight;
-end
-
 GFXConfig.setRenderSize = function(self, width, height)
 	self._renderWidth = width;
 	self._renderHeight = height;

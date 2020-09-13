@@ -54,7 +54,7 @@ local computeTargetPosition = function(self)
 		tx, ty = computeAveragePosition(self, trackedEntities);
 	end
 
-	local screenW, screenH = GFXConfig:getGameSize();
+	local screenW, screenH = self:getScreenSize();
 	return clampPosition(self, tx, ty, screenW, screenH);
 end
 
@@ -62,12 +62,19 @@ Camera.init = function(self, scene)
 	self._x = 0;
 	self._y = 0;
 	self._scene = scene;
+	self._maxCropX = 0;
+	self._maxCropY = 1;
 	self._smoothing = 0.002;
+end
+
+Camera.getScreenSize = function(self)
+	local w, h = GFXConfig:getRenderSize();
+	return w + 2 * self._maxCropX, h + 2 * self._maxCropY;
 end
 
 Camera.getExactRenderOffset = function(self)
 	local left, top = self._x, self._y;
-	local screenW, screenH = GFXConfig:getGameSize();
+	local screenW, screenH = self:getScreenSize();
 	left = left - screenW / 2;
 	top = top - screenH / 2;
 	return -left, -top;
