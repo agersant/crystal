@@ -180,7 +180,7 @@ Context.resetGlobalState = function(self, test)
 	Scene:setCurrent(Scene:new());
 
 	test.resolution = test.resolution or {200, 200};
-	GFXConfig:setNativeSize(test.resolution[1], test.resolution[2]);
+	GFXConfig:setGameSize(test.resolution[1], test.resolution[2]);
 	GFXConfig:setRenderSize(test.resolution[1], test.resolution[2]);
 
 	if test.gfx == "mock" then
@@ -189,7 +189,7 @@ Context.resetGlobalState = function(self, test)
 		MockGraphics:disable();
 		if test.gfx == "on" then
 			if test.resolution[1] ~= self.resolution[1] or test.resolution[2] ~= self.resolution[2] then
-				GFXConfig:setResolution(test.resolution[1], test.resolution[2]);
+				GFXConfig:setWindowSize(test.resolution[1], test.resolution[2]);
 				self.resolution = test.resolution;
 			end
 			love.graphics.reset();

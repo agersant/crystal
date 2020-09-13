@@ -6,7 +6,7 @@ local Renderer = Class("Renderer");
 local letterbox = function(self, drawFunction)
 	local windowWidth, windowHeight = GFXConfig:getWindowSize();
 	local renderWidth, renderHeight = GFXConfig:getRenderSize();
-	local nativeWidth, nativeHeight = GFXConfig:getNativeSize();
+	local nativeWidth, nativeHeight = GFXConfig:getGameSize();
 	local zoom = GFXConfig:getZoom();
 
 	local letterboxWidth = renderWidth * zoom;
@@ -24,7 +24,7 @@ end
 
 Renderer.init = function(self)
 	local renderWidth, renderHeight = GFXConfig:getRenderSize();
-	local nativeWidth, nativeHeight = GFXConfig:getNativeSize();
+	local nativeWidth, nativeHeight = GFXConfig:getGameSize();
 	assert(nativeWidth >= renderWidth);
 	assert(nativeHeight >= renderHeight);
 	self._padding = 1; -- Additional pixels rendered so that we have adjacent data when offsetting the scene by (unzoomed) subpixel amounts

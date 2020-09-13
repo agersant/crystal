@@ -27,21 +27,18 @@ end
 
 GFXConfig.init = function(self)
 
-	-- How content is authored
-	-- TODO rename this to something less confusing, maybe contentSize
-	self._nativeWidth = 480;
-	self._nativeHeight = 272;
+	-- How big a screen-filling scene is (multiple of tile size)
+	self._gameWidth = 480;
+	self._gameHeight = 272;
 
 	-- Game window size when playing at zoom 1
 	self._renderWidth = 480;
 	self._renderHeight = 270;
 
-	self._zoom = 1;
-
 	self:setZoom(2);
 end
 
-GFXConfig.setResolution = function(self, width, height)
+GFXConfig.setWindowSize = function(self, width, height)
 	self._windowWidth = width;
 	self._windowHeight = height;
 	refreshZoom(self);
@@ -56,20 +53,20 @@ end
 GFXConfig.setZoom = function(self, zoom)
 	assert(zoom > 0);
 	assert(zoom == math.floor(zoom));
-	self:setResolution(self._renderWidth * zoom, self._renderHeight * zoom);
+	self:setWindowSize(self._renderWidth * zoom, self._renderHeight * zoom);
 end
 
 GFXConfig.getZoom = function(self)
 	return self._zoom;
 end
 
-GFXConfig.setNativeSize = function(self, width, height)
-	self._nativeWidth = width;
-	self._nativeHeight = height;
+GFXConfig.setGameSize = function(self, width, height)
+	self._gameWidth = width;
+	self._gameHeight = height;
 end
 
-GFXConfig.getNativeSize = function(self)
-	return self._nativeWidth, self._nativeHeight;
+GFXConfig.getGameSize = function(self)
+	return self._gameWidth, self._gameHeight;
 end
 
 GFXConfig.setRenderSize = function(self, width, height)
