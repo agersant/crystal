@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local GFXConfig = require("engine/graphics/GFXConfig");
 local Drawable = require("engine/mapscene/display/Drawable");
 local MathUtils = require("engine/utils/MathUtils");
 
@@ -29,10 +28,9 @@ end
 WorldWidget.draw = function(self)
 	WorldWidget.super.draw();
 	if self._widget then
-		local snapTo = 1 / GFXConfig:getZoom();
 		local width, height = self._widget:getSize();
-		local x = MathUtils.roundTo(self._x - width / 2, snapTo);
-		local y = MathUtils.roundTo(self._y - height / 2, snapTo);
+		local x = MathUtils.round(self._x - width / 2);
+		local y = MathUtils.round(self._y - height / 2);
 		love.graphics.push();
 		love.graphics.translate(x, y);
 		self._widget:draw();

@@ -1,6 +1,7 @@
 require("engine/utils/OOP");
 local FFI = require("ffi");
 local Diamond = FFI.load("diamond");
+local GFXConfig = require("engine/graphics/GFXConfig");
 local Path = require("engine/mapscene/behavior/ai/Path");
 local Features = require("engine/dev/Features");
 local Colors = require("engine/resources/Colors");
@@ -60,14 +61,15 @@ end
 
 NavigationMesh.draw = function(self)
 	assert(self._triangles);
-	love.graphics.setLineWidth(0.2);
-	love.graphics.setPointSize(3);
+	love.graphics.setLineWidth(1);
+	love.graphics.setLineJoin("bevel");
+	love.graphics.setPointSize(4 * GFXConfig:getZoom());
 	for i, triangle in ipairs(self._triangles) do
 		love.graphics.setColor(Colors.cyan:alpha(.25));
 		love.graphics.polygon("fill", triangle.vertices);
 		love.graphics.setColor(Colors.cyan);
 		love.graphics.polygon("line", triangle.vertices);
-		love.graphics.points(triangle);
+		love.graphics.points(triangle.vertices);
 	end
 end
 

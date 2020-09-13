@@ -1,11 +1,9 @@
 require("engine/dev/HotReload");
-local GFXConfig = require("engine/graphics/GFXConfig");
 local FPSCounter = require("engine/dev/FPSCounter");
 local Log = require("engine/dev/Log");
 local CLI = require("engine/dev/cli/CLI");
 local CommandStore = require("engine/dev/cli/CommandStore");
 local Input = require("engine/input/Input");
-local MapScene = require("engine/mapscene/MapScene");
 local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/Scene");
 local Module = require("engine/Module");
@@ -29,24 +27,13 @@ end
 
 love.update = function(dt)
 	fpsCounter:update(dt);
-
-	local scene;
-	local newScene = Scene:getCurrent();
-	while scene ~= newScene do
-		scene = newScene;
-		scene:update(dt);
-		newScene = Scene:getCurrent();
-	end
-
+	Scene:getCurrent():update(dt);
 	Input:flushEvents();
 end
 
 love.draw = function()
 	love.graphics.reset();
-
-	GFXConfig:applyTransforms();
 	Scene:getCurrent():draw();
-
 	love.graphics.reset();
 	fpsCounter:draw();
 	cli:draw();

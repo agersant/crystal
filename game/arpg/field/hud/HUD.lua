@@ -21,14 +21,6 @@ HUD.init = function(self)
 	self._dialogBox:setVerticalAlignment(VerticalAlignment.BOTTOM);
 end
 
-HUD.update = function(self, dt)
-	HUD.super.update(self, dt);
-	local w, h = GFXConfig:getNativeSize();
-	assert(not self:getParent());
-	self:setLocalPosition(0, w, 0, h);
-	self:layout();
-end
-
 HUD.getDialogBox = function(self)
 	return self._dialogBox;
 end

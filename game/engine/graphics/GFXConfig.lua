@@ -28,10 +28,11 @@ end
 GFXConfig.init = function(self)
 
 	-- How content is authored
+	-- TODO rename this to something less confusing, maybe contentSize
 	self._nativeWidth = 480;
 	self._nativeHeight = 272;
 
-	-- Base resolution
+	-- Game window size when playing at zoom 1
 	self._renderWidth = 480;
 	self._renderHeight = 270;
 
@@ -71,22 +72,17 @@ GFXConfig.getNativeSize = function(self)
 	return self._nativeWidth, self._nativeHeight;
 end
 
-GFXConfig.applyTransforms = function(self)
+GFXConfig.setRenderSize = function(self, width, height)
+	self._renderWidth = width;
+	self._renderHeight = height;
+end
 
-	-- Letterbox
-	local w = self._renderWidth * self._zoom;
-	local h = self._renderHeight * self._zoom;
-	local letterBoxDx = math.floor((self._windowWidth - self._renderWidth * self._zoom) / 2);
-	local letterBoxDy = math.floor((self._windowHeight - self._renderHeight * self._zoom) / 2);
-	love.graphics.setScissor(letterBoxDx, letterBoxDy, w, h);
-	love.graphics.translate(letterBoxDx, letterBoxDy);
+GFXConfig.getRenderSize = function(self)
+	return self._renderWidth, self._renderHeight;
+end
 
-	-- Center native size within render size
-	love.graphics.translate((self._renderWidth - self._nativeWidth) / 2, (self._renderHeight - self._nativeHeight) / 2);
-
-	-- Zoom
-	love.graphics.scale(self._zoom, self._zoom);
-
+GFXConfig.getWindowSize = function(self)
+	return self._windowWidth, self._windowHeight;
 end
 
 instance = GFXConfig:new();

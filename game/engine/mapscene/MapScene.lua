@@ -2,6 +2,7 @@ require("engine/utils/OOP");
 local CLI = require("engine/dev/cli/CLI");
 local Log = require("engine/dev/Log");
 local ECS = require("engine/ecs/ECS");
+local Renderer = require("engine/graphics/Renderer");
 local Assets = require("engine/resources/Assets");
 local MapSystem = require("engine/mapscene/MapSystem");
 local BehaviorSystem = require("engine/mapscene/behavior/BehaviorSystem");
@@ -40,6 +41,8 @@ MapScene.init = function(self, mapName)
 
 	self._ecs = ecs;
 	Alias:add(ecs, self);
+
+	self._renderer = Renderer:new();
 
 	-- Before physics
 	ecs:addSystem(PhysicsBodySystem:new(ecs));
@@ -122,11 +125,27 @@ end
 
 MapScene.draw = function(self)
 	MapScene.super.draw(self);
-	self._ecs:notifySystems("beforeDraw");
-	self._ecs:notifySystems("beforeEntitiesDraw");
-	self._ecs:notifySystems("duringEntitiesDraw");
-	self._ecs:notifySystems("afterEntitiesDraw");
-	self._ecs:notifySystems("afterDraw");
+
+	local camera = self._ecs:getSystem(CameraSystem):getCamera();
+	assert(camera);
+	local subpixelOffsetX, subpixelOffsetY = camera:getSubpixelOffset();
+
+	self._renderer:draw(function()
+		self._ecs:notifySystems("beforeEntitiesDraw");
+		self._ecs:notifySystems("duringEntitiesDraw");
+		self._ecs:notifySystems("afterEntitiesDraw");
+	end, {subpixelOffsetX = subpixelOffsetX, subpixelOffsetY = subpixelOffsetY});
+
+	self._renderer:draw(function()
+		self._ecs:notifySystems("beforeDebugDraw");
+		self._ecs:notifySystems("duringDebugDraw");
+		self._ecs:notifySystems("afterDebugDraw");
+	end, {nativeResolution = true});
+
+	self._renderer:draw(function()
+		self._ecs:notifySystems("drawOverlay");
+	end);
+
 end
 
 CLI:registerCommand("loadMap mapName:string", function(mapName)

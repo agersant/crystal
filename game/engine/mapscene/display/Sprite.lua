@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local GFXConfig = require("engine/graphics/GFXConfig");
 local Drawable = require("engine/mapscene/display/Drawable");
 local MathUtils = require("engine/utils/MathUtils");
 
@@ -32,9 +31,8 @@ Sprite.draw = function(self)
 	if not self._frame then
 		return;
 	end
-	local snapTo = 1 / GFXConfig:getZoom();
-	local x = MathUtils.roundTo(self._x, snapTo);
-	local y = MathUtils.roundTo(self._y, snapTo);
+	local x = MathUtils.round(self._x);
+	local y = MathUtils.round(self._y);
 	local originX, originY = self._frame:getOrigin();
 	love.graphics.draw(self._frame:getImage(), self._frame:getQuad(), x, y, 0, 1, 1, originX, originY);
 end

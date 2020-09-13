@@ -6,6 +6,8 @@ end
 
 local spriteBatch = {add = noop};
 
+local canvas = {setFilter = noop};
+
 local font = {
 	getHeight = function()
 		return 1;
@@ -38,6 +40,10 @@ end
 
 mockAPI.getHeight = function()
 	return 1;
+end
+
+mockAPI.newCanvas = function()
+	return canvas;
 end
 
 mockAPI.newFont = function()

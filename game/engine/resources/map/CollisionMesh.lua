@@ -59,11 +59,12 @@ end
 
 CollisionMesh.draw = function(self)
 	love.graphics.setColor(Colors.coquelicot);
+	love.graphics.setLineWidth(2);
+	love.graphics.setLineJoin("bevel");
+	love.graphics.setPointSize(6 * GFXConfig:getZoom());
 	for _, chain in ipairs(self._chains) do
 		if #chain >= 6 then
-			love.graphics.setLineWidth(2);
 			love.graphics.polygon("line", chain);
-			love.graphics.setPointSize(6 * GFXConfig:getZoom());
 			love.graphics.points(chain);
 		end
 	end

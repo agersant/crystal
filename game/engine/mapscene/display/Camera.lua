@@ -16,8 +16,8 @@ local computeAveragePosition = function(self, trackedEntities)
 	local tx, ty = 0, 0;
 	for _, entity in ipairs(trackedEntities) do
 		local x, y = entity:getPosition();
-		tx = tx + x;
-		ty = ty + y;
+		tx = tx + MathUtils.round(x);
+		ty = ty + MathUtils.round(y);
 	end
 	tx = tx / #trackedEntities;
 	ty = ty / #trackedEntities;
@@ -40,43 +40,48 @@ local clampPosition = function(self, tx, ty, screenW, screenH)
 end
 
 local computeTargetPosition = function(self)
-
-	local tx, ty;
-	local screenW, screenH = GFXConfig:getNativeSize();
-	local mapWidth, mapHeight = getMapSize(self);
-
 	local trackedEntities = {};
 	for entity in pairs(self._scene:getECS():getAllEntitiesWith(InputListener)) do
 		table.insert(trackedEntities, entity);
 	end
 
+	local tx, ty;
 	if #trackedEntities == 0 then
+		local mapWidth, mapHeight = getMapSize(self);
 		tx = mapWidth / 2;
 		ty = mapHeight / 2;
 	else
 		tx, ty = computeAveragePosition(self, trackedEntities);
 	end
 
-	tx, ty = clampPosition(self, tx, ty, screenW, screenH);
-
-	return tx, ty;
+	local screenW, screenH = GFXConfig:getNativeSize();
+	return clampPosition(self, tx, ty, screenW, screenH);
 end
 
 Camera.init = function(self, scene)
-	self:setPosition(0, 0);
+	self._x = 0;
+	self._y = 0;
 	self._scene = scene;
 	self._smoothing = 0.002;
 end
 
-Camera.getRenderOffset = function(self)
+Camera.getExactRenderOffset = function(self)
 	local left, top = self._x, self._y;
-	local z = GFXConfig:getZoom();
 	local screenW, screenH = GFXConfig:getNativeSize();
 	left = left - screenW / 2;
 	top = top - screenH / 2;
-	left = MathUtils.roundTo(left, 1 / z);
-	top = MathUtils.roundTo(top, 1 / z);
 	return -left, -top;
+end
+
+Camera.getRoundedRenderOffset = function(self)
+	local left, top = self:getExactRenderOffset();
+	return MathUtils.round(left), MathUtils.round(top);
+end
+
+Camera.getSubpixelOffset = function(self)
+	local exactX, exactY = self:getExactRenderOffset();
+	local roundedX, roundedY = self:getRoundedRenderOffset();
+	return exactX - roundedX, exactY - roundedY;
 end
 
 Camera.setPosition = function(self, x, y)

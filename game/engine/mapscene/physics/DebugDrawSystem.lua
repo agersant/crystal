@@ -62,8 +62,7 @@ local drawShape = function(self, x, y, shape, color)
 	love.graphics.pop();
 end
 
-DebugDrawSystem.afterEntitiesDraw = function(self, dt)
-
+DebugDrawSystem.duringDebugDraw = function(self)
 	local map = self._ecs:getMap();
 	assert(map);
 
@@ -82,7 +81,6 @@ DebugDrawSystem.afterEntitiesDraw = function(self, dt)
 			end
 		end
 	end
-
 end
 
 CLI:registerCommand("showNavmeshOverlay", function()

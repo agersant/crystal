@@ -18,14 +18,14 @@ CameraSystem.afterScripts = function(self, dt)
 	self._camera:update(dt);
 end
 
-CameraSystem.beforeDraw = function(self)
-	love.graphics.push();
-	local ox, oy = self._camera:getRenderOffset();
+CameraSystem.beforeEntitiesDraw = function(self)
+	local ox, oy = self._camera:getRoundedRenderOffset();
 	love.graphics.translate(ox, oy);
 end
 
-CameraSystem.afterDraw = function(self)
-	love.graphics.pop();
+CameraSystem.beforeDebugDraw = function(self)
+	local ox, oy = self._camera:getExactRenderOffset();
+	love.graphics.translate(ox, oy);
 end
 
 return CameraSystem;
