@@ -5,6 +5,7 @@ local GFXConfig = require("engine/graphics/GFXConfig");
 local Assets = require("engine/resources/Assets");
 local Module = require("engine/Module");
 local MockGraphics = require("engine/dev/mock/love/graphics");
+local Scene = require("engine/Scene");
 
 local engineTestFiles = {
 	"engine/dev/cli/TestCLI",
@@ -176,6 +177,7 @@ end
 
 Context.resetGlobalState = function(self, test)
 	Assets:unloadAll();
+	Scene:setCurrent(Scene:new());
 
 	test.resolution = test.resolution or {200, 200};
 	GFXConfig:setNativeSize(test.resolution[1], test.resolution[2]);

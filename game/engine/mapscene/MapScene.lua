@@ -160,13 +160,12 @@ end);
 local spawn = function(className)
 	local currentScene = Scene:getCurrent();
 
-	local player;
+	local playerPhysicsBody;
 	local players = currentScene:getECS():getAllEntitiesWith(InputListener);
 	for entity in pairs(players) do
-		player = entity;
+		playerPhysicsBody = entity:getComponent(PhysicsBody);
 		break
 	end
-	assert(player);
 
 	local map = currentScene:getMap();
 	assert(map);
@@ -179,8 +178,8 @@ local spawn = function(className)
 	local entity = currentScene:spawn(class);
 
 	local physicsBody = entity:getComponent(PhysicsBody);
-	if physicsBody then
-		local x, y = player:getPosition();
+	if physicsBody and playerPhysicsBody then
+		local x, y = playerPhysicsBody:getPosition();
 		local angle = math.random(2 * math.pi);
 		local radius = 40;
 		x = x + radius * math.cos(angle);
