@@ -1,8 +1,11 @@
 require("engine/utils/OOP");
+local CLI = require("engine/dev/cli/CLI");
 local System = require("engine/ecs/System");
 local Camera = require("engine/mapscene/display/Camera");
 
 local CameraSystem = Class("CameraSystem", System);
+
+local drawCameraOverlay = false;
 
 CameraSystem.init = function(self, ecs, scene)
 	assert(scene);
@@ -27,5 +30,19 @@ CameraSystem.beforeDebugDraw = function(self)
 	local ox, oy = self._camera:getExactRenderOffset();
 	love.graphics.translate(ox, oy);
 end
+
+CameraSystem.duringDebugDraw = function(self)
+	if drawCameraOverlay then
+		self._camera:drawDebug();
+	end
+end
+
+CLI:registerCommand("showCameraOverlay", function()
+	drawCameraOverlay = true;
+end);
+
+CLI:registerCommand("hideCameraOverlay", function()
+	drawCameraOverlay = false;
+end);
 
 return CameraSystem;

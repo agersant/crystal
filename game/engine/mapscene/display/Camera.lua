@@ -1,6 +1,8 @@
 require("engine/utils/OOP");
+local Features = require("engine/dev/Features");
 local GFXConfig = require("engine/graphics/GFXConfig");
 local InputListener = require("engine/mapscene/behavior/InputListener");
+local Colors = require("engine/resources/Colors");
 local MathUtils = require("engine/utils/MathUtils");
 
 local Camera = Class("Camera");
@@ -128,6 +130,25 @@ Camera.update = function(self, dt)
 	end
 
 	self:setPosition(newX, newY);
+end
+
+Camera.drawDebug = function(self)
+	if not Features.debugDraw then
+		return;
+	end
+
+	local buffer = self._scrollingBuffer;
+	local screenW, screenH = self:getScreenSize();
+	love.graphics.setLineWidth(1);
+	love.graphics.setColor(Colors.cyan);
+
+	love.graphics.line(self._x - buffer, self._y - screenH / 2, self._x - buffer, self._y + screenH / 2);
+	love.graphics.line(self._x + buffer, self._y - screenH / 2, self._x + buffer, self._y + screenH / 2);
+	love.graphics.line(self._x - screenW / 2, self._y - buffer, self._x + screenW / 2, self._y - buffer);
+	love.graphics.line(self._x - screenW / 2, self._y + buffer, self._x + screenW / 2, self._y + buffer);
+
+	love.graphics.line(self._x - 3, self._y, self._x + 3, self._y);
+	love.graphics.line(self._x, self._y - 3, self._x, self._y + 3);
 end
 
 return Camera;
