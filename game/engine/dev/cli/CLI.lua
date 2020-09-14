@@ -259,10 +259,13 @@ CLI.execute = function(self, command)
 		Log:error(command:getName() .. " requires " .. command:getNumArgs() .. " arguments");
 		return;
 	end
-	local success, errorMessage = pcall(command:getFunc(), unpack(useArgs));
-	if not success then
-		Log:error("Error while running command '" .. parsedInput.fullText .. "':\n" .. (errorMessage or ""));
-	end
+	xpcall(function()
+		command:getFunc()(unpack(useArgs))
+	end, function(err)
+		err = "Error while running command '" .. parsedInput.fullText .. "':" .. err .. "\n";
+		err = err .. debug.traceback();
+		Log:error(err);
+	end);
 end
 
 CLI.textInput = function(self, text)
