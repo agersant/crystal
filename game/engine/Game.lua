@@ -3,6 +3,7 @@ local FPSCounter = require("engine/dev/FPSCounter");
 local Log = require("engine/dev/Log");
 local CLI = require("engine/dev/cli/CLI");
 local CommandStore = require("engine/dev/cli/CommandStore");
+local GFXConfig = require("engine/graphics/GFXConfig");
 local Input = require("engine/input/Input");
 local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/Scene");
@@ -55,4 +56,8 @@ end
 
 love.textinput = function(text)
 	cli:textInput(text);
+end
+
+love.resize = function(width, height)
+	GFXConfig:setWindowSize(width, height);
 end

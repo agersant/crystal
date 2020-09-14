@@ -13,35 +13,19 @@ local setMode = function(self)
 	love.window.setTitle("Crystal");
 end
 
-local refreshZoom = function(self)
-	local zx = self._windowWidth / self._renderWidth;
-	local zy = self._windowHeight / self._renderHeight;
-	self._zoom = math.max(1, math.min(math.floor(zx), math.floor(zy)));
-end
-
-love.resize = function(width, height)
-	instance._windowWidth = width;
-	instance._windowHeight = height;
-	refreshZoom(instance);
-end
-
 GFXConfig.init = function(self)
-
-	-- How big a screen-filling scene is (multiple of tile size)
-	self._gameWidth = 480;
-	self._gameHeight = 272;
-
 	-- Game window size when playing at zoom 1
 	self._renderWidth = 480;
 	self._renderHeight = 270;
-
 	self:setZoom(2);
 end
 
 GFXConfig.setWindowSize = function(self, width, height)
 	self._windowWidth = width;
 	self._windowHeight = height;
-	refreshZoom(self);
+	local zx = self._windowWidth / self._renderWidth;
+	local zy = self._windowHeight / self._renderHeight;
+	self._zoom = math.max(1, math.min(math.floor(zx), math.floor(zy)));
 	setMode(self);
 end
 
