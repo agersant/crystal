@@ -10,6 +10,8 @@ local reloadModule = function(moduleName)
 	local updated = {};
 
 	local function update(old, new)
+		assert(type(old) == "table");
+		assert(type(new) == "table");
 		if updated[old] then
 			return;
 		end
@@ -19,7 +21,7 @@ local reloadModule = function(moduleName)
 			update(oldmt, newmt);
 		end
 		for k, v in pairs(new) do
-			if type(v) == "table" then
+			if type(old[k]) == "table" and type(v) == "table" then
 				update(old[k], v)
 			else
 				old[k] = v;
