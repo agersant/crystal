@@ -67,6 +67,8 @@ tests[#tests].body = function(context)
 	local player = scene:spawn(Entity);
 	player:addComponent(InputListener:new(1));
 	player:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+	player:setPosition(200, 200);
+	scene:update(0);
 
 	local cli = CLI:new(CommandStore:getGlobalStore());
 	cli:execute("spawn TestSpawnCommandProximity");
