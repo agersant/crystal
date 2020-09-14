@@ -16,7 +16,7 @@ end
 CommandStore.addCommand = function(self, description, func)
 	local command = Command:new(description, func);
 	local ref = command:getRef();
-	assert(not self._commands[ref]);
+	assert(_G["hotReloading"] or not self._commands[ref]);
 	self._commands[ref] = command;
 end
 

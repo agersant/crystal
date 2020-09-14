@@ -63,7 +63,9 @@ local declareClass = function(self, name, baseClass, options)
 	class.getClassName = getClassName;
 	class.isInstanceOf = makeIsInstanceOf(class);
 
-	if not options or not options.allowRedefinition then
+	local allowRedefinition = _G["hotReloading"];
+	allowRedefinition = allowRedefinition or (options and options.allowRedefinition);
+	if not allowRedefinition then
 		assert(not classIndex[name]);
 	end
 	classIndex[name] = class;

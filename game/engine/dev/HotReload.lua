@@ -1,4 +1,5 @@
 local CLI = require("engine/dev/cli/CLI");
+local CommandStore = require("engine/dev/cli/CommandStore");
 local Log = require("engine/dev/Log");
 local Assets = require("engine/resources/Assets");
 local TableUtils = require("engine/utils/TableUtils");
@@ -33,8 +34,11 @@ local reloadModule = function(moduleName)
 		for k in pairs(_G) do
 			_G[k] = oldGlobal[k];
 		end
-		Log:error("Error while hot-reloading " .. tostring(moduleName) .. ":\n" .. tostring(e));
+		e = Log:error("Error while hot-reloading " .. tostring(moduleName) .. ": " .. tostring(e) .. "\n");
+		error(e);
 	end
+
+	_G["hotReloading"] = true;
 
 	local ok, oldmod = pcall(require, moduleName);
 	oldmod = ok and oldmod or nil;
@@ -52,7 +56,7 @@ local reloadModule = function(moduleName)
 		end
 	end, onError);
 
-	package.loaded[moduleName] = false;
+	_G["hotReloading"] = false;
 end
 
 local hotReload = function()
@@ -69,8 +73,9 @@ local hotReload = function()
 		Assets:refresh(file .. "." .. ext);
 	end
 
-	CLI:execute("save hot_reload");
-	CLI:execute("load hot_reload");
+	local cli = CLI:new(CommandStore:getGlobalStore());
+	cli:execute("save hot_reload");
+	cli:execute("load hot_reload");
 end
 
 CLI:registerCommand("hotReload", hotReload);
