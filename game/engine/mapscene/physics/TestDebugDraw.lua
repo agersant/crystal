@@ -18,29 +18,28 @@ tests[#tests].body = function(context)
 
 	local entityA = scene:spawn(Entity);
 	local physicsBodyA = entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	entityA:setPosition(40, 40);
+	entityA:setPosition(95, 55);
 	entityA:addComponent(Collision:new(physicsBodyA, 10));
 
 	local entityB = scene:spawn(Entity);
 	local physicsBodyB = entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	entityB:setPosition(80, 40);
+	entityB:setPosition(135, 55);
 	entityB:addComponent(Hitbox:new(physicsBodyB, love.physics.newRectangleShape(20, 20)));
 
 	local entityC = scene:spawn(Entity);
 	local physicsBodyC = entityC:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	entityC:setPosition(120, 40);
+	entityC:setPosition(175, 55);
 	entityC:addComponent(Weakbox:new(physicsBodyC, love.physics.newRectangleShape(20, 20)));
 
 	local entityD = scene:spawn(Entity);
 	local physicsBodyD = entityD:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	entityD:setPosition(160, 40);
+	entityD:setPosition(215, 55);
 	local touchTrigger = TouchTrigger:new(physicsBodyD, love.physics.newCircleShape(10));
 	entityD:addComponent(touchTrigger);
 
 	cli:execute("showPhysicsOverlay");
 	scene:update(0);
 	local camera = scene:getECS():getSystem(CameraSystem):getCamera();
-	camera:setPosition(105, 105);
 	scene:draw();
 	cli:execute("hidePhysicsOverlay");
 
