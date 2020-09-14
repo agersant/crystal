@@ -39,7 +39,7 @@ local clampPosition = function(self, tx, ty, screenW, screenH)
 	return tx, ty;
 end
 
-local computeTargetPosition = function(self)
+local computeIdealPosition = function(self)
 	local trackedEntities = {};
 	for entity in pairs(self._scene:getECS():getAllEntitiesWith(InputListener)) do
 		table.insert(trackedEntities, entity);
@@ -59,12 +59,24 @@ local computeTargetPosition = function(self)
 end
 
 Camera.init = function(self, scene)
+
+	assert(scene);
+	self._scene = scene;
+
+	-- Map coordinate the camera is centered on
 	self._x = 0;
 	self._y = 0;
-	self._scene = scene;
+
+	-- How many pixels should world position be offset by so that camera is centered on self._x, self._y
+	self._renderOffsetX = 0;
+	self._renderOffsetY = 0;
+
+	-- Typical (single-screen) game scene is 480x272 but we only render at 480x270
 	self._maxCropX = 0;
 	self._maxCropY = 1;
-	self._smoothing = 0.002;
+
+	-- How far from screen center character can move before scrolling kicks in
+	self._scrollingBuffer = 20;
 end
 
 Camera.getScreenSize = function(self)
@@ -73,16 +85,11 @@ Camera.getScreenSize = function(self)
 end
 
 Camera.getExactRenderOffset = function(self)
-	local left, top = self._x, self._y;
-	local screenW, screenH = self:getScreenSize();
-	left = left - screenW / 2;
-	top = top - screenH / 2;
-	return -left, -top;
+	return self._renderOffsetX, self._renderOffsetY;
 end
 
 Camera.getRoundedRenderOffset = function(self)
-	local left, top = self:getExactRenderOffset();
-	return MathUtils.round(left), MathUtils.round(top);
+	return MathUtils.round(self._renderOffsetX), MathUtils.round(self._renderOffsetY);
 end
 
 Camera.getSubpixelOffset = function(self)
@@ -96,22 +103,28 @@ Camera.setPosition = function(self, x, y)
 	assert(type(y) == "number");
 	self._x = x;
 	self._y = y;
+
+	local screenW, screenH = self:getScreenSize();
+	self._renderOffsetX = -(self._x - screenW / 2);
+	self._renderOffsetY = -(self._y - screenH / 2);
 end
 
 Camera.update = function(self, dt)
 
 	local z = GFXConfig:getZoom();
-	local tx, ty = computeTargetPosition(self);
+	local tx, ty = computeIdealPosition(self);
 
-	local newX, newY;
+	local newX, newY = self._x, self._y;
 	if z ~= self._previousZoom then
 		newX, newY = tx, ty;
 		self._previousZoom = z;
 	else
-		-- TODO revisit camera smoothing, this version below makes the player sprite jitter during scrolling
-		-- newX = MathUtils.damp(self._x, tx, self._smoothing, dt);
-		-- newY = MathUtils.damp(self._y, ty, self._smoothing, dt);
-		newX, newY = tx, ty;
+		if math.abs(self._x - tx) > self._scrollingBuffer then
+			newX = MathUtils.clamp(tx - self._scrollingBuffer, self._x, tx + self._scrollingBuffer);
+		end
+		if math.abs(self._y - ty) > self._scrollingBuffer then
+			newY = MathUtils.clamp(ty - self._scrollingBuffer, self._y, ty + self._scrollingBuffer);
+		end
 	end
 
 	self:setPosition(newX, newY);
