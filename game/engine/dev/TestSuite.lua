@@ -19,6 +19,7 @@ local engineTestFiles = {
 	"engine/mapscene/behavior/TestBehavior",
 	"engine/mapscene/display/TestSprite",
 	"engine/mapscene/display/TestSpriteAnimator",
+	"engine/mapscene/display/TestWorldWidget",
 	"engine/mapscene/TestMapScene",
 	"engine/mapscene/physics/TestContacts",
 	"engine/mapscene/physics/TestDebugDraw",

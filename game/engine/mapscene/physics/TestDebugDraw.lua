@@ -2,7 +2,6 @@ local CLI = require("engine/dev/cli/CLI");
 local CommandStore = require("engine/dev/cli/CommandStore");
 local Entity = require("engine/ecs/Entity");
 local MapScene = require("engine/mapscene/MapScene");
-local CameraSystem = require("engine/mapscene/display/CameraSystem");
 local Hitbox = require("engine/mapscene/physics/Hitbox");
 local Collision = require("engine/mapscene/physics/Collision");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
@@ -39,7 +38,6 @@ tests[#tests].body = function(context)
 
 	cli:execute("showPhysicsOverlay");
 	scene:update(0);
-	local camera = scene:getECS():getSystem(CameraSystem):getCamera();
 	scene:draw();
 	cli:execute("hidePhysicsOverlay");
 
