@@ -45,4 +45,17 @@ tests[#tests].body = function(context)
 	-- context:compareFrame("engine/test-data/TestDebugDraw/draws-physics-objects.png");
 end
 
+tests[#tests + 1] = {name = "Draw navigation mesh", gfx = "on"};
+tests[#tests].body = function(context)
+	local cli = CLI:new(CommandStore:getGlobalStore());
+	local scene = MapScene:new("engine/test-data/empty_map.lua");
+
+	cli:execute("showNavmeshOverlay");
+	scene:update(0);
+	scene:draw();
+	cli:execute("hideNavmeshOverlay");
+
+	context:compareFrame("engine/test-data/TestDebugDraw/draws-navigation-mesh.png");
+end
+
 return tests;
