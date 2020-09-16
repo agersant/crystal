@@ -25,14 +25,6 @@ CommandStore.removeCommand = function(self, name)
 	self._commands[ref] = nil;
 end
 
-CommandStore.listCommandNames = function(self)
-	local commandNames = {};
-	for k, command in pairs(self._commands) do
-		table.insert(commandNames, command:getName());
-	end
-	return commandNames;
-end
-
 CommandStore.search = function(self, query)
 	local matches = {};
 	local hasStrongMatch = false;
