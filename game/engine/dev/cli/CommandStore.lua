@@ -20,11 +20,6 @@ CommandStore.addCommand = function(self, description, func)
 	self._commands[ref] = command;
 end
 
-CommandStore.removeCommand = function(self, name)
-	local ref = StringUtils.trim(name:lower());
-	self._commands[ref] = nil;
-end
-
 CommandStore.search = function(self, query)
 	local matches = {};
 	local hasStrongMatch = false;

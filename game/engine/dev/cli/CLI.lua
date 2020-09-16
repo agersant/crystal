@@ -331,10 +331,6 @@ CLI.addCommand = function(self, description, func)
 	self._commandStore:addCommand(description, func);
 end
 
-CLI.removeCommand = function(self, name)
-	self._commandStore:removeCommand(name);
-end
-
 CLI.registerCommand = function(self, description, func)
 	local store = CommandStore:getGlobalStore();
 	store:addCommand(description, func);
