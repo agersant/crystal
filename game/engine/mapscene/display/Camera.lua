@@ -1,18 +1,10 @@
 require("engine/utils/OOP");
 local Features = require("engine/dev/Features");
 local GFXConfig = require("engine/graphics/GFXConfig");
-local InputListener = require("engine/mapscene/behavior/InputListener");
 local Colors = require("engine/resources/Colors");
 local MathUtils = require("engine/utils/MathUtils");
 
 local Camera = Class("Camera");
-
-local getMapSize = function(self)
-	local map = self._scene:getMap();
-	local mapWidth = map:getWidthInPixels();
-	local mapHeight = map:getHeightInPixels();
-	return mapWidth, mapHeight;
-end
 
 local computeAveragePosition = function(self, trackedEntities)
 	local tx, ty = 0, 0;
@@ -27,31 +19,24 @@ local computeAveragePosition = function(self, trackedEntities)
 end
 
 local clampPosition = function(self, tx, ty, screenW, screenH)
-	local mapWidth, mapHeight = getMapSize(self);
-	if mapWidth <= screenW then
-		tx = mapWidth / 2;
+	if self._mapWidth <= screenW then
+		tx = self._mapWidth / 2;
 	else
-		tx = MathUtils.clamp(screenW / 2, tx, mapWidth - screenW / 2);
+		tx = MathUtils.clamp(screenW / 2, tx, self._mapWidth - screenW / 2);
 	end
-	if mapHeight <= screenH then
-		ty = mapHeight / 2;
+	if self._mapHeight <= screenH then
+		ty = self._mapHeight / 2;
 	else
-		ty = MathUtils.clamp(screenH / 2, ty, mapHeight - screenH / 2);
+		ty = MathUtils.clamp(screenH / 2, ty, self._mapHeight - screenH / 2);
 	end
 	return tx, ty;
 end
 
-local computeIdealPosition = function(self)
-	local trackedEntities = {};
-	for entity in pairs(self._scene:getECS():getAllEntitiesWith(InputListener)) do
-		table.insert(trackedEntities, entity);
-	end
-
+local computeIdealPosition = function(self, trackedEntities)
 	local tx, ty;
 	if #trackedEntities == 0 then
-		local mapWidth, mapHeight = getMapSize(self);
-		tx = mapWidth / 2;
-		ty = mapHeight / 2;
+		tx = self._mapWidth / 2;
+		ty = self._mapHeight / 2;
 	else
 		tx, ty = computeAveragePosition(self, trackedEntities);
 	end
@@ -60,10 +45,12 @@ local computeIdealPosition = function(self)
 	return clampPosition(self, tx, ty, screenW, screenH);
 end
 
-Camera.init = function(self, scene)
+Camera.init = function(self, mapWidth, mapHeight)
 
-	assert(scene);
-	self._scene = scene;
+	assert(mapWidth);
+	assert(mapHeight);
+	self._mapWidth = mapWidth;
+	self._mapHeight = mapHeight;
 
 	-- Map coordinate the camera is centered on
 	self._x = 0;
@@ -111,10 +98,10 @@ Camera.setPosition = function(self, x, y)
 	self._renderOffsetY = -(self._y - screenH / 2);
 end
 
-Camera.update = function(self, dt)
+Camera.update = function(self, trackedEntities)
 
 	local z = GFXConfig:getZoom();
-	local tx, ty = computeIdealPosition(self);
+	local tx, ty = computeIdealPosition(self, trackedEntities);
 
 	local newX, newY = self._x, self._y;
 	if z ~= self._previousZoom then

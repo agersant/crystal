@@ -1,16 +1,19 @@
 require("engine/utils/OOP");
 local CLI = require("engine/dev/cli/CLI");
 local System = require("engine/ecs/System");
+local InputListener = require("engine/mapscene/behavior/InputListener");
 local Camera = require("engine/mapscene/display/Camera");
+local Map = require("engine/resources/map/Map");
 
 local CameraSystem = Class("CameraSystem", System);
 
 local drawCameraOverlay = false;
 
-CameraSystem.init = function(self, ecs, scene)
-	assert(scene);
+CameraSystem.init = function(self, ecs, map)
+	assert(map);
+	assert(map:isInstanceOf(Map));
 	CameraSystem.super.init(self, ecs);
-	self._camera = Camera:new(scene);
+	self._camera = Camera:new(map:getWidthInPixels(), map:getHeightInPixels());
 end
 
 CameraSystem.getCamera = function(self)
@@ -18,7 +21,11 @@ CameraSystem.getCamera = function(self)
 end
 
 CameraSystem.afterScripts = function(self, dt)
-	self._camera:update(dt);
+	local trackedEntities = {};
+	for entity in pairs(self._ecs:getAllEntitiesWith(InputListener)) do
+		table.insert(trackedEntities, entity);
+	end
+	self._camera:update(trackedEntities);
 end
 
 CameraSystem.beforeEntitiesDraw = function(self)
