@@ -139,7 +139,8 @@ Camera.drawDebug = function(self)
 
 	local buffer = self._scrollingBuffer;
 	local screenW, screenH = self:getScreenSize();
-	love.graphics.setLineWidth(1);
+	love.graphics.setLineStyle("rough");
+	love.graphics.setLineWidth(2);
 	love.graphics.setColor(Colors.cyan);
 
 	love.graphics.line(self._x - buffer, self._y - screenH / 2, self._x - buffer, self._y + screenH / 2);
@@ -147,8 +148,8 @@ Camera.drawDebug = function(self)
 	love.graphics.line(self._x - screenW / 2, self._y - buffer, self._x + screenW / 2, self._y - buffer);
 	love.graphics.line(self._x - screenW / 2, self._y + buffer, self._x + screenW / 2, self._y + buffer);
 
-	love.graphics.line(self._x - 3, self._y, self._x + 3, self._y);
-	love.graphics.line(self._x, self._y - 3, self._x, self._y + 3);
+	love.graphics.line(self._x - 4, self._y, self._x + 4, self._y);
+	love.graphics.line(self._x, self._y - 4, self._x, self._y + 4);
 end
 
 return Camera;

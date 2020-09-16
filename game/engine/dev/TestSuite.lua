@@ -18,6 +18,7 @@ local engineTestFiles = {
 	"engine/mapscene/behavior/ai/TestNavigation",
 	"engine/mapscene/behavior/ai/TestPath",
 	"engine/mapscene/behavior/ai/TestPositionGoal",
+	"engine/mapscene/display/TestCameraSystem",
 	"engine/mapscene/display/TestSprite",
 	"engine/mapscene/display/TestSpriteAnimator",
 	"engine/mapscene/display/TestWorldWidget",
