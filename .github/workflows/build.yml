@@ -15,7 +15,7 @@ jobs:
       run:  |
         curl -L -o love.zip https://github.com/love2d/love/releases/download/11.3/love-11.3-win64.zip
         unzip love.zip
-        echo "##[add-path]${{ github.workspace }}\love-11.3-win64"
+        echo "${{ github.workspace }}\love-11.3-win64" >> $GITHUB_PATH
     - name: Build Diamond
       run: .\build_diamond_windows.ps1
     - name: Run Diamond tests
@@ -35,7 +35,7 @@ jobs:
       run:  |
         curl -L -o love https://github.com/love2d/love/releases/download/11.3/love-11.3-x86_64.AppImage
         chmod +x love
-        echo "::add-path::${{ github.workspace }}"
+        echo "${{ github.workspace }}" >> $GITHUB_PATH
     - name: Install Tarpaulin
       run: cargo install cargo-tarpaulin
     - name: Build Diamond
