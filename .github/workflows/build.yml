@@ -10,50 +10,50 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Install Love 2D
-      shell: bash
-      run:  |
-        curl -L -o love.zip https://github.com/love2d/love/releases/download/11.3/love-11.3-win64.zip
-        unzip love.zip
-        echo "${{ github.workspace }}\love-11.3-win64" >> $GITHUB_PATH
-    - name: Build Diamond
-      run: .\build_diamond_windows.ps1
-    - name: Run Diamond tests
-      run: cargo test --release
-      working-directory: ./lib/diamond
-    - name: Run Crystal Tests
-      run: lovec . /test-unit
-      working-directory: ./game
+      - uses: actions/checkout@v2
+      - name: Install Love 2D
+        shell: bash
+        run: |
+          curl -L -o love.zip https://github.com/love2d/love/releases/download/11.3/love-11.3-win64.zip
+          unzip love.zip
+          echo "${{ github.workspace }}\love-11.3-win64" >> $GITHUB_PATH
+      - name: Build native libs
+        run: .\build_libs_windows.ps1
+      - name: Run Diamond tests
+        run: cargo test --release
+        working-directory: ./lib/diamond
+      - name: Run Crystal Tests
+        run: lovec . /test-unit
+        working-directory: ./game
 
   tests-linux:
     name: Run Tests (Linux)
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Install Love 2D
-      run:  |
-        curl -L -o love https://github.com/love2d/love/releases/download/11.3/love-11.3-x86_64.AppImage
-        chmod +x love
-        echo "${{ github.workspace }}" >> $GITHUB_PATH
-    - name: Install Tarpaulin
-      run: cargo install cargo-tarpaulin
-    - name: Build Diamond
-      run: ./build_diamond_linux.sh
-    - name: Run Diamond tests
-      run: cargo tarpaulin --ignore-tests --out Xml -t 600
-      working-directory: ./lib/diamond
-    - name: Run Crystal Tests
-      run: xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" love . /test-unit /test-gfx /coverage
-      working-directory: ./game
-    - uses: actions/upload-artifact@v2
-      if: failure()
-      with:
-        name: test-output
-        path: game/test-output
-    - name: Upload Test Coverage Results
-      uses: codecov/codecov-action@v1
-      with:
-        token: ${{ secrets.CODECOV_TOKEN }}
-        fail_ci_if_error: true
+      - uses: actions/checkout@v2
+      - name: Install Love 2D
+        run: |
+          curl -L -o love https://github.com/love2d/love/releases/download/11.3/love-11.3-x86_64.AppImage
+          chmod +x love
+          echo "${{ github.workspace }}" >> $GITHUB_PATH
+      - name: Install Tarpaulin
+        run: cargo install cargo-tarpaulin
+      - name: Build native libs
+        run: ./build_libs_linux.sh
+      - name: Run Diamond tests
+        run: cargo tarpaulin --ignore-tests --out Xml -t 600
+        working-directory: ./lib/diamond
+      - name: Run Crystal Tests
+        run: xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" love . /test-unit /test-gfx /coverage
+        working-directory: ./game
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: test-output
+          path: game/test-output
+      - name: Upload Test Coverage Results
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true

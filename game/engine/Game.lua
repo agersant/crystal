@@ -1,5 +1,6 @@
 require("engine/dev/HotReload");
 local FPSCounter = require("engine/dev/FPSCounter");
+local LiveTweak = require("engine/dev/LiveTweak");
 local Log = require("engine/dev/Log");
 local CLI = require("engine/dev/cli/CLI");
 local CommandStore = require("engine/dev/cli/CommandStore");
@@ -11,12 +12,14 @@ local Module = require("engine/Module");
 
 local cli;
 local fpsCounter;
+local liveTweak;
 
 love.load = function()
 	love.keyboard.setTextInput(false);
 
 	cli = CLI:new(CommandStore:getGlobalStore());
 	fpsCounter = FPSCounter:new();
+	liveTweak = LiveTweak:new();
 
 	local module = require(MODULE):new();
 	Module:setCurrent(module);
