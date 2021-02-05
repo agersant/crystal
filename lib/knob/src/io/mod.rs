@@ -38,7 +38,6 @@ impl State {
 		}
 		let cc_index = message[1];
 		let knob_value = message[2];
-		println!("value {}", knob_value);
 		self.knob_values.insert(cc_index, knob_value);
 	}
 }
