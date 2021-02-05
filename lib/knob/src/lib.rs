@@ -1,4 +1,4 @@
 mod c_api;
-mod device;
+mod io;
 
 pub use c_api::*;

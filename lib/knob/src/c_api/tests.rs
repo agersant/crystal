@@ -1,9 +1,11 @@
-use crate::c_api::device::*;
+use crate::c_api::*;
 
 #[test]
-fn device_lifecycle() {
+fn lifecycle() {
 	unsafe {
-		let device = device_new();
-		device_delete(device);
+		assert_eq!(read_knob(70), -1.0);
+		connect(0);
+		assert_eq!(read_knob(70), -1.0);
+		disconnect();
 	}
 }

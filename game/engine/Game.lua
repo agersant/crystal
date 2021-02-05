@@ -12,14 +12,12 @@ local Module = require("engine/Module");
 
 local cli;
 local fpsCounter;
-local liveTweak;
 
 love.load = function()
 	love.keyboard.setTextInput(false);
 
 	cli = CLI:new(CommandStore:getGlobalStore());
 	fpsCounter = FPSCounter:new();
-	liveTweak = LiveTweak:new();
 
 	local module = require(MODULE):new();
 	Module:setCurrent(module);
