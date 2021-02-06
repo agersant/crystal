@@ -40,6 +40,13 @@ impl State {
 		let knob_value = message[2];
 		self.knob_values.insert(cc_index, knob_value);
 	}
+
+	pub fn read_knob(&self, cc_index: u8) -> f32 {
+		self.knob_values
+			.get(&cc_index)
+			.map(|n| (*n as f32) / 127.0)
+			.unwrap_or(-1.0)
+	}
 }
 
 fn try_connect(port_number: usize) -> Result<MidiInputConnection<()>, anyhow::Error> {
@@ -92,9 +99,5 @@ pub fn disconnect() {
 
 pub fn read_knob(cc_index: u8) -> f32 {
 	let state = STATE.lock();
-	state
-		.knob_values
-		.get(&cc_index)
-		.map(|n| (*n as f32) / 127.0)
-		.unwrap_or(-1.0)
+	state.read_knob(cc_index)
 }
