@@ -9,8 +9,18 @@ pub unsafe extern "C" fn connect(port_number: usize) {
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn set_mode(mode: io::Mode) {
+	io::set_mode(mode);
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn read_knob(cc_index: u8) -> f32 {
 	io::read_knob(cc_index)
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn write_knob(cc_index: u8, value: f32) {
+	io::write_knob(cc_index, value)
 }
 
 #[no_mangle]
