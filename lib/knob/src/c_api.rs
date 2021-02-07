@@ -3,11 +3,16 @@ use std::os::raw::{c_char, c_int};
 use std::{mem, ptr};
 
 use crate::io;
-use crate::MIDI_HARDWARE_STATE;
+
+#[cfg(not(test))]
+use crate::MIDI_HARDWARE_STATE as HARDWARE_STATE;
+
+#[cfg(test)]
+use crate::SAMPLE_HARDWARE_STATE as HARDWARE_STATE;
 
 #[no_mangle]
 pub unsafe extern "C" fn list_devices(out_num_devices: *mut c_int) -> *mut *mut c_char {
-	let mut devices = io::list_devices(MIDI_HARDWARE_STATE.clone())
+	let mut devices = io::list_devices(HARDWARE_STATE.clone())
 		.into_iter()
 		.map(|d| CString::new(d).unwrap_or_default().into_raw())
 		.collect::<Vec<_>>();
@@ -31,37 +36,37 @@ unsafe extern "C" fn free_device_list(device_list: *mut *mut c_char, num_devices
 
 #[no_mangle]
 pub unsafe extern "C" fn connect() {
-	io::connect(MIDI_HARDWARE_STATE.clone());
+	io::connect(HARDWARE_STATE.clone());
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn get_port_number() -> usize {
-	io::get_port_number(MIDI_HARDWARE_STATE.clone())
+	io::get_port_number(HARDWARE_STATE.clone())
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn set_port_number(port_number: usize) {
-	io::set_port_number(MIDI_HARDWARE_STATE.clone(), port_number);
+	io::set_port_number(HARDWARE_STATE.clone(), port_number);
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn set_mode(mode: io::mode::Mode) {
-	io::set_mode(MIDI_HARDWARE_STATE.clone(), mode);
+	io::set_mode(HARDWARE_STATE.clone(), mode);
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn read_knob(cc_index: u8) -> f32 {
-	io::read_knob(MIDI_HARDWARE_STATE.clone(), cc_index)
+	io::read_knob(HARDWARE_STATE.clone(), cc_index)
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn write_knob(cc_index: u8, value: f32) {
-	io::write_knob(MIDI_HARDWARE_STATE.clone(), cc_index, value)
+	io::write_knob(HARDWARE_STATE.clone(), cc_index, value)
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn disconnect() {
-	io::disconnect(MIDI_HARDWARE_STATE.clone());
+	io::disconnect(HARDWARE_STATE.clone());
 }
 
 #[test]
@@ -82,7 +87,7 @@ fn list_and_free_devices() {
 	unsafe {
 		let mut num_devices: c_int = -1;
 		let devices = list_devices(&mut num_devices);
-		assert!(num_devices >= 0);
+		assert!(num_devices == 1);
 		free_device_list(devices, num_devices);
 	}
 }

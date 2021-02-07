@@ -6,6 +6,14 @@ mod c_api;
 mod io;
 
 lazy_static! {
-	pub static ref MIDI_HARDWARE_STATE: Arc<Mutex<io::state::State<io::hal::MidiHardware>>> =
+	pub static ref MIDI_HARDWARE_STATE: io::state::StateHandle<io::hal::MidiHardware> =
 		Arc::new(Mutex::new(io::state::State::new(io::hal::MidiHardware {})));
+}
+
+#[cfg(test)]
+lazy_static! {
+	pub static ref SAMPLE_HARDWARE_STATE: io::state::StateHandle<io::hal::SampleHardware> =
+		Arc::new(Mutex::new(io::state::State::new(
+			io::hal::SampleHardware {}
+		)));
 }

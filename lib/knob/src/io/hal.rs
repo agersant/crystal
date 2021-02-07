@@ -86,3 +86,24 @@ impl HAL for MidiHardware {
 		Ok(devices)
 	}
 }
+
+#[cfg(test)]
+pub struct SampleHardware {}
+
+#[cfg(test)]
+impl HAL for SampleHardware {
+	type Device = Device<()>;
+
+	fn connect(
+		&self,
+		_port_number: usize,
+		mode: Mode,
+	) -> Result<Arc<Mutex<Self::Device>>, anyhow::Error> {
+		let device = Arc::new(Mutex::new(Device::new("sample_device", mode)));
+		Ok(device)
+	}
+
+	fn list_devices(&self) -> Result<Vec<String>, anyhow::Error> {
+		Ok(vec!["sample_device".to_owned()])
+	}
+}
