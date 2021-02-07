@@ -12,6 +12,7 @@ anyhow = "1.0"
 lazy_static = "1.4"
 midir = "0.7"
 parking_lot = "0.11"
+strum = { version = "0.20", features = ["derive"] }
 
 [build-dependencies]
 lua-ffi-gen = { path = "../lua-ffi-gen" }
