@@ -3,19 +3,19 @@ use parking_lot::Mutex;
 use std::sync::{mpsc::*, Arc};
 use std::time::Duration;
 
-use connector::MIDIConnector;
 use device::DeviceAPI;
+use hal::MidiHardware;
 pub use mode::Mode;
 use state::State;
 
-mod connector;
 mod device;
+mod hal;
 mod mode;
 mod state;
 
 lazy_static! {
-	static ref STATE: Arc<Mutex<State<MIDIConnector>>> =
-		Arc::new(Mutex::new(State::new(MIDIConnector {})));
+	static ref STATE: Arc<Mutex<State<MidiHardware>>> =
+		Arc::new(Mutex::new(State::new(MidiHardware {})));
 }
 
 pub fn connect() {

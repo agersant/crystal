@@ -10,7 +10,7 @@ static MIDI_CLIENT_NAME: &'static str = "crystal-knob-client-input";
 static MIDI_PORT_NAME: &'static str = "crystal-knob-input-port";
 static UNKNOWN_DEVICE_NAME: &'static str = "Unknown MIDI Device";
 
-pub trait Connector {
+pub trait HAL {
 	type Device: DeviceAPI;
 
 	fn connect(
@@ -22,15 +22,15 @@ pub trait Connector {
 	fn list_devices(&self) -> Result<Vec<String>, anyhow::Error>;
 }
 
-pub struct MIDIConnector {}
+pub struct MidiHardware {}
 
-impl MIDIConnector {
+impl MidiHardware {
 	fn get_midi_input() -> Result<MidiInput, anyhow::Error> {
 		MidiInput::new(MIDI_CLIENT_NAME).context("Failed to create MIDI input")
 	}
 }
 
-impl Connector for MIDIConnector {
+impl HAL for MidiHardware {
 	type Device = Device<MidiInputConnection<()>>;
 
 	fn connect(
