@@ -12,7 +12,6 @@ pub struct State<T: Connector> {
 
 impl<T: Connector> State<T> {
 	pub fn new(connector: T) -> Self {
-		println!("create");
 		State {
 			mode: Mode::Absolute,
 			device: None,
