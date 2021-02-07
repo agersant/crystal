@@ -39,6 +39,8 @@ jobs:
           echo "${{ github.workspace }}" >> $GITHUB_PATH
       - name: Install Tarpaulin
         run: cargo install cargo-tarpaulin
+      - name: Install Knob dependencies
+        run: sudo apt-get install libasound2-dev
       - name: Build native libs
         run: ./build_libs_linux.sh
       - name: Run Diamond tests
