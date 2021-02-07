@@ -11,7 +11,7 @@ static MIDI_PORT_NAME: &'static str = "crystal-knob-input-port";
 static UNKNOWN_DEVICE_NAME: &'static str = "Unknown MIDI Device";
 
 pub trait HAL: Send + 'static {
-	type Device: DeviceAPI + Send;
+	type Device: DeviceAPI;
 
 	fn connect(
 		&self,
@@ -22,6 +22,11 @@ pub trait HAL: Send + 'static {
 	fn list_devices(&self) -> Result<Vec<String>, anyhow::Error>;
 
 	fn is_device_valid(&self, device: &Self::Device) -> bool;
+
+	fn find_port_number(
+		&self,
+		port: &<Self::Device as DeviceAPI>::Port,
+	) -> Result<usize, anyhow::Error>;
 }
 
 pub struct MidiHardware {}
@@ -99,6 +104,22 @@ impl HAL for MidiHardware {
 		let devices = self.list_devices().unwrap_or_default();
 		devices.iter().any(|name| *name == device_name)
 	}
+
+	fn find_port_number(
+		&self,
+		port: &<Self::Device as DeviceAPI>::Port,
+	) -> Result<usize, anyhow::Error> {
+		// TODO https://github.com/Boddlnagg/midir/issues/35
+		// This code isn't reliable when multiple devices have the same name
+		let device_name = Self::get_midi_input()
+			.and_then(|m| m.port_name(port).map_err(|e| e.into()))
+			.unwrap_or(UNKNOWN_DEVICE_NAME.to_owned());
+		let devices = self.list_devices().unwrap_or_default();
+		devices
+			.iter()
+			.position(|name| *name == device_name)
+			.ok_or(anyhow!("device not found"))
+	}
 }
 
 #[cfg(test)]
@@ -123,6 +144,13 @@ impl HAL for SampleHardware {
 
 	fn is_device_valid(&self, _device: &Self::Device) -> bool {
 		true
+	}
+
+	fn find_port_number(
+		&self,
+		_port: &<Self::Device as DeviceAPI>::Port,
+	) -> Result<usize, anyhow::Error> {
+		Ok(0)
 	}
 }
 
@@ -161,5 +189,16 @@ impl HAL for MockHardware {
 		self.list_devices()
 			.unwrap_or_default()
 			.contains(device.port())
+	}
+
+	fn find_port_number(
+		&self,
+		port: &<Self::Device as DeviceAPI>::Port,
+	) -> Result<usize, anyhow::Error> {
+		self.list_devices()
+			.unwrap_or_default()
+			.iter()
+			.position(|n| n == port)
+			.ok_or(anyhow!("device not found"))
 	}
 }

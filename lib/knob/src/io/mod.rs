@@ -1,6 +1,3 @@
-use std::sync::mpsc::*;
-use std::time::Duration;
-
 use device::DeviceAPI;
 use hal::HAL;
 use mode::Mode;
@@ -12,26 +9,8 @@ pub mod mode;
 pub mod state;
 
 pub fn connect<T: HAL>(state: StateHandle<T>, port_number: usize) {
-	let (sender, receiver) = channel::<()>();
-	{
-		let mut state = state.lock();
-		state.connection_loop = Some(sender);
-		state.disconnect();
-	}
-	std::thread::spawn(move || loop {
-		{
-			let mut state = state.lock();
-			match receiver.try_recv() {
-				Err(TryRecvError::Disconnected) => return,
-				_ => (),
-			}
-			if !state.is_connected() {
-				// TODO This will reconnect to the wrong device if something else gets connected into the same port number
-				state.connect(port_number);
-			}
-		}
-		std::thread::sleep(Duration::from_millis(500));
-	});
+	let mut state = state.lock();
+	state.connect(port_number);
 }
 
 pub fn list_devices<T: HAL>(state: StateHandle<T>) -> Vec<String> {
@@ -47,21 +26,19 @@ pub fn set_mode<T: HAL>(state: StateHandle<T>, mode: Mode) {
 pub fn read_knob<T: HAL>(state: StateHandle<T>, cc_index: u8) -> f32 {
 	let state = state.lock();
 	state
-		.device
-		.as_ref()
+		.device()
 		.map(|d| d.lock().read(cc_index))
 		.unwrap_or(-1.0)
 }
 
 pub fn write_knob<T: HAL>(state: StateHandle<T>, cc_index: u8, value: f32) {
-	let mut state = state.lock();
-	if let Some(device) = &mut state.device {
+	let state = state.lock();
+	if let Some(device) = state.device() {
 		device.lock().write(cc_index, value);
 	}
 }
 
 pub fn disconnect<T: HAL>(state: StateHandle<T>) {
 	let mut state = state.lock();
-	state.connection_loop = None;
 	state.disconnect();
 }

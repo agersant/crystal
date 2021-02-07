@@ -7,13 +7,3 @@ pub enum Mode {
 	Absolute,
 	RelativeArturia1,
 }
-
-impl Mode {
-	#[cfg(test)]
-	pub fn is_absolute(&self) -> bool {
-		match self {
-			Mode::Absolute => true,
-			_ => false,
-		}
-	}
-}

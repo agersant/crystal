@@ -6,13 +6,15 @@ static MIDI_MESSAGE_CONTROL_CHANGE: u8 = 176;
 
 use crate::io::Mode;
 
-pub trait DeviceAPI {
+pub trait DeviceAPI: Send {
+	type Port: Clone + Send;
 	fn set_mode(&mut self, mode: Mode);
 	fn read(&self, cc_index: u8) -> f32;
 	fn write(&mut self, cc_index: u8, value: f32);
 	fn handle_message(&mut self, message: &[u8]);
 	fn name<'a>(&'a self) -> &'a str;
 	fn mode(&self) -> Mode;
+	fn port(&self) -> &Self::Port;
 }
 
 pub struct Device<T, P> {
@@ -37,13 +39,11 @@ impl<T, P> Device<T, P> {
 	pub fn hold_connection(&mut self, connection: T) {
 		self.connection = Some(connection);
 	}
-
-	pub fn port(&self) -> &P {
-		&self.port
-	}
 }
 
-impl<T, P: Clone> DeviceAPI for Device<T, P> {
+impl<T: Send, P: Clone + Send> DeviceAPI for Device<T, P> {
+	type Port = P;
+
 	fn set_mode(&mut self, mode: Mode) {
 		self.mode = mode;
 	}
@@ -88,6 +88,10 @@ impl<T, P: Clone> DeviceAPI for Device<T, P> {
 
 	fn mode(&self) -> Mode {
 		self.mode
+	}
+
+	fn port(&self) -> &P {
+		&self.port
 	}
 }
 
@@ -134,7 +138,7 @@ fn absolute_mode_can_read_knob_values() {
 fn relative_modes_ignore_messages_before_write() {
 	let cc_index = 70;
 	for mode in Mode::iter() {
-		if mode.is_absolute() {
+		if matches!(mode, Mode::Absolute) {
 			continue;
 		}
 		let mut device = Device::<(), ()>::new("test device", mode, ());
