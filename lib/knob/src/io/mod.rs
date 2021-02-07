@@ -26,6 +26,7 @@ pub fn connect<T: HAL>(state: StateHandle<T>, port_number: usize) {
 				_ => (),
 			}
 			if !state.is_connected() {
+				// TODO This will reconnect to the wrong device if something else gets connected into the same port number
 				state.connect(port_number);
 			}
 		}

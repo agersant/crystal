@@ -8,6 +8,13 @@ use crate::io::mode::Mode;
 
 pub type StateHandle<T> = Arc<Mutex<State<T>>>;
 
+// TODO better state tracking
+// enum ConnectionState<H: HAL> {
+// 	Disconnected,
+// 	Connecting(H::Port),
+// 	Connected(H::Device),
+// }
+
 pub struct State<T: HAL> {
 	mode: Mode,
 	pub device: Option<Arc<Mutex<T::Device>>>,
@@ -84,19 +91,7 @@ fn keeps_track_of_connection() {
 }
 
 #[test]
-fn loss_of_device_list_causes_disconnect() {
-	let hal = crate::io::hal::MockHardware {
-		devices: Some(vec!["device 1".to_owned(), "device 2".to_owned()]),
-	};
-	let mut state = State::new(hal);
-	state.connect(0);
-	assert!(state.is_connected());
-	state.hal = crate::io::hal::MockHardware { devices: None };
-	assert!(!state.is_connected());
-}
-
-#[test]
-fn device_removal_causes_disconnect() {
+fn current_device_removal_causes_disconnect() {
 	let hal = crate::io::hal::MockHardware {
 		devices: Some(vec!["device 1".to_owned(), "device 2".to_owned()]),
 	};
