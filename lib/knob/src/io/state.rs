@@ -48,3 +48,66 @@ impl<T: HAL> State<T> {
 		self.device = None;
 	}
 }
+
+#[test]
+fn fails_to_connect_without_device_list() {
+	{
+		let hal = crate::io::hal::MockHardware { devices: None };
+		let mut state = State::new(hal);
+		state.connect();
+		assert!(!state.is_connected());
+	}
+}
+
+#[test]
+fn fails_to_connect_with_empty_device_list() {
+	{
+		let hal = crate::io::hal::MockHardware {
+			devices: Some(vec![]),
+		};
+		let mut state = State::new(hal);
+		state.connect();
+		assert!(!state.is_connected());
+	}
+}
+
+#[test]
+fn keeps_track_of_connection() {
+	let hal = crate::io::hal::MockHardware {
+		devices: Some(vec!["device 1".to_owned()]),
+	};
+	let mut state = State::new(hal);
+	assert!(!state.is_connected());
+	state.connect();
+	assert!(state.is_connected());
+	state.disconnect();
+	assert!(!state.is_connected());
+}
+
+#[test]
+fn loss_of_device_list_causes_disconnect() {
+	let hal = crate::io::hal::MockHardware {
+		devices: Some(vec!["device 1".to_owned(), "device 2".to_owned()]),
+	};
+	let mut state = State::new(hal);
+	state.connect();
+	assert!(state.is_connected());
+
+	state.hal = crate::io::hal::MockHardware { devices: None };
+	assert!(!state.is_connected());
+}
+
+#[test]
+fn device_removal_causes_disconnect() {
+	let hal = crate::io::hal::MockHardware {
+		devices: Some(vec!["device 1".to_owned(), "device 2".to_owned()]),
+	};
+	let mut state = State::new(hal);
+	state.connect();
+	assert!(state.is_connected());
+
+	state.hal = crate::io::hal::MockHardware {
+		devices: Some(vec!["device 2".to_owned()]),
+	};
+	assert!(!state.is_connected());
+}

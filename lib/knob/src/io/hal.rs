@@ -107,3 +107,34 @@ impl HAL for SampleHardware {
 		Ok(vec!["sample_device".to_owned()])
 	}
 }
+
+#[cfg(test)]
+pub struct MockHardware {
+	pub devices: Option<Vec<String>>,
+}
+
+#[cfg(test)]
+impl HAL for MockHardware {
+	type Device = Device<()>;
+
+	fn connect(
+		&self,
+		port_number: usize,
+		mode: Mode,
+	) -> Result<Arc<Mutex<Self::Device>>, anyhow::Error> {
+		let devices = self.list_devices().unwrap_or_default();
+		if port_number >= devices.len() {
+			return Err(anyhow!("No device exists on port {}", port_number));
+		}
+		let device_name = self.devices.as_ref().unwrap()[port_number].as_str();
+		let device = Arc::new(Mutex::new(Device::new(device_name, mode)));
+		Ok(device)
+	}
+
+	fn list_devices(&self) -> Result<Vec<String>, anyhow::Error> {
+		match &self.devices {
+			None => Err(anyhow!("no device list")),
+			Some(d) => Ok(d.clone()),
+		}
+	}
+}
