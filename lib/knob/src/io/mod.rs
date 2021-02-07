@@ -1,4 +1,7 @@
-use std::cell::RefCell;
+use lazy_static::lazy_static;
+use parking_lot::Mutex;
+use std::sync::{mpsc::*, Arc};
+use std::time::Duration;
 
 use connector::MIDIConnector;
 use device::DeviceAPI;
@@ -10,38 +13,68 @@ mod device;
 mod mode;
 mod state;
 
-thread_local! {
-	pub static STATE: RefCell<State<MIDIConnector>> = RefCell::new(State::new(MIDIConnector {}));
+lazy_static! {
+	static ref STATE: Arc<Mutex<State<MIDIConnector>>> =
+		Arc::new(Mutex::new(State::new(MIDIConnector {})));
 }
 
-pub fn connect(port_number: usize) {
-	STATE.with(|s| s.borrow_mut().set_port_number(port_number));
-}
-
-pub fn set_mode(mode: Mode) {
-	STATE.with(|s| s.borrow_mut().set_mode(mode));
-}
-
-pub fn read_knob(cc_index: u8) -> f32 {
-	STATE.with(|s| {
-		s.borrow()
-			.device
-			.as_ref()
-			.map(|d| d.lock().read(cc_index))
-			.unwrap_or(-1.0)
-	})
-}
-
-pub fn write_knob(cc_index: u8, value: f32) {
-	STATE.with(|s| {
-		if let Some(device) = &mut s.borrow_mut().device {
-			device.lock().write(cc_index, value);
+pub fn connect() {
+	let (sender, receiver) = channel::<()>();
+	{
+		let mut state = STATE.lock();
+		state.connection_loop = Some(sender);
+	}
+	std::thread::spawn(move || loop {
+		{
+			let mut state = STATE.lock();
+			if !state.is_connected() {
+				state.connect();
+			}
+		}
+		std::thread::sleep(Duration::from_millis(500));
+		match receiver.try_recv() {
+			Err(TryRecvError::Disconnected) => return,
+			_ => continue,
 		}
 	});
 }
 
+pub fn set_port_number(port_number: usize) {
+	let mut state = STATE.lock();
+	if state.port_number == port_number {
+		return;
+	}
+	state.port_number = port_number;
+	state.device = None;
+}
+
+pub fn set_mode(mode: Mode) {
+	let mut state = STATE.lock();
+	if state.mode == mode {
+		return;
+	}
+	state.mode = mode;
+	state.device = None;
+}
+
+pub fn read_knob(cc_index: u8) -> f32 {
+	let state = STATE.lock();
+	state
+		.device
+		.as_ref()
+		.map(|d| d.lock().read(cc_index))
+		.unwrap_or(-1.0)
+}
+
+pub fn write_knob(cc_index: u8, value: f32) {
+	let mut state = STATE.lock();
+	if let Some(device) = &mut state.device {
+		device.lock().write(cc_index, value);
+	}
+}
+
 pub fn disconnect() {
-	STATE.with(|s| {
-		s.borrow_mut().device = None;
-	});
+	let mut state = STATE.lock();
+	state.connection_loop = None;
+	state.disconnect();
 }

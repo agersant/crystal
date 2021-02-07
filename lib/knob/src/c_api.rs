@@ -1,8 +1,13 @@
 use crate::io;
 
 #[no_mangle]
-pub unsafe extern "C" fn connect(port_number: usize) {
-	io::connect(port_number);
+pub unsafe extern "C" fn connect() {
+	io::connect();
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn set_port_number(port_number: usize) {
+	io::set_port_number(port_number);
 }
 
 #[no_mangle]
@@ -28,8 +33,9 @@ pub unsafe extern "C" fn disconnect() {
 #[test]
 fn omnibus() {
 	unsafe {
-		connect(0);
+		set_port_number(0);
 		set_mode(io::Mode::Absolute);
+		connect();
 		write_knob(70, 1.0);
 		read_knob(70);
 		disconnect();

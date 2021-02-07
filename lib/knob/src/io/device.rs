@@ -40,7 +40,6 @@ impl<T> DeviceAPI for Device<T> {
 	}
 
 	fn write(&mut self, cc_index: u8, value: f32) {
-		println!("device write");
 		self.knob_values.insert(cc_index, value.min(1.0).max(0.0));
 	}
 

@@ -1,13 +1,14 @@
 use crate::io::connector::Connector;
 use crate::io::mode::Mode;
 use parking_lot::Mutex;
-use std::sync::Arc;
+use std::sync::{mpsc::Sender, Arc};
 
 pub struct State<T: Connector> {
-	mode: Mode,
-	port_number: usize,
+	pub mode: Mode,
+	pub port_number: usize,
 	pub device: Option<Arc<Mutex<T::Device>>>,
-	connector: T,
+	pub connection_loop: Option<Sender<()>>,
+	pub connector: T,
 }
 
 impl<T: Connector> State<T> {
@@ -16,32 +17,20 @@ impl<T: Connector> State<T> {
 			mode: Mode::Absolute,
 			device: None,
 			connector,
+			connection_loop: None,
 			port_number: 0,
 		}
 	}
 
-	pub fn set_mode(&mut self, mode: Mode) {
-		if mode == self.mode {
-			return;
-		}
-		self.mode = mode;
-		self.connect();
-	}
-
-	pub fn set_port_number(&mut self, port_number: usize) {
-		if port_number == self.port_number {
-			return;
-		}
-		self.port_number = port_number;
-		self.connect();
+	pub fn is_connected(&self) -> bool {
+		self.device.is_some()
 	}
 
 	pub fn connect(&mut self) {
+		self.device = self.connector.connect(self.port_number, self.mode).ok();
+	}
+
+	pub fn disconnect(&mut self) {
 		self.device = None;
-		let device = self.connector.connect(self.port_number, self.mode);
-		if let Err(e) = &device {
-			println!("Error connecting to MIDI device: {}", e);
-		}
-		self.device = device.ok();
 	}
 }
