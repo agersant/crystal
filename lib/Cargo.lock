@@ -781,7 +781,6 @@ name = "knob"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "lazy_static",
  "lua-ffi-gen",
  "midir",
  "parking_lot",
