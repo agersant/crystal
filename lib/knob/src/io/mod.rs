@@ -1,22 +1,15 @@
-use lazy_static::lazy_static;
-use parking_lot::Mutex;
-use std::sync::{mpsc::*, Arc};
+use std::sync::mpsc::*;
 use std::time::Duration;
 
 use device::DeviceAPI;
-use hal::{MidiHardware, HAL};
-pub use mode::Mode;
-use state::{State, StateHandle};
+use hal::HAL;
+use mode::Mode;
+use state::StateHandle;
 
-mod device;
-mod hal;
-mod mode;
-mod state;
-
-lazy_static! {
-	pub static ref MIDI_HARDWARE_STATE: Arc<Mutex<State<MidiHardware>>> =
-		Arc::new(Mutex::new(State::new(MidiHardware {})));
-}
+pub mod device;
+pub mod hal;
+pub mod mode;
+pub mod state;
 
 pub fn connect<T: HAL>(state: StateHandle<T>) {
 	let (sender, receiver) = channel::<()>();

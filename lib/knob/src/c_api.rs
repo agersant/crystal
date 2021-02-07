@@ -3,10 +3,11 @@ use std::os::raw::{c_char, c_int};
 use std::{mem, ptr};
 
 use crate::io;
+use crate::MIDI_HARDWARE_STATE;
 
 #[no_mangle]
 pub unsafe extern "C" fn list_devices(out_num_devices: *mut c_int) -> *mut *mut c_char {
-	let mut devices = io::list_devices(io::MIDI_HARDWARE_STATE.clone())
+	let mut devices = io::list_devices(MIDI_HARDWARE_STATE.clone())
 		.into_iter()
 		.map(|d| CString::new(d).unwrap_or_default().into_raw())
 		.collect::<Vec<_>>();
@@ -30,37 +31,37 @@ unsafe extern "C" fn free_device_list(device_list: *mut *mut c_char, num_devices
 
 #[no_mangle]
 pub unsafe extern "C" fn connect() {
-	io::connect(io::MIDI_HARDWARE_STATE.clone());
+	io::connect(MIDI_HARDWARE_STATE.clone());
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn get_port_number() -> usize {
-	io::get_port_number(io::MIDI_HARDWARE_STATE.clone())
+	io::get_port_number(MIDI_HARDWARE_STATE.clone())
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn set_port_number(port_number: usize) {
-	io::set_port_number(io::MIDI_HARDWARE_STATE.clone(), port_number);
+	io::set_port_number(MIDI_HARDWARE_STATE.clone(), port_number);
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn set_mode(mode: io::Mode) {
-	io::set_mode(io::MIDI_HARDWARE_STATE.clone(), mode);
+pub unsafe extern "C" fn set_mode(mode: io::mode::Mode) {
+	io::set_mode(MIDI_HARDWARE_STATE.clone(), mode);
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn read_knob(cc_index: u8) -> f32 {
-	io::read_knob(io::MIDI_HARDWARE_STATE.clone(), cc_index)
+	io::read_knob(MIDI_HARDWARE_STATE.clone(), cc_index)
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn write_knob(cc_index: u8, value: f32) {
-	io::write_knob(io::MIDI_HARDWARE_STATE.clone(), cc_index, value)
+	io::write_knob(MIDI_HARDWARE_STATE.clone(), cc_index, value)
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn disconnect() {
-	io::disconnect(io::MIDI_HARDWARE_STATE.clone());
+	io::disconnect(MIDI_HARDWARE_STATE.clone());
 }
 
 #[test]
@@ -68,7 +69,7 @@ fn omnibus() {
 	unsafe {
 		get_port_number();
 		set_port_number(0);
-		set_mode(io::Mode::Absolute);
+		set_mode(io::mode::Mode::Absolute);
 		connect();
 		write_knob(70, 1.0);
 		read_knob(70);
