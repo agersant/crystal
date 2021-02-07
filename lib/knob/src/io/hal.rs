@@ -62,6 +62,7 @@ impl HAL for MidiHardware {
 				port,
 				MIDI_PORT_NAME,
 				move |_, message, _| {
+					// TODO Pipe messages to a channel instead of having to directly reference the device
 					connection_device.lock().handle_message(message);
 				},
 				(),
