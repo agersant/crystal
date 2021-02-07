@@ -4,7 +4,7 @@ use std::sync::{mpsc::*, Arc};
 use std::time::Duration;
 
 use device::DeviceAPI;
-use hal::MidiHardware;
+use hal::{MidiHardware, HAL};
 pub use mode::Mode;
 use state::State;
 
@@ -37,6 +37,16 @@ pub fn connect() {
 			_ => continue,
 		}
 	});
+}
+
+pub fn list_devices() -> Vec<String> {
+	let state = STATE.lock();
+	state.hal.list_devices().unwrap_or_default()
+}
+
+pub fn get_port_number() -> usize {
+	let state = STATE.lock();
+	state.port_number
 }
 
 pub fn set_port_number(port_number: usize) {
