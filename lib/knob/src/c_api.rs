@@ -6,7 +6,7 @@ use crate::io;
 
 #[no_mangle]
 pub unsafe extern "C" fn list_devices(out_num_devices: *mut c_int) -> *mut *mut c_char {
-	let mut devices = io::list_devices()
+	let mut devices = io::list_devices(io::MIDI_HARDWARE_STATE.clone())
 		.into_iter()
 		.map(|d| CString::new(d).unwrap_or_default().into_raw())
 		.collect::<Vec<_>>();
@@ -30,37 +30,37 @@ unsafe extern "C" fn free_device_list(device_list: *mut *mut c_char, num_devices
 
 #[no_mangle]
 pub unsafe extern "C" fn connect() {
-	io::connect();
+	io::connect(io::MIDI_HARDWARE_STATE.clone());
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn get_port_number() -> usize {
-	io::get_port_number()
+	io::get_port_number(io::MIDI_HARDWARE_STATE.clone())
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn set_port_number(port_number: usize) {
-	io::set_port_number(port_number);
+	io::set_port_number(io::MIDI_HARDWARE_STATE.clone(), port_number);
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn set_mode(mode: io::Mode) {
-	io::set_mode(mode);
+	io::set_mode(io::MIDI_HARDWARE_STATE.clone(), mode);
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn read_knob(cc_index: u8) -> f32 {
-	io::read_knob(cc_index)
+	io::read_knob(io::MIDI_HARDWARE_STATE.clone(), cc_index)
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn write_knob(cc_index: u8, value: f32) {
-	io::write_knob(cc_index, value)
+	io::write_knob(io::MIDI_HARDWARE_STATE.clone(), cc_index, value)
 }
 
 #[no_mangle]
 pub unsafe extern "C" fn disconnect() {
-	io::disconnect();
+	io::disconnect(io::MIDI_HARDWARE_STATE.clone());
 }
 
 #[test]

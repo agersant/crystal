@@ -5,6 +5,8 @@ use crate::io::device::DeviceAPI;
 use crate::io::hal::HAL;
 use crate::io::mode::Mode;
 
+pub type StateHandle<T> = Arc<Mutex<State<T>>>;
+
 pub struct State<T: HAL> {
 	pub mode: Mode,
 	pub port_number: usize,

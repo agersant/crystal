@@ -10,8 +10,8 @@ static MIDI_CLIENT_NAME: &'static str = "crystal-knob-client-input";
 static MIDI_PORT_NAME: &'static str = "crystal-knob-input-port";
 static UNKNOWN_DEVICE_NAME: &'static str = "Unknown MIDI Device";
 
-pub trait HAL {
-	type Device: DeviceAPI;
+pub trait HAL: Send + 'static {
+	type Device: DeviceAPI + Send;
 
 	fn connect(
 		&self,
