@@ -91,11 +91,13 @@ impl HAL for MidiHardware {
 	}
 
 	fn is_device_valid(&self, device: &Self::Device) -> bool {
-		if let Ok(midi_input) = Self::get_midi_input() {
-			// TODO this always comes back as Ok even after unplugging the hardware :(
-			return midi_input.port_name(&device.port()).is_ok();
-		}
-		false
+		// TODO https://github.com/Boddlnagg/midir/issues/35
+		// This code isn't reliable when multiple devices have the same name
+		let device_name = Self::get_midi_input()
+			.and_then(|m| m.port_name(&device.port()).map_err(|e| e.into()))
+			.unwrap_or(UNKNOWN_DEVICE_NAME.to_owned());
+		let devices = self.list_devices().unwrap_or_default();
+		devices.iter().any(|name| *name == device_name)
 	}
 }
 
