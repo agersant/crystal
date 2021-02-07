@@ -11,8 +11,9 @@ pub type StateHandle<T> = Arc<Mutex<State<T>>>;
 // TODO better state tracking
 // enum ConnectionState<H: HAL> {
 // 	Disconnected,
-// 	Connecting(H::Port),
+// 	Connecting(usize),
 // 	Connected(H::Device),
+//	Reconnecting(H::Port)
 // }
 
 pub struct State<T: HAL> {
