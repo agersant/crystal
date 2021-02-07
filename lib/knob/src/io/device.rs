@@ -6,6 +6,12 @@ static MIDI_MESSAGE_CONTROL_CHANGE: u8 = 176;
 
 use crate::io::Mode;
 
+pub trait DeviceAPI {
+	fn read(&self, cc_index: u8) -> f32;
+	fn write(&mut self, cc_index: u8, value: f32);
+	fn handle_message(&mut self, message: &[u8]);
+}
+
 pub struct Device<T> {
 	mode: Mode,
 	_name: String,
@@ -22,16 +28,18 @@ impl<T> Device<T> {
 			knob_values: HashMap::new(),
 		}
 	}
+}
 
-	pub fn read(&self, cc_index: u8) -> f32 {
+impl<T> DeviceAPI for Device<T> {
+	fn read(&self, cc_index: u8) -> f32 {
 		self.knob_values.get(&cc_index).copied().unwrap_or(-1.0)
 	}
 
-	pub fn write(&mut self, cc_index: u8, value: f32) {
+	fn write(&mut self, cc_index: u8, value: f32) {
 		self.knob_values.insert(cc_index, value.min(1.0).max(0.0));
 	}
 
-	pub fn handle_message(&mut self, message: &[u8]) {
+	fn handle_message(&mut self, message: &[u8]) {
 		if message.len() < 3 {
 			return;
 		}

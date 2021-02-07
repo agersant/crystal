@@ -3,7 +3,7 @@ use lazy_static::lazy_static;
 use midir::*;
 use parking_lot::Mutex;
 
-use crate::io::device::Device;
+use crate::io::device::{Device, DeviceAPI};
 pub use crate::io::mode::Mode;
 
 mod device;
@@ -14,7 +14,7 @@ lazy_static! {
 }
 
 trait Connector {
-	type Device;
+	type Device: DeviceAPI;
 	fn connect(&self, port_number: usize, mode: Mode) -> Result<Self::Device, anyhow::Error>;
 }
 
