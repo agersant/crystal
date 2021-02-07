@@ -92,6 +92,7 @@ impl HAL for MidiHardware {
 
 	fn is_device_valid(&self, device: &Self::Device) -> bool {
 		if let Ok(midi_input) = Self::get_midi_input() {
+			// TODO this always comes back as Ok even after unplugging the hardware :(
 			return midi_input.port_name(&device.port()).is_ok();
 		}
 		false
