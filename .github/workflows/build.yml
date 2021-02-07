@@ -45,7 +45,7 @@ jobs:
         run: ./build_libs_linux.sh
       - name: Run Diamond tests
         run: cargo tarpaulin --ignore-tests --out Xml -t 600
-        working-directory: ./lib/diamond
+        working-directory: ./lib
       - name: Run Crystal Tests
         run: xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" love . /test-unit /test-gfx /coverage
         working-directory: ./game
