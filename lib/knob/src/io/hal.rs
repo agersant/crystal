@@ -66,7 +66,8 @@ impl HAL for MidiHardware {
 				},
 				(),
 			)
-			.map_err(|e| anyhow!(format!("MIDI connection error: {}", e)))?;
+			// TODO: https://github.com/Boddlnagg/midir/issues/55
+			.map_err(|e| midir::ConnectError::new(e.kind(), ()))?;
 		device.lock().hold_connection(connection);
 
 		println!("Connected to {}", device_name);
