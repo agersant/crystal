@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Context};
-use midir::{MidiInput, MidiInputConnection};
+use midir::{MidiInput, MidiInputConnection, MidiInputPort};
 use parking_lot::Mutex;
 use std::sync::Arc;
 
@@ -20,6 +20,8 @@ pub trait HAL: Send + 'static {
 	) -> Result<Arc<Mutex<Self::Device>>, anyhow::Error>;
 
 	fn list_devices(&self) -> Result<Vec<String>, anyhow::Error>;
+
+	fn is_device_valid(&self, device: &Self::Device) -> bool;
 }
 
 pub struct MidiHardware {}
@@ -31,7 +33,7 @@ impl MidiHardware {
 }
 
 impl HAL for MidiHardware {
-	type Device = Device<MidiInputConnection<()>>;
+	type Device = Device<MidiInputConnection<()>, MidiInputPort>;
 
 	fn connect(
 		&self,
@@ -53,7 +55,7 @@ impl HAL for MidiHardware {
 			.port_name(port)
 			.unwrap_or(UNKNOWN_DEVICE_NAME.to_owned());
 
-		let device = Arc::new(Mutex::new(Device::new(&device_name, mode)));
+		let device = Arc::new(Mutex::new(Device::new(&device_name, mode, port.clone())));
 		let connection_device = device.clone();
 		let connection = midi_input
 			.connect(
@@ -85,6 +87,13 @@ impl HAL for MidiHardware {
 			.collect();
 		Ok(devices)
 	}
+
+	fn is_device_valid(&self, device: &Self::Device) -> bool {
+		if let Ok(midi_input) = Self::get_midi_input() {
+			return midi_input.port_name(&device.port()).is_ok();
+		}
+		false
+	}
 }
 
 #[cfg(test)]
@@ -92,19 +101,23 @@ pub struct SampleHardware {}
 
 #[cfg(test)]
 impl HAL for SampleHardware {
-	type Device = Device<()>;
+	type Device = Device<(), ()>;
 
 	fn connect(
 		&self,
 		_port_number: usize,
 		mode: Mode,
 	) -> Result<Arc<Mutex<Self::Device>>, anyhow::Error> {
-		let device = Arc::new(Mutex::new(Device::new("sample_device", mode)));
+		let device = Arc::new(Mutex::new(Device::new("sample_device", mode, ())));
 		Ok(device)
 	}
 
 	fn list_devices(&self) -> Result<Vec<String>, anyhow::Error> {
 		Ok(vec!["sample_device".to_owned()])
+	}
+
+	fn is_device_valid(&self, _device: &Self::Device) -> bool {
+		true
 	}
 }
 
@@ -115,7 +128,7 @@ pub struct MockHardware {
 
 #[cfg(test)]
 impl HAL for MockHardware {
-	type Device = Device<()>;
+	type Device = Device<(), String>;
 
 	fn connect(
 		&self,
@@ -127,7 +140,8 @@ impl HAL for MockHardware {
 			return Err(anyhow!("No device exists on port {}", port_number));
 		}
 		let device_name = self.devices.as_ref().unwrap()[port_number].as_str();
-		let device = Arc::new(Mutex::new(Device::new(device_name, mode)));
+		let port = device_name.to_owned();
+		let device = Arc::new(Mutex::new(Device::new(device_name, mode, port)));
 		Ok(device)
 	}
 
@@ -136,5 +150,11 @@ impl HAL for MockHardware {
 			None => Err(anyhow!("no device list")),
 			Some(d) => Ok(d.clone()),
 		}
+	}
+
+	fn is_device_valid(&self, device: &Self::Device) -> bool {
+		self.list_devices()
+			.unwrap_or_default()
+			.contains(device.port())
 	}
 }

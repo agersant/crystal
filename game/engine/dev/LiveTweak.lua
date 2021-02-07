@@ -13,7 +13,7 @@ if not Features.liveTweak then
 end
 
 LiveTweak.init = function(self)
-	Knob.connect();
+	Knob.connect(0);
 	Knob.set_mode(1); -- TODO make Lua API
 	-- CC Indices for Arturia MiniLab mkII
 	self._ccIndices = {112, 74, 71, 76, 77, 93, 73, 75, 114, 18, 19, 16, 17, 91, 79, 72};

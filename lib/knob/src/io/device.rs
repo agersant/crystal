@@ -7,25 +7,29 @@ static MIDI_MESSAGE_CONTROL_CHANGE: u8 = 176;
 use crate::io::Mode;
 
 pub trait DeviceAPI {
+	fn set_mode(&mut self, mode: Mode);
 	fn read(&self, cc_index: u8) -> f32;
 	fn write(&mut self, cc_index: u8, value: f32);
 	fn handle_message(&mut self, message: &[u8]);
 	fn name<'a>(&'a self) -> &'a str;
+	fn mode(&self) -> Mode;
 }
 
-pub struct Device<T> {
+pub struct Device<T, P> {
 	mode: Mode,
 	name: String,
 	connection: Option<T>,
+	port: P,
 	knob_values: HashMap<u8, f32>,
 }
 
-impl<T> Device<T> {
-	pub fn new<S: Into<String>>(name: S, mode: Mode) -> Device<T> {
+impl<T, P> Device<T, P> {
+	pub fn new<S: Into<String>>(name: S, mode: Mode, port: P) -> Device<T, P> {
 		Self {
 			mode,
 			name: name.into(),
 			connection: None,
+			port,
 			knob_values: HashMap::new(),
 		}
 	}
@@ -33,9 +37,17 @@ impl<T> Device<T> {
 	pub fn hold_connection(&mut self, connection: T) {
 		self.connection = Some(connection);
 	}
+
+	pub fn port(&self) -> &P {
+		&self.port
+	}
 }
 
-impl<T> DeviceAPI for Device<T> {
+impl<T, P: Clone> DeviceAPI for Device<T, P> {
+	fn set_mode(&mut self, mode: Mode) {
+		self.mode = mode;
+	}
+
 	fn read(&self, cc_index: u8) -> f32 {
 		self.knob_values.get(&cc_index).copied().unwrap_or(-1.0)
 	}
@@ -73,13 +85,17 @@ impl<T> DeviceAPI for Device<T> {
 	fn name(&self) -> &str {
 		&self.name
 	}
+
+	fn mode(&self) -> Mode {
+		self.mode
+	}
 }
 
 #[test]
 fn can_read_before_receiving_data() {
 	let cc_index = 70;
 	for mode in Mode::iter() {
-		let device = Device::<()>::new("test device", mode);
+		let device = Device::<(), ()>::new("test device", mode, ());
 		assert_eq!(device.read(cc_index), -1.0);
 	}
 }
@@ -88,7 +104,7 @@ fn can_read_before_receiving_data() {
 fn can_read_write_arbitrary_values() {
 	let cc_index = 70;
 	for mode in Mode::iter() {
-		let mut device = Device::<()>::new("test device", mode);
+		let mut device = Device::<(), ()>::new("test device", mode, ());
 		device.write(cc_index, 0.5);
 		assert_eq!(device.read(cc_index), 0.5);
 	}
@@ -98,7 +114,7 @@ fn can_read_write_arbitrary_values() {
 fn clamps_values() {
 	let cc_index = 70;
 	for mode in Mode::iter() {
-		let mut device = Device::<()>::new("test device", mode);
+		let mut device = Device::<(), ()>::new("test device", mode, ());
 		device.write(cc_index, 1.5);
 		assert_eq!(device.read(cc_index), 1.0);
 		device.write(cc_index, -0.5);
@@ -109,7 +125,7 @@ fn clamps_values() {
 #[test]
 fn absolute_mode_can_read_knob_values() {
 	let cc_index = 70;
-	let mut device = Device::<()>::new("test device", Mode::Absolute);
+	let mut device = Device::<(), ()>::new("test device", Mode::Absolute, ());
 	device.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, 100]);
 	assert_eq!(device.read(cc_index), 100.0 / 127.0);
 }
@@ -121,7 +137,7 @@ fn relative_modes_ignore_messages_before_write() {
 		if mode.is_absolute() {
 			continue;
 		}
-		let mut device = Device::<()>::new("test device", mode);
+		let mut device = Device::<(), ()>::new("test device", mode, ());
 		device.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, 64]);
 		assert_eq!(device.read(cc_index), -1.0);
 	}
@@ -130,7 +146,7 @@ fn relative_modes_ignore_messages_before_write() {
 #[test]
 fn arturia1_mode_interprets_messages_correctly() {
 	let cc_index = 70;
-	let mut device = Device::<()>::new("test device", Mode::RelativeArturia1);
+	let mut device = Device::<(), ()>::new("test device", Mode::RelativeArturia1, ());
 
 	for m in 0x41..=0x43 {
 		device.write(cc_index, 0.5);

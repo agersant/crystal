@@ -1,3 +1,4 @@
+use core::ops::Deref;
 use parking_lot::Mutex;
 use std::sync::{mpsc::Sender, Arc};
 
@@ -8,8 +9,7 @@ use crate::io::mode::Mode;
 pub type StateHandle<T> = Arc<Mutex<State<T>>>;
 
 pub struct State<T: HAL> {
-	pub mode: Mode,
-	pub port_number: usize,
+	mode: Mode,
 	pub device: Option<Arc<Mutex<T::Device>>>,
 	pub connection_loop: Option<Sender<()>>,
 	pub hal: T,
@@ -22,26 +22,25 @@ impl<T: HAL> State<T> {
 			device: None,
 			hal,
 			connection_loop: None,
-			port_number: 0,
+		}
+	}
+
+	pub fn set_mode(&mut self, mode: Mode) {
+		self.mode = mode;
+		if let Some(device) = &mut self.device {
+			device.lock().set_mode(mode);
 		}
 	}
 
 	pub fn is_connected(&self) -> bool {
 		match &self.device {
 			None => false,
-			Some(device) => {
-				let devices = self.hal.list_devices().unwrap_or_default();
-				if self.port_number >= devices.len() {
-					false
-				} else {
-					devices[self.port_number] == device.lock().name()
-				}
-			}
+			Some(device) => self.hal.is_device_valid(device.lock().deref()),
 		}
 	}
 
-	pub fn connect(&mut self) {
-		self.device = self.hal.connect(self.port_number, self.mode).ok();
+	pub fn connect(&mut self, port_number: usize) {
+		self.device = self.hal.connect(port_number, self.mode).ok();
 	}
 
 	pub fn disconnect(&mut self) {
@@ -54,7 +53,7 @@ fn fails_to_connect_without_device_list() {
 	{
 		let hal = crate::io::hal::MockHardware { devices: None };
 		let mut state = State::new(hal);
-		state.connect();
+		state.connect(0);
 		assert!(!state.is_connected());
 	}
 }
@@ -66,7 +65,7 @@ fn fails_to_connect_with_empty_device_list() {
 			devices: Some(vec![]),
 		};
 		let mut state = State::new(hal);
-		state.connect();
+		state.connect(0);
 		assert!(!state.is_connected());
 	}
 }
@@ -78,7 +77,7 @@ fn keeps_track_of_connection() {
 	};
 	let mut state = State::new(hal);
 	assert!(!state.is_connected());
-	state.connect();
+	state.connect(0);
 	assert!(state.is_connected());
 	state.disconnect();
 	assert!(!state.is_connected());
@@ -90,9 +89,8 @@ fn loss_of_device_list_causes_disconnect() {
 		devices: Some(vec!["device 1".to_owned(), "device 2".to_owned()]),
 	};
 	let mut state = State::new(hal);
-	state.connect();
+	state.connect(0);
 	assert!(state.is_connected());
-
 	state.hal = crate::io::hal::MockHardware { devices: None };
 	assert!(!state.is_connected());
 }
@@ -103,11 +101,59 @@ fn device_removal_causes_disconnect() {
 		devices: Some(vec!["device 1".to_owned(), "device 2".to_owned()]),
 	};
 	let mut state = State::new(hal);
-	state.connect();
+	state.connect(0);
 	assert!(state.is_connected());
-
 	state.hal = crate::io::hal::MockHardware {
 		devices: Some(vec!["device 2".to_owned()]),
 	};
 	assert!(!state.is_connected());
+}
+
+#[test]
+fn other_device_removal_does_not_cause_disconnect() {
+	let hal = crate::io::hal::MockHardware {
+		devices: Some(vec!["device 1".to_owned(), "device 2".to_owned()]),
+	};
+	let mut state = State::new(hal);
+	state.connect(1);
+	assert!(state.is_connected());
+	state.hal = crate::io::hal::MockHardware {
+		devices: Some(vec!["device 2".to_owned()]),
+	};
+	assert!(state.is_connected());
+}
+
+#[test]
+fn mode_change_does_not_cause_disconnect() {
+	let hal = crate::io::hal::MockHardware {
+		devices: Some(vec!["device 1".to_owned(), "device 2".to_owned()]),
+	};
+	let mut state = State::new(hal);
+	state.connect(0);
+	state.set_mode(Mode::Absolute);
+	assert!(state.is_connected());
+	state.set_mode(Mode::RelativeArturia1);
+	assert!(state.is_connected());
+}
+
+#[test]
+fn mode_change_applies_to_current_device() {
+	let hal = crate::io::hal::MockHardware {
+		devices: Some(vec!["device 1".to_owned(), "device 2".to_owned()]),
+	};
+	let mut state = State::new(hal);
+	state.connect(0);
+	state.set_mode(Mode::RelativeArturia1);
+	assert_eq!(state.device.unwrap().lock().mode(), Mode::RelativeArturia1);
+}
+
+#[test]
+fn mode_change_applies_to_future_device() {
+	let hal = crate::io::hal::MockHardware {
+		devices: Some(vec!["device 1".to_owned(), "device 2".to_owned()]),
+	};
+	let mut state = State::new(hal);
+	state.set_mode(Mode::RelativeArturia1);
+	state.connect(0);
+	assert_eq!(state.device.unwrap().lock().mode(), Mode::RelativeArturia1);
 }

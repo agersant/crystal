@@ -35,18 +35,8 @@ unsafe extern "C" fn free_device_list(device_list: *mut *mut c_char, num_devices
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn connect() {
-	io::connect(HARDWARE_STATE.clone());
-}
-
-#[no_mangle]
-pub unsafe extern "C" fn get_port_number() -> usize {
-	io::get_port_number(HARDWARE_STATE.clone())
-}
-
-#[no_mangle]
-pub unsafe extern "C" fn set_port_number(port_number: usize) {
-	io::set_port_number(HARDWARE_STATE.clone(), port_number);
+pub unsafe extern "C" fn connect(port_number: usize) {
+	io::connect(HARDWARE_STATE.clone(), port_number);
 }
 
 #[no_mangle]
@@ -72,10 +62,8 @@ pub unsafe extern "C" fn disconnect() {
 #[test]
 fn omnibus() {
 	unsafe {
-		get_port_number();
-		set_port_number(0);
 		set_mode(io::mode::Mode::Absolute);
-		connect();
+		connect(0);
 		write_knob(70, 1.0);
 		read_knob(70);
 		disconnect();
