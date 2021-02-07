@@ -1,7 +1,9 @@
-use crate::io::connector::Connector;
-use crate::io::mode::Mode;
 use parking_lot::Mutex;
 use std::sync::{mpsc::Sender, Arc};
+
+use crate::io::connector::Connector;
+use crate::io::device::DeviceAPI;
+use crate::io::mode::Mode;
 
 pub struct State<T: Connector> {
 	pub mode: Mode,
@@ -23,7 +25,17 @@ impl<T: Connector> State<T> {
 	}
 
 	pub fn is_connected(&self) -> bool {
-		self.device.is_some()
+		match &self.device {
+			None => false,
+			Some(device) => {
+				let devices = self.connector.list_devices().unwrap_or_default();
+				if self.port_number >= devices.len() {
+					false
+				} else {
+					devices[self.port_number] == device.lock().name()
+				}
+			}
+		}
 	}
 
 	pub fn connect(&mut self) {

@@ -10,11 +10,12 @@ pub trait DeviceAPI {
 	fn read(&self, cc_index: u8) -> f32;
 	fn write(&mut self, cc_index: u8, value: f32);
 	fn handle_message(&mut self, message: &[u8]);
+	fn name<'a>(&'a self) -> &'a str;
 }
 
 pub struct Device<T> {
 	mode: Mode,
-	_name: String,
+	name: String,
 	connection: Option<T>,
 	knob_values: HashMap<u8, f32>,
 }
@@ -23,7 +24,7 @@ impl<T> Device<T> {
 	pub fn new<S: Into<String>>(name: S, mode: Mode) -> Device<T> {
 		Self {
 			mode,
-			_name: name.into(),
+			name: name.into(),
 			connection: None,
 			knob_values: HashMap::new(),
 		}
@@ -67,6 +68,10 @@ impl<T> DeviceAPI for Device<T> {
 		};
 
 		self.write(cc_index, new_value);
+	}
+
+	fn name(&self) -> &str {
+		&self.name
 	}
 }
 
