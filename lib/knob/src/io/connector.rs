@@ -1,5 +1,5 @@
 use anyhow::{anyhow, Context};
-use midir::*;
+use midir::{MidiInput, MidiInputConnection};
 use parking_lot::Mutex;
 use std::sync::Arc;
 
