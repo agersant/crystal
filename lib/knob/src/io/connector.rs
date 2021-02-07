@@ -53,16 +53,14 @@ impl Connector for MIDIConnector {
 
 		let device = Arc::new(Mutex::new(Device::new(&device_name, mode)));
 		let connection_device = device.clone();
-		let connection = midi_input
-			.connect(
-				port,
-				"crystal-knob-input-port",
-				move |_, message, _| {
-					connection_device.lock().handle_message(message);
-				},
-				(),
-			)
-			.context("Failed to establish MIDI input connection")?;
+		let connection = midi_input.connect(
+			port,
+			"crystal-knob-input-port",
+			move |_, message, _| {
+				connection_device.lock().handle_message(message);
+			},
+			(),
+		)?;
 		device.lock().hold_connection(connection);
 
 		println!("Connected to {}", device_name);
