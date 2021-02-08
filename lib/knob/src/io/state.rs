@@ -1,5 +1,5 @@
 use anyhow::anyhow;
-use core::ops::Deref;
+use core::ops::{Deref, DerefMut};
 use parking_lot::Mutex;
 use std::sync::{mpsc::*, Arc};
 use std::time::Duration;
@@ -20,6 +20,14 @@ enum ConnectionState<H: HAL> {
 	Disconnected,
 	Connecting(ConnectionTarget<H>),
 	Connected(DeviceHandle<H>),
+}
+
+impl<H: HAL> Drop for ConnectionState<H> {
+	fn drop(&mut self) {
+		if let ConnectionState::Connected(device) = self {
+			device.lock().deref_mut().drop_connection();
+		}
+	}
 }
 
 pub struct State<H: HAL> {

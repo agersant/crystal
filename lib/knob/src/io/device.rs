@@ -17,13 +17,14 @@ pub trait DeviceAPI: Send {
 	fn name<'a>(&'a self) -> &'a str;
 	fn mode(&self) -> Mode;
 	fn port(&self) -> &Self::Port;
+	fn drop_connection(&mut self);
 }
 
 pub struct Device<C, P> {
 	mode: Mode,
 	name: String,
 	port: P,
-	_connection: C,
+	connection: Option<C>,
 	knob_values: HashMap<u8, f32>,
 }
 
@@ -39,7 +40,7 @@ impl<C: Send + 'static, P: Clone + Send + 'static> Device<C, P> {
 			mode,
 			name: name.into(),
 			port,
-			_connection: connection,
+			connection: Some(connection),
 			knob_values: HashMap::new(),
 		}));
 
@@ -109,6 +110,10 @@ impl<T: Send, P: Clone + Send> DeviceAPI for Device<T, P> {
 
 	fn port(&self) -> &P {
 		&self.port
+	}
+
+	fn drop_connection(&mut self) {
+		self.connection = None;
 	}
 }
 
