@@ -81,6 +81,10 @@ end
 
 local instance = LiveTweak:new();
 
+CLI:registerCommand("connectToMIDIDevice port:number", function(port)
+	instance:connectToDevice(port);
+end);
+
 -- TODO WIP
 CLI:registerCommand("listDevices", function()
 	instance:listDevices();
