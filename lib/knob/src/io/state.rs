@@ -6,7 +6,7 @@ use std::time::Duration;
 
 use crate::io::device::DeviceAPI;
 use crate::io::hal::HAL;
-use crate::io::mode::Mode;
+use crate::io::Mode;
 
 pub type StateHandle<H> = Arc<Mutex<State<H>>>;
 pub type DeviceHandle<H> = Arc<Mutex<<H as HAL>::Device>>;

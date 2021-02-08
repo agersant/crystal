@@ -1,12 +1,19 @@
 use device::DeviceAPI;
 use hal::HAL;
-use mode::Mode;
 use state::StateHandle;
+use strum::EnumIter;
 
 pub mod device;
 pub mod hal;
-pub mod mode;
 pub mod state;
+
+// https://www.yamahasynth.com/ask-a-question/relative-mode-for-control-knobs#reply-102919
+#[repr(C)]
+#[derive(Clone, Copy, Debug, EnumIter, PartialEq)]
+pub enum Mode {
+	Absolute,
+	RelativeArturia1,
+}
 
 pub fn connect<T: HAL>(state: StateHandle<T>, port_number: usize) {
 	let mut state = state.lock();

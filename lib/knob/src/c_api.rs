@@ -40,7 +40,7 @@ pub unsafe extern "C" fn connect(port_number: usize) {
 }
 
 #[no_mangle]
-pub unsafe extern "C" fn set_mode(mode: io::mode::Mode) {
+pub unsafe extern "C" fn set_mode(mode: io::Mode) {
 	io::set_mode(HARDWARE_STATE.clone(), mode);
 }
 
@@ -62,7 +62,7 @@ pub unsafe extern "C" fn disconnect() {
 #[test]
 fn omnibus() {
 	unsafe {
-		set_mode(io::mode::Mode::Absolute);
+		set_mode(io::Mode::Absolute);
 		connect(0);
 		write_knob(70, 1.0);
 		read_knob(70);

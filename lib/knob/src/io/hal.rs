@@ -4,7 +4,7 @@ use parking_lot::Mutex;
 use std::sync::{mpsc::*, Arc};
 
 use crate::io::device::{Device, DeviceAPI};
-pub use crate::io::mode::Mode;
+use crate::io::Mode;
 
 static MIDI_CLIENT_NAME: &'static str = "crystal-knob-client-input";
 static MIDI_PORT_NAME: &'static str = "crystal-knob-input-port";
