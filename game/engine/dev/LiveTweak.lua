@@ -12,14 +12,25 @@ if not Features.liveTweak then
 	Features.stub(LiveTweak);
 end
 
+LiveTweak.Modes = {ABSOLUTE = Knob.Absolute, RELATIVE_ARTURIA1 = Knob.RelativeArturia1};
+
 LiveTweak.init = function(self)
-	Knob.connect(0);
-	Knob.set_mode(1); -- TODO make Lua API
-	-- CC Indices for Arturia MiniLab mkII
+	self:setMode(LiveTweak.Modes.RELATIVE_ARTURIA1);
+	self:connect(0);
+	-- Table of knob index -> MIDI CC Index
+	-- Default values setup for the factory settings of Arturia MINILAB mkII
 	self._ccIndices = {112, 74, 71, 76, 77, 93, 73, 75, 114, 18, 19, 16, 17, 91, 79, 72};
 end
 
-LiveTweak.mapKnobs = function(self, ccIndices)
+LiveTweak.connectToDevice = function(self, portNumber)
+	Knob.connect(portNumber);
+end
+
+LiveTweak.setMode = function(self, mode)
+	Knob.set_mode(mode);
+end
+
+LiveTweak.mapKnobsToMIDI = function(self, ccIndices)
 	assert(type(ccIndices) == "table");
 	self._ccIndices = ccIndices;
 end
