@@ -16,7 +16,7 @@ LiveTweak.Modes = {ABSOLUTE = Knob.Absolute, RELATIVE_ARTURIA1 = Knob.RelativeAr
 
 LiveTweak.init = function(self)
 	self:setMode(LiveTweak.Modes.RELATIVE_ARTURIA1);
-	self:connect(0);
+	self:connectToDevice(0);
 	-- Table of knob index -> MIDI CC Index
 	-- Default values setup for the factory settings of Arturia MINILAB mkII
 	self._ccIndices = {112, 74, 71, 76, 77, 93, 73, 75, 114, 18, 19, 16, 17, 91, 79, 72};
