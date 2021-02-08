@@ -25,6 +25,11 @@ pub fn list_devices<T: HAL>(state: StateHandle<T>) -> Vec<String> {
 	state.hal.list_devices().unwrap_or_default()
 }
 
+pub fn get_current_device<T: HAL>(state: StateHandle<T>) -> Option<String> {
+	let state = state.lock();
+	state.device().map(|d| state.hal.get_device_name(&d.lock()))
+}
+
 pub fn set_mode<T: HAL>(state: StateHandle<T>, mode: Mode) {
 	let mut state = state.lock();
 	state.set_mode(mode);

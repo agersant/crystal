@@ -21,6 +21,8 @@ pub trait HAL: Send + 'static {
 
 	fn list_devices(&self) -> Result<Vec<String>, anyhow::Error>;
 
+	fn get_device_name(&self, device: &Self::Device) -> String;
+
 	fn is_device_valid(&self, device: &Self::Device) -> bool;
 
 	fn find_port_number(
@@ -92,6 +94,12 @@ impl HAL for MidiHardware {
 		Ok(devices)
 	}
 
+	fn get_device_name(&self, device: &Self::Device) -> String {
+		Self::get_midi_input()
+			.and_then(|m| m.port_name(&device.port()).map_err(|e| e.into()))
+			.unwrap_or(UNKNOWN_DEVICE_NAME.to_owned())
+	}
+
 	fn is_device_valid(&self, device: &Self::Device) -> bool {
 		// TODO https://github.com/Boddlnagg/midir/issues/35
 		// This code isn't reliable when multiple devices have the same name
@@ -140,6 +148,10 @@ impl HAL for SampleHardware {
 		Ok(vec!["sample_device".to_owned()])
 	}
 
+	fn get_device_name(&self, _device: &Self::Device) -> String {
+		"sample_device".to_owned()
+	}
+
 	fn is_device_valid(&self, _device: &Self::Device) -> bool {
 		true
 	}
@@ -182,6 +194,10 @@ impl HAL for MockHardware {
 			None => Err(anyhow!("no device list")),
 			Some(d) => Ok(d.clone()),
 		}
+	}
+
+	fn get_device_name(&self, device: &Self::Device) -> String {
+		device.port().clone()
 	}
 
 	fn is_device_valid(&self, device: &Self::Device) -> bool {

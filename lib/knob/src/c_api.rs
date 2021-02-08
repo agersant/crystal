@@ -25,13 +25,25 @@ pub unsafe extern "C" fn list_devices(out_num_devices: *mut c_int) -> *mut *mut 
 }
 
 #[no_mangle]
-unsafe extern "C" fn free_device_list(device_list: *mut *mut c_char, num_devices: c_int) {
+pub unsafe extern "C" fn free_device_list(device_list: *mut *mut c_char, num_devices: c_int) {
 	let num_devices = num_devices as usize;
 	let device_list = Vec::from_raw_parts(device_list, num_devices, num_devices);
 	for device in device_list {
 		let device_name = CString::from_raw(device);
 		mem::drop(device_name);
 	}
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn get_current_device() -> *mut c_char {
+	let device_name = io::get_current_device(HARDWARE_STATE.clone()).unwrap_or_default();
+	CString::new(device_name).unwrap_or_default().into_raw()
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn free_device(device: *mut c_char) {
+	let device_name = CString::from_raw(device);
+	mem::drop(device_name);
 }
 
 #[no_mangle]
@@ -67,6 +79,14 @@ fn omnibus() {
 		write_knob(70, 1.0);
 		read_knob(70);
 		disconnect();
+	}
+}
+
+#[test]
+fn get_and_free_current_device() {
+	unsafe {
+		let device = get_current_device();
+		free_device(device);
 	}
 }
 
