@@ -1,10 +1,12 @@
+use parking_lot::Mutex;
 use std::collections::HashMap;
+use std::sync::{mpsc::*, Arc};
 #[cfg(test)]
 use strum::IntoEnumIterator;
 
-static MIDI_MESSAGE_CONTROL_CHANGE: u8 = 176;
-
 use crate::io::Mode;
+
+static MIDI_MESSAGE_CONTROL_CHANGE: u8 = 176;
 
 pub trait DeviceAPI: Send {
 	type Port: Clone + Send;
@@ -17,27 +19,42 @@ pub trait DeviceAPI: Send {
 	fn port(&self) -> &Self::Port;
 }
 
-pub struct Device<T, P> {
+pub struct Device<C, P> {
 	mode: Mode,
 	name: String,
-	connection: Option<T>,
 	port: P,
+	_connection: C,
 	knob_values: HashMap<u8, f32>,
 }
 
-impl<T, P> Device<T, P> {
-	pub fn new<S: Into<String>>(name: S, mode: Mode, port: P) -> Device<T, P> {
-		Self {
+impl<C: Send + 'static, P: Clone + Send + 'static> Device<C, P> {
+	pub fn new<S: Into<String>>(
+		name: S,
+		mode: Mode,
+		port: P,
+		connection: C,
+		receiver: Receiver<Vec<u8>>,
+	) -> Arc<Mutex<Device<C, P>>> {
+		let device = Arc::new(Mutex::new(Self {
 			mode,
 			name: name.into(),
-			connection: None,
 			port,
+			_connection: connection,
 			knob_values: HashMap::new(),
-		}
-	}
+		}));
 
-	pub fn hold_connection(&mut self, connection: T) {
-		self.connection = Some(connection);
+		let receive_device = device.clone();
+		std::thread::spawn(move || loop {
+			match receiver.recv() {
+				Ok(message) => {
+					let mut device = receive_device.lock();
+					device.handle_message(&message);
+				}
+				Err(_) => return,
+			}
+		});
+
+		device
 	}
 }
 
@@ -95,12 +112,19 @@ impl<T: Send, P: Clone + Send> DeviceAPI for Device<T, P> {
 	}
 }
 
+#[cfg(test)]
+fn make_test_device(mode: Mode) -> (Arc<Mutex<Device<(), ()>>>, Sender<Vec<u8>>) {
+	let (sender, receiver) = channel();
+	let device = Device::<(), ()>::new("test device", mode, (), (), receiver);
+	(device, sender)
+}
+
 #[test]
 fn can_read_before_receiving_data() {
 	let cc_index = 70;
 	for mode in Mode::iter() {
-		let device = Device::<(), ()>::new("test device", mode, ());
-		assert_eq!(device.read(cc_index), -1.0);
+		let (device, _) = make_test_device(mode);
+		assert_eq!(device.lock().read(cc_index), -1.0);
 	}
 }
 
@@ -108,9 +132,9 @@ fn can_read_before_receiving_data() {
 fn can_read_write_arbitrary_values() {
 	let cc_index = 70;
 	for mode in Mode::iter() {
-		let mut device = Device::<(), ()>::new("test device", mode, ());
-		device.write(cc_index, 0.5);
-		assert_eq!(device.read(cc_index), 0.5);
+		let (device, _) = make_test_device(mode);
+		device.lock().write(cc_index, 0.5);
+		assert_eq!(device.lock().read(cc_index), 0.5);
 	}
 }
 
@@ -118,20 +142,33 @@ fn can_read_write_arbitrary_values() {
 fn clamps_values() {
 	let cc_index = 70;
 	for mode in Mode::iter() {
-		let mut device = Device::<(), ()>::new("test device", mode, ());
-		device.write(cc_index, 1.5);
-		assert_eq!(device.read(cc_index), 1.0);
-		device.write(cc_index, -0.5);
-		assert_eq!(device.read(cc_index), 0.0);
+		let (device, _) = make_test_device(mode);
+		device.lock().write(cc_index, 1.5);
+		assert_eq!(device.lock().read(cc_index), 1.0);
+		device.lock().write(cc_index, -0.5);
+		assert_eq!(device.lock().read(cc_index), 0.0);
 	}
 }
 
 #[test]
 fn absolute_mode_can_read_knob_values() {
 	let cc_index = 70;
-	let mut device = Device::<(), ()>::new("test device", Mode::Absolute, ());
-	device.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, 100]);
-	assert_eq!(device.read(cc_index), 100.0 / 127.0);
+	let (device, _) = make_test_device(Mode::Absolute);
+	device
+		.lock()
+		.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, 100]);
+	assert_eq!(device.lock().read(cc_index), 100.0 / 127.0);
+}
+
+#[test]
+fn handles_messages_from_sender() {
+	let cc_index = 70;
+	let (device, sender) = make_test_device(Mode::Absolute);
+	sender
+		.send([MIDI_MESSAGE_CONTROL_CHANGE, cc_index, 100].to_vec())
+		.unwrap();
+	std::thread::sleep(std::time::Duration::from_millis(100));
+	assert_eq!(device.lock().read(cc_index), 100.0 / 127.0);
 }
 
 #[test]
@@ -141,26 +178,32 @@ fn relative_modes_ignore_messages_before_write() {
 		if matches!(mode, Mode::Absolute) {
 			continue;
 		}
-		let mut device = Device::<(), ()>::new("test device", mode, ());
-		device.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, 64]);
-		assert_eq!(device.read(cc_index), -1.0);
+		let (device, _) = make_test_device(mode);
+		device
+			.lock()
+			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, 64]);
+		assert_eq!(device.lock().read(cc_index), -1.0);
 	}
 }
 
 #[test]
 fn arturia1_mode_interprets_messages_correctly() {
 	let cc_index = 70;
-	let mut device = Device::<(), ()>::new("test device", Mode::RelativeArturia1, ());
+	let (device, _) = make_test_device(Mode::RelativeArturia1);
 
 	for m in 0x41..=0x43 {
-		device.write(cc_index, 0.5);
-		device.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
-		assert!(device.read(cc_index) > 0.5);
+		device.lock().write(cc_index, 0.5);
+		device
+			.lock()
+			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
+		assert!(device.lock().read(cc_index) > 0.5);
 	}
 
 	for m in 0x3D..=0x3F {
-		device.write(cc_index, 0.5);
-		device.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
-		assert!(device.read(cc_index) < 0.5);
+		device.lock().write(cc_index, 0.5);
+		device
+			.lock()
+			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
+		assert!(device.lock().read(cc_index) < 0.5);
 	}
 }

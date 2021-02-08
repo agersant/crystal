@@ -1,7 +1,7 @@
 use anyhow::{anyhow, Context};
 use midir::{MidiInput, MidiInputConnection, MidiInputPort};
 use parking_lot::Mutex;
-use std::sync::Arc;
+use std::sync::{mpsc::*, Arc};
 
 use crate::io::device::{Device, DeviceAPI};
 pub use crate::io::mode::Mode;
@@ -60,21 +60,18 @@ impl HAL for MidiHardware {
 			.port_name(port)
 			.unwrap_or(UNKNOWN_DEVICE_NAME.to_owned());
 
-		let device = Arc::new(Mutex::new(Device::new(&device_name, mode, port.clone())));
-		let connection_device = device.clone();
+		let (sender, receiver) = channel::<Vec<u8>>();
 		let connection = midi_input
 			.connect(
 				port,
 				MIDI_PORT_NAME,
-				move |_, message, _| {
-					// TODO Pipe messages to a channel instead of having to directly reference the device
-					connection_device.lock().handle_message(message);
-				},
+				move |_, message, _| sender.send(message.to_vec()).unwrap(),
 				(),
 			)
 			// TODO: https://github.com/Boddlnagg/midir/issues/55
 			.map_err(|e| midir::ConnectError::new(e.kind(), ()))?;
-		device.lock().hold_connection(connection);
+
+		let device = Device::new(&device_name, mode, port.clone(), connection, receiver);
 
 		println!("Connected to {}", device_name);
 
@@ -134,7 +131,8 @@ impl HAL for SampleHardware {
 		_port_number: usize,
 		mode: Mode,
 	) -> Result<Arc<Mutex<Self::Device>>, anyhow::Error> {
-		let device = Arc::new(Mutex::new(Device::new("sample_device", mode, ())));
+		let (_sender, receiver) = std::sync::mpsc::channel();
+		let device = Device::new("sample_device", mode, (), (), receiver);
 		Ok(device)
 	}
 
@@ -174,7 +172,8 @@ impl HAL for MockHardware {
 		}
 		let device_name = self.devices.as_ref().unwrap()[port_number].as_str();
 		let port = device_name.to_owned();
-		let device = Arc::new(Mutex::new(Device::new(device_name, mode, port)));
+		let (_sender, receiver) = std::sync::mpsc::channel();
+		let device = Device::new(device_name, mode, port, (), receiver);
 		Ok(device)
 	}
 
