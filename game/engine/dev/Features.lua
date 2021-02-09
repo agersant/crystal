@@ -17,6 +17,7 @@ Features.init = function(self)
 	self.debugDraw = not release and self.display;
 	self.liveTweak = not release;
 	self.slowAssertions = not release;
+	self.constants = not release;
 end
 
 local doNothing = function()

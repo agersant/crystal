@@ -8,6 +8,7 @@ local Scene = require("engine/Scene");
 
 local engineTestFiles = {
 	"engine/dev/cli/TestCLI",
+	"engine/dev/TestConstants",
 	"engine/dev/TestLiveTweak",
 	"engine/ecs/TestECS",
 	"engine/input/TestInputDevice",
