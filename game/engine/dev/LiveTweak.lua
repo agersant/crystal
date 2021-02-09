@@ -85,14 +85,4 @@ CLI:registerCommand("connectToMIDIDevice port:number", function(port)
 	instance:connectToDevice(port);
 end);
 
--- TODO WIP
-CLI:registerCommand("listDevices", function()
-	instance:listDevices();
-end);
-
--- TODO WIP
-CLI:registerCommand("currentDevice", function()
-	print(instance:getCurrentDevice());
-end);
-
 return instance;
