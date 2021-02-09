@@ -33,6 +33,9 @@ Constants.define = function(self, name, initialValue, options)
 		constant.maxValue = options.maxValue;
 	end
 
+	-- TODO register read/write console commands
+	-- TODO implement live tweak monitor
+
 	self._store[name] = constant;
 end
 
