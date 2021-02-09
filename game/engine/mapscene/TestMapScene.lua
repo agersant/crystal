@@ -41,7 +41,7 @@ tests[#tests].body = function(context)
 	local scene = MapScene:new("engine/test-data/empty_map.lua");
 	Scene:setCurrent(scene);
 
-	local cli = CLI:new(CommandStore:getGlobalStore());
+	local cli = CLI:new();
 	cli:execute("spawn TestSpawnCommand");
 	scene:update(0);
 
@@ -70,7 +70,7 @@ tests[#tests].body = function(context)
 	player:setPosition(200, 200);
 	scene:update(0);
 
-	local cli = CLI:new(CommandStore:getGlobalStore());
+	local cli = CLI:new();
 	cli:execute("spawn TestSpawnCommandProximity");
 	scene:update(0);
 

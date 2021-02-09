@@ -91,7 +91,7 @@ local submitInput = function(self)
 end
 
 CLI.init = function(self, commandStore)
-	self._commandStore = commandStore or CommandStore:new();
+	self._commandStore = commandStore or CommandStore.globalStore;
 	self._autoComplete = AutoComplete:new(self._commandStore);
 	self._inputs = {TextInput:new(maxUndo)};
 	self._inputCursor = 1;
@@ -332,7 +332,7 @@ CLI.addCommand = function(self, description, func)
 end
 
 CLI.registerCommand = function(self, description, func)
-	local store = CommandStore:getGlobalStore();
+	local store = CommandStore.globalStore;
 	store:addCommand(description, func);
 end
 

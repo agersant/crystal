@@ -16,7 +16,7 @@ local fpsCounter;
 love.load = function()
 	love.keyboard.setTextInput(false);
 
-	cli = CLI:new(CommandStore:getGlobalStore());
+	cli = CLI:new();
 	fpsCounter = FPSCounter:new();
 
 	local module = require(MODULE):new();

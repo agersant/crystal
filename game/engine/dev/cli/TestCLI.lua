@@ -5,7 +5,7 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Toggling", gfx = "mock"};
 tests[#tests].body = function()
-	local cli = CLI:new();
+	local cli = CLI:new(CommandStore:new());
 	local wasActive = cli:isActive();
 	cli:toggle();
 	assert(cli:isActive() ~= wasActive);
@@ -15,7 +15,7 @@ end
 
 tests[#tests + 1] = {name = "Run command", gfx = "mock"};
 tests[#tests].body = function()
-	local cli = CLI:new();
+	local cli = CLI:new(CommandStore:new());
 	cli:enable();
 	local sentinel = 0;
 	cli:addCommand("testCommand", function()
@@ -28,7 +28,7 @@ end
 
 tests[#tests + 1] = {name = "Number argument", gfx = "mock"};
 tests[#tests].body = function()
-	local cli = CLI:new();
+	local cli = CLI:new(CommandStore:new());
 	cli:enable();
 	local sentinel = 0;
 	cli:addCommand("testCommand value:number", function(value)
@@ -41,7 +41,7 @@ end
 
 tests[#tests + 1] = {name = "String argument", gfx = "mock"};
 tests[#tests].body = function()
-	local cli = CLI:new();
+	local cli = CLI:new(CommandStore:new());
 	cli:enable();
 	local sentinel = "";
 	cli:addCommand("testCommand value:string", function(value)
@@ -54,7 +54,7 @@ end
 
 tests[#tests + 1] = {name = "Execute from code", gfx = "mock"};
 tests[#tests].body = function()
-	local cli = CLI:new();
+	local cli = CLI:new(CommandStore:new());
 	local sentinel = "";
 	cli:addCommand("testCommand value:string", function(value)
 		sentinel = value;
@@ -65,7 +65,7 @@ end
 
 tests[#tests + 1] = {name = "Execute from history", gfx = "mock"};
 tests[#tests].body = function()
-	local cli = CLI:new();
+	local cli = CLI:new(CommandStore:new());
 	cli:enable();
 
 	local sentinel = "";
@@ -90,7 +90,7 @@ end
 
 tests[#tests + 1] = {name = "Autocomplete", gfx = "mock"};
 tests[#tests].body = function()
-	local cli = CLI:new();
+	local cli = CLI:new(CommandStore:new());
 	cli:enable();
 
 	local sentinel = "";
@@ -105,7 +105,7 @@ end
 
 tests[#tests + 1] = {name = "Can draw CLI", gfx = "mock"};
 tests[#tests].body = function(context)
-	local cli = CLI:new(CommandStore:getGlobalStore());
+	local cli = CLI:new();
 	cli:enable();
 	cli:textInput("show");
 	cli:draw();

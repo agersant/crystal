@@ -73,7 +73,7 @@ local hotReload = function()
 		Assets:refresh(file .. "." .. ext);
 	end
 
-	local cli = CLI:new(CommandStore:getGlobalStore());
+	local cli = CLI:new();
 	cli:execute("save hot_reload");
 	cli:execute("load hot_reload");
 end

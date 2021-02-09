@@ -6,7 +6,7 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Draws camera overlay", gfx = "on"};
 tests[#tests].body = function(context)
-	local cli = CLI:new(CommandStore:getGlobalStore());
+	local cli = CLI:new();
 	local scene = MapScene:new("engine/test-data/empty_map.lua");
 
 	cli:execute("showCameraOverlay");

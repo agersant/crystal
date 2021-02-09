@@ -50,8 +50,6 @@ CommandStore.getCommand = function(self, name)
 end
 
 local global = CommandStore:new();
-CommandStore.getGlobalStore = function(self)
-	return global;
-end
+CommandStore.globalStore = global;
 
 return CommandStore;
