@@ -1,4 +1,5 @@
 require("engine/dev/HotReload");
+local Constants = require("engine/dev/Constants");
 local FPSCounter = require("engine/dev/FPSCounter");
 local LiveTweak = require("engine/dev/LiveTweak");
 local Log = require("engine/dev/Log");
@@ -12,6 +13,8 @@ local Module = require("engine/Module");
 
 local cli;
 local fpsCounter;
+
+Constants:register("timeScale", 1.0, {minValue = 0.0, maxValue = 5.0});
 
 love.load = function()
 	love.keyboard.setTextInput(false);
@@ -29,7 +32,7 @@ end
 
 love.update = function(dt)
 	fpsCounter:update(dt);
-	Scene:getCurrent():update(dt);
+	Scene:getCurrent():update(dt * Constants:get("timeScale"));
 	Input:flushEvents();
 end
 
