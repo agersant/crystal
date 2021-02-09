@@ -1,6 +1,5 @@
 local Features = require("engine/dev/Features");
 local Log = require("engine/dev/Log");
-local LogLevels = require("engine/dev/LogLevels");
 local GFXConfig = require("engine/graphics/GFXConfig");
 local Assets = require("engine/resources/Assets");
 local Module = require("engine/Module");
@@ -223,7 +222,7 @@ end
 
 return {
 	execute = function(self)
-		Log:setVerbosity(LogLevels.ERROR);
+		Log:setVerbosity(Log.Levels.ERROR);
 		Module:setCurrent(require(MODULE):new());
 		local testFiles = {};
 		for _, file in ipairs(engineTestFiles) do
