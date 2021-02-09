@@ -21,6 +21,9 @@ GFXConfig.init = function(self)
 end
 
 GFXConfig.setWindowSize = function(self, width, height)
+	if self._windowWidth == width and self._windowHeight == height then
+		return;
+	end
 	self._windowWidth = width;
 	self._windowHeight = height;
 	local zx = self._windowWidth / self._renderWidth;
