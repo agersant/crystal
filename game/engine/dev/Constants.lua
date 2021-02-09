@@ -7,6 +7,17 @@ local Constants = Class("Constants");
 
 local globalStore = {};
 
+local normalizeName = function(name)
+	assert(name);
+	return string.lower(name);
+end
+
+local findConstant = function(self, name)
+	local constant = self._store[normalizeName(name)];
+	assert(constant);
+	return constant;
+end
+
 Constants.init = function(self, store)
 	self._store = store or globalStore;
 end
@@ -15,7 +26,7 @@ Constants.define = function(self, name, initialValue, options)
 	assert(name);
 	assert(initialValue);
 
-	local name = string.lower(name);
+	local name = normalizeName(name);
 	if self._store[name] then
 		return;
 	end
@@ -41,9 +52,7 @@ Constants.define = function(self, name, initialValue, options)
 end
 
 Constants.read = function(self, name)
-	local name = string.lower(name);
-	local constant = self._store[name];
-	assert(constant);
+	local constant = findConstant(self, name);
 	if not (Features.liveTweak and constant.knobIndex) then
 		return constant.value;
 	else
@@ -55,9 +64,7 @@ Constants.write = function(self, name, value)
 	if not Features.constants then
 		return;
 	end
-	local name = string.lower(name);
-	local constant = self._store[name];
-	assert(constant);
+	local constant = findConstant(self, name);
 	assert(type(constant.value) == type(value));
 	local value = value;
 	if type(value) == "number" then
@@ -70,9 +77,7 @@ Constants.mapToKnob = function(self, name, knobIndex)
 	if not Features.liveTweak then
 		return;
 	end
-	local name = string.lower(name);
-	local constant = self._store[name];
-	assert(constant);
+	local constant = findConstant(self, name);
 	assert(type(knobIndex) == "number");
 	constant.knobIndex = knobIndex;
 end

@@ -25,6 +25,13 @@ tests[#tests].body = function()
 	assert(constants:read("piggy") == "oinque");
 end
 
+tests[#tests + 1] = {name = "Is case insensitive"};
+tests[#tests].body = function()
+	local constants = Constants:new({});
+	constants:define("piggy", "oink");
+	assert(constants:read("PIGGY") == "oink");
+end
+
 tests[#tests + 1] = {name = "Clamps numeric constants"};
 tests[#tests].body = function()
 	local constants = Constants:new({});
