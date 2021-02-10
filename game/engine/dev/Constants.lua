@@ -1,4 +1,5 @@
 require("engine/utils/OOP");
+local CLI = require("engine/dev/cli/CLI");
 local Features = require("engine/dev/Features");
 local LiveTweak = require("engine/dev/LiveTweak");
 local MathUtils = require("engine/utils/MathUtils");
@@ -98,5 +99,9 @@ end
 Constants.liveTweak = function(self, name, knobIndex)
 	return globalConstants:mapToKnob(name, knobIndex);
 end
+
+CLI:registerCommand("liveTweak constant:string knob:number", function(name, knobIndex)
+	Constants:liveTweak(name, knobIndex);
+end)
 
 return Constants;
