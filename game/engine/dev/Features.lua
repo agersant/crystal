@@ -15,7 +15,7 @@ Features.init = function(self)
 	self.cli = not release;
 	self.fpsCounter = not release;
 	self.debugDraw = not release and self.display;
-	self.liveTweak = not release;
+	self.liveTune = not release;
 	self.slowAssertions = not release;
 	self.constants = not release;
 end

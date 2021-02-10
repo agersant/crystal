@@ -1,7 +1,7 @@
 require("engine/dev/HotReload");
 local Constants = require("engine/dev/Constants");
 local FPSCounter = require("engine/dev/FPSCounter");
-local LiveTweak = require("engine/dev/LiveTweak");
+local LiveTune = require("engine/dev/LiveTune");
 local Log = require("engine/dev/Log");
 local CLI = require("engine/dev/cli/CLI");
 local CommandStore = require("engine/dev/cli/CommandStore");

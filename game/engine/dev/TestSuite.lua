@@ -9,7 +9,7 @@ local Scene = require("engine/Scene");
 local engineTestFiles = {
 	"engine/dev/cli/TestCLI",
 	"engine/dev/TestConstants",
-	"engine/dev/TestLiveTweak",
+	"engine/dev/TestLiveTune",
 	"engine/ecs/TestECS",
 	"engine/input/TestInputDevice",
 	"engine/mapscene/behavior/TestActor",

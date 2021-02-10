@@ -7,36 +7,36 @@ local Features = require("engine/dev/Features");
 local Log = require("engine/dev/Log");
 local MathUtils = require("engine/utils/MathUtils");
 
-local LiveTweak = Class("LiveTweak");
+local LiveTune = Class("LiveTune");
 
-if not Features.liveTweak then
-	Features.stub(LiveTweak);
+if not Features.liveTune then
+	Features.stub(LiveTune);
 end
 
-LiveTweak.Modes = {ABSOLUTE = Knob.Absolute, RELATIVE_ARTURIA1 = Knob.RelativeArturia1};
+LiveTune.Modes = {ABSOLUTE = Knob.Absolute, RELATIVE_ARTURIA1 = Knob.RelativeArturia1};
 
-LiveTweak.init = function(self)
-	self:setMode(LiveTweak.Modes.RELATIVE_ARTURIA1);
+LiveTune.init = function(self)
+	self:setMode(LiveTune.Modes.RELATIVE_ARTURIA1);
 	self:connectToDevice(0);
 	-- Table of knob index -> MIDI CC Index
 	-- Default values setup for the factory settings of Arturia MINILAB mkII
 	self._ccIndices = {112, 74, 71, 76, 77, 93, 73, 75, 114, 18, 19, 16, 17, 91, 79, 72};
 end
 
-LiveTweak.connectToDevice = function(self, portNumber)
+LiveTune.connectToDevice = function(self, portNumber)
 	Knob.connect(portNumber);
 end
 
-LiveTweak.setMode = function(self, mode)
+LiveTune.setMode = function(self, mode)
 	Knob.set_mode(mode);
 end
 
-LiveTweak.mapKnobsToMIDI = function(self, ccIndices)
+LiveTune.mapKnobsToMIDI = function(self, ccIndices)
 	assert(type(ccIndices) == "table");
 	self._ccIndices = ccIndices;
 end
 
-LiveTweak.getValue = function(self, knobIndex, initialValue, minValue, maxValue)
+LiveTune.getValue = function(self, knobIndex, initialValue, minValue, maxValue)
 	assert(maxValue >= minValue)
 	assert(initialValue >= minValue)
 	assert(initialValue <= maxValue)
@@ -53,7 +53,7 @@ LiveTweak.getValue = function(self, knobIndex, initialValue, minValue, maxValue)
 	end
 end
 
-LiveTweak.listDevices = function(self)
+LiveTune.listDevices = function(self)
 	local cNumDevices = FFI.new("int[1]");
 	local cDevices = Knob.list_devices(cNumDevices);
 
@@ -68,7 +68,7 @@ LiveTweak.listDevices = function(self)
 	return devices;
 end
 
-LiveTweak.getCurrentDevice = function(self)
+LiveTune.getCurrentDevice = function(self)
 	local cDevice = Knob.get_current_device();
 	local device = FFI.string(cDevice);
 	Knob.free_device(cDevice);
@@ -79,7 +79,7 @@ LiveTweak.getCurrentDevice = function(self)
 	end
 end
 
-local instance = LiveTweak:new();
+local instance = LiveTune:new();
 
 CLI:registerCommand("connectToMIDIDevice port:number", function(port)
 	instance:connectToDevice(port);

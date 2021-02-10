@@ -1,7 +1,7 @@
 require("engine/utils/OOP");
 local CLI = require("engine/dev/cli/CLI");
 local Features = require("engine/dev/Features");
-local LiveTweak = require("engine/dev/LiveTweak");
+local LiveTune = require("engine/dev/LiveTune");
 local MathUtils = require("engine/utils/MathUtils");
 
 local Constants = Class("Constants");
@@ -53,10 +53,10 @@ end
 
 Constants.read = function(self, name)
 	local constant = findConstant(self, name);
-	if not (Features.liveTweak and constant.knobIndex) then
+	if not (Features.liveTune and constant.knobIndex) then
 		return constant.value;
 	else
-		return LiveTweak:getValue(constant.knobIndex, constant.value, constant.minValue, constant.maxValue);
+		return LiveTune:getValue(constant.knobIndex, constant.value, constant.minValue, constant.maxValue);
 	end
 end
 
@@ -74,7 +74,7 @@ Constants.write = function(self, name, value)
 end
 
 Constants.mapToKnob = function(self, name, knobIndex)
-	if not Features.liveTweak then
+	if not Features.liveTune then
 		return;
 	end
 	local constant = findConstant(self, name);
@@ -95,12 +95,12 @@ Constants.set = function(self, name, value)
 	return globalConstants:write(name, value);
 end
 
-Constants.liveTweak = function(self, name, knobIndex)
+Constants.liveTune = function(self, name, knobIndex)
 	return globalConstants:mapToKnob(name, knobIndex);
 end
 
-CLI:registerCommand("liveTweak constant:string knob:number", function(name, knobIndex)
-	Constants:liveTweak(name, knobIndex);
+CLI:registerCommand("liveTune constant:string knob:number", function(name, knobIndex)
+	Constants:liveTune(name, knobIndex);
 end)
 
 return Constants;
