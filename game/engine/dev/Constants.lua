@@ -19,13 +19,17 @@ local findConstant = function(self, name)
 	return constant;
 end
 
-Constants.init = function(self, store)
+Constants.init = function(self, store, cli)
 	self._store = store or globalStore;
+	self._cli = cli or CLI:new();
 end
 
 Constants.define = function(self, name, initialValue, options)
 	assert(name);
 	assert(initialValue);
+
+	local originalName = name;
+	local valueType = type(initialValue);
 
 	local name = normalizeName(name);
 	if self._store[name] then
@@ -33,9 +37,8 @@ Constants.define = function(self, name, initialValue, options)
 	end
 
 	local options = options or {};
-
 	local constant = {value = initialValue};
-	if type(initialValue) == "number" then
+	if valueType == "number" then
 		assert(type(options.minValue) == "number");
 		assert(type(options.maxValue) == "number");
 		assert(options.minValue <= options.maxValue);
@@ -45,7 +48,11 @@ Constants.define = function(self, name, initialValue, options)
 		constant.maxValue = options.maxValue;
 	end
 
-	-- TODO register read/write console commands for constant
+	if valueType == "number" or valueType == "string" or valueType == "boolean" then
+		self._cli:addCommand(originalName .. " value:" .. valueType, function(value)
+			self:write(name, value)
+		end)
+	end
 	-- TODO implement live tweak monitor
 
 	self._store[name] = constant;
