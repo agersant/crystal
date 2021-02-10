@@ -46,7 +46,6 @@ Constants.define = function(self, name, initialValue, options)
 	end
 
 	-- TODO register read/write console commands for constant
-	-- TODO add command for `livetweak name`
 	-- TODO implement live tweak monitor
 
 	self._store[name] = constant;
