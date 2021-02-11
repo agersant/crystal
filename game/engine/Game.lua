@@ -31,6 +31,7 @@ love.load = function()
 end
 
 love.update = function(dt)
+	Constants.instance:update();
 	fpsCounter:update(dt);
 	Scene:getCurrent():update(dt * Constants:get("timeScale"));
 	Input:flushEvents();

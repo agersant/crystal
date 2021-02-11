@@ -6,8 +6,6 @@ local MathUtils = require("engine/utils/MathUtils");
 
 local Constants = Class("Constants");
 
-local globalStore = {};
-
 local normalizeName = function(name)
 	assert(name);
 	return string.lower(name);
@@ -19,9 +17,10 @@ local findConstant = function(self, name)
 	return constant;
 end
 
-Constants.init = function(self, store, cli)
-	self._store = store or globalStore;
+Constants.init = function(self, cli)
+	self._store = {};
 	self._cli = cli or CLI:new();
+	self._knobMappings = {};
 end
 
 Constants.define = function(self, name, initialValue, options)
@@ -60,11 +59,7 @@ end
 
 Constants.read = function(self, name)
 	local constant = findConstant(self, name);
-	if not (Features.liveTune and constant.knobIndex) then
-		return constant.value;
-	else
-		return LiveTune:getValue(constant.knobIndex, constant.value, constant.minValue, constant.maxValue);
-	end
+	return constant.value;
 end
 
 Constants.write = function(self, name, value)
@@ -86,28 +81,48 @@ Constants.mapToKnob = function(self, name, knobIndex)
 	end
 	local constant = findConstant(self, name);
 	assert(type(knobIndex) == "number");
-	constant.knobIndex = knobIndex;
+
+	local previouslyAssigned;
+	for name, mappedKnob in pairs(self._knobMappings) do
+		if mappedKnob == knobIndex then
+			previouslyAssigned = name;
+			break
+		end
+	end
+	if previouslyAssigned then
+		self._knobMappings[previouslyAssigned] = nil;
+	end
+
+	self._knobMappings[name] = knobIndex;
 end
 
-local globalConstants = Constants:new(globalStore);
+Constants.update = function(self)
+	if not Features.liveTune then
+		return;
+	end
+	for name, knobIndex in pairs(self._knobMappings) do
+		local constant = findConstant(self, name);
+		local value = LiveTune:getValue(constant.knobIndex, constant.value, constant.minValue, constant.maxValue);
+		self:write(name, value);
+	end
+end
+
+Constants.instance = Constants:new();
+
 Constants.register = function(self, name, initialValue, options)
-	globalConstants:define(name, initialValue, options);
+	Constants.instance:define(name, initialValue, options);
 end
 
 Constants.get = function(self, name)
-	return globalConstants:read(name);
+	return Constants.instance:read(name);
 end
 
 Constants.set = function(self, name, value)
-	return globalConstants:write(name, value);
-end
-
-Constants.liveTune = function(self, name, knobIndex)
-	return globalConstants:mapToKnob(name, knobIndex);
+	Constants.instance:write(name, value);
 end
 
 CLI:registerCommand("liveTune constant:string knob:number", function(name, knobIndex)
-	Constants:liveTune(name, knobIndex);
+	Constants.instance:mapToKnob(name, knobIndex);
 end)
 
 return Constants;
