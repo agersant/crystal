@@ -49,7 +49,4 @@ CommandStore.getCommand = function(self, name)
 	return command;
 end
 
-local global = CommandStore:new();
-CommandStore.globalStore = global;
-
 return CommandStore;

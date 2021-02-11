@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local CLI = require("engine/dev/cli/CLI");
+local Terminal = require("engine/dev/cli/Terminal");
 local Persistence = require("engine/persistence/Persistence");
 
 local Scene = Class("Scene");
@@ -24,7 +24,7 @@ Scene.setCurrent = function(self, scene)
 	currentScene = scene;
 end
 
-CLI:registerCommand("loadScene sceneName:string", function(sceneName)
+Terminal:registerCommand("loadScene sceneName:string", function(sceneName)
 	Persistence:getSaveData():save();
 	local class = Class:getByName(sceneName);
 	assert(class);

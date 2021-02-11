@@ -7,7 +7,8 @@ local MockGraphics = require("engine/dev/mock/love/graphics");
 local Scene = require("engine/Scene");
 
 local engineTestFiles = {
-	"engine/dev/cli/TestCLI",
+	"engine/dev/cli/TestConsole",
+	"engine/dev/cli/TestTerminal",
 	"engine/dev/TestConstants",
 	"engine/dev/TestLiveTune",
 	"engine/ecs/TestECS",

@@ -2,7 +2,7 @@ require("engine/utils/OOP");
 require("engine/ffi/Knob");
 local FFI = require("ffi");
 local Knob = FFI.load("knob");
-local CLI = require("engine/dev/cli/CLI");
+local Terminal = require("engine/dev/cli/Terminal");
 local Features = require("engine/dev/Features");
 local Log = require("engine/dev/Log");
 local MathUtils = require("engine/utils/MathUtils");
@@ -37,6 +37,7 @@ LiveTune.mapKnobsToMIDI = function(self, ccIndices)
 end
 
 LiveTune.getValue = function(self, knobIndex, initialValue, minValue, maxValue)
+	assert(knobIndex);
 	assert(maxValue >= minValue)
 	assert(initialValue >= minValue)
 	assert(initialValue <= maxValue)
@@ -81,7 +82,7 @@ end
 
 local instance = LiveTune:new();
 
-CLI:registerCommand("connectToMIDIDevice port:number", function(port)
+Terminal:registerCommand("connectToMIDIDevice port:number", function(port)
 	instance:connectToDevice(port);
 end);
 

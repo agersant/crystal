@@ -1,5 +1,4 @@
-local CLI = require("engine/dev/cli/CLI");
-local CommandStore = require("engine/dev/cli/CommandStore");
+local Terminal = require("engine/dev/cli/Terminal");
 local Log = require("engine/dev/Log");
 local Assets = require("engine/resources/Assets");
 local TableUtils = require("engine/utils/TableUtils");
@@ -73,9 +72,8 @@ local hotReload = function()
 		Assets:refresh(file .. "." .. ext);
 	end
 
-	local cli = CLI:new();
-	cli:execute("save hot_reload");
-	cli:execute("load hot_reload");
+	Terminal:execute("save hot_reload");
+	Terminal:execute("load hot_reload");
 end
 
-CLI:registerCommand("hotReload", hotReload);
+Terminal:registerCommand("hotReload", hotReload);

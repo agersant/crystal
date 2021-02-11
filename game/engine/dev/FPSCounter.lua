@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local CLI = require("engine/dev/cli/CLI");
+local Terminal = require("engine/dev/cli/Terminal");
 local Features = require("engine/dev/Features");
 local Log = require("engine/dev/Log");
 local Colors = require("engine/resources/Colors");
@@ -76,11 +76,11 @@ FPSCounter.draw = function(self)
 	love.graphics.print(self._text, x, y);
 end
 
-CLI:registerCommand("showFPSCounter", function()
+Terminal:registerCommand("showFPSCounter", function()
 	state.isActive = true;
 end);
 
-CLI:registerCommand("hideFPSCounter", function()
+Terminal:registerCommand("hideFPSCounter", function()
 	state.isActive = false;
 end);
 

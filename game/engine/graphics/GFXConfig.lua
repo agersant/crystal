@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local CLI = require("engine/dev/cli/CLI");
+local Terminal = require("engine/dev/cli/Terminal");
 
 local GFXConfig = Class("GFXConfig");
 local instance;
@@ -74,8 +74,8 @@ local disableFullscreen = function()
 	instance:setFullscreenEnabled(false);
 end
 
-CLI:registerCommand("setZoom zoom:number", setZoom);
-CLI:registerCommand("enableFullscreen", enableFullscreen);
-CLI:registerCommand("disableFullscreen", disableFullscreen);
+Terminal:registerCommand("setZoom zoom:number", setZoom);
+Terminal:registerCommand("enableFullscreen", enableFullscreen);
+Terminal:registerCommand("disableFullscreen", disableFullscreen);
 
 return instance;

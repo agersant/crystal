@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local CLI = require("engine/dev/cli/CLI");
+local Terminal = require("engine/dev/cli/Terminal");
 local Features = require("engine/dev/Features");
 local LiveTune = require("engine/dev/LiveTune");
 local MathUtils = require("engine/utils/MathUtils");
@@ -17,9 +17,10 @@ local findConstant = function(self, name)
 	return constant;
 end
 
-Constants.init = function(self, cli)
+Constants.init = function(self, terminal)
+	assert(terminal);
 	self._store = {};
-	self._cli = cli or CLI:new();
+	self._terminal = terminal;
 	self._knobMappings = {};
 end
 
@@ -48,7 +49,7 @@ Constants.define = function(self, name, initialValue, options)
 	end
 
 	if valueType == "number" or valueType == "string" or valueType == "boolean" then
-		self._cli:addCommand(originalName .. " value:" .. valueType, function(value)
+		self._terminal:addCommand(originalName .. " value:" .. valueType, function(value)
 			self:write(name, value)
 		end)
 	end
@@ -79,6 +80,7 @@ Constants.mapToKnob = function(self, name, knobIndex)
 	if not Features.liveTune then
 		return;
 	end
+	local name = normalizeName(name);
 	local constant = findConstant(self, name);
 	assert(type(knobIndex) == "number");
 
@@ -102,12 +104,12 @@ Constants.update = function(self)
 	end
 	for name, knobIndex in pairs(self._knobMappings) do
 		local constant = findConstant(self, name);
-		local value = LiveTune:getValue(constant.knobIndex, constant.value, constant.minValue, constant.maxValue);
+		local value = LiveTune:getValue(knobIndex, constant.value, constant.minValue, constant.maxValue);
 		self:write(name, value);
 	end
 end
 
-Constants.instance = Constants:new();
+Constants.instance = Constants:new(Terminal.instance);
 
 Constants.register = function(self, name, initialValue, options)
 	Constants.instance:define(name, initialValue, options);
@@ -121,7 +123,7 @@ Constants.set = function(self, name, value)
 	Constants.instance:write(name, value);
 end
 
-CLI:registerCommand("liveTune constant:string knob:number", function(name, knobIndex)
+Terminal:registerCommand("liveTune constant:string knob:number", function(name, knobIndex)
 	Constants.instance:mapToKnob(name, knobIndex);
 end)
 
