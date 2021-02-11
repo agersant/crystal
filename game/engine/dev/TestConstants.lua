@@ -1,6 +1,6 @@
 local CLI = require("engine/dev/cli/CLI");
 local CommandStore = require("engine/dev/cli/CommandStore");
-local Constants = require("engine/dev/Constants");
+local Constants = require("engine/dev/constants/Constants");
 
 local tests = {};
 
