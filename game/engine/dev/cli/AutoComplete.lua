@@ -4,6 +4,8 @@ local StringUtils = require("engine/utils/StringUtils");
 
 local AutoComplete = Class("AutoComplete");
 
+-- TODO consider moving colors out of here
+
 local getSuggestionsForCommand = function(self, input)
 	local matches = self._commandStore:search(input.fullText);
 	table.sort(matches, function(a, b)
@@ -61,7 +63,7 @@ local updateSuggestions = function(self, input)
 		self._suggestions = {lines = getSuggestionsForCommand(self, input), state = "command"};
 	elseif not self._commandStore:getCommand(input.command) then
 		self._suggestions = {
-			lines = {{text = {Colors.strawberry, input.command .. " is not a valid command"}}},
+			lines = {{text = {Colors.coquelicot, input.command .. " is not a valid command"}}},
 			state = "badcommand",
 		};
 	else

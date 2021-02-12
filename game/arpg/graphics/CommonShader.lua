@@ -1,7 +1,7 @@
 require("engine/utils/OOP");
 local Assets = require("engine/resources/Assets");
-local Colors = require("engine/resources/Colors");
 local Shader = require("engine/mapscene/display/Shader");
+local Palette = require("arpg/graphics/Palette");
 
 local CommonShader = Class("CommonShader", Shader);
 
@@ -15,7 +15,7 @@ CommonShader.setHighlightColor = function(self, color)
 	if color then
 		self:setUniform("highlightColor", color);
 	else
-		self:setUniform("highlightColor", Colors.black);
+		self:setUniform("highlightColor", Palette.black);
 	end
 end
 
