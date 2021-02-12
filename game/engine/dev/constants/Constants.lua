@@ -1,7 +1,7 @@
 require("engine/utils/OOP");
 local Terminal = require("engine/dev/cli/Terminal");
 local Features = require("engine/dev/Features");
-local LiveTune = require("engine/dev/LiveTune");
+local LiveTune = require("engine/dev/constants/LiveTune");
 local MathUtils = require("engine/utils/MathUtils");
 
 local Constants = Class("Constants");

@@ -1,4 +1,4 @@
-local LiveTune = require("engine/dev/LiveTune");
+local LiveTune = require("engine/dev/constants/LiveTune");
 
 local tests = {};
 
