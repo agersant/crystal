@@ -168,6 +168,10 @@ Terminal.getAutoCompleteOutput = function(self)
 	return self._autoCompleteOutput;
 end
 
+Terminal.getAutoCompleteCursor = function(self)
+	return self._autoCompleteCursor;
+end
+
 Terminal.getCurrentInput = function(self)
 	return self._inputs[self._inputCursor];
 end

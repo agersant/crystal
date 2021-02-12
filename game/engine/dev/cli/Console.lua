@@ -167,7 +167,7 @@ Console.draw = function(self)
 		local suggestionY = autoCompleteBoxY + autoCompletePaddingY;
 		for i, suggestion in ipairs(autoComplete.lines) do
 			local suggestionY = suggestionY + (i - 1) * font:getHeight();
-			if autoComplete.state == "command" and i == self._autoCompleteCursor then
+			if autoComplete.state == "command" and i == self._terminal:getAutoCompleteCursor() then
 				love.graphics.setColor(Colors.oxfordBlue);
 				love.graphics.rectangle("fill", autoCompleteBoxX, suggestionY, autoCompleteBoxWidth, font:getHeight());
 				love.graphics.setColor(Colors.cyan);
