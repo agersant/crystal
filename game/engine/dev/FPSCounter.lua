@@ -25,7 +25,7 @@ local textPaddingY = 5;
 local state = {isActive = false, frameDurations = {}};
 
 FPSCounter.init = function(self)
-	self.font = Fonts:get("dev", fontSize);
+	self.font = Fonts:get("devBold", fontSize);
 end
 
 FPSCounter.update = function(self, dt)
@@ -69,9 +69,7 @@ FPSCounter.draw = function(self)
 
 	x = paddingX + textPaddingX;
 	y = paddingY + textPaddingY;
-	love.graphics.setColor(Colors.nightSkyBlue);
 	love.graphics.setFont(self.font);
-	love.graphics.print(self._text, x + 1, y + 1);
 	love.graphics.setColor(Colors.white);
 	love.graphics.print(self._text, x, y);
 end
