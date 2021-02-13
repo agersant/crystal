@@ -8,6 +8,9 @@ local pickFont = function(name)
 	if name == "dev" then
 		return "engine/assets/source_code_pro_medium.otf";
 	end
+	if name == "devBold" then
+		return "engine/assets/source_code_pro_bold.otf";
+	end
 	local font = Module:getCurrent().fonts[name];
 	return font or error("Unknown font: " .. tostring(name));
 end

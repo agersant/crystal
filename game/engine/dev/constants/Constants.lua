@@ -123,8 +123,12 @@ Constants.set = function(self, name, value)
 	Constants.instance:write(name, value);
 end
 
-Terminal:registerCommand("liveTune constant:string knob:number", function(name, knobIndex)
+Constants.liveTune = function(self, name, knobIndex)
 	Constants.instance:mapToKnob(name, knobIndex);
+end
+
+Terminal:registerCommand("liveTune constant:string knob:number", function(name, knobIndex)
+	Constants:liveTune(name, knobIndex);
 end)
 
 return Constants;

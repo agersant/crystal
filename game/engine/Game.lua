@@ -1,5 +1,6 @@
 require("engine/dev/HotReload");
 local Constants = require("engine/dev/constants/Constants");
+local LiveTuneOverlay = require("engine/dev/constants/LiveTuneOverlay");
 local FPSCounter = require("engine/dev/FPSCounter");
 local Log = require("engine/dev/Log");
 local Console = require("engine/dev/cli/Console");
@@ -12,6 +13,7 @@ local Module = require("engine/Module");
 
 local console;
 local fpsCounter;
+local liveTuneOverlay;
 
 Constants:register("timeScale", 1.0, {minValue = 0.0, maxValue = 5.0});
 
@@ -20,6 +22,7 @@ love.load = function()
 
 	fpsCounter = FPSCounter:new();
 	console = Console:new(Terminal.instance);
+	liveTuneOverlay = LiveTuneOverlay:new();
 
 	local module = require(MODULE):new();
 	Module:setCurrent(module);
@@ -41,6 +44,7 @@ love.draw = function()
 	Scene:getCurrent():draw();
 	love.graphics.reset();
 	fpsCounter:draw();
+	liveTuneOverlay:draw();
 	console:draw();
 end
 
