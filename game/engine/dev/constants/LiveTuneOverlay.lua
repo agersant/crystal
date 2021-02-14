@@ -75,11 +75,13 @@ LiveTuneOverlay.draw = function(self)
 	-- Measurements
 	local contentHeight = math.max(2 * arcRadius, valueFontSize + 2 * valuePadding) + 2 * contentPadding;
 	local totalHeight = contentHeight + headerHeight;
+	local spacing = 10;
 
 	-- Draw device name
 	local y = deviceNameFontSize / 2 + 0.5 + 4;
 	love.graphics.setColor(colors.deviceName);
 	love.graphics.setLineWidth(1);
+	love.graphics.setLineStyle("rough");
 	love.graphics.line(0, y, prefixLineLength, y);
 	local x = prefixLineLength + deviceNameFont:getWidth(deviceName) + 2 * deviceNamePaddingX;
 	love.graphics.line(x, y, love.graphics.getWidth() - 2 * padding, y);
@@ -87,20 +89,16 @@ LiveTuneOverlay.draw = function(self)
 	love.graphics.printf(deviceName, prefixLineLength + deviceNamePaddingX, 0, love.graphics.getWidth(), "left");
 	love.graphics.translate(0, deviceNameFontSize + deviceNamePaddingY);
 
-	-- TODO Real data + scale value for bounds
-	for i = 1, 16 do
-
+	-- TODO state for no mapped knobs
+	local mappedKnobs = Constants.instance:getMappedKnobs();
+	for _, mappedKnob in ipairs(mappedKnobs) do
 		love.graphics.push();
 
-		local constantName = "Constant#" .. i;
-		Constants:register(constantName, 0.5, {minValue = 0, maxValue = 1});
-		Constants:liveTune(constantName, i);
-		local value = Constants:get(constantName);
+		local rawValue = Constants:get(mappedKnob.constantName);
+		local value = (rawValue - mappedKnob.minValue) / (mappedKnob.maxValue - mappedKnob.minValue);
 
-		local headerText = constantName;
+		local headerText = mappedKnob.constantName;
 		local width = math.max(130, headerFont:getWidth(headerText) + headerPaddingLeft + headerPaddingRight);
-
-		local spacing = 10;
 
 		-- Draw background
 		love.graphics.setColor(colors.background);
@@ -129,7 +127,8 @@ LiveTuneOverlay.draw = function(self)
 		-- Draw knob index
 		love.graphics.setColor(colors.knobIndex);
 		love.graphics.setFont(knobIndexFont);
-		love.graphics.printf(i, arcRadius - width / 2, 2 * arcRadius + arcThickness / 2 + 2, width, "center");
+		love.graphics.printf(mappedKnob.knobIndex, arcRadius - width / 2, 2 * arcRadius + arcThickness / 2 + 2, width,
+                     		"center");
 
 		love.graphics.translate(2 * arcRadius + knobMargin, (contentHeight - valueFontSize - 2 * valuePadding) / 2);
 
@@ -143,7 +142,7 @@ LiveTuneOverlay.draw = function(self)
 		-- Draw value
 		love.graphics.setColor(colors.valueText);
 		love.graphics.setFont(Fonts:get("devBold", valueFontSize));
-		love.graphics.print(string.format("%.2f", value), valuePadding, valuePadding - 2);
+		love.graphics.print(string.format("%.2f", rawValue), valuePadding, valuePadding - 2);
 
 		love.graphics.pop();
 

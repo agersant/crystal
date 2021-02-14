@@ -38,7 +38,7 @@ Constants.define = function(self, name, initialValue, options)
 	end
 
 	local options = options or {};
-	local constant = {value = initialValue};
+	local constant = {value = initialValue, name = originalName};
 	if valueType == "number" then
 		assert(type(options.minValue) == "number");
 		assert(type(options.maxValue) == "number");
@@ -107,6 +107,23 @@ Constants.update = function(self)
 		local value = LiveTune:getValue(knobIndex, constant.value, constant.minValue, constant.maxValue);
 		self:write(name, value);
 	end
+end
+
+Constants.getMappedKnobs = function(self)
+	local knobs = {};
+	for name, knobIndex in pairs(self._knobMappings) do
+		local constant = findConstant(self, name);
+		table.insert(knobs, {
+			knobIndex = knobIndex,
+			constantName = constant.name,
+			minValue = constant.minValue,
+			maxValue = constant.maxValue,
+		});
+	end
+	table.sort(knobs, function(a, b)
+		return a.knobIndex < b.knobIndex
+	end);
+	return knobs;
 end
 
 Constants.instance = Constants:new(Terminal.instance);
