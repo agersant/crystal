@@ -40,13 +40,17 @@ LiveTuneOverlay.draw = function(self)
 	local padding = 20;
 	love.graphics.translate(padding, padding);
 
-	-- Device name
+	-- Title
 	local deviceNameFontSize = 16;
 	local prefixLineLength = 16;
 	local deviceNamePaddingX = 6;
 	local deviceNamePaddingY = 12;
 	local deviceNameFont = Fonts:get("devCondensed", deviceNameFontSize);
-	local deviceName = LiveTune:getCurrentDevice() or "Not connected to a MIDI device";
+	local deviceName = "LIVETUNE: " .. (LiveTune:getCurrentDevice() or "Not connected to a MIDI device");
+
+	-- Help
+	local helpFontSize = 14;
+	local helpFont = Fonts:get("dev", helpFontSize);
 
 	-- Headers
 	local headerPaddingY = 8;
@@ -91,6 +95,13 @@ LiveTuneOverlay.draw = function(self)
 
 	-- TODO state for no mapped knobs
 	local mappedKnobs = Constants.instance:getMappedKnobs();
+
+	if #mappedKnobs == 0 then
+		love.graphics.setFont(helpFont);
+		love.graphics.printf("Use the `liveTune` command to map a Constant to a knob on your MIDI device", 0, 0,
+                     		love.graphics.getWidth(), "left");
+	end
+
 	for _, mappedKnob in ipairs(mappedKnobs) do
 		love.graphics.push();
 
