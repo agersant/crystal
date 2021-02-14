@@ -26,13 +26,13 @@ local pickFixtureColor = function(self, fixture)
 	assert(fixture);
 	local categories, mask, group = fixture:getFilterData();
 	if bit.band(categories, CollisionFilters.TRIGGER) ~= 0 then
-		return Colors.ecoGreen;
+		return Colors.mintyGreen;
 	elseif bit.band(categories, CollisionFilters.SOLID) ~= 0 then
-		return Colors.cyan;
+		return Colors.jadeDust;
 	elseif bit.band(categories, CollisionFilters.WEAKBOX) ~= 0 then
-		return Colors.ecoGreen;
+		return Colors.mintyGreen;
 	elseif bit.band(categories, CollisionFilters.HITBOX) ~= 0 then
-		return Colors.coquelicot;
+		return Colors.redOrange;
 	end
 end
 

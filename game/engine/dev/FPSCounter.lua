@@ -19,7 +19,7 @@ local fontSize = 16;
 local height = math.ceil(numFramesRecorded * 9 / 16);
 local paddingX = 20;
 local paddingY = 20;
-local textPaddingX = 10;
+local textPaddingX = 5;
 local textPaddingY = 5;
 
 local state = {isActive = false, frameDurations = {}};
@@ -51,7 +51,7 @@ FPSCounter.draw = function(self)
 
 	local width = numFramesRecorded;
 
-	love.graphics.setColor(Colors.darkViridian:alpha(0.7));
+	love.graphics.setColor(Colors.greyB);
 	love.graphics.rectangle("fill", paddingX, paddingY, width, height);
 
 	local x = paddingX + width - 1;
@@ -64,13 +64,10 @@ FPSCounter.draw = function(self)
 		x = x - 1;
 	end
 
-	love.graphics.setColor(Colors.darkViridian);
-	love.graphics.rectangle("fill", paddingX, y - height * targetFPS / maxFPSDisplay, width, 1);
-
 	x = paddingX + textPaddingX;
 	y = paddingY + textPaddingY;
 	love.graphics.setFont(self.font);
-	love.graphics.setColor(Colors.white);
+	love.graphics.setColor(Colors.greyD);
 	love.graphics.print(self._text, x, y);
 end
 

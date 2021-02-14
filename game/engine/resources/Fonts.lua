@@ -11,6 +11,9 @@ local pickFont = function(name)
 	if name == "devBold" then
 		return "engine/assets/source_code_pro_bold.otf";
 	end
+	if name == "devCondensed" then
+		return "engine/assets/open_sans_condensed_bold.ttf";
+	end
 	local font = Module:getCurrent().fonts[name];
 	return font or error("Unknown font: " .. tostring(name));
 end

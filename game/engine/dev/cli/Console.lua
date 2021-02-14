@@ -88,17 +88,13 @@ Console.draw = function(self)
 	local font = self._font;
 	love.graphics.setFont(font);
 
-	-- Draw background
-	love.graphics.setColor(Colors.darkViridian:alpha(0.7));
-	love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight());
-
 	-- Draw input box
 	local inputBoxX = marginX;
 	local inputBoxY = marginX;
 	local inputBoxWidth = love.graphics.getWidth() - 2 * marginX;
 	local inputBoxHeight = font:getHeight() + 2 * inputBoxPaddingY;
-	local rounding = 8;
-	love.graphics.setColor(Colors.nightSkyBlue);
+	local rounding = 4;
+	love.graphics.setColor(Colors.greyA);
 	love.graphics.rectangle("fill", inputBoxX, inputBoxY, inputBoxWidth, inputBoxHeight, rounding, rounding);
 
 	-- Draw chevron
@@ -153,8 +149,8 @@ Console.draw = function(self)
 		local autoCompleteBoxY = inputBoxY + inputBoxHeight + autoCompleteMargin;
 		local autoCompleteBoxWidth = suggestionsWidth + 2 * autoCompletePaddingX;
 		local autoCompleteBoxHeight = #autoComplete.lines * font:getHeight() + 2 * autoCompletePaddingY;
-		love.graphics.setColor(Colors.nightSkyBlue);
-		love.graphics.rectangle("fill", autoCompleteBoxX, autoCompleteBoxY, autoCompleteBoxWidth, autoCompleteBoxHeight, 0, 0);
+		love.graphics.setColor(Colors.greyA);
+		love.graphics.rectangle("fill", autoCompleteBoxX, autoCompleteBoxY, autoCompleteBoxWidth, autoCompleteBoxHeight, 2, 2);
 
 		-- Draw autocomplete arrow
 		love.graphics.polygon("fill", autoCompleteBoxX + autoCompleteArrowMargin, autoCompleteBoxY,
@@ -168,7 +164,7 @@ Console.draw = function(self)
 		for i, suggestion in ipairs(autoComplete.lines) do
 			local suggestionY = suggestionY + (i - 1) * font:getHeight();
 			if autoComplete.state == "command" and i == self._terminal:getAutoCompleteCursor() then
-				love.graphics.setColor(Colors.oxfordBlue);
+				love.graphics.setColor(Colors.grey0);
 				love.graphics.rectangle("fill", autoCompleteBoxX, suggestionY, autoCompleteBoxWidth, font:getHeight());
 				love.graphics.setColor(Colors.cyan);
 				love.graphics.rectangle("fill", autoCompleteBoxX, suggestionY, autoCompleteCursorWidth, font:getHeight());

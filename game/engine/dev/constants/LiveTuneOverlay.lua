@@ -12,19 +12,19 @@ if not Features.liveTune then
 	Features.stub(LiveTuneOverlay);
 end
 
-local drawOverlay = true;
+local drawOverlay = false;
 
 -- TODO finalize
 local colors = {
-	deviceName = Colors.white,
-	headerBackground = {227 / 255, 149 / 255, 38 / 255},
-	headerText = {54 / 255, 36 / 255, 0 / 255},
-	background = {52 / 255, 53 / 255, 57 / 255},
-	knobInactive = Colors.rainCloudGrey,
-	knobActive = Colors.ecoGreen,
-	knobIndex = Colors.rainCloudGrey,
-	valueBackground = Colors.nightSkyBlue,
-	valueText = Colors.white,
+	deviceName = Colors.greyD,
+	headerBackground = Colors.greyA,
+	headerText = Colors.greyD,
+	background = Colors.greyB,
+	knobInactive = Colors.greyC,
+	knobActive = Colors.cyan,
+	knobIndex = Colors.greyD,
+	valueOutline = Colors.greyC,
+	valueText = Colors.greyD,
 };
 
 LiveTuneOverlay.init = function(self)
@@ -46,13 +46,13 @@ LiveTuneOverlay.draw = function(self)
 	local prefixLineLength = 16;
 	local deviceNamePaddingX = 6;
 	local deviceNamePaddingY = 12;
-	local deviceNameFont = Fonts:get("devBold", deviceNameFontSize);
+	local deviceNameFont = Fonts:get("devCondensed", deviceNameFontSize);
 	local deviceName = LiveTune:getCurrentDevice() or "Not connected to a MIDI device"; -- TODO
 
 	-- Headers
 	local headerPadding = 4;
 	local headerFontSize = 12;
-	local headerFont = Fonts:get("devBold", headerFontSize);
+	local headerFont = Fonts:get("devCondensed", headerFontSize);
 	local headerHeight = headerFontSize + 2 * headerPadding;
 	local contentPadding = 8;
 
@@ -61,13 +61,14 @@ LiveTuneOverlay.draw = function(self)
 	local numSegments = 64;
 	local arcRadius = 10;
 	local arcThickness = 4;
-	local arcStart = p + 3 / 24 * p;
-	local arcEnd = 9 / 24 * p;
+	local arcStart = 40 / 360 * p + p;
+	local arcEnd = 140 / 360 * p;
 	local knobIndexFontSize = 10;
+	local knobIndexFont = Fonts:get("devBold", knobIndexFontSize);
 	local knobMargin = 10;
 
 	-- Value
-	local valueFontSize = 14;
+	local valueFontSize = 12;
 	local valuePadding = 4;
 
 	-- Measurements
@@ -75,7 +76,7 @@ LiveTuneOverlay.draw = function(self)
 	local totalHeight = contentHeight + headerHeight;
 
 	-- Draw device name
-	local y = deviceNameFontSize / 2 + 0.5 + 2;
+	local y = deviceNameFontSize / 2 + 0.5 + 4;
 	love.graphics.setColor(colors.deviceName);
 	love.graphics.setLineWidth(1);
 	love.graphics.line(0, y, prefixLineLength, y);
@@ -90,13 +91,13 @@ LiveTuneOverlay.draw = function(self)
 
 		love.graphics.push();
 
-		local constantName = "windup_duration" .. i;
+		local constantName = "WindupDuration" .. i;
 		Constants:register(constantName, 0.5, {minValue = 0, maxValue = 1});
 		Constants:liveTune(constantName, i);
 		local value = Constants:get(constantName);
 
-		local headerText = constantName:upper();
-		local width = math.max(100, headerFont:getWidth(headerText) + 2 * headerPadding);
+		local headerText = constantName;
+		local width = math.max(120, headerFont:getWidth(headerText) + 2 * headerPadding);
 
 		local spacing = 10;
 
@@ -126,16 +127,17 @@ LiveTuneOverlay.draw = function(self)
 
 		-- Draw knob index
 		love.graphics.setColor(colors.knobIndex);
-		love.graphics.setFont(Fonts:get("dev", knobIndexFontSize));
-		love.graphics.printf(i, arcRadius - width / 2, 2 * arcRadius + arcThickness, width, "center");
+		love.graphics.setFont(knobIndexFont);
+		love.graphics.printf(i, arcRadius - width / 2, 2 * arcRadius + arcThickness / 2 + 1, width, "center");
 
 		love.graphics.translate(2 * arcRadius + knobMargin, (contentHeight - valueFontSize - 2 * valuePadding) / 2);
 
 		-- Draw value background
 		local r = 2;
 		local w = width - 2 * contentPadding - 2 * arcRadius - knobMargin;
-		love.graphics.setColor(colors.valueBackground);
-		love.graphics.rectangle("fill", 0, 0, w, valueFontSize + 2 * valuePadding, r, r);
+		love.graphics.setColor(colors.valueOutline);
+		love.graphics.setLineWidth(1);
+		love.graphics.rectangle("line", 0, 0, w, valueFontSize + 2 * valuePadding, r, r);
 
 		-- Draw value
 		love.graphics.setColor(colors.valueText);

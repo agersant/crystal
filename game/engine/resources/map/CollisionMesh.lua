@@ -58,7 +58,7 @@ CollisionMesh.spawnBody = function(self, scene)
 end
 
 CollisionMesh.draw = function(self)
-	love.graphics.setColor(Colors.coquelicot);
+	love.graphics.setColor(Colors.redOrange);
 	love.graphics.setLineWidth(2);
 	love.graphics.setLineJoin("bevel");
 	love.graphics.setPointSize(6 * GFXConfig:getZoom());
