@@ -15,7 +15,7 @@ end
 local drawOverlay = false;
 
 local colors = {
-	deviceName = Colors.greyD,
+	title = Colors.greyD,
 	headerBackground = Colors.greyA,
 	headerText = Colors.greyD,
 	background = Colors.greyB,
@@ -41,12 +41,16 @@ LiveTuneOverlay.draw = function(self)
 	love.graphics.translate(padding, padding);
 
 	-- Title
-	local deviceNameFontSize = 16;
+	local titleFontSize = 16;
 	local prefixLineLength = 16;
-	local deviceNamePaddingX = 6;
-	local deviceNamePaddingY = 12;
-	local deviceNameFont = Fonts:get("devCondensed", deviceNameFontSize);
-	local deviceName = "LIVETUNE: " .. (LiveTune:getCurrentDevice() or "Not connected to a MIDI device");
+	local titlePaddingX = 6;
+	local titlePaddingY = 12;
+	local titleFont = Fonts:get("devCondensed", titleFontSize);
+	local deviceName = LiveTune:getCurrentDevice();
+	local title = "LIVETUNE";
+	if deviceName then
+		title = title .. " / " .. deviceName;
+	end
 
 	-- Help
 	local helpFontSize = 14;
@@ -82,83 +86,102 @@ LiveTuneOverlay.draw = function(self)
 	local spacing = 10;
 
 	-- Draw device name
-	local y = deviceNameFontSize / 2 + 0.5 + 4;
-	love.graphics.setColor(colors.deviceName);
+	local y = titleFontSize / 2 + 0.5 + 4;
+	love.graphics.setColor(colors.title);
 	love.graphics.setLineWidth(1);
 	love.graphics.setLineStyle("rough");
 	love.graphics.line(0, y, prefixLineLength, y);
-	local x = prefixLineLength + deviceNameFont:getWidth(deviceName) + 2 * deviceNamePaddingX;
+	local x = prefixLineLength + titleFont:getWidth(title) + 2 * titlePaddingX;
 	love.graphics.line(x, y, love.graphics.getWidth() - 2 * padding, y);
-	love.graphics.setFont(deviceNameFont);
-	love.graphics.printf(deviceName, prefixLineLength + deviceNamePaddingX, 0, love.graphics.getWidth(), "left");
-	love.graphics.translate(0, deviceNameFontSize + deviceNamePaddingY);
+	love.graphics.setFont(titleFont);
+	love.graphics.printf(title, prefixLineLength + titlePaddingX, 0, love.graphics.getWidth(), "left");
+	love.graphics.translate(0, titleFontSize + titlePaddingY);
 
-	-- TODO state for no mapped knobs
 	local mappedKnobs = Constants.instance:getMappedKnobs();
 
-	if #mappedKnobs == 0 then
+	if not deviceName then
 		love.graphics.setFont(helpFont);
-		love.graphics.printf("Use the `liveTune` command to map a Constant to a knob on your MIDI device", 0, 0,
-                     		love.graphics.getWidth(), "left");
-	end
+		local deviceList = LiveTune:listDevices();
 
-	for _, mappedKnob in ipairs(mappedKnobs) do
-		love.graphics.push();
+		if #deviceList == 0 then
+			love.graphics.printf("No MIDI devices were detected, please plug in a MIDI device.", 0, 0, love.graphics.getWidth(),
+                     			"left");
+		else
+			love.graphics.printf("Not connected to a MIDI device. Use the `connectToMIDIDevice` command to select a device.", 0,
+                     			0, love.graphics.getWidth(), "left");
+			love.graphics.translate(0, 2 * helpFontSize);
+			love.graphics.printf("MIDI devices detected:", 0, 0, love.graphics.getWidth(), "left");
+			love.graphics.translate(10, 0);
+			for i, deviceName in ipairs(deviceList) do
+				love.graphics.translate(0, helpFontSize);
+				love.graphics.printf("#" .. i .. " " .. deviceName, 0, 0, love.graphics.getWidth(), "left");
+			end
+		end
 
-		local rawValue = Constants:get(mappedKnob.constantName);
-		local value = (rawValue - mappedKnob.minValue) / (mappedKnob.maxValue - mappedKnob.minValue);
+	elseif #mappedKnobs == 0 then
+		love.graphics.setFont(helpFont);
+		love.graphics.printf("Connected. Use the `liveTune` command to map a Constant to a knob on your " .. deviceName ..
+                     						" device.", 0, 0, love.graphics.getWidth(), "left");
+	else
 
-		local headerText = mappedKnob.constantName;
-		local width = math.max(130, headerFont:getWidth(headerText) + headerPaddingLeft + headerPaddingRight);
+		for _, mappedKnob in ipairs(mappedKnobs) do
+			love.graphics.push();
 
-		-- Draw background
-		love.graphics.setColor(colors.background);
-		love.graphics.rectangle("fill", 0, headerHeight / 2, width, headerHeight / 2 + contentHeight, 2, 2);
+			local rawValue = Constants:get(mappedKnob.constantName);
+			local value = (rawValue - mappedKnob.minValue) / (mappedKnob.maxValue - mappedKnob.minValue);
 
-		-- Draw header
-		love.graphics.setColor(colors.headerBackground);
-		love.graphics.rectangle("fill", 0, 0, width, headerHeight, 2, 2);
-		love.graphics.rectangle("fill", 0, 2, width, headerHeight - 2, 0, 0);
+			local headerText = mappedKnob.constantName;
+			local width = math.max(130, headerFont:getWidth(headerText) + headerPaddingLeft + headerPaddingRight);
 
-		love.graphics.setFont(headerFont);
-		love.graphics.setColor(colors.headerText);
-		love.graphics.printf(headerText, headerPaddingLeft, headerPaddingY - 2, width, "left");
+			-- Draw background
+			love.graphics.setColor(colors.background);
+			love.graphics.rectangle("fill", 0, headerHeight / 2, width, headerHeight / 2 + contentHeight, 2, 2);
 
-		love.graphics.translate(contentPadding + arcThickness / 2, headerHeight);
+			-- Draw header
+			love.graphics.setColor(colors.headerBackground);
+			love.graphics.rectangle("fill", 0, 0, width, headerHeight, 2, 2);
+			love.graphics.rectangle("fill", 0, 2, width, headerHeight - 2, 0, 0);
 
-		-- Draw knob
-		love.graphics.setColor(colors.knobInactive);
-		love.graphics.setLineWidth(arcThickness);
-		love.graphics.arc("line", "open", arcRadius, contentHeight / 2, arcRadius, arcStart, arcEnd, numSegments);
-		love.graphics.setColor(colors.knobActive);
-		love.graphics.setLineWidth(arcThickness);
-		love.graphics.arc("line", "open", arcRadius, contentHeight / 2, arcRadius, arcEnd + value * (arcStart - arcEnd),
-                  		arcEnd, numSegments);
+			love.graphics.setFont(headerFont);
+			love.graphics.setColor(colors.headerText);
+			love.graphics.printf(headerText, headerPaddingLeft, headerPaddingY - 2, width, "left");
 
-		-- Draw knob index
-		love.graphics.setColor(colors.knobIndex);
-		love.graphics.setFont(knobIndexFont);
-		love.graphics.printf(mappedKnob.knobIndex, arcRadius - width / 2, 2 * arcRadius + arcThickness / 2 + 2, width,
-                     		"center");
+			love.graphics.translate(contentPadding + arcThickness / 2, headerHeight);
 
-		love.graphics.translate(2 * arcRadius + knobMargin, (contentHeight - valueFontSize - 2 * valuePadding) / 2);
+			-- Draw knob
+			love.graphics.setColor(colors.knobInactive);
+			love.graphics.setLineWidth(arcThickness);
+			love.graphics.arc("line", "open", arcRadius, contentHeight / 2, arcRadius, arcStart, arcEnd, numSegments);
+			love.graphics.setColor(colors.knobActive);
+			love.graphics.setLineWidth(arcThickness);
+			love.graphics.arc("line", "open", arcRadius, contentHeight / 2, arcRadius, arcEnd + value * (arcStart - arcEnd),
+                  			arcEnd, numSegments);
 
-		-- Draw value background
-		local r = 2;
-		local w = width - 2 * contentPadding - 2 * arcRadius - knobMargin;
-		love.graphics.setColor(colors.valueOutline);
-		love.graphics.setLineWidth(1);
-		love.graphics.rectangle("line", 0, 0, w, valueFontSize + 2 * valuePadding, r, r);
+			-- Draw knob index
+			love.graphics.setColor(colors.knobIndex);
+			love.graphics.setFont(knobIndexFont);
+			love.graphics.printf(mappedKnob.knobIndex, arcRadius - width / 2, 2 * arcRadius + arcThickness / 2 + 2, width,
+                     			"center");
 
-		-- Draw value
-		love.graphics.setColor(colors.valueText);
-		love.graphics.setFont(Fonts:get("devBold", valueFontSize));
-		love.graphics.print(string.format("%.2f", rawValue), valuePadding, valuePadding - 2);
+			love.graphics.translate(2 * arcRadius + knobMargin, (contentHeight - valueFontSize - 2 * valuePadding) / 2);
 
-		love.graphics.pop();
+			-- Draw value background
+			local r = 2;
+			local w = width - 2 * contentPadding - 2 * arcRadius - knobMargin;
+			love.graphics.setColor(colors.valueOutline);
+			love.graphics.setLineWidth(1);
+			love.graphics.rectangle("line", 0, 0, w, valueFontSize + 2 * valuePadding, r, r);
 
-		-- Move to next
-		love.graphics.translate(width + spacing, 0);
+			-- Draw value
+			love.graphics.setColor(colors.valueText);
+			love.graphics.setFont(Fonts:get("devBold", valueFontSize));
+			love.graphics.print(string.format("%.2f", rawValue), valuePadding, valuePadding - 2);
+
+			love.graphics.pop();
+
+			-- Move to next
+			love.graphics.translate(width + spacing, 0);
+		end
 	end
 
 	love.graphics.pop();
