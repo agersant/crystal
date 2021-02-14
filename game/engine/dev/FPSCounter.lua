@@ -15,7 +15,7 @@ local numFramesRecorded = 255;
 local targetFPS = 144;
 local maxFPSDisplay = 200;
 
-local fontSize = 16;
+local fontSize = 14;
 local height = math.ceil(numFramesRecorded * 9 / 16);
 local paddingX = 20;
 local paddingY = 20;

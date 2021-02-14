@@ -14,7 +14,6 @@ end
 
 local drawOverlay = false;
 
--- TODO finalize
 local colors = {
 	deviceName = Colors.greyD,
 	headerBackground = Colors.greyA,
@@ -47,14 +46,16 @@ LiveTuneOverlay.draw = function(self)
 	local deviceNamePaddingX = 6;
 	local deviceNamePaddingY = 12;
 	local deviceNameFont = Fonts:get("devCondensed", deviceNameFontSize);
-	local deviceName = LiveTune:getCurrentDevice() or "Not connected to a MIDI device"; -- TODO
+	local deviceName = LiveTune:getCurrentDevice() or "Not connected to a MIDI device";
 
 	-- Headers
-	local headerPadding = 4;
-	local headerFontSize = 12;
+	local headerPaddingY = 8;
+	local headerPaddingLeft = 8;
+	local headerPaddingRight = 8;
+	local headerFontSize = 14;
 	local headerFont = Fonts:get("devCondensed", headerFontSize);
-	local headerHeight = headerFontSize + 2 * headerPadding;
-	local contentPadding = 8;
+	local headerHeight = headerFontSize + 2 * headerPaddingY;
+	local contentPadding = 10;
 
 	-- Knob
 	local p = 2 * math.pi;
@@ -63,12 +64,12 @@ LiveTuneOverlay.draw = function(self)
 	local arcThickness = 4;
 	local arcStart = 40 / 360 * p + p;
 	local arcEnd = 140 / 360 * p;
-	local knobIndexFontSize = 10;
+	local knobIndexFontSize = 12;
 	local knobIndexFont = Fonts:get("devBold", knobIndexFontSize);
 	local knobMargin = 10;
 
 	-- Value
-	local valueFontSize = 12;
+	local valueFontSize = 14;
 	local valuePadding = 4;
 
 	-- Measurements
@@ -91,13 +92,13 @@ LiveTuneOverlay.draw = function(self)
 
 		love.graphics.push();
 
-		local constantName = "WindupDuration" .. i;
+		local constantName = "Constant#" .. i;
 		Constants:register(constantName, 0.5, {minValue = 0, maxValue = 1});
 		Constants:liveTune(constantName, i);
 		local value = Constants:get(constantName);
 
 		local headerText = constantName;
-		local width = math.max(120, headerFont:getWidth(headerText) + 2 * headerPadding);
+		local width = math.max(130, headerFont:getWidth(headerText) + headerPaddingLeft + headerPaddingRight);
 
 		local spacing = 10;
 
@@ -112,9 +113,9 @@ LiveTuneOverlay.draw = function(self)
 
 		love.graphics.setFont(headerFont);
 		love.graphics.setColor(colors.headerText);
-		love.graphics.printf(headerText, headerPadding, headerPadding - 1, width, "left");
+		love.graphics.printf(headerText, headerPaddingLeft, headerPaddingY - 2, width, "left");
 
-		love.graphics.translate(contentPadding, headerHeight);
+		love.graphics.translate(contentPadding + arcThickness / 2, headerHeight);
 
 		-- Draw knob
 		love.graphics.setColor(colors.knobInactive);
@@ -128,7 +129,7 @@ LiveTuneOverlay.draw = function(self)
 		-- Draw knob index
 		love.graphics.setColor(colors.knobIndex);
 		love.graphics.setFont(knobIndexFont);
-		love.graphics.printf(i, arcRadius - width / 2, 2 * arcRadius + arcThickness / 2 + 1, width, "center");
+		love.graphics.printf(i, arcRadius - width / 2, 2 * arcRadius + arcThickness / 2 + 2, width, "center");
 
 		love.graphics.translate(2 * arcRadius + knobMargin, (contentHeight - valueFontSize - 2 * valuePadding) / 2);
 
@@ -147,7 +148,6 @@ LiveTuneOverlay.draw = function(self)
 		love.graphics.pop();
 
 		-- Move to next
-		-- TODO Wrap
 		love.graphics.translate(width + spacing, 0);
 	end
 

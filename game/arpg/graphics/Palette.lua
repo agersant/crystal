@@ -7,6 +7,7 @@ Palette.cyan = {0, 234, 255};
 Palette.strawberry = {231, 38, 38};
 
 -- TODO this is copy pasta from Engine.Colors
+-- Introduce proper support for colors and palettes
 
 local applyAlpha = function(color, alpha)
 	return {color[1], color[2], color[3], alpha};

@@ -8,6 +8,7 @@ local Constants = Class("Constants");
 
 local normalizeName = function(name)
 	assert(name);
+	-- TODO remove whitespace
 	return string.lower(name);
 end
 
@@ -53,7 +54,6 @@ Constants.define = function(self, name, initialValue, options)
 			self:write(name, value)
 		end)
 	end
-	-- TODO implement live tweak monitor
 
 	self._store[name] = constant;
 end
