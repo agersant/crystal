@@ -52,7 +52,7 @@ end
 
 HorizontalBox.getDesiredSize = function(self)
 	local width, height = 0, 0;
-	for child, joint in pairs(self._joints) do
+	for child, joint in pairs(self._childJoints) do
 		local childWidth, childHeight = child:getDesiredSize();
 		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:getEachPadding();
 		width = width + childWidth + paddingLeft + paddingRight;
@@ -68,14 +68,14 @@ HorizontalBox.arrangeChildren = function(self)
 	local totalGrow = 0;
 	local totalShrink = 0;
 	for _, child in ipairs(self._children) do
-		local joint = self._joints[child];
+		local joint = self._childJoints[child];
 		totalGrow = totalGrow + joint:getGrow();
 		totalShrink = totalShrink + joint:getShrink();
 	end
 
 	local x = 0;
 	for _, child in ipairs(self._children) do
-		local joint = self._joints[child];
+		local joint = self._childJoints[child];
 		local childDesiredWidth, childDesiredHeight = child:getDesiredSize();
 		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:getEachPadding();
 		local grow = joint:getGrow();

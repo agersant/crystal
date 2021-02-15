@@ -45,7 +45,7 @@ end
 
 Overlay.getDesiredSize = function(self)
 	local width, height = 0, 0;
-	for child, joint in pairs(self._joints) do
+	for child, joint in pairs(self._childJoints) do
 		local childWidth, childHeight = child:getDesiredSize();
 		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:getEachPadding();
 		local horizontalAlignment = joint:getHorizontalAlignment();
@@ -63,7 +63,7 @@ end
 Overlay.arrangeChildren = function(self)
 	local width, height = self:getSize();
 	for _, child in ipairs(self._children) do
-		local joint = self._joints[child];
+		local joint = self._childJoints[child];
 		local childDesiredWidth, childDesiredHeight = child:getDesiredSize();
 		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:getEachPadding();
 		local horizontalAlignment = joint:getHorizontalAlignment();
@@ -73,11 +73,13 @@ Overlay.arrangeChildren = function(self)
 		if horizontalAlignment == HorizontalAlignment.STRETCH then
 			childWidth = width - paddingLeft - paddingRight;
 		end
+		childWidth = math.max(0, childWidth);
 
 		local childHeight = childDesiredHeight;
 		if verticalAlignment == VerticalAlignment.STRETCH then
 			childHeight = height - paddingTop - paddingBottom;
 		end
+		childHeight = math.max(0, childHeight);
 
 		local x;
 		if horizontalAlignment == HorizontalAlignment.LEFT then
