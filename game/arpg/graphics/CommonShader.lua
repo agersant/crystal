@@ -12,6 +12,8 @@ CommonShader.init = function(self)
 end
 
 CommonShader.setHighlightColor = function(self, color)
+	-- TODO use https://love2d.org/wiki/Shader:sendColor
+	-- And enable gamma correct rendering
 	if color then
 		self:setUniform("highlightColor", color);
 	else
