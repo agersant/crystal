@@ -35,6 +35,7 @@ end
 love.update = function(dt)
 	Constants.instance:update();
 	fpsCounter:update(dt);
+	liveTuneOverlay:update(dt);
 	Scene:getCurrent():update(dt * Constants:get("timeScale"));
 	Input:flushEvents();
 end
