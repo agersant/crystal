@@ -5,10 +5,10 @@ local TextAlignment = require("engine/ui/bricks/elements/TextAlignment");
 
 local Text = Class("Text", Element);
 
-Text.init = function(self)
+Text.init = function(self, initialContent)
 	Text.super.init(self);
 	self._alignment = TextAlignment.LEFT;
-	self._content = "";
+	self._content = initialContent or "";
 	self._font = Fonts:get("dev", 16);
 end
 
