@@ -3,13 +3,15 @@ local Terminal = require("engine/dev/cli/Terminal");
 local Features = require("engine/dev/Features");
 local LiveTune = require("engine/dev/constants/LiveTune");
 local MathUtils = require("engine/utils/MathUtils");
+local StringUtils = require("engine/utils/StringUtils");
 
 local Constants = Class("Constants");
 
 local normalizeName = function(name)
 	assert(name);
-	-- TODO remove whitespace
-	return string.lower(name);
+	local name = string.lower(StringUtils.removeWhitespace(name));
+	assert(#name > 0);
+	return name;
 end
 
 local findConstant = function(self, name)

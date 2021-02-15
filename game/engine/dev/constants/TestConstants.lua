@@ -37,6 +37,14 @@ tests[#tests].body = function()
 	assert(constants:read("PIGGY") == "oink");
 end
 
+tests[#tests + 1] = {name = "Ignores whitespace in names"};
+tests[#tests].body = function()
+	local terminal = Terminal:new();
+	local constants = Constants:new(terminal);
+	constants:define("piggy pig", "oink");
+	assert(constants:read("piggypig") == "oink");
+end
+
 tests[#tests + 1] = {name = "Clamps numeric constants"};
 tests[#tests].body = function()
 	local terminal = Terminal:new();

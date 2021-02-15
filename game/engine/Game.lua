@@ -15,7 +15,7 @@ local console;
 local fpsCounter;
 local liveTuneOverlay;
 
-Constants:register("timeScale", 1.0, {minValue = 0.0, maxValue = 5.0});
+Constants:register("Time Scale", 1.0, {minValue = 0.0, maxValue = 5.0});
 
 love.load = function()
 	love.keyboard.setTextInput(false);
