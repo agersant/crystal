@@ -18,7 +18,7 @@ SaveData.init = function(self)
 	self._party:addMember(defaultPartyMember);
 
 	self._location = {};
-	self:setLocation("nowhere", 0, 0);
+	self:setLocation("", 0, 0);
 end
 
 SaveData.toPOD = function(self)
@@ -83,8 +83,10 @@ end
 SaveData.load = function(self)
 	SaveData.super.load(self);
 	local map, x, y = self:getLocation();
-	local scene = Field:new(map, x, y);
-	Scene:setCurrent(scene);
+	if #map > 0 then
+		local scene = Field:new(map, x, y);
+		Scene:setCurrent(scene);
+	end
 end
 
 SaveData.fromPOD = function(self, pod)
