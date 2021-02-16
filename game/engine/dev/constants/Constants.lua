@@ -52,8 +52,8 @@ Constants.define = function(self, name, initialValue, options)
 	end
 
 	if valueType == "number" or valueType == "string" or valueType == "boolean" then
-		self._terminal:addCommand(originalName .. " value:" .. valueType, function(value)
-			self:write(name, value)
+		self._terminal:addCommand(name .. " value:" .. valueType, function(value)
+			self:write(name, value);
 		end)
 	end
 
