@@ -23,7 +23,7 @@ if not Features.liveTune then
 	Features.stub(LiveTuneOverlay);
 end
 
-local drawOverlay = true;
+local drawOverlay = false;
 
 local colors = {
 	title = Colors.greyD,
@@ -58,10 +58,8 @@ end
 KnobDonut.draw = function(self)
 	local width, height = self:getSize();
 	love.graphics.setLineWidth(self._thickness);
-
 	love.graphics.setColor(colors.knobInactive);
 	love.graphics.arc("line", "open", width / 2, height / 2, self._radius, self._arcStart, self._arcEnd, self._numSegments);
-
 	love.graphics.setColor(colors.knobActive);
 	love.graphics.arc("line", "open", width / 2, height / 2, self._radius,
                   	self._arcEnd + self.value * (self._arcStart - self._arcEnd), self._arcEnd, self._numSegments);
@@ -78,8 +76,7 @@ KnobInfo.init = function(self)
 	header:setHorizontalAlignment(HorizontalAlignment.STRETCH);
 	local headerBackground = header:addChild(Image:new());
 	headerBackground:setColor(colors.headerBackground);
-	headerBackground:setHorizontalAlignment(HorizontalAlignment.STRETCH);
-	headerBackground:setVerticalAlignment(VerticalAlignment.STRETCH);
+	headerBackground:setAlignment(HorizontalAlignment.STRETCH, VerticalAlignment.STRETCH);
 	self._headerText = header:addChild(Text:new());
 	self._headerText:setFont(Fonts:get("devCondensed", 14));
 	self._headerText:setColor(colors.headerText);
@@ -90,8 +87,7 @@ KnobInfo.init = function(self)
 	content:setHorizontalAlignment(HorizontalAlignment.STRETCH);
 	local contentBackground = content:addChild(Image:new());
 	contentBackground:setColor(colors.background);
-	contentBackground:setHorizontalAlignment(HorizontalAlignment.STRETCH);
-	contentBackground:setVerticalAlignment(VerticalAlignment.STRETCH);
+	contentBackground:setAlignment(HorizontalAlignment.STRETCH, VerticalAlignment.STRETCH);
 	local data = content:addChild(HorizontalBox:new());
 	data:setAllPadding(10);
 
@@ -99,16 +95,14 @@ KnobInfo.init = function(self)
 	donutContainer:setRightPadding(10);
 	self._donut = donutContainer:addChild(KnobDonut:new());
 	self._knobIndexText = donutContainer:addChild(Text:new());
-	self._knobIndexText:setHorizontalAlignment(HorizontalAlignment.CENTER);
-	self._knobIndexText:setVerticalAlignment(VerticalAlignment.BOTTOM);
+	self._knobIndexText:setAlignment(HorizontalAlignment.CENTER, VerticalAlignment.BOTTOM);
 	self._knobIndexText:setBottomPadding(-6);
 	self._knobIndexText:setColor(colors.knobIndex);
 	self._knobIndexText:setFont(Fonts:get("devBold", 12));
 
 	local valueContainer = data:addChild(Overlay:new());
 	local border = valueContainer:addChild(Border:new());
-	border:setHorizontalAlignment(HorizontalAlignment.STRETCH);
-	border:setVerticalAlignment(VerticalAlignment.STRETCH);
+	border:setAlignment(HorizontalAlignment.STRETCH, VerticalAlignment.STRETCH);
 	border:setRounding(2);
 	border:setColor(colors.valueOutline);
 

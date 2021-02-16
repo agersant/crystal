@@ -23,8 +23,7 @@ Overlay.getDesiredSize = function(self)
 	for child, joint in pairs(self._childJoints) do
 		local childWidth, childHeight = child:getDesiredSize();
 		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:getEachPadding();
-		local horizontalAlignment = joint:getHorizontalAlignment();
-		local verticalAlignment = joint:getVerticalAlignment();
+		local horizontalAlignment, verticalAlignment = joint:getAlignment();
 		if horizontalAlignment ~= HorizontalAlignment.STRETCH then
 			width = math.max(width, childWidth + paddingLeft + paddingRight);
 		end

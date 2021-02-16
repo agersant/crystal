@@ -7,16 +7,16 @@ local Text = Class("Text", Element);
 
 Text.init = function(self, initialContent)
 	Text.super.init(self);
-	self._alignment = TextAlignment.LEFT;
+	self._textAlignment = TextAlignment.LEFT;
 	self._content = initialContent or "";
 	self._font = Fonts:get("dev", 16);
 end
 
-Text.setAlignment = function(self, alignment)
-	assert(alignment);
-	assert(alignment >= TextAlignment.LEFT);
-	assert(alignment <= TextAlignment.RIGHT);
-	self._alignment = alignment;
+Text.setTextAlignment = function(self, textAlignment)
+	assert(textAlignment);
+	assert(textAlignment >= TextAlignment.LEFT);
+	assert(textAlignment <= TextAlignment.RIGHT);
+	self._textAlignment = textAlignment;
 end
 
 Text.setContent = function(self, content)
@@ -37,14 +37,14 @@ end
 
 Text.drawSelf = function(self)
 	local width, _ = self:getSize();
-	local alignment = "left";
-	if self._alignment == TextAlignment.CENTER then
-		alignment = "center";
-	elseif self._alignment == TextAlignment.RIGHT then
-		alignment = "right";
+	local textAlignment = "left";
+	if self._textAlignment == TextAlignment.CENTER then
+		textAlignment = "center";
+	elseif self._textAlignment == TextAlignment.RIGHT then
+		textAlignment = "right";
 	end
 	love.graphics.setFont(self._font);
-	love.graphics.printf(self._content, 0, 0, width, alignment);
+	love.graphics.printf(self._content, 0, 0, width, textAlignment);
 end
 
 return Text;

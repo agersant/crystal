@@ -18,7 +18,7 @@ HitWidget.init = function(self, amount)
 	local outline = overlay:addChild(Text:new());
 	outline:setFont(Fonts:get("small", 16));
 	outline:setColor(Palette.black);
-	outline:setAlignment(TextAlignment.CENTER);
+	outline:setTextAlignment(TextAlignment.CENTER);
 	outline:setContent(amount);
 	outline:setLeftPadding(1);
 	outline:setTopPadding(1);
@@ -26,7 +26,7 @@ HitWidget.init = function(self, amount)
 	self._textWidget = overlay:addChild(Text:new());
 	self._textWidget:setFont(Fonts:get("small", 16));
 	self._textWidget:setColor(Palette.barbadosCherry);
-	self._textWidget:setAlignment(TextAlignment.CENTER);
+	self._textWidget:setTextAlignment(TextAlignment.CENTER);
 	self._textWidget:setContent(amount);
 
 	self._animation = self:addScript(Script:new());

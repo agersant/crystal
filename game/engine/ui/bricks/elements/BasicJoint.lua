@@ -15,12 +15,21 @@ BasicJoint.init = function(self, parent, child)
 	Alias:add(self, self._padding);
 end
 
+BasicJoint.getAlignment = function(self)
+	return self._horizontalAlignment, self._verticalAlignment;
+end
+
 BasicJoint.getHorizontalAlignment = function(self)
 	return self._horizontalAlignment;
 end
 
 BasicJoint.getVerticalAlignment = function(self)
 	return self._verticalAlignment;
+end
+
+BasicJoint.setAlignment = function(self, horizontal, vertical)
+	self:setHorizontalAlignment(horizontal);
+	self:setVerticalAlignment(vertical);
 end
 
 BasicJoint.setHorizontalAlignment = function(self, alignment)
