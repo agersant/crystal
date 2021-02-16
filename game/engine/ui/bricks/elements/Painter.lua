@@ -38,6 +38,9 @@ Painter.setShaderResource = function(self, shaderResource)
 	self._shaderResource = shaderResource;
 end
 
+Painter.configureShader = function(self)
+end
+
 Painter.getDesiredSize = function(self)
 	local width, height = 0, 0;
 	if self._child then
@@ -94,6 +97,7 @@ Painter.drawSelf = function(self)
 
 			love.graphics.push("all");
 			love.graphics.setShader(self._shaderResource);
+			self:configureShader();
 			love.graphics.draw(self._canvas, self._quad);
 			love.graphics.pop();
 		end
