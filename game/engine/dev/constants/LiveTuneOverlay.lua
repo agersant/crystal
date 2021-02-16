@@ -5,6 +5,17 @@ local LiveTune = require("engine/dev/constants/LiveTune");
 local Features = require("engine/dev/Features");
 local Colors = require("engine/resources/Colors");
 local Fonts = require("engine/resources/Fonts");
+local Element = require("engine/ui/bricks/core/Element");
+local HorizontalAlignment = require("engine/ui/bricks/core/HorizontalAlignment");
+local VerticalAlignment = require("engine/ui/bricks/core/VerticalAlignment");
+local Border = require("engine/ui/bricks/elements/Border");
+local HorizontalBox = require("engine/ui/bricks/elements/HorizontalBox");
+local Image = require("engine/ui/bricks/elements/Image");
+local Overlay = require("engine/ui/bricks/elements/Overlay");
+local Switcher = require("engine/ui/bricks/elements/Switcher");
+local Text = require("engine/ui/bricks/elements/Text");
+local VerticalBox = require("engine/ui/bricks/elements/VerticalBox");
+local Widget = require("engine/ui/bricks/elements/Widget");
 
 local LiveTuneOverlay = Class("LiveTuneOverlay");
 
@@ -12,10 +23,11 @@ if not Features.liveTune then
 	Features.stub(LiveTuneOverlay);
 end
 
-local drawOverlay = false;
+local drawOverlay = true;
 
 local colors = {
 	title = Colors.greyD,
+	help = Colors.greyD,
 	headerBackground = Colors.greyA,
 	headerText = Colors.greyD,
 	background = Colors.greyB,
@@ -26,166 +38,198 @@ local colors = {
 	valueText = Colors.greyD,
 };
 
-LiveTuneOverlay.init = function(self)
+local KnobDonut = Class("KnobDonut", Element);
+
+KnobDonut.init = function(self)
+	KnobDonut.super.init(self);
+	self._radius = 10;
+	self._thickness = 4;
+	self._arcStart = 2 * math.pi * (1 + 40 / 360);
+	self._arcEnd = 2 * math.pi * (140 / 360);
+	self._numSegments = 64;
+	self.value = 0.5;
 end
 
-LiveTuneOverlay.draw = function(self)
+KnobDonut.getDesiredSize = function(self)
+	local size = 2 * self._radius + self._thickness;
+	return size, size;
+end
 
-	if not drawOverlay then
-		return;
-	end
+KnobDonut.draw = function(self)
+	local width, height = self:getSize();
+	love.graphics.setLineWidth(self._thickness);
 
-	love.graphics.push();
+	love.graphics.setColor(colors.knobInactive);
+	love.graphics.arc("line", "open", width / 2, height / 2, self._radius, self._arcStart, self._arcEnd, self._numSegments);
 
-	local padding = 20;
-	love.graphics.translate(padding, padding);
+	love.graphics.setColor(colors.knobActive);
+	love.graphics.arc("line", "open", width / 2, height / 2, self._radius,
+                  	self._arcEnd + self.value * (self._arcStart - self._arcEnd), self._arcEnd, self._numSegments);
+end
 
-	-- Title
-	local titleFontSize = 16;
-	local prefixLineLength = 16;
-	local titlePaddingX = 6;
-	local titlePaddingY = 12;
-	local titleFont = Fonts:get("devCondensed", titleFontSize);
-	local deviceName = LiveTune:getCurrentDevice();
+local KnobInfo = Class("KnobInfo", Widget);
+
+KnobInfo.init = function(self)
+	KnobInfo.super.init(self);
+
+	local topLevelList = self:setRoot(VerticalBox:new());
+
+	local header = topLevelList:addChild(Overlay:new());
+	header:setHorizontalAlignment(HorizontalAlignment.STRETCH);
+	local headerBackground = header:addChild(Image:new());
+	headerBackground:setColor(colors.headerBackground);
+	headerBackground:setHorizontalAlignment(HorizontalAlignment.STRETCH);
+	headerBackground:setVerticalAlignment(VerticalAlignment.STRETCH);
+	self._headerText = header:addChild(Text:new());
+	self._headerText:setFont(Fonts:get("devCondensed", 14));
+	self._headerText:setColor(colors.headerText);
+	self._headerText:setAllPadding(8);
+	self._headerText:setVerticalAlignment(VerticalAlignment.CENTER);
+
+	local content = topLevelList:addChild(Overlay:new());
+	content:setHorizontalAlignment(HorizontalAlignment.STRETCH);
+	local contentBackground = content:addChild(Image:new());
+	contentBackground:setColor(colors.background);
+	contentBackground:setHorizontalAlignment(HorizontalAlignment.STRETCH);
+	contentBackground:setVerticalAlignment(VerticalAlignment.STRETCH);
+	local data = content:addChild(HorizontalBox:new());
+	data:setAllPadding(10);
+
+	local donutContainer = data:addChild(Overlay:new());
+	donutContainer:setRightPadding(10);
+	self._donut = donutContainer:addChild(KnobDonut:new());
+	self._knobIndexText = donutContainer:addChild(Text:new());
+	self._knobIndexText:setHorizontalAlignment(HorizontalAlignment.CENTER);
+	self._knobIndexText:setVerticalAlignment(VerticalAlignment.BOTTOM);
+	self._knobIndexText:setBottomPadding(-6);
+	self._knobIndexText:setColor(colors.knobIndex);
+	self._knobIndexText:setFont(Fonts:get("devBold", 12));
+
+	local valueContainer = data:addChild(Overlay:new());
+	local border = valueContainer:addChild(Border:new());
+	border:setHorizontalAlignment(HorizontalAlignment.STRETCH);
+	border:setVerticalAlignment(VerticalAlignment.STRETCH);
+	border:setRounding(2);
+	border:setColor(colors.valueOutline);
+
+	self._knobValueText = valueContainer:addChild(Text:new());
+	self._knobValueText:setVerticalPadding(4);
+	self._knobValueText:setHorizontalPadding(10);
+	self._knobValueText:setColor(colors.valueText);
+	self._knobValueText:setFont(Fonts:get("devBold", 14));
+end
+
+KnobInfo.setTitle = function(self, title)
+	self._headerText:setContent(title);
+end
+
+KnobInfo.setKnobIndex = function(self, knobIndex)
+	self._knobIndexText:setContent(knobIndex);
+end
+
+KnobInfo.setValue = function(self, current, min, max)
+	self._donut.value = (current - min) / (max - min);
+	self._knobValueText:setContent(string.format("%.2f", current));
+end
+
+LiveTuneOverlay.init = function(self)
+	self._widget = Widget:new();
+
+	local topLevelList = self._widget:setRoot(VerticalBox:new());
+	topLevelList:setAllPadding(20);
+
+	local titleBar = topLevelList:addChild(HorizontalBox:new());
+	titleBar:setHorizontalAlignment(HorizontalAlignment.STRETCH);
+	titleBar:setBottomPadding(12);
+
+	local titleBarPrefix = titleBar:addChild(Image:new());
+	self._titleText = titleBar:addChild(Text:new());
+	local titleBarSuffix = titleBar:addChild(Image:new());
+
+	self._titleText:setHorizontalPadding(6);
+	self._titleText:setFont(Fonts:get("devCondensed", 16));
+	self._titleText:setColor(colors.title);
+
+	titleBarPrefix:setVerticalAlignment(VerticalAlignment.CENTER);
+	titleBarPrefix:setWidth(16);
+	titleBarPrefix:setHeight(1);
+	titleBarPrefix:setColor(colors.title);
+	titleBarPrefix:setTopPadding(1.5); -- TODO let image widget handle pixel snapping?
+
+	titleBarSuffix:setVerticalAlignment(VerticalAlignment.CENTER);
+	titleBarSuffix:setGrow(1);
+	titleBarSuffix:setHeight(1);
+	titleBarSuffix:setColor(colors.title);
+	titleBarSuffix:setTopPadding(1.5); -- TODO let image widget handle pixel snapping?
+
+	self._content = topLevelList:addChild(Switcher:new());
+	self._content:setHorizontalAlignment(HorizontalAlignment.STRETCH);
+	self._helpText = self._content:addChild(Text:new());
+	self._helpText:setHorizontalAlignment(HorizontalAlignment.STRETCH);
+	self._helpText:setColor(colors.help);
+	self._knobInfos = self._content:addChild(HorizontalBox:new());
+end
+
+LiveTuneOverlay.update = function(self)
 	local title = "LIVETUNE";
+	local deviceName = LiveTune:getCurrentDevice();
 	if deviceName then
 		title = title .. " / " .. deviceName;
 	end
-
-	-- Help
-	local helpFontSize = 14;
-	local helpFont = Fonts:get("dev", helpFontSize);
-
-	-- Headers
-	local headerPaddingY = 8;
-	local headerPaddingLeft = 8;
-	local headerPaddingRight = 8;
-	local headerFontSize = 14;
-	local headerFont = Fonts:get("devCondensed", headerFontSize);
-	local headerHeight = headerFontSize + 2 * headerPaddingY;
-	local contentPadding = 10;
-
-	-- Knob
-	local p = 2 * math.pi;
-	local numSegments = 64;
-	local arcRadius = 10;
-	local arcThickness = 4;
-	local arcStart = 40 / 360 * p + p;
-	local arcEnd = 140 / 360 * p;
-	local knobIndexFontSize = 12;
-	local knobIndexFont = Fonts:get("devBold", knobIndexFontSize);
-	local knobMargin = 10;
-
-	-- Value
-	local valueFontSize = 14;
-	local valuePadding = 4;
-
-	-- Measurements
-	local contentHeight = math.max(2 * arcRadius, valueFontSize + 2 * valuePadding) + 2 * contentPadding;
-	local totalHeight = contentHeight + headerHeight;
-	local spacing = 10;
-
-	-- Draw device name
-	local y = titleFontSize / 2 + 0.5 + 4;
-	love.graphics.setColor(colors.title);
-	love.graphics.setLineWidth(1);
-	love.graphics.setLineStyle("rough");
-	love.graphics.line(0, y, prefixLineLength, y);
-	local x = prefixLineLength + titleFont:getWidth(title) + 2 * titlePaddingX;
-	love.graphics.line(x, y, love.graphics.getWidth() - 2 * padding, y);
-	love.graphics.setFont(titleFont);
-	love.graphics.printf(title, prefixLineLength + titlePaddingX, 0, love.graphics.getWidth(), "left");
-	love.graphics.translate(0, titleFontSize + titlePaddingY);
+	self._titleText:setContent(title);
 
 	local mappedKnobs = Constants.instance:getMappedKnobs();
 
 	if not deviceName then
-		love.graphics.setFont(helpFont);
+		self._content:setActiveChild(self._helpText);
 		local deviceList = LiveTune:listDevices();
-
 		if #deviceList == 0 then
-			love.graphics.printf("No MIDI devices were detected, please plug in a MIDI device.", 0, 0, love.graphics.getWidth(),
-                     			"left");
+			self._helpText:setContent("No MIDI devices were detected, please plug in a MIDI device.");
 		else
-			love.graphics.printf("Not connected to a MIDI device. Use the `connectToMIDIDevice` command to select a device.", 0,
-                     			0, love.graphics.getWidth(), "left");
-			love.graphics.translate(0, 2 * helpFontSize);
-			love.graphics.printf("MIDI devices detected:", 0, 0, love.graphics.getWidth(), "left");
-			love.graphics.translate(10, 0);
+			local text = "Not connected to a MIDI device. Use the `connectToMIDIDevice` command to select a device.";
+			text = text .. "\n\nMIDI devices detected:";
 			for i, deviceName in ipairs(deviceList) do
-				love.graphics.translate(0, helpFontSize);
-				love.graphics.printf("#" .. i .. " " .. deviceName, 0, 0, love.graphics.getWidth(), "left");
+				text = text .. "\n\t#" .. i .. " " .. deviceName;
 			end
+			self._helpText:setContent(text);
 		end
 
 	elseif #mappedKnobs == 0 then
-		love.graphics.setFont(helpFont);
-		love.graphics.printf("Connected. Use the `liveTune` command to map a Constant to a knob on your " .. deviceName ..
-                     						" device.", 0, 0, love.graphics.getWidth(), "left");
+		self._content:setActiveChild(self._helpText);
+		self._helpText:setContent(
+						"Connected. Use the `liveTune` command to map a Constant to a knob on your " .. deviceName .. " device.");
 	else
-
-		for _, mappedKnob in ipairs(mappedKnobs) do
-			love.graphics.push();
-
-			local rawValue = Constants:get(mappedKnob.constantName);
-			local value = (rawValue - mappedKnob.minValue) / (mappedKnob.maxValue - mappedKnob.minValue);
-
-			local headerText = mappedKnob.constantName;
-			local width = math.max(130, headerFont:getWidth(headerText) + headerPaddingLeft + headerPaddingRight);
-
-			-- Draw background
-			love.graphics.setColor(colors.background);
-			love.graphics.rectangle("fill", 0, headerHeight / 2, width, headerHeight / 2 + contentHeight, 2, 2);
-
-			-- Draw header
-			love.graphics.setColor(colors.headerBackground);
-			love.graphics.rectangle("fill", 0, 0, width, headerHeight, 2, 2);
-			love.graphics.rectangle("fill", 0, 2, width, headerHeight - 2, 0, 0);
-
-			love.graphics.setFont(headerFont);
-			love.graphics.setColor(colors.headerText);
-			love.graphics.printf(headerText, headerPaddingLeft, headerPaddingY - 2, width, "left");
-
-			love.graphics.translate(contentPadding + arcThickness / 2, headerHeight);
-
-			-- Draw knob
-			love.graphics.setColor(colors.knobInactive);
-			love.graphics.setLineWidth(arcThickness);
-			love.graphics.arc("line", "open", arcRadius, contentHeight / 2, arcRadius, arcStart, arcEnd, numSegments);
-			love.graphics.setColor(colors.knobActive);
-			love.graphics.setLineWidth(arcThickness);
-			love.graphics.arc("line", "open", arcRadius, contentHeight / 2, arcRadius, arcEnd + value * (arcStart - arcEnd),
-                  			arcEnd, numSegments);
-
-			-- Draw knob index
-			love.graphics.setColor(colors.knobIndex);
-			love.graphics.setFont(knobIndexFont);
-			love.graphics.printf(mappedKnob.knobIndex, arcRadius - width / 2, 2 * arcRadius + arcThickness / 2 + 2, width,
-                     			"center");
-
-			love.graphics.translate(2 * arcRadius + knobMargin, (contentHeight - valueFontSize - 2 * valuePadding) / 2);
-
-			-- Draw value background
-			local r = 2;
-			local w = width - 2 * contentPadding - 2 * arcRadius - knobMargin;
-			love.graphics.setColor(colors.valueOutline);
-			love.graphics.setLineWidth(1);
-			love.graphics.rectangle("line", 0, 0, w, valueFontSize + 2 * valuePadding, r, r);
-
-			-- Draw value
-			love.graphics.setColor(colors.valueText);
-			love.graphics.setFont(Fonts:get("devBold", valueFontSize));
-			love.graphics.print(string.format("%.2f", rawValue), valuePadding, valuePadding - 2);
-
-			love.graphics.pop();
-
-			-- Move to next
-			love.graphics.translate(width + spacing, 0);
-		end
+		self._content:setActiveChild(self._knobInfos);
 	end
 
-	love.graphics.pop();
+	local children = self._knobInfos:getChildren();
+	for i = 1 + #mappedKnobs, #children do
+		self._knobInfos:removeChild(children[i]);
+	end
+	for i = 1 + #children, #mappedKnobs do
+		local knobInfo = self._knobInfos:addChild(KnobInfo:new());
+		knobInfo:setRightPadding(10);
+	end
 
+	for i, mappedKnob in ipairs(mappedKnobs) do
+		local widget = self._knobInfos:getChild(i);
+		assert(widget);
+		widget:setTitle(mappedKnob.constantName);
+		local currentValue = Constants:get(mappedKnob.constantName);
+		widget:setValue(currentValue, mappedKnob.minValue, mappedKnob.maxValue);
+		widget:setKnobIndex(mappedKnob.knobIndex);
+	end
+
+	self._widget:update(dt);
+	self._widget:setLocalPosition(0, love.graphics.getWidth(), 0, love.graphics.getHeight());
+	self._widget:layout();
+end
+
+LiveTuneOverlay.draw = function(self)
+	if not drawOverlay then
+		return;
+	end
+	self._widget:draw();
 end
 
 Terminal:registerCommand("showLiveTuneOverlay", function()
