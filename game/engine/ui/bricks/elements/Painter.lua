@@ -90,7 +90,7 @@ Painter.drawSelf = function(self)
 			self._child:draw();
 		else
 			love.graphics.push("all");
-			love.graphics.replaceTransform(love.math.newTransform());
+			love.graphics.reset();
 			love.graphics.setCanvas(self._canvas);
 			self._child:draw();
 			love.graphics.pop();
