@@ -12,6 +12,7 @@ local Border = require("engine/ui/bricks/elements/Border");
 local HorizontalBox = require("engine/ui/bricks/elements/HorizontalBox");
 local Image = require("engine/ui/bricks/elements/Image");
 local Overlay = require("engine/ui/bricks/elements/Overlay");
+local RoundedCorners = require("engine/ui/bricks/elements/RoundedCorners");
 local Switcher = require("engine/ui/bricks/elements/Switcher");
 local Text = require("engine/ui/bricks/elements/Text");
 local VerticalBox = require("engine/ui/bricks/elements/VerticalBox");
@@ -70,7 +71,8 @@ local KnobInfo = Class("KnobInfo", Widget);
 KnobInfo.init = function(self)
 	KnobInfo.super.init(self);
 
-	local topLevelList = self:setRoot(VerticalBox:new());
+	local roundedCorners = self:setRoot(RoundedCorners:new());
+	local topLevelList = roundedCorners:setChild(VerticalBox:new());
 
 	local header = topLevelList:addChild(Overlay:new());
 	header:setHorizontalAlignment(HorizontalAlignment.STRETCH);
@@ -80,7 +82,8 @@ KnobInfo.init = function(self)
 	self._headerText = header:addChild(Text:new());
 	self._headerText:setFont(Fonts:get("devCondensed", 14));
 	self._headerText:setColor(colors.headerText);
-	self._headerText:setAllPadding(8);
+	self._headerText:setHorizontalPadding(8);
+	self._headerText:setVerticalPadding(2);
 	self._headerText:setVerticalAlignment(VerticalAlignment.CENTER);
 
 	local content = topLevelList:addChild(Overlay:new());
