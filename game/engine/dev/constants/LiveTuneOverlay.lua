@@ -1,6 +1,5 @@
 require("engine/utils/OOP");
 local Terminal = require("engine/dev/cli/Terminal");
-local Constants = require("engine/dev/constants/Constants");
 local LiveTune = require("engine/dev/constants/LiveTune");
 local Features = require("engine/dev/Features");
 local Colors = require("engine/resources/Colors");
@@ -129,7 +128,8 @@ KnobInfo.setValue = function(self, current, min, max)
 	self._knobValueText:setContent(string.format("%.2f", current));
 end
 
-LiveTuneOverlay.init = function(self)
+LiveTuneOverlay.init = function(self, constants)
+	self._constants = constants;
 	self._widget = Widget:new();
 
 	local topLevelList = self._widget:setRoot(VerticalBox:new());
@@ -175,7 +175,7 @@ LiveTuneOverlay.update = function(self)
 	end
 	self._titleText:setContent(title);
 
-	local mappedKnobs = Constants.instance:getMappedKnobs();
+	local mappedKnobs = self._constants:getMappedKnobs();
 
 	if not deviceName then
 		self._content:setActiveChild(self._helpText);
@@ -212,7 +212,7 @@ LiveTuneOverlay.update = function(self)
 		local widget = self._knobInfos:getChild(i);
 		assert(widget);
 		widget:setTitle(mappedKnob.constantName);
-		local currentValue = Constants:get(mappedKnob.constantName);
+		local currentValue = self._constants:read(mappedKnob.constantName);
 		widget:setValue(currentValue, mappedKnob.minValue, mappedKnob.maxValue);
 		widget:setKnobIndex(mappedKnob.knobIndex);
 	end

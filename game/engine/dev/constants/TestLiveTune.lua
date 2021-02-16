@@ -1,4 +1,7 @@
+local Constants = require("engine/dev/constants/Constants");
 local LiveTune = require("engine/dev/constants/LiveTune");
+local LiveTuneOverlay = require("engine/dev/constants/LiveTuneOverlay");
+local Terminal = require("engine/dev/cli/Terminal");
 
 local tests = {};
 
@@ -30,6 +33,14 @@ tests[#tests + 1] = {name = "Retrieve current device"};
 tests[#tests].body = function()
 	local device = LiveTune:getCurrentDevice();
 	assert(type(device) == "nil" or type(device) == "string");
+end
+
+tests[#tests + 1] = {name = "Overlay lifecycle", gfx = "mock"};
+tests[#tests].body = function()
+	local constants = Constants:new(Terminal:new());
+	local overlay = LiveTuneOverlay:new(constants);
+	overlay:update(0);
+	overlay:draw();
 end
 
 return tests;

@@ -22,7 +22,7 @@ love.load = function()
 
 	fpsCounter = FPSCounter:new();
 	console = Console:new(Terminal.instance);
-	liveTuneOverlay = LiveTuneOverlay:new();
+	liveTuneOverlay = LiveTuneOverlay:new(Constants.instance);
 
 	local module = require(MODULE):new();
 	Module:setCurrent(module);
