@@ -5,7 +5,6 @@ local Padding = require("engine/ui/bricks/core/Padding");
 local VerticalAlignment = require("engine/ui/bricks/core/VerticalAlignment");
 local Alias = require("engine/utils/Alias");
 
--- TODO move to bricks/core
 local BasicJoint = Class("BasicJoint", Joint);
 
 BasicJoint.init = function(self, parent, child)

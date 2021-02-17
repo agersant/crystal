@@ -3,7 +3,7 @@ local Container = require("engine/ui/bricks/core/Container");
 local Padding = require("engine/ui/bricks/core/Padding");
 local HorizontalAlignment = require("engine/ui/bricks/core/HorizontalAlignment");
 local VerticalAlignment = require("engine/ui/bricks/core/VerticalAlignment");
-local BasicJoint = require("engine/ui/bricks/elements/BasicJoint");
+local BasicJoint = require("engine/ui/bricks/core/BasicJoint");
 
 local SwitcherJoint = Class("SwitcherJoint", BasicJoint);
 local Switcher = Class("Switcher", Container);

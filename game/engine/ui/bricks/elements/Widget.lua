@@ -5,7 +5,7 @@ local Joint = require("engine/ui/bricks/core/Joint");
 local Padding = require("engine/ui/bricks/core/Padding");
 local VerticalAlignment = require("engine/ui/bricks/core/VerticalAlignment");
 local Wrapper = require("engine/ui/bricks/core/Wrapper");
-local BasicJoint = require("engine/ui/bricks/elements/BasicJoint");
+local BasicJoint = require("engine/ui/bricks/core/BasicJoint");
 local Alias = require("engine/utils/Alias");
 local TableUtils = require("engine/utils/TableUtils");
 

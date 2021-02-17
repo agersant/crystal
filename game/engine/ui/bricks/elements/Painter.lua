@@ -3,7 +3,7 @@ local HorizontalAlignment = require("engine/ui/bricks/core/HorizontalAlignment")
 local Joint = require("engine/ui/bricks/core/Joint");
 local VerticalAlignment = require("engine/ui/bricks/core/VerticalAlignment");
 local Wrapper = require("engine/ui/bricks/core/Wrapper");
-local BasicJoint = require("engine/ui/bricks/elements/BasicJoint");
+local BasicJoint = require("engine/ui/bricks/core/BasicJoint");
 
 local PainterJoint = Class("PainterJoint", BasicJoint);
 local Painter = Class("Painter", Wrapper);
