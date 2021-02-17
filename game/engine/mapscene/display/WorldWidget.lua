@@ -20,10 +20,7 @@ end
 
 WorldWidget.updateWidget = function(self, dt)
 	if self._widget then
-		self._widget:update(dt);
-		local width, height = self._widget:getDesiredSize();
-		self._widget:setLocalPosition(0, width, 0, height);
-		self._widget:layout();
+		self._widget:updateTree(dt);
 	end
 end
 

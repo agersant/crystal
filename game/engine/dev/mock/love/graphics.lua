@@ -34,6 +34,10 @@ local quad = {
 
 local shader = {send = noop, sendColor = noop};
 
+mockAPI.getDimensions = function()
+	return 1, 1;
+end
+
 mockAPI.getWidth = function()
 	return 1;
 end

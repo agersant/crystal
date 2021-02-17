@@ -50,7 +50,7 @@ HorizontalBox.init = function(self)
 	HorizontalBox.super.init(self, HorizontalBoxJoint);
 end
 
-HorizontalBox.getDesiredSize = function(self)
+HorizontalBox.computeDesiredSize = function(self)
 	local width, height = 0, 0;
 	for child, joint in pairs(self._childJoints) do
 		local childWidth, childHeight = child:getDesiredSize();

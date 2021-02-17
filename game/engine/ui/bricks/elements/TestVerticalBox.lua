@@ -8,7 +8,6 @@ local tests = {};
 tests[#tests + 1] = {name = "Aligns children"};
 tests[#tests].body = function()
 	local box = VerticalBox:new();
-	box:setLocalPosition(0, 40, 0, 90);
 
 	local a = box:addChild(Element:new());
 	a:setGrow(1);
@@ -19,7 +18,7 @@ tests[#tests].body = function()
 	local c = box:addChild(Element:new());
 	c:setGrow(1);
 
-	box:layout();
+	box:updateTree(0, 40, 90);
 	assert(TableUtils.equals({0, 0, 0, 30}, {a:getLocalPosition()}));
 	assert(TableUtils.equals({0, 0, 30, 60}, {b:getLocalPosition()}));
 	assert(TableUtils.equals({0, 0, 60, 90}, {c:getLocalPosition()}));
@@ -41,22 +40,20 @@ tests[#tests].body = function()
 	local d = box:addChild(Element:new());
 	d:setHorizontalAlignment(HorizontalAlignment.STRETCH);
 
-	a.getDesiredSize = function()
+	a.computeDesiredSize = function()
 		return 10, 25;
 	end
-	b.getDesiredSize = function()
+	b.computeDesiredSize = function()
 		return 10, 25;
 	end
-	c.getDesiredSize = function()
+	c.computeDesiredSize = function()
 		return 10, 25;
 	end
-	d.getDesiredSize = function()
+	d.computeDesiredSize = function()
 		return 10, 25;
 	end
 
-	local _, h = box:getDesiredSize();
-	box:setLocalPosition(0, 40, 0, h);
-	box:layout();
+	box:updateTree(0, 40);
 	assert(TableUtils.equals({0, 10, 0, 25}, {a:getLocalPosition()}));
 	assert(TableUtils.equals({15, 25, 25, 50}, {b:getLocalPosition()}));
 	assert(TableUtils.equals({30, 40, 50, 75}, {c:getLocalPosition()}));
@@ -84,22 +81,20 @@ tests[#tests].body = function()
 	d:setHorizontalAlignment(HorizontalAlignment.STRETCH);
 	d:setAllPadding(10);
 
-	a.getDesiredSize = function()
+	a.computeDesiredSize = function()
 		return 10, 25;
 	end
-	b.getDesiredSize = function()
+	b.computeDesiredSize = function()
 		return 10, 25;
 	end
-	c.getDesiredSize = function()
+	c.computeDesiredSize = function()
 		return 10, 25;
 	end
-	d.getDesiredSize = function()
+	d.computeDesiredSize = function()
 		return 20, 25;
 	end
 
-	local w, h = box:getDesiredSize();
-	box:setLocalPosition(0, w, 0, h);
-	box:layout();
+	box:updateTree(0);
 	assert(TableUtils.equals({0, 10, 5, 30}, {a:getLocalPosition()}));
 	assert(TableUtils.equals({16, 26, 30, 55}, {b:getLocalPosition()}));
 	assert(TableUtils.equals({30, 40, 55, 80}, {c:getLocalPosition()}));

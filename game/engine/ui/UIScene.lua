@@ -16,10 +16,8 @@ UIScene.init = function(self, widget)
 end
 
 UIScene.update = function(self, dt)
-	self._widget:update(dt);
 	local width, height = GFXConfig:getRenderSize();
-	self._widget:setLocalPosition(0, width, 0, height);
-	self._widget:layout();
+	self._widget:updateTree(dt, width, height);
 end
 
 UIScene.draw = function(self)

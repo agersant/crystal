@@ -50,7 +50,7 @@ KnobDonut.init = function(self)
 	self.value = 0.5;
 end
 
-KnobDonut.getDesiredSize = function(self)
+KnobDonut.computeDesiredSize = function(self)
 	local size = 2 * self._radius + self._thickness;
 	return size, size;
 end
@@ -167,7 +167,7 @@ LiveTuneOverlay.init = function(self, constants)
 	self._knobInfos = self._content:addChild(HorizontalBox:new());
 end
 
-LiveTuneOverlay.update = function(self)
+LiveTuneOverlay.update = function(self, dt)
 	local title = "LIVETUNE";
 	local deviceName = LiveTune:getCurrentDevice();
 	if deviceName then
@@ -222,9 +222,8 @@ LiveTuneOverlay.update = function(self)
 		widget:setKnobIndex(mappedKnob.knobIndex);
 	end
 
-	self._widget:update(dt);
-	self._widget:setLocalPosition(0, love.graphics.getWidth(), 0, love.graphics.getHeight());
-	self._widget:layout();
+	local width, height = love.graphics.getDimensions();
+	self._widget:updateTree(dt, width, height);
 end
 
 LiveTuneOverlay.draw = function(self)

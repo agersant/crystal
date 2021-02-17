@@ -41,7 +41,7 @@ end
 Painter.configureShader = function(self)
 end
 
-Painter.getDesiredSize = function(self)
+Painter.computeDesiredSize = function(self)
 	local width, height = 0, 0;
 	if self._child then
 		local childWidth, childHeight = self._child:getDesiredSize();

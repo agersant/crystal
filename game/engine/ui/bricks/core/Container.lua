@@ -52,6 +52,13 @@ Container.update = function(self, dt)
 	end
 end
 
+Container.updateDesiredSize = function(self)
+	for _, child in ipairs(self._children) do
+		child:updateDesiredSize();
+	end
+	Container.super.updateDesiredSize(self);
+end
+
 Container.layout = function(self)
 	Container.super.layout(self);
 	self:arrangeChildren();

@@ -41,7 +41,7 @@ Switcher.removeChild = function(self, child)
 	end
 end
 
-Switcher.getDesiredSize = function(self)
+Switcher.computeDesiredSize = function(self)
 	local width, height = 0, 0;
 	if self._activeChild then
 		local joint = self._childJoints[self._activeChild];

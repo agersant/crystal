@@ -6,38 +6,38 @@ local Image = Class("Image", Element);
 Image.init = function(self)
 	Image.super.init(self);
 	self._texture = nil;
-	self._width = 1;
-	self._height = 1;
+	self._imageWidth = 1;
+	self._imageHeight = 1;
 end
 
 Image.setWidth = function(self, width)
-	self._width = width;
+	self._imageWidth = width;
 end
 
 Image.setHeight = function(self, height)
-	self._height = height;
+	self._imageHeight = height;
 end
 
 Image.setSize = function(self, width, height)
-	self._width = width;
-	self._height = height;
+	self._imageWidth = width;
+	self._imageHeight = height;
 end
 
 Image.setTexture = function(self, texture, adoptSize)
 	self._texture = texture;
 	if adoptSize then
 		if self._texture then
-			self._width = self._texture:getWidth();
-			self._height = self._texture:getHeight();
+			self._imageWidth = self._texture:getWidth();
+			self._imageHeight = self._texture:getHeight();
 		else
-			self._width = 0;
-			self._height = 0;
+			self._imageWidth = 0;
+			self._imageHeight = 0;
 		end
 	end
 end
 
-Image.getDesiredSize = function(self)
-	return self._width, self._height;
+Image.computeDesiredSize = function(self)
+	return self._imageWidth, self._imageHeight;
 end
 
 Image.drawSelf = function(self)

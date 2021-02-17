@@ -29,7 +29,7 @@ Text.setFont = function(self, font)
 	self._font = font;
 end
 
-Text.getDesiredSize = function(self)
+Text.computeDesiredSize = function(self)
 	local width = self._font:getWidth(self._content);
 	local height = self._font:getHeight();
 	return width, height;

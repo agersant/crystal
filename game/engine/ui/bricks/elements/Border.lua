@@ -17,7 +17,7 @@ Border.setThickness = function(self, thickness)
 	self._thickness = thickness;
 end
 
-Border.getDesiredSize = function(self)
+Border.computeDesiredSize = function(self)
 	return 0, 0;
 end
 

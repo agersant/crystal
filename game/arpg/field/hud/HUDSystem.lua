@@ -15,10 +15,8 @@ HUDSystem.getHUD = function(self)
 end
 
 HUDSystem.afterScripts = function(self, dt)
-	self._hud:update(dt);
-	local w, h = GFXConfig:getRenderSize();
-	self._hud:setLocalPosition(0, w, 0, h);
-	self._hud:layout();
+	local width, height = GFXConfig:getRenderSize();
+	self._hud:updateTree(dt, width, height);
 end
 
 HUDSystem.drawOverlay = function(self)

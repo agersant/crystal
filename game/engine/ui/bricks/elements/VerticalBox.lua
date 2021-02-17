@@ -50,7 +50,7 @@ VerticalBox.init = function(self)
 	VerticalBox.super.init(self, VerticalBoxJoint);
 end
 
-VerticalBox.getDesiredSize = function(self)
+VerticalBox.computeDesiredSize = function(self)
 	local width, height = 0, 0;
 	for child, joint in pairs(self._childJoints) do
 		local childWidth, childHeight = child:getDesiredSize();

@@ -39,9 +39,9 @@ Wrapper.removeChild = function(self, child)
 	self._childJoint = nil;
 end
 
-Wrapper.getDesiredSize = function(self)
+Wrapper.computeDesiredSize = function(self)
 	if self._child then
-		return self._child:getDesiredSize();
+		return self._child:computeDesiredSize();
 	end
 	return 0, 0;
 end
@@ -66,6 +66,13 @@ Wrapper.update = function(self, dt)
 	if self._child then
 		return self._child:update(dt);
 	end
+end
+
+Wrapper.updateDesiredSize = function(self)
+	if self._child then
+		self._child:updateDesiredSize();
+	end
+	Wrapper.super.updateDesiredSize(self);
 end
 
 Wrapper.drawSelf = function(self)

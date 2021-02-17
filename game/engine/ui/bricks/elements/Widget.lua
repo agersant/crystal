@@ -40,7 +40,7 @@ Widget.removeScript = function(self, script)
 	self._scripts[script] = nil;
 end
 
-Widget.getDesiredSize = function(self)
+Widget.computeDesiredSize = function(self)
 	local width, height = 0, 0;
 	if self._child then
 		local childWidth, childHeight = self._child:getDesiredSize();

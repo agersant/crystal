@@ -11,6 +11,8 @@ Element.init = function(self)
 	self._transform = Transform:new();
 	self._color = Colors.white;
 	self._alpha = 1;
+	self._desiredWidth = nil;
+	self._desiredHeight = nil;
 end
 
 Element.getParent = function(self)
@@ -68,7 +70,7 @@ Element.getLocalPosition = function(self)
 end
 
 Element.getDesiredSize = function(self)
-	return 0, 0;
+	return self._desiredWidth, self._desiredHeight;
 end
 
 Element.getSize = function(self)
@@ -104,7 +106,23 @@ Element.setLocalPosition = function(self, left, right, top, bottom)
 	self._bottom = bottom;
 end
 
+Element.updateTree = function(self, dt, width, height)
+	assert(dt);
+	self:update(dt);
+	self:updateDesiredSize();
+	self:setLocalPosition(0, width or self._desiredWidth, 0, height or self._desiredHeight);
+	self:layout();
+end
+
 Element.update = function(self, dt)
+end
+
+Element.computeDesiredSize = function(self)
+	return 0, 0;
+end
+
+Element.updateDesiredSize = function(self)
+	self._desiredWidth, self._desiredHeight = self:computeDesiredSize();
 end
 
 Element.layout = function(self)

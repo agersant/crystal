@@ -56,9 +56,11 @@ tests[#tests].body = function()
 		sentinel = sentinel + 10;
 	end
 	local container = Container:new(Joint);
+	container.arrangeChildren = function()
+	end
 	container:addChild(a);
 	container:addChild(b);
-	container:update(0);
+	container:updateTree(0);
 	assert(sentinel == 11)
 end
 
@@ -75,15 +77,11 @@ tests[#tests].body = function()
 	end
 	local container = Container:new(Joint);
 	container.arrangeChildren = function(self)
-		for _, child in ipairs(self._children) do
-			child:setLocalPosition(0, 0, 0, 0);
-		end
 		sentinel = 1;
 	end;
 	container:addChild(a);
 	container:addChild(b);
-	container:setLocalPosition(0, 0, 0, 0);
-	container:layout();
+	container:updateTree(0);
 	assert(sentinel == 1)
 	container:draw();
 	assert(sentinel == 12)

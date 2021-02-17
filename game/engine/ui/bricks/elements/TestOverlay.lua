@@ -30,10 +30,9 @@ tests[#tests].body = function()
 
 	for _, testCase in ipairs(testCases) do
 		local overlay = Overlay:new();
-		overlay:setLocalPosition(0, 100, 0, 100);
 
 		local element = Element:new();
-		element.getDesiredSize = function()
+		element.computeDesiredSize = function()
 			return 60, 40;
 		end
 
@@ -41,7 +40,7 @@ tests[#tests].body = function()
 		element:setHorizontalAlignment(testCase[1]);
 		element:setVerticalAlignment(testCase[2]);
 
-		overlay:layout();
+		overlay:updateTree(0, 100, 100);
 		assert(TableUtils.equals({element:getLocalPosition()}, testCase[3]));
 	end
 end
@@ -70,10 +69,9 @@ tests[#tests].body = function()
 
 	for _, testCase in ipairs(testCases) do
 		local overlay = Overlay:new();
-		overlay:setLocalPosition(0, 100, 0, 100);
 
 		local element = Element:new();
-		element.getDesiredSize = function()
+		element.computeDesiredSize = function()
 			return 60, 40;
 		end
 
@@ -82,7 +80,7 @@ tests[#tests].body = function()
 		element:setVerticalAlignment(testCase[2]);
 		element:setEachPadding(2, 4, 6, 8);
 
-		overlay:layout();
+		overlay:updateTree(0, 100, 100);
 		assert(TableUtils.equals({element:getLocalPosition()}, testCase[3]));
 	end
 end

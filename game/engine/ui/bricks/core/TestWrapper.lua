@@ -48,8 +48,7 @@ tests[#tests].body = function()
 		sentinel = 1;
 	end;
 	wrapper:setChild(a);
-	wrapper:setLocalPosition(0, 0, 0, 0);
-	wrapper:layout();
+	wrapper:updateTree(0);
 	assert(sentinel == 1)
 	wrapper:draw();
 	assert(sentinel == 11)
