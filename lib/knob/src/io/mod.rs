@@ -13,6 +13,8 @@ pub mod state;
 pub enum Mode {
 	Absolute,
 	RelativeArturia1,
+	RelativeArturia2,
+	RelativeArturia3,
 }
 
 pub fn connect<T: HAL>(state: StateHandle<T>, port_number: usize) {

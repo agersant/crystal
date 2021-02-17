@@ -95,6 +95,28 @@ impl<T: Send, P: Clone + Send> DeviceAPI for Device<T, P> {
 					return;
 				}
 			}
+			Mode::RelativeArturia2 => {
+				if let Some(value) = self.knob_values.get(&cc_index).copied() {
+					let delta = match raw_value {
+						0x01..=0x03 => raw_value as i8,
+						0x7D..=0x7F => -((0x80 as u8 - raw_value as u8) as i8),
+						_ => return,
+					};
+					let ux_tuning = 0.25;
+					value + (ux_tuning * delta as f32 / i8::MAX as f32)
+				} else {
+					return;
+				}
+			}
+			Mode::RelativeArturia3 => {
+				if let Some(value) = self.knob_values.get(&cc_index).copied() {
+					let delta = (raw_value as i8) - 0x10;
+					let ux_tuning = 0.25;
+					value + (ux_tuning * delta as f32 / i8::MAX as f32)
+				} else {
+					return;
+				}
+			}
 		};
 
 		self.write(cc_index, new_value);
@@ -205,6 +227,50 @@ fn arturia1_mode_interprets_messages_correctly() {
 	}
 
 	for m in 0x3D..=0x3F {
+		device.lock().write(cc_index, 0.5);
+		device
+			.lock()
+			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
+		assert!(device.lock().read(cc_index) < 0.5);
+	}
+}
+
+#[test]
+fn arturia2_mode_interprets_messages_correctly() {
+	let cc_index = 70;
+	let (device, _) = make_test_device(Mode::RelativeArturia2);
+
+	for m in 0x01..=0x03 {
+		device.lock().write(cc_index, 0.5);
+		device
+			.lock()
+			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
+		assert!(device.lock().read(cc_index) > 0.5);
+	}
+
+	for m in 0x7D..=0x7F {
+		device.lock().write(cc_index, 0.5);
+		device
+			.lock()
+			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
+		assert!(device.lock().read(cc_index) < 0.5);
+	}
+}
+
+#[test]
+fn arturia3_mode_interprets_messages_correctly() {
+	let cc_index = 70;
+	let (device, _) = make_test_device(Mode::RelativeArturia3);
+
+	for m in 0x11..=0x13 {
+		device.lock().write(cc_index, 0.5);
+		device
+			.lock()
+			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
+		assert!(device.lock().read(cc_index) > 0.5);
+	}
+
+	for m in 0x0D..=0x0F {
 		device.lock().write(cc_index, 0.5);
 		device
 			.lock()

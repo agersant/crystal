@@ -13,7 +13,12 @@ if not Features.liveTune then
 	Features.stub(LiveTune);
 end
 
-LiveTune.Modes = {ABSOLUTE = Knob.Absolute, RELATIVE_ARTURIA1 = Knob.RelativeArturia1};
+LiveTune.Modes = {
+	ABSOLUTE = Knob.Absolute,
+	RELATIVE_ARTURIA1 = Knob.RelativeArturia1,
+	RELATIVE_ARTURIA2 = Knob.RelativeArturia2,
+	RELATIVE_ARTURIA3 = Knob.RelativeArturia3,
+};
 
 LiveTune.init = function(self)
 	self:setMode(LiveTune.Modes.RELATIVE_ARTURIA1);
