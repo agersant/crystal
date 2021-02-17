@@ -4,6 +4,8 @@ local StringUtils = require("engine/utils/StringUtils");
 
 local AutoComplete = Class("AutoComplete");
 
+-- TODO consider moving colors out of here
+
 local getSuggestionsForCommand = function(self, input)
 	local matches = self._commandStore:search(input.fullText);
 	table.sort(matches, function(a, b)
@@ -17,11 +19,11 @@ local getSuggestionsForCommand = function(self, input)
 		local preMatch = match.matchStart > 1 and match.command:getName():sub(1, match.matchStart - 1) or "";
 		local matchText = match.command:getName():sub(match.matchStart, match.matchEnd);
 		local postMatch = match.command:getName():sub(match.matchEnd + 1);
-		table.insert(textChunks, Colors.rainCloudGrey);
+		table.insert(textChunks, Colors.greyC);
 		table.insert(textChunks, preMatch);
-		table.insert(textChunks, Colors.white);
+		table.insert(textChunks, Colors.greyD);
 		table.insert(textChunks, matchText);
-		table.insert(textChunks, Colors.rainCloudGrey);
+		table.insert(textChunks, Colors.greyC);
 		table.insert(textChunks, postMatch);
 		table.insert(lines, {text = textChunks, command = match.command});
 	end
@@ -41,11 +43,11 @@ local getSuggestionsForArguments = function(self, input)
 			correctType = command:typeCheckArgument(i, input.arguments[i]);
 		end
 		local argString = (i > 1 and " " or "") .. commandArg.name;
-		local argColor = Colors.rainCloudGrey:alpha(1);
+		local argColor = Colors.greyC:alpha(1);
 		if correctType == true then
-			argColor = Colors.ecoGreen;
+			argColor = Colors.green;
 		elseif correctType == false then
-			argColor = Colors.strawberry;
+			argColor = Colors.red;
 		end
 		table.insert(args, argColor);
 		table.insert(args, argString);
@@ -61,7 +63,7 @@ local updateSuggestions = function(self, input)
 		self._suggestions = {lines = getSuggestionsForCommand(self, input), state = "command"};
 	elseif not self._commandStore:getCommand(input.command) then
 		self._suggestions = {
-			lines = {{text = {Colors.strawberry, input.command .. " is not a valid command"}}},
+			lines = {{text = {Colors.red, input.command .. " is not a valid command"}}},
 			state = "badcommand",
 		};
 	else

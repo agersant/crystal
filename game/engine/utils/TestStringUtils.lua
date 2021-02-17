@@ -12,9 +12,19 @@ tests[#tests].body = function()
 	assert("oink" == StringUtils.trim("oink  	 	"));
 end
 
-tests[#tests + 1] = {name = "Trim preserve middle"};
+tests[#tests + 1] = {name = "Trim preserves spaces in the middle"};
 tests[#tests].body = function()
 	assert("oink 	gruik" == StringUtils.trim(" 	oink 	gruik	 "));
+end
+
+tests[#tests + 1] = {name = "Remove whitespace removes spaces"};
+tests[#tests].body = function()
+	assert(StringUtils.removeWhitespace("  oink  gruik  ") == "oinkgruik");
+end
+
+tests[#tests + 1] = {name = "Remove whitespace removes tabs"};
+tests[#tests].body = function()
+	assert(StringUtils.removeWhitespace("	oink	gruik	") == "oinkgruik");
 end
 
 tests[#tests + 1] = {name = "Valid file extension"};

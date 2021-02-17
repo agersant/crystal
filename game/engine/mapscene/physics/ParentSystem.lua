@@ -14,6 +14,7 @@ end
 
 ParentSystem.afterPhysics = function(self, dt)
 	local entities = self._query:getEntities();
+	-- TODO there is no ordering here. Nested parenting isn't guaranteed to put all descendants in the same spot
 	for entity in pairs(entities) do
 		local parent = entity:getComponent(Parent):getParentEntity();
 		local physicsBody = entity:getComponent(PhysicsBody);

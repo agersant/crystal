@@ -128,7 +128,7 @@ Camera.drawDebug = function(self)
 	local screenW, screenH = self:getScreenSize();
 	love.graphics.setLineStyle("rough");
 	love.graphics.setLineWidth(2);
-	love.graphics.setColor(Colors.cyan);
+	love.graphics.setColor(Colors.jadeDust);
 
 	love.graphics.line(self._x - buffer, self._y - screenH / 2, self._x - buffer, self._y + screenH / 2);
 	love.graphics.line(self._x + buffer, self._y - screenH / 2, self._x + buffer, self._y + screenH / 2);

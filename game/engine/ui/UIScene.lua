@@ -12,6 +12,7 @@ UIScene.init = function(self, widget)
 	assert(widget);
 	assert(widget:isInstanceOf(Widget));
 	self._widget = widget;
+	self:update(0);
 end
 
 UIScene.update = function(self, dt)

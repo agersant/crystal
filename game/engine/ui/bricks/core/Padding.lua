@@ -39,6 +39,12 @@ Padding.setRightPadding = function(self, amount)
 	self._right = amount;
 end
 
+Padding.setHorizontalPadding = function(self, amount)
+	assert(amount);
+	self._left = amount;
+	self._right = amount;
+end
+
 Padding.setTopPadding = function(self, amount)
 	assert(amount);
 	self._top = amount;
@@ -46,6 +52,12 @@ end
 
 Padding.setBottomPadding = function(self, amount)
 	assert(amount);
+	self._bottom = amount;
+end
+
+Padding.setVerticalPadding = function(self, amount)
+	assert(amount);
+	self._top = amount;
 	self._bottom = amount;
 end
 

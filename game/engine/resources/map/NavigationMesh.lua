@@ -65,9 +65,9 @@ NavigationMesh.draw = function(self)
 	love.graphics.setLineJoin("bevel");
 	love.graphics.setPointSize(4 * GFXConfig:getZoom());
 	for i, triangle in ipairs(self._triangles) do
-		love.graphics.setColor(Colors.cyan:alpha(.25));
+		love.graphics.setColor(Colors.jadeDust:alpha(.25));
 		love.graphics.polygon("fill", triangle.vertices);
-		love.graphics.setColor(Colors.cyan);
+		love.graphics.setColor(Colors.jadeDust);
 		love.graphics.polygon("line", triangle.vertices);
 		love.graphics.points(triangle.vertices);
 	end

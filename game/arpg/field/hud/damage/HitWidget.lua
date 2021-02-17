@@ -1,11 +1,11 @@
 require("engine/utils/OOP");
 local Fonts = require("engine/resources/Fonts");
-local Colors = require("engine/resources/Colors");
 local Overlay = require("engine/ui/bricks/elements/Overlay");
 local Text = require("engine/ui/bricks/elements/Text");
 local TextAlignment = require("engine/ui/bricks/elements/TextAlignment");
 local Widget = require("engine/ui/bricks/elements/Widget");
 local Script = require("engine/script/Script");
+local Palette = require("arpg/graphics/Palette");
 
 local HitWidget = Class("HitWidget", Widget);
 
@@ -17,16 +17,16 @@ HitWidget.init = function(self, amount)
 
 	local outline = overlay:addChild(Text:new());
 	outline:setFont(Fonts:get("small", 16));
-	outline:setColor(Colors.black);
-	outline:setAlignment(TextAlignment.CENTER);
+	outline:setColor(Palette.black);
+	outline:setTextAlignment(TextAlignment.CENTER);
 	outline:setContent(amount);
 	outline:setLeftPadding(1);
 	outline:setTopPadding(1);
 
 	self._textWidget = overlay:addChild(Text:new());
 	self._textWidget:setFont(Fonts:get("small", 16));
-	self._textWidget:setColor(Colors.barbadosCherry);
-	self._textWidget:setAlignment(TextAlignment.CENTER);
+	self._textWidget:setColor(Palette.barbadosCherry);
+	self._textWidget:setTextAlignment(TextAlignment.CENTER);
 	self._textWidget:setContent(amount);
 
 	self._animation = self:addScript(Script:new());

@@ -1,6 +1,5 @@
 local Features = require("engine/dev/Features");
 local Log = require("engine/dev/Log");
-local LogLevels = require("engine/dev/LogLevels");
 local GFXConfig = require("engine/graphics/GFXConfig");
 local Assets = require("engine/resources/Assets");
 local Module = require("engine/Module");
@@ -8,7 +7,10 @@ local MockGraphics = require("engine/dev/mock/love/graphics");
 local Scene = require("engine/Scene");
 
 local engineTestFiles = {
-	"engine/dev/cli/TestCLI",
+	"engine/dev/cli/TestConsole",
+	"engine/dev/cli/TestTerminal",
+	"engine/dev/constants/TestConstants",
+	"engine/dev/constants/TestLiveTune",
 	"engine/ecs/TestECS",
 	"engine/input/TestInputDevice",
 	"engine/mapscene/behavior/TestActor",
@@ -35,6 +37,7 @@ local engineTestFiles = {
 	"engine/ui/bricks/core/TestWrapper",
 	"engine/ui/bricks/elements/TestHorizontalBox",
 	"engine/ui/bricks/elements/TestOverlay",
+	"engine/ui/bricks/elements/TestVerticalBox",
 	"engine/ui/bricks/elements/TestWidget",
 	"engine/ui/TestTextInput",
 	"engine/utils/TestAlias",
@@ -222,7 +225,7 @@ end
 
 return {
 	execute = function(self)
-		Log:setVerbosity(LogLevels.ERROR);
+		Log:setVerbosity(Log.Levels.ERROR);
 		Module:setCurrent(require(MODULE):new());
 		local testFiles = {};
 		for _, file in ipairs(engineTestFiles) do

@@ -1,5 +1,4 @@
-local CLI = require("engine/dev/cli/CLI");
-local CommandStore = require("engine/dev/cli/CommandStore");
+local Terminal = require("engine/dev/cli/Terminal");
 local Entity = require("engine/ecs/Entity");
 local MapScene = require("engine/mapscene/MapScene");
 local InputListener = require("engine/mapscene/behavior/InputListener");
@@ -41,8 +40,7 @@ tests[#tests].body = function(context)
 	local scene = MapScene:new("engine/test-data/empty_map.lua");
 	Scene:setCurrent(scene);
 
-	local cli = CLI:new(CommandStore:getGlobalStore());
-	cli:execute("spawn TestSpawnCommand");
+	Terminal:execute("spawn TestSpawnCommand");
 	scene:update(0);
 
 	for entity in pairs(scene:getECS():getAllEntities()) do
@@ -70,8 +68,7 @@ tests[#tests].body = function(context)
 	player:setPosition(200, 200);
 	scene:update(0);
 
-	local cli = CLI:new(CommandStore:getGlobalStore());
-	cli:execute("spawn TestSpawnCommandProximity");
+	Terminal:execute("spawn TestSpawnCommandProximity");
 	scene:update(0);
 
 	for entity in pairs(scene:getECS():getAllEntities()) do

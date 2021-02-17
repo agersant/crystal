@@ -4,6 +4,10 @@ StringUtils.trim = function(s)
 	return s:match("^%s*(.-)%s*$");
 end
 
+StringUtils.removeWhitespace = function(s)
+	return s:gsub("%s+", "");
+end
+
 StringUtils.split = function(str, sep)
 	local out = {};
 	local pattern = string.format("([^%s]+)", sep);

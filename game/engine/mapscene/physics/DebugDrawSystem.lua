@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local CLI = require("engine/dev/cli/CLI");
+local Terminal = require("engine/dev/cli/Terminal");
 local Features = require("engine/dev/Features");
 local System = require("engine/ecs/System");
 local AllComponents = require("engine/ecs/query/AllComponents");
@@ -26,13 +26,13 @@ local pickFixtureColor = function(self, fixture)
 	assert(fixture);
 	local categories, mask, group = fixture:getFilterData();
 	if bit.band(categories, CollisionFilters.TRIGGER) ~= 0 then
-		return Colors.ecoGreen;
+		return Colors.mintyGreen;
 	elseif bit.band(categories, CollisionFilters.SOLID) ~= 0 then
-		return Colors.cyan;
+		return Colors.jadeDust;
 	elseif bit.band(categories, CollisionFilters.WEAKBOX) ~= 0 then
-		return Colors.ecoGreen;
+		return Colors.mintyGreen;
 	elseif bit.band(categories, CollisionFilters.HITBOX) ~= 0 then
-		return Colors.strawberry;
+		return Colors.redOrange;
 	end
 end
 
@@ -83,19 +83,19 @@ DebugDrawSystem.duringDebugDraw = function(self)
 	end
 end
 
-CLI:registerCommand("showNavmeshOverlay", function()
+Terminal:registerCommand("showNavmeshOverlay", function()
 	drawNavigation = true;
 end);
 
-CLI:registerCommand("hideNavmeshOverlay", function()
+Terminal:registerCommand("hideNavmeshOverlay", function()
 	drawNavigation = false;
 end);
 
-CLI:registerCommand("showPhysicsOverlay", function()
+Terminal:registerCommand("showPhysicsOverlay", function()
 	drawPhysics = true;
 end);
 
-CLI:registerCommand("hidePhysicsOverlay", function()
+Terminal:registerCommand("hidePhysicsOverlay", function()
 	drawPhysics = false;
 end);
 

@@ -10,16 +10,13 @@ tests[#tests].body = function()
 	local box = HorizontalBox:new();
 	box:setLocalPosition(0, 90, 0, 40);
 
-	local a = Element:new();
-	box:addChild(a);
+	local a = box:addChild(Element:new());
 	a:setGrow(1);
 
-	local b = Element:new();
-	box:addChild(b);
+	local b = box:addChild(Element:new());
 	b:setGrow(1);
 
-	local c = Element:new();
-	box:addChild(c);
+	local c = box:addChild(Element:new());
 	c:setGrow(1);
 
 	box:layout();
@@ -32,20 +29,16 @@ tests[#tests + 1] = {name = "Respects vertical alignment"};
 tests[#tests].body = function()
 	local box = HorizontalBox:new();
 
-	local a = Element:new();
-	box:addChild(a);
+	local a = box:addChild(Element:new());
 	a:setVerticalAlignment(VerticalAlignment.TOP);
 
-	local b = Element:new();
-	box:addChild(b);
+	local b = box:addChild(Element:new());
 	b:setVerticalAlignment(VerticalAlignment.CENTER);
 
-	local c = Element:new();
-	box:addChild(c);
+	local c = box:addChild(Element:new());
 	c:setVerticalAlignment(VerticalAlignment.BOTTOM);
 
-	local d = Element:new();
-	box:addChild(d);
+	local d = box:addChild(Element:new());
 	d:setVerticalAlignment(VerticalAlignment.STRETCH);
 
 	a.getDesiredSize = function()
@@ -74,24 +67,20 @@ tests[#tests + 1] = {name = "Respects padding"};
 tests[#tests].body = function()
 	local box = HorizontalBox:new();
 
-	local a = Element:new();
-	box:addChild(a);
+	local a = box:addChild(Element:new());
 	a:setVerticalAlignment(VerticalAlignment.TOP);
 	a:setLeftPadding(5);
 
-	local b = Element:new();
-	box:addChild(b);
+	local b = box:addChild(Element:new());
 	b:setVerticalAlignment(VerticalAlignment.CENTER);
 	b:setTopPadding(5);
 	b:setBottomPadding(4);
 
-	local c = Element:new();
-	box:addChild(c);
+	local c = box:addChild(Element:new());
 	c:setVerticalAlignment(VerticalAlignment.BOTTOM);
 	c:setRightPadding(10);
 
-	local d = Element:new();
-	box:addChild(d);
+	local d = box:addChild(Element:new());
 	d:setVerticalAlignment(VerticalAlignment.STRETCH);
 	d:setAllPadding(10);
 

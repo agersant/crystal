@@ -1,5 +1,5 @@
 require("engine/utils/OOP");
-local CLI = require("engine/dev/cli/CLI");
+local Terminal = require("engine/dev/cli/Terminal");
 local Log = require("engine/dev/Log");
 local ECS = require("engine/ecs/ECS");
 local Renderer = require("engine/graphics/Renderer");
@@ -154,7 +154,7 @@ MapScene.draw = function(self)
 
 end
 
-CLI:registerCommand("loadMap mapName:string", function(mapName)
+Terminal:registerCommand("loadMap mapName:string", function(mapName)
 	Persistence:getSaveData():save();
 	local module = Module:getCurrent();
 	local sceneClass = module.classes.MapScene;
@@ -195,6 +195,6 @@ local spawn = function(className)
 	end
 end
 
-CLI:registerCommand("spawn className:string", spawn);
+Terminal:registerCommand("spawn className:string", spawn);
 
 return MapScene;

@@ -6,8 +6,8 @@ local Image = Class("Image", Element);
 Image.init = function(self)
 	Image.super.init(self);
 	self._texture = nil;
-	self._width = 0;
-	self._height = 0;
+	self._width = 1;
+	self._height = 1;
 end
 
 Image.setWidth = function(self, width)

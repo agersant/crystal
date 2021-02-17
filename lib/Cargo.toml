@@ -2,4 +2,5 @@
 members = [
     "diamond",
     "lua-ffi-gen",
+    "knob",
 ]

@@ -12,6 +12,8 @@ WorldWidget.init = function(self, widget)
 end
 
 WorldWidget.setWidgetPosition = function(self, x, y)
+	assert(x);
+	assert(y);
 	self._x = x;
 	self._y = y;
 end

@@ -1,5 +1,6 @@
 require("engine/utils/OOP");
 local Element = require("engine/ui/bricks/core/Element");
+local TableUtils = require("engine/utils/TableUtils");
 
 local Container = Class("Container", Element);
 
@@ -7,12 +8,12 @@ Container.init = function(self, jointClass)
 	assert(jointClass);
 	Container.super.init(self);
 	self._children = {};
-	self._joints = {};
+	self._childJoints = {};
 	self._jointClass = jointClass;
 end
 
 Container.addChild = function(self, child)
-	if self._joints[child] then
+	if self._childJoints[child] then
 		return;
 	end
 	if child:getParent() then
@@ -20,20 +21,28 @@ Container.addChild = function(self, child)
 	end
 	table.insert(self._children, child);
 	local joint = self._jointClass:new(self, child);
-	self._joints[child] = joint;
+	self._childJoints[child] = joint;
 	child:setJoint(joint);
 	return child;
 end
 
 Container.removeChild = function(self, child)
-	assert(self._joints[child]);
+	assert(self._childJoints[child]);
 	child:setJoint(nil);
-	self._joints[child] = nil;
+	self._childJoints[child] = nil;
 	for i, c in ipairs(self._children) do
 		if c == child then
 			table.remove(self._children, i);
 		end
 	end
+end
+
+Container.getChild = function(self, index)
+	return self._children[index];
+end
+
+Container.getChildren = function(self)
+	return TableUtils.shallowCopy(self._children);
 end
 
 Container.update = function(self, dt)

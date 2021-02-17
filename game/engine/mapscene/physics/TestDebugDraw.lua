@@ -1,5 +1,4 @@
-local CLI = require("engine/dev/cli/CLI");
-local CommandStore = require("engine/dev/cli/CommandStore");
+local Terminal = require("engine/dev/cli/Terminal");
 local Entity = require("engine/ecs/Entity");
 local MapScene = require("engine/mapscene/MapScene");
 local Hitbox = require("engine/mapscene/physics/Hitbox");
@@ -12,7 +11,6 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Draws physics objects", gfx = "on"};
 tests[#tests].body = function(context)
-	local cli = CLI:new(CommandStore:getGlobalStore());
 	local scene = MapScene:new("engine/test-data/empty_map.lua");
 
 	local entityA = scene:spawn(Entity);
@@ -36,10 +34,10 @@ tests[#tests].body = function(context)
 	local touchTrigger = TouchTrigger:new(physicsBodyD, love.physics.newCircleShape(10));
 	entityD:addComponent(touchTrigger);
 
-	cli:execute("showPhysicsOverlay");
+	Terminal:execute("showPhysicsOverlay");
 	scene:update(0);
 	scene:draw();
-	cli:execute("hidePhysicsOverlay");
+	Terminal:execute("hidePhysicsOverlay");
 
 	-- TODO Test disabled due to https://github.com/love2d/love/issues/1618
 	-- context:compareFrame("engine/test-data/TestDebugDraw/draws-physics-objects.png");
@@ -47,13 +45,12 @@ end
 
 tests[#tests + 1] = {name = "Draw navigation mesh", gfx = "on"};
 tests[#tests].body = function(context)
-	local cli = CLI:new(CommandStore:getGlobalStore());
 	local scene = MapScene:new("engine/test-data/empty_map.lua");
 
-	cli:execute("showNavmeshOverlay");
+	Terminal:execute("showNavmeshOverlay");
 	scene:update(0);
 	scene:draw();
-	cli:execute("hideNavmeshOverlay");
+	Terminal:execute("hideNavmeshOverlay");
 
 	-- TODO Test disabled due to https://github.com/love2d/love/issues/1618
 	-- context:compareFrame("engine/test-data/TestDebugDraw/draws-navigation-mesh.png");

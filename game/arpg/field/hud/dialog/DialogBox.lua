@@ -1,6 +1,5 @@
 require("engine/utils/OOP");
 local Log = require("engine/dev/Log");
-local Colors = require("engine/resources/Colors");
 local Fonts = require("engine/resources/Fonts");
 local Script = require("engine/script/Script");
 local HorizontalAlignment = require("engine/ui/bricks/core/HorizontalAlignment");
@@ -9,6 +8,7 @@ local Image = require("engine/ui/bricks/elements/Image");
 local Overlay = require("engine/ui/bricks/elements/Overlay");
 local Text = require("engine/ui/bricks/elements/Text");
 local Widget = require("engine/ui/bricks/elements/Widget");
+local Palette = require("arpg/graphics/Palette");
 
 local DialogBox = Class("DialogBox", Widget);
 
@@ -24,7 +24,7 @@ DialogBox.init = function(self)
 	local overlay = self:setRoot(Overlay:new());
 
 	local background = overlay:addChild(Image:new());
-	background:setColor(Colors.black6C);
+	background:setColor(Palette.black6C);
 	background:setAlpha(.8);
 	background:setHeight(80);
 	background:setHorizontalAlignment(HorizontalAlignment.STRETCH);

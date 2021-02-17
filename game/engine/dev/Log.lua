@@ -1,19 +1,20 @@
 require("engine/utils/OOP");
 local Features = require("engine/dev/Features");
-local LogLevels = require("engine/dev/LogLevels");
 
 local bufferSize = 1024; -- in bytes
 local logDir = "logs";
 
-local logLevelDetails = {
-	[LogLevels.DEBUG] = {name = "DEBUG"},
-	[LogLevels.INFO] = {name = "INFO"},
-	[LogLevels.WARNING] = {name = "WARNING"},
-	[LogLevels.ERROR] = {name = "ERROR"},
-	[LogLevels.FATAL] = {name = "FATAL"},
-};
-
 local Log = Class("Log");
+
+Log.Levels = {DEBUG = 1, INFO = 2, WARNING = 3, ERROR = 4, FATAL = 5};
+
+local logLevelDetails = {
+	[Log.Levels.DEBUG] = {name = "DEBUG"},
+	[Log.Levels.INFO] = {name = "INFO"},
+	[Log.Levels.WARNING] = {name = "WARNING"},
+	[Log.Levels.ERROR] = {name = "ERROR"},
+	[Log.Levels.FATAL] = {name = "FATAL"},
+};
 
 if not Features.logging then
 	Features.stub(Log);
@@ -35,7 +36,7 @@ local append = function(self, level, text)
 end
 
 Log.init = function(self)
-	self._verbosity = LogLevels.DEBUG;
+	self._verbosity = Log.Levels.DEBUG;
 
 	local errorMessage;
 	local success = love.filesystem.createDirectory(logDir);
@@ -58,29 +59,29 @@ end
 
 Log.setVerbosity = function(self, verbosity)
 	assert(verbosity);
-	assert(verbosity >= LogLevels.DEBUG);
-	assert(verbosity <= LogLevels.FATAL);
+	assert(verbosity >= Log.Levels.DEBUG);
+	assert(verbosity <= Log.Levels.FATAL);
 	self._verbosity = verbosity;
 end
 
 Log.debug = function(self, text)
-	append(self, LogLevels.DEBUG, text);
+	append(self, Log.Levels.DEBUG, text);
 end
 
 Log.info = function(self, text)
-	append(self, LogLevels.INFO, text);
+	append(self, Log.Levels.INFO, text);
 end
 
 Log.warning = function(self, text)
-	append(self, LogLevels.WARNING, text);
+	append(self, Log.Levels.WARNING, text);
 end
 
 Log.error = function(self, text)
-	append(self, LogLevels.ERROR, text);
+	append(self, Log.Levels.ERROR, text);
 end
 
 Log.fatal = function(self, text)
-	append(self, LogLevels.FATAL, text);
+	append(self, Log.Levels.FATAL, text);
 end
 
 local instance = Log:new();
