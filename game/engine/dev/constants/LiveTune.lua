@@ -15,6 +15,7 @@ end
 
 LiveTune.Modes = {
 	ABSOLUTE = Knob.Absolute,
+	RELATIVE_AKAI = Knob.RelativeAkai,
 	RELATIVE_ARTURIA1 = Knob.RelativeArturia1,
 	RELATIVE_ARTURIA2 = Knob.RelativeArturia2,
 	RELATIVE_ARTURIA3 = Knob.RelativeArturia3,

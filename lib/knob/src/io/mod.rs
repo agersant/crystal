@@ -12,6 +12,7 @@ pub mod state;
 #[derive(Clone, Copy, Debug, EnumIter, PartialEq)]
 pub enum Mode {
 	Absolute,
+	RelativeAkai,
 	RelativeArturia1,
 	RelativeArturia2,
 	RelativeArturia3,

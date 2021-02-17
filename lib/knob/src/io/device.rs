@@ -86,6 +86,19 @@ impl<T: Send, P: Clone + Send> DeviceAPI for Device<T, P> {
 
 		let new_value = match self.mode {
 			Mode::Absolute => raw_value as f32 / i8::MAX as f32,
+			Mode::RelativeAkai => {
+				if let Some(value) = self.knob_values.get(&cc_index).copied() {
+					let delta = match raw_value {
+						0x01..=0x3F => raw_value as i8,
+						0x40..=0x7F => -((0x80 as u8 - raw_value as u8) as i8),
+						_ => return,
+					};
+					let ux_tuning = 0.25; // Untested
+					value + (ux_tuning * delta as f32 / i8::MAX as f32)
+				} else {
+					return;
+				}
+			}
 			Mode::RelativeArturia1 => {
 				if let Some(value) = self.knob_values.get(&cc_index).copied() {
 					let delta = (raw_value as i8) - 0x40;
@@ -210,6 +223,28 @@ fn relative_modes_ignore_messages_before_write() {
 			.lock()
 			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, 64]);
 		assert_eq!(device.lock().read(cc_index), -1.0);
+	}
+}
+
+#[test]
+fn akai_mode_interprets_messages_correctly() {
+	let cc_index = 70;
+	let (device, _) = make_test_device(Mode::RelativeAkai);
+
+	for m in 0x01..=0x3F {
+		device.lock().write(cc_index, 0.5);
+		device
+			.lock()
+			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
+		assert!(device.lock().read(cc_index) > 0.5);
+	}
+
+	for m in 0x40..=0x7F {
+		device.lock().write(cc_index, 0.5);
+		device
+			.lock()
+			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
+		assert!(device.lock().read(cc_index) < 0.5);
 	}
 }
 
