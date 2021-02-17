@@ -177,6 +177,11 @@ LiveTuneOverlay.update = function(self)
 
 	local mappedKnobs = self._constants:getMappedKnobs();
 
+	if #mappedKnobs > 0 and self._previousNumMappedKnobs == 0 then
+		drawOverlay = true;
+	end
+	self._previousNumMappedKnobs = #mappedKnobs;
+
 	if not deviceName then
 		self._content:setActiveChild(self._helpText);
 		local deviceList = LiveTune:listDevices();
