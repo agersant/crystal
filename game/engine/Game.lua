@@ -1,5 +1,6 @@
 require("engine/dev/HotReload");
 local Constants = require("engine/dev/constants/Constants");
+local LiveTune = require("engine/dev/constants/LiveTune");
 local LiveTuneOverlay = require("engine/dev/constants/LiveTuneOverlay");
 local FPSCounter = require("engine/dev/FPSCounter");
 local Log = require("engine/dev/Log");
@@ -22,7 +23,7 @@ love.load = function()
 
 	fpsCounter = FPSCounter:new();
 	console = Console:new(Terminal.instance);
-	liveTuneOverlay = LiveTuneOverlay:new(Constants.instance);
+	liveTuneOverlay = LiveTuneOverlay:new(Constants.instance, LiveTune.instance);
 
 	local module = require(MODULE):new();
 	Module:setCurrent(module);

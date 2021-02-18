@@ -30,9 +30,16 @@ local quad = {
 	getViewport = function()
 		return 0, 0, 1, 1;
 	end,
+	getTextureDimensions = function()
+		return 1, 1;
+	end,
 };
 
 local shader = {send = noop, sendColor = noop};
+
+mockAPI.arc = noop;
+
+mockAPI.draw = noop;
 
 mockAPI.getDimensions = function()
 	return 1, 1;
@@ -74,17 +81,27 @@ mockAPI.polygon = noop;
 
 mockAPI.print = noop;
 
+mockAPI.printf = noop;
+
 mockAPI.pop = noop;
 
 mockAPI.push = noop;
 
 mockAPI.rectangle = noop;
 
+mockAPI.reset = noop;
+
 mockAPI.scale = noop;
+
+mockAPI.setCanvas = noop;
 
 mockAPI.setColor = noop;
 
 mockAPI.setFont = noop;
+
+mockAPI.setLineWidth = noop;
+
+mockAPI.setShader = noop;
 
 mockAPI.translate = noop;
 

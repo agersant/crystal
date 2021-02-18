@@ -11,6 +11,7 @@ local engineTestFiles = {
 	"engine/dev/cli/TestTerminal",
 	"engine/dev/constants/TestConstants",
 	"engine/dev/constants/TestLiveTune",
+	"engine/dev/constants/TestLiveTuneOverlay",
 	"engine/ecs/TestECS",
 	"engine/input/TestInputDevice",
 	"engine/mapscene/behavior/TestActor",

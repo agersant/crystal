@@ -20,10 +20,12 @@ local findConstant = function(self, name)
 	return constant;
 end
 
-Constants.init = function(self, terminal)
+Constants.init = function(self, terminal, liveTune)
 	assert(terminal);
+	assert(liveTune);
 	self._store = {};
 	self._terminal = terminal;
+	self._liveTune = liveTune;
 	self._knobMappings = {};
 end
 
@@ -106,7 +108,7 @@ Constants.update = function(self)
 	end
 	for name, knobIndex in pairs(self._knobMappings) do
 		local constant = findConstant(self, name);
-		local value = LiveTune:getValue(knobIndex, constant.value, constant.minValue, constant.maxValue);
+		local value = self._liveTune:getValue(knobIndex, constant.value, constant.minValue, constant.maxValue);
 		self:write(name, value);
 	end
 end
@@ -128,7 +130,7 @@ Constants.getMappedKnobs = function(self)
 	return knobs;
 end
 
-Constants.instance = Constants:new(Terminal.instance);
+Constants.instance = Constants:new(Terminal.instance, LiveTune.instance);
 
 Constants.register = function(self, name, initialValue, options)
 	Constants.instance:define(name, initialValue, options);

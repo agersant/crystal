@@ -1,5 +1,6 @@
 require("engine/utils/OOP");
 local Terminal = require("engine/dev/cli/Terminal");
+local Constants = require("engine/dev/constants/Constants");
 local LiveTune = require("engine/dev/constants/LiveTune");
 local Features = require("engine/dev/Features");
 local Colors = require("engine/resources/Colors");
@@ -128,8 +129,11 @@ KnobInfo.setValue = function(self, current, min, max)
 	self._knobValueText:setContent(string.format("%.2f", current));
 end
 
-LiveTuneOverlay.init = function(self, constants)
+LiveTuneOverlay.init = function(self, constants, liveTune)
+	assert(constants);
+	assert(liveTune);
 	self._constants = constants;
+	self._liveTune = liveTune;
 	self._widget = Widget:new();
 
 	local topLevelList = self._widget:setRoot(VerticalBox:new());
@@ -169,7 +173,7 @@ end
 
 LiveTuneOverlay.update = function(self, dt)
 	local title = "LIVETUNE";
-	local deviceName = LiveTune:getCurrentDevice();
+	local deviceName = self._liveTune:getCurrentDevice();
 	if deviceName then
 		title = title .. " / " .. deviceName;
 	end
@@ -184,7 +188,7 @@ LiveTuneOverlay.update = function(self, dt)
 
 	if not deviceName then
 		self._content:setActiveChild(self._helpText);
-		local deviceList = LiveTune:listDevices();
+		local deviceList = self._liveTune:listDevices();
 		if #deviceList == 0 then
 			self._helpText:setContent("No MIDI devices were detected, please plug in a MIDI device.");
 		else

@@ -21,6 +21,26 @@ LiveTune.Modes = {
 	RELATIVE_ARTURIA3 = Knob.RelativeArturia3,
 };
 
+LiveTune.Mock = Class("LiveTuneMock", LiveTune);
+
+LiveTune.Mock.init = function(self)
+	self.deviceList = {};
+	self.values = {};
+	self.currentDevice = nil;
+end
+
+LiveTune.Mock.getValue = function(self, knobIndex, initialValue)
+	return self.values[knobIndex];
+end
+
+LiveTune.Mock.listDevices = function(self)
+	return self.deviceList;
+end
+
+LiveTune.Mock.getCurrentDevice = function(self)
+	return self.currentDevice;
+end
+
 LiveTune.init = function(self)
 	self:setMode(LiveTune.Modes.RELATIVE_ARTURIA1);
 	self:connectToDevice(1);
@@ -86,10 +106,10 @@ LiveTune.getCurrentDevice = function(self)
 	end
 end
 
-local instance = LiveTune:new();
+LiveTune.instance = LiveTune:new();
 
 Terminal:registerCommand("connectToMIDIDevice port:number", function(port)
-	instance:connectToDevice(port);
+	LiveTune.instance:connectToDevice(port);
 end);
 
-return instance;
+return LiveTune;

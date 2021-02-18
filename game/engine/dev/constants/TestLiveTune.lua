@@ -35,12 +35,4 @@ tests[#tests].body = function()
 	assert(type(device) == "nil" or type(device) == "string");
 end
 
-tests[#tests + 1] = {name = "Overlay lifecycle", gfx = "mock"};
-tests[#tests].body = function()
-	local constants = Constants:new(Terminal:new());
-	local overlay = LiveTuneOverlay:new(constants);
-	overlay:update(0);
-	overlay:draw();
-end
-
 return tests;
