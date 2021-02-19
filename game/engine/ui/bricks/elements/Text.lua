@@ -1,21 +1,18 @@
 require("engine/utils/OOP");
 local Fonts = require("engine/resources/Fonts");
 local Element = require("engine/ui/bricks/core/Element");
-local TextAlignment = require("engine/ui/bricks/elements/TextAlignment");
 
 local Text = Class("Text", Element);
 
 Text.init = function(self, initialContent)
 	Text.super.init(self);
-	self._textAlignment = TextAlignment.LEFT;
+	self._textAlignment = "left";
 	self._content = initialContent or "";
 	self._font = Fonts:get("dev", 16);
 end
 
 Text.setTextAlignment = function(self, textAlignment)
-	assert(textAlignment);
-	assert(textAlignment >= TextAlignment.LEFT);
-	assert(textAlignment <= TextAlignment.RIGHT);
+	assert(textAlignment == "left" or textAlignment == "center" or textAlignment == "right");
 	self._textAlignment = textAlignment;
 end
 
@@ -37,14 +34,8 @@ end
 
 Text.drawSelf = function(self)
 	local width, _ = self:getSize();
-	local textAlignment = "left";
-	if self._textAlignment == TextAlignment.CENTER then
-		textAlignment = "center";
-	elseif self._textAlignment == TextAlignment.RIGHT then
-		textAlignment = "right";
-	end
 	love.graphics.setFont(self._font);
-	love.graphics.printf(self._content, 0, 0, width, textAlignment);
+	love.graphics.printf(self._content, 0, 0, width, self._textAlignment);
 end
 
 return Text;
