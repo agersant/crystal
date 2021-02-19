@@ -24,6 +24,10 @@ Element.removeFromParent = function(self)
 	self._parent:removeChild(self);
 end
 
+Element.getJoint = function(self)
+	return self._joint;
+end
+
 Element.setJoint = function(self, joint)
 	if joint then
 		Alias:add(self, joint);
@@ -77,22 +81,6 @@ Element.getSize = function(self)
 	return math.abs(self._right - self._left), math.abs(self._top - self._bottom);
 end
 
-Element.updateColor = function(self)
-	self._finalColor = self._color;
-	if self._parent then
-		for i = 1, 3 do
-			self._finalColor[i] = self._finalColor[i] * self._parent._finalColor[i];
-		end
-	end
-end
-
-Element.updateAlpha = function(self)
-	self._finalAlpha = self._alpha;
-	if self._parent then
-		self._finalAlpha = self._finalAlpha * self._parent._finalAlpha;
-	end
-end
-
 Element.setLocalPosition = function(self, left, right, top, bottom)
 	assert(left);
 	assert(right);
@@ -126,20 +114,19 @@ Element.updateDesiredSize = function(self)
 end
 
 Element.layout = function(self)
-	self:updateColor();
-	self:updateAlpha();
 end
 
 Element.draw = function(self)
-	if self._finalAlpha == 0 then
+	if self._alpha == 0 then
 		return;
 	end
 	if self._scaleX == 0 or self._scaleY == 0 then
 		return;
 	end
 	love.graphics.push("all");
+	local r, g, b, a = love.graphics.getColor();
+	love.graphics.setColor(r * self._color[1], g * self._color[2], b * self._color[3], a * self._alpha);
 	love.graphics.translate(self._left, self._top);
-	love.graphics.setColor(self._finalColor[1], self._finalColor[2], self._finalColor[3], self._finalAlpha);
 	self._transform:apply(self:getSize());
 	self:drawSelf();
 	love.graphics.pop();
