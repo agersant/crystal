@@ -1,8 +1,6 @@
 require("engine/utils/OOP");
 local Container = require("engine/ui/bricks/core/Container");
 local Padding = require("engine/ui/bricks/core/Padding");
-local HorizontalAlignment = require("engine/ui/bricks/core/HorizontalAlignment");
-local VerticalAlignment = require("engine/ui/bricks/core/VerticalAlignment");
 local BasicJoint = require("engine/ui/bricks/core/BasicJoint");
 
 local SwitcherJoint = Class("SwitcherJoint", BasicJoint);
@@ -10,8 +8,8 @@ local Switcher = Class("Switcher", Container);
 
 SwitcherJoint.init = function(self, parent, child)
 	SwitcherJoint.super.init(self, parent, child);
-	self._horizontalAlignment = HorizontalAlignment.LEFT;
-	self._verticalAlignment = VerticalAlignment.TOP;
+	self._horizontalAlignment = "left";
+	self._verticalAlignment = "top";
 end
 
 Switcher.init = function(self)

@@ -1,7 +1,5 @@
 require("engine/utils/OOP");
-local HorizontalAlignment = require("engine/ui/bricks/core/HorizontalAlignment");
 local Joint = require("engine/ui/bricks/core/Joint");
-local VerticalAlignment = require("engine/ui/bricks/core/VerticalAlignment");
 local Wrapper = require("engine/ui/bricks/core/Wrapper");
 local BasicJoint = require("engine/ui/bricks/core/BasicJoint");
 
@@ -19,8 +17,8 @@ end
 
 PainterJoint.init = function(self, parent, child)
 	PainterJoint.super.init(self, parent, child);
-	self._horizontalAlignment = HorizontalAlignment.STRETCH;
-	self._verticalAlignment = VerticalAlignment.STRETCH;
+	self._horizontalAlignment = "stretch";
+	self._verticalAlignment = "stretch";
 end
 
 Painter.init = function(self, shaderResource)

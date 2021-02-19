@@ -1,8 +1,8 @@
 require("engine/utils/OOP");
+local BricksUtils = require("engine/ui/bricks/core/BricksUtils");
 local Container = require("engine/ui/bricks/core/Container");
 local Joint = require("engine/ui/bricks/core/Joint");
 local Padding = require("engine/ui/bricks/core/Padding");
-local VerticalAlignment = require("engine/ui/bricks/core/VerticalAlignment");
 local Alias = require("engine/utils/Alias");
 
 local HorizontalBoxJoint = Class("HorizontalBoxJoint", Joint);
@@ -11,7 +11,7 @@ local HorizontalBox = Class("HorizontalBox", Container);
 HorizontalBoxJoint.init = function(self, parent, child)
 	HorizontalBoxJoint.super.init(self, parent, child);
 	self._padding = Padding:new();
-	self._verticalAlignment = VerticalAlignment.TOP;
+	self._verticalAlignment = "top";
 	self._grow = 0;
 	self._shrink = 0;
 	Alias:add(self, self._padding);
@@ -30,9 +30,7 @@ HorizontalBoxJoint.getShrink = function(self)
 end
 
 HorizontalBoxJoint.setVerticalAlignment = function(self, alignment)
-	assert(alignment);
-	assert(alignment >= VerticalAlignment.TOP);
-	assert(alignment <= VerticalAlignment.STRETCH);
+	assert(BricksUtils.isVerticalAlignment(alignment));
 	self._verticalAlignment = alignment;
 end
 
@@ -91,16 +89,16 @@ HorizontalBox.arrangeChildren = function(self)
 		end
 
 		local childHeight, y;
-		if verticalAlignment == VerticalAlignment.STRETCH then
+		if verticalAlignment == "stretch" then
 			childHeight = height - paddingTop - paddingBottom;
 			y = paddingTop;
-		elseif verticalAlignment == VerticalAlignment.TOP then
+		elseif verticalAlignment == "top" then
 			childHeight = childDesiredHeight;
 			y = paddingTop;
-		elseif verticalAlignment == VerticalAlignment.CENTER then
+		elseif verticalAlignment == "center" then
 			childHeight = childDesiredHeight;
 			y = (height - childHeight) / 2 + paddingTop - paddingBottom;
-		elseif verticalAlignment == VerticalAlignment.BOTTOM then
+		elseif verticalAlignment == "bottom" then
 			childHeight = childDesiredHeight;
 			y = height - childHeight - paddingBottom;
 		end

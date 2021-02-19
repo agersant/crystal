@@ -6,8 +6,6 @@ local Features = require("engine/dev/Features");
 local Colors = require("engine/resources/Colors");
 local Fonts = require("engine/resources/Fonts");
 local Element = require("engine/ui/bricks/core/Element");
-local HorizontalAlignment = require("engine/ui/bricks/core/HorizontalAlignment");
-local VerticalAlignment = require("engine/ui/bricks/core/VerticalAlignment");
 local Border = require("engine/ui/bricks/elements/Border");
 local HorizontalBox = require("engine/ui/bricks/elements/HorizontalBox");
 local Image = require("engine/ui/bricks/elements/Image");
@@ -75,22 +73,22 @@ KnobInfo.init = function(self)
 	local topLevelList = roundedCorners:setChild(VerticalBox:new());
 
 	local header = topLevelList:addChild(Overlay:new());
-	header:setHorizontalAlignment(HorizontalAlignment.STRETCH);
+	header:setHorizontalAlignment("stretch");
 	local headerBackground = header:addChild(Image:new());
 	headerBackground:setColor(colors.headerBackground);
-	headerBackground:setAlignment(HorizontalAlignment.STRETCH, VerticalAlignment.STRETCH);
+	headerBackground:setAlignment("stretch", "stretch");
 	self._headerText = header:addChild(Text:new());
 	self._headerText:setFont(Fonts:get("devCondensed", 14));
 	self._headerText:setColor(colors.headerText);
 	self._headerText:setHorizontalPadding(8);
 	self._headerText:setVerticalPadding(2);
-	self._headerText:setVerticalAlignment(VerticalAlignment.CENTER);
+	self._headerText:setVerticalAlignment("center");
 
 	local content = topLevelList:addChild(Overlay:new());
-	content:setHorizontalAlignment(HorizontalAlignment.STRETCH);
+	content:setHorizontalAlignment("stretch");
 	local contentBackground = content:addChild(Image:new());
 	contentBackground:setColor(colors.background);
-	contentBackground:setAlignment(HorizontalAlignment.STRETCH, VerticalAlignment.STRETCH);
+	contentBackground:setAlignment("stretch", "stretch");
 	local data = content:addChild(HorizontalBox:new());
 	data:setAllPadding(10);
 
@@ -98,14 +96,14 @@ KnobInfo.init = function(self)
 	donutContainer:setRightPadding(10);
 	self._donut = donutContainer:addChild(KnobDonut:new());
 	self._knobIndexText = donutContainer:addChild(Text:new());
-	self._knobIndexText:setAlignment(HorizontalAlignment.CENTER, VerticalAlignment.BOTTOM);
+	self._knobIndexText:setAlignment("center", "bottom");
 	self._knobIndexText:setBottomPadding(-6);
 	self._knobIndexText:setColor(colors.knobIndex);
 	self._knobIndexText:setFont(Fonts:get("devBold", 12));
 
 	local valueContainer = data:addChild(Overlay:new());
 	local border = valueContainer:addChild(Border:new());
-	border:setAlignment(HorizontalAlignment.STRETCH, VerticalAlignment.STRETCH);
+	border:setAlignment("stretch", "stretch");
 	border:setRounding(2);
 	border:setColor(colors.valueOutline);
 
@@ -140,7 +138,7 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 	topLevelList:setAllPadding(20);
 
 	local titleBar = topLevelList:addChild(HorizontalBox:new());
-	titleBar:setHorizontalAlignment(HorizontalAlignment.STRETCH);
+	titleBar:setHorizontalAlignment("stretch");
 	titleBar:setBottomPadding(12);
 
 	local titleBarPrefix = titleBar:addChild(Image:new());
@@ -151,22 +149,22 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 	self._titleText:setFont(Fonts:get("devCondensed", 16));
 	self._titleText:setColor(colors.title);
 
-	titleBarPrefix:setVerticalAlignment(VerticalAlignment.CENTER);
+	titleBarPrefix:setVerticalAlignment("center");
 	titleBarPrefix:setWidth(16);
 	titleBarPrefix:setHeight(1);
 	titleBarPrefix:setColor(colors.title);
 	titleBarPrefix:setTopPadding(1.5); -- TODO let image widget handle pixel snapping?
 
-	titleBarSuffix:setVerticalAlignment(VerticalAlignment.CENTER);
+	titleBarSuffix:setVerticalAlignment("center");
 	titleBarSuffix:setGrow(1);
 	titleBarSuffix:setHeight(1);
 	titleBarSuffix:setColor(colors.title);
 	titleBarSuffix:setTopPadding(1.5); -- TODO let image widget handle pixel snapping?
 
 	self._content = topLevelList:addChild(Switcher:new());
-	self._content:setHorizontalAlignment(HorizontalAlignment.STRETCH);
+	self._content:setHorizontalAlignment("stretch");
 	self._helpText = self._content:addChild(Text:new());
-	self._helpText:setHorizontalAlignment(HorizontalAlignment.STRETCH);
+	self._helpText:setHorizontalAlignment("stretch");
 	self._helpText:setColor(colors.help);
 	self._knobInfos = self._content:addChild(HorizontalBox:new());
 end

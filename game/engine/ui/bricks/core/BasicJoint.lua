@@ -1,8 +1,7 @@
 require("engine/utils/OOP");
-local HorizontalAlignment = require("engine/ui/bricks/core/HorizontalAlignment");
 local Joint = require("engine/ui/bricks/core/Joint");
 local Padding = require("engine/ui/bricks/core/Padding");
-local VerticalAlignment = require("engine/ui/bricks/core/VerticalAlignment");
+local BricksUtils = require("engine/ui/bricks/core/BricksUtils");
 local Alias = require("engine/utils/Alias");
 
 local BasicJoint = Class("BasicJoint", Joint);
@@ -10,8 +9,8 @@ local BasicJoint = Class("BasicJoint", Joint);
 BasicJoint.init = function(self, parent, child)
 	BasicJoint.super.init(self, parent, child);
 	self._padding = Padding:new();
-	self._horizontalAlignment = HorizontalAlignment.STRETCH;
-	self._verticalAlignment = VerticalAlignment.STRETCH;
+	self._horizontalAlignment = "stretch";
+	self._verticalAlignment = "stretch";
 	Alias:add(self, self._padding);
 end
 
@@ -33,16 +32,12 @@ BasicJoint.setAlignment = function(self, horizontal, vertical)
 end
 
 BasicJoint.setHorizontalAlignment = function(self, alignment)
-	assert(alignment);
-	assert(alignment >= HorizontalAlignment.LEFT);
-	assert(alignment <= HorizontalAlignment.STRETCH);
+	assert(BricksUtils.isHorizontalAlignment(alignment));
 	self._horizontalAlignment = alignment;
 end
 
 BasicJoint.setVerticalAlignment = function(self, alignment)
-	assert(alignment);
-	assert(alignment >= VerticalAlignment.TOP);
-	assert(alignment <= VerticalAlignment.STRETCH);
+	assert(BricksUtils.isVerticalAlignment(alignment));
 	self._verticalAlignment = alignment;
 end
 
@@ -53,36 +48,36 @@ BasicJoint.computeLocalPosition = function(self, desiredWidth, desiredHeight, pa
 	local verticalAlignment = self:getVerticalAlignment();
 
 	local childWidth = desiredWidth;
-	if horizontalAlignment == HorizontalAlignment.STRETCH then
+	if horizontalAlignment == "stretch" then
 		childWidth = parentWidth - paddingLeft - paddingRight;
 	end
 	childWidth = math.max(0, childWidth);
 
 	local childHeight = desiredHeight;
-	if verticalAlignment == VerticalAlignment.STRETCH then
+	if verticalAlignment == "stretch" then
 		childHeight = parentHeight - paddingTop - paddingBottom;
 	end
 	childHeight = math.max(0, childHeight);
 
 	local x;
-	if horizontalAlignment == HorizontalAlignment.LEFT then
+	if horizontalAlignment == "left" then
 		x = paddingLeft;
-	elseif horizontalAlignment == HorizontalAlignment.CENTER then
+	elseif horizontalAlignment == "center" then
 		x = (parentWidth - childWidth) / 2 + paddingLeft - paddingRight;
-	elseif horizontalAlignment == HorizontalAlignment.RIGHT then
+	elseif horizontalAlignment == "right" then
 		x = parentWidth - childWidth - paddingRight;
-	elseif horizontalAlignment == HorizontalAlignment.STRETCH then
+	elseif horizontalAlignment == "stretch" then
 		x = paddingLeft;
 	end
 
 	local y;
-	if verticalAlignment == VerticalAlignment.TOP then
+	if verticalAlignment == "top" then
 		y = paddingTop;
-	elseif verticalAlignment == VerticalAlignment.CENTER then
+	elseif verticalAlignment == "center" then
 		y = (parentHeight - childHeight) / 2 + paddingTop - paddingBottom;
-	elseif verticalAlignment == VerticalAlignment.BOTTOM then
+	elseif verticalAlignment == "bottom" then
 		y = parentHeight - childHeight - paddingBottom;
-	elseif verticalAlignment == VerticalAlignment.STRETCH then
+	elseif verticalAlignment == "stretch" then
 		y = paddingTop;
 	end
 

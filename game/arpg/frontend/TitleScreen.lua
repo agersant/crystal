@@ -1,7 +1,5 @@
 require("engine/utils/OOP");
 local Fonts = require("engine/resources/Fonts");
-local HorizontalAlignment = require("engine/ui/bricks/core/HorizontalAlignment");
-local VerticalAlignment = require("engine/ui/bricks/core/VerticalAlignment");
 local Overlay = require("engine/ui/bricks/elements/Overlay");
 local Widget = require("engine/ui/bricks/elements/Widget");
 local Text = require("engine/ui/bricks/elements/Text");
@@ -18,8 +16,7 @@ TitleScreenWidget.init = function(self)
 	local text = overlay:addChild(Text:new());
 	text:setFont(Fonts:get("fat", 16));
 	text:setContent("Project Crystal");
-	text:setHorizontalAlignment(HorizontalAlignment.CENTER);
-	text:setVerticalAlignment(VerticalAlignment.CENTER);
+	text:setAlignment("center", "center");
 end
 
 TitleScreen.init = function(self)

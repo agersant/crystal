@@ -1,9 +1,7 @@
 require("engine/utils/OOP");
 local Script = require("engine/script/Script");
-local HorizontalAlignment = require("engine/ui/bricks/core/HorizontalAlignment");
 local Joint = require("engine/ui/bricks/core/Joint");
 local Padding = require("engine/ui/bricks/core/Padding");
-local VerticalAlignment = require("engine/ui/bricks/core/VerticalAlignment");
 local Wrapper = require("engine/ui/bricks/core/Wrapper");
 local BasicJoint = require("engine/ui/bricks/core/BasicJoint");
 local Alias = require("engine/utils/Alias");
@@ -14,8 +12,8 @@ local Widget = Class("Widget", Wrapper);
 
 WidgetJoint.init = function(self, parent, child)
 	WidgetJoint.super.init(self, parent, child);
-	self._horizontalAlignment = HorizontalAlignment.STRETCH;
-	self._verticalAlignment = VerticalAlignment.STRETCH;
+	self._horizontalAlignment = "stretch";
+	self._verticalAlignment = "stretch";
 end
 
 Widget.init = function(self)

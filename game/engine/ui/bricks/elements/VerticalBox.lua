@@ -1,8 +1,8 @@
 require("engine/utils/OOP");
+local BricksUtils = require("engine/ui/bricks/core/BricksUtils");
 local Container = require("engine/ui/bricks/core/Container");
 local Joint = require("engine/ui/bricks/core/Joint");
 local Padding = require("engine/ui/bricks/core/Padding");
-local HorizontalAlignment = require("engine/ui/bricks/core/HorizontalAlignment");
 local Alias = require("engine/utils/Alias");
 
 local VerticalBoxJoint = Class("VerticalBoxJoint", Joint);
@@ -11,7 +11,7 @@ local VerticalBox = Class("VerticalBox", Container);
 VerticalBoxJoint.init = function(self, parent, child)
 	VerticalBoxJoint.super.init(self, parent, child);
 	self._padding = Padding:new();
-	self._horizontalAlignment = HorizontalAlignment.LEFT;
+	self._horizontalAlignment = "left";
 	self._grow = 0;
 	self._shrink = 0;
 	Alias:add(self, self._padding);
@@ -30,9 +30,7 @@ VerticalBoxJoint.getShrink = function(self)
 end
 
 VerticalBoxJoint.setHorizontalAlignment = function(self, alignment)
-	assert(alignment);
-	assert(alignment >= HorizontalAlignment.LEFT);
-	assert(alignment <= HorizontalAlignment.STRETCH);
+	assert(BricksUtils.isHorizontalAlignment(alignment));
 	self._horizontalAlignment = alignment;
 end
 
@@ -91,16 +89,16 @@ VerticalBox.arrangeChildren = function(self)
 		end
 
 		local childWidth, x;
-		if horizontalAlignment == HorizontalAlignment.STRETCH then
+		if horizontalAlignment == "stretch" then
 			childWidth = width - paddingLeft - paddingRight;
 			x = paddingLeft;
-		elseif horizontalAlignment == HorizontalAlignment.LEFT then
+		elseif horizontalAlignment == "left" then
 			childWidth = childDesiredWidth;
 			x = paddingLeft;
-		elseif horizontalAlignment == HorizontalAlignment.CENTER then
+		elseif horizontalAlignment == "center" then
 			childWidth = childDesiredWidth;
 			x = (width - childWidth) / 2 + paddingLeft - paddingRight;
-		elseif horizontalAlignment == HorizontalAlignment.RIGHT then
+		elseif horizontalAlignment == "right" then
 			childWidth = childDesiredWidth;
 			x = width - childWidth - paddingRight;
 		end

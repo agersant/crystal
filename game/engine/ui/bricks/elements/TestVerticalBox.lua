@@ -1,5 +1,4 @@
 local Element = require("engine/ui/bricks/core/Element");
-local HorizontalAlignment = require("engine/ui/bricks/core/HorizontalAlignment");
 local VerticalBox = require("engine/ui/bricks/elements/VerticalBox");
 local TableUtils = require("engine/utils/TableUtils");
 
@@ -29,16 +28,16 @@ tests[#tests].body = function()
 	local box = VerticalBox:new();
 
 	local a = box:addChild(Element:new());
-	a:setHorizontalAlignment(HorizontalAlignment.LEFT);
+	a:setHorizontalAlignment("left");
 
 	local b = box:addChild(Element:new());
-	b:setHorizontalAlignment(HorizontalAlignment.CENTER);
+	b:setHorizontalAlignment("center");
 
 	local c = box:addChild(Element:new());
-	c:setHorizontalAlignment(HorizontalAlignment.RIGHT);
+	c:setHorizontalAlignment("right");
 
 	local d = box:addChild(Element:new());
-	d:setHorizontalAlignment(HorizontalAlignment.STRETCH);
+	d:setHorizontalAlignment("stretch");
 
 	a.computeDesiredSize = function()
 		return 10, 25;
@@ -65,20 +64,20 @@ tests[#tests].body = function()
 	local box = VerticalBox:new();
 
 	local a = box:addChild(Element:new());
-	a:setHorizontalAlignment(HorizontalAlignment.LEFT);
+	a:setHorizontalAlignment("left");
 	a:setTopPadding(5);
 
 	local b = box:addChild(Element:new());
-	b:setHorizontalAlignment(HorizontalAlignment.CENTER);
+	b:setHorizontalAlignment("center");
 	b:setLeftPadding(5);
 	b:setRightPadding(4);
 
 	local c = box:addChild(Element:new());
-	c:setHorizontalAlignment(HorizontalAlignment.RIGHT);
+	c:setHorizontalAlignment("right");
 	c:setBottomPadding(10);
 
 	local d = box:addChild(Element:new());
-	d:setHorizontalAlignment(HorizontalAlignment.STRETCH);
+	d:setHorizontalAlignment("stretch");
 	d:setAllPadding(10);
 
 	a.computeDesiredSize = function()

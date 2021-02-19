@@ -1,6 +1,4 @@
 local Element = require("engine/ui/bricks/core/Element");
-local HorizontalAlignment = require("engine/ui/bricks/core/HorizontalAlignment");
-local VerticalAlignment = require("engine/ui/bricks/core/VerticalAlignment");
 local Overlay = require("engine/ui/bricks/elements/Overlay");
 local TableUtils = require("engine/utils/TableUtils");
 
@@ -10,22 +8,22 @@ tests[#tests + 1] = {name = "Respects alignment"};
 tests[#tests].body = function()
 
 	local testCases = {
-		{HorizontalAlignment.LEFT, VerticalAlignment.TOP, {0, 60, 0, 40}},
-		{HorizontalAlignment.LEFT, VerticalAlignment.CENTER, {0, 60, 30, 70}},
-		{HorizontalAlignment.LEFT, VerticalAlignment.BOTTOM, {0, 60, 60, 100}},
-		{HorizontalAlignment.LEFT, VerticalAlignment.STRETCH, {0, 60, 0, 100}},
-		{HorizontalAlignment.CENTER, VerticalAlignment.TOP, {20, 80, 0, 40}},
-		{HorizontalAlignment.CENTER, VerticalAlignment.CENTER, {20, 80, 30, 70}},
-		{HorizontalAlignment.CENTER, VerticalAlignment.BOTTOM, {20, 80, 60, 100}},
-		{HorizontalAlignment.CENTER, VerticalAlignment.STRETCH, {20, 80, 0, 100}},
-		{HorizontalAlignment.RIGHT, VerticalAlignment.TOP, {40, 100, 0, 40}},
-		{HorizontalAlignment.RIGHT, VerticalAlignment.CENTER, {40, 100, 30, 70}},
-		{HorizontalAlignment.RIGHT, VerticalAlignment.BOTTOM, {40, 100, 60, 100}},
-		{HorizontalAlignment.RIGHT, VerticalAlignment.STRETCH, {40, 100, 0, 100}},
-		{HorizontalAlignment.STRETCH, VerticalAlignment.TOP, {0, 100, 0, 40}},
-		{HorizontalAlignment.STRETCH, VerticalAlignment.CENTER, {0, 100, 30, 70}},
-		{HorizontalAlignment.STRETCH, VerticalAlignment.BOTTOM, {0, 100, 60, 100}},
-		{HorizontalAlignment.STRETCH, VerticalAlignment.STRETCH, {0, 100, 0, 100}},
+		{"left", "top", {0, 60, 0, 40}},
+		{"left", "center", {0, 60, 30, 70}},
+		{"left", "bottom", {0, 60, 60, 100}},
+		{"left", "stretch", {0, 60, 0, 100}},
+		{"center", "top", {20, 80, 0, 40}},
+		{"center", "center", {20, 80, 30, 70}},
+		{"center", "bottom", {20, 80, 60, 100}},
+		{"center", "stretch", {20, 80, 0, 100}},
+		{"right", "top", {40, 100, 0, 40}},
+		{"right", "center", {40, 100, 30, 70}},
+		{"right", "bottom", {40, 100, 60, 100}},
+		{"right", "stretch", {40, 100, 0, 100}},
+		{"stretch", "top", {0, 100, 0, 40}},
+		{"stretch", "center", {0, 100, 30, 70}},
+		{"stretch", "bottom", {0, 100, 60, 100}},
+		{"stretch", "stretch", {0, 100, 0, 100}},
 	};
 
 	for _, testCase in ipairs(testCases) do
@@ -49,22 +47,22 @@ tests[#tests + 1] = {name = "Respects padding"};
 tests[#tests].body = function()
 
 	local testCases = {
-		{HorizontalAlignment.LEFT, VerticalAlignment.TOP, {2, 62, 6, 46}},
-		{HorizontalAlignment.LEFT, VerticalAlignment.CENTER, {2, 62, 28, 68}},
-		{HorizontalAlignment.LEFT, VerticalAlignment.BOTTOM, {2, 62, 52, 92}},
-		{HorizontalAlignment.LEFT, VerticalAlignment.STRETCH, {2, 62, 6, 92}},
-		{HorizontalAlignment.CENTER, VerticalAlignment.TOP, {18, 78, 6, 46}},
-		{HorizontalAlignment.CENTER, VerticalAlignment.CENTER, {18, 78, 28, 68}},
-		{HorizontalAlignment.CENTER, VerticalAlignment.BOTTOM, {18, 78, 52, 92}},
-		{HorizontalAlignment.CENTER, VerticalAlignment.STRETCH, {18, 78, 6, 92}},
-		{HorizontalAlignment.RIGHT, VerticalAlignment.TOP, {36, 96, 6, 46}},
-		{HorizontalAlignment.RIGHT, VerticalAlignment.CENTER, {36, 96, 28, 68}},
-		{HorizontalAlignment.RIGHT, VerticalAlignment.BOTTOM, {36, 96, 52, 92}},
-		{HorizontalAlignment.RIGHT, VerticalAlignment.STRETCH, {36, 96, 6, 92}},
-		{HorizontalAlignment.STRETCH, VerticalAlignment.TOP, {2, 96, 6, 46}},
-		{HorizontalAlignment.STRETCH, VerticalAlignment.CENTER, {2, 96, 28, 68}},
-		{HorizontalAlignment.STRETCH, VerticalAlignment.BOTTOM, {2, 96, 52, 92}},
-		{HorizontalAlignment.STRETCH, VerticalAlignment.STRETCH, {2, 96, 6, 92}},
+		{"left", "top", {2, 62, 6, 46}},
+		{"left", "center", {2, 62, 28, 68}},
+		{"left", "bottom", {2, 62, 52, 92}},
+		{"left", "stretch", {2, 62, 6, 92}},
+		{"center", "top", {18, 78, 6, 46}},
+		{"center", "center", {18, 78, 28, 68}},
+		{"center", "bottom", {18, 78, 52, 92}},
+		{"center", "stretch", {18, 78, 6, 92}},
+		{"right", "top", {36, 96, 6, 46}},
+		{"right", "center", {36, 96, 28, 68}},
+		{"right", "bottom", {36, 96, 52, 92}},
+		{"right", "stretch", {36, 96, 6, 92}},
+		{"stretch", "top", {2, 96, 6, 46}},
+		{"stretch", "center", {2, 96, 28, 68}},
+		{"stretch", "bottom", {2, 96, 52, 92}},
+		{"stretch", "stretch", {2, 96, 6, 92}},
 	};
 
 	for _, testCase in ipairs(testCases) do

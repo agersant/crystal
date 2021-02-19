@@ -1,8 +1,6 @@
 require("engine/utils/OOP");
 local Container = require("engine/ui/bricks/core/Container");
 local Padding = require("engine/ui/bricks/core/Padding");
-local HorizontalAlignment = require("engine/ui/bricks/core/HorizontalAlignment");
-local VerticalAlignment = require("engine/ui/bricks/core/VerticalAlignment");
 local BasicJoint = require("engine/ui/bricks/core/BasicJoint");
 
 local OverlayJoint = Class("OverlayJoint", BasicJoint);
@@ -10,8 +8,8 @@ local Overlay = Class("Overlay", Container);
 
 OverlayJoint.init = function(self, parent, child)
 	OverlayJoint.super.init(self, parent, child);
-	self._horizontalAlignment = HorizontalAlignment.LEFT;
-	self._verticalAlignment = VerticalAlignment.TOP;
+	self._horizontalAlignment = "left";
+	self._verticalAlignment = "top";
 end
 
 Overlay.init = function(self)
@@ -24,10 +22,10 @@ Overlay.computeDesiredSize = function(self)
 		local childWidth, childHeight = child:getDesiredSize();
 		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:getEachPadding();
 		local horizontalAlignment, verticalAlignment = joint:getAlignment();
-		if horizontalAlignment ~= HorizontalAlignment.STRETCH then
+		if horizontalAlignment ~= "stretch" then
 			width = math.max(width, childWidth + paddingLeft + paddingRight);
 		end
-		if verticalAlignment ~= VerticalAlignment.STRETCH then
+		if verticalAlignment ~= "stretch" then
 			height = math.max(height, childHeight + paddingTop + paddingBottom);
 		end
 	end
