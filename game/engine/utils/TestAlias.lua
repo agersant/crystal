@@ -47,6 +47,7 @@ tests[#tests].body = function()
 	assert(from.method());
 end
 
+-- TODO consider supporting this (no tests break) and supporting writing to existing aliased variables
 tests[#tests + 1] = {name = "Does not alias variables"};
 tests[#tests].body = function()
 	local From = Class:test("From");
