@@ -40,14 +40,11 @@ Painter.configureShader = function(self)
 end
 
 Painter.computeDesiredSize = function(self)
-	local width, height = 0, 0;
 	if self._child then
 		local childWidth, childHeight = self._child:getDesiredSize();
-		local paddingLeft, paddingRight, paddingTop, paddingBottom = self._childJoint:getEachPadding();
-		width = childWidth + paddingLeft + paddingRight;
-		height = childHeight + paddingTop + paddingBottom;
+		return self._childJoint:computeDesiredSize(childWidth, childHeight);
 	end
-	return math.max(width, 0), math.max(height, 0);
+	return 0, 0;
 end
 
 Painter.arrangeChild = function(self)

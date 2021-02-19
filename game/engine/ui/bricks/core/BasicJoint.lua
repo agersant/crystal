@@ -41,6 +41,13 @@ BasicJoint.setVerticalAlignment = function(self, alignment)
 	self._verticalAlignment = alignment;
 end
 
+BasicJoint.computeDesiredSize = function(self, desiredWidth, desiredHeight)
+	local paddingLeft, paddingRight, paddingTop, paddingBottom = self:getEachPadding();
+	local width = desiredWidth + paddingLeft + paddingRight;
+	local height = desiredHeight + paddingTop + paddingBottom;
+	return math.max(0, width), math.max(0, height);
+end
+
 BasicJoint.computeLocalPosition = function(self, desiredWidth, desiredHeight, parentWidth, parentHeight)
 
 	local paddingLeft, paddingRight, paddingTop, paddingBottom = self:getEachPadding();
