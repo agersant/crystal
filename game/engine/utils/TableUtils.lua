@@ -79,6 +79,8 @@ TableUtils.contains = function(t, value)
 end
 
 TableUtils.equals = function(t, u)
+	assert(type(t) == "table");
+	assert(type(u) == "table");
 	for k, v in pairs(t) do
 		if t[k] ~= u[k] then
 			return false;
