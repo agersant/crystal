@@ -41,6 +41,10 @@ mockAPI.arc = noop;
 
 mockAPI.draw = noop;
 
+mockAPI.getColor = function()
+	return 1, 1, 1, 1;
+end
+
 mockAPI.getDimensions = function()
 	return 1, 1;
 end
