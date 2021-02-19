@@ -7,13 +7,12 @@ local Colors = require("engine/resources/Colors");
 local Fonts = require("engine/resources/Fonts");
 local Element = require("engine/ui/bricks/core/Element");
 local Border = require("engine/ui/bricks/elements/Border");
-local HorizontalBox = require("engine/ui/bricks/elements/HorizontalBox");
 local Image = require("engine/ui/bricks/elements/Image");
+local List = require("engine/ui/bricks/elements/List");
 local Overlay = require("engine/ui/bricks/elements/Overlay");
 local RoundedCorners = require("engine/ui/bricks/elements/RoundedCorners");
 local Switcher = require("engine/ui/bricks/elements/Switcher");
 local Text = require("engine/ui/bricks/elements/Text");
-local VerticalBox = require("engine/ui/bricks/elements/VerticalBox");
 local Widget = require("engine/ui/bricks/elements/Widget");
 
 local LiveTuneOverlay = Class("LiveTuneOverlay");
@@ -70,7 +69,7 @@ KnobInfo.init = function(self)
 	KnobInfo.super.init(self);
 
 	local roundedCorners = self:setRoot(RoundedCorners:new());
-	local topLevelList = roundedCorners:setChild(VerticalBox:new());
+	local topLevelList = roundedCorners:setChild(List.Vertical:new());
 
 	local header = topLevelList:addChild(Overlay:new());
 	header:setHorizontalAlignment("stretch");
@@ -89,7 +88,7 @@ KnobInfo.init = function(self)
 	local contentBackground = content:addChild(Image:new());
 	contentBackground:setColor(colors.background);
 	contentBackground:setAlignment("stretch", "stretch");
-	local data = content:addChild(HorizontalBox:new());
+	local data = content:addChild(List.Horizontal:new());
 	data:setAllPadding(10);
 
 	local donutContainer = data:addChild(Overlay:new());
@@ -134,10 +133,10 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 	self._liveTune = liveTune;
 	self._widget = Widget:new();
 
-	local topLevelList = self._widget:setRoot(VerticalBox:new());
+	local topLevelList = self._widget:setRoot(List.Vertical:new());
 	topLevelList:setAllPadding(20);
 
-	local titleBar = topLevelList:addChild(HorizontalBox:new());
+	local titleBar = topLevelList:addChild(List.Horizontal:new());
 	titleBar:setHorizontalAlignment("stretch");
 	titleBar:setBottomPadding(12);
 
@@ -166,7 +165,7 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 	self._helpText = self._content:addChild(Text:new());
 	self._helpText:setHorizontalAlignment("stretch");
 	self._helpText:setColor(colors.help);
-	self._knobInfos = self._content:addChild(HorizontalBox:new());
+	self._knobInfos = self._content:addChild(List.Horizontal:new());
 end
 
 LiveTuneOverlay.update = function(self, dt)
