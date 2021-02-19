@@ -12,7 +12,7 @@ if not Features.cli then
 	Features.stub(Terminal);
 end
 
-local maxHistory = 20;
+local maxHistory = 100;
 local maxUndo = 20;
 
 local parseInput = function(input)
