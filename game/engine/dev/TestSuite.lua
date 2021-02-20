@@ -39,6 +39,7 @@ local engineTestFiles = {
 	"engine/ui/bricks/elements/TestList",
 	"engine/ui/bricks/elements/TestOverlay",
 	"engine/ui/bricks/elements/TestWidget",
+	"engine/ui/bricks/elements/switcher/TestSwitcher",
 	"engine/ui/TestTextInput",
 	"engine/utils/TestAlias",
 	"engine/utils/TestMathUtils",

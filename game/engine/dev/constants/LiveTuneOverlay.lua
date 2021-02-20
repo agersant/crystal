@@ -11,7 +11,7 @@ local Image = require("engine/ui/bricks/elements/Image");
 local List = require("engine/ui/bricks/elements/List");
 local Overlay = require("engine/ui/bricks/elements/Overlay");
 local RoundedCorners = require("engine/ui/bricks/elements/RoundedCorners");
-local Switcher = require("engine/ui/bricks/elements/Switcher");
+local Switcher = require("engine/ui/bricks/elements/switcher/Switcher");
 local Text = require("engine/ui/bricks/elements/Text");
 local Widget = require("engine/ui/bricks/elements/Widget");
 
@@ -169,19 +169,23 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 end
 
 LiveTuneOverlay.update = function(self, dt)
+
+	local mappedKnobs = self._constants:getMappedKnobs();
+	if #mappedKnobs > 0 and self._previousNumMappedKnobs == 0 then
+		drawOverlay = true;
+	end
+	self._previousNumMappedKnobs = #mappedKnobs;
+
+	if not drawOverlay then
+		return;
+	end
+
 	local title = "LIVETUNE";
 	local deviceName = self._liveTune:getCurrentDevice();
 	if deviceName then
 		title = title .. " / " .. deviceName;
 	end
 	self._titleText:setContent(title);
-
-	local mappedKnobs = self._constants:getMappedKnobs();
-
-	if #mappedKnobs > 0 and self._previousNumMappedKnobs == 0 then
-		drawOverlay = true;
-	end
-	self._previousNumMappedKnobs = #mappedKnobs;
 
 	if not deviceName then
 		self._content:setActiveChild(self._helpText);
