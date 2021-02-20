@@ -3,6 +3,7 @@ local Element = require("engine/ui/bricks/core/Element");
 
 local Image = Class("Image", Element);
 
+-- TODO add texture argument
 Image.init = function(self)
 	Image.super.init(self);
 	self._texture = nil;
