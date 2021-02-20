@@ -59,6 +59,23 @@ tests[#tests].body = function()
 	assert(not drawnElements[c]);
 end
 
+tests[#tests + 1] = {name = "Supports dynamic or bounding box sizing"};
+tests[#tests].body = function()
+	for _, test in pairs({
+		{method = "sizeToActiveChild", expectedSize = {0, 50, 0, 100}},
+		{method = "sizeToFitAnyChild", expectedSize = {0, 100, 0, 100}},
+	}) do
+		local switcher = Switcher:new();
+		local a = switcher:addChild(Image:new());
+		a:setSize(50, 100);
+		local b = switcher:addChild(Image:new());
+		b:setSize(100, 50);
+		switcher[test.method](switcher);
+		switcher:updateTree(0);
+		assert(TableUtils.equals(test.expectedSize, {switcher:getLocalPosition()}));
+	end
+end
+
 tests[#tests + 1] = {name = "Can transition to a different child", gfx = "mock"};
 tests[#tests].body = function()
 	local drawnElements = {};

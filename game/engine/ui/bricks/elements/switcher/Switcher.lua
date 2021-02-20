@@ -18,6 +18,15 @@ Switcher.init = function(self, transition)
 	Switcher.super.init(self, SwitcherJoint);
 	self._activeChild = nil;
 	self._transition = transition or SwitcherTransition:new();
+	self._useDynamicSize = true;
+end
+
+Switcher.sizeToActiveChild = function(self)
+	self._useDynamicSize = true;
+end
+
+Switcher.sizeToFitAnyChild = function(self)
+	self._useDynamicSize = false;
 end
 
 Switcher.update = function(self, dt)
@@ -60,14 +69,26 @@ Switcher.removeChild = function(self, child)
 end
 
 Switcher.computeDesiredSize = function(self)
-	-- TODO support size policy "dynamic" vs "biggestChild"
-	local width, height
-	if self._transition:isOver() then
-		local joint = self._childJoints[self._activeChild];
-		local childWidth, childHeight = self._activeChild:getDesiredSize();
-		width, height = joint:computeDesiredSize(childWidth, childHeight);
+	local width, height;
+	if self._useDynamicSize then
+		if self._transition:isOver() then
+			-- Size to active child
+			local joint = self._childJoints[self._activeChild];
+			local childWidth, childHeight = self._activeChild:getDesiredSize();
+			width, height = joint:computeDesiredSize(childWidth, childHeight);
+		else
+			-- Active transition decides size
+			width, height = self._transition:computeDesiredSize();
+		end
 	else
-		width, height = self._transition:computeDesiredSize();
+		-- Size to bounding box of all children
+		width, height = 0, 0;
+		for child, joint in pairs(self._childJoints) do
+			local childWidth, childHeight = child:getDesiredSize();
+			childWidth, childHeight = joint:computeDesiredSize(childWidth, childHeight);
+			width = math.max(width, childWidth);
+			height = math.max(height, childHeight);
+		end
 	end
 	return math.max(width, 0), math.max(height, 0);
 end

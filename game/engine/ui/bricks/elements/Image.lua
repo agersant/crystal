@@ -19,6 +19,7 @@ Image.setHeight = function(self, height)
 	self._imageHeight = height;
 end
 
+-- TODO rename to avoid potential conflits with joints that have setSize()
 Image.setSize = function(self, width, height)
 	self._imageWidth = width;
 	self._imageHeight = height;
