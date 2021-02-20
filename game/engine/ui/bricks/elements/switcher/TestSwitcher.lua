@@ -51,7 +51,7 @@ tests[#tests].body = function()
 	a.drawSelf = draw;
 	local b = switcher:addChild(Element:new());
 	b.drawSelf = draw;
-	switcher:setActiveChild(b);
+	switcher:jumpToChild(b);
 	switcher:updateTree(0);
 	switcher:draw();
 	assert(not drawnElements[a]);
@@ -72,7 +72,7 @@ tests[#tests].body = function()
 	local b = switcher:addChild(Element:new());
 	b.drawSelf = draw;
 
-	switcher:transitionActiveChild(b);
+	switcher:transitionToChild(b);
 	switcher:updateTree(0);
 	switcher:draw();
 	assert(not drawnElements[a]);
@@ -86,7 +86,7 @@ tests[#tests].body = function()
 	local switcher = Switcher:new(transition);
 	local a = switcher:addChild(Image:new());
 	local b = switcher:addChild(Image:new());
-	switcher:transitionActiveChild(b);
+	switcher:transitionToChild(b);
 
 	switcher:updateTree(5);
 	assert(TableUtils.equals({0, 50, 0, 100}, {a:getLocalPosition()}));
@@ -102,13 +102,13 @@ tests[#tests].body = function()
 	local switcher = Switcher:new(transition);
 	local a = switcher:addChild(Image:new());
 	local b = switcher:addChild(Image:new());
-	switcher:transitionActiveChild(b);
+	switcher:transitionToChild(b);
 
 	switcher:updateTree(5);
 	assert(TableUtils.equals({0, 50, 0, 100}, {a:getLocalPosition()}));
 	assert(TableUtils.equals({0, 50, 0, 100}, {b:getLocalPosition()}));
 
-	switcher:setActiveChild(b);
+	switcher:jumpToChild(b);
 	assert(transition.drawnAtProgress == nil);
 end
 
@@ -118,13 +118,13 @@ tests[#tests].body = function()
 	local switcher = Switcher:new(transition);
 	local a = switcher:addChild(Image:new());
 	local b = switcher:addChild(Image:new());
-	switcher:transitionActiveChild(b);
+	switcher:transitionToChild(b);
 
 	switcher:updateTree(5);
 	assert(TableUtils.equals({0, 50, 0, 100}, {a:getLocalPosition()}));
 	assert(TableUtils.equals({0, 50, 0, 100}, {b:getLocalPosition()}));
 
-	switcher:transitionActiveChild(a);
+	switcher:transitionToChild(a);
 	switcher:updateTree(2);
 	switcher:draw();
 
@@ -137,13 +137,13 @@ tests[#tests].body = function()
 	local switcher = Switcher:new(transition);
 	local a = switcher:addChild(Image:new());
 	local b = switcher:addChild(Image:new());
-	switcher:transitionActiveChild(b);
+	switcher:transitionToChild(b);
 
 	switcher:updateTree(5);
 	assert(TableUtils.equals({0, 50, 0, 100}, {a:getLocalPosition()}));
 	assert(TableUtils.equals({0, 50, 0, 100}, {b:getLocalPosition()}));
 
-	switcher:transitionActiveChild(b);
+	switcher:transitionToChild(b);
 	switcher:updateTree(2);
 	switcher:draw();
 

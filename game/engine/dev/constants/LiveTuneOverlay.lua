@@ -188,7 +188,7 @@ LiveTuneOverlay.update = function(self, dt)
 	self._titleText:setContent(title);
 
 	if not deviceName then
-		self._content:setActiveChild(self._helpText);
+		self._content:jumpToChild(self._helpText);
 		local deviceList = self._liveTune:listDevices();
 		if #deviceList == 0 then
 			self._helpText:setContent("No MIDI devices were detected, please plug in a MIDI device.");
@@ -202,11 +202,11 @@ LiveTuneOverlay.update = function(self, dt)
 		end
 
 	elseif #mappedKnobs == 0 then
-		self._content:setActiveChild(self._helpText);
+		self._content:jumpToChild(self._helpText);
 		self._helpText:setContent(
 						"Connected. Use the `liveTune` command to map a Constant to a knob on your " .. deviceName .. " device.");
 	else
-		self._content:setActiveChild(self._knobInfos);
+		self._content:jumpToChild(self._knobInfos);
 	end
 
 	local children = self._knobInfos:getChildren();

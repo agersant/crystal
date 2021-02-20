@@ -28,7 +28,7 @@ Switcher.update = function(self, dt)
 end
 
 -- TODO name?
-Switcher.setActiveChild = function(self, child)
+Switcher.jumpToChild = function(self, child)
 	assert(not child or child:getParent() == self);
 	self._activeChild = child;
 	self._transition:play(nil, child);
@@ -36,7 +36,7 @@ Switcher.setActiveChild = function(self, child)
 end
 
 -- TODO name?
-Switcher.transitionActiveChild = function(self, child)
+Switcher.transitionToChild = function(self, child)
 	assert(not child or child:getParent() == self);
 	if self._activeChild == child then
 		return;
@@ -51,7 +51,7 @@ Switcher.addChild = function(self, child)
 	local child = Switcher.super.addChild(self, child);
 	assert(child:getParent() == self);
 	if wasEmpty then
-		self:setActiveChild(child);
+		self:jumpToChild(child);
 	end
 	return child;
 end
