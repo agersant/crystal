@@ -1,5 +1,6 @@
 require("engine/utils/OOP");
 local Script = require("engine/script/Script");
+local MathUtils = require("engine/utils/MathUtils");
 
 local SwitcherTransition = Class("SwitcherTransition");
 
@@ -67,12 +68,24 @@ SwitcherTransition.handleChildRemoved = function(self, child)
 end
 
 SwitcherTransition.computeDesiredSize = function(self)
+	local fromWidth = 0;
+	local fromHeight = 0;
+	if self._from then
+		local joint = self._from:getJoint();
+		local childWidth, childHeight = self._from:getDesiredSize();
+		fromWidth, fromHeight = joint:computeDesiredSize(childWidth, childHeight);
+	end
+
+	local toWidth = 0;
+	local toHeight = 0;
 	if self._to then
 		local joint = self._to:getJoint();
 		local childWidth, childHeight = self._to:getDesiredSize();
-		return joint:computeDesiredSize(childWidth, childHeight);
+		toWidth, toHeight = joint:computeDesiredSize(childWidth, childHeight);
 	end
-	return 0, 0;
+
+	local t = self:getProgress();
+	return MathUtils.lerp(t, fromWidth, toWidth), MathUtils.lerp(t, fromHeight, toHeight);
 end
 
 SwitcherTransition.draw = function(self, width, height)
