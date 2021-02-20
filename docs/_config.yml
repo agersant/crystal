@@ -1,0 +1,8 @@
+title: Project Crystal
+lang: en
+description: Lua+Rust game framework based on Love2D
+
+remote_theme: rundocs/jekyll-rtd-theme
+
+plugins:
+  - jemoji
