@@ -3,12 +3,13 @@ local Element = require("engine/ui/bricks/core/Element");
 
 local Image = Class("Image", Element);
 
--- TODO add texture argument
-Image.init = function(self)
+Image.init = function(self, texture)
 	Image.super.init(self);
-	self._texture = nil;
 	self._imageWidth = 1;
 	self._imageHeight = 1;
+	if texture then
+		self:setTexture(texture, true);
+	end
 end
 
 Image.setWidth = function(self, width)
@@ -19,8 +20,7 @@ Image.setHeight = function(self, height)
 	self._imageHeight = height;
 end
 
--- TODO rename to avoid potential conflits with joints that have setSize()
-Image.setSize = function(self, width, height)
+Image.setImageSize = function(self, width, height)
 	self._imageWidth = width;
 	self._imageHeight = height;
 end
@@ -29,11 +29,9 @@ Image.setTexture = function(self, texture, adoptSize)
 	self._texture = texture;
 	if adoptSize then
 		if self._texture then
-			self._imageWidth = self._texture:getWidth();
-			self._imageHeight = self._texture:getHeight();
+			self:setImageSize(self._texture:getWidth(), self._texture:getHeight());
 		else
-			self._imageWidth = 0;
-			self._imageHeight = 0;
+			self:setImageSize(0, 0);
 		end
 	end
 end

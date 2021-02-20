@@ -11,7 +11,7 @@ tests[#tests].body = function(context)
 	local scene = MapScene:new("engine/test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);
 	local widget = Image:new();
-	widget:setSize(48, 32);
+	widget:setImageSize(48, 32);
 	entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 	entity:addComponent(WorldWidget:new(widget));
 	entity:setPosition(160, 120);
