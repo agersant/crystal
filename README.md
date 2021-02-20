@@ -1,6 +1,5 @@
 [![Actions Status](https://github.com/agersant/crystal/workflows/Build/badge.svg)](https://github.com/agersant/crystal/actions) [![codecov.io](http://codecov.io/github/agersant/crystal/branch/master/graphs/badge.svg)](http://codecov.io/github/agersant/crystal)
 
-
 This project is a playground for me to write Lua and Rust game code, experimenting with ideas (old and new) and focusing on features I want to explore outside of a shipping project.
 
 This project uses Love 2D to access SDL's rendering and input polling capabilities from Lua.
@@ -10,8 +9,6 @@ Some code highlights:
 - Ref-counted [asset loading/unloading system](game/engine/resources/Assets.lua) with support for hot-reload
 - Co-routine based [scripting system](game/engine/script/Script.lua) which makes it easy to write gameplay features synchronously (example: [Basic NPC](game/arpg/content/NPC.lua), [Dash skill](game/arpg/content/job/warrior/Dash.lua))
 - 'Many to Many' [keybinding system](game/engine/input/InputDevice.lua)
-
-[Documentation](https://agersant.github.io/crystal/index.html)
 
 # Feature Screenshots
 
@@ -38,13 +35,15 @@ This screenshot illustrates usage of the dev CLI to spawn entities of various ty
 ## Windows
 
 ### Install dependencies
+
 1. Install the 64-bit version of [Love2D](https://love2d.org/) (11.3 as of this writing)
 2. Install the stable version of the [Rust compiler](https://www.rust-lang.org/learn/get-started)
 3. Add `C:\Program Files\LOVE` to your path
 
 ### Build native modules
+
 1. From the top level of this repository, execute the `build_diamond_windows.ps1` script
 
 ### Run the game
-1. From `crystal\game`, execute `love .`. If you use VSCode, you simply can use the included `Launch Game` task instead.
 
+1. From `crystal\game`, execute `love .`. If you use VSCode, you simply can use the included `Launch Game` task instead.
