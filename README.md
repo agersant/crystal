@@ -11,6 +11,8 @@ Some code highlights:
 - Co-routine based [scripting system](game/engine/script/Script.lua) which makes it easy to write gameplay features synchronously (example: [Basic NPC](game/arpg/content/NPC.lua), [Dash skill](game/arpg/content/job/warrior/Dash.lua))
 - 'Many to Many' [keybinding system](game/engine/input/InputDevice.lua)
 
+[Documentation](docs/index.md)
+
 # Feature Screenshots
 
 ## Collisions
