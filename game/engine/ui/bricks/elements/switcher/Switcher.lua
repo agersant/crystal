@@ -27,7 +27,6 @@ Switcher.update = function(self, dt)
 	end
 end
 
--- TODO name?
 Switcher.jumpToChild = function(self, child)
 	assert(not child or child:getParent() == self);
 	self._activeChild = child;
@@ -35,7 +34,6 @@ Switcher.jumpToChild = function(self, child)
 	self._transition:skipToEnd();
 end
 
--- TODO name?
 Switcher.transitionToChild = function(self, child)
 	assert(not child or child:getParent() == self);
 	if self._activeChild == child then
