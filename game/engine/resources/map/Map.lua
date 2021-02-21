@@ -116,12 +116,12 @@ Map.drawAboveEntities = function(self)
 	end
 end
 
-Map.drawCollisionMesh = function(self)
-	self._collisionMesh:draw();
+Map.drawCollisionMesh = function(self, viewport)
+	self._collisionMesh:draw(viewport);
 end
 
-Map.drawNavigationMesh = function(self)
-	self._navigationMesh:draw();
+Map.drawNavigationMesh = function(self, viewport)
+	self._navigationMesh:draw(viewport);
 end
 
 Map.getTileset = function(self)

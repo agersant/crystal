@@ -58,20 +58,16 @@ Viewport.getWindowSize = function(self)
 	return self._windowWidth, self._windowHeight;
 end
 
-local setZoom = function(zoom)
+TERMINAL:addCommand("setZoom zoom:number", function(zoom)
 	VIEWPORT:setZoom(zoom);
-end
+end);
 
-local enableFullscreen = function()
+TERMINAL:addCommand("enableFullscreen", function()
 	VIEWPORT:setFullscreenEnabled(true);
-end
+end);
 
-local disableFullscreen = function()
+TERMINAL:addCommand("disableFullscreen", function()
 	VIEWPORT:setFullscreenEnabled(false);
-end
-
-TERMINAL:addCommand("setZoom zoom:number", setZoom);
-TERMINAL:addCommand("enableFullscreen", enableFullscreen);
-TERMINAL:addCommand("disableFullscreen", disableFullscreen);
+end);
 
 return Viewport;

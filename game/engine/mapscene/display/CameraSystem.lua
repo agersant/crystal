@@ -1,5 +1,6 @@
 require("engine/utils/OOP");
 local System = require("engine/ecs/System");
+local Viewport = require("engine/graphics/Viewport");
 local InputListener = require("engine/mapscene/behavior/InputListener");
 local Camera = require("engine/mapscene/display/Camera");
 local Map = require("engine/resources/map/Map");
@@ -8,11 +9,13 @@ local CameraSystem = Class("CameraSystem", System);
 
 local drawCameraOverlay = false;
 
-CameraSystem.init = function(self, ecs, map)
+CameraSystem.init = function(self, ecs, map, viewport)
 	assert(map);
 	assert(map:isInstanceOf(Map));
+	assert(viewport);
+	assert(viewport:isInstanceOf(Viewport));
 	CameraSystem.super.init(self, ecs);
-	self._camera = Camera:new(map:getWidthInPixels(), map:getHeightInPixels());
+	self._camera = Camera:new(viewport, map:getWidthInPixels(), map:getHeightInPixels());
 end
 
 CameraSystem.getCamera = function(self)

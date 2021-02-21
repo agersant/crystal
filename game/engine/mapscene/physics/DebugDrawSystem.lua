@@ -61,16 +61,16 @@ local drawShape = function(self, x, y, shape, color)
 	love.graphics.pop();
 end
 
-DebugDrawSystem.duringDebugDraw = function(self)
+DebugDrawSystem.duringDebugDraw = function(self, viewport)
 	local map = self._ecs:getMap();
 	assert(map);
 
 	if drawNavigation then
-		map:drawNavigationMesh();
+		map:drawNavigationMesh(viewport);
 	end
 
 	if drawPhysics then
-		map:drawCollisionMesh();
+		map:drawCollisionMesh(viewport);
 		for entity in pairs(self._query:getEntities()) do
 			local physicsBody = entity:getComponent(PhysicsBody):getBody();
 			local x, y = physicsBody:getX(), physicsBody:getY();

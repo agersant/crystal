@@ -15,7 +15,7 @@ UIScene.init = function(self, widget)
 end
 
 UIScene.update = function(self, dt)
-	local width, height = VIEWPORT:getRenderSize();
+	local width, height = self._renderer:getViewport():getRenderSize();
 	self._widget:updateTree(dt, width, height);
 end
 

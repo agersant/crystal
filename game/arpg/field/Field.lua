@@ -56,7 +56,7 @@ Field.addSystems = function(self)
 	ecs:addSystem(CombatSystem:new(ecs));
 	ecs:addSystem(DamageNumbersSystem:new(ecs));
 	ecs:addSystem(GameOverSystem:new(ecs));
-	ecs:addSystem(HUDSystem:new(ecs));
+	ecs:addSystem(HUDSystem:new(ecs, self._renderer:getViewport()));
 end
 
 Field.getHUD = function(self)

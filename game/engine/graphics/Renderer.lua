@@ -29,6 +29,10 @@ Renderer.init = function(self, viewport)
 	self._canvas:setFilter("nearest");
 end
 
+Renderer.getViewport = function(self)
+	return self._viewport;
+end
+
 Renderer.draw = function(self, drawFunction, options)
 	local renderWidth, renderHeight = self._viewport:getRenderSize();
 

@@ -65,7 +65,7 @@ MapScene.init = function(self, mapName)
 	ecs:addSystem(WorldWidgetSystem:new(ecs));
 
 	-- Before draw
-	ecs:addSystem(CameraSystem:new(ecs, map)); -- (also has afterScripts logic)
+	ecs:addSystem(CameraSystem:new(ecs, map, self._renderer:getViewport())); -- (also has afterScripts logic)
 	ecs:addSystem(MapSystem:new(ecs, map));
 	ecs:addSystem(DebugDrawSystem:new(ecs));
 
@@ -121,6 +121,8 @@ end
 MapScene.draw = function(self)
 	MapScene.super.draw(self);
 
+	local viewport = self._renderer:getViewport();
+
 	local camera = self._ecs:getSystem(CameraSystem):getCamera();
 	assert(camera);
 	local subpixelOffsetX, subpixelOffsetY = camera:getSubpixelOffset();
@@ -138,9 +140,9 @@ MapScene.draw = function(self)
 	});
 
 	self._renderer:draw(function()
-		self._ecs:notifySystems("beforeDebugDraw");
-		self._ecs:notifySystems("duringDebugDraw");
-		self._ecs:notifySystems("afterDebugDraw");
+		self._ecs:notifySystems("beforeDebugDraw", viewport);
+		self._ecs:notifySystems("duringDebugDraw", viewport);
+		self._ecs:notifySystems("afterDebugDraw", viewport);
 	end, {nativeResolution = true, sceneSizeX = sceneSizeX, sceneSizeY = sceneSizeY});
 
 	self._renderer:draw(function()

@@ -58,11 +58,11 @@ NavigationMesh.getNearestPointOnNavmesh = function(self, x, y)
 	return result.x, result.y;
 end
 
-NavigationMesh.draw = function(self)
+NavigationMesh.draw = function(self, viewport)
 	assert(self._triangles);
 	love.graphics.setLineWidth(1);
 	love.graphics.setLineJoin("bevel");
-	love.graphics.setPointSize(4 * VIEWPORT:getZoom());
+	love.graphics.setPointSize(4 * viewport:getZoom());
 	for i, triangle in ipairs(self._triangles) do
 		love.graphics.setColor(Colors.jadeDust:alpha(.25));
 		love.graphics.polygon("fill", triangle.vertices);
