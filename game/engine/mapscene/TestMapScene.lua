@@ -38,9 +38,8 @@ tests[#tests].body = function(context)
 	local TestSpawnCommand = Class("TestSpawnCommand", Entity);
 
 	local scene = MapScene:new("test-data/empty_map.lua");
-	ENGINE:loadScene(scene);
 
-	TERMINAL:run("spawn TestSpawnCommand");
+	scene:spawnEntityNearPlayer(TestSpawnCommand);
 	scene:update(0);
 
 	for entity in pairs(scene:getECS():getAllEntities()) do
@@ -60,7 +59,6 @@ tests[#tests].body = function(context)
 	end
 
 	local scene = MapScene:new("test-data/empty_map.lua");
-	ENGINE:loadScene(scene);
 
 	local player = scene:spawn(Entity);
 	player:addComponent(InputListener:new(InputDevice:new(1)));
@@ -68,7 +66,7 @@ tests[#tests].body = function(context)
 	player:setPosition(200, 200);
 	scene:update(0);
 
-	TERMINAL:run("spawn TestSpawnCommandProximity");
+	scene:spawnEntityNearPlayer(TestSpawnCommandProximity);
 	scene:update(0);
 
 	for entity in pairs(scene:getECS():getAllEntities()) do

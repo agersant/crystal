@@ -25,6 +25,7 @@ end
 Engine.init = function(self, global)
 	self._globals = {ENGINE = self};
 	self._scene = nil;
+	self._nextScene = nil;
 	self._input = nil;
 
 	if global then
@@ -67,7 +68,6 @@ Engine.init = function(self, global)
 	end);
 
 	self._terminal:addCommand("loadGame gamePackage:string", function(gamePackage)
-		self:unloadGame();
 		self:loadGame(gamePackage);
 	end);
 end
@@ -91,12 +91,27 @@ Engine.load = function(self)
 end
 
 Engine.update = function(self, dt)
+
 	self._constants:update();
-	self._fpsCounter:update(dt);
-	self._liveTuneOverlay:update(dt);
+
+	if self._fpsCounter then
+		self._fpsCounter:update(dt);
+	end
+
+	if self._liveTuneOverlay then
+		self._liveTuneOverlay:update(dt);
+	end
+
+	if self._nextScene then
+		self._scene = self._nextScene;
+		self._globals.SCENE = self._nextScene;
+		self._nextScene = nil;
+	end
+
 	if self._scene then
 		self._scene:update(dt * self._constants:get("timeScale"));
 	end
+
 	if self._input then
 		self._input:flushEvents();
 	end
@@ -108,9 +123,18 @@ Engine.draw = function(self)
 		self._scene:draw();
 	end
 	love.graphics.reset();
-	self._fpsCounter:draw();
-	self._liveTuneOverlay:draw();
-	self._console:draw();
+
+	if self._fpsCounter then
+		self._fpsCounter:draw();
+	end
+
+	if self._liveTuneOverlay then
+		self._liveTuneOverlay:draw();
+	end
+
+	if self._console then
+		self._console:draw();
+	end
 end
 
 Engine.keyPressed = function(self, key, scanCode, isRepeat)
@@ -140,12 +164,14 @@ Engine.resize = function(self, width, height)
 end
 
 Engine.loadScene = function(self, scene)
-	self._scene = scene;
-	self._globals.SCENE = scene;
-	-- TODO What happens to the rest of the frame?
+	-- Change applies before next update, so that the current frame
+	-- can continue with a consistent SCENE global
+	self._nextScene = scene;
 end
 
 Engine.loadGame = function(self, path)
+	self:unloadGame();
+
 	assert(path);
 	local game = require(path):new();
 	assert(game:isInstanceOf(Game));
@@ -163,8 +189,6 @@ Engine.loadGame = function(self, path)
 
 	local Fonts = require("engine/resources/Fonts");
 	self._globals.FONTS = Fonts:new(game.fonts);
-
-	-- TODO What happens to the rest of the frame?
 end
 
 Engine.unloadGame = function(self)
@@ -174,9 +198,7 @@ Engine.unloadGame = function(self)
 	self._globals.SCENE = nil;
 	self._globals.INPUT = nil;
 	self._globals.PERSISTENCE = nil;
-
 	-- TODO reinit assets and fonts?
-	-- TODO What happens to the rest of the frame?
 end
 
 return Engine;

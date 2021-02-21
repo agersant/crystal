@@ -23,7 +23,7 @@ tests[#tests].body = function()
 		saveData.foo = pod.foo;
 		return saveData;
 	end;
-	SaveData.save = function(self)
+	SaveData.save = function(self, scene)
 		self.foo = foo;
 	end;
 	SaveData.load = function(self)
@@ -33,7 +33,7 @@ tests[#tests].body = function()
 	local persistence = Persistence:new(SaveData);
 
 	foo = "bar";
-	persistence:getSaveData():save();
+	persistence:getSaveData():save(nil);
 	persistence:writeToDisk("test.crystal");
 	foo = "not bar";
 	persistence:loadFromDisk("test.crystal");

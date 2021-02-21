@@ -48,12 +48,11 @@ SaveData.setLocation = function(self, map, x, y)
 	self._location.y = y;
 end
 
-SaveData.save = function(self)
+SaveData.save = function(self, scene)
 	SaveData.super.save(self);
 
-	local currentScene = SCENE;
-	if currentScene:isInstanceOf(Field) then
-		local partyEntities = currentScene:getECS():getAllEntitiesWith(PartyMember);
+	if scene:isInstanceOf(Field) then
+		local partyEntities = scene:getECS():getAllEntitiesWith(PartyMember);
 
 		local partyLeader;
 		local partyLeaderPlayerIndex;
@@ -76,7 +75,7 @@ SaveData.save = function(self)
 		local x, y = partyLeader:getPosition();
 		assert(x);
 		assert(y);
-		self:setLocation(currentScene:getMap():getName(), x, y);
+		self:setLocation(scene:getMap():getName(), x, y);
 	end
 end
 

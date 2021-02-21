@@ -32,7 +32,7 @@ Persistence.loadFromDisk = function(self, path)
 end
 
 TERMINAL:addCommand("save fileName:string", function(fileName)
-	PERSISTENCE:getSaveData():save();
+	PERSISTENCE:getSaveData():save(SCENE);
 	PERSISTENCE:writeToDisk(fileName);
 end);
 

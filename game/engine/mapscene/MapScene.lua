@@ -149,33 +149,22 @@ MapScene.draw = function(self)
 
 end
 
-TERMINAL:addCommand("loadMap mapName:string", function(mapName)
-	local sceneClass = GAME.classes.MapScene;
-	local sceneFile = StringUtils.mergePaths(GAME.mapDirectory, mapName .. ".lua");
-	local newScene = sceneClass:new(sceneFile);
-	ENGINE:loadScene(newScene);
-end);
-
-local spawn = function(className)
-
-	local currentScene = SCENE;
-
+MapScene.spawnEntityNearPlayer = function(self, class)
 	local playerPhysicsBody;
-	local players = currentScene:getECS():getAllEntitiesWith(InputListener);
+	local players = self:getECS():getAllEntitiesWith(InputListener);
 	for entity in pairs(players) do
 		playerPhysicsBody = entity:getComponent(PhysicsBody);
 		break
 	end
 
-	local map = currentScene:getMap();
+	local map = self:getMap();
 	assert(map);
 	local navigationMesh = map:getNavigationMesh();
 	assert(navigationMesh);
 
-	local class = Class:getByName(className);
 	assert(class);
 	assert(class:isInstanceOf(Entity));
-	local entity = currentScene:spawn(class);
+	local entity = self:spawn(class);
 
 	local physicsBody = entity:getComponent(PhysicsBody);
 	if physicsBody and playerPhysicsBody then
@@ -189,6 +178,17 @@ local spawn = function(className)
 	end
 end
 
-TERMINAL:addCommand("spawn className:string", spawn);
+TERMINAL:addCommand("loadMap mapName:string", function(mapName)
+	local sceneClass = GAME.classes.MapScene;
+	local sceneFile = StringUtils.mergePaths(GAME.mapDirectory, mapName .. ".lua");
+	local newScene = sceneClass:new(sceneFile);
+	ENGINE:loadScene(newScene);
+end);
+
+TERMINAL:addCommand("spawn className:string", function(className)
+	if SCENE then
+		SCENE:spawnEntityNearPlayer(Class:getByName(className));
+	end
+end);
 
 return MapScene;
