@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local Log = require("engine/dev/Log");
 local ECS = require("engine/ecs/ECS");
 local Renderer = require("engine/graphics/Renderer");
 local MapSystem = require("engine/mapscene/MapSystem");
@@ -29,7 +28,7 @@ local StringUtils = require("engine/utils/StringUtils");
 local MapScene = Class("MapScene", Scene);
 
 MapScene.init = function(self, mapName)
-	Log:info("Instancing scene for map: " .. tostring(mapName));
+	LOG:info("Instancing scene for map: " .. tostring(mapName));
 	MapScene.super.init(self);
 
 	local ecs = ECS:new();

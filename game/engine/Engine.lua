@@ -33,6 +33,9 @@ Engine.init = function(self, global)
 		installGlobals(self);
 	end
 
+	local Log = require("engine/dev/Log");
+	self._globals.LOG = Log:new();
+
 	local Terminal = require("engine/dev/cli/Terminal");
 	self._terminal = Terminal:new();
 	self._globals.TERMINAL = self._terminal;
@@ -54,8 +57,6 @@ Engine.init = function(self, global)
 
 	local Assets = require("engine/resources/Assets");
 	self._globals.ASSETS = Assets:new();
-
-	-- TODO promote LOG to a global
 
 	self._constants:define("Time Scale", 1.0, {minValue = 0.0, maxValue = 5.0});
 end

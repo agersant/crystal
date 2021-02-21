@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local Log = require("engine/dev/Log");
 local TableUtils = require("engine/utils/TableUtils");
 local StringUtils = require("engine/utils/StringUtils");
 
@@ -20,7 +19,7 @@ Persistence.writeToDisk = function(self, path)
 	local fileContent = TableUtils.serialize(pod);
 	love.filesystem.write(path, fileContent);
 	local fullPath = StringUtils.mergePaths(love.filesystem.getRealDirectory(path), path);
-	Log:info("Saved player save to " .. fullPath);
+	LOG:info("Saved player save to " .. fullPath);
 end
 
 Persistence.loadFromDisk = function(self, path)
@@ -28,7 +27,7 @@ Persistence.loadFromDisk = function(self, path)
 	local pod = TableUtils.unserialize(fileContent);
 	local newSaveData = self._saveDataClass:fromPOD(pod);
 	local fullPath = StringUtils.mergePaths(love.filesystem.getRealDirectory(path), path);
-	Log:info("Loaded player save from " .. fullPath);
+	LOG:info("Loaded player save from " .. fullPath);
 	self._saveData = newSaveData;
 end
 

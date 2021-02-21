@@ -3,7 +3,6 @@ require("engine/ffi/Knob");
 local FFI = require("ffi");
 local Knob = FFI.load("knob");
 local Features = require("engine/dev/Features");
-local Log = require("engine/dev/Log");
 local MathUtils = require("engine/utils/MathUtils");
 
 local LiveTune = Class("LiveTune");

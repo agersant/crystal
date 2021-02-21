@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local Log = require("engine/dev/Log");
 local Script = require("engine/script/Script");
 local Image = require("engine/ui/bricks/elements/Image");
 local Overlay = require("engine/ui/bricks/elements/Overlay");
@@ -48,7 +47,7 @@ end
 
 DialogBox.sayLine = function(self, targetText)
 	assert(targetText);
-	Log:info("Displaying dialogbox: " .. targetText);
+	LOG:info("Displaying dialogbox: " .. targetText);
 
 	local duration = #targetText / self._textSpeed;
 

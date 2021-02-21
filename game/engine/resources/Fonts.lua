@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local Log = require("engine/dev/Log");
 local Module = require("engine/Module");
 
 local Fonts = Class("Fonts");
@@ -34,7 +33,7 @@ Fonts.get = function(self, name, size)
 	local fontFile = pickFont(self, name);
 	self._fontObjects[name][size] = love.graphics.newFont(fontFile, size);
 	self._fontObjects[name][size]:setFilter("nearest");
-	Log:info("Registered font " .. fontFile .. " at size " .. size);
+	LOG:info("Registered font " .. fontFile .. " at size " .. size);
 	return self._fontObjects[name][size];
 end
 

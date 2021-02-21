@@ -1,6 +1,5 @@
 require("engine/utils/OOP");
 local Features = require("engine/dev/Features");
-local Log = require("engine/dev/Log");
 local Colors = require("engine/resources/Colors");
 
 local FPSCounter = Class("FPSCounter");
@@ -29,7 +28,7 @@ end
 FPSCounter.update = function(self, dt)
 	assert(dt > 0);
 	if dt > 1 / 50 then
-		Log:warning("Previous frame took " .. math.ceil(dt * 1000) .. "ms");
+		LOG:warning("Previous frame took " .. math.ceil(dt * 1000) .. "ms");
 	end
 	table.insert(state.frameDurations, dt);
 	while #state.frameDurations > numFramesRecorded do

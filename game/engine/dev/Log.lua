@@ -84,5 +84,4 @@ Log.fatal = function(self, text)
 	append(self, Log.Levels.FATAL, text);
 end
 
-local instance = Log:new();
-return instance;
+return Log;

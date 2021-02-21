@@ -1,5 +1,4 @@
 local Features = require("engine/dev/Features");
-local Log = require("engine/dev/Log");
 local MockGraphics = require("engine/dev/mock/love/graphics");
 
 local engineTestFiles = {
@@ -221,7 +220,7 @@ end
 
 return {
 	execute = function(self)
-		Log:setVerbosity(Log.Levels.ERROR);
+		LOG:setVerbosity(LOG.Levels.ERROR);
 
 		local testFiles = {};
 		for _, file in ipairs(engineTestFiles) do

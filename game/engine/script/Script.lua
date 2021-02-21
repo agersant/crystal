@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local Log = require("engine/dev/Log");
 local Thread = require("engine/script/Thread");
 local TableUtils = require("engine/utils/TableUtils");
 
@@ -89,8 +88,8 @@ pumpThread = function(thread, resumeArgs)
 		local success = results[1];
 		if not success then
 			local errorText = results[2];
-			Log:error(errorText);
-			Log:error(debug.traceback(threadCoroutine));
+			LOG:error(errorText);
+			LOG:error(debug.traceback(threadCoroutine));
 		else
 			local instruction = results[2];
 			if instruction == "fork" then
