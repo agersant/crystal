@@ -37,7 +37,7 @@ tests[#tests].body = function()
 	assert(type(device) == "nil" or type(device) == "string");
 end
 
-tests[#tests + 1] = {name = "Global API"};
+tests[#tests + 1] = {name = "Has global API"};
 tests[#tests].body = function()
 	assert(LIVE_TUNE);
 end
