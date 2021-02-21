@@ -153,7 +153,7 @@ TERMINAL:addCommand("loadMap mapName:string", function(mapName)
 	local sceneClass = GAME.classes.MapScene;
 	local sceneFile = StringUtils.mergePaths(GAME.mapDirectory, mapName .. ".lua");
 	local newScene = sceneClass:new(sceneFile);
-	LOAD_SCENE(newScene);
+	ENGINE:loadScene(newScene);
 end);
 
 local spawn = function(className)

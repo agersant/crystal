@@ -19,7 +19,7 @@ local doTeleport = function(self, triggeredBy)
 
 	local targetMap = StringUtils.mergePaths(GAME.mapDirectory, teleportEntity._targetMap);
 	local newScene = Field:new(targetMap, finalX, finalY, self:getAngle());
-	LOAD_SCENE(newScene);
+	ENGINE:loadScene(newScene);
 end
 
 local teleportScript = function(self)

@@ -16,7 +16,7 @@ TERMINAL:addCommand("loadScene sceneName:string", function(sceneName)
 	assert(class);
 	assert(class:isInstanceOf(Scene));
 	local newScene = class:new();
-	LOAD_SCENE(newScene);
+	ENGINE:loadScene(newScene);
 end);
 
 return Scene;

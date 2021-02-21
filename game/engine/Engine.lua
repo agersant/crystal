@@ -20,12 +20,7 @@ local installGlobals = function(self)
 end
 
 Engine.init = function(self, global)
-	self._globals = {
-		-- TODO Just expose self as ENGINE instead?
-		LOAD_SCENE = wrap(self, Engine.loadScene),
-		LOAD_MODULE = wrap(self, Engine.loadModule),
-		UNLOAD_MODULE = wrap(self, Engine.unloadModule),
-	};
+	self._globals = {ENGINE = self};
 	self._scene = nil;
 	self._input = nil;
 

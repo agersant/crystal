@@ -229,7 +229,7 @@ return {
 
 		-- TODO run engine tests before loading game module
 
-		LOAD_MODULE(MODULE);
+		ENGINE:loadModule(MODULE);
 		for _, file in ipairs(GAME.testFiles) do
 			table.insert(testFiles, file);
 		end

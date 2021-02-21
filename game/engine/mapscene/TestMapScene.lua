@@ -38,7 +38,7 @@ tests[#tests].body = function(context)
 	local TestSpawnCommand = Class("TestSpawnCommand", Entity);
 
 	local scene = MapScene:new("test-data/empty_map.lua");
-	LOAD_SCENE(scene);
+	ENGINE:loadScene(scene);
 
 	TERMINAL:run("spawn TestSpawnCommand");
 	scene:update(0);
@@ -60,7 +60,7 @@ tests[#tests].body = function(context)
 	end
 
 	local scene = MapScene:new("test-data/empty_map.lua");
-	LOAD_SCENE(scene);
+	ENGINE:loadScene(scene);
 
 	local player = scene:spawn(Entity);
 	player:addComponent(InputListener:new(InputDevice:new(1)));

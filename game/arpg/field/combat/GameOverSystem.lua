@@ -21,7 +21,7 @@ GameOverSystem.afterScripts = function(self)
 			return;
 		end
 	end
-	LOAD_SCENE(TitleScreen:new());
+	ENGINE:loadScene(TitleScreen:new());
 end
 
 return GameOverSystem;

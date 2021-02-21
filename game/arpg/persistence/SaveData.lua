@@ -85,7 +85,7 @@ SaveData.load = function(self)
 	local map, x, y = self:getLocation();
 	if #map > 0 then
 		local scene = Field:new(map, x, y);
-		LOAD_SCENE(scene);
+		ENGINE:loadScene(scene);
 	end
 end
 
