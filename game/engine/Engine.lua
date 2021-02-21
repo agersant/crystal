@@ -71,6 +71,15 @@ Engine.init = function(self, global)
 	self._terminal:addCommand("loadGame gamePackage:string", function(gamePackage)
 		self:loadGame(gamePackage);
 	end);
+
+	self._terminal:addCommand("hotReload", function()
+		self._terminal:run("save hot_reload");
+		_G["hotReloading"] = true;
+		self:reloadGame();
+		_G["hotReloading"] = false;
+		self._terminal:run("load hot_reload");
+	end);
+
 end
 
 Engine.load = function(self)
