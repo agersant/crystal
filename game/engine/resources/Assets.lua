@@ -184,6 +184,7 @@ loadAsset = function(self, path, source)
 	local _, extension = getPathAndExtension(path);
 
 	if not isAssetLoaded(self, path) then
+		-- TODO require packages to list what their content is and remove extension heuristics
 		local assetData, assetType;
 		if extension == "png" then
 			assetType, assetData = loadImage(self, path);
