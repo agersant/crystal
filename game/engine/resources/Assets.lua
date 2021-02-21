@@ -199,7 +199,7 @@ loadAsset = function(self, path, source)
 		assert(assetType);
 
 		assert(not self._loadedAssets[assetID]);
-		self._loadedAssets[assetID] = {path = path, raw = assetData, type = assetType, sources = {}, numSources = 0};
+		self._loadedAssets[assetID] = {path = path, data = assetData, type = assetType, sources = {}, numSources = 0};
 		LOG:info("Loaded asset: " .. path);
 	end
 
@@ -210,7 +210,7 @@ loadAsset = function(self, path, source)
 	end
 
 	assert(isAssetLoaded(self, path));
-	return self._loadedAssets[assetID].raw;
+	return self._loadedAssets[assetID].data;
 end
 
 unloadAsset = function(self, path, source)
@@ -263,7 +263,7 @@ getAsset = function(self, assetType, path)
 	assert(isAssetLoaded(self, path));
 	local assetID = getAssetID(path);
 	assert(self._loadedAssets[assetID].type == assetType);
-	return self._loadedAssets[assetID].raw;
+	return self._loadedAssets[assetID].data;
 end
 
 Assets.init = function(self)
