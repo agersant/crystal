@@ -7,7 +7,7 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Runs behavior script", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local sentinel = 0;
 	local behavior = Behavior:new(function(self)
@@ -31,7 +31,7 @@ end
 
 tests[#tests + 1] = {name = "Can run multiple behaviors", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local Behavior1 = Class:test("Behavior1", Behavior);
 	local Behavior2 = Class:test("Behavior2", Behavior);
@@ -61,7 +61,7 @@ end
 
 tests[#tests + 1] = {name = "Stops running script when behavior is removed", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local sentinel = 0;
 	local behavior = Behavior:new(function(self)
@@ -85,7 +85,7 @@ end
 
 tests[#tests + 1] = {name = "Behavior script cleanup functions are called on behavior removal", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local sentinel = false;
 	local behavior = Behavior:new(function(self)
@@ -107,7 +107,7 @@ end
 
 tests[#tests + 1] = {name = "Behavior script cleanup functions are called on despawn", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local sentinel = false;
 	local behavior = Behavior:new(function(self)

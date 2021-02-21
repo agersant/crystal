@@ -10,7 +10,7 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Walk to point", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local startX, startY = 20, 20;
 	local endX, endY = 300, 200;
@@ -33,7 +33,7 @@ end
 
 tests[#tests + 1] = {name = "Walk to entity", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local startX, startY = 20, 20;
 	local endX, endY = 300, 200;
@@ -60,7 +60,7 @@ end
 
 tests[#tests + 1] = {name = "Can use blocking script function", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local startX, startY = 20, 20;
 	local endX, endY = 300, 200;

@@ -39,7 +39,7 @@ PartyMemberData.fromEntity = function(self, entity)
 
 	local partyMemberData = PartyMemberData:new(className);
 	if inputListener then
-		PartyMemberData:setAssignedPlayer(inputListener:getAssignedPlayer());
+		PartyMemberData:setAssignedPlayer(inputListener:getInputDevice():getIndex());
 	end
 	return partyMemberData;
 end

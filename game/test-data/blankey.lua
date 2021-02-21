@@ -1,7 +1,7 @@
 return {
 	type = "spritesheet",
 	content = {
-		texture = "engine/test-data/blankey.png",
+		texture = "test-data/blankey.png",
 		frames = {
 
 			frame_0 = {x = 0, y = 0, w = 32, h = 32},

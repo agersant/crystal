@@ -2,7 +2,6 @@ require("engine/utils/OOP");
 local AutoComplete = require("engine/dev/cli/AutoComplete");
 local CommandStore = require("engine/dev/cli/CommandStore");
 local Features = require("engine/dev/Features");
-local Log = require("engine/dev/Log");
 local TextInput = require("engine/ui/TextInput");
 local StringUtils = require("engine/utils/StringUtils");
 
@@ -86,26 +85,26 @@ Terminal.run = function(self, command)
 	local command = self._commandStore:getCommand(parsedInput.command);
 	if not command then
 		if #parsedInput.command > 0 then
-			Log:error(parsedInput.command .. " is not a valid command");
+			LOG:error(parsedInput.command .. " is not a valid command");
 		end
 		return;
 	end
 	local useArgs = {};
 	for i, arg in ipairs(parsedInput.arguments) do
 		if i > command:getNumArgs() then
-			Log:error("Too many arguments for calling " .. command:getName());
+			LOG:error("Too many arguments for calling " .. command:getName());
 			return;
 		end
 		local requiredType = command:getArg(i).type;
 		if not command:typeCheckArgument(i, arg) then
-			Log:error("Argument #" .. i .. " (" .. command:getArg(i).name .. ") of command " .. command:getName() ..
+			LOG:error("Argument #" .. i .. " (" .. command:getArg(i).name .. ") of command " .. command:getName() ..
           							" must be a " .. requiredType);
 			return;
 		end
 		table.insert(useArgs, command:castArgument(i, arg));
 	end
 	if #useArgs < command:getNumArgs() then
-		Log:error(command:getName() .. " requires " .. command:getNumArgs() .. " arguments");
+		LOG:error(command:getName() .. " requires " .. command:getNumArgs() .. " arguments");
 		return;
 	end
 	xpcall(function()
@@ -113,7 +112,7 @@ Terminal.run = function(self, command)
 	end, function(err)
 		err = "Error while running command '" .. parsedInput.fullText .. "':" .. err .. "\n";
 		err = err .. debug.traceback();
-		Log:error(err);
+		LOG:error(err);
 	end);
 end
 
@@ -182,16 +181,6 @@ end
 
 Terminal.getParsedInput = function(self)
 	return self._parsedInput;
-end
-
-Terminal.instance = Terminal:new();
-
-Terminal.registerCommand = function(self, description, func)
-	Terminal.instance:addCommand(description, func);
-end
-
-Terminal.execute = function(self, command)
-	Terminal.instance:run(command);
 end
 
 return Terminal;

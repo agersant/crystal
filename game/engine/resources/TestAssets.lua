@@ -4,28 +4,31 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Load empty map", gfx = "mock"};
 tests[#tests].body = function()
-	local mapName = "engine/test-data/empty_map.lua";
-	Assets:load(mapName);
-	local map = Assets:getMap(mapName);
+	local assets = Assets:new();
+	local mapName = "test-data/empty_map.lua";
+	assets:load(mapName);
+	local map = assets:getMap(mapName);
 	assert(map);
-	Assets:unload(mapName);
+	assets:unload(mapName);
 end
 
 tests[#tests + 1] = {name = "Load shader", gfx = "on"};
 tests[#tests].body = function()
-	local shaderPath = "engine/test-data/TestAssets/shader.glsl";
-	Assets:load(shaderPath);
-	local shader = Assets:getShader(shaderPath);
+	local assets = Assets:new();
+	local shaderPath = "test-data/TestAssets/shader.glsl";
+	assets:load(shaderPath);
+	local shader = assets:getShader(shaderPath);
 	assert(shader);
-	Assets:unload(shaderPath);
+	assets:unload(shaderPath);
 end
 
 tests[#tests + 1] = {name = "Load spritesheet", gfx = "on"};
 tests[#tests].body = function()
-	local sheetName = "engine/test-data/blankey.lua";
-	Assets:load(sheetName);
+	local assets = Assets:new();
+	local sheetName = "test-data/blankey.lua";
+	assets:load(sheetName);
 
-	local sheet = Assets:getSpritesheet(sheetName);
+	local sheet = assets:getSpritesheet(sheetName);
 	assert(sheet);
 
 	local animation = sheet:getAnimation("hurt");
@@ -39,63 +42,58 @@ tests[#tests].body = function()
 	assert(ox);
 	assert(oy);
 
-	Assets:unload(sheetName);
+	assets:unload(sheetName);
 end
 
 tests[#tests + 1] = {name = "Load package", gfx = "mock"};
 tests[#tests].body = function()
-	local packageName = "engine/test-data/TestAssets/package.lua";
-	local sheetName = "engine/test-data/blankey.lua";
-	assert(not Assets:isAssetLoaded(packageName));
-	assert(not Assets:isAssetLoaded(sheetName));
-	Assets:load(packageName);
-	assert(Assets:isAssetLoaded(packageName));
-	assert(Assets:isAssetLoaded(sheetName));
-	Assets:unload(packageName);
-	assert(not Assets:isAssetLoaded(packageName));
-	assert(not Assets:isAssetLoaded(sheetName));
+	local assets = Assets:new();
+	local packageName = "test-data/TestAssets/package.lua";
+	local sheetName = "test-data/blankey.lua";
+	assert(not assets:isAssetLoaded(packageName));
+	assert(not assets:isAssetLoaded(sheetName));
+	assets:load(packageName);
+	assert(assets:isAssetLoaded(packageName));
+	assert(assets:isAssetLoaded(sheetName));
+	assets:unload(packageName);
+	assert(not assets:isAssetLoaded(packageName));
+	assert(not assets:isAssetLoaded(sheetName));
 end
 
 tests[#tests + 1] = {name = "Nested packages work", gfx = "mock"};
 tests[#tests].body = function()
-	local wrapperPackageName = "engine/test-data/TestAssets/wrapper_package.lua";
-	local packageName = "engine/test-data/TestAssets/package.lua";
-	local sheetName = "engine/test-data/blankey.lua";
-	assert(not Assets:isAssetLoaded(packageName));
-	assert(not Assets:isAssetLoaded(sheetName));
-	Assets:load(wrapperPackageName);
-	assert(Assets:isAssetLoaded(packageName));
-	assert(Assets:isAssetLoaded(sheetName));
-	Assets:unload(wrapperPackageName);
-	assert(not Assets:isAssetLoaded(packageName));
-	assert(not Assets:isAssetLoaded(sheetName));
+	local assets = Assets:new();
+	local wrapperPackageName = "test-data/TestAssets/wrapper_package.lua";
+	local packageName = "test-data/TestAssets/package.lua";
+	local sheetName = "test-data/blankey.lua";
+	assert(not assets:isAssetLoaded(packageName));
+	assert(not assets:isAssetLoaded(sheetName));
+	assets:load(wrapperPackageName);
+	assert(assets:isAssetLoaded(packageName));
+	assert(assets:isAssetLoaded(sheetName));
+	assets:unload(wrapperPackageName);
+	assert(not assets:isAssetLoaded(packageName));
+	assert(not assets:isAssetLoaded(sheetName));
 end
 
 tests[#tests + 1] = {name = "A single reference keeps assets loaded", gfx = "mock"};
 tests[#tests].body = function()
-	local wrapperPackageName = "engine/test-data/TestAssets/wrapper_package.lua";
-	local packageName = "engine/test-data/TestAssets/package.lua";
-	local sheetName = "engine/test-data/blankey.lua";
-	assert(not Assets:isAssetLoaded(sheetName));
-	Assets:load(wrapperPackageName);
-	Assets:load(packageName);
-	Assets:unload(wrapperPackageName);
-	assert(Assets:isAssetLoaded(sheetName));
-	Assets:unload(packageName);
-	assert(not Assets:isAssetLoaded(sheetName));
+	local assets = Assets:new();
+	local wrapperPackageName = "test-data/TestAssets/wrapper_package.lua";
+	local packageName = "test-data/TestAssets/package.lua";
+	local sheetName = "test-data/blankey.lua";
+	assert(not assets:isAssetLoaded(sheetName));
+	assets:load(wrapperPackageName);
+	assets:load(packageName);
+	assets:unload(wrapperPackageName);
+	assert(assets:isAssetLoaded(sheetName));
+	assets:unload(packageName);
+	assert(not assets:isAssetLoaded(sheetName));
 end
 
-tests[#tests + 1] = {name = "Assets can be reloaded", gfx = "mock"};
+tests[#tests + 1] = {name = "Has global API"};
 tests[#tests].body = function()
-	local sheetName = "engine/test-data/blankey.lua";
-	Assets:load(sheetName);
-	local sheet = Assets:getSpritesheet(sheetName);
-	sheet.pollution = true;
-	local sheet = Assets:getSpritesheet(sheetName);
-	assert(sheet.pollution);
-	Assets:refresh(sheetName);
-	local sheet = Assets:getSpritesheet(sheetName);
-	assert(not sheet.pollution);
+	assert(ASSETS);
 end
 
 return tests;

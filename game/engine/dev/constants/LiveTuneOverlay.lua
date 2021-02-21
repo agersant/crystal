@@ -1,10 +1,8 @@
 require("engine/utils/OOP");
-local Terminal = require("engine/dev/cli/Terminal");
 local Constants = require("engine/dev/constants/Constants");
 local LiveTune = require("engine/dev/constants/LiveTune");
 local Features = require("engine/dev/Features");
 local Colors = require("engine/resources/Colors");
-local Fonts = require("engine/resources/Fonts");
 local Element = require("engine/ui/bricks/core/Element");
 local Border = require("engine/ui/bricks/elements/Border");
 local Image = require("engine/ui/bricks/elements/Image");
@@ -77,7 +75,7 @@ KnobInfo.init = function(self)
 	headerBackground:setColor(colors.headerBackground);
 	headerBackground:setAlignment("stretch", "stretch");
 	self._headerText = header:addChild(Text:new());
-	self._headerText:setFont(Fonts:get("devCondensed", 14));
+	self._headerText:setFont(FONTS:get("devCondensed", 14));
 	self._headerText:setColor(colors.headerText);
 	self._headerText:setHorizontalPadding(8);
 	self._headerText:setVerticalPadding(2);
@@ -98,7 +96,7 @@ KnobInfo.init = function(self)
 	self._knobIndexText:setAlignment("center", "bottom");
 	self._knobIndexText:setBottomPadding(-6);
 	self._knobIndexText:setColor(colors.knobIndex);
-	self._knobIndexText:setFont(Fonts:get("devBold", 12));
+	self._knobIndexText:setFont(FONTS:get("devBold", 12));
 
 	local valueContainer = data:addChild(Overlay:new());
 	local border = valueContainer:addChild(Border:new());
@@ -110,7 +108,7 @@ KnobInfo.init = function(self)
 	self._knobValueText:setVerticalPadding(4);
 	self._knobValueText:setHorizontalPadding(10);
 	self._knobValueText:setColor(colors.valueText);
-	self._knobValueText:setFont(Fonts:get("devBold", 14));
+	self._knobValueText:setFont(FONTS:get("devBold", 14));
 end
 
 KnobInfo.setTitle = function(self, title)
@@ -145,7 +143,7 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 	local titleBarSuffix = titleBar:addChild(Image:new());
 
 	self._titleText:setHorizontalPadding(6);
-	self._titleText:setFont(Fonts:get("devCondensed", 16));
+	self._titleText:setFont(FONTS:get("devCondensed", 16));
 	self._titleText:setColor(colors.title);
 
 	titleBarPrefix:setVerticalAlignment("center");
@@ -222,7 +220,7 @@ LiveTuneOverlay.update = function(self, dt)
 		local widget = self._knobInfos:getChild(i);
 		assert(widget);
 		widget:setTitle(mappedKnob.constantName);
-		local currentValue = self._constants:read(mappedKnob.constantName);
+		local currentValue = self._constants:get(mappedKnob.constantName);
 		widget:setValue(currentValue, mappedKnob.minValue, mappedKnob.maxValue);
 		widget:setKnobIndex(mappedKnob.knobIndex);
 	end
@@ -238,11 +236,11 @@ LiveTuneOverlay.draw = function(self)
 	self._widget:draw();
 end
 
-Terminal:registerCommand("showLiveTuneOverlay", function()
+TERMINAL:addCommand("showLiveTuneOverlay", function()
 	drawOverlay = true;
 end);
 
-Terminal:registerCommand("hideLiveTuneOverlay", function()
+TERMINAL:addCommand("hideLiveTuneOverlay", function()
 	drawOverlay = false;
 end);
 

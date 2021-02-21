@@ -2,9 +2,7 @@ require("engine/utils/OOP");
 require("engine/ffi/Knob");
 local FFI = require("ffi");
 local Knob = FFI.load("knob");
-local Terminal = require("engine/dev/cli/Terminal");
 local Features = require("engine/dev/Features");
-local Log = require("engine/dev/Log");
 local MathUtils = require("engine/utils/MathUtils");
 
 local LiveTune = Class("LiveTune");
@@ -47,6 +45,10 @@ LiveTune.init = function(self)
 	-- Table of knob index -> MIDI CC Index
 	-- Default values setup for the factory settings of Arturia MINILAB mkII
 	self._ccIndices = {112, 74, 71, 76, 77, 93, 73, 75, 114, 18, 19, 16, 17, 91, 79, 72};
+end
+
+LiveTune.disconnectFromDevice = function(self)
+	Knob.disconnect();
 end
 
 LiveTune.connectToDevice = function(self, portNumber)
@@ -106,10 +108,8 @@ LiveTune.getCurrentDevice = function(self)
 	end
 end
 
-LiveTune.instance = LiveTune:new();
-
-Terminal:registerCommand("connectToMIDIDevice port:number", function(port)
-	LiveTune.instance:connectToDevice(port);
+TERMINAL:addCommand("connectToMIDIDevice port:number", function(port)
+	LIVE_TUNE:connectToDevice(port);
 end);
 
 return LiveTune;

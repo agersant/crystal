@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local Terminal = require("engine/dev/cli/Terminal");
 local Features = require("engine/dev/Features");
 local System = require("engine/ecs/System");
 local AllComponents = require("engine/ecs/query/AllComponents");
@@ -62,16 +61,16 @@ local drawShape = function(self, x, y, shape, color)
 	love.graphics.pop();
 end
 
-DebugDrawSystem.duringDebugDraw = function(self)
+DebugDrawSystem.duringDebugDraw = function(self, viewport)
 	local map = self._ecs:getMap();
 	assert(map);
 
 	if drawNavigation then
-		map:drawNavigationMesh();
+		map:drawNavigationMesh(viewport);
 	end
 
 	if drawPhysics then
-		map:drawCollisionMesh();
+		map:drawCollisionMesh(viewport);
 		for entity in pairs(self._query:getEntities()) do
 			local physicsBody = entity:getComponent(PhysicsBody):getBody();
 			local x, y = physicsBody:getX(), physicsBody:getY();
@@ -83,19 +82,19 @@ DebugDrawSystem.duringDebugDraw = function(self)
 	end
 end
 
-Terminal:registerCommand("showNavmeshOverlay", function()
+TERMINAL:addCommand("showNavmeshOverlay", function()
 	drawNavigation = true;
 end);
 
-Terminal:registerCommand("hideNavmeshOverlay", function()
+TERMINAL:addCommand("hideNavmeshOverlay", function()
 	drawNavigation = false;
 end);
 
-Terminal:registerCommand("showPhysicsOverlay", function()
+TERMINAL:addCommand("showPhysicsOverlay", function()
 	drawPhysics = true;
 end);
 
-Terminal:registerCommand("hidePhysicsOverlay", function()
+TERMINAL:addCommand("hidePhysicsOverlay", function()
 	drawPhysics = false;
 end);
 

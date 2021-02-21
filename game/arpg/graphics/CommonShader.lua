@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local Assets = require("engine/resources/Assets");
 local Shader = require("engine/mapscene/display/Shader");
 local Palette = require("arpg/graphics/Palette");
 
@@ -7,7 +6,7 @@ local CommonShader = Class("CommonShader", Shader);
 
 CommonShader.init = function(self)
 	Shader.super.init(self);
-	self:setShaderResource(Assets:getShader("arpg/assets/shader/common.glsl"));
+	self:setShaderResource(ASSETS:getShader("arpg/assets/shader/common.glsl"));
 	self:setHighlightColor();
 end
 

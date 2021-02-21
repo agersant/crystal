@@ -1,13 +1,13 @@
 require("engine/utils/OOP");
-local Module = require("engine/Module");
-local Content = require("engine/resources/Content");
+local Game = require("engine/Game");
 
-local ARPG = Class("ARPG", Module);
+local ARPG = Class("ARPG", Game);
 
 ARPG.init = function(self)
 	ARPG.super.init(self);
 	self.classes.MapScene = require("arpg/field/Field");
 	self.classes.SaveData = require("arpg/persistence/SaveData");
+	self.sourceDirectories = {"arpg/content", "arpg/field", "arpg/frontend", "arpg/graphics", "arpg/persistence"};
 	self.assetsDirectory = "arpg/assets";
 	self.mapDirectory = "arpg/assets/map";
 	self.testFiles = {
@@ -22,7 +22,6 @@ ARPG.init = function(self)
 		body = "arpg/assets/font/karen2black.ttf",
 		fat = "arpg/assets/font/karenfat.ttf",
 	};
-	Content:requireAll("arpg/content");
 end
 
 return ARPG;

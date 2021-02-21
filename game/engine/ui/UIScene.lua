@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local GFXConfig = require("engine/graphics/GFXConfig");
 local Renderer = require("engine/graphics/Renderer");
 local Widget = require("engine/ui/bricks/elements/Widget");
 local Scene = require("engine/Scene");
@@ -8,7 +7,7 @@ local UIScene = Class("UIScene", Scene);
 
 UIScene.init = function(self, widget)
 	UIScene.super.init(self);
-	self._renderer = Renderer:new();
+	self._renderer = Renderer:new(VIEWPORT);
 	assert(widget);
 	assert(widget:isInstanceOf(Widget));
 	self._widget = widget;
@@ -16,7 +15,7 @@ UIScene.init = function(self, widget)
 end
 
 UIScene.update = function(self, dt)
-	local width, height = GFXConfig:getRenderSize();
+	local width, height = self._renderer:getViewport():getRenderSize();
 	self._widget:updateTree(dt, width, height);
 end
 

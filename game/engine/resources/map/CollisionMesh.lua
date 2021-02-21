@@ -1,7 +1,6 @@
 require("engine/utils/OOP");
 local FFI = require("ffi");
 local Diamond = FFI.load("diamond");
-local GFXConfig = require("engine/graphics/GFXConfig");
 local Colors = require("engine/resources/Colors");
 
 local CollisionMesh = Class("CollisionMesh");
@@ -57,11 +56,11 @@ CollisionMesh.spawnBody = function(self, scene)
 	return body;
 end
 
-CollisionMesh.draw = function(self)
+CollisionMesh.draw = function(self, viewport)
 	love.graphics.setColor(Colors.redOrange);
 	love.graphics.setLineWidth(2);
 	love.graphics.setLineJoin("bevel");
-	love.graphics.setPointSize(6 * GFXConfig:getZoom());
+	love.graphics.setPointSize(6 * viewport:getZoom());
 	for _, chain in ipairs(self._chains) do
 		if #chain >= 6 then
 			love.graphics.polygon("line", chain);

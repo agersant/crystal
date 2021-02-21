@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local Log = require("engine/dev/Log");
 local Colors = require("engine/resources/Colors");
 local DynamicLayer = require("engine/resources/map/DynamicLayer");
 local MeshBuilder = require("engine/resources/map/MeshBuilder");
@@ -25,11 +24,11 @@ end
 
 local parseEntity = function(self, objectData)
 	if objectData.shape ~= "rectangle" then
-		Log:warning("Ignored map entity not defined as rectangle");
+		LOG:warning("Ignored map entity not defined as rectangle");
 		return;
 	end
 	if not objectData.type or #objectData.type == 0 then
-		Log:warning("Ignored map entity because no type was specified");
+		LOG:warning("Ignored map entity because no type was specified");
 		return;
 	end
 	local options = TableUtils.shallowCopy(objectData.properties);
@@ -117,12 +116,12 @@ Map.drawAboveEntities = function(self)
 	end
 end
 
-Map.drawCollisionMesh = function(self)
-	self._collisionMesh:draw();
+Map.drawCollisionMesh = function(self, viewport)
+	self._collisionMesh:draw(viewport);
 end
 
-Map.drawNavigationMesh = function(self)
-	self._navigationMesh:draw();
+Map.drawNavigationMesh = function(self, viewport)
+	self._navigationMesh:draw(viewport);
 end
 
 Map.getTileset = function(self)

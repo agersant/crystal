@@ -17,10 +17,16 @@ local buildBindingTables = function(self)
 	end
 end
 
-InputDevice.init = function(self)
+InputDevice.init = function(self, index)
+	assert(index);
 	self._bindingPairs = {};
 	self._events = {};
+	self._index = index;
 	buildBindingTables(self);
+end
+
+InputDevice.getIndex = function(self)
+	return self._index;
 end
 
 InputDevice.addBinding = function(self, command, key)

@@ -67,9 +67,9 @@ tests[#tests].body = function()
 	}) do
 		local switcher = Switcher:new();
 		local a = switcher:addChild(Image:new());
-		a:setSize(50, 100);
+		a:setImageSize(50, 100);
 		local b = switcher:addChild(Image:new());
-		b:setSize(100, 50);
+		b:setImageSize(100, 50);
 		switcher[test.method](switcher);
 		switcher:updateTree(0);
 		assert(TableUtils.equals(test.expectedSize, {switcher:getLocalPosition()}));

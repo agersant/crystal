@@ -1,10 +1,5 @@
 local Features = require("engine/dev/Features");
-local Log = require("engine/dev/Log");
-local GFXConfig = require("engine/graphics/GFXConfig");
-local Assets = require("engine/resources/Assets");
-local Module = require("engine/Module");
 local MockGraphics = require("engine/dev/mock/love/graphics");
-local Scene = require("engine/Scene");
 
 local engineTestFiles = {
 	"engine/dev/cli/TestConsole",
@@ -183,11 +178,10 @@ Context.compareFrame = function(self, referenceImagePath)
 end
 
 Context.resetGlobalState = function(self, test)
-	Assets:unloadAll();
-	Scene:setCurrent(Scene:new());
+	ASSETS:unloadAll();
 
 	test.resolution = test.resolution or {200, 200};
-	GFXConfig:setRenderSize(test.resolution[1], test.resolution[2]);
+	VIEWPORT:setRenderSize(test.resolution[1], test.resolution[2]);
 
 	if test.gfx == "mock" then
 		MockGraphics:enable();
@@ -195,7 +189,7 @@ Context.resetGlobalState = function(self, test)
 		MockGraphics:disable();
 		if test.gfx == "on" then
 			if test.resolution[1] ~= self.resolution[1] or test.resolution[2] ~= self.resolution[2] then
-				GFXConfig:setWindowSize(test.resolution[1], test.resolution[2]);
+				VIEWPORT:setWindowSize(test.resolution[1], test.resolution[2]);
 				self.resolution = test.resolution;
 			end
 			love.graphics.reset();
@@ -226,15 +220,20 @@ end
 
 return {
 	execute = function(self)
-		Log:setVerbosity(Log.Levels.ERROR);
-		Module:setCurrent(require(MODULE):new());
+		LOG:setVerbosity(LOG.Levels.ERROR);
+
 		local testFiles = {};
 		for _, file in ipairs(engineTestFiles) do
 			table.insert(testFiles, file);
 		end
-		for _, file in ipairs(Module:getCurrent().testFiles) do
+
+		-- TODO run engine tests before loading game
+
+		ENGINE:loadGame(STARTUP_GAME);
+		for _, file in ipairs(GAME.testFiles) do
 			table.insert(testFiles, file);
 		end
+
 		return Context:runTestSuite(testFiles);
 	end,
 };

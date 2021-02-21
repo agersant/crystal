@@ -7,7 +7,7 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Is idle after completing action", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local entity = scene:spawn(Entity);
 	entity:addComponent(ScriptRunner:new());
@@ -30,7 +30,7 @@ end
 
 tests[#tests + 1] = {name = "Can stop action", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local entity = scene:spawn(Entity);
 	entity:addComponent(ScriptRunner:new());
