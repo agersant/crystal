@@ -1,4 +1,7 @@
 require("engine/utils/OOP");
+local Game = require("engine/Game");
+local Scene = require("engine/Scene");
+
 local Engine = Class("Engine");
 
 local wrap = function(self, f)
@@ -54,6 +57,19 @@ Engine.init = function(self, global)
 	self._globals.ASSETS = Assets:new();
 
 	self._constants:define("Time Scale", 1.0, {minValue = 0.0, maxValue = 5.0});
+
+	self._terminal:addCommand("loadScene sceneName:string", function(sceneName)
+		local class = Class:getByName(sceneName);
+		assert(class);
+		assert(class:isInstanceOf(Scene));
+		local newScene = class:new();
+		self:loadScene(newScene);
+	end);
+
+	self._terminal:addCommand("loadGame gamePackage:string", function(gamePackage)
+		self:unloadGame();
+		self:loadGame(gamePackage);
+	end);
 end
 
 Engine.load = function(self)
@@ -132,6 +148,7 @@ end
 Engine.loadGame = function(self, path)
 	assert(path);
 	local game = require(path):new();
+	assert(game:isInstanceOf(Game));
 	self._globals.GAME = game;
 
 	local Input = require("engine/input/Input");

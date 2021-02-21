@@ -11,12 +11,4 @@ end
 Scene.draw = function(self)
 end
 
-TERMINAL:addCommand("loadScene sceneName:string", function(sceneName)
-	local class = Class:getByName(sceneName);
-	assert(class);
-	assert(class:isInstanceOf(Scene));
-	local newScene = class:new();
-	ENGINE:loadScene(newScene);
-end);
-
 return Scene;
