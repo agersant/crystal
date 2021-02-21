@@ -19,9 +19,9 @@ jobs:
           echo "${{ github.workspace }}\love-11.3-win64" >> $GITHUB_PATH
       - name: Build native libs
         run: .\build_libs_windows.ps1
-      - name: Run Diamond tests
+      - name: Run native tests
         run: cargo test --release
-        working-directory: ./lib/diamond
+        working-directory: ./lib
       - name: Run Crystal Tests
         run: lovec . /test-unit
         working-directory: ./game
@@ -43,7 +43,7 @@ jobs:
         run: sudo apt-get install libasound2-dev
       - name: Build native libs
         run: ./build_libs_linux.sh
-      - name: Run Diamond tests
+      - name: Run native tests
         run: cargo tarpaulin --ignore-tests --out Xml -t 600
         working-directory: ./lib
       - name: Run Crystal Tests
