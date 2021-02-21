@@ -45,7 +45,7 @@ Engine.init = function(self, global)
 	self._constants = Constants:new(self._terminal, self._liveTune);
 	self._globals.CONSTANTS = self._constants;
 
-	local Viewport = require("engine/graphics/GFXConfig");
+	local Viewport = require("engine/graphics/Viewport");
 	self._viewport = Viewport:new();
 	self._globals.VIEWPORT = self._viewport;
 
