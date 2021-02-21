@@ -210,6 +210,7 @@ Engine.unloadGame = function(self)
 	end
 	self._globals.ASSETS:unloadAll();
 	self._globals.FONTS:clear();
+	-- TODO game-specific constants and terminal commands should get wiped too
 
 	self._scene = nil;
 	self._gamePath = nil;
