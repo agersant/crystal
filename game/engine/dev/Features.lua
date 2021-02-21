@@ -1,24 +1,21 @@
-require("engine/utils/OOP");
 local TableUtils = require("engine/utils/TableUtils");
 
-local Features = Class("Features");
+local Features = {};
 
-Features.init = function(self)
-	local release = love.filesystem.isFused();
-	self.unitTesting = TableUtils.contains(arg, "/test-unit");
-	self.gfxTesting = TableUtils.contains(arg, "/test-gfx");
-	self.testing = self.unitTesting or self.gfxTesting;
-	self.codeCoverage = TableUtils.contains(arg, "/coverage");
-	self.audioOutput = not self.testing;
-	self.display = self.gfxTesting or not self.testing;
-	self.logging = not release;
-	self.cli = not release;
-	self.fpsCounter = not release;
-	self.debugDraw = not release and self.display;
-	self.liveTune = not release;
-	self.slowAssertions = not release;
-	self.constants = not release;
-end
+local release = love.filesystem.isFused();
+Features.unitTesting = TableUtils.contains(arg, "/test-unit");
+Features.gfxTesting = TableUtils.contains(arg, "/test-gfx");
+Features.testing = Features.unitTesting or Features.gfxTesting;
+Features.codeCoverage = TableUtils.contains(arg, "/coverage");
+Features.audioOutput = not Features.testing;
+Features.display = Features.gfxTesting or not Features.testing;
+Features.logging = not release;
+Features.cli = not release;
+Features.fpsCounter = not release;
+Features.debugDraw = not release and Features.display;
+Features.liveTune = not release;
+Features.slowAssertions = not release;
+Features.constants = not release;
 
 local doNothing = function()
 end
@@ -35,6 +32,4 @@ Features.stub = function(t)
 	setmetatable(t, stubMetaTable);
 end
 
-local instance = Features:new();
-
-return instance;
+return Features;
