@@ -1,8 +1,8 @@
 local hotReload = function()
 	TERMINAL:run("save hot_reload");
-	ASSETS:unloadAll();
-	-- TODO This doesnt reload shit!
-	package.loaded = {};
+	_G["hotReloading"] = true;
+	ENGINE:reloadGame();
+	_G["hotReloading"] = false;
 	TERMINAL:run("load hot_reload");
 end
 

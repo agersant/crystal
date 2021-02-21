@@ -1,4 +1,5 @@
 require("engine/utils/OOP");
+local Content = require("engine/resources/Content");
 local Game = require("engine/Game");
 local Scene = require("engine/Scene");
 
@@ -26,7 +27,6 @@ Engine.init = function(self, global)
 	self._globals = {ENGINE = self};
 	self._scene = nil;
 	self._nextScene = nil;
-	self._input = nil;
 
 	if global then
 		installGlobals(self);
@@ -112,8 +112,8 @@ Engine.update = function(self, dt)
 		self._scene:update(dt * self._constants:get("timeScale"));
 	end
 
-	if self._input then
-		self._input:flushEvents();
+	if self._globals.INPUT then
+		self._globals.INPUT:flushEvents();
 	end
 end
 
@@ -140,17 +140,17 @@ end
 Engine.keyPressed = function(self, key, scanCode, isRepeat)
 	local ctrl = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl");
 	self._console:keyPressed(key, scanCode, ctrl);
-	if self._input then
+	if self._globals.INPUT then
 		if not self._console:isActive() then
-			self._input:keyPressed(key, scanCode, isRepeat);
+			self._globals.INPUT:keyPressed(key, scanCode, isRepeat);
 		end
 	end
 end
 
 Engine.keyReleased = function(self, key, scanCode)
-	if self._input then
+	if self._globals.INPUT then
 		if not self._console:isActive() then
-			self._input:keyReleased(key, scanCode);
+			self._globals.INPUT:keyReleased(key, scanCode);
 		end
 	end
 end
@@ -169,17 +169,18 @@ Engine.loadScene = function(self, scene)
 	self._nextScene = scene;
 end
 
-Engine.loadGame = function(self, path)
+Engine.loadGame = function(self, gamePath)
 	self:unloadGame();
 
-	assert(path);
-	local game = require(path):new();
+	assert(gamePath);
+	self._gamePath = gamePath;
+
+	local game = require(gamePath):new();
 	assert(game:isInstanceOf(Game));
 	self._globals.GAME = game;
 
 	local Input = require("engine/input/Input");
-	self._input = Input:new();
-	self._globals.INPUT = self._input;
+	self._globals.INPUT = Input:new();
 
 	local Persistence = require("engine/persistence/Persistence");
 	self._globals.PERSISTENCE = Persistence:new(game.classes.SaveData);
@@ -189,16 +190,33 @@ Engine.loadGame = function(self, path)
 
 	local Fonts = require("engine/resources/Fonts");
 	self._globals.FONTS = Fonts:new(game.fonts);
+
+	for _, path in ipairs(self._globals.GAME.sourceDirectories) do
+		Content:requireAll(path);
+	end
+end
+
+Engine.reloadGame = function(self)
+	if self._gamePath then
+		self:loadGame(self._gamePath);
+	end
 end
 
 Engine.unloadGame = function(self)
+	if self._globals.GAME then
+		for _, path in ipairs(self._globals.GAME.sourceDirectories) do
+			Content:unrequireAll(path);
+		end
+	end
+	self._globals.ASSETS:unloadAll();
+
 	self._scene = nil;
-	self._input = nil;
+	self._gamePath = nil;
 	self._globals.GAME = nil;
-	self._globals.SCENE = nil;
 	self._globals.INPUT = nil;
 	self._globals.PERSISTENCE = nil;
-	-- TODO reinit assets and fonts?
+	self._globals.SCENE = nil;
+	-- TODO reinit fonts?
 end
 
 return Engine;
