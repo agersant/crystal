@@ -71,7 +71,7 @@ Engine.load = function(self)
 	local Content = require("engine/resources/Content");
 	Content:requireAll("engine");
 
-	self:loadModule(MODULE);
+	self:loadGame(STARTUP_GAME);
 end
 
 Engine.update = function(self, dt)
@@ -129,28 +129,28 @@ Engine.loadScene = function(self, scene)
 	-- TODO What happens to the rest of the frame?
 end
 
-Engine.loadModule = function(self, moduleName)
-	assert(moduleName);
-	local module = require(moduleName):new();
-	self._globals.GAME = module;
+Engine.loadGame = function(self, path)
+	assert(path);
+	local game = require(path):new();
+	self._globals.GAME = game;
 
 	local Input = require("engine/input/Input");
 	self._input = Input:new();
 	self._globals.INPUT = self._input;
 
 	local Persistence = require("engine/persistence/Persistence");
-	self._globals.PERSISTENCE = Persistence:new(module.classes.SaveData);
+	self._globals.PERSISTENCE = Persistence:new(game.classes.SaveData);
 
 	local Assets = require("engine/resources/Assets");
 	self._globals.ASSETS = Assets:new();
 
 	local Fonts = require("engine/resources/Fonts");
-	self._globals.FONTS = Fonts:new(module.fonts);
+	self._globals.FONTS = Fonts:new(game.fonts);
 
 	-- TODO What happens to the rest of the frame?
 end
 
-Engine.unloadModule = function(self)
+Engine.unloadGame = function(self)
 	self._scene = nil;
 	self._input = nil;
 	self._globals.GAME = nil;

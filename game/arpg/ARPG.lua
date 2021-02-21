@@ -1,8 +1,8 @@
 require("engine/utils/OOP");
-local Module = require("engine/Module");
+local Game = require("engine/Game");
 local Content = require("engine/resources/Content");
 
-local ARPG = Class("ARPG", Module);
+local ARPG = Class("ARPG", Game);
 
 ARPG.init = function(self)
 	ARPG.super.init(self);

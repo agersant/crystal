@@ -1,7 +1,7 @@
 local Engine = require("engine/Engine");
 local Features = require("engine/dev/Features");
 
-MODULE = "arpg/ARPG"
+STARTUP_GAME = "arpg/ARPG"
 
 local engine = Engine:new(true);
 

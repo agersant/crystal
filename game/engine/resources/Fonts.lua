@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local Module = require("engine/Module");
 
 local Fonts = Class("Fonts");
 
