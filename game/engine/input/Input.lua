@@ -12,6 +12,7 @@ Input.init = function(self)
 		table.insert(self._devices, device);
 	end
 
+	-- TODO Move to somewhere game specific
 	local player1Device = self:getDevice(1);
 	player1Device:addBinding("moveLeft", "left");
 	player1Device:addBinding("moveRight", "right");

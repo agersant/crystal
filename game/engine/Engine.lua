@@ -209,6 +209,7 @@ Engine.unloadGame = function(self)
 		end
 	end
 	self._globals.ASSETS:unloadAll();
+	self._globals.FONTS:clear();
 
 	self._scene = nil;
 	self._gamePath = nil;
@@ -216,7 +217,6 @@ Engine.unloadGame = function(self)
 	self._globals.INPUT = nil;
 	self._globals.PERSISTENCE = nil;
 	self._globals.SCENE = nil;
-	-- TODO reinit fonts?
 end
 
 return Engine;

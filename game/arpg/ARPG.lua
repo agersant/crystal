@@ -1,6 +1,5 @@
 require("engine/utils/OOP");
 local Game = require("engine/Game");
-local Content = require("engine/resources/Content");
 
 local ARPG = Class("ARPG", Game);
 

@@ -22,6 +22,11 @@ Fonts.init = function(self, list)
 	self._fontObjects = {};
 end
 
+Fonts.clear = function(self)
+	self._list = {};
+	self._fontObjects = {};
+end
+
 Fonts.get = function(self, name, size)
 	if self._fontObjects[name] and self._fontObjects[name][size] then
 		return self._fontObjects[name][size];
