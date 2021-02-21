@@ -14,7 +14,6 @@ if Features.testing then
 	local TestSuite = require("engine/dev/TestSuite");
 	local success = TestSuite:execute();
 	local exitCode = success and 0 or 1;
-	love.load = function()
-	end
+	love.load = nil;
 	love.event.quit(exitCode);
 end
