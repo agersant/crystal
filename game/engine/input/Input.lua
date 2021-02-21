@@ -8,10 +8,11 @@ local maxLocalPlayers = 8;
 Input.init = function(self)
 	self._devices = {};
 	for i = 1, maxLocalPlayers do
-		local device = InputDevice:new();
+		local device = InputDevice:new(i);
 		table.insert(self._devices, device);
 	end
 
+	-- TODO Move to somewhere game specific
 	local player1Device = self:getDevice(1);
 	player1Device:addBinding("moveLeft", "left");
 	player1Device:addBinding("moveRight", "right");
@@ -52,5 +53,4 @@ Input.flushEvents = function(self)
 	end
 end
 
-local instance = Input:new();
-return instance;
+return Input;

@@ -10,7 +10,6 @@ local WalkAnimation = require("arpg/field/animation/WalkAnimation");
 local CommonShader = require("arpg/graphics/CommonShader");
 local ComboAttack = require("arpg/content/job/warrior/ComboAttack");
 local Dash = require("arpg/content/job/warrior/Dash");
-local Assets = require("engine/resources/Assets");
 local Actor = require("engine/mapscene/behavior/Actor");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local Sprite = require("engine/mapscene/display/Sprite");
@@ -38,7 +37,7 @@ end
 Warrior.init = function(self, scene)
 	Warrior.super.init(self, scene);
 
-	local sheet = Assets:getSpritesheet("arpg/assets/spritesheet/duran.lua");
+	local sheet = ASSETS:getSpritesheet("arpg/assets/spritesheet/duran.lua");
 	local sprite = self:addComponent(Sprite:new());
 	self:addComponent(SpriteAnimator:new(sprite, sheet));
 	self:addComponent(CommonShader:new());

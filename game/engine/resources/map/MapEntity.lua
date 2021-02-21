@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local Log = require("engine/dev/Log");
 local Entity = require("engine/ecs/Entity");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 
@@ -25,7 +24,7 @@ MapEntity.spawn = function(self, scene)
 			physicsBody:setPosition(self._options.x, self._options.y);
 		end
 	end, function(err)
-		Log:error("Error spawning map entity of class '" .. tostring(self._class) .. "':\n" .. tostring(err));
+		LOG:error("Error spawning map entity of class '" .. tostring(self._class) .. "':\n" .. tostring(err));
 		print(debug.traceback());
 	end);
 end

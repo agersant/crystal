@@ -75,8 +75,6 @@ impl HAL for MidiHardware {
 
 		let device = Device::new(&device_name, mode, port.clone(), connection, receiver);
 
-		println!("Connected to {}", device_name);
-
 		Ok(device)
 	}
 

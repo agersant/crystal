@@ -1,11 +1,10 @@
 require("engine/utils/OOP");
-local Assets = require("engine/resources/Assets");
 local Painter = require("engine/ui/bricks/elements/Painter");
 
 local RoundedCorners = Class("RoundedCorners", Painter);
 
 RoundedCorners.init = function(self, radius)
-	RoundedCorners.super.init(self, Assets:getShader("engine/assets/rounded_corners.glsl"));
+	RoundedCorners.super.init(self, ASSETS:getShader("engine/assets/rounded_corners.glsl"));
 	self:setAllRadius(radius or 2);
 end
 

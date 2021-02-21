@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local Log = require("engine/dev/Log");
 local Map = require("engine/resources/map/Map");
 local Tileset = require("engine/resources/map/Tileset");
 local Spritesheet = require("engine/resources/spritesheet/Spritesheet");
@@ -7,7 +6,7 @@ local StringUtils = require("engine/utils/StringUtils");
 
 local Assets = Class("Assets");
 
-local loadAsset, unloadAsset, isAssetLoaded, getAsset, getAssetType, refreshAsset;
+local loadAsset, unloadAsset, isAssetLoaded, getAsset, getAssetType;
 local loadPackage, unloadPackage;
 
 local getAssetID = function(path)
@@ -185,6 +184,7 @@ loadAsset = function(self, path, source)
 	local _, extension = getPathAndExtension(path);
 
 	if not isAssetLoaded(self, path) then
+		-- TODO require packages to list what their content is and remove extension heuristics
 		local assetData, assetType;
 		if extension == "png" then
 			assetType, assetData = loadImage(self, path);
@@ -199,8 +199,8 @@ loadAsset = function(self, path, source)
 		assert(assetType);
 
 		assert(not self._loadedAssets[assetID]);
-		self._loadedAssets[assetID] = {path = path, raw = assetData, type = assetType, sources = {}, numSources = 0};
-		Log:info("Loaded asset: " .. path);
+		self._loadedAssets[assetID] = {path = path, data = assetData, type = assetType, sources = {}, numSources = 0};
+		LOG:info("Loaded asset: " .. path);
 	end
 
 	assert(self._loadedAssets[assetID]);
@@ -210,27 +210,7 @@ loadAsset = function(self, path, source)
 	end
 
 	assert(isAssetLoaded(self, path));
-	return self._loadedAssets[assetID].raw;
-end
-
-refreshAsset = function(self, path)
-	if not isAssetLoaded(self, path) then
-		return;
-	end
-	local assetID = getAssetID(path);
-	local oldAsset = self._loadedAssets[assetID];
-	self._loadedAssets[assetID] = nil;
-	loadAsset(self, path, "refresh");
-	self._loadedAssets[assetID].sources = oldAsset.sources;
-	self._loadedAssets[assetID].numSources = oldAsset.numSources;
-	for source, _ in pairs(self._loadedAssets[assetID].sources) do
-		if isAssetLoaded(self, source) then
-			local assetType = getAssetType(self, source);
-			if assetType ~= "package" then
-				refreshAsset(self, source .. ".lua");
-			end
-		end
-	end
+	return self._loadedAssets[assetID].data;
 end
 
 unloadAsset = function(self, path, source)
@@ -258,7 +238,7 @@ unloadAsset = function(self, path, source)
 		end
 
 		self._loadedAssets[assetID] = nil;
-		Log:info("Unloaded asset: " .. path);
+		LOG:info("Unloaded asset: " .. path);
 	end
 end
 
@@ -277,13 +257,13 @@ end
 getAsset = function(self, assetType, path)
 	assert(type(path) == "string");
 	if not isAssetLoaded(self, path) then
-		Log:warning("Requested missing asset, loading at runtime: " .. path);
+		LOG:warning("Requested missing asset, loading at runtime: " .. path);
 		loadAsset(self, path, "emergency");
 	end
 	assert(isAssetLoaded(self, path));
 	local assetID = getAssetID(path);
 	assert(self._loadedAssets[assetID].type == assetType);
-	return self._loadedAssets[assetID].raw;
+	return self._loadedAssets[assetID].data;
 end
 
 Assets.init = function(self)
@@ -298,11 +278,6 @@ end
 Assets.isAssetLoaded = function(self, path)
 	assert(type(path) == "string");
 	return isAssetLoaded(self, path);
-end
-
-Assets.refresh = function(self, path)
-	assert(type(path) == "string");
-	refreshAsset(self, path);
 end
 
 Assets.unload = function(self, path)
@@ -338,5 +313,4 @@ Assets.getShader = function(self, path)
 	return getAsset(self, "shader", path);
 end
 
-local instance = Assets:new();
-return instance;
+return Assets;

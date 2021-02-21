@@ -1,7 +1,5 @@
 require("engine/utils/OOP");
-local Terminal = require("engine/dev/cli/Terminal");
 local Features = require("engine/dev/Features");
-local LiveTune = require("engine/dev/constants/LiveTune");
 local MathUtils = require("engine/utils/MathUtils");
 local StringUtils = require("engine/utils/StringUtils");
 
@@ -55,19 +53,19 @@ Constants.define = function(self, name, initialValue, options)
 
 	if valueType == "number" or valueType == "string" or valueType == "boolean" then
 		self._terminal:addCommand(name .. " value:" .. valueType, function(value)
-			self:write(name, value);
+			self:set(name, value);
 		end)
 	end
 
 	self._store[name] = constant;
 end
 
-Constants.read = function(self, name)
+Constants.get = function(self, name)
 	local constant = findConstant(self, name);
 	return constant.value;
 end
 
-Constants.write = function(self, name, value)
+Constants.set = function(self, name, value)
 	if not Features.constants then
 		return;
 	end
@@ -109,7 +107,7 @@ Constants.update = function(self)
 	for name, knobIndex in pairs(self._knobMappings) do
 		local constant = findConstant(self, name);
 		local value = self._liveTune:getValue(knobIndex, constant.value, constant.minValue, constant.maxValue);
-		self:write(name, value);
+		self:set(name, value);
 	end
 end
 
@@ -130,26 +128,8 @@ Constants.getMappedKnobs = function(self)
 	return knobs;
 end
 
-Constants.instance = Constants:new(Terminal.instance, LiveTune.instance);
-
-Constants.register = function(self, name, initialValue, options)
-	Constants.instance:define(name, initialValue, options);
-end
-
-Constants.get = function(self, name)
-	return Constants.instance:read(name);
-end
-
-Constants.set = function(self, name, value)
-	Constants.instance:write(name, value);
-end
-
-Constants.liveTune = function(self, name, knobIndex)
-	Constants.instance:mapToKnob(name, knobIndex);
-end
-
-Terminal:registerCommand("liveTune constant:string knob:number", function(name, knobIndex)
-	Constants:liveTune(name, knobIndex);
+TERMINAL:addCommand("liveTune constant:string knob:number", function(name, knobIndex)
+	CONSTANTS:mapToKnob(name, knobIndex);
 end)
 
 return Constants;

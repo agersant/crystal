@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local Log = require("engine/dev/Log");
 local MathUtils = require("engine/utils/MathUtils");
 
 local StaticLayer = Class("StaticLayer");

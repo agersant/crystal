@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local Fonts = require("engine/resources/Fonts");
 local Overlay = require("engine/ui/bricks/elements/Overlay");
 local Text = require("engine/ui/bricks/elements/Text");
 local Widget = require("engine/ui/bricks/elements/Widget");
@@ -15,7 +14,7 @@ HitWidget.init = function(self, amount)
 	local overlay = self:setRoot(Overlay:new());
 
 	local outline = overlay:addChild(Text:new());
-	outline:setFont(Fonts:get("small", 16));
+	outline:setFont(FONTS:get("small", 16));
 	outline:setColor(Palette.black);
 	outline:setTextAlignment("center");
 	outline:setContent(amount);
@@ -23,7 +22,7 @@ HitWidget.init = function(self, amount)
 	outline:setTopPadding(1);
 
 	self._textWidget = overlay:addChild(Text:new());
-	self._textWidget:setFont(Fonts:get("small", 16));
+	self._textWidget:setFont(FONTS:get("small", 16));
 	self._textWidget:setColor(Palette.barbadosCherry);
 	self._textWidget:setTextAlignment("center");
 	self._textWidget:setContent(amount);

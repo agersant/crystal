@@ -21,7 +21,7 @@ return {
       spacing = 0,
       margin = 0,
       columns = 8,
-      image = "../../assets/tileset.png",
+      image = "../tileset.png",
       imagewidth = 128,
       imageheight = 128,
       tileoffset = {

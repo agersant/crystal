@@ -1,6 +1,5 @@
 require("engine/utils/OOP");
 local Features = require("engine/dev/Features");
-local GFXConfig = require("engine/graphics/GFXConfig");
 local Colors = require("engine/resources/Colors");
 local MathUtils = require("engine/utils/MathUtils");
 
@@ -45,10 +44,12 @@ local computeIdealPosition = function(self, trackedEntities)
 	return clampPosition(self, tx, ty, screenW, screenH);
 end
 
-Camera.init = function(self, mapWidth, mapHeight)
+Camera.init = function(self, viewport, mapWidth, mapHeight)
 
+	assert(viewport);
 	assert(mapWidth);
 	assert(mapHeight);
+	self._viewport = viewport;
 	self._mapWidth = mapWidth;
 	self._mapHeight = mapHeight;
 
@@ -68,8 +69,9 @@ Camera.init = function(self, mapWidth, mapHeight)
 	self._scrollingBuffer = 20;
 end
 
+-- TODO this probably should live on the viewport instead
 Camera.getScreenSize = function(self)
-	local w, h = GFXConfig:getRenderSize();
+	local w, h = self._viewport:getRenderSize();
 	return w + 2 * self._maxCropX, h + 2 * self._maxCropY;
 end
 
@@ -100,7 +102,7 @@ end
 
 Camera.update = function(self, trackedEntities)
 
-	local z = GFXConfig:getZoom();
+	local z = self._viewport:getZoom();
 	local tx, ty = computeIdealPosition(self, trackedEntities);
 
 	local newX, newY = self._x, self._y;

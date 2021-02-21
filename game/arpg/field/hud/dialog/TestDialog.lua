@@ -1,4 +1,5 @@
 local MapScene = require("engine/mapscene/MapScene");
+local InputDevice = require("engine/input/InputDevice");
 local Script = require("engine/script/Script");
 local InputListener = require("engine/mapscene/behavior/InputListener");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
@@ -11,13 +12,17 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Blocks script during dialog", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local dialogBox = DialogBox:new();
 
 	local player = scene:spawn(Entity);
+
+	local inputDevice = InputDevice:new(1);
+	inputDevice:addBinding("advanceDialog", "q");
+	player:addComponent(InputListener:new(inputDevice));
+
 	player:addComponent(ScriptRunner:new());
-	player:addComponent(InputListener:new(1));
 	player:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 
 	local npc = scene:spawn(Entity);
@@ -32,7 +37,6 @@ tests[#tests].body = function()
 		a = 2;
 	end));
 
-	local inputDevice = player:getInputDevice();
 	local frame = function(self)
 		scene:update(0);
 		dialogBox:update(0);
@@ -56,13 +60,17 @@ end
 
 tests[#tests + 1] = {name = "Can't start concurrent dialogs", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local dialogBox = DialogBox:new();
 
 	local player = scene:spawn(Entity);
+
+	local inputDevice = InputDevice:new(1);
+	inputDevice:addBinding("advanceDialog", "q");
+	player:addComponent(InputListener:new(inputDevice));
+
 	player:addComponent(ScriptRunner:new());
-	player:addComponent(InputListener:new(1));
 	player:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 
 	local npc = scene:spawn(Entity);
@@ -97,13 +105,17 @@ end
 
 tests[#tests + 1] = {name = "Dialog is cleaned up if entity despawns while speaking", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local dialogBox = DialogBox:new();
 
 	local player = scene:spawn(Entity);
+
+	local inputDevice = InputDevice:new(1);
+	inputDevice:addBinding("advanceDialog", "q");
+	player:addComponent(InputListener:new(inputDevice));
+
 	player:addComponent(ScriptRunner:new());
-	player:addComponent(InputListener:new(1));
 	player:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 
 	local npc = scene:spawn(Entity);

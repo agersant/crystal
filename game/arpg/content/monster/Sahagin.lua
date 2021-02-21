@@ -13,7 +13,6 @@ local WalkAnimation = require("arpg/field/animation/WalkAnimation");
 local CommonShader = require("arpg/graphics/CommonShader");
 local Navigation = require("engine/mapscene/behavior/ai/Navigation");
 local Entity = require("engine/ecs/Entity");
-local Assets = require("engine/resources/Assets");
 local Actor = require("engine/mapscene/behavior/Actor");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local Sprite = require("engine/mapscene/display/Sprite");
@@ -96,7 +95,7 @@ end
 Sahagin.init = function(self, scene)
 	Sahagin.super.init(self, scene);
 
-	local sheet = Assets:getSpritesheet("arpg/assets/spritesheet/sahagin.lua");
+	local sheet = ASSETS:getSpritesheet("arpg/assets/spritesheet/sahagin.lua");
 	local sprite = self:addComponent(Sprite:new());
 	self:addComponent(SpriteAnimator:new(sprite, sheet));
 	self:addComponent(CommonShader:new());

@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local Fonts = require("engine/resources/Fonts");
 local Element = require("engine/ui/bricks/core/Element");
 
 local Text = Class("Text", Element);
@@ -8,7 +7,7 @@ Text.init = function(self, initialContent)
 	Text.super.init(self);
 	self._textAlignment = "left";
 	self._content = initialContent or "";
-	self._font = Fonts:get("dev", 16);
+	self._font = FONTS:get("dev", 16);
 end
 
 Text.setTextAlignment = function(self, textAlignment)

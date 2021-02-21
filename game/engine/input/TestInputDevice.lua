@@ -4,13 +4,13 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Missing binding"};
 tests[#tests].body = function()
-	local device = InputDevice:new();
+	local device = InputDevice:new(1);
 	assert(not device:isCommandActive("attack"));
 end
 
 tests[#tests + 1] = {name = "Cleared binding"};
 tests[#tests].body = function()
-	local device = InputDevice:new();
+	local device = InputDevice:new(1);
 	device:addBinding("attack", "z");
 	device:clearBindingsForCommand("attack");
 	device:keyPressed("z");
@@ -19,7 +19,7 @@ end
 
 tests[#tests + 1] = {name = "Single-key binding"};
 tests[#tests].body = function()
-	local device = InputDevice:new();
+	local device = InputDevice:new(1);
 	device:addBinding("attack", "z");
 	assert(not device:isCommandActive("attack"));
 	device:keyPressed("z");
@@ -30,7 +30,7 @@ end
 
 tests[#tests + 1] = {name = "Multi-key binding"};
 tests[#tests].body = function()
-	local device = InputDevice:new();
+	local device = InputDevice:new(1);
 	device:addBinding("attack", "z");
 	device:addBinding("attack", "x");
 	assert(not device:isCommandActive("attack"));
@@ -45,7 +45,7 @@ end
 
 tests[#tests + 1] = {name = "Multi-command key"};
 tests[#tests].body = function()
-	local device = InputDevice:new();
+	local device = InputDevice:new(1);
 	device:addBinding("attack", "z");
 	device:addBinding("talk", "z");
 	assert(not device:isCommandActive("attack"));

@@ -1,5 +1,5 @@
-local Terminal = require("engine/dev/cli/Terminal");
 local Entity = require("engine/ecs/Entity");
+local InputDevice = require("engine/input/InputDevice");
 local MapScene = require("engine/mapscene/MapScene");
 local InputListener = require("engine/mapscene/behavior/InputListener");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
@@ -9,21 +9,21 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Draws all layers", gfx = "on"};
 tests[#tests].body = function(context)
-	local scene = MapScene:new("engine/test-data/TestMapScene/all_features.lua");
+	local scene = MapScene:new("test-data/TestMapScene/all_features.lua");
 	scene:draw();
-	context:compareFrame("engine/test-data/TestMapScene/draws-all-layers.png");
+	context:compareFrame("test-data/TestMapScene/draws-all-layers.png");
 end
 
 tests[#tests + 1] = {name = "Loads entities", gfx = "mock"};
 tests[#tests].body = function(context)
-	local scene = MapScene:new("engine/test-data/TestMapScene/all_features.lua");
+	local scene = MapScene:new("test-data/TestMapScene/all_features.lua");
 	local entities = scene:getECS():getAllEntities();
 	assert(TableUtils.countKeys(entities) == 10); -- 8 dynamic tiles + 2 map entities
 end
 
 tests[#tests + 1] = {name = "Can spawn and despawn entities", gfx = "mock"};
 tests[#tests].body = function(context)
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
 	local Piggy = Class:test("Piggy", Entity);
 	local piggy = scene:spawn(Piggy);
 	scene:update(0);
@@ -37,10 +37,9 @@ tests[#tests + 1] = {name = "Can use the `spawn` command", gfx = "mock"};
 tests[#tests].body = function(context)
 	local TestSpawnCommand = Class("TestSpawnCommand", Entity);
 
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
-	Scene:setCurrent(scene);
+	local scene = MapScene:new("test-data/empty_map.lua");
 
-	Terminal:execute("spawn TestSpawnCommand");
+	scene:spawnEntityNearPlayer(TestSpawnCommand);
 	scene:update(0);
 
 	for entity in pairs(scene:getECS():getAllEntities()) do
@@ -59,16 +58,15 @@ tests[#tests].body = function(context)
 		self:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 	end
 
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
-	Scene:setCurrent(scene);
+	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local player = scene:spawn(Entity);
-	player:addComponent(InputListener:new(1));
+	player:addComponent(InputListener:new(InputDevice:new(1)));
 	player:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
 	player:setPosition(200, 200);
 	scene:update(0);
 
-	Terminal:execute("spawn TestSpawnCommandProximity");
+	scene:spawnEntityNearPlayer(TestSpawnCommandProximity);
 	scene:update(0);
 
 	for entity in pairs(scene:getECS():getAllEntities()) do

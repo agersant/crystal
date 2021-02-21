@@ -1,7 +1,6 @@
 require("engine/utils/OOP");
 local FFI = require("ffi");
 local Diamond = FFI.load("diamond");
-local GFXConfig = require("engine/graphics/GFXConfig");
 local Path = require("engine/mapscene/behavior/ai/Path");
 local Features = require("engine/dev/Features");
 local Colors = require("engine/resources/Colors");
@@ -59,11 +58,11 @@ NavigationMesh.getNearestPointOnNavmesh = function(self, x, y)
 	return result.x, result.y;
 end
 
-NavigationMesh.draw = function(self)
+NavigationMesh.draw = function(self, viewport)
 	assert(self._triangles);
 	love.graphics.setLineWidth(1);
 	love.graphics.setLineJoin("bevel");
-	love.graphics.setPointSize(4 * GFXConfig:getZoom());
+	love.graphics.setPointSize(4 * viewport:getZoom());
 	for i, triangle in ipairs(self._triangles) do
 		love.graphics.setColor(Colors.jadeDust:alpha(.25));
 		love.graphics.polygon("fill", triangle.vertices);

@@ -1,7 +1,6 @@
 require("engine/utils/OOP");
 local Features = require("engine/dev/Features");
 local Colors = require("engine/resources/Colors");
-local Fonts = require("engine/resources/Fonts");
 
 local Console = Class("Console");
 
@@ -27,7 +26,7 @@ Console.init = function(self, terminal)
 	self._isActive = false;
 	self._textInputWasOn = false;
 	self._keyRepeatWasOn = false;
-	self._font = Fonts:get("dev", fontSize);
+	self._font = FONTS:get("dev", fontSize);
 end
 
 Console.toggle = function(self)

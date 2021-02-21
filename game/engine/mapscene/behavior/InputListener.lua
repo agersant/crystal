@@ -1,21 +1,17 @@
 require("engine/utils/OOP");
-local Input = require("engine/input/Input");
+local InputDevice = require("engine/input/InputDevice");
 local Component = require("engine/ecs/Component");
 local InputContext = require("engine/mapscene/behavior/InputContext");
 
 local InputListener = Class("InputListener", Component);
 
-InputListener.init = function(self, playerIndex)
-	assert(playerIndex);
+InputListener.init = function(self, inputDevice)
+	assert(inputDevice);
+	assert(inputDevice:isInstanceOf(InputDevice));
 	InputListener.super.init(self);
-	self._playerIndex = playerIndex;
-	self._inputDevice = Input:getDevice(playerIndex);
+	self._inputDevice = inputDevice;
 	self._inputContexts = {};
 	self._disabled = 0;
-end
-
-InputListener.getAssignedPlayer = function(self)
-	return self._playerIndex;
 end
 
 InputListener.getInputDevice = function(self)

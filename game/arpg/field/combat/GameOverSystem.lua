@@ -4,7 +4,6 @@ local TitleScreen = require("arpg/frontend/TitleScreen");
 local PartyMember = require("arpg/persistence/party/PartyMember");
 local AllComponents = require("engine/ecs/query/AllComponents");
 local System = require("engine/ecs/System");
-local Scene = require("engine/Scene");
 
 local GameOverSystem = Class("GameOverSystem", System);
 
@@ -22,7 +21,7 @@ GameOverSystem.afterScripts = function(self)
 			return;
 		end
 	end
-	Scene:setCurrent(TitleScreen:new());
+	ENGINE:loadScene(TitleScreen:new());
 end
 
 return GameOverSystem;
