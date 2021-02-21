@@ -47,6 +47,10 @@ LiveTune.init = function(self)
 	self._ccIndices = {112, 74, 71, 76, 77, 93, 73, 75, 114, 18, 19, 16, 17, 91, 79, 72};
 end
 
+LiveTune.disconnectFromDevice = function(self)
+	Knob.disconnect();
+end
+
 LiveTune.connectToDevice = function(self, portNumber)
 	Knob.connect(portNumber - 1);
 end

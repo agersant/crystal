@@ -16,6 +16,7 @@ local installGlobals = function(self)
 	love.keypressed = wrap(self, Engine.keyPressed);
 	love.keyreleased = wrap(self, Engine.keyReleased);
 	love.load = wrap(self, Engine.load);
+	love.quit = wrap(self, Engine.quit);
 	love.resize = wrap(self, Engine.resize);
 	love.update = wrap(self, Engine.update);
 	love.textinput = wrap(self, Engine.textInput);
@@ -218,6 +219,10 @@ Engine.unloadGame = function(self)
 	self._globals.INPUT = nil;
 	self._globals.PERSISTENCE = nil;
 	self._globals.SCENE = nil;
+end
+
+Engine.quit = function(self)
+	self._globals.LIVE_TUNE:disconnectFromDevice();
 end
 
 return Engine;
