@@ -1,12 +1,11 @@
 require("engine/utils/OOP");
-local GFXConfig = require("engine/graphics/GFXConfig");
 
 local Renderer = Class("Renderer");
 
 local letterbox = function(self, drawFunction)
-	local windowWidth, windowHeight = GFXConfig:getWindowSize();
-	local renderWidth, renderHeight = GFXConfig:getRenderSize();
-	local zoom = GFXConfig:getZoom();
+	local windowWidth, windowHeight = self._viewport:getWindowSize();
+	local renderWidth, renderHeight = self._viewport:getRenderSize();
+	local zoom = self._viewport:getZoom();
 
 	local letterboxWidth = renderWidth * zoom;
 	local letterboxHeight = renderHeight * zoom;
@@ -20,15 +19,18 @@ local letterbox = function(self, drawFunction)
 	love.graphics.pop();
 end
 
-Renderer.init = function(self)
-	local renderWidth, renderHeight = GFXConfig:getRenderSize();
+Renderer.init = function(self, viewport)
+	assert(viewport);
+	self._viewport = viewport;
+
+	local renderWidth, renderHeight = self._viewport:getRenderSize();
 	self._padding = 1; -- Additional pixels rendered so that we have adjacent data when offsetting the scene by (unzoomed) subpixel amounts
 	self._canvas = love.graphics.newCanvas(renderWidth + 2 * self._padding, renderHeight + 2 * self._padding);
 	self._canvas:setFilter("nearest");
 end
 
 Renderer.draw = function(self, drawFunction, options)
-	local renderWidth, renderHeight = GFXConfig:getRenderSize();
+	local renderWidth, renderHeight = self._viewport:getRenderSize();
 
 	options = options or {};
 	local subpixelOffsetX = options.subpixelOffsetX or 0;
@@ -50,7 +52,7 @@ Renderer.draw = function(self, drawFunction, options)
 	end
 
 	letterbox(self, function()
-		local zoom = GFXConfig:getZoom();
+		local zoom = self._viewport:getZoom();
 		love.graphics.scale(zoom, zoom);
 		love.graphics.translate(subpixelOffsetX, subpixelOffsetY);
 		love.graphics.translate((renderWidth - sceneSizeX) / 2, (renderHeight - sceneSizeY) / 2);

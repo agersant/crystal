@@ -1,6 +1,5 @@
 require("engine/utils/OOP");
 local DialogBox = require("arpg/field/hud/dialog/DialogBox");
-local GFXConfig = require("engine/graphics/GFXConfig");
 local Overlay = require("engine/ui/bricks/elements/Overlay");
 local Widget = require("engine/ui/bricks/elements/Widget");
 

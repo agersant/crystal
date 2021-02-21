@@ -3,14 +3,13 @@ local MapScene = require("engine/mapscene/MapScene");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local Sprite = require("engine/mapscene/display/Sprite");
 local SpriteAnimator = require("engine/mapscene/display/SpriteAnimator");
-local Assets = require("engine/resources/Assets");
 local Script = require("engine/script/Script");
 
 local tests = {};
 
 tests[#tests + 1] = {name = "Set animation updates current frame", gfx = "mock"};
 tests[#tests].body = function()
-	local sheet = Assets:getSpritesheet("engine/test-data/blankey.lua");
+	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
 	local sprite = Sprite:new();
 	local animator = SpriteAnimator:new(sprite, sheet);
 	assert(not sprite:getFrame());
@@ -20,8 +19,8 @@ end
 
 tests[#tests + 1] = {name = "Cycles through animation frames", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
-	local sheet = Assets:getSpritesheet("engine/test-data/blankey.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
+	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
 
 	local entity = scene:spawn(Entity);
 	local sprite = entity:addComponent(Sprite:new());
@@ -41,8 +40,8 @@ end
 
 tests[#tests + 1] = {name = "Animation blocks script", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
-	local sheet = Assets:getSpritesheet("engine/test-data/blankey.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
+	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
 
 	local entity = scene:spawn(Entity);
 	local sprite = entity:addComponent(Sprite:new());
@@ -64,8 +63,8 @@ end
 
 tests[#tests + 1] = {name = "Looping animation thread never ends", gfx = "mock"};
 tests[#tests].body = function()
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
-	local sheet = Assets:getSpritesheet("engine/test-data/blankey.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
+	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
 
 	local entity = scene:spawn(Entity);
 	local sprite = entity:addComponent(Sprite:new());

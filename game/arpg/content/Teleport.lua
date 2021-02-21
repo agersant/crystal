@@ -1,8 +1,6 @@
 require("engine/utils/OOP");
-local Module = require("engine/Module");
 local PartyMember = require("arpg/persistence/party/PartyMember");
 local Persistence = require("engine/persistence/Persistence");
-local Scene = require("engine/Scene");
 local MapSystem = require("engine/mapscene/MapSystem");
 local ScriptRunner = require("engine/mapscene/behavior/ScriptRunner");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
@@ -19,10 +17,9 @@ local doTeleport = function(self, triggeredBy)
 	local teleportEntity = self:getEntity();
 	local finalX, finalY = teleportEntity._targetX, teleportEntity._targetY;
 
-	Persistence:getSaveData():save();
-	local targetMap = StringUtils.mergePaths(Module:getCurrent().mapDirectory, teleportEntity._targetMap);
+	local targetMap = StringUtils.mergePaths(GAME.mapDirectory, teleportEntity._targetMap);
 	local newScene = Field:new(targetMap, finalX, finalY, self:getAngle());
-	Scene:setCurrent(newScene);
+	LOAD_SCENE(newScene);
 end
 
 local teleportScript = function(self)

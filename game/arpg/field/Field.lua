@@ -10,13 +10,12 @@ local DamageNumbersSystem = require("arpg/field/hud/damage/DamageNumbersSystem")
 local HUDSystem = require("arpg/field/hud/HUDSystem");
 local PartyMember = require("arpg/persistence/party/PartyMember");
 local MapScene = require("engine/mapscene/MapScene");
-local Persistence = require("engine/persistence/Persistence");
 local InputListener = require("engine/mapscene/behavior/InputListener");
 
 local Field = Class("Field", MapScene);
 
 local spawnParty = function(self, x, y, startAngle)
-	local partyData = Persistence:getSaveData():getParty();
+	local partyData = PERSISTENCE:getSaveData():getParty();
 	assert(partyData);
 	for i, partyMemberData in ipairs(partyData:getMembers()) do
 		local assignedPlayerIndex = partyMemberData:getAssignedPlayer();
@@ -27,7 +26,7 @@ local spawnParty = function(self, x, y, startAngle)
 		local entity = self:spawn(class, {});
 		entity:addComponent(PartyMember:new());
 		if assignedPlayerIndex then
-			entity:addComponent(InputListener:new(assignedPlayerIndex));
+			entity:addComponent(InputListener:new(INPUT:getDevice(assignedPlayerIndex)));
 			entity:addComponent(MovementControls:new());
 			entity:addComponent(InteractionControls:new());
 		end

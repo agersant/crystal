@@ -5,8 +5,8 @@ local tests = {};
 
 tests[#tests + 1] = {name = "Starts with blank save"};
 tests[#tests].body = function()
-	Persistence:init(BaseSaveData);
-	assert(Persistence:getSaveData():isInstanceOf(BaseSaveData));
+	local persistence = Persistence:new(BaseSaveData);
+	assert(persistence:getSaveData():isInstanceOf(BaseSaveData));
 end
 
 tests[#tests + 1] = {name = "Saves and loads data"};
@@ -30,16 +30,21 @@ tests[#tests].body = function()
 		foo = self.foo;
 	end;
 
-	Persistence:init(SaveData);
+	local persistence = Persistence:new(SaveData);
 
 	foo = "bar";
-	Persistence:getSaveData():save();
-	Persistence:writeToDisk("test.crystal");
+	persistence:getSaveData():save();
+	persistence:writeToDisk("test.crystal");
 	foo = "not bar";
-	Persistence:loadFromDisk("test.crystal");
+	persistence:loadFromDisk("test.crystal");
 	assert(foo == "not bar");
-	Persistence:getSaveData():load();
+	persistence:getSaveData():load();
 	assert(foo == "bar");
+end
+
+tests[#tests + 1] = {name = "Has global API"};
+tests[#tests].body = function()
+	assert(PERSISTENCE);
 end
 
 return tests;

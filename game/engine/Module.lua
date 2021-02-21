@@ -9,16 +9,4 @@ Module.init = function(self)
 	self.fonts = {};
 end
 
-local currentModule;
-
-Module.getCurrent = function(self)
-	return currentModule;
-end
-
-Module.setCurrent = function(self, module)
-	assert(module);
-	assert(module:isInstanceOf(Module));
-	currentModule = module;
-end
-
 return Module;

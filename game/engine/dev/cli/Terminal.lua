@@ -184,14 +184,4 @@ Terminal.getParsedInput = function(self)
 	return self._parsedInput;
 end
 
-Terminal.instance = Terminal:new();
-
-Terminal.registerCommand = function(self, description, func)
-	Terminal.instance:addCommand(description, func);
-end
-
-Terminal.execute = function(self, command)
-	Terminal.instance:run(command);
-end
-
 return Terminal;

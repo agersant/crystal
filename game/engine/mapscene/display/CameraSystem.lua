@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local Terminal = require("engine/dev/cli/Terminal");
 local System = require("engine/ecs/System");
 local InputListener = require("engine/mapscene/behavior/InputListener");
 local Camera = require("engine/mapscene/display/Camera");
@@ -44,11 +43,11 @@ CameraSystem.duringDebugDraw = function(self)
 	end
 end
 
-Terminal:registerCommand("showCameraOverlay", function()
+TERMINAL:addCommand("showCameraOverlay", function()
 	drawCameraOverlay = true;
 end);
 
-Terminal:registerCommand("hideCameraOverlay", function()
+TERMINAL:addCommand("hideCameraOverlay", function()
 	drawCameraOverlay = false;
 end);
 

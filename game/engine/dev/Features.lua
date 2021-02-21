@@ -21,7 +21,7 @@ Features.init = function(self)
 end
 
 local doNothing = function()
-end;
+end
 
 local stubMetaTable = {
 	__newindex = function(t, k, v)

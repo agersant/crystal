@@ -13,7 +13,7 @@ local tests = {};
 tests[#tests + 1] = {name = "Hitbox components register contacts against weakbox components", gfx = "mock"};
 tests[#tests].body = function()
 
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local entityA = scene:spawn(Entity);
 	local physicsBodyA = entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
@@ -55,7 +55,7 @@ end
 tests[#tests + 1] = {name = "Hitbox components stop generating contacts when removed", gfx = "mock"};
 tests[#tests].body = function()
 
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local entityA = scene:spawn(Entity);
 	local physicsBodyA = entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
@@ -95,7 +95,7 @@ end
 tests[#tests + 1] = {name = "Collision components register contacts against trigger components", gfx = "mock"};
 tests[#tests].body = function()
 
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local entityA = scene:spawn(Entity);
 	local physicsBodyA = entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
@@ -135,7 +135,7 @@ end
 tests[#tests + 1] = {name = "Trigger components stop generating contacts when removed", gfx = "mock"};
 tests[#tests].body = function()
 
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local entityA = scene:spawn(Entity);
 	local physicsBody = entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
@@ -162,7 +162,7 @@ end
 tests[#tests + 1] = {name = "Collision components register contacts against each other", gfx = "mock"};
 tests[#tests].body = function()
 
-	local scene = MapScene:new("engine/test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local entityA = scene:spawn(Entity);
 	local physicsBodyA = entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));

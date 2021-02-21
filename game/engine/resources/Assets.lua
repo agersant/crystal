@@ -7,7 +7,7 @@ local StringUtils = require("engine/utils/StringUtils");
 
 local Assets = Class("Assets");
 
-local loadAsset, unloadAsset, isAssetLoaded, getAsset, getAssetType, refreshAsset;
+local loadAsset, unloadAsset, isAssetLoaded, getAsset, getAssetType;
 local loadPackage, unloadPackage;
 
 local getAssetID = function(path)
@@ -213,26 +213,6 @@ loadAsset = function(self, path, source)
 	return self._loadedAssets[assetID].raw;
 end
 
-refreshAsset = function(self, path)
-	if not isAssetLoaded(self, path) then
-		return;
-	end
-	local assetID = getAssetID(path);
-	local oldAsset = self._loadedAssets[assetID];
-	self._loadedAssets[assetID] = nil;
-	loadAsset(self, path, "refresh");
-	self._loadedAssets[assetID].sources = oldAsset.sources;
-	self._loadedAssets[assetID].numSources = oldAsset.numSources;
-	for source, _ in pairs(self._loadedAssets[assetID].sources) do
-		if isAssetLoaded(self, source) then
-			local assetType = getAssetType(self, source);
-			if assetType ~= "package" then
-				refreshAsset(self, source .. ".lua");
-			end
-		end
-	end
-end
-
 unloadAsset = function(self, path, source)
 	local source = string.lower(source);
 	local assetID = getAssetID(path);
@@ -300,11 +280,6 @@ Assets.isAssetLoaded = function(self, path)
 	return isAssetLoaded(self, path);
 end
 
-Assets.refresh = function(self, path)
-	assert(type(path) == "string");
-	refreshAsset(self, path);
-end
-
 Assets.unload = function(self, path)
 	assert(type(path) == "string");
 	unloadAsset(self, path, "user");
@@ -338,5 +313,4 @@ Assets.getShader = function(self, path)
 	return getAsset(self, "shader", path);
 end
 
-local instance = Assets:new();
-return instance;
+return Assets;

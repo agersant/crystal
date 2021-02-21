@@ -8,7 +8,7 @@ local maxLocalPlayers = 8;
 Input.init = function(self)
 	self._devices = {};
 	for i = 1, maxLocalPlayers do
-		local device = InputDevice:new();
+		local device = InputDevice:new(i);
 		table.insert(self._devices, device);
 	end
 
@@ -52,5 +52,4 @@ Input.flushEvents = function(self)
 	end
 end
 
-local instance = Input:new();
-return instance;
+return Input;

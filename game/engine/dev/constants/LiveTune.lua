@@ -2,7 +2,6 @@ require("engine/utils/OOP");
 require("engine/ffi/Knob");
 local FFI = require("ffi");
 local Knob = FFI.load("knob");
-local Terminal = require("engine/dev/cli/Terminal");
 local Features = require("engine/dev/Features");
 local Log = require("engine/dev/Log");
 local MathUtils = require("engine/utils/MathUtils");
@@ -106,10 +105,8 @@ LiveTune.getCurrentDevice = function(self)
 	end
 end
 
-LiveTune.instance = LiveTune:new();
-
-Terminal:registerCommand("connectToMIDIDevice port:number", function(port)
-	LiveTune.instance:connectToDevice(port);
+TERMINAL:addCommand("connectToMIDIDevice port:number", function(port)
+	LIVE_TUNE:connectToDevice(port);
 end);
 
 return LiveTune;

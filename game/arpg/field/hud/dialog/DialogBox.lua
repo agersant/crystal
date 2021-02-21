@@ -1,6 +1,5 @@
 require("engine/utils/OOP");
 local Log = require("engine/dev/Log");
-local Fonts = require("engine/resources/Fonts");
 local Script = require("engine/script/Script");
 local Image = require("engine/ui/bricks/elements/Image");
 local Overlay = require("engine/ui/bricks/elements/Overlay");
@@ -28,7 +27,7 @@ DialogBox.init = function(self)
 	background:setHorizontalAlignment("stretch");
 
 	self._textWidget = overlay:addChild(Text:new());
-	self._textWidget:setFont(Fonts:get("body", 16));
+	self._textWidget:setFont(FONTS:get("body", 16));
 	self._textWidget:setAllPadding(8);
 	self._textWidget:setLeftPadding(80);
 	self._textWidget:setAlignment("stretch", "stretch");

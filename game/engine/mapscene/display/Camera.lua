@@ -1,6 +1,5 @@
 require("engine/utils/OOP");
 local Features = require("engine/dev/Features");
-local GFXConfig = require("engine/graphics/GFXConfig");
 local Colors = require("engine/resources/Colors");
 local MathUtils = require("engine/utils/MathUtils");
 
@@ -45,6 +44,7 @@ local computeIdealPosition = function(self, trackedEntities)
 	return clampPosition(self, tx, ty, screenW, screenH);
 end
 
+-- TODO Add viewport parameter instead of using the global
 Camera.init = function(self, mapWidth, mapHeight)
 
 	assert(mapWidth);
@@ -69,7 +69,7 @@ Camera.init = function(self, mapWidth, mapHeight)
 end
 
 Camera.getScreenSize = function(self)
-	local w, h = GFXConfig:getRenderSize();
+	local w, h = VIEWPORT:getRenderSize();
 	return w + 2 * self._maxCropX, h + 2 * self._maxCropY;
 end
 
@@ -100,7 +100,7 @@ end
 
 Camera.update = function(self, trackedEntities)
 
-	local z = GFXConfig:getZoom();
+	local z = VIEWPORT:getZoom();
 	local tx, ty = computeIdealPosition(self, trackedEntities);
 
 	local newX, newY = self._x, self._y;

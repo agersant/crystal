@@ -1,8 +1,9 @@
-_G["love"] = love or {};
-
+local Engine = require("engine/Engine");
 local Features = require("engine/dev/Features");
 
 MODULE = "arpg/ARPG"
+
+local engine = Engine:new(true);
 
 if Features.testing then
 	if Features.codeCoverage then
@@ -14,6 +15,4 @@ if Features.testing then
 	local success = TestSuite:execute();
 	local exitCode = success and 0 or 1;
 	love.event.quit(exitCode);
-else
-	require("engine/Game");
 end

@@ -1,9 +1,7 @@
 require("engine/utils/OOP");
-local Terminal = require("engine/dev/cli/Terminal");
 local Log = require("engine/dev/Log");
 local ECS = require("engine/ecs/ECS");
 local Renderer = require("engine/graphics/Renderer");
-local Assets = require("engine/resources/Assets");
 local MapSystem = require("engine/mapscene/MapSystem");
 local BehaviorSystem = require("engine/mapscene/behavior/BehaviorSystem");
 local Entity = require("engine/ecs/Entity");
@@ -24,8 +22,6 @@ local PhysicsBodySystem = require("engine/mapscene/physics/PhysicsBodySystem");
 local PhysicsSystem = require("engine/mapscene/physics/PhysicsSystem");
 local TouchTriggerSystem = require("engine/mapscene/physics/TouchTriggerSystem");
 local WeakboxSystem = require("engine/mapscene/physics/WeakboxSystem");
-local Module = require("engine/Module");
-local Persistence = require("engine/persistence/Persistence");
 local Scene = require("engine/Scene");
 local Alias = require("engine/utils/Alias");
 local StringUtils = require("engine/utils/StringUtils");
@@ -37,12 +33,12 @@ MapScene.init = function(self, mapName)
 	MapScene.super.init(self);
 
 	local ecs = ECS:new();
-	local map = Assets:getMap(mapName);
+	local map = ASSETS:getMap(mapName);
 
 	self._ecs = ecs;
 	Alias:add(ecs, self);
 
-	self._renderer = Renderer:new();
+	self._renderer = Renderer:new(VIEWPORT);
 
 	-- Before physics
 	ecs:addSystem(PhysicsBodySystem:new(ecs));
@@ -154,17 +150,16 @@ MapScene.draw = function(self)
 
 end
 
-Terminal:registerCommand("loadMap mapName:string", function(mapName)
-	Persistence:getSaveData():save();
-	local module = Module:getCurrent();
-	local sceneClass = module.classes.MapScene;
-	local sceneFile = StringUtils.mergePaths(module.mapDirectory, mapName .. ".lua");
+TERMINAL:addCommand("loadMap mapName:string", function(mapName)
+	local sceneClass = GAME.classes.MapScene;
+	local sceneFile = StringUtils.mergePaths(GAME.mapDirectory, mapName .. ".lua");
 	local newScene = sceneClass:new(sceneFile);
-	Scene:setCurrent(newScene);
+	LOAD_SCENE(newScene);
 end);
 
 local spawn = function(className)
-	local currentScene = Scene:getCurrent();
+
+	local currentScene = SCENE;
 
 	local playerPhysicsBody;
 	local players = currentScene:getECS():getAllEntitiesWith(InputListener);
@@ -195,6 +190,6 @@ local spawn = function(className)
 	end
 end
 
-Terminal:registerCommand("spawn className:string", spawn);
+TERMINAL:addCommand("spawn className:string", spawn);
 
 return MapScene;

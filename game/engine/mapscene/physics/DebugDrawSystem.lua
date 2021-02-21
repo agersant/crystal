@@ -1,5 +1,4 @@
 require("engine/utils/OOP");
-local Terminal = require("engine/dev/cli/Terminal");
 local Features = require("engine/dev/Features");
 local System = require("engine/ecs/System");
 local AllComponents = require("engine/ecs/query/AllComponents");
@@ -83,19 +82,19 @@ DebugDrawSystem.duringDebugDraw = function(self)
 	end
 end
 
-Terminal:registerCommand("showNavmeshOverlay", function()
+TERMINAL:addCommand("showNavmeshOverlay", function()
 	drawNavigation = true;
 end);
 
-Terminal:registerCommand("hideNavmeshOverlay", function()
+TERMINAL:addCommand("hideNavmeshOverlay", function()
 	drawNavigation = false;
 end);
 
-Terminal:registerCommand("showPhysicsOverlay", function()
+TERMINAL:addCommand("showPhysicsOverlay", function()
 	drawPhysics = true;
 end);
 
-Terminal:registerCommand("hidePhysicsOverlay", function()
+TERMINAL:addCommand("hidePhysicsOverlay", function()
 	drawPhysics = false;
 end);
 

@@ -1,8 +1,6 @@
 require("engine/utils/OOP");
-local Terminal = require("engine/dev/cli/Terminal");
-
+-- TODO rename to Viewport
 local GFXConfig = Class("GFXConfig");
-local instance;
 
 local setMode = function(self)
 	if not love.window then
@@ -60,22 +58,20 @@ GFXConfig.getWindowSize = function(self)
 	return self._windowWidth, self._windowHeight;
 end
 
-instance = GFXConfig:new();
-
 local setZoom = function(zoom)
-	instance:setZoom(zoom);
+	VIEWPORT:setZoom(zoom);
 end
 
 local enableFullscreen = function()
-	instance:setFullscreenEnabled(true);
+	VIEWPORT:setFullscreenEnabled(true);
 end
 
 local disableFullscreen = function()
-	instance:setFullscreenEnabled(false);
+	VIEWPORT:setFullscreenEnabled(false);
 end
 
-Terminal:registerCommand("setZoom zoom:number", setZoom);
-Terminal:registerCommand("enableFullscreen", enableFullscreen);
-Terminal:registerCommand("disableFullscreen", disableFullscreen);
+TERMINAL:addCommand("setZoom zoom:number", setZoom);
+TERMINAL:addCommand("enableFullscreen", enableFullscreen);
+TERMINAL:addCommand("disableFullscreen", disableFullscreen);
 
-return instance;
+return GFXConfig;

@@ -1,9 +1,7 @@
 require("engine/utils/OOP");
-local Terminal = require("engine/dev/cli/Terminal");
 local Features = require("engine/dev/Features");
 local Log = require("engine/dev/Log");
 local Colors = require("engine/resources/Colors");
-local Fonts = require("engine/resources/Fonts");
 
 local FPSCounter = Class("FPSCounter");
 
@@ -25,7 +23,7 @@ local textPaddingY = 5;
 local state = {isActive = false, frameDurations = {}};
 
 FPSCounter.init = function(self)
-	self.font = Fonts:get("devBold", fontSize);
+	self.font = FONTS:get("devBold", fontSize);
 end
 
 FPSCounter.update = function(self, dt)
@@ -71,11 +69,11 @@ FPSCounter.draw = function(self)
 	love.graphics.print(self._text, x, y);
 end
 
-Terminal:registerCommand("showFPSCounter", function()
+TERMINAL:addCommand("showFPSCounter", function()
 	state.isActive = true;
 end);
 
-Terminal:registerCommand("hideFPSCounter", function()
+TERMINAL:addCommand("hideFPSCounter", function()
 	state.isActive = false;
 end);
 

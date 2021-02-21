@@ -1,10 +1,10 @@
 require("engine/utils/OOP");
 local System = require("engine/ecs/System");
-local GFXConfig = require("engine/graphics/GFXConfig");
 local HUD = require("arpg/field/hud/HUD");
 
 local HUDSystem = Class("HUDSystem", System);
 
+-- TODO Add viewport parameter
 HUDSystem.init = function(self, ecs)
 	HUDSystem.super.init(self, ecs);
 	self._hud = HUD:new();
@@ -15,7 +15,7 @@ HUDSystem.getHUD = function(self)
 end
 
 HUDSystem.afterScripts = function(self, dt)
-	local width, height = GFXConfig:getRenderSize();
+	local width, height = VIEWPORT:getRenderSize();
 	self._hud:updateTree(dt, width, height);
 end
 
