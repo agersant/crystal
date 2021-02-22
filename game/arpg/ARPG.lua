@@ -22,6 +22,18 @@ ARPG.init = function(self)
 		body = "arpg/assets/font/karen2black.ttf",
 		fat = "arpg/assets/font/karenfat.ttf",
 	};
+	self.defaultBindings = {
+		{
+			left = {"moveLeft"},
+			right = {"moveRight"},
+			up = {"moveUp"},
+			down = {"moveDown"},
+			q = {"interact", "useSkill1", "advanceDialog"},
+			w = {"useSkill2"},
+			e = {"useSkill3"},
+			r = {"useSkill4"},
+		},
+	};
 end
 
 return ARPG;

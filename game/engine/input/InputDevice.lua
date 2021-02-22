@@ -30,9 +30,15 @@ InputDevice.getIndex = function(self)
 end
 
 InputDevice.addBinding = function(self, command, key)
+	-- TODO prevent duplicate entries
 	assert(type(command) == "string");
 	assert(type(key) == "string");
 	table.insert(self._bindingPairs, {command = command, key = key});
+	buildBindingTables(self);
+end
+
+InputDevice.clearAllBindings = function(self)
+	self._bindingPairs = {};
 	buildBindingTables(self);
 end
 

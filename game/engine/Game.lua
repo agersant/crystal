@@ -7,6 +7,8 @@ Game.init = function(self)
 	self.mapDirectory = "engine/assets";
 	self.testFiles = {};
 	self.fonts = {};
+	self.maxLocalPlayers = 1;
+	self.defaultBindings = {};
 end
 
 return Game;

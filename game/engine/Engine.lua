@@ -190,7 +190,8 @@ Engine.loadGame = function(self, gamePath)
 	self._globals.GAME = game;
 
 	local Input = require("engine/input/Input");
-	self._globals.INPUT = Input:new();
+	self._globals.INPUT = Input:new(game.maxLocalPlayers);
+	self._globals.INPUT:applyBindings(game.defaultBindings);
 
 	local Persistence = require("engine/persistence/Persistence");
 	self._globals.PERSISTENCE = Persistence:new(game.classes.SaveData);
