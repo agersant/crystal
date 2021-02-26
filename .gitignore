@@ -1,26 +1,8 @@
 luacov.report.out
 luacov.stats.out
 
-*.suo
-*.sdf
-*.vcxproj.user
-c_cpp_properties.json
-
-*.obj
-*.iobj
-
 *.dll
 *.lib
-
-*.exp
-*.ilk
-*.idb
-*.ipdb
-*.pdb
-*.log
-*.tlog
-
-builddir/
 
 lib/**/target
 lib/**/ffi
