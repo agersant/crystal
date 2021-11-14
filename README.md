@@ -42,7 +42,7 @@ This screenshot illustrates usage of the dev CLI to spawn entities of various ty
 
 ### Build native modules
 
-1. From the top level of this repository, execute the `build_diamond_windows.ps1` script
+1. From the top level of this repository, execute the `build_libs_windows.ps1` script
 
 ### Run the game
 

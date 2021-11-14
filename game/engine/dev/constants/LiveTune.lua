@@ -48,11 +48,11 @@ LiveTune.init = function(self)
 end
 
 LiveTune.disconnectFromDevice = function(self)
-	Knob.disconnect();
+	Knob.disconnect_from_device();
 end
 
 LiveTune.connectToDevice = function(self, portNumber)
-	Knob.connect(portNumber - 1);
+	Knob.connect_to_device(portNumber - 1);
 end
 
 LiveTune.setMode = function(self, mode)
