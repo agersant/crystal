@@ -1,11 +1,12 @@
 {
-	"vscode-lua-format.configPath": ".lua-format",
-	"Lua.runtime.version": "LuaJIT",
-	"search.exclude": {
-		"**/external": true
-	},
-	"Lua.workspace.ignoreDir": [
-		".vscode",
-		"**/external"
-	]
+  "vscode-lua-format.configPath": ".lua-format",
+  "Lua.runtime.version": "LuaJIT",
+  "search.exclude": {
+    "**/external": true
+  },
+  "Lua.workspace.ignoreDir": [".vscode", "**/external"],
+  "Lua.workspace.library": [
+    "${3rd}/love2d/library"
+  ],
+  "Lua.workspace.checkThirdParty": false
 }
