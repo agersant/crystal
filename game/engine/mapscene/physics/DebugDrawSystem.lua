@@ -5,6 +5,7 @@ local AllComponents = require("engine/ecs/query/AllComponents");
 local CollisionFilters = require("engine/mapscene/physics/CollisionFilters");
 local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 local Colors = require("engine/resources/Colors");
+local MathUtils = require("engine/utils/MathUtils");
 
 local DebugDrawSystem = Class("DebugDrawSystem", System);
 
@@ -74,6 +75,8 @@ DebugDrawSystem.duringDebugDraw = function(self, viewport)
 		for entity in pairs(self._query:getEntities()) do
 			local physicsBody = entity:getComponent(PhysicsBody):getBody();
 			local x, y = physicsBody:getX(), physicsBody:getY();
+			x = MathUtils.round(x);
+			y = MathUtils.round(y);
 			for _, fixture in ipairs(physicsBody:getFixtures()) do
 				local color = pickFixtureColor(self, fixture);
 				drawShape(self, x, y, fixture:getShape(), color);
