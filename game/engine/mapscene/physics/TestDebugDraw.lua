@@ -38,7 +38,8 @@ tests[#tests].body = function(context)
 	scene:draw();
 	TERMINAL:run("hidePhysicsOverlay");
 
-	context:compareFrame("test-data/TestDebugDraw/draws-physics-objects.png");
+	-- TODO Test disabled due to https://github.com/love2d/love/issues/1618
+	-- context:compareFrame("test-data/TestDebugDraw/draws-physics-objects.png");
 end
 
 tests[#tests + 1] = {name = "Draw navigation mesh", gfx = "on"};
@@ -50,7 +51,8 @@ tests[#tests].body = function(context)
 	scene:draw();
 	TERMINAL:run("hideNavmeshOverlay");
 
-	context:compareFrame("test-data/TestDebugDraw/draws-navigation-mesh.png");
+	-- TODO Test disabled due to https://github.com/love2d/love/issues/1618
+	-- context:compareFrame("test-data/TestDebugDraw/draws-navigation-mesh.png");
 end
 
 return tests;
