@@ -9,6 +9,9 @@ pub mod navigation;
 #[cfg(test)]
 pub mod tests;
 
+// TODO replace geo_booleanop::boolean::BooleanOp with new built-in implementation
+// See: https://github.com/georust/geo/pull/835
+
 pub struct Mesh {
 	pub collision: CollisionMesh,
 	pub navigation: NavigationMesh,
