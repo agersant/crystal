@@ -31,7 +31,7 @@ local attack = function(self)
 	self:resetMultiHitTracking();
 	local onHitEffects = {FlinchEffect:new()};
 	self:setDamagePayload({DamageUnit:new(10)}, onHitEffects);
-	self:join(self:playAnimation("attack_" .. self:getDirection4(), true));
+	self:join(self:playAnimation("attack", self:getAngle4(), true));
 end
 
 local reachAndAttack = function(self)

@@ -10,17 +10,25 @@ return {
 		animations = {
 			{%- for animation in animations %}
 			["{{ animation.name }}"] = {
-				loop = {{ animation.is_looping }}, frames = {
-					{%- for keyframe in animation.keyframes %}
-					{ id = "frame_{{ keyframe.frame.index }}", duration = {{ keyframe.duration | divided_by: 1000.0 }}, ox = {{ keyframe.top_left_offset_x | times: -1 }}, oy = {{ keyframe.top_left_offset_y | times: -1 }},
-					{%- assign num_hitboxes = keyframe.frame.hitboxes | size -%}
-					{%- if num_hitboxes > 0 -%}
-					tags = {
-						{%- for hitbox in keyframe.frame.hitboxes -%}
-						["{{ hitbox.name }}"] = { rect = { x = {{ hitbox.left_from_frame_left | plus: keyframe.top_left_offset_x }}, y = {{ hitbox.top_from_frame_top | plus: keyframe.top_left_offset_y }}, w = {{ hitbox.width }}, h = {{ hitbox.height }} } },
-						{%- endfor -%}
-					},
-					{%- endif -%}
+				loop = {{ animation.is_looping }},
+				sequences = {
+					{%- for sequence in animation.sequences %}
+					{
+						direction = "{{ sequence.direction }}",
+						frames = {
+							{%- for keyframe in sequence.keyframes %}
+							{ id = "frame_{{ keyframe.frame.index }}", duration = {{ keyframe.duration | divided_by: 1000.0 }}, ox = {{ keyframe.top_left_offset_x | times: -1 }}, oy = {{ keyframe.top_left_offset_y | times: -1 }},
+							{%- assign num_hitboxes = keyframe.hitboxes | size -%}
+							{%- if num_hitboxes > 0 -%}
+							tags = {
+								{%- for hitbox in keyframe.hitboxes -%}
+								["{{ hitbox.name }}"] = { rect = { x = {{ hitbox.left }}, y = {{ hitbox.top }}, w = {{ hitbox.width }}, h = {{ hitbox.height }} } },
+								{%- endfor -%}
+							},
+							{%- endif -%}
+							},
+							{%- endfor %}
+						},
 					},
 					{%- endfor %}
 				},

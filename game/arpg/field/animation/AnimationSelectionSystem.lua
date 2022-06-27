@@ -28,8 +28,6 @@ AnimationSelectionSystem.afterScripts = function(self)
 	local idleEntities = self._idles:getEntities();
 	local flinchEntities = self._flinches:getEntities();
 
-	-- TODO introduce the concept of directions in Tiger and let the sheet figure out the best direction for each animation
-
 	-- FLINCH
 	for entity in pairs(flinchEntities) do
 		local flinch = entity:getComponent(Flinch);
@@ -39,7 +37,7 @@ AnimationSelectionSystem.afterScripts = function(self)
 			if animation then
 				local animator = entity:getComponent(SpriteAnimator);
 				local physicsBody = entity:getComponent(PhysicsBody);
-				animator:setAnimation(animation .. "_" .. physicsBody:getDirection4());
+				animator:setAnimation(animation, physicsBody:getAngle4());
 				walkEntities[entity] = nil;
 				idleEntities[entity] = nil;
 			end
@@ -57,7 +55,7 @@ AnimationSelectionSystem.afterScripts = function(self)
 				if animation then
 					local animator = entity:getComponent(SpriteAnimator);
 					local physicsBody = entity:getComponent(PhysicsBody);
-					animator:setAnimation(animation .. "_" .. physicsBody:getDirection4());
+					animator:setAnimation(animation, physicsBody:getAngle4());
 					idleEntities[entity] = nil;
 				end
 			end
@@ -73,7 +71,7 @@ AnimationSelectionSystem.afterScripts = function(self)
 			if animation then
 				local animator = entity:getComponent(SpriteAnimator);
 				local physicsBody = entity:getComponent(PhysicsBody);
-				animator:setAnimation(animation .. "_" .. physicsBody:getDirection4());
+				animator:setAnimation(animation, physicsBody:getAngle4());
 			end
 		end
 	end

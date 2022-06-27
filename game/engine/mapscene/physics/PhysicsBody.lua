@@ -88,21 +88,16 @@ PhysicsBody.setDirection8 = function(self, xDir8, yDir8)
 	end
 
 	if xDir8 * yDir8 == 0 then
-		if xDir8 == 1 then
-			self._dir4 = "right";
-		elseif xDir8 == -1 then
-			self._dir4 = "left";
-		elseif yDir8 == 1 then
-			self._dir4 = "down";
-		elseif yDir8 == -1 then
-			self._dir4 = "up";
-		end
+		self._xDir4 = xDir8;
+		self._yDir4 = yDir8;
 	else
 		if xDir8 ~= self._xDir8 then
-			self._dir4 = yDir8 == 1 and "down" or "up";
+			self._xDir4 = 0;
+			self._yDir4 = yDir8;
 		end
 		if yDir8 ~= self._yDir8 then
-			self._dir4 = xDir8 == 1 and "right" or "left";
+			self._xDir4 = xDir8;
+			self._yDir4 = 0;
 		end
 	end
 
@@ -113,7 +108,11 @@ PhysicsBody.setDirection8 = function(self, xDir8, yDir8)
 end
 
 PhysicsBody.getDirection4 = function(self)
-	return self._dir4;
+	return self._xDir4, self._yDir4;
+end
+
+PhysicsBody.getAngle4 = function(self)
+	return math.atan2(self._yDir4, self._xDir4);
 end
 
 PhysicsBody.setLinearVelocity = function(self, x, y)

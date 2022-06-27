@@ -11,14 +11,15 @@ local jumpToFrame = function(self, animationFrame)
 	self._sprite:setFrame(frame);
 end
 
-local playback = function(self, animation)
+local playback = function(self, sequence)
+	assert(sequence);
 	local animator = self;
 	return function(self)
 		local startTime = self:getTime();
 		while true do
 			local timeElasped = self:getTime() - startTime;
-			jumpToFrame(animator, animation:getFrameAtTime(timeElasped));
-			if timeElasped >= animation:getDuration() and not animation:isLooping() then
+			jumpToFrame(animator, sequence:getFrameAtTime(timeElasped));
+			if timeElasped >= sequence:getDuration() and not sequence:isLooping() then
 				break
 			else
 				self:waitFrame();
@@ -27,15 +28,17 @@ local playback = function(self, animation)
 	end;
 end
 
-local playAnimationInternal = function(self, animationName, forceRestart)
+local playAnimationInternal = function(self, animationName, angle, forceRestart)
 	local animation = self._sheet:getAnimation(animationName);
 	assert(animation);
-	if animation == self._animation and not forceRestart then
+	local sequence = animation:getSequence(angle or math.pi / 2);
+	assert(sequence);
+	if sequence == self._sequence and not forceRestart then
 		return;
 	end
-	self._animation = animation;
+	self._sequence = sequence;
 	self._script:stopAllThreads();
-	return self._script:addThreadAndRun(playback(self, animation));
+	return self._script:addThreadAndRun(playback(self, sequence));
 end
 
 SpriteAnimator.init = function(self, sprite, sheet)
@@ -44,16 +47,16 @@ SpriteAnimator.init = function(self, sprite, sheet)
 	assert(sprite:isInstanceOf(Sprite));
 	self._sprite = sprite;
 	self._sheet = sheet;
-	self._animation = nil;
+	self._sequence = nil;
 	self._animationFrame = nil;
 end
 
-SpriteAnimator.setAnimation = function(self, animationName)
-	playAnimationInternal(self, animationName, false);
+SpriteAnimator.setAnimation = function(self, animationName, angle)
+	playAnimationInternal(self, animationName, angle, false);
 end
 
-SpriteAnimator.playAnimation = function(self, animationName)
-	local thread = playAnimationInternal(self, animationName, true);
+SpriteAnimator.playAnimation = function(self, animationName, angle)
+	local thread = playAnimationInternal(self, animationName, angle, true);
 	assert(thread);
 	return thread;
 end

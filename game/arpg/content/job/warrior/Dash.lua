@@ -20,7 +20,7 @@ local action = function(self)
 	local onHitEffects = {FlinchEffect:new(FlinchAmounts.LARGE)};
 	self:setDamagePayload({DamageUnit:new(10)}, onHitEffects);
 
-	self:setAnimation("dash_" .. self:getDirection4());
+	self:setAnimation("dash", self:getAngle4());
 
 	local angle = self:getAngle();
 	local dx = math.cos(angle);

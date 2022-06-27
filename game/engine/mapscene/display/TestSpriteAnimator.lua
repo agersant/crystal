@@ -30,10 +30,11 @@ tests[#tests].body = function()
 	animator:playAnimation("floating");
 
 	local animation = sheet:getAnimation("floating");
-	assert(animation:getFrameAtTime(0) ~= animation:getFrameAtTime(0.5));
+	local sequence = animation:getSequence(0);
+	assert(sequence:getFrameAtTime(0) ~= sequence:getFrameAtTime(0.5));
 
 	for t = 0, 500 do
-		assert(sprite:getFrame() == animation:getFrameAtTime(t * 1 / 60):getFrame());
+		assert(sprite:getFrame() == sequence:getFrameAtTime(t * 1 / 60):getFrame());
 		scene:update(1 / 60);
 	end
 end

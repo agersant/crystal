@@ -1,105 +1,110 @@
 {
-  "version": "Tiger2",
+  "version": "Tiger4",
   "sheet": {
     "frames": [
       {
-        "source": "blankey_floating_0.png",
-        "hitboxes": []
+        "source": "blankey_floating_0.png"
       },
       {
-        "source": "blankey_floating_1.png",
-        "hitboxes": []
+        "source": "blankey_floating_1.png"
       },
       {
-        "source": "blankey_floating_2.png",
-        "hitboxes": []
+        "source": "blankey_floating_2.png"
       },
       {
-        "source": "blankey_floating_3.png",
-        "hitboxes": []
+        "source": "blankey_floating_3.png"
       },
       {
-        "source": "blankey_hurt_0.png",
-        "hitboxes": [
-          {
-            "name": "test",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -5,
-                  -6
-                ],
-                "size": [
-                  11,
-                  11
+        "source": "blankey_hurt_0.png"
+      }
+    ],
+    "animations": {
+      "floating": {
+        "sequences": {
+          "North": {
+            "keyframes": [
+              {
+                "frame": "blankey_floating_0.png",
+                "hitboxes": {},
+                "duration_millis": 302,
+                "offset": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "frame": "blankey_floating_1.png",
+                "hitboxes": {},
+                "duration_millis": 299,
+                "offset": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "frame": "blankey_floating_2.png",
+                "hitboxes": {},
+                "duration_millis": 299,
+                "offset": [
+                  0,
+                  0
+                ]
+              },
+              {
+                "frame": "blankey_floating_3.png",
+                "hitboxes": {},
+                "duration_millis": 302,
+                "offset": [
+                  0,
+                  0
                 ]
               }
-            }
-          }
-        ]
-      }
-    ],
-    "animations": [
-      {
-        "name": "floating",
-        "timeline": [
-          {
-            "frame": "blankey_floating_0.png",
-            "duration": 302,
-            "offset": [
-              0,
-              0
-            ]
-          },
-          {
-            "frame": "blankey_floating_1.png",
-            "duration": 299,
-            "offset": [
-              0,
-              0
-            ]
-          },
-          {
-            "frame": "blankey_floating_2.png",
-            "duration": 299,
-            "offset": [
-              0,
-              0
-            ]
-          },
-          {
-            "frame": "blankey_floating_3.png",
-            "duration": 302,
-            "offset": [
-              0,
-              0
             ]
           }
-        ],
+        },
         "is_looping": true
       },
-      {
-        "name": "hurt",
-        "timeline": [
-          {
-            "frame": "blankey_hurt_0.png",
-            "duration": 100,
-            "offset": [
-              0,
-              0
+      "hurt": {
+        "sequences": {
+          "North": {
+            "keyframes": [
+              {
+                "frame": "blankey_hurt_0.png",
+                "hitboxes": {
+                  "test": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -5,
+                          -6
+                        ],
+                        "size": [
+                          11,
+                          11
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 100,
+                "offset": [
+                  0,
+                  0
+                ]
+              }
             ]
           }
-        ],
+        },
         "is_looping": false
       }
-    ],
+    },
     "export_settings": {
-      "format": {
-        "Template": "..\\..\\crystal.liquid"
-      },
-      "texture_destination": "..\\..\\..\\game\\engine\\test-data\\blankey.png",
-      "metadata_destination": "..\\..\\..\\game\\engine\\test-data\\blankey.lua",
-      "metadata_paths_root": "..\\..\\..\\game"
+      "Liquid": {
+        "template_file": "..\\..\\crystal.liquid",
+        "texture_file": "..\\..\\..\\game\\test-data\\blankey.png",
+        "metadata_file": "..\\..\\..\\game\\test-data\\blankey.lua",
+        "metadata_paths_root": "..\\..\\..\\game"
+      }
     }
   }
 }

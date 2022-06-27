@@ -12,19 +12,23 @@ tests[#tests].body = function()
 
 	entity:lookAt(10, 0);
 	assert(entity:getAngle() == 0);
-	assert(entity:getDirection4() == "right");
+	local x, y = entity:getDirection4();
+	assert(x == 1 and y == 0);
 
 	entity:lookAt(0, 10);
 	assert(entity:getAngle() == 0.5 * math.pi);
-	assert(entity:getDirection4() == "down");
+	local x, y = entity:getDirection4();
+	assert(x == 0 and y == 1);
 
 	entity:lookAt(-10, 0);
 	assert(entity:getAngle() == math.pi);
-	assert(entity:getDirection4() == "left");
+	local x, y = entity:getDirection4();
+	assert(x == -1 and y == 0);
 
 	entity:lookAt(0, -10);
 	assert(entity:getAngle() == -0.5 * math.pi);
-	assert(entity:getDirection4() == "up");
+	local x, y = entity:getDirection4();
+	assert(x == 0 and y == -1);
 end
 
 tests[#tests + 1] = {name = "Direction is preserved when switching to adjacent diagonal", gfx = "mock"};
@@ -32,15 +36,22 @@ tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);
 	entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	entity:setAngle(0);
+
 	entity:setAngle(0.25 * math.pi);
-	assert(entity:getDirection4() == "right");
+	local x, y = entity:getDirection4();
+	assert(x == 1 and y == 0);
+
 	entity:setAngle(-0.25 * math.pi);
-	assert(entity:getDirection4() == "right");
+	local x, y = entity:getDirection4();
+	assert(x == 1 and y == 0);
+
 	entity:setAngle(-0.75 * math.pi);
-	assert(entity:getDirection4() == "up");
+	local x, y = entity:getDirection4();
+	assert(x == 0 and y == -1);
+
 	entity:setAngle(-0.25 * math.pi);
-	assert(entity:getDirection4() == "up");
+	local x, y = entity:getDirection4();
+	assert(x == 0 and y == -1);
 end
 
 tests[#tests + 1] = {name = "Distance measurements", gfx = "mock"};

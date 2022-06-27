@@ -26,6 +26,15 @@ tests[#tests].body = function()
 	assert(180 == math.deg(MathUtils.angleBetweenVectors(0, 1, 0, -3)));
 end
 
+tests[#tests + 1] = {name = "Difference between angles"};
+tests[#tests].body = function()
+	local epsilon = 0.0001;
+	assert(0 == MathUtils.angleDifference(0, math.rad(0)));
+	assert(math.abs(math.rad(40) - MathUtils.angleDifference(math.rad(40), math.rad(0))) < epsilon);
+	assert(math.abs(math.rad(180) - MathUtils.angleDifference(math.rad(0), math.rad(180))) < epsilon);
+	assert(math.abs(math.rad(180) - MathUtils.angleDifference(math.rad(-20), math.rad(160))) < epsilon);
+end
+
 tests[#tests + 1] = {name = "Index to XY"};
 tests[#tests].body = function()
 	local x, y = MathUtils.indexToXY(8, 5);

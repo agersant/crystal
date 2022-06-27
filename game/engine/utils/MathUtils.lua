@@ -53,6 +53,13 @@ MathUtils.angleBetweenVectors = function(x1, y1, x2, y2)
 	return math.acos(dp / (n1 * n2));
 end
 
+MathUtils.angleDifference = function(angle1, angle2)
+	local angle1 = angle1 % (2 * math.pi);
+	local angle2 = angle2 % (2 * math.pi);
+	local delta = math.abs(angle1 - angle2);
+	return math.min(delta, 2 * math.pi - delta);
+end
+
 MathUtils.snapAngle = function(angle, numDirections)
 	local rad360 = 2 * math.pi;
 	angle = angle % rad360;

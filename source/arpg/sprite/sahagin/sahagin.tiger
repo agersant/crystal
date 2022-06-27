@@ -1,979 +1,853 @@
 {
-  "version": "Tiger2",
+  "version": "Tiger4",
   "sheet": {
     "frames": [
       {
-        "source": "attack_down_0.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -9,
-                  -6
-                ],
-                "size": [
-                  17,
-                  16
-                ]
-              }
-            }
-          }
-        ]
+        "source": "attack_down_0.png"
       },
       {
-        "source": "attack_down_1.png",
-        "hitboxes": [
-          {
-            "name": "hit",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -8,
-                  -4
-                ],
-                "size": [
-                  7,
-                  24
-                ]
-              }
-            }
-          },
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -6,
-                  -18
-                ],
-                "size": [
-                  16,
-                  13
-                ]
-              }
-            }
-          }
-        ]
+        "source": "attack_down_1.png"
       },
       {
-        "source": "attack_down_2.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -6,
-                  -15
-                ],
-                "size": [
-                  17,
-                  13
-                ]
-              }
-            }
-          }
-        ]
+        "source": "attack_down_2.png"
       },
       {
-        "source": "attack_left_0.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -7,
-                  -7
-                ],
-                "size": [
-                  15,
-                  15
-                ]
-              }
-            }
-          }
-        ]
+        "source": "attack_left_0.png"
       },
       {
-        "source": "attack_left_1.png",
-        "hitboxes": [
-          {
-            "name": "hit",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -21,
-                  0
-                ],
-                "size": [
-                  24,
-                  7
-                ]
-              }
-            }
-          },
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  5,
-                  -8
-                ],
-                "size": [
-                  14,
-                  16
-                ]
-              }
-            }
-          }
-        ]
+        "source": "attack_left_1.png"
       },
       {
-        "source": "attack_left_2.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -1,
-                  -8
-                ],
-                "size": [
-                  13,
-                  16
-                ]
-              }
-            }
-          }
-        ]
+        "source": "attack_left_2.png"
       },
       {
-        "source": "attack_right_0.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -7,
-                  -7
-                ],
-                "size": [
-                  14,
-                  15
-                ]
-              }
-            }
-          }
-        ]
+        "source": "attack_right_0.png"
       },
       {
-        "source": "attack_right_1.png",
-        "hitboxes": [
-          {
-            "name": "hit",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
+        "source": "attack_right_1.png"
+      },
+      {
+        "source": "attack_right_2.png"
+      },
+      {
+        "source": "attack_up_0.png"
+      },
+      {
+        "source": "attack_up_1.png"
+      },
+      {
+        "source": "attack_up_2.png"
+      },
+      {
+        "source": "idle_down.png"
+      },
+      {
+        "source": "idle_left.png"
+      },
+      {
+        "source": "idle_right.png"
+      },
+      {
+        "source": "idle_up.png"
+      },
+      {
+        "source": "knockback.png"
+      },
+      {
+        "source": "smashed.png"
+      },
+      {
+        "source": "walk_down_0.png"
+      },
+      {
+        "source": "walk_down_1.png"
+      },
+      {
+        "source": "walk_left_0.png"
+      },
+      {
+        "source": "walk_left_1.png"
+      },
+      {
+        "source": "walk_right_0.png"
+      },
+      {
+        "source": "walk_right_1.png"
+      },
+      {
+        "source": "walk_up_0.png"
+      },
+      {
+        "source": "walk_up_1.png"
+      }
+    ],
+    "animations": {
+      "attack": {
+        "sequences": {
+          "East": {
+            "keyframes": [
+              {
+                "frame": "attack_right_0.png",
+                "hitboxes": {
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -9,
+                          -15
+                        ],
+                        "size": [
+                          14,
+                          15
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 300,
+                "offset": [
                   -2,
-                  0
-                ],
-                "size": [
-                  24,
-                  7
-                ]
-              }
-            }
-          },
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -17,
                   -8
-                ],
-                "size": [
-                  13,
-                  16
                 ]
-              }
-            }
-          }
-        ]
-      },
-      {
-        "source": "attack_right_2.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -13,
-                  -9
-                ],
-                "size": [
-                  15,
-                  16
-                ]
-              }
-            }
-          }
-        ]
-      },
-      {
-        "source": "attack_up_0.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -7,
-                  -7
-                ],
-                "size": [
-                  14,
-                  14
-                ]
-              }
-            }
-          }
-        ]
-      },
-      {
-        "source": "attack_up_1.png",
-        "hitboxes": [
-          {
-            "name": "hit",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  2,
-                  -20
-                ],
-                "size": [
-                  7,
-                  24
-                ]
-              }
-            }
-          },
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -6,
-                  5
-                ],
-                "size": [
-                  16,
-                  14
-                ]
-              }
-            }
-          }
-        ]
-      },
-      {
-        "source": "attack_up_2.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -5,
-                  -1
-                ],
-                "size": [
-                  14,
-                  13
-                ]
-              }
-            }
-          }
-        ]
-      },
-      {
-        "source": "idle_down.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -6,
-                  -6
-                ],
-                "size": [
-                  14,
-                  15
-                ]
-              }
-            }
-          }
-        ]
-      },
-      {
-        "source": "idle_left.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -9,
-                  -9
-                ],
-                "size": [
-                  15,
-                  14
-                ]
-              }
-            }
-          }
-        ]
-      },
-      {
-        "source": "idle_right.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -4,
-                  -10
-                ],
-                "size": [
+              },
+              {
+                "frame": "attack_right_1.png",
+                "hitboxes": {
+                  "hit": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          10,
+                          -7
+                        ],
+                        "size": [
+                          24,
+                          7
+                        ]
+                      }
+                    }
+                  },
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -5,
+                          -15
+                        ],
+                        "size": [
+                          13,
+                          16
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 80,
+                "offset": [
                   12,
-                  15
+                  -7
+                ]
+              },
+              {
+                "frame": "attack_right_2.png",
+                "hitboxes": {
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -6,
+                          -16
+                        ],
+                        "size": [
+                          15,
+                          16
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 82,
+                "offset": [
+                  7,
+                  -7
                 ]
               }
-            }
-          }
-        ]
-      },
-      {
-        "source": "idle_up.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -7,
-                  -6
-                ],
-                "size": [
-                  15,
-                  15
+            ]
+          },
+          "North": {
+            "keyframes": [
+              {
+                "frame": "attack_up_0.png",
+                "hitboxes": {
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -6,
+                          -14
+                        ],
+                        "size": [
+                          14,
+                          14
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 301,
+                "offset": [
+                  1,
+                  -7
+                ]
+              },
+              {
+                "frame": "attack_up_1.png",
+                "hitboxes": {
+                  "hit": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          1,
+                          -38
+                        ],
+                        "size": [
+                          7,
+                          24
+                        ]
+                      }
+                    }
+                  },
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -7,
+                          -13
+                        ],
+                        "size": [
+                          16,
+                          14
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 79,
+                "offset": [
+                  -1,
+                  -18
+                ]
+              },
+              {
+                "frame": "attack_up_2.png",
+                "hitboxes": {
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -6,
+                          -13
+                        ],
+                        "size": [
+                          14,
+                          13
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 84,
+                "offset": [
+                  -1,
+                  -12
                 ]
               }
-            }
-          }
-        ]
-      },
-      {
-        "source": "knockback.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -3,
-                  -6
-                ],
-                "size": [
-                  17,
-                  14
-                ]
-              }
-            }
-          }
-        ]
-      },
-      {
-        "source": "smashed.png",
-        "hitboxes": []
-      },
-      {
-        "source": "walk_down_0.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -8,
+            ]
+          },
+          "West": {
+            "keyframes": [
+              {
+                "frame": "attack_left_0.png",
+                "hitboxes": {
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -5,
+                          -15
+                        ],
+                        "size": [
+                          15,
+                          15
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 302,
+                "offset": [
+                  2,
                   -8
-                ],
-                "size": [
-                  15,
-                  15
                 ]
-              }
-            }
-          }
-        ]
-      },
-      {
-        "source": "walk_down_1.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -2,
-                  -8
-                ],
-                "size": [
-                  15,
-                  16
-                ]
-              }
-            }
-          }
-        ]
-      },
-      {
-        "source": "walk_left_0.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -5,
-                  -11
-                ],
-                "size": [
-                  14,
-                  16
-                ]
-              }
-            }
-          }
-        ]
-      },
-      {
-        "source": "walk_left_1.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -10,
-                  -9
-                ],
-                "size": [
-                  13,
-                  15
-                ]
-              }
-            }
-          }
-        ]
-      },
-      {
-        "source": "walk_right_0.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -9,
-                  -10
-                ],
-                "size": [
-                  14,
-                  14
-                ]
-              }
-            }
-          }
-        ]
-      },
-      {
-        "source": "walk_right_1.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -3,
-                  -9
-                ],
-                "size": [
-                  14,
-                  15
-                ]
-              }
-            }
-          }
-        ]
-      },
-      {
-        "source": "walk_up_0.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
-                  -6,
-                  -8
-                ],
-                "size": [
-                  14,
-                  15
-                ]
-              }
-            }
-          }
-        ]
-      },
-      {
-        "source": "walk_up_1.png",
-        "hitboxes": [
-          {
-            "name": "weak",
-            "geometry": {
-              "Rectangle": {
-                "top_left": [
+              },
+              {
+                "frame": "attack_left_1.png",
+                "hitboxes": {
+                  "hit": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -34,
+                          -7
+                        ],
+                        "size": [
+                          24,
+                          7
+                        ]
+                      }
+                    }
+                  },
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -8,
+                          -15
+                        ],
+                        "size": [
+                          14,
+                          16
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 81,
+                "offset": [
                   -13,
-                  -9
-                ],
-                "size": [
-                  15,
-                  14
+                  -7
+                ]
+              },
+              {
+                "frame": "attack_left_2.png",
+                "hitboxes": {
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -8,
+                          -15
+                        ],
+                        "size": [
+                          13,
+                          16
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 83,
+                "offset": [
+                  -7,
+                  -7
                 ]
               }
-            }
+            ]
+          },
+          "South": {
+            "keyframes": [
+              {
+                "frame": "attack_down_0.png",
+                "hitboxes": {
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -8,
+                          -15
+                        ],
+                        "size": [
+                          17,
+                          16
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 301,
+                "offset": [
+                  1,
+                  -9
+                ]
+              },
+              {
+                "frame": "attack_down_1.png",
+                "hitboxes": {
+                  "hit": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -9,
+                          1
+                        ],
+                        "size": [
+                          7,
+                          24
+                        ]
+                      }
+                    }
+                  },
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -7,
+                          -13
+                        ],
+                        "size": [
+                          16,
+                          13
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 82,
+                "offset": [
+                  -1,
+                  5
+                ]
+              },
+              {
+                "frame": "attack_down_2.png",
+                "hitboxes": {
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -7,
+                          -13
+                        ],
+                        "size": [
+                          17,
+                          13
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 81,
+                "offset": [
+                  -1,
+                  2
+                ]
+              }
+            ]
           }
-        ]
+        },
+        "is_looping": false
+      },
+      "idle": {
+        "sequences": {
+          "East": {
+            "keyframes": [
+              {
+                "frame": "idle_right.png",
+                "hitboxes": {
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -5,
+                          -14
+                        ],
+                        "size": [
+                          12,
+                          15
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 100,
+                "offset": [
+                  -1,
+                  -4
+                ]
+              }
+            ]
+          },
+          "North": {
+            "keyframes": [
+              {
+                "frame": "idle_up.png",
+                "hitboxes": {
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -7,
+                          -14
+                        ],
+                        "size": [
+                          15,
+                          15
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 100,
+                "offset": [
+                  0,
+                  -8
+                ]
+              }
+            ]
+          },
+          "West": {
+            "keyframes": [
+              {
+                "frame": "idle_left.png",
+                "hitboxes": {
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -8,
+                          -13
+                        ],
+                        "size": [
+                          15,
+                          14
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 100,
+                "offset": [
+                  1,
+                  -4
+                ]
+              }
+            ]
+          },
+          "South": {
+            "keyframes": [
+              {
+                "frame": "idle_down.png",
+                "hitboxes": {
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -7,
+                          -13
+                        ],
+                        "size": [
+                          14,
+                          15
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 100,
+                "offset": [
+                  -1,
+                  -7
+                ]
+              }
+            ]
+          }
+        },
+        "is_looping": false
+      },
+      "knockback": {
+        "sequences": {
+          "North": {
+            "keyframes": [
+              {
+                "frame": "knockback.png",
+                "hitboxes": {
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -10,
+                          -14
+                        ],
+                        "size": [
+                          17,
+                          14
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 100,
+                "offset": [
+                  -7,
+                  -8
+                ]
+              }
+            ]
+          }
+        },
+        "is_looping": true
+      },
+      "smashed": {
+        "sequences": {
+          "North": {
+            "keyframes": [
+              {
+                "frame": "smashed.png",
+                "hitboxes": {},
+                "duration_millis": 100,
+                "offset": [
+                  -5,
+                  2
+                ]
+              }
+            ]
+          }
+        },
+        "is_looping": true
+      },
+      "walk": {
+        "sequences": {
+          "East": {
+            "keyframes": [
+              {
+                "frame": "walk_right_1.png",
+                "hitboxes": {},
+                "duration_millis": 150,
+                "offset": [
+                  -3,
+                  -5
+                ]
+              },
+              {
+                "frame": "idle_right.png",
+                "hitboxes": {},
+                "duration_millis": 150,
+                "offset": [
+                  -1,
+                  -4
+                ]
+              },
+              {
+                "frame": "walk_right_0.png",
+                "hitboxes": {},
+                "duration_millis": 150,
+                "offset": [
+                  2,
+                  -4
+                ]
+              },
+              {
+                "frame": "idle_right.png",
+                "hitboxes": {},
+                "duration_millis": 150,
+                "offset": [
+                  -1,
+                  -4
+                ]
+              }
+            ]
+          },
+          "North": {
+            "keyframes": [
+              {
+                "frame": "walk_up_0.png",
+                "hitboxes": {},
+                "duration_millis": 150,
+                "offset": [
+                  -1,
+                  -6
+                ]
+              },
+              {
+                "frame": "idle_up.png",
+                "hitboxes": {},
+                "duration_millis": 150,
+                "offset": [
+                  0,
+                  -9
+                ]
+              },
+              {
+                "frame": "walk_up_1.png",
+                "hitboxes": {},
+                "duration_millis": 150,
+                "offset": [
+                  6,
+                  -5
+                ]
+              },
+              {
+                "frame": "idle_up.png",
+                "hitboxes": {},
+                "duration_millis": 150,
+                "offset": [
+                  0,
+                  -9
+                ]
+              }
+            ]
+          },
+          "West": {
+            "keyframes": [
+              {
+                "frame": "walk_left_1.png",
+                "hitboxes": {},
+                "duration_millis": 150,
+                "offset": [
+                  3,
+                  -5
+                ]
+              },
+              {
+                "frame": "idle_left.png",
+                "hitboxes": {},
+                "duration_millis": 150,
+                "offset": [
+                  1,
+                  -4
+                ]
+              },
+              {
+                "frame": "walk_left_0.png",
+                "hitboxes": {},
+                "duration_millis": 150,
+                "offset": [
+                  -2,
+                  -4
+                ]
+              },
+              {
+                "frame": "idle_left.png",
+                "hitboxes": {},
+                "duration_millis": 150,
+                "offset": [
+                  1,
+                  -4
+                ]
+              }
+            ]
+          },
+          "South": {
+            "keyframes": [
+              {
+                "frame": "walk_down_0.png",
+                "hitboxes": {
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -7,
+                          -13
+                        ],
+                        "size": [
+                          15,
+                          15
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 150,
+                "offset": [
+                  1,
+                  -5
+                ]
+              },
+              {
+                "frame": "idle_down.png",
+                "hitboxes": {
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -7,
+                          -13
+                        ],
+                        "size": [
+                          14,
+                          15
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 150,
+                "offset": [
+                  -1,
+                  -7
+                ]
+              },
+              {
+                "frame": "walk_down_1.png",
+                "hitboxes": {
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -8,
+                          -14
+                        ],
+                        "size": [
+                          15,
+                          16
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 150,
+                "offset": [
+                  -6,
+                  -6
+                ]
+              },
+              {
+                "frame": "idle_down.png",
+                "hitboxes": {
+                  "weak": {
+                    "geometry": {
+                      "Rectangle": {
+                        "top_left": [
+                          -7,
+                          -13
+                        ],
+                        "size": [
+                          14,
+                          15
+                        ]
+                      }
+                    }
+                  }
+                },
+                "duration_millis": 150,
+                "offset": [
+                  -1,
+                  -7
+                ]
+              }
+            ]
+          }
+        },
+        "is_looping": true
       }
-    ],
-    "animations": [
-      {
-        "name": "idle_left",
-        "timeline": [
-          {
-            "frame": "idle_left.png",
-            "duration": 100,
-            "offset": [
-              1,
-              -4
-            ]
-          }
-        ],
-        "is_looping": false
-      },
-      {
-        "name": "idle_right",
-        "timeline": [
-          {
-            "frame": "idle_right.png",
-            "duration": 100,
-            "offset": [
-              -1,
-              -4
-            ]
-          }
-        ],
-        "is_looping": false
-      },
-      {
-        "name": "idle_up",
-        "timeline": [
-          {
-            "frame": "idle_up.png",
-            "duration": 100,
-            "offset": [
-              0,
-              -8
-            ]
-          }
-        ],
-        "is_looping": false
-      },
-      {
-        "name": "idle_down",
-        "timeline": [
-          {
-            "frame": "idle_down.png",
-            "duration": 100,
-            "offset": [
-              -1,
-              -7
-            ]
-          }
-        ],
-        "is_looping": false
-      },
-      {
-        "name": "walk_left",
-        "timeline": [
-          {
-            "frame": "walk_left_0.png",
-            "duration": 151,
-            "offset": [
-              -2,
-              -4
-            ]
-          },
-          {
-            "frame": "idle_left.png",
-            "duration": 151,
-            "offset": [
-              1,
-              -4
-            ]
-          },
-          {
-            "frame": "walk_left_1.png",
-            "duration": 148,
-            "offset": [
-              3,
-              -5
-            ]
-          },
-          {
-            "frame": "idle_left.png",
-            "duration": 151,
-            "offset": [
-              1,
-              -4
-            ]
-          }
-        ],
-        "is_looping": true
-      },
-      {
-        "name": "walk_right",
-        "timeline": [
-          {
-            "frame": "walk_right_0.png",
-            "duration": 152,
-            "offset": [
-              2,
-              -4
-            ]
-          },
-          {
-            "frame": "idle_right.png",
-            "duration": 145,
-            "offset": [
-              -1,
-              -4
-            ]
-          },
-          {
-            "frame": "walk_right_1.png",
-            "duration": 153,
-            "offset": [
-              -3,
-              -5
-            ]
-          },
-          {
-            "frame": "idle_right.png",
-            "duration": 152,
-            "offset": [
-              -1,
-              -4
-            ]
-          }
-        ],
-        "is_looping": true
-      },
-      {
-        "name": "smashed",
-        "timeline": [
-          {
-            "frame": "smashed.png",
-            "duration": 100,
-            "offset": [
-              -5,
-              2
-            ]
-          }
-        ],
-        "is_looping": true
-      },
-      {
-        "name": "knockback_left",
-        "timeline": [
-          {
-            "frame": "knockback.png",
-            "duration": 100,
-            "offset": [
-              -7,
-              -8
-            ]
-          }
-        ],
-        "is_looping": true
-      },
-      {
-        "name": "walk_up",
-        "timeline": [
-          {
-            "frame": "walk_up_0.png",
-            "duration": 149,
-            "offset": [
-              -1,
-              -6
-            ]
-          },
-          {
-            "frame": "idle_up.png",
-            "duration": 154,
-            "offset": [
-              0,
-              -8
-            ]
-          },
-          {
-            "frame": "walk_up_1.png",
-            "duration": 154,
-            "offset": [
-              6,
-              -5
-            ]
-          },
-          {
-            "frame": "idle_up.png",
-            "duration": 145,
-            "offset": [
-              0,
-              -8
-            ]
-          }
-        ],
-        "is_looping": true
-      },
-      {
-        "name": "walk_down",
-        "timeline": [
-          {
-            "frame": "walk_down_0.png",
-            "duration": 150,
-            "offset": [
-              1,
-              -5
-            ]
-          },
-          {
-            "frame": "idle_down.png",
-            "duration": 151,
-            "offset": [
-              -1,
-              -7
-            ]
-          },
-          {
-            "frame": "walk_down_1.png",
-            "duration": 148,
-            "offset": [
-              -6,
-              -6
-            ]
-          },
-          {
-            "frame": "idle_down.png",
-            "duration": 152,
-            "offset": [
-              -1,
-              -7
-            ]
-          }
-        ],
-        "is_looping": true
-      },
-      {
-        "name": "knockback_right",
-        "timeline": [
-          {
-            "frame": "knockback.png",
-            "duration": 100,
-            "offset": [
-              -7,
-              -8
-            ]
-          }
-        ],
-        "is_looping": true
-      },
-      {
-        "name": "knockback_down",
-        "timeline": [
-          {
-            "frame": "knockback.png",
-            "duration": 100,
-            "offset": [
-              -7,
-              -8
-            ]
-          }
-        ],
-        "is_looping": true
-      },
-      {
-        "name": "knockback_up",
-        "timeline": [
-          {
-            "frame": "knockback.png",
-            "duration": 100,
-            "offset": [
-              -7,
-              -8
-            ]
-          }
-        ],
-        "is_looping": true
-      },
-      {
-        "name": "attack_left",
-        "timeline": [
-          {
-            "frame": "attack_left_0.png",
-            "duration": 302,
-            "offset": [
-              2,
-              -8
-            ]
-          },
-          {
-            "frame": "attack_left_1.png",
-            "duration": 81,
-            "offset": [
-              -13,
-              -7
-            ]
-          },
-          {
-            "frame": "attack_left_2.png",
-            "duration": 83,
-            "offset": [
-              -7,
-              -7
-            ]
-          }
-        ],
-        "is_looping": false
-      },
-      {
-        "name": "attack_right",
-        "timeline": [
-          {
-            "frame": "attack_right_0.png",
-            "duration": 300,
-            "offset": [
-              -2,
-              -8
-            ]
-          },
-          {
-            "frame": "attack_right_1.png",
-            "duration": 80,
-            "offset": [
-              12,
-              -7
-            ]
-          },
-          {
-            "frame": "attack_right_2.png",
-            "duration": 82,
-            "offset": [
-              7,
-              -7
-            ]
-          }
-        ],
-        "is_looping": false
-      },
-      {
-        "name": "attack_up",
-        "timeline": [
-          {
-            "frame": "attack_up_0.png",
-            "duration": 301,
-            "offset": [
-              1,
-              -7
-            ]
-          },
-          {
-            "frame": "attack_up_1.png",
-            "duration": 79,
-            "offset": [
-              -1,
-              -18
-            ]
-          },
-          {
-            "frame": "attack_up_2.png",
-            "duration": 84,
-            "offset": [
-              -1,
-              -12
-            ]
-          }
-        ],
-        "is_looping": false
-      },
-      {
-        "name": "attack_down",
-        "timeline": [
-          {
-            "frame": "attack_down_0.png",
-            "duration": 301,
-            "offset": [
-              1,
-              -9
-            ]
-          },
-          {
-            "frame": "attack_down_1.png",
-            "duration": 82,
-            "offset": [
-              -1,
-              5
-            ]
-          },
-          {
-            "frame": "attack_down_2.png",
-            "duration": 81,
-            "offset": [
-              -1,
-              2
-            ]
-          }
-        ],
-        "is_looping": false
-      }
-    ],
+    },
     "export_settings": {
-      "format": {
-        "Template": "..\\..\\..\\crystal.liquid"
-      },
-      "texture_destination": "..\\..\\..\\..\\game\\arpg\\assets\\texture\\sprite\\sahagin.png",
-      "metadata_destination": "..\\..\\..\\..\\game\\arpg\\assets\\spritesheet\\sahagin.lua",
-      "metadata_paths_root": "..\\..\\..\\..\\game"
+      "Liquid": {
+        "template_file": "..\\..\\..\\crystal.liquid",
+        "texture_file": "..\\..\\..\\..\\game\\arpg\\assets\\texture\\sprite\\sahagin.png",
+        "metadata_file": "..\\..\\..\\..\\game\\arpg\\assets\\spritesheet\\sahagin.lua",
+        "metadata_paths_root": "..\\..\\..\\..\\game"
+      }
     }
   }
 }
