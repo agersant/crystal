@@ -32,9 +32,10 @@ tests[#tests].body = function()
 	assert(sheet);
 
 	local animation = sheet:getAnimation("hurt");
-	assert(animation:getDuration());
+	local sequence = animation:getSequence(0);
+	assert(sequence:getDuration());
 
-	local animationFrame = animation:getFrameAtTime(0);
+	local animationFrame = sequence:getFrameAtTime(0);
 	assert(animationFrame:getFrame());
 	assert(animationFrame:getDuration());
 	assert(animationFrame:getTagShape("test"));
