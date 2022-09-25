@@ -17,12 +17,12 @@ return {
 						direction = "{{ sequence.direction }}",
 						frames = {
 							{%- for keyframe in sequence.keyframes %}
-							{ id = "frame_{{ keyframe.frame.index }}", duration = {{ keyframe.duration | divided_by: 1000.0 }}, ox = {{ keyframe.top_left_offset_x | times: -1 }}, oy = {{ keyframe.top_left_offset_y | times: -1 }},
+							{ id = "frame_{{ keyframe.frame.index }}", duration = {{ keyframe.duration | divided_by: 1000.0 }}, ox = {{ keyframe.x | times: -1 }}, oy = {{ keyframe.y | times: -1 }},
 							{%- assign num_hitboxes = keyframe.hitboxes | size -%}
 							{%- if num_hitboxes > 0 -%}
 							tags = {
 								{%- for hitbox in keyframe.hitboxes -%}
-								["{{ hitbox.name }}"] = { rect = { x = {{ hitbox.left }}, y = {{ hitbox.top }}, w = {{ hitbox.width }}, h = {{ hitbox.height }} } },
+								["{{ hitbox.name }}"] = { rect = { x = {{ hitbox.x }}, y = {{ hitbox.y }}, w = {{ hitbox.width }}, h = {{ hitbox.height }} } },
 								{%- endfor -%}
 							},
 							{%- endif -%}
