@@ -42,7 +42,7 @@ jobs:
       - name: Install Knob dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install libasound2-dev
+          sudo apt-get install libasound2-dev libfuse2
       - name: Build native libs
         run: ./build_libs_linux.sh
       - name: Run native tests
