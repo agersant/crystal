@@ -14,7 +14,7 @@ pub trait DeviceAPI: Send {
 	fn read(&self, cc_index: u8) -> f32;
 	fn write(&mut self, cc_index: u8, value: f32);
 	fn handle_message(&mut self, message: &[u8]);
-	fn name<'a>(&'a self) -> &'a str;
+	fn name(&self) -> &str;
 	fn mode(&self) -> Mode;
 	fn port(&self) -> &Self::Port;
 	fn drop_connection(&mut self);
@@ -90,7 +90,7 @@ impl<T: Send, P: Clone + Send> DeviceAPI for Device<T, P> {
 				if let Some(value) = self.knob_values.get(&cc_index).copied() {
 					let delta = match raw_value {
 						0x01..=0x3F => raw_value as i8,
-						0x40..=0x7F => -((0x80 as u8 - raw_value as u8) as i8),
+						0x40..=0x7F => -((0x80 - raw_value as u8) as i8),
 						_ => return,
 					};
 					let ux_tuning = 0.25; // Untested
@@ -112,7 +112,7 @@ impl<T: Send, P: Clone + Send> DeviceAPI for Device<T, P> {
 				if let Some(value) = self.knob_values.get(&cc_index).copied() {
 					let delta = match raw_value {
 						0x01..=0x03 => raw_value as i8,
-						0x7D..=0x7F => -((0x80 as u8 - raw_value as u8) as i8),
+						0x7D..=0x7F => -((0x80 - raw_value as u8) as i8),
 						_ => return,
 					};
 					let ux_tuning = 0.25;

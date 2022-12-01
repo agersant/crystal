@@ -62,7 +62,7 @@ impl Context {
 			}
 
 			if let Some(path) = &self.mesh.navigation.compute_path(&from, &to) {
-				self.validate_path(path, from.clone(), to.clone());
+				self.validate_path(path, from, to);
 			}
 		}
 	}
@@ -74,11 +74,11 @@ impl Context {
 		expected_path: Option<LineString<f32>>,
 	) {
 		if let Some(path) = &expected_path {
-			self.draw_test_case(Some((&path, "expected", &from, &to)));
+			self.draw_test_case(Some((path, "expected", &from, &to)));
 		}
 		let path = self.mesh.navigation.compute_path(&from, &to);
 		if let Some(path) = &path {
-			self.draw_test_case(Some((&path, "actual", &from, &to)));
+			self.draw_test_case(Some((path, "actual", &from, &to)));
 			self.validate_path(path, from, to);
 		}
 		assert_eq!(path, expected_path);
@@ -94,7 +94,7 @@ impl Context {
 					// TODO this breaks when running tests with 0 navigation padding
 					let intersects = polygon.intersects(&line);
 					if intersects {
-						self.draw_test_case(Some((&path, "actual", &from, &to)));
+						self.draw_test_case(Some((path, "actual", &from, &to)));
 					}
 					assert!(!intersects);
 				}
@@ -132,7 +132,7 @@ impl Context {
 		}
 
 		if let Some((path, _, _, _)) = path {
-			mesh_painter.draw_line_string(&path, &MAGENTA);
+			mesh_painter.draw_line_string(path, &MAGENTA);
 		}
 	}
 }

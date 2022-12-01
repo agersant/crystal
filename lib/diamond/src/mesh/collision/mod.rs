@@ -48,7 +48,7 @@ impl CollisionMesh {
 
 	#[cfg(test)]
 	pub fn bounding_box(&self) -> (Point<f32>, Point<f32>) {
-		if self.obstacles.0.len() == 0 {
+		if self.obstacles.0.is_empty() {
 			return (Point::new(0.0, 0.0), Point::new(0.0, 0.0));
 		}
 		let extremes = self.obstacles.extreme_points();

@@ -12,18 +12,10 @@ pub mod tests;
 // TODO replace geo_booleanop::boolean::BooleanOp with new built-in implementation
 // See: https://github.com/georust/geo/pull/835
 
+#[derive(Default)]
 pub struct Mesh {
 	pub collision: CollisionMesh,
 	pub navigation: NavigationMesh,
-}
-
-impl Default for Mesh {
-	fn default() -> Self {
-		Mesh {
-			collision: CollisionMesh::default(),
-			navigation: NavigationMesh::default(),
-		}
-	}
 }
 
 impl Mesh {
@@ -42,7 +34,7 @@ impl Mesh {
 		points.push(bottom_right);
 
 		let multi_point: MultiPoint<f32> = points.into();
-		let extremes = (&multi_point).extreme_points();
+		let extremes = multi_point.extreme_points();
 		(
 			Point::new(extremes.xmin.x(), extremes.ymin.y()),
 			Point::new(extremes.xmax.x(), extremes.ymax.y()),

@@ -28,7 +28,7 @@ impl PointExt for Point<f32> {
 		if length > 0.0 {
 			Point::new(self.x() / length, self.y() / length)
 		} else {
-			self.clone()
+			*self
 		}
 	}
 }
@@ -118,7 +118,7 @@ impl LineStringExt for LineString<f32> {
 			vertices.push(intersection);
 		}
 
-		vertices.push(vertices[0].clone());
+		vertices.push(vertices[0]);
 		vertices.into()
 	}
 }

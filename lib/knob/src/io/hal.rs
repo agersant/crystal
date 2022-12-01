@@ -6,11 +6,11 @@ use std::sync::{mpsc::*, Arc};
 use crate::io::device::{Device, DeviceAPI};
 use crate::io::Mode;
 
-static MIDI_CLIENT_NAME: &'static str = "crystal-knob-client-input";
-static MIDI_PORT_NAME: &'static str = "crystal-knob-input-port";
-static UNKNOWN_DEVICE_NAME: &'static str = "Unknown MIDI Device";
+static MIDI_CLIENT_NAME: &str = "crystal-knob-client-input";
+static MIDI_PORT_NAME: &str = "crystal-knob-input-port";
+static UNKNOWN_DEVICE_NAME: &str = "Unknown MIDI Device";
 
-pub trait HAL: Send + 'static {
+pub trait Hal: Send + 'static {
 	type Device: DeviceAPI;
 
 	fn connect(
@@ -39,7 +39,7 @@ impl MidiHardware {
 	}
 }
 
-impl HAL for MidiHardware {
+impl Hal for MidiHardware {
 	type Device = Device<MidiInputConnection<()>, MidiInputPort>;
 
 	fn connect(
@@ -49,7 +49,7 @@ impl HAL for MidiHardware {
 	) -> Result<Arc<Mutex<Self::Device>>, anyhow::Error> {
 		let midi_input = Self::get_midi_input()?;
 		let ports = midi_input.ports();
-		if ports.len() == 0 {
+		if ports.is_empty() {
 			return Err(anyhow!("No MIDI devices detected"));
 		}
 
@@ -60,7 +60,7 @@ impl HAL for MidiHardware {
 		let port = &ports[port_number];
 		let device_name = midi_input
 			.port_name(port)
-			.unwrap_or(UNKNOWN_DEVICE_NAME.to_owned());
+			.unwrap_or_else(|_| UNKNOWN_DEVICE_NAME.to_owned());
 
 		let (sender, receiver) = channel::<Vec<u8>>();
 		let connection = midi_input
@@ -86,7 +86,7 @@ impl HAL for MidiHardware {
 			.map(|port| {
 				midi_input
 					.port_name(port)
-					.unwrap_or(UNKNOWN_DEVICE_NAME.to_owned())
+					.unwrap_or_else(|_| UNKNOWN_DEVICE_NAME.to_owned())
 			})
 			.collect();
 		Ok(devices)
@@ -94,16 +94,16 @@ impl HAL for MidiHardware {
 
 	fn get_device_name(&self, device: &Self::Device) -> String {
 		Self::get_midi_input()
-			.and_then(|m| m.port_name(&device.port()).map_err(|e| e.into()))
-			.unwrap_or(UNKNOWN_DEVICE_NAME.to_owned())
+			.and_then(|m| m.port_name(device.port()).map_err(|e| e.into()))
+			.unwrap_or_else(|_| UNKNOWN_DEVICE_NAME.to_owned())
 	}
 
 	fn is_device_valid(&self, device: &Self::Device) -> bool {
 		// TODO https://github.com/Boddlnagg/midir/issues/35
 		// This code isn't reliable when multiple devices have the same name
 		let device_name = Self::get_midi_input()
-			.and_then(|m| m.port_name(&device.port()).map_err(|e| e.into()))
-			.unwrap_or(UNKNOWN_DEVICE_NAME.to_owned());
+			.and_then(|m| m.port_name(device.port()).map_err(|e| e.into()))
+			.unwrap_or_else(|_| UNKNOWN_DEVICE_NAME.to_owned());
 		let devices = self.list_devices().unwrap_or_default();
 		devices.iter().any(|name| *name == device_name)
 	}
@@ -116,12 +116,12 @@ impl HAL for MidiHardware {
 		// This code isn't reliable when multiple devices have the same name
 		let device_name = Self::get_midi_input()
 			.and_then(|m| m.port_name(port).map_err(|e| e.into()))
-			.unwrap_or(UNKNOWN_DEVICE_NAME.to_owned());
+			.unwrap_or_else(|_| UNKNOWN_DEVICE_NAME.to_owned());
 		let devices = self.list_devices().unwrap_or_default();
 		devices
 			.iter()
 			.position(|name| *name == device_name)
-			.ok_or(anyhow!("device not found"))
+			.ok_or_else(|| anyhow!("device not found"))
 	}
 }
 
@@ -129,7 +129,7 @@ impl HAL for MidiHardware {
 pub struct SampleHardware {}
 
 #[cfg(test)]
-impl HAL for SampleHardware {
+impl Hal for SampleHardware {
 	type Device = Device<(), ()>;
 
 	fn connect(
@@ -168,7 +168,7 @@ pub struct MockHardware {
 }
 
 #[cfg(test)]
-impl HAL for MockHardware {
+impl Hal for MockHardware {
 	type Device = Device<(), String>;
 
 	fn connect(
@@ -212,6 +212,6 @@ impl HAL for MockHardware {
 			.unwrap_or_default()
 			.iter()
 			.position(|n| n == port)
-			.ok_or(anyhow!("device not found"))
+			.ok_or_else(|| anyhow!("device not found"))
 	}
 }

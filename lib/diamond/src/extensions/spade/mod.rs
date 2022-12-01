@@ -37,8 +37,7 @@ impl<'a> EdgeHandleExt<'a> for &EdgeHandle<'a, [f32; 2], CdtEdge> {
 	fn adjacent_faces(self) -> Vec<FaceHandle<'a, Vertex, CdtEdge>> {
 		[self.from(), self.to()]
 			.iter()
-			.map(|v| v.adjacent_faces())
-			.flatten()
+			.flat_map(|v| v.adjacent_faces())
 			.collect()
 	}
 }
@@ -93,8 +92,7 @@ impl<'a> FaceHandleExt<'a> for &FaceHandle<'a, [f32; 2], CdtEdge> {
 	fn adjacent_faces(self) -> Vec<FaceHandle<'a, Vertex, CdtEdge>> {
 		self.as_triangle()
 			.iter()
-			.map(|v| v.adjacent_faces())
-			.flatten()
+			.flat_map(|v| v.adjacent_faces())
 			.collect()
 	}
 }

@@ -79,6 +79,6 @@ pub unsafe extern "C" fn mesh_get_nearest_navigable_point(
 	let mesh = &*mesh;
 	mesh.navigation
 		.get_nearest_navigable_point(&Point::new(x, y))
-		.unwrap_or(Point::new(x, y))
+		.unwrap_or_else(|| Point::new(x, y))
 		.into()
 }

@@ -48,7 +48,7 @@ pub unsafe extern "C" fn mesh_builder_add_polygon(
 		.map(|v| v.into())
 		.collect::<Vec<Point<f32>>>()
 		.into();
-	(&mut *builder).add_polygon(tile_x, tile_y, line_string);
+	(*builder).add_polygon(tile_x, tile_y, line_string);
 }
 
 #[no_mangle]
@@ -56,6 +56,6 @@ pub unsafe extern "C" fn mesh_builder_build_mesh(builder: *mut MeshBuilder, out_
 	if builder.is_null() {
 		return;
 	}
-	let mesh = (&*builder).build();
+	let mesh = (*builder).build();
 	*out_mesh = mesh;
 }

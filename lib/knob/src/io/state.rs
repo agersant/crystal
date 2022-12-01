@@ -5,24 +5,24 @@ use std::sync::{mpsc::*, Arc};
 use std::time::Duration;
 
 use crate::io::device::DeviceAPI;
-use crate::io::hal::HAL;
+use crate::io::hal::Hal;
 use crate::io::Mode;
 
 pub type StateHandle<H> = Arc<Mutex<State<H>>>;
-pub type DeviceHandle<H> = Arc<Mutex<<H as HAL>::Device>>;
+pub type DeviceHandle<H> = Arc<Mutex<<H as Hal>::Device>>;
 
-enum ConnectionTarget<H: HAL> {
+enum ConnectionTarget<H: Hal> {
 	PortNumber(usize),
 	Port(<H::Device as DeviceAPI>::Port),
 }
 
-enum ConnectionState<H: HAL> {
+enum ConnectionState<H: Hal> {
 	Disconnected,
 	Connecting(ConnectionTarget<H>),
 	Connected(DeviceHandle<H>),
 }
 
-impl<H: HAL> Drop for ConnectionState<H> {
+impl<H: Hal> Drop for ConnectionState<H> {
 	fn drop(&mut self) {
 		if let ConnectionState::Connected(device) = self {
 			device.lock().deref_mut().drop_connection();
@@ -30,14 +30,14 @@ impl<H: HAL> Drop for ConnectionState<H> {
 	}
 }
 
-pub struct State<H: HAL> {
+pub struct State<H: Hal> {
 	pub hal: H,
 	mode: Mode,
 	_ticker: Option<Sender<()>>,
 	connection_state: ConnectionState<H>,
 }
 
-impl<H: HAL> State<H> {
+impl<H: Hal> State<H> {
 	pub fn new(hal: H) -> StateHandle<H> {
 		let (sender, receiver) = channel::<()>();
 		let state = Arc::new(Mutex::new(State {
@@ -51,9 +51,8 @@ impl<H: HAL> State<H> {
 		std::thread::spawn(move || loop {
 			{
 				let mut state = poll_state.lock();
-				match receiver.try_recv() {
-					Err(TryRecvError::Disconnected) => return,
-					_ => (),
+				if let Err(TryRecvError::Disconnected) = receiver.try_recv() {
+					return;
 				}
 				state.tick();
 			}

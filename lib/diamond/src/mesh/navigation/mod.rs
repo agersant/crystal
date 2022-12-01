@@ -50,11 +50,11 @@ impl NavigationMesh {
 	fn project_point_to_nearest_navigable_face<'a>(
 		&self,
 		point: &Point<f32>,
-		candidates: &Vec<FaceHandle<'a, Vertex, CdtEdge>>,
+		candidates: &[FaceHandle<'a, Vertex, CdtEdge>],
 	) -> ProjectionResult<'a> {
 		let candidates = candidates
 			.iter()
-			.filter(|f| self.is_face_navigable(&f))
+			.filter(|f| self.is_face_navigable(f))
 			.collect::<Vec<_>>();
 
 		if let Some(face) = candidates.iter().find(|f| f.to_triangle().contains(point)) {
@@ -83,7 +83,7 @@ impl NavigationMesh {
 			PositionInTriangulation::NoTriangulationPresent => return None,
 			PositionInTriangulation::InTriangle(f) => {
 				if self.is_face_navigable(&f) {
-					self.project_point_to_nearest_navigable_face(point, &vec![f])
+					self.project_point_to_nearest_navigable_face(point, &[f])
 				} else {
 					self.project_point_to_nearest_navigable_face(point, &f.adjacent_faces())
 				}
@@ -166,7 +166,7 @@ impl NavigationMesh {
 			.map(|e| e.from().to_point())
 			.collect::<Vec<_>>()
 			.into();
-		if multi_point.0.len() == 0 {
+		if multi_point.0.is_empty() {
 			return (Point::new(0.0, 0.0), Point::new(0.0, 0.0));
 		}
 		let extremes = multi_point.extreme_points();
@@ -187,7 +187,7 @@ impl Default for NavigationMesh {
 }
 
 fn heuristic(from: &FaceHandle<Vertex, CdtEdge>, to: &Point<f32>) -> f32 {
-	let line = Line::new(from.center(), to.clone());
+	let line = Line::new(from.center(), *to);
 	line.length()
 }
 

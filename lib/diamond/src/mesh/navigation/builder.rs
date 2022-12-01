@@ -40,7 +40,7 @@ impl NavigationMeshBuilder {
 		.into();
 
 		for obstacle in &collision_mesh.obstacles.0 {
-			let padded_obstacle = pad_obstacle(&obstacle, self.padding);
+			let padded_obstacle = pad_obstacle(obstacle, self.padding);
 			playable_space = playable_space.difference(&padded_obstacle);
 		}
 

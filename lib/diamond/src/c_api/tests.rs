@@ -20,8 +20,8 @@ fn build_and_query_mesh() {
 		mesh_builder_build_mesh(builder, mesh);
 		mesh_builder_delete(builder);
 
-		assert!((*mesh).collision.get_contours().len() > 0);
-		assert!((*mesh).navigation.get_triangles().len() > 0);
+		assert!(!(*mesh).collision.get_contours().is_empty());
+		assert!(!(*mesh).navigation.get_triangles().is_empty());
 
 		let nearest = mesh_get_nearest_navigable_point(mesh, 65.0, 40.0);
 		assert_eq!(nearest.x, 64.0);
