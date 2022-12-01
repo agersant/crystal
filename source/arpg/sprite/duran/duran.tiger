@@ -3389,8 +3389,8 @@
       }
     },
     "export_settings": {
-      "Liquid": {
-        "template_file": "..\\..\\..\\crystal.liquid",
+      "Template": {
+        "template_file": "..\\..\\..\\crystal.template",
         "texture_file": "..\\..\\..\\..\\game\\arpg\\assets\\texture\\sprite\\duran.png",
         "metadata_file": "..\\..\\..\\..\\game\\arpg\\assets\\spritesheet\\duran.lua",
         "metadata_paths_root": "..\\..\\..\\..\\game"

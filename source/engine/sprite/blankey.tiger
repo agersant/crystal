@@ -99,8 +99,8 @@
       }
     },
     "export_settings": {
-      "Liquid": {
-        "template_file": "..\\..\\crystal.liquid",
+      "Template": {
+        "template_file": "..\\..\\crystal.template",
         "texture_file": "..\\..\\..\\game\\test-data\\blankey.png",
         "metadata_file": "..\\..\\..\\game\\test-data\\blankey.lua",
         "metadata_paths_root": "..\\..\\..\\game"
