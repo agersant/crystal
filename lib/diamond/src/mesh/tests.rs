@@ -80,8 +80,8 @@ impl<'a> MeshPainter<'a> {
 		}
 		for point in line_string.points_iter() {
 			let point = (
-				(padding as f32 - self.top_left.x() + point.x()) as i32,
-				(padding as f32 - self.top_left.y() + point.y()) as i32,
+				(padding - self.top_left.x() + point.x()) as i32,
+				(padding - self.top_left.y() + point.y()) as i32,
 			);
 			self.backend.draw_circle(point, 2, color, true).unwrap();
 		}

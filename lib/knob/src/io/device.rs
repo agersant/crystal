@@ -71,7 +71,7 @@ impl<T: Send, P: Clone + Send> DeviceAPI for Device<T, P> {
 	}
 
 	fn write(&mut self, cc_index: u8, value: f32) {
-		self.knob_values.insert(cc_index, value.min(1.0).max(0.0));
+		self.knob_values.insert(cc_index, value.clamp(0.0, 1.0));
 	}
 
 	fn handle_message(&mut self, message: &[u8]) {
@@ -90,7 +90,7 @@ impl<T: Send, P: Clone + Send> DeviceAPI for Device<T, P> {
 				if let Some(value) = self.knob_values.get(&cc_index).copied() {
 					let delta = match raw_value {
 						0x01..=0x3F => raw_value as i8,
-						0x40..=0x7F => -((0x80 - raw_value as u8) as i8),
+						0x40..=0x7F => -((0x80 - raw_value) as i8),
 						_ => return,
 					};
 					let ux_tuning = 0.25; // Untested
@@ -112,7 +112,7 @@ impl<T: Send, P: Clone + Send> DeviceAPI for Device<T, P> {
 				if let Some(value) = self.knob_values.get(&cc_index).copied() {
 					let delta = match raw_value {
 						0x01..=0x03 => raw_value as i8,
-						0x7D..=0x7F => -((0x80 - raw_value as u8) as i8),
+						0x7D..=0x7F => -((0x80 - raw_value) as i8),
 						_ => return,
 					};
 					let ux_tuning = 0.25;

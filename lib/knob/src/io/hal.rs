@@ -73,7 +73,7 @@ impl Hal for MidiHardware {
 			// TODO: https://github.com/Boddlnagg/midir/issues/55
 			.map_err(|e| midir::ConnectError::new(e.kind(), ()))?;
 
-		let device = Device::new(&device_name, mode, port.clone(), connection, receiver);
+		let device = Device::new(device_name, mode, port.clone(), connection, receiver);
 
 		Ok(device)
 	}

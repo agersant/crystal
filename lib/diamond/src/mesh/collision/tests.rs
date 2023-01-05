@@ -46,7 +46,7 @@ fn run_test_case(name: &str) {
 
 	let expected_collision_mesh_file = format!("test-data/{}-collision-mesh.json", name);
 	let expected_collision_mesh = {
-		let file = File::open(&expected_collision_mesh_file).unwrap();
+		let file = File::open(expected_collision_mesh_file).unwrap();
 		let reader = BufReader::new(file);
 		let obstacles = serde_json::from_reader(reader).unwrap();
 		CollisionMesh { obstacles }
