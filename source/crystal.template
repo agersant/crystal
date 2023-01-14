@@ -1,7 +1,7 @@
 return {
 	type = "spritesheet",
 	content = {
-		texture = "{{ replace sheet_image "\\" "/" }}",
+		texture = "{{ atlas_image.path }}",
 		frames = {
 			{{ #each frames as |frame| }}
 			frame_{{ frame.index }} = { x = {{ frame.x }}, y = {{ frame.y }}, w = {{ frame.width }}, h = {{ frame.height }}, },
