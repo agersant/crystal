@@ -7,7 +7,7 @@ pub fn generate_bindings() {
 
     let package_name = env::var("CARGO_PKG_NAME").unwrap();
     let output_file = target_dir()
-        .join(format!("{}.lua", package_name))
+        .join(format!("{package_name}.lua"))
         .display()
         .to_string();
 

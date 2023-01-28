@@ -15,7 +15,7 @@ struct Context {
 
 impl Context {
 	fn new(name: &str) -> Self {
-		let input_file = format!("test-data/{}-input.json", name);
+		let input_file = format!("test-data/{name}-input.json");
 		let input_map: InputMap = {
 			let file = File::open(input_file).unwrap();
 			let reader = BufReader::new(file);

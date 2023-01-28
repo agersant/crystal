@@ -37,14 +37,14 @@ impl From<&InputPolygon> for LineString<f32> {
 }
 
 fn run_test_case(name: &str) {
-	let input_file = format!("test-data/{}-input.json", name);
+	let input_file = format!("test-data/{name}-input.json");
 	let input_map: InputMap = {
 		let file = File::open(input_file).unwrap();
 		let reader = BufReader::new(file);
 		serde_json::from_reader(reader).unwrap()
 	};
 
-	let expected_collision_mesh_file = format!("test-data/{}-collision-mesh.json", name);
+	let expected_collision_mesh_file = format!("test-data/{name}-collision-mesh.json");
 	let expected_collision_mesh = {
 		let file = File::open(expected_collision_mesh_file).unwrap();
 		let reader = BufReader::new(file);
@@ -62,10 +62,10 @@ fn run_test_case(name: &str) {
 	}
 	let actual_mesh = builder.build();
 
-	let expected_result_file = format!("test-output/{}-collision-mesh-expected.png", name);
+	let expected_result_file = format!("test-output/{name}-collision-mesh-expected.png");
 	draw_collision_mesh(&expected_mesh, &expected_result_file);
 
-	let actual_result_file = format!("test-output/{}-collision-mesh-actual.png", name);
+	let actual_result_file = format!("test-output/{name}-collision-mesh-actual.png");
 	draw_collision_mesh(&actual_mesh, &actual_result_file);
 
 	assert_eq!(actual_mesh.collision, expected_mesh.collision);
