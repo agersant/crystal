@@ -74,11 +74,11 @@ impl Context {
 		expected_path: Option<LineString<f32>>,
 	) {
 		if let Some(path) = &expected_path {
-			self.draw_test_case(Some((path, "expected", &from, &to)));
+			self.draw_test_case("expected", Some((path, &from, &to)));
 		}
 		let path = self.mesh.navigation.compute_path(&from, &to);
 		if let Some(path) = &path {
-			self.draw_test_case(Some((path, "actual", &from, &to)));
+			self.draw_test_case("actual", Some((path, &from, &to)));
 			self.validate_path(path, from, to);
 		}
 		assert_eq!(path, expected_path);
@@ -94,7 +94,7 @@ impl Context {
 					// TODO this breaks when running tests with 0 navigation padding
 					let intersects = polygon.intersects(&line);
 					if intersects {
-						self.draw_test_case(Some((path, "actual", &from, &to)));
+						self.draw_test_case("actual", Some((path, &from, &to)));
 					}
 					assert!(!intersects);
 				}
@@ -102,17 +102,20 @@ impl Context {
 		}
 	}
 
-	fn draw_test_case(&self, path: Option<(&LineString<f32>, &str, &Point<f32>, &Point<f32>)>) {
+	fn draw_test_case(
+		&self,
+		suffix: &str,
+		path: Option<(&LineString<f32>, &Point<f32>, &Point<f32>)>,
+	) {
 		let result_file = match path {
-			None => format!("test-output/{}-navigation-mesh-actual.png", &self.name),
-			Some((_, suffix, from, to)) => format!(
-				"test-output/{}-path-from-({}, {})-to-({}, {})-{}.png",
+			None => format!("test-output/{}-navigation-mesh-{suffix}.png", &self.name,),
+			Some((_, from, to)) => format!(
+				"test-output/{}-path-from-({}, {})-to-({}, {})-{suffix}.png",
 				&self.name,
 				from.x(),
 				from.y(),
 				to.x(),
 				to.y(),
-				suffix
 			),
 		};
 		let mut mesh_painter = MeshPainter::new(&self.mesh, &result_file);
@@ -131,7 +134,7 @@ impl Context {
 			mesh_painter.draw_line_string(line_string, &CYAN);
 		}
 
-		if let Some((path, _, _, _)) = path {
+		if let Some((path, _, _)) = path {
 			mesh_painter.draw_line_string(path, &MAGENTA);
 		}
 	}
@@ -140,7 +143,7 @@ impl Context {
 #[test]
 fn empty() {
 	let context = Context::new("empty");
-	context.draw_test_case(None);
+	context.draw_test_case("actual", None);
 	context.test_specific_path(
 		Point::new(10.0, 20.0),
 		Point::new(40.0, 30.0),
@@ -151,7 +154,7 @@ fn empty() {
 #[test]
 fn small() {
 	let context = Context::new("small");
-	context.draw_test_case(None);
+	context.draw_test_case("actual", None);
 	context.test_specific_path(
 		Point::new(50.0, 35.0),
 		Point::new(170.0, 35.0),
@@ -168,7 +171,7 @@ fn small() {
 #[test]
 fn large() {
 	let context = Context::new("large");
-	context.draw_test_case(None);
+	context.draw_test_case("actual", None);
 	context.test_specific_path(Point::new(300.0, 300.0), Point::new(450.0, 500.0), None);
 	context.test_exhaustive_paths();
 }

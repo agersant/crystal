@@ -153,163 +153,170 @@ impl<T: Send, P: Clone + Send> DeviceAPI for Device<T, P> {
 }
 
 #[cfg(test)]
-fn make_test_device(mode: Mode) -> (Arc<Mutex<Device<(), ()>>>, Sender<Vec<u8>>) {
-	let (sender, receiver) = channel();
-	let device = Device::<(), ()>::new("test device", mode, (), (), receiver);
-	(device, sender)
-}
+mod tests {
 
-#[test]
-fn can_read_before_receiving_data() {
-	let cc_index = 70;
-	for mode in Mode::iter() {
-		let (device, _) = make_test_device(mode);
-		assert_eq!(device.lock().read(cc_index), -1.0);
+	use super::*;
+
+	type TestDevice = Device<(), ()>;
+
+	fn make_test_device(mode: Mode) -> (Arc<Mutex<TestDevice>>, Sender<Vec<u8>>) {
+		let (sender, receiver) = channel();
+		let device = Device::<(), ()>::new("test device", mode, (), (), receiver);
+		(device, sender)
 	}
-}
 
-#[test]
-fn can_read_write_arbitrary_values() {
-	let cc_index = 70;
-	for mode in Mode::iter() {
-		let (device, _) = make_test_device(mode);
-		device.lock().write(cc_index, 0.5);
-		assert_eq!(device.lock().read(cc_index), 0.5);
-	}
-}
-
-#[test]
-fn clamps_values() {
-	let cc_index = 70;
-	for mode in Mode::iter() {
-		let (device, _) = make_test_device(mode);
-		device.lock().write(cc_index, 1.5);
-		assert_eq!(device.lock().read(cc_index), 1.0);
-		device.lock().write(cc_index, -0.5);
-		assert_eq!(device.lock().read(cc_index), 0.0);
-	}
-}
-
-#[test]
-fn absolute_mode_can_read_knob_values() {
-	let cc_index = 70;
-	let (device, _) = make_test_device(Mode::Absolute);
-	device
-		.lock()
-		.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, 100]);
-	assert_eq!(device.lock().read(cc_index), 100.0 / 127.0);
-}
-
-#[test]
-fn handles_messages_from_sender() {
-	let cc_index = 70;
-	let (device, sender) = make_test_device(Mode::Absolute);
-	sender
-		.send([MIDI_MESSAGE_CONTROL_CHANGE, cc_index, 100].to_vec())
-		.unwrap();
-	std::thread::sleep(std::time::Duration::from_millis(100));
-	assert_eq!(device.lock().read(cc_index), 100.0 / 127.0);
-}
-
-#[test]
-fn relative_modes_ignore_messages_before_write() {
-	let cc_index = 70;
-	for mode in Mode::iter() {
-		if matches!(mode, Mode::Absolute) {
-			continue;
+	#[test]
+	fn can_read_before_receiving_data() {
+		let cc_index = 70;
+		for mode in Mode::iter() {
+			let (device, _) = make_test_device(mode);
+			assert_eq!(device.lock().read(cc_index), -1.0);
 		}
-		let (device, _) = make_test_device(mode);
-		device
-			.lock()
-			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, 64]);
-		assert_eq!(device.lock().read(cc_index), -1.0);
-	}
-}
-
-#[test]
-fn akai_mode_interprets_messages_correctly() {
-	let cc_index = 70;
-	let (device, _) = make_test_device(Mode::RelativeAkai);
-
-	for m in 0x01..=0x3F {
-		device.lock().write(cc_index, 0.5);
-		device
-			.lock()
-			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
-		assert!(device.lock().read(cc_index) > 0.5);
 	}
 
-	for m in 0x40..=0x7F {
-		device.lock().write(cc_index, 0.5);
-		device
-			.lock()
-			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
-		assert!(device.lock().read(cc_index) < 0.5);
-	}
-}
-
-#[test]
-fn arturia1_mode_interprets_messages_correctly() {
-	let cc_index = 70;
-	let (device, _) = make_test_device(Mode::RelativeArturia1);
-
-	for m in 0x41..=0x43 {
-		device.lock().write(cc_index, 0.5);
-		device
-			.lock()
-			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
-		assert!(device.lock().read(cc_index) > 0.5);
+	#[test]
+	fn can_read_write_arbitrary_values() {
+		let cc_index = 70;
+		for mode in Mode::iter() {
+			let (device, _) = make_test_device(mode);
+			device.lock().write(cc_index, 0.5);
+			assert_eq!(device.lock().read(cc_index), 0.5);
+		}
 	}
 
-	for m in 0x3D..=0x3F {
-		device.lock().write(cc_index, 0.5);
-		device
-			.lock()
-			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
-		assert!(device.lock().read(cc_index) < 0.5);
-	}
-}
-
-#[test]
-fn arturia2_mode_interprets_messages_correctly() {
-	let cc_index = 70;
-	let (device, _) = make_test_device(Mode::RelativeArturia2);
-
-	for m in 0x01..=0x03 {
-		device.lock().write(cc_index, 0.5);
-		device
-			.lock()
-			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
-		assert!(device.lock().read(cc_index) > 0.5);
+	#[test]
+	fn clamps_values() {
+		let cc_index = 70;
+		for mode in Mode::iter() {
+			let (device, _) = make_test_device(mode);
+			device.lock().write(cc_index, 1.5);
+			assert_eq!(device.lock().read(cc_index), 1.0);
+			device.lock().write(cc_index, -0.5);
+			assert_eq!(device.lock().read(cc_index), 0.0);
+		}
 	}
 
-	for m in 0x7D..=0x7F {
-		device.lock().write(cc_index, 0.5);
+	#[test]
+	fn absolute_mode_can_read_knob_values() {
+		let cc_index = 70;
+		let (device, _) = make_test_device(Mode::Absolute);
 		device
 			.lock()
-			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
-		assert!(device.lock().read(cc_index) < 0.5);
-	}
-}
-
-#[test]
-fn arturia3_mode_interprets_messages_correctly() {
-	let cc_index = 70;
-	let (device, _) = make_test_device(Mode::RelativeArturia3);
-
-	for m in 0x11..=0x13 {
-		device.lock().write(cc_index, 0.5);
-		device
-			.lock()
-			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
-		assert!(device.lock().read(cc_index) > 0.5);
+			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, 100]);
+		assert_eq!(device.lock().read(cc_index), 100.0 / 127.0);
 	}
 
-	for m in 0x0D..=0x0F {
-		device.lock().write(cc_index, 0.5);
-		device
-			.lock()
-			.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
-		assert!(device.lock().read(cc_index) < 0.5);
+	#[test]
+	fn handles_messages_from_sender() {
+		let cc_index = 70;
+		let (device, sender) = make_test_device(Mode::Absolute);
+		sender
+			.send([MIDI_MESSAGE_CONTROL_CHANGE, cc_index, 100].to_vec())
+			.unwrap();
+		std::thread::sleep(std::time::Duration::from_millis(100));
+		assert_eq!(device.lock().read(cc_index), 100.0 / 127.0);
+	}
+
+	#[test]
+	fn relative_modes_ignore_messages_before_write() {
+		let cc_index = 70;
+		for mode in Mode::iter() {
+			if matches!(mode, Mode::Absolute) {
+				continue;
+			}
+			let (device, _) = make_test_device(mode);
+			device
+				.lock()
+				.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, 64]);
+			assert_eq!(device.lock().read(cc_index), -1.0);
+		}
+	}
+
+	#[test]
+	fn akai_mode_interprets_messages_correctly() {
+		let cc_index = 70;
+		let (device, _) = make_test_device(Mode::RelativeAkai);
+
+		for m in 0x01..=0x3F {
+			device.lock().write(cc_index, 0.5);
+			device
+				.lock()
+				.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
+			assert!(device.lock().read(cc_index) > 0.5);
+		}
+
+		for m in 0x40..=0x7F {
+			device.lock().write(cc_index, 0.5);
+			device
+				.lock()
+				.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
+			assert!(device.lock().read(cc_index) < 0.5);
+		}
+	}
+
+	#[test]
+	fn arturia1_mode_interprets_messages_correctly() {
+		let cc_index = 70;
+		let (device, _) = make_test_device(Mode::RelativeArturia1);
+
+		for m in 0x41..=0x43 {
+			device.lock().write(cc_index, 0.5);
+			device
+				.lock()
+				.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
+			assert!(device.lock().read(cc_index) > 0.5);
+		}
+
+		for m in 0x3D..=0x3F {
+			device.lock().write(cc_index, 0.5);
+			device
+				.lock()
+				.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
+			assert!(device.lock().read(cc_index) < 0.5);
+		}
+	}
+
+	#[test]
+	fn arturia2_mode_interprets_messages_correctly() {
+		let cc_index = 70;
+		let (device, _) = make_test_device(Mode::RelativeArturia2);
+
+		for m in 0x01..=0x03 {
+			device.lock().write(cc_index, 0.5);
+			device
+				.lock()
+				.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
+			assert!(device.lock().read(cc_index) > 0.5);
+		}
+
+		for m in 0x7D..=0x7F {
+			device.lock().write(cc_index, 0.5);
+			device
+				.lock()
+				.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
+			assert!(device.lock().read(cc_index) < 0.5);
+		}
+	}
+
+	#[test]
+	fn arturia3_mode_interprets_messages_correctly() {
+		let cc_index = 70;
+		let (device, _) = make_test_device(Mode::RelativeArturia3);
+
+		for m in 0x11..=0x13 {
+			device.lock().write(cc_index, 0.5);
+			device
+				.lock()
+				.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
+			assert!(device.lock().read(cc_index) > 0.5);
+		}
+
+		for m in 0x0D..=0x0F {
+			device.lock().write(cc_index, 0.5);
+			device
+				.lock()
+				.handle_message(&[MIDI_MESSAGE_CONTROL_CHANGE, cc_index, m]);
+			assert!(device.lock().read(cc_index) < 0.5);
+		}
 	}
 }
