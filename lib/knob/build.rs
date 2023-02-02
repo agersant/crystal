@@ -1,4 +1,4 @@
 use lua_ffi_gen::*;
 fn main() {
-	generate_bindings();
+    generate_bindings();
 }
