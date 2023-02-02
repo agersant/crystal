@@ -22,7 +22,7 @@ SaveData.init = function(self)
 end
 
 SaveData.toPOD = function(self)
-	return {party = self._party:toPOD(), location = self._location};
+	return { party = self._party:toPOD(), location = self._location };
 end
 
 SaveData.getParty = function(self)

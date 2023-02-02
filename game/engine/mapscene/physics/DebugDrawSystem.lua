@@ -18,7 +18,7 @@ local drawNavigation = false;
 
 DebugDrawSystem.init = function(self, ecs)
 	DebugDrawSystem.super.init(self, ecs);
-	self._query = AllComponents:new({PhysicsBody});
+	self._query = AllComponents:new({ PhysicsBody });
 	self:getECS():addQuery(self._query);
 end
 

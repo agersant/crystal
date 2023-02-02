@@ -143,7 +143,7 @@ MapScene.draw = function(self)
 		self._ecs:notifySystems("beforeDebugDraw", viewport);
 		self._ecs:notifySystems("duringDebugDraw", viewport);
 		self._ecs:notifySystems("afterDebugDraw", viewport);
-	end, {nativeResolution = true, sceneSizeX = sceneSizeX, sceneSizeY = sceneSizeY});
+	end, { nativeResolution = true, sceneSizeX = sceneSizeX, sceneSizeY = sceneSizeY });
 
 	self._renderer:draw(function()
 		self._ecs:notifySystems("drawOverlay");

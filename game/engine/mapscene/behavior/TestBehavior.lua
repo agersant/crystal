@@ -5,7 +5,7 @@ local MapScene = require("engine/mapscene/MapScene");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Runs behavior script", gfx = "mock"};
+tests[#tests + 1] = { name = "Runs behavior script", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
@@ -29,7 +29,7 @@ tests[#tests].body = function()
 	assert(sentinel == 11);
 end
 
-tests[#tests + 1] = {name = "Can run multiple behaviors", gfx = "mock"};
+tests[#tests + 1] = { name = "Can run multiple behaviors", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
@@ -59,7 +59,7 @@ tests[#tests].body = function()
 	assert(sentinel2 == 1);
 end
 
-tests[#tests + 1] = {name = "Stops running script when behavior is removed", gfx = "mock"};
+tests[#tests + 1] = { name = "Stops running script when behavior is removed", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
@@ -83,7 +83,7 @@ tests[#tests].body = function()
 	assert(sentinel == 1);
 end
 
-tests[#tests + 1] = {name = "Behavior script cleanup functions are called on behavior removal", gfx = "mock"};
+tests[#tests + 1] = { name = "Behavior script cleanup functions are called on behavior removal", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
@@ -105,7 +105,7 @@ tests[#tests].body = function()
 	assert(sentinel);
 end
 
-tests[#tests + 1] = {name = "Behavior script cleanup functions are called on despawn", gfx = "mock"};
+tests[#tests + 1] = { name = "Behavior script cleanup functions are called on despawn", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 

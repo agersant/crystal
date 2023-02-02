@@ -21,4 +21,3 @@ DamageScalingSource.isScalingOffTarget = function(self)
 end
 
 return DamageScalingSource;
-

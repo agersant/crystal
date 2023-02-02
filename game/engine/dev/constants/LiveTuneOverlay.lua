@@ -58,7 +58,7 @@ KnobDonut.draw = function(self)
 	love.graphics.arc("line", "open", width / 2, height / 2, self._radius, self._arcStart, self._arcEnd, self._numSegments);
 	love.graphics.setColor(colors.knobActive);
 	love.graphics.arc("line", "open", width / 2, height / 2, self._radius,
-                  	self._arcEnd + self.value * (self._arcStart - self._arcEnd), self._arcEnd, self._numSegments);
+		self._arcEnd + self.value * (self._arcStart - self._arcEnd), self._arcEnd, self._numSegments);
 end
 
 local KnobInfo = Class("KnobInfo", Widget);
@@ -202,7 +202,7 @@ LiveTuneOverlay.update = function(self, dt)
 	elseif #mappedKnobs == 0 then
 		self._content:jumpToChild(self._helpText);
 		self._helpText:setContent(
-						"Connected. Use the `liveTune` command to map a Constant to a knob on your " .. deviceName .. " device.");
+			"Connected. Use the `liveTune` command to map a Constant to a knob on your " .. deviceName .. " device.");
 	else
 		self._content:jumpToChild(self._knobInfos);
 	end

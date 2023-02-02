@@ -8,7 +8,7 @@ local Weakbox = require("engine/mapscene/physics/Weakbox");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Draws physics objects", gfx = "on"};
+tests[#tests + 1] = { name = "Draws physics objects", gfx = "on" };
 tests[#tests].body = function(context)
 	local scene = MapScene:new("test-data/empty_map.lua");
 
@@ -42,7 +42,7 @@ tests[#tests].body = function(context)
 	-- context:compareFrame("test-data/TestDebugDraw/draws-physics-objects.png");
 end
 
-tests[#tests + 1] = {name = "Draw navigation mesh", gfx = "on"};
+tests[#tests + 1] = { name = "Draw navigation mesh", gfx = "on" };
 tests[#tests].body = function(context)
 	local scene = MapScene:new("test-data/empty_map.lua");
 

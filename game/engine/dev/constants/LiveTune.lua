@@ -44,7 +44,7 @@ LiveTune.init = function(self)
 	self:connectToDevice(1);
 	-- Table of knob index -> MIDI CC Index
 	-- Default values setup for the factory settings of Arturia MINILAB mkII
-	self._ccIndices = {112, 74, 71, 76, 77, 93, 73, 75, 114, 18, 19, 16, 17, 91, 79, 72};
+	self._ccIndices = { 112, 74, 71, 76, 77, 93, 73, 75, 114, 18, 19, 16, 17, 91, 79, 72 };
 end
 
 LiveTune.disconnectFromDevice = function(self)

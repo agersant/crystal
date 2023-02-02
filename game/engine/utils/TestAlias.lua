@@ -2,7 +2,7 @@ local Alias = require("engine/utils/Alias");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Basic usage"};
+tests[#tests + 1] = { name = "Basic usage" };
 tests[#tests].body = function()
 	local From = Class:test("From");
 	local To = Class:test("To");
@@ -16,7 +16,7 @@ tests[#tests].body = function()
 	assert(from.method());
 end
 
-tests[#tests + 1] = {name = "Transitive"};
+tests[#tests + 1] = { name = "Transitive" };
 tests[#tests].body = function()
 	local From = Class:test("From");
 	local Middle = Class:test("Middle");
@@ -32,7 +32,7 @@ tests[#tests].body = function()
 	assert(from.method());
 end
 
-tests[#tests + 1] = {name = "Works for inherited methods"};
+tests[#tests + 1] = { name = "Works for inherited methods" };
 tests[#tests].body = function()
 	local From = Class:test("From");
 	local Base = Class:test("Base");
@@ -48,7 +48,7 @@ tests[#tests].body = function()
 end
 
 -- TODO consider supporting this (doesnt break existing tests outside of this one) and also writing to existing aliased variables
-tests[#tests + 1] = {name = "Does not alias variables"};
+tests[#tests + 1] = { name = "Does not alias variables" };
 tests[#tests].body = function()
 	local From = Class:test("From");
 	local To = Class:test("To");
@@ -59,7 +59,7 @@ tests[#tests].body = function()
 	assert(not from.member);
 end
 
-tests[#tests + 1] = {name = "Overrides self parameter"};
+tests[#tests + 1] = { name = "Overrides self parameter" };
 tests[#tests].body = function()
 	local From = Class:test("From");
 	local To = Class:test("To");
@@ -72,7 +72,7 @@ tests[#tests].body = function()
 	assert(from:getMyClass() == To);
 end
 
-tests[#tests + 1] = {name = "Errors on ambiguous call"};
+tests[#tests + 1] = { name = "Errors on ambiguous call" };
 tests[#tests].body = function()
 	local From = Class:test("From");
 	local ToA = Class:test("ToA");
@@ -94,7 +94,7 @@ tests[#tests].body = function()
 	assert(#errorMessage > 1);
 end
 
-tests[#tests + 1] = {name = "Shared base methods are not ambiguous"};
+tests[#tests + 1] = { name = "Shared base methods are not ambiguous" };
 tests[#tests].body = function()
 	local From = Class:test("From");
 	local Base = Class:test("Base");

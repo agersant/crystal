@@ -7,7 +7,7 @@ local Script = require("engine/script/Script");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Set animation updates current frame", gfx = "mock"};
+tests[#tests + 1] = { name = "Set animation updates current frame", gfx = "mock" };
 tests[#tests].body = function()
 	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
 	local sprite = Sprite:new();
@@ -17,7 +17,7 @@ tests[#tests].body = function()
 	assert(sprite:getFrame());
 end
 
-tests[#tests + 1] = {name = "Cycles through animation frames", gfx = "mock"};
+tests[#tests + 1] = { name = "Cycles through animation frames", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
@@ -39,7 +39,7 @@ tests[#tests].body = function()
 	end
 end
 
-tests[#tests + 1] = {name = "Animation blocks script", gfx = "mock"};
+tests[#tests + 1] = { name = "Animation blocks script", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
@@ -62,7 +62,7 @@ tests[#tests].body = function()
 	assert(sentinel);
 end
 
-tests[#tests + 1] = {name = "Looping animation thread never ends", gfx = "mock"};
+tests[#tests + 1] = { name = "Looping animation thread never ends", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");

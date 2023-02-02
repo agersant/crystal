@@ -3,7 +3,7 @@ local PartyMemberData = require("arpg/persistence/party/PartyMemberData");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Add member"};
+tests[#tests + 1] = { name = "Add member" };
 tests[#tests].body = function()
 	local party = PartyData:new();
 	local member = PartyMemberData:new("Thief");
@@ -12,7 +12,7 @@ tests[#tests].body = function()
 	assert(party:getMembers()[1] == member);
 end
 
-tests[#tests + 1] = {name = "Remove member"};
+tests[#tests + 1] = { name = "Remove member" };
 tests[#tests].body = function()
 	local party = PartyData:new();
 	local member = PartyMemberData:new("Thief");
@@ -21,7 +21,7 @@ tests[#tests].body = function()
 	assert(#party:getMembers() == 0);
 end
 
-tests[#tests + 1] = {name = "Save and load"};
+tests[#tests + 1] = { name = "Save and load" };
 tests[#tests].body = function()
 	local original = PartyData:new();
 	local member = PartyMemberData:new("Thief");

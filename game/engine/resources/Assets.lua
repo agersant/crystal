@@ -139,7 +139,7 @@ local requireLuaAsset = function(path)
 		return rawData;
 	else
 		assert(rawData.tiledversion);
-		return {type = "map", content = rawData};
+		return { type = "map", content = rawData };
 	end
 end
 
@@ -199,7 +199,7 @@ loadAsset = function(self, path, source)
 		assert(assetType);
 
 		assert(not self._loadedAssets[assetID]);
-		self._loadedAssets[assetID] = {path = path, data = assetData, type = assetType, sources = {}, numSources = 0};
+		self._loadedAssets[assetID] = { path = path, data = assetData, type = assetType, sources = {}, numSources = 0 };
 		LOG:info("Loaded asset: " .. path);
 	end
 

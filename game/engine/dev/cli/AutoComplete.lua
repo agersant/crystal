@@ -25,7 +25,7 @@ local getSuggestionsForCommand = function(self, input)
 		table.insert(textChunks, matchText);
 		table.insert(textChunks, Colors.greyC);
 		table.insert(textChunks, postMatch);
-		table.insert(lines, {text = textChunks, command = match.command});
+		table.insert(lines, { text = textChunks, command = match.command });
 	end
 	return lines;
 end
@@ -52,27 +52,27 @@ local getSuggestionsForArguments = function(self, input)
 		table.insert(args, argColor);
 		table.insert(args, argString);
 	end
-	return {{text = args}};
+	return { { text = args } };
 end
 
 local updateSuggestions = function(self, input)
 	local trimmedInput = StringUtils.trim(input.fullText);
 	if #trimmedInput == 0 then
-		self._suggestions = {lines = {}, state = "command"};
+		self._suggestions = { lines = {}, state = "command" };
 	elseif not input.commandIsComplete then
-		self._suggestions = {lines = getSuggestionsForCommand(self, input), state = "command"};
+		self._suggestions = { lines = getSuggestionsForCommand(self, input), state = "command" };
 	elseif not self._commandStore:getCommand(input.command) then
 		self._suggestions = {
-			lines = {{text = {Colors.red, input.command .. " is not a valid command"}}},
+			lines = { { text = { Colors.red, input.command .. " is not a valid command" } } },
 			state = "badcommand",
 		};
 	else
-		self._suggestions = {lines = getSuggestionsForArguments(self, input), state = "args"};
+		self._suggestions = { lines = getSuggestionsForArguments(self, input), state = "args" };
 	end
 end
 
 AutoComplete.init = function(self, commandStore)
-	self._suggestions = {lines = {}, state = "command"};
+	self._suggestions = { lines = {}, state = "command" };
 	self._commandStore = commandStore;
 end
 

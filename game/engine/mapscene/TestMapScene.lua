@@ -7,21 +7,21 @@ local Scene = require("engine/Scene");
 local TableUtils = require("engine/utils/TableUtils");
 local tests = {};
 
-tests[#tests + 1] = {name = "Draws all layers", gfx = "on"};
+tests[#tests + 1] = { name = "Draws all layers", gfx = "on" };
 tests[#tests].body = function(context)
 	local scene = MapScene:new("test-data/TestMapScene/all_features.lua");
 	scene:draw();
 	context:compareFrame("test-data/TestMapScene/draws-all-layers.png");
 end
 
-tests[#tests + 1] = {name = "Loads entities", gfx = "mock"};
+tests[#tests + 1] = { name = "Loads entities", gfx = "mock" };
 tests[#tests].body = function(context)
 	local scene = MapScene:new("test-data/TestMapScene/all_features.lua");
 	local entities = scene:getECS():getAllEntities();
 	assert(TableUtils.countKeys(entities) == 10); -- 8 dynamic tiles + 2 map entities
 end
 
-tests[#tests + 1] = {name = "Can spawn and despawn entities", gfx = "mock"};
+tests[#tests + 1] = { name = "Can spawn and despawn entities", gfx = "mock" };
 tests[#tests].body = function(context)
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local Piggy = Class:test("Piggy", Entity);
@@ -33,7 +33,7 @@ tests[#tests].body = function(context)
 	assert(not scene:getECS():getAllEntities()[piggy]);
 end
 
-tests[#tests + 1] = {name = "Can use the `spawn` command", gfx = "mock"};
+tests[#tests + 1] = { name = "Can use the `spawn` command", gfx = "mock" };
 tests[#tests].body = function(context)
 	local TestSpawnCommand = Class("TestSpawnCommand", Entity);
 
@@ -50,7 +50,7 @@ tests[#tests].body = function(context)
 	error("Spawned entity not found");
 end
 
-tests[#tests + 1] = {name = "Spawn command puts entity near player", gfx = "mock"};
+tests[#tests + 1] = { name = "Spawn command puts entity near player", gfx = "mock" };
 tests[#tests].body = function(context)
 	local TestSpawnCommandProximity = Class("TestSpawnCommandProximity", Entity);
 	TestSpawnCommandProximity.init = function(self, scene)

@@ -56,7 +56,7 @@ else
 			local numResults = TableUtils.countKeys(results);
 			if numResults > 1 then
 				local errorMessage = string.format("Ambiguous method call, %s.%s can resolve to any of the followings:",
-                                   				from:getClassName(), key);
+					from:getClassName(), key);
 				for _, result in ipairs(results) do
 					errorMessage = errorMessage .. string.format("\n\t- %s.%s", result.alias:getClassName(), key);
 				end

@@ -2,7 +2,7 @@ local PartyMemberData = require("arpg/persistence/party/PartyMemberData");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Instance class"};
+tests[#tests + 1] = { name = "Instance class" };
 tests[#tests].body = function()
 	local original = PartyMemberData:new("Sailor");
 	assert(original:getInstanceClass() == "Sailor");
@@ -10,7 +10,7 @@ tests[#tests].body = function()
 	assert(copy:getInstanceClass() == original:getInstanceClass());
 end
 
-tests[#tests + 1] = {name = "Assigned player"};
+tests[#tests + 1] = { name = "Assigned player" };
 tests[#tests].body = function()
 	local original = PartyMemberData:new("Sailor");
 	original:setAssignedPlayer(2);

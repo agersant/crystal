@@ -6,7 +6,7 @@ local Image = require("engine/ui/bricks/elements/Image");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Draws widget", gfx = "on"};
+tests[#tests + 1] = { name = "Draws widget", gfx = "on" };
 tests[#tests].body = function(context)
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);

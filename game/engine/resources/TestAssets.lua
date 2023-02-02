@@ -2,7 +2,7 @@ local Assets = require("engine/resources/Assets");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Load empty map", gfx = "mock"};
+tests[#tests + 1] = { name = "Load empty map", gfx = "mock" };
 tests[#tests].body = function()
 	local assets = Assets:new();
 	local mapName = "test-data/empty_map.lua";
@@ -12,7 +12,7 @@ tests[#tests].body = function()
 	assets:unload(mapName);
 end
 
-tests[#tests + 1] = {name = "Load shader", gfx = "on"};
+tests[#tests + 1] = { name = "Load shader", gfx = "on" };
 tests[#tests].body = function()
 	local assets = Assets:new();
 	local shaderPath = "test-data/TestAssets/shader.glsl";
@@ -22,7 +22,7 @@ tests[#tests].body = function()
 	assets:unload(shaderPath);
 end
 
-tests[#tests + 1] = {name = "Load spritesheet", gfx = "on"};
+tests[#tests + 1] = { name = "Load spritesheet", gfx = "on" };
 tests[#tests].body = function()
 	local assets = Assets:new();
 	local sheetName = "test-data/blankey.lua";
@@ -46,7 +46,7 @@ tests[#tests].body = function()
 	assets:unload(sheetName);
 end
 
-tests[#tests + 1] = {name = "Load package", gfx = "mock"};
+tests[#tests + 1] = { name = "Load package", gfx = "mock" };
 tests[#tests].body = function()
 	local assets = Assets:new();
 	local packageName = "test-data/TestAssets/package.lua";
@@ -61,7 +61,7 @@ tests[#tests].body = function()
 	assert(not assets:isAssetLoaded(sheetName));
 end
 
-tests[#tests + 1] = {name = "Nested packages work", gfx = "mock"};
+tests[#tests + 1] = { name = "Nested packages work", gfx = "mock" };
 tests[#tests].body = function()
 	local assets = Assets:new();
 	local wrapperPackageName = "test-data/TestAssets/wrapper_package.lua";
@@ -77,7 +77,7 @@ tests[#tests].body = function()
 	assert(not assets:isAssetLoaded(sheetName));
 end
 
-tests[#tests + 1] = {name = "A single reference keeps assets loaded", gfx = "mock"};
+tests[#tests + 1] = { name = "A single reference keeps assets loaded", gfx = "mock" };
 tests[#tests].body = function()
 	local assets = Assets:new();
 	local wrapperPackageName = "test-data/TestAssets/wrapper_package.lua";
@@ -92,7 +92,7 @@ tests[#tests].body = function()
 	assert(not assets:isAssetLoaded(sheetName));
 end
 
-tests[#tests + 1] = {name = "Has global API"};
+tests[#tests + 1] = { name = "Has global API" };
 tests[#tests].body = function()
 	assert(ASSETS);
 end

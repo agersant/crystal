@@ -4,7 +4,7 @@ local Joint = require("engine/ui/bricks/core/Joint");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Can add and remove children"};
+tests[#tests + 1] = { name = "Can add and remove children" };
 tests[#tests].body = function()
 	local a = Element:new();
 	local b = Element:new();
@@ -25,14 +25,14 @@ tests[#tests].body = function()
 	assert(b:getParent() == otherContainer);
 end
 
-tests[#tests + 1] = {name = "Add child returns newly added child"};
+tests[#tests + 1] = { name = "Add child returns newly added child" };
 tests[#tests].body = function()
 	local a = Element:new();
 	local container = Container:new(Joint);
 	assert(container:addChild(a) == a);
 end
 
-tests[#tests + 1] = {name = "Can nest containers"};
+tests[#tests + 1] = { name = "Can nest containers" };
 tests[#tests].body = function()
 	local a = Container:new(Joint);
 	local b = Container:new(Joint);
@@ -44,7 +44,7 @@ tests[#tests].body = function()
 	assert(c:getParent() == b);
 end
 
-tests[#tests + 1] = {name = "Calls update on children"};
+tests[#tests + 1] = { name = "Calls update on children" };
 tests[#tests].body = function()
 	local a = Element:new(Joint);
 	local b = Element:new(Joint);
@@ -64,7 +64,7 @@ tests[#tests].body = function()
 	assert(sentinel == 11)
 end
 
-tests[#tests + 1] = {name = "Layouts and draws children", gfx = "mock"};
+tests[#tests + 1] = { name = "Layouts and draws children", gfx = "mock" };
 tests[#tests].body = function()
 	local a = Element:new(Joint);
 	local b = Element:new(Joint);

@@ -2,7 +2,7 @@ local Script = require("engine/script/Script");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Script runs"};
+tests[#tests + 1] = { name = "Script runs" };
 tests[#tests].body = function()
 	local a = 0;
 	local script = Script:new(function(self)
@@ -15,7 +15,7 @@ tests[#tests].body = function()
 	assert(a == 1);
 end
 
-tests[#tests + 1] = {name = "Wait frame"};
+tests[#tests + 1] = { name = "Wait frame" };
 tests[#tests].body = function()
 	local a = 0;
 	local script = Script:new(function(self)
@@ -28,7 +28,7 @@ tests[#tests].body = function()
 	assert(a == 1);
 end
 
-tests[#tests + 1] = {name = "Wait duration"};
+tests[#tests + 1] = { name = "Wait duration" };
 tests[#tests].body = function()
 	local a = 0;
 	local script = Script:new(function(self)
@@ -42,7 +42,7 @@ tests[#tests].body = function()
 	assert(a == 1);
 end
 
-tests[#tests + 1] = {name = "Wait for"};
+tests[#tests + 1] = { name = "Wait for" };
 tests[#tests].body = function()
 	local a = 0;
 	local script = Script:new(function(self)
@@ -55,7 +55,7 @@ tests[#tests].body = function()
 	assert(a == 1);
 end
 
-tests[#tests + 1] = {name = "Successive waits"};
+tests[#tests + 1] = { name = "Successive waits" };
 tests[#tests].body = function()
 	local a = 0;
 	local script = Script:new(function(self)
@@ -78,11 +78,11 @@ tests[#tests].body = function()
 	assert(a == 3);
 end
 
-tests[#tests + 1] = {name = "Wait for any"};
+tests[#tests + 1] = { name = "Wait for any" };
 tests[#tests].body = function()
 	local a = 0;
 	local script = Script:new(function(self)
-		self:waitForAny({"testSignal", "gruik"});
+		self:waitForAny({ "testSignal", "gruik" });
 		a = a + 1;
 	end);
 	script:update(0);
@@ -95,7 +95,7 @@ tests[#tests].body = function()
 	assert(a == 1);
 end
 
-tests[#tests + 1] = {name = "Start thread"};
+tests[#tests + 1] = { name = "Start thread" };
 tests[#tests].body = function()
 	local a = 0;
 	local script = Script:new(function(self)
@@ -111,7 +111,7 @@ tests[#tests].body = function()
 	assert(a == 1);
 end
 
-tests[#tests + 1] = {name = "Stop thread"};
+tests[#tests + 1] = { name = "Stop thread" };
 tests[#tests].body = function()
 	local a = 0;
 	local script = Script:new(function(self)
@@ -127,7 +127,7 @@ tests[#tests].body = function()
 	assert(a == 0);
 end
 
-tests[#tests + 1] = {name = "Cannot start thread from stopped thread"};
+tests[#tests + 1] = { name = "Cannot start thread from stopped thread" };
 tests[#tests].body = function()
 	local script = Script:new();
 	local t0 = script:addThreadAndRun(function()
@@ -140,7 +140,7 @@ tests[#tests].body = function()
 
 end
 
-tests[#tests + 1] = {name = "Signal additional data"};
+tests[#tests + 1] = { name = "Signal additional data" };
 tests[#tests].body = function()
 	local a = 0;
 	local script = Script:new(function(self)
@@ -153,12 +153,12 @@ tests[#tests].body = function()
 	assert(a == 1);
 end
 
-tests[#tests + 1] = {name = "Multiple signals additional data"};
+tests[#tests + 1] = { name = "Multiple signals additional data" };
 tests[#tests].body = function()
 	local a = 0;
 	local s = "";
 	local script = Script:new(function(self)
-		s, a = self:waitForAny({"testSignal", "gruik"});
+		s, a = self:waitForAny({ "testSignal", "gruik" });
 	end);
 	assert(a == 0);
 	script:update(0);
@@ -168,7 +168,7 @@ tests[#tests].body = function()
 	assert(a == 1);
 end
 
-tests[#tests + 1] = {name = "Signal doesn't wake dead threads"};
+tests[#tests + 1] = { name = "Signal doesn't wake dead threads" };
 tests[#tests].body = function()
 	local sentinel = true;
 	local script = Script:new(function(self)
@@ -187,7 +187,7 @@ tests[#tests].body = function()
 	assert(sentinel);
 end
 
-tests[#tests + 1] = {name = "End on"};
+tests[#tests + 1] = { name = "End on" };
 tests[#tests].body = function()
 	local a = 0;
 	local script = Script:new(function(self)
@@ -202,7 +202,7 @@ tests[#tests].body = function()
 	assert(a == 0);
 end
 
-tests[#tests + 1] = {name = "Unblock after end on"};
+tests[#tests + 1] = { name = "Unblock after end on" };
 tests[#tests].body = function()
 	local a = 0;
 	local script = Script:new(function(self)
@@ -218,7 +218,7 @@ tests[#tests].body = function()
 	assert(a == 0);
 end
 
-tests[#tests + 1] = {name = "Wait for join"};
+tests[#tests + 1] = { name = "Wait for join" };
 tests[#tests].body = function()
 	local sentinel = false;
 	local script = Script:new();
@@ -238,7 +238,7 @@ tests[#tests].body = function()
 	assert(sentinel);
 end
 
-tests[#tests + 1] = {name = "Join any"};
+tests[#tests + 1] = { name = "Join any" };
 tests[#tests].body = function()
 	local sentinel = false;
 	local script = Script:new();
@@ -250,7 +250,7 @@ tests[#tests].body = function()
 		self:waitFor("s3");
 	end);
 	local t3 = script:addThreadAndRun(function(self)
-		self:joinAny({t1, t2});
+		self:joinAny({ t1, t2 });
 		sentinel = true;
 	end);
 
@@ -261,7 +261,7 @@ tests[#tests].body = function()
 	assert(sentinel);
 end
 
-tests[#tests + 1] = {name = "Join returns true when joined thread completed"};
+tests[#tests + 1] = { name = "Join returns true when joined thread completed" };
 tests[#tests].body = function()
 	local completed;
 	local script = Script:new();
@@ -279,7 +279,7 @@ tests[#tests].body = function()
 	assert(completed);
 end
 
-tests[#tests + 1] = {name = "Join returns false when joined thread was stopped"};
+tests[#tests + 1] = { name = "Join returns false when joined thread was stopped" };
 tests[#tests].body = function()
 	local completed;
 	local script = Script:new();
@@ -300,7 +300,7 @@ tests[#tests].body = function()
 	assert(completed == false);
 end
 
-tests[#tests + 1] = {name = "Join returns thread output"};
+tests[#tests + 1] = { name = "Join returns thread output" };
 tests[#tests].body = function()
 	local completed, sentinel;
 	local script = Script:new();
@@ -322,7 +322,7 @@ tests[#tests].body = function()
 	assert(sentinel == 10);
 end
 
-tests[#tests + 1] = {name = "Join doesn't unblock when parent thread is in the process of stopping"};
+tests[#tests + 1] = { name = "Join doesn't unblock when parent thread is in the process of stopping" };
 tests[#tests].body = function()
 	local sentinel;
 	local script = Script:new();
@@ -348,7 +348,7 @@ tests[#tests].body = function()
 	assert(sentinel);
 end
 
-tests[#tests + 1] = {name = "Joining dead threads is no-op"};
+tests[#tests + 1] = { name = "Joining dead threads is no-op" };
 tests[#tests].body = function()
 	local sentinel;
 	local script = Script:new();
@@ -369,7 +369,7 @@ tests[#tests].body = function()
 	assert(sentinel);
 end
 
-tests[#tests + 1] = {name = "Cross script join keeps execution context"};
+tests[#tests + 1] = { name = "Cross script join keeps execution context" };
 tests[#tests].body = function()
 	local t0;
 	local scriptA = Script:new(function(self)
@@ -395,7 +395,7 @@ tests[#tests].body = function()
 	assert(sentinel);
 end
 
-tests[#tests + 1] = {name = "End child threads after thread ends"};
+tests[#tests + 1] = { name = "End child threads after thread ends" };
 tests[#tests].body = function()
 	local a = 0;
 	local script = Script:new(function(self)
@@ -410,7 +410,7 @@ tests[#tests].body = function()
 	assert(a == 0);
 end
 
-tests[#tests + 1] = {name = "End grand-child threads after thread ends"};
+tests[#tests + 1] = { name = "End grand-child threads after thread ends" };
 tests[#tests].body = function()
 	local a = 0;
 	local script = Script:new(function(self)
@@ -427,7 +427,7 @@ tests[#tests].body = function()
 	assert(a == 0);
 end
 
-tests[#tests + 1] = {name = "Signal not propagated to thread it makes appear"};
+tests[#tests + 1] = { name = "Signal not propagated to thread it makes appear" };
 tests[#tests].body = function()
 	local a = 0;
 	local script = Script:new(function(self)
@@ -444,7 +444,7 @@ tests[#tests].body = function()
 	assert(a == 1);
 end
 
-tests[#tests + 1] = {name = "Cross-script threading"};
+tests[#tests + 1] = { name = "Cross-script threading" };
 tests[#tests].body = function()
 	local a = 0;
 
@@ -463,7 +463,7 @@ tests[#tests].body = function()
 	assert(a == 1);
 end
 
-tests[#tests + 1] = {name = "Pump new thread only once"};
+tests[#tests + 1] = { name = "Pump new thread only once" };
 tests[#tests].body = function()
 	local a = 0;
 	local script = Script:new(function(self)
@@ -478,7 +478,7 @@ tests[#tests].body = function()
 	assert(a == 1);
 end
 
-tests[#tests + 1] = {name = "Successive waits not treated as waitForAny"};
+tests[#tests + 1] = { name = "Successive waits not treated as waitForAny" };
 tests[#tests].body = function()
 	local sentinel = false;
 	local script = Script:new(function(self)
@@ -498,7 +498,7 @@ tests[#tests].body = function()
 	assert(sentinel);
 end
 
-tests[#tests + 1] = {name = "Scope cleanup functions run after thread finishes"};
+tests[#tests + 1] = { name = "Scope cleanup functions run after thread finishes" };
 tests[#tests].body = function()
 	local sentinel = false;
 	local script = Script:new(function(self)
@@ -514,7 +514,7 @@ tests[#tests].body = function()
 	assert(sentinel);
 end
 
-tests[#tests + 1] = {name = "Scope cleanup functions run after thread is stopped"};
+tests[#tests + 1] = { name = "Scope cleanup functions run after thread is stopped" };
 tests[#tests].body = function()
 	local sentinel = false;
 	local script = Script:new();
@@ -530,7 +530,7 @@ tests[#tests].body = function()
 	assert(sentinel);
 end
 
-tests[#tests + 1] = {name = "Scope cleanup functions from child threads also run"};
+tests[#tests + 1] = { name = "Scope cleanup functions from child threads also run" };
 tests[#tests].body = function()
 	local sentinel = false;
 	local script = Script:new(function(self)
@@ -550,7 +550,7 @@ tests[#tests].body = function()
 	assert(sentinel);
 end
 
-tests[#tests + 1] = {name = "Script can be stopped"};
+tests[#tests + 1] = { name = "Script can be stopped" };
 tests[#tests].body = function()
 	local sentinel = 0;
 
@@ -578,7 +578,7 @@ tests[#tests].body = function()
 	assert(sentinel == 11);
 end
 
-tests[#tests + 1] = {name = "Threads can be added after stopping"};
+tests[#tests + 1] = { name = "Threads can be added after stopping" };
 tests[#tests].body = function()
 	local script1 = Script:new();
 	local thread = script1:addThreadAndRun(function(self)
@@ -599,7 +599,7 @@ tests[#tests].body = function()
 	assert(sentinel);
 end
 
-tests[#tests + 1] = {name = "Recursive stops don't re-trigger join"};
+tests[#tests + 1] = { name = "Recursive stops don't re-trigger join" };
 tests[#tests].body = function()
 	local sentinel = 0;
 
@@ -623,7 +623,7 @@ tests[#tests].body = function()
 	assert(sentinel == 1);
 end
 
-tests[#tests + 1] = {name = "Thread can stop itself"};
+tests[#tests + 1] = { name = "Thread can stop itself" };
 tests[#tests].body = function()
 	local sentinel = 0;
 
@@ -637,7 +637,7 @@ tests[#tests].body = function()
 	assert(sentinel == 1)
 end
 
-tests[#tests + 1] = {name = "Thread can stop its own script"};
+tests[#tests + 1] = { name = "Thread can stop its own script" };
 tests[#tests].body = function()
 	local sentinel = 0;
 
@@ -651,7 +651,7 @@ tests[#tests].body = function()
 	assert(sentinel == 1)
 end
 
-tests[#tests + 1] = {name = "Cross-script stop using addThreadAndRun"};
+tests[#tests + 1] = { name = "Cross-script stop using addThreadAndRun" };
 tests[#tests].body = function()
 	local sentinel = 0;
 
@@ -669,7 +669,7 @@ tests[#tests].body = function()
 	assert(sentinel == 1)
 end
 
-tests[#tests + 1] = {name = "Cross-script stop using a signal"};
+tests[#tests + 1] = { name = "Cross-script stop using a signal" };
 tests[#tests].body = function()
 	local sentinel = 0;
 

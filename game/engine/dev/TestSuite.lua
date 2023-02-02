@@ -43,7 +43,7 @@ local engineTestFiles = {
 	"engine/utils/TestTableUtils",
 };
 
-local Context = {currentTest = "", resolution = {}};
+local Context = { currentTest = "", resolution = {} };
 
 Context.runTestSuite = function(self, testFiles)
 	self:createOutputDirectories();
@@ -138,11 +138,11 @@ Context.diffScreenshots = function(self, actual, expected)
 		for y = 0, actual:getHeight() - 1 do
 			for x = 0, actual:getWidth() - 1 do
 				if not badPixel then
-					local expectedColor = {expected:getPixel(x, y)};
-					local actualColor = {actual:getPixel(x, y)};
+					local expectedColor = { expected:getPixel(x, y) };
+					local actualColor = { actual:getPixel(x, y) };
 					for i = 1, 4 do
 						if math.abs(expectedColor[i] - actualColor[i]) > 1 / 255 then
-							badPixel = {x = x, y = y, expected = expectedColor, actual = actualColor};
+							badPixel = { x = x, y = y, expected = expectedColor, actual = actualColor };
 						end
 					end
 				end
@@ -162,14 +162,14 @@ Context.compareFrame = function(self, referenceImagePath)
 		local name = string.gsub(string.lower(self.currentTest.name), "%s+", "-");
 		local capturedImagePath = self:saveScreenshot(actualImageData, name);
 		local errorMessage = string.format("Screenshot did not match reference image.\n\tTarget: %s\n\tActual: %s",
-                                   		referenceImagePath, capturedImagePath);
+			referenceImagePath, capturedImagePath);
 		if badPixel then
 			errorMessage = errorMessage ..
-               							string.format(
-               											"\n\tPixel at (x: %d, y: %d) is (R: %f, G: %f, B: %f, A: %f) but should be (R: %f, G: %f, B: %f, A: %f)",
-               											badPixel.x, badPixel.y, badPixel.actual[1], badPixel.actual[2], badPixel.actual[3],
-               											badPixel.actual[4], badPixel.expected[1], badPixel.expected[2], badPixel.expected[3],
-               											badPixel.expected[4]);
+				string.format(
+					"\n\tPixel at (x: %d, y: %d) is (R: %f, G: %f, B: %f, A: %f) but should be (R: %f, G: %f, B: %f, A: %f)",
+					badPixel.x, badPixel.y, badPixel.actual[1], badPixel.actual[2], badPixel.actual[3],
+					badPixel.actual[4], badPixel.expected[1], badPixel.expected[2], badPixel.expected[3],
+					badPixel.expected[4]);
 		end
 		error(errorMessage);
 	end
@@ -180,7 +180,7 @@ end
 Context.resetGlobalState = function(self, test)
 	ASSETS:unloadAll();
 
-	test.resolution = test.resolution or {200, 200};
+	test.resolution = test.resolution or { 200, 200 };
 	VIEWPORT:setRenderSize(test.resolution[1], test.resolution[2]);
 
 	if test.gfx == "mock" then

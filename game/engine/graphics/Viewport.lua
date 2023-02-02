@@ -7,7 +7,7 @@ local setMode = function(self)
 		return;
 	end
 	love.window.setMode(self._windowWidth, self._windowHeight,
-                    	{msaa = 8, resizable = true, vsync = false, fullscreen = self._fullscreen});
+		{ msaa = 8, resizable = true, vsync = false, fullscreen = self._fullscreen });
 	love.window.setTitle("Crystal");
 end
 

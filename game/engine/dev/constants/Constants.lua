@@ -40,7 +40,7 @@ Constants.define = function(self, name, initialValue, options)
 	end
 
 	local options = options or {};
-	local constant = {value = initialValue, name = originalName};
+	local constant = { value = initialValue, name = originalName };
 	if valueType == "number" then
 		assert(type(options.minValue) == "number");
 		assert(type(options.maxValue) == "number");

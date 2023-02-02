@@ -8,7 +8,7 @@ local SpriteSystem = Class("SpriteSystem", System);
 
 SpriteSystem.init = function(self, ecs)
 	SpriteSystem.super.init(self, ecs);
-	self._bodyQuery = AllComponents:new({Sprite, PhysicsBody});
+	self._bodyQuery = AllComponents:new({ Sprite, PhysicsBody });
 	self:getECS():addQuery(self._bodyQuery);
 end
 

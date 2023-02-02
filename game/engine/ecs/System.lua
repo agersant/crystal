@@ -15,4 +15,3 @@ System.update = function(self)
 end
 
 return System;
-

@@ -8,7 +8,7 @@ local WorldWidgetSystem = Class("WorldWidgetSystem", System);
 
 WorldWidgetSystem.init = function(self, ecs)
 	WorldWidgetSystem.super.init(self, ecs);
-	self._bodyQuery = AllComponents:new({WorldWidget, PhysicsBody});
+	self._bodyQuery = AllComponents:new({ WorldWidget, PhysicsBody });
 	self:getECS():addQuery(self._bodyQuery);
 end
 

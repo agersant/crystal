@@ -22,7 +22,7 @@ PartyMemberData.setAssignedPlayer = function(self, assignedPlayer)
 end
 
 PartyMemberData.toPOD = function(self)
-	return {instanceClass = self:getInstanceClass(), assignedPlayer = self:getAssignedPlayer()};
+	return { instanceClass = self:getInstanceClass(), assignedPlayer = self:getAssignedPlayer() };
 end
 
 PartyMemberData.fromPOD = function(self, pod)

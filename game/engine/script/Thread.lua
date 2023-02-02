@@ -123,7 +123,7 @@ end
 Thread.waitFor = function(self, signal)
 	assert(not self:isDead());
 	assert(type(signal) == "string");
-	return self:waitForAny({signal});
+	return self:waitForAny({ signal });
 end
 
 Thread.waitForAny = function(self, signals)
@@ -136,7 +136,7 @@ end
 Thread.endOn = function(self, signal)
 	assert(not self:isDead());
 	assert(type(signal) == "string");
-	return self:endOnAny({signal});
+	return self:endOnAny({ signal });
 end
 
 Thread.endOnAny = function(self, signals)
@@ -148,7 +148,7 @@ end
 Thread.join = function(self, thread)
 	assert(not self:isDead());
 	assert(thread);
-	return self:joinAny({thread});
+	return self:joinAny({ thread });
 end
 
 Thread.joinAny = function(self, threads)

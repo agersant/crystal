@@ -153,9 +153,9 @@ Console.draw = function(self)
 
 		-- Draw autocomplete arrow
 		love.graphics.polygon("fill", autoCompleteBoxX + autoCompleteArrowMargin, autoCompleteBoxY,
-                      		autoCompleteBoxX + autoCompleteArrowMargin + autoCompleteArrowWidth, autoCompleteBoxY,
-                      		autoCompleteBoxX + autoCompleteArrowMargin + autoCompleteArrowWidth / 2,
-                      		autoCompleteBoxY - autoCompleteArrowHeight);
+			autoCompleteBoxX + autoCompleteArrowMargin + autoCompleteArrowWidth, autoCompleteBoxY,
+			autoCompleteBoxX + autoCompleteArrowMargin + autoCompleteArrowWidth / 2,
+			autoCompleteBoxY - autoCompleteArrowHeight);
 
 		-- Draw autocomplete content
 		love.graphics.setColor(Colors.white);

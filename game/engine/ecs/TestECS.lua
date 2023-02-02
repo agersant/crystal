@@ -9,7 +9,7 @@ local TableUtils = require("engine/utils/TableUtils");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Spawn and despawn entity"};
+tests[#tests + 1] = { name = "Spawn and despawn entity" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 
@@ -33,7 +33,7 @@ tests[#tests].body = function()
 	assert(not ecs:getAllEntities()[b]);
 end
 
-tests[#tests + 1] = {name = "Spawn and despawn entity between updates"};
+tests[#tests + 1] = { name = "Spawn and despawn entity between updates" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 
@@ -45,7 +45,7 @@ tests[#tests].body = function()
 	assert(not ecs:getAllEntities()[a]);
 end
 
-tests[#tests + 1] = {name = "Add and remove component"};
+tests[#tests + 1] = { name = "Add and remove component" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 
@@ -64,7 +64,7 @@ tests[#tests].body = function()
 	assert(snoot:getEntity() == nil);
 end
 
-tests[#tests + 1] = {name = "Add and remove component between updates"};
+tests[#tests + 1] = { name = "Add and remove component between updates" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local Snoot = Class:test("Snoot", Component);
@@ -91,7 +91,7 @@ tests[#tests].body = function()
 	assert(a:getComponent(Snoot) == snoot);
 end
 
-tests[#tests + 1] = {name = "Cannot add component to despawned entity"};
+tests[#tests + 1] = { name = "Cannot add component to despawned entity" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local a = ecs:spawn(Entity);
@@ -103,7 +103,7 @@ tests[#tests].body = function()
 	assert(not a:getExactComponent(Component));
 end
 
-tests[#tests + 1] = {name = "Transfer component"};
+tests[#tests + 1] = { name = "Transfer component" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 
@@ -137,7 +137,7 @@ tests[#tests].body = function()
 	assert(b:getComponent(Snoot) == snoot);
 end
 
-tests[#tests + 1] = {name = "Prevent duplicate components"};
+tests[#tests + 1] = { name = "Prevent duplicate components" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 
@@ -159,7 +159,7 @@ tests[#tests].body = function()
 	assert(not success);
 end
 
-tests[#tests + 1] = {name = "Get exact component"};
+tests[#tests + 1] = { name = "Get exact component" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local a = ecs:spawn(Entity);
@@ -198,7 +198,7 @@ tests[#tests].body = function()
 	assert(a:getExactComponent(Snoot) == nil);
 end
 
-tests[#tests + 1] = {name = "Get component"};
+tests[#tests + 1] = { name = "Get component" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local a = ecs:spawn(Entity);
@@ -237,7 +237,7 @@ tests[#tests].body = function()
 	assert(a:getComponent(Snoot) == bonk);
 end
 
-tests[#tests + 1] = {name = "Get components"};
+tests[#tests + 1] = { name = "Get components" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 
@@ -247,16 +247,16 @@ tests[#tests].body = function()
 	local Boop = Class:test("Boop", Snoot);
 	local boop = Boop:new();
 	a:addComponent(boop);
-	assert(TableUtils.equals({[boop] = true}, a:getComponents(Snoot)));
+	assert(TableUtils.equals({ [boop] = true }, a:getComponents(Snoot)));
 	ecs:update();
-	assert(TableUtils.equals({[boop] = true}, a:getComponents(Snoot)));
+	assert(TableUtils.equals({ [boop] = true }, a:getComponents(Snoot)));
 	a:removeComponent(boop);
 	assert(TableUtils.equals({}, a:getComponents(Snoot)));
 	ecs:update();
 	assert(TableUtils.equals({}, a:getComponents(Snoot)));
 end
 
-tests[#tests + 1] = {name = "Get all entities with component"};
+tests[#tests + 1] = { name = "Get all entities with component" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 
@@ -267,13 +267,13 @@ tests[#tests].body = function()
 	local boop = Boop:new();
 	a:addComponent(boop);
 	ecs:update();
-	assert(TableUtils.equals({[a] = true}, ecs:getAllEntitiesWith(Snoot)));
+	assert(TableUtils.equals({ [a] = true }, ecs:getAllEntitiesWith(Snoot)));
 	a:removeComponent(boop);
 	ecs:update();
 	assert(TableUtils.equals({}, ecs:getAllEntitiesWith(Snoot)));
 end
 
-tests[#tests + 1] = {name = "Get all components"};
+tests[#tests + 1] = { name = "Get all components" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 
@@ -298,7 +298,7 @@ tests[#tests].body = function()
 	assert(#ecs:getAllComponents(Boop) == 0);
 end
 
-tests[#tests + 1] = {name = "Despawned entities don't leave components behind"};
+tests[#tests + 1] = { name = "Despawned entities don't leave components behind" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 
@@ -314,7 +314,7 @@ tests[#tests].body = function()
 	assert(#ecs:getAllComponents(Comp) == 0);
 end
 
-tests[#tests + 1] = {name = "Get system"};
+tests[#tests + 1] = { name = "Get system" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 
@@ -332,7 +332,7 @@ tests[#tests].body = function()
 	assert(ecs:getSystem(SystemB) == systemB);
 end
 
-tests[#tests + 1] = {name = "Systems run when notified"};
+tests[#tests + 1] = { name = "Systems run when notified" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 
@@ -353,7 +353,7 @@ tests[#tests].body = function()
 	assert(sentinel == 10);
 end
 
-tests[#tests + 1] = {name = "Systems receive parameters"};
+tests[#tests + 1] = { name = "Systems receive parameters" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 
@@ -369,11 +369,11 @@ tests[#tests].body = function()
 	assert(ran);
 end
 
-tests[#tests + 1] = {name = "Query maintains list of entities"};
+tests[#tests + 1] = { name = "Query maintains list of entities" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local Snoot = Class:test("Snoot", Component);
-	local query = AllComponents:new({Snoot});
+	local query = AllComponents:new({ Snoot });
 	ecs:addQuery(query);
 
 	local a = ecs:spawn(Entity);
@@ -404,12 +404,12 @@ tests[#tests].body = function()
 	assert(not query:contains(b));
 end
 
-tests[#tests + 1] = {name = "Query entity list captures derived components"};
+tests[#tests + 1] = { name = "Query entity list captures derived components" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local Snoot = Class:test("Snoot", Component);
 	local Boop = Class:test("Boop", Snoot);
-	local query = AllComponents:new({Snoot});
+	local query = AllComponents:new({ Snoot });
 	ecs:addQuery(query);
 
 	local a = ecs:spawn(Entity);
@@ -423,11 +423,11 @@ tests[#tests].body = function()
 	assert(not query:getEntities()[a]);
 end
 
-tests[#tests + 1] = {name = "Query maintains changelog of entities"};
+tests[#tests + 1] = { name = "Query maintains changelog of entities" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local Snoot = Class:test("Snoot", Component);
-	local query = AllComponents:new({Snoot});
+	local query = AllComponents:new({ Snoot });
 	ecs:addQuery(query);
 
 	local a = ecs:spawn(Entity);
@@ -452,11 +452,11 @@ tests[#tests].body = function()
 	assert(not query:getRemovedEntities()[b]);
 end
 
-tests[#tests + 1] = {name = "Query maintains changelog of components"};
+tests[#tests + 1] = { name = "Query maintains changelog of components" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local BaseComp = Class:test("BaseComp", Component);
-	local query = AllComponents:new({BaseComp});
+	local query = AllComponents:new({ BaseComp });
 	ecs:addQuery(query);
 
 	local CompA = Class:test("CompA", BaseComp);
@@ -472,22 +472,22 @@ tests[#tests].body = function()
 	assert(TableUtils.equals({}, query:getAddedComponents(BaseComp)));
 
 	ecs:update();
-	assert(TableUtils.equals({[compA] = a, [compB] = a}, query:getAddedComponents(BaseComp)));
+	assert(TableUtils.equals({ [compA] = a, [compB] = a }, query:getAddedComponents(BaseComp)));
 
 	a:addComponent(compC);
 	ecs:update();
-	assert(TableUtils.equals({[compC] = a}, query:getAddedComponents(BaseComp)));
+	assert(TableUtils.equals({ [compC] = a }, query:getAddedComponents(BaseComp)));
 
 	a:removeComponent(compA);
 	ecs:update();
-	assert(TableUtils.equals({[compA] = a}, query:getRemovedComponents(BaseComp)));
+	assert(TableUtils.equals({ [compA] = a }, query:getRemovedComponents(BaseComp)));
 end
 
-tests[#tests + 1] = {name = "Changelog of components is updated when entity despawns"};
+tests[#tests + 1] = { name = "Changelog of components is updated when entity despawns" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local Comp = Class:test("Comp", Component);
-	local query = AllComponents:new({Comp});
+	local query = AllComponents:new({ Comp });
 	ecs:addQuery(query);
 
 	local comp = Comp:new();
@@ -502,13 +502,13 @@ tests[#tests].body = function()
 	assert(query:getRemovedComponents(Comp)[comp] == a);
 end
 
-tests[#tests + 1] = {name = "Query component changelog works when component is added and removed between updates"};
+tests[#tests + 1] = { name = "Query component changelog works when component is added and removed between updates" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local BaseComp = Class:test("BaseComp", Component);
 	local CompA = Class:test("CompA", BaseComp);
 	local CompB = Class:test("CompB", BaseComp);
-	local query = EitherComponent:new({CompA, CompB});
+	local query = EitherComponent:new({ CompA, CompB });
 	ecs:addQuery(query);
 
 	local compA = CompA:new();
@@ -529,14 +529,14 @@ tests[#tests].body = function()
 	assert(TableUtils.equals({}, query:getAddedComponents(CompA)));
 end
 
-tests[#tests + 1] = {name = "Query component changelog works for intersection query"};
+tests[#tests + 1] = { name = "Query component changelog works for intersection query" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local BaseComp = Class:test("BaseComp", Component);
 	local CompA = Class:test("CompA", BaseComp);
 	local CompB = Class:test("CompB", BaseComp);
 	local CompC = Class:test("CompC", BaseComp);
-	local query = AllComponents:new({CompA, CompB, CompC});
+	local query = AllComponents:new({ CompA, CompB, CompC });
 	ecs:addQuery(query);
 
 	local compA = CompA:new();
@@ -563,14 +563,14 @@ tests[#tests].body = function()
 	assert(query:getRemovedComponents(CompC)[compC]);
 end
 
-tests[#tests + 1] = {name = "Query component changelog works for union query"};
+tests[#tests + 1] = { name = "Query component changelog works for union query" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local BaseComp = Class:test("BaseComp", Component);
 	local CompA = Class:test("CompA", BaseComp);
 	local CompB = Class:test("CompB", BaseComp);
 	local CompC = Class:test("CompC", BaseComp);
-	local query = EitherComponent:new({CompA, CompB, CompC});
+	local query = EitherComponent:new({ CompA, CompB, CompC });
 	ecs:addQuery(query);
 
 	local compA = CompA:new();
@@ -597,7 +597,7 @@ tests[#tests].body = function()
 	assert(not query:getRemovedComponents(CompC)[compC]);
 end
 
-tests[#tests + 1] = {name = "Events can be retrieved within the rest of the frame"};
+tests[#tests + 1] = { name = "Events can be retrieved within the rest of the frame" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local entity = ecs:spawn(Entity);
@@ -611,7 +611,7 @@ tests[#tests].body = function()
 	assert(#ecs:getEvents(Event) == 0);
 end
 
-tests[#tests + 1] = {name = "Events can be retrieved by base class"};
+tests[#tests + 1] = { name = "Events can be retrieved by base class" };
 tests[#tests].body = function()
 	local MyEvent = Class:test("MyEvent", Event);
 	local MyOtherEvent = Class:test("MyOtherEvent", Event);

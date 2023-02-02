@@ -73,8 +73,8 @@ local declareClass = function(self, name, baseClass, options)
 	return class;
 end
 
-Class = setmetatable({}, {__call = declareClass});
+Class = setmetatable({}, { __call = declareClass });
 Class.getByName = getClassByName;
 Class.test = function(self, name, baseClass)
-	return declareClass(self, name, baseClass, {allowRedefinition = true});
+	return declareClass(self, name, baseClass, { allowRedefinition = true });
 end;

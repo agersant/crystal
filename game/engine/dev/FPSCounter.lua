@@ -19,7 +19,7 @@ local paddingY = 20;
 local textPaddingX = 5;
 local textPaddingY = 5;
 
-local state = {isActive = false, frameDurations = {}};
+local state = { isActive = false, frameDurations = {} };
 
 FPSCounter.init = function(self)
 	self.font = FONTS:get("devBold", fontSize);

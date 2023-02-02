@@ -2,13 +2,13 @@ local InputDevice = require("engine/input/InputDevice");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Missing binding"};
+tests[#tests + 1] = { name = "Missing binding" };
 tests[#tests].body = function()
 	local device = InputDevice:new(1);
 	assert(not device:isCommandActive("attack"));
 end
 
-tests[#tests + 1] = {name = "Cleared binding"};
+tests[#tests + 1] = { name = "Cleared binding" };
 tests[#tests].body = function()
 	local device = InputDevice:new(1);
 	device:addBinding("attack", "z");
@@ -17,7 +17,7 @@ tests[#tests].body = function()
 	assert(not device:isCommandActive("attack"));
 end
 
-tests[#tests + 1] = {name = "Single-key binding"};
+tests[#tests + 1] = { name = "Single-key binding" };
 tests[#tests].body = function()
 	local device = InputDevice:new(1);
 	device:addBinding("attack", "z");
@@ -28,7 +28,7 @@ tests[#tests].body = function()
 	assert(not device:isCommandActive("attack"));
 end
 
-tests[#tests + 1] = {name = "Multi-key binding"};
+tests[#tests + 1] = { name = "Multi-key binding" };
 tests[#tests].body = function()
 	local device = InputDevice:new(1);
 	device:addBinding("attack", "z");
@@ -43,7 +43,7 @@ tests[#tests].body = function()
 	assert(not device:isCommandActive("attack"));
 end
 
-tests[#tests + 1] = {name = "Multi-command key"};
+tests[#tests + 1] = { name = "Multi-command key" };
 tests[#tests].body = function()
 	local device = InputDevice:new(1);
 	device:addBinding("attack", "z");

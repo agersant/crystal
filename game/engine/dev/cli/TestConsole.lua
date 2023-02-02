@@ -3,7 +3,7 @@ local Terminal = require("engine/dev/cli/Terminal");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Can toggle console", gfx = "mock"};
+tests[#tests + 1] = { name = "Can toggle console", gfx = "mock" };
 tests[#tests].body = function()
 	local console = Console:new(Terminal:new());
 	local wasActive = console:isActive();
@@ -13,7 +13,7 @@ tests[#tests].body = function()
 	assert(console:isActive() == wasActive);
 end
 
-tests[#tests + 1] = {name = "Can draw console", gfx = "mock"};
+tests[#tests + 1] = { name = "Can draw console", gfx = "mock" };
 tests[#tests].body = function(context)
 	local terminal = Terminal:new();
 	terminal:addCommand("example arg1:string arg2:number", function()

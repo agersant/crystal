@@ -12,7 +12,7 @@ local ECS = require("engine/ecs/ECS");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Kill"};
+tests[#tests + 1] = { name = "Kill" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local entity = ecs:spawn(Entity);
@@ -22,7 +22,7 @@ tests[#tests].body = function()
 	assert(entity:isDead());
 end
 
-tests[#tests + 1] = {name = "Inflict flat damage"};
+tests[#tests + 1] = { name = "Inflict flat damage" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local attacker = ecs:spawn(Entity);
@@ -32,13 +32,13 @@ tests[#tests].body = function()
 	ecs:update(0);
 
 	local intent = DamageIntent:new();
-	intent:setDamagePayload({DamageUnit:new(10)});
+	intent:setDamagePayload({ DamageUnit:new(10) });
 
 	attacker:inflictDamage(intent, victim:getComponent(CombatData));
 	assert(victim:getCurrentHealth() == 90);
 end
 
-tests[#tests + 1] = {name = "Inflict scaling physical damage"};
+tests[#tests + 1] = { name = "Inflict scaling physical damage" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local attacker = ecs:spawn(Entity);
@@ -50,7 +50,7 @@ tests[#tests].body = function()
 	local intent = DamageIntent:new();
 	local unit = DamageUnit:new();
 	unit:setScalingAmount(2, DamageScalingSource:new(ScalingSources.OFFENSE_PHYSICAL));
-	intent:setDamagePayload({unit});
+	intent:setDamagePayload({ unit });
 
 	attacker:inflictDamage(intent, victim:getComponent(CombatData));
 	assert(victim:getCurrentHealth() == 100);
@@ -60,7 +60,7 @@ tests[#tests].body = function()
 	assert(victim:getCurrentHealth() == 94);
 end
 
-tests[#tests + 1] = {name = "Mitigate physical damage"};
+tests[#tests + 1] = { name = "Mitigate physical damage" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local attacker = ecs:spawn(Entity);
@@ -72,16 +72,16 @@ tests[#tests].body = function()
 	local intent = DamageIntent:new();
 	victim:getStat(Stats.DEFENSE_PHYSICAL):setBaseValue(100);
 
-	intent:setDamagePayload({DamageUnit:new(100)});
+	intent:setDamagePayload({ DamageUnit:new(100) });
 	attacker:inflictDamage(intent, victim:getComponent(CombatData));
 	assert(victim:getCurrentHealth() == 50);
 
-	intent:setDamagePayload({DamageUnit:new(50)});
+	intent:setDamagePayload({ DamageUnit:new(50) });
 	attacker:inflictDamage(intent, victim:getComponent(CombatData));
 	assert(victim:getCurrentHealth() == 25);
 end
 
-tests[#tests + 1] = {name = "Elemental affinity multiplies damage"};
+tests[#tests + 1] = { name = "Elemental affinity multiplies damage" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local attacker = ecs:spawn(Entity);
@@ -91,14 +91,14 @@ tests[#tests].body = function()
 	ecs:update(0);
 
 	local intent = DamageIntent:new();
-	intent:setDamagePayload({DamageUnit:new(10, DamageTypes.MAGIC, Elements.FIRE)});
+	intent:setDamagePayload({ DamageUnit:new(10, DamageTypes.MAGIC, Elements.FIRE) });
 
 	attacker:getStat(Stats.AFFINITY_FIRE):setBaseValue(0.5);
 	attacker:inflictDamage(intent, victim:getComponent(CombatData));
 	assert(victim:getCurrentHealth() == 85);
 end
 
-tests[#tests + 1] = {name = "Elemental resistance multiplies damage"};
+tests[#tests + 1] = { name = "Elemental resistance multiplies damage" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local attacker = ecs:spawn(Entity);
@@ -108,14 +108,14 @@ tests[#tests].body = function()
 	ecs:update(0);
 
 	local intent = DamageIntent:new();
-	intent:setDamagePayload({DamageUnit:new(10, DamageTypes.MAGIC, Elements.FIRE)});
+	intent:setDamagePayload({ DamageUnit:new(10, DamageTypes.MAGIC, Elements.FIRE) });
 
 	victim:getStat(Stats.RESISTANCE_FIRE):setBaseValue(0.5);
 	attacker:inflictDamage(intent, victim:getComponent(CombatData));
 	assert(victim:getCurrentHealth() == 95);
 end
 
-tests[#tests + 1] = {name = "Flat stat modifiers"};
+tests[#tests + 1] = { name = "Flat stat modifiers" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local entity = ecs:spawn(Entity);
@@ -128,7 +128,7 @@ tests[#tests].body = function()
 	assert(entity:evaluateStat(Stats.OFFENSE_MAGIC) == 20);
 end
 
-tests[#tests + 1] = {name = "Flat + same-stat percentage modifier"};
+tests[#tests + 1] = { name = "Flat + same-stat percentage modifier" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local entity = ecs:spawn(Entity);
@@ -141,7 +141,7 @@ tests[#tests].body = function()
 	assert(entity:evaluateStat(Stats.OFFENSE_MAGIC) == 22);
 end
 
-tests[#tests + 1] = {name = "Convert 10% of offense into defense and vice versa"};
+tests[#tests + 1] = { name = "Convert 10% of offense into defense and vice versa" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local entity = ecs:spawn(Entity);
@@ -163,7 +163,7 @@ tests[#tests].body = function()
 	assert(entity:evaluateStat(Stats.DEFENSE_PHYSICAL) == 105);
 end
 
-tests[#tests + 1] = {name = "Swap offense and defense"};
+tests[#tests + 1] = { name = "Swap offense and defense" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local entity = ecs:spawn(Entity);
@@ -191,7 +191,7 @@ tests[#tests].body = function()
 	assert(entity:evaluateStat(Stats.DEFENSE_PHYSICAL) == 50);
 end
 
-tests[#tests + 1] = {name = "Three way +10% stat modifiers"};
+tests[#tests + 1] = { name = "Three way +10% stat modifiers" };
 tests[#tests].body = function()
 	local ecs = ECS:new();
 	local entity = ecs:spawn(Entity);

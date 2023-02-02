@@ -1,6 +1,6 @@
 local tests = {};
 
-tests[#tests + 1] = {name = "To string"};
+tests[#tests + 1] = { name = "To string" };
 tests[#tests].body = function()
 	local Fruit = Class:test("Fruit");
 	local Peach = Class:test("Peach", Fruit);
@@ -11,7 +11,7 @@ tests[#tests].body = function()
 	assert(tostring(Fruit) ~= tostring(Peach));
 end
 
-tests[#tests + 1] = {name = "Get class"};
+tests[#tests + 1] = { name = "Get class" };
 tests[#tests].body = function()
 	local Fruit = Class:test("Fruit");
 	local Peach = Class:test("Peach", Fruit);
@@ -21,7 +21,7 @@ tests[#tests].body = function()
 	assert(myPeach:getClass() == Peach);
 end
 
-tests[#tests + 1] = {name = "Get class name"};
+tests[#tests + 1] = { name = "Get class name" };
 tests[#tests].body = function()
 	local Fruit = Class:test("Fruit");
 	local Peach = Class:test("Peach", Fruit);
@@ -31,7 +31,7 @@ tests[#tests].body = function()
 	assert(myPeach:getClassName() == "Peach");
 end
 
-tests[#tests + 1] = {name = "Is instance of"};
+tests[#tests + 1] = { name = "Is instance of" };
 tests[#tests].body = function()
 	local Fruit = Class:test("Fruit");
 	local myFruit = Fruit:new();
@@ -41,7 +41,7 @@ tests[#tests].body = function()
 	assert(not myFruit:isInstanceOf(Bird));
 end
 
-tests[#tests + 1] = {name = "Is instance of inheritance"};
+tests[#tests + 1] = { name = "Is instance of inheritance" };
 tests[#tests].body = function()
 	local Fruit = Class:test("Fruit");
 	local Peach = Class:test("Peach", Fruit);
@@ -57,7 +57,7 @@ tests[#tests].body = function()
 	assert(not myFruit:isInstanceOf(Peach));
 end
 
-tests[#tests + 1] = {name = "Get by name"};
+tests[#tests + 1] = { name = "Get by name" };
 tests[#tests].body = function()
 	local Fruit = Class("MostUniqueFruit");
 	local Peach = Class("VeryUniqueDerivedPeach", Fruit);
@@ -66,7 +66,7 @@ tests[#tests].body = function()
 	assert(Class:getByName("Berry") == nil);
 end
 
-tests[#tests + 1] = {name = "Placement new"};
+tests[#tests + 1] = { name = "Placement new" };
 tests[#tests].body = function()
 	local Fruit = Class:test("Fruit");
 	local fruit = {};

@@ -10,9 +10,9 @@ local MeshBuilder = Class("MeshBuilder");
 
 local newMeshBuilder = function(numTilesX, numTilesY, tileWidth, tileHeight, navigationPadding)
 	local output = FFI.gc(Diamond.mesh_builder_new(numTilesX, numTilesY, tileWidth, tileHeight, navigationPadding),
-                      	function(builder)
-		Diamond.mesh_builder_delete(builder);
-	end);
+		function(builder)
+			Diamond.mesh_builder_delete(builder);
+		end);
 	return output;
 end
 
@@ -60,7 +60,7 @@ MeshBuilder.addLayer = function(self, tileset, layerData)
 				for _, vert in ipairs(localPolygon) do
 					local vertX = MathUtils.round(vert.x);
 					local vertY = MathUtils.round(vert.y);
-					table.insert(polygon, {x = x + vertX, y = y + vertY});
+					table.insert(polygon, { x = x + vertX, y = y + vertY });
 				end
 				self:addPolygon(tileX, tileY, polygon);
 			end

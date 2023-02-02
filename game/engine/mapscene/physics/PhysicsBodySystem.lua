@@ -7,7 +7,7 @@ local PhysicsBodySystem = Class("PhysicsBodySystem", System);
 
 PhysicsBodySystem.init = function(self, ecs)
 	PhysicsBodySystem.super.init(self, ecs);
-	self._query = AllComponents:new({PhysicsBody});
+	self._query = AllComponents:new({ PhysicsBody });
 	self:getECS():addQuery(self._query);
 end
 

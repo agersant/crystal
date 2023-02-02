@@ -12,7 +12,7 @@ local buildBindingTables = function(self)
 		self._keyBindings[key] = self._keyBindings[key] or {};
 		table.insert(self._keyBindings[key], command);
 
-		self._commandBindings[command] = self._commandBindings[command] or {keys = {}, numInputsDown = 0};
+		self._commandBindings[command] = self._commandBindings[command] or { keys = {}, numInputsDown = 0 };
 		table.insert(self._commandBindings[command].keys, key);
 	end
 end
@@ -33,7 +33,7 @@ InputDevice.addBinding = function(self, command, key)
 	-- TODO prevent duplicate entries
 	assert(type(command) == "string");
 	assert(type(key) == "string");
-	table.insert(self._bindingPairs, {command = command, key = key});
+	table.insert(self._bindingPairs, { command = command, key = key });
 	buildBindingTables(self);
 end
 

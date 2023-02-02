@@ -12,11 +12,11 @@ DynamicLayer.init = function(self, map, layerData)
 		if tileID >= self._tileset:getFirstGID() then
 			local tx, ty = MathUtils.indexToXY(tileID - self._tileset:getFirstGID(), self._tileset:getWidthInTiles());
 			local quad = love.graphics.newQuad(tx * map:getTileWidth(), ty * map:getTileHeight(), map:getTileWidth(),
-                                   			map:getTileHeight(), tilesetImage:getDimensions());
+				map:getTileHeight(), tilesetImage:getDimensions());
 			local x, y = MathUtils.indexToXY(tileNum - 1, map:getWidthInTiles());
 			x = x * map:getTileWidth();
 			y = y * map:getTileHeight();
-			table.insert(self._tiles, {quad = quad, x = x, y = y});
+			table.insert(self._tiles, { quad = quad, x = x, y = y });
 		end
 	end
 end

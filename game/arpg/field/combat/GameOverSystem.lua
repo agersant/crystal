@@ -9,7 +9,7 @@ local GameOverSystem = Class("GameOverSystem", System);
 
 GameOverSystem.init = function(self, ecs)
 	GameOverSystem.super.init(self, ecs);
-	self._query = AllComponents:new({CombatData, PartyMember});
+	self._query = AllComponents:new({ CombatData, PartyMember });
 	self:getECS():addQuery(self._query);
 end
 

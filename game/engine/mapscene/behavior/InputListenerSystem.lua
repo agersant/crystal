@@ -8,7 +8,7 @@ local InputListenerSystem = Class("InputListenerSystem", System);
 
 InputListenerSystem.init = function(self, ecs)
 	InputListenerSystem.super.init(self, ecs);
-	self._query = AllComponents:new({InputListener, ScriptRunner});
+	self._query = AllComponents:new({ InputListener, ScriptRunner });
 	self:getECS():addQuery(self._query);
 end
 

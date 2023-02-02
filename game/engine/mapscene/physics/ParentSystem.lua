@@ -8,7 +8,7 @@ local ParentSystem = Class("ParentSystem", System);
 
 ParentSystem.init = function(self, ecs)
 	ParentSystem.super.init(self, ecs);
-	self._query = AllComponents:new({Parent, PhysicsBody});
+	self._query = AllComponents:new({ Parent, PhysicsBody });
 	self:getECS():addQuery(self._query);
 end
 

@@ -3,7 +3,7 @@ local Widget = require("engine/ui/bricks/elements/Widget");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Runs scripts"};
+tests[#tests + 1] = { name = "Runs scripts" };
 tests[#tests].body = function()
 	local widget = Widget:new();
 	local sentinel;

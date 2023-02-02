@@ -4,7 +4,7 @@ local PhysicsBody = require("engine/mapscene/physics/PhysicsBody");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "LookAt turns to correct direction", gfx = "mock"};
+tests[#tests + 1] = { name = "LookAt turns to correct direction", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);
@@ -31,7 +31,7 @@ tests[#tests].body = function()
 	assert(x == 0 and y == -1);
 end
 
-tests[#tests + 1] = {name = "Direction is preserved when switching to adjacent diagonal", gfx = "mock"};
+tests[#tests + 1] = { name = "Direction is preserved when switching to adjacent diagonal", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);
@@ -54,7 +54,7 @@ tests[#tests].body = function()
 	assert(x == 0 and y == -1);
 end
 
-tests[#tests + 1] = {name = "Distance measurements", gfx = "mock"};
+tests[#tests + 1] = { name = "Distance measurements", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);
@@ -70,7 +70,7 @@ tests[#tests].body = function()
 	assert(entity:distance2To(target:getPosition()) == 100);
 end
 
-tests[#tests + 1] = {name = "Stores velocity", gfx = "mock"};
+tests[#tests + 1] = { name = "Stores velocity", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);
@@ -86,7 +86,7 @@ tests[#tests].body = function()
 	assert(vy == 2);
 end
 
-tests[#tests + 1] = {name = "Stores angle", gfx = "mock"};
+tests[#tests + 1] = { name = "Stores angle", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);
@@ -96,7 +96,7 @@ tests[#tests].body = function()
 	assert(entity:getAngle() == 50);
 end
 
-tests[#tests + 1] = {name = "Stores altitude", gfx = "mock"};
+tests[#tests + 1] = { name = "Stores altitude", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);
@@ -106,7 +106,7 @@ tests[#tests].body = function()
 	assert(entity:getAltitude() == 50);
 end
 
-tests[#tests + 1] = {name = "Can save and restore state", gfx = "mock"};
+tests[#tests + 1] = { name = "Can save and restore state", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);
@@ -127,13 +127,13 @@ tests[#tests].body = function()
 	assert(entity:getAngle() == 0);
 end
 
-tests[#tests + 1] = {name = "Can save and restore position", gfx = "mock"};
+tests[#tests + 1] = { name = "Can save and restore position", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);
 	entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
 
-	local restore = entity:pushPhysicsBodyState({includePosition = true});
+	local restore = entity:pushPhysicsBodyState({ includePosition = true });
 	entity:setPosition(100, 150);
 	restore();
 	local x, y = entity:getPosition();

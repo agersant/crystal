@@ -8,7 +8,7 @@ local Script = require("engine/script/Script");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Walk to point", gfx = "mock"};
+tests[#tests + 1] = { name = "Walk to point", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
@@ -31,7 +31,7 @@ tests[#tests].body = function()
 	assert(subject:distanceTo(endX, endY) < acceptanceRadius);
 end
 
-tests[#tests + 1] = {name = "Walk to entity", gfx = "mock"};
+tests[#tests + 1] = { name = "Walk to entity", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
@@ -58,7 +58,7 @@ tests[#tests].body = function()
 	assert(subject:distanceToEntity(target) < acceptanceRadius);
 end
 
-tests[#tests + 1] = {name = "Can use blocking script function", gfx = "mock"};
+tests[#tests + 1] = { name = "Can use blocking script function", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 

@@ -16,9 +16,9 @@ local CombatSystem = Class("CombatSystem", System);
 
 CombatSystem.init = function(self, ecs)
 	CombatSystem.super.init(self, ecs);
-	self._scriptRunnerQuery = AllComponents:new({ScriptRunner});
-	self._locomotionQuery = AllComponents:new({CombatData, Locomotion});
-	self._inputQuery = AllComponents:new({CombatData, InputListener});
+	self._scriptRunnerQuery = AllComponents:new({ ScriptRunner });
+	self._locomotionQuery = AllComponents:new({ CombatData, Locomotion });
+	self._inputQuery = AllComponents:new({ CombatData, InputListener });
 	self:getECS():addQuery(self._scriptRunnerQuery);
 	self:getECS():addQuery(self._locomotionQuery);
 	self:getECS():addQuery(self._inputQuery);

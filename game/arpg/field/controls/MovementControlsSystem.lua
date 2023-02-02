@@ -9,7 +9,7 @@ local MovementControlsSystem = Class("MovementControlsSystem", System);
 
 MovementControlsSystem.init = function(self, ecs)
 	MovementControlsSystem.super.init(self, ecs);
-	self._withLocomotion = AllComponents:new({InputListener, Locomotion, MovementControls});
+	self._withLocomotion = AllComponents:new({ InputListener, Locomotion, MovementControls });
 	self:getECS():addQuery(self._withLocomotion);
 end
 

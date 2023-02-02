@@ -2,7 +2,7 @@ local Path = require("engine/mapscene/behavior/ai/Path");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Count vertices"};
+tests[#tests + 1] = { name = "Count vertices" };
 tests[#tests].body = function()
 	local path = Path:new();
 	assert(path:getNumVertices() == 0);
@@ -12,7 +12,7 @@ tests[#tests].body = function()
 	assert(path:getNumVertices() == 3);
 end
 
-tests[#tests + 1] = {name = "Iterate on vertices"};
+tests[#tests + 1] = { name = "Iterate on vertices" };
 tests[#tests].body = function()
 	local path = Path:new();
 	path:addVertex(0, 10);

@@ -4,7 +4,7 @@ local Joint = require("engine/ui/bricks/core/Joint");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Can set and unset child"};
+tests[#tests + 1] = { name = "Can set and unset child" };
 tests[#tests].body = function()
 	local a = Element:new();
 	local wrapper = Wrapper:new(Joint);
@@ -14,14 +14,14 @@ tests[#tests].body = function()
 	assert(a:getParent() == nil);
 end
 
-tests[#tests + 1] = {name = "Set child returns child"};
+tests[#tests + 1] = { name = "Set child returns child" };
 tests[#tests].body = function()
 	local a = Element:new();
 	local wrapper = Wrapper:new(Joint);
 	assert(wrapper:setChild(a) == a);
 end
 
-tests[#tests + 1] = {name = "Can nest wrappers"};
+tests[#tests + 1] = { name = "Can nest wrappers" };
 tests[#tests].body = function()
 	local a = Wrapper:new(Joint);
 	local b = Wrapper:new(Joint);
@@ -33,7 +33,7 @@ tests[#tests].body = function()
 	assert(c:getParent() == b);
 end
 
-tests[#tests + 1] = {name = "Layouts and draws child", gfx = "mock"};
+tests[#tests + 1] = { name = "Layouts and draws child", gfx = "mock" };
 tests[#tests].body = function()
 	local a = Element:new(Joint);
 	local sentinel = 0;

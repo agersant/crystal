@@ -4,9 +4,9 @@ local mockAPI = {};
 local noop = function()
 end
 
-local spriteBatch = {add = noop};
+local spriteBatch = { add = noop };
 
-local canvas = {setFilter = noop};
+local canvas = { setFilter = noop };
 
 local font = {
 	getHeight = function()
@@ -35,7 +35,7 @@ local quad = {
 	end,
 };
 
-local shader = {send = noop, sendColor = noop};
+local shader = { send = noop, sendColor = noop };
 
 mockAPI.arc = noop;
 

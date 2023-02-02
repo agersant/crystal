@@ -14,9 +14,9 @@ local AnimationSelectionSystem = Class("AnimationSelectionSystem", System);
 
 AnimationSelectionSystem.init = function(self, ecs)
 	AnimationSelectionSystem.super.init(self, ecs);
-	self._idles = AllComponents:new({SpriteAnimator, PhysicsBody, IdleAnimation});
-	self._walks = AllComponents:new({SpriteAnimator, PhysicsBody, Locomotion, WalkAnimation});
-	self._flinches = AllComponents:new({SpriteAnimator, PhysicsBody, Flinch, FlinchAnimation});
+	self._idles = AllComponents:new({ SpriteAnimator, PhysicsBody, IdleAnimation });
+	self._walks = AllComponents:new({ SpriteAnimator, PhysicsBody, Locomotion, WalkAnimation });
+	self._flinches = AllComponents:new({ SpriteAnimator, PhysicsBody, Flinch, FlinchAnimation });
 	self:getECS():addQuery(self._idles);
 	self:getECS():addQuery(self._walks);
 	self:getECS():addQuery(self._flinches);

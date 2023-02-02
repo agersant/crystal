@@ -15,7 +15,7 @@ StaticLayer.init = function(self, map, layerData, sort)
 		if tileID >= tileset:getFirstGID() then
 			local tx, ty = MathUtils.indexToXY(tileID - tileset:getFirstGID(), tileset:getWidthInTiles());
 			quad:setViewport(tx * tileset:getTileWidth(), ty * tileset:getTileHeight(), tileset:getTileWidth(),
-                 			tileset:getTileHeight());
+				tileset:getTileHeight());
 			local x, y = MathUtils.indexToXY(tileNum - 1, map:getWidthInTiles());
 			x = x * tileset:getTileWidth();
 			y = y * tileset:getTileHeight();

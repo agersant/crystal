@@ -93,7 +93,7 @@ Navigation.navigateToGoal = function(self, goal, repathDelay)
 		end);
 
 		local completion = self:thread(function(self)
-			local signal = self:waitForAny({"success", "failure"});
+			local signal = self:waitForAny({ "success", "failure" });
 			return signal == "success";
 		end);
 

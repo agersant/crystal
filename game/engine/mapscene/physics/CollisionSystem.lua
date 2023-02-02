@@ -8,7 +8,7 @@ local CollisionSystem = Class("CollisionSystem", System);
 
 CollisionSystem.init = function(self, ecs)
 	CollisionSystem.super.init(self, ecs);
-	self._query = AllComponents:new({Collision, PhysicsBody});
+	self._query = AllComponents:new({ Collision, PhysicsBody });
 	self:getECS():addQuery(self._query);
 end
 

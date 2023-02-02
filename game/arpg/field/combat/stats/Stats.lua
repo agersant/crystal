@@ -2,7 +2,7 @@ local DamageTypes = require("arpg/field/combat/damage/DamageTypes");
 local Elements = require("arpg/field/combat/damage/Elements");
 local TableUtils = require("engine/utils/TableUtils");
 
-local Stats = {MOVEMENT_SPEED = 1, HEALTH = 2, MAX_HEALTH = 3};
+local Stats = { MOVEMENT_SPEED = 1, HEALTH = 2, MAX_HEALTH = 3 };
 
 local nextIndex = TableUtils.countKeys(Stats) + 1;
 for name in pairs(DamageTypes) do

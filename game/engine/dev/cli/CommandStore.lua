@@ -27,7 +27,7 @@ CommandStore.search = function(self, query)
 		local matchStart, matchEnd = command:getRef():find(StringUtils.trim(query:lower()));
 		if matchStart then
 			hasStrongMatch = hasStrongMatch or matchStart == 1;
-			local match = {command = command, matchStart = matchStart, matchEnd = matchEnd};
+			local match = { command = command, matchStart = matchStart, matchEnd = matchEnd };
 			table.insert(matches, match);
 		end
 	end

@@ -8,7 +8,7 @@ local TouchTriggerSystem = Class("TouchTriggerSystem", System);
 
 TouchTriggerSystem.init = function(self, ecs)
 	TouchTriggerSystem.super.init(self, ecs);
-	self._query = AllComponents:new({TouchTrigger, PhysicsBody});
+	self._query = AllComponents:new({ TouchTrigger, PhysicsBody });
 	self:getECS():addQuery(self._query);
 end
 

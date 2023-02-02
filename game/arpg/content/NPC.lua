@@ -16,7 +16,7 @@ local script = function(self)
 		local player = self:waitFor("interact");
 		if self:beginDialog(player) then
 			self:join(self:sayLine(
-          							"The harvest this year was meager, there is no spare bread for a stranger like you. If I cannot feed my children, why would I feed you? Extra lines of text to get to line four, come on just a little more."));
+				"The harvest this year was meager, there is no spare bread for a stranger like you. If I cannot feed my children, why would I feed you? Extra lines of text to get to line four, come on just a little more."));
 			self:join(self:sayLine("Now leave this town before things go awry, please."));
 			self:endDialog();
 		end

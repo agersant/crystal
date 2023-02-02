@@ -39,16 +39,16 @@ beginContact = function(self, fixtureA, fixtureB, contact)
 		return;
 	end
 	if objectA:isInstanceOf(Hitbox) and objectB:isInstanceOf(Weakbox) then
-		table.insert(self._contactCallbacks, {func = objectA.onBeginTouch, args = {objectA, objectB}});
+		table.insert(self._contactCallbacks, { func = objectA.onBeginTouch, args = { objectA, objectB } });
 	elseif objectA:isInstanceOf(Weakbox) and objectB:isInstanceOf(Hitbox) then
-		table.insert(self._contactCallbacks, {func = objectB.onBeginTouch, args = {objectB, objectA}});
+		table.insert(self._contactCallbacks, { func = objectB.onBeginTouch, args = { objectB, objectA } });
 	elseif objectA:isInstanceOf(Collision) and objectB:isInstanceOf(Collision) then
-		table.insert(self._contactCallbacks, {func = objectA.onBeginTouch, args = {objectA, objectB}});
-		table.insert(self._contactCallbacks, {func = objectB.onBeginTouch, args = {objectB, objectA}});
+		table.insert(self._contactCallbacks, { func = objectA.onBeginTouch, args = { objectA, objectB } });
+		table.insert(self._contactCallbacks, { func = objectB.onBeginTouch, args = { objectB, objectA } });
 	elseif objectA:isInstanceOf(TouchTrigger) and objectB:isInstanceOf(Collision) then
-		table.insert(self._contactCallbacks, {func = objectA.onBeginTouch, args = {objectA, objectB}});
+		table.insert(self._contactCallbacks, { func = objectA.onBeginTouch, args = { objectA, objectB } });
 	elseif objectA:isInstanceOf(Collision) and objectB:isInstanceOf(TouchTrigger) then
-		table.insert(self._contactCallbacks, {func = objectB.onBeginTouch, args = {objectB, objectA}});
+		table.insert(self._contactCallbacks, { func = objectB.onBeginTouch, args = { objectB, objectA } });
 	end
 end
 
@@ -59,16 +59,16 @@ endContact = function(self, fixtureA, fixtureB, contact)
 		return;
 	end
 	if objectA:isInstanceOf(Hitbox) and objectB:isInstanceOf(Weakbox) then
-		table.insert(self._contactCallbacks, {func = objectA.onEndTouch, args = {objectA, objectB}});
+		table.insert(self._contactCallbacks, { func = objectA.onEndTouch, args = { objectA, objectB } });
 	elseif objectA:isInstanceOf(Weakbox) and objectB:isInstanceOf(Hitbox) then
-		table.insert(self._contactCallbacks, {func = objectB.onEndTouch, args = {objectB, objectA}});
+		table.insert(self._contactCallbacks, { func = objectB.onEndTouch, args = { objectB, objectA } });
 	elseif objectA:isInstanceOf(Collision) and objectB:isInstanceOf(Collision) then
-		table.insert(self._contactCallbacks, {func = objectA.onEndTouch, args = {objectA, objectB}});
-		table.insert(self._contactCallbacks, {func = objectB.onEndTouch, args = {objectB, objectA}});
+		table.insert(self._contactCallbacks, { func = objectA.onEndTouch, args = { objectA, objectB } });
+		table.insert(self._contactCallbacks, { func = objectB.onEndTouch, args = { objectB, objectA } });
 	elseif objectA:isInstanceOf(TouchTrigger) and objectB:isInstanceOf(Collision) then
-		table.insert(self._contactCallbacks, {func = objectA.onEndTouch, args = {objectA, objectB}});
+		table.insert(self._contactCallbacks, { func = objectA.onEndTouch, args = { objectA, objectB } });
 	elseif objectA:isInstanceOf(Collision) and objectB:isInstanceOf(TouchTrigger) then
-		table.insert(self._contactCallbacks, {func = objectB.onEndTouch, args = {objectB, objectA}});
+		table.insert(self._contactCallbacks, { func = objectB.onEndTouch, args = { objectB, objectA } });
 	end
 end
 

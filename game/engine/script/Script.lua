@@ -33,7 +33,7 @@ local unblockThread = function(self, thread, signal, ...)
 	for signal in pairs(signals) do
 		self._blockingSignals[signal][thread] = nil;
 	end
-	local signalData = {...};
+	local signalData = { ... };
 	if TableUtils.countKeys(signals) > 1 then
 		table.insert(signalData, 1, signal);
 	end
@@ -80,9 +80,9 @@ pumpThread = function(thread, resumeArgs)
 		table.insert(runningThreads, thread);
 		if resumeArgs ~= nil then
 			assert(type(resumeArgs) == "table");
-			results = {coroutine.resume(threadCoroutine, resumeArgs)};
+			results = { coroutine.resume(threadCoroutine, resumeArgs) };
 		else
-			results = {coroutine.resume(threadCoroutine, thread)};
+			results = { coroutine.resume(threadCoroutine, thread) };
 		end
 		table.remove(runningThreads);
 		local success = results[1];
@@ -143,7 +143,7 @@ endThread = function(self, thread)
 	cleanupThread(self, thread);
 	for otherThread in pairs(thread:getThreadsJoiningOnMe()) do
 		otherThread:unblock();
-		pumpThread(otherThread, thread:getOutput() or {false});
+		pumpThread(otherThread, thread:getOutput() or { false });
 	end
 end
 

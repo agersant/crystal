@@ -3,20 +3,20 @@ local Persistence = require("engine/persistence/Persistence");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Starts with blank save"};
+tests[#tests + 1] = { name = "Starts with blank save" };
 tests[#tests].body = function()
 	local persistence = Persistence:new(BaseSaveData);
 	assert(persistence:getSaveData():isInstanceOf(BaseSaveData));
 end
 
-tests[#tests + 1] = {name = "Saves and loads data"};
+tests[#tests + 1] = { name = "Saves and loads data" };
 tests[#tests].body = function()
 
 	local foo;
 
 	local SaveData = Class("TestSaveData", BaseSaveData);
 	SaveData.toPOD = function(self)
-		return {foo = self.foo};
+		return { foo = self.foo };
 	end;
 	SaveData.fromPOD = function(self, pod)
 		local saveData = SaveData:new();
@@ -42,7 +42,7 @@ tests[#tests].body = function()
 	assert(foo == "bar");
 end
 
-tests[#tests + 1] = {name = "Has global API"};
+tests[#tests + 1] = { name = "Has global API" };
 tests[#tests].body = function()
 	assert(PERSISTENCE);
 end

@@ -5,7 +5,7 @@ local MapScene = require("engine/mapscene/MapScene");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Is idle after completing action", gfx = "mock"};
+tests[#tests + 1] = { name = "Is idle after completing action", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
@@ -28,7 +28,7 @@ tests[#tests].body = function()
 	assert(entity:isIdle());
 end
 
-tests[#tests + 1] = {name = "Can stop action", gfx = "mock"};
+tests[#tests + 1] = { name = "Can stop action", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 

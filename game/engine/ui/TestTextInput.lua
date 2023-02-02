@@ -2,7 +2,7 @@ local TextInput = require("engine/ui/TextInput");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Setting and clearing text"};
+tests[#tests + 1] = { name = "Setting and clearing text" };
 tests[#tests].body = function()
 	local textInput = TextInput:new();
 	assert(textInput:getText() == "");
@@ -12,7 +12,7 @@ tests[#tests].body = function()
 	assert(textInput:getText() == "");
 end
 
-tests[#tests + 1] = {name = "Letters entry"};
+tests[#tests + 1] = { name = "Letters entry" };
 tests[#tests].body = function()
 	local textInput = TextInput:new();
 	textInput:setText("oink");
@@ -24,7 +24,7 @@ tests[#tests].body = function()
 	assert(textInput:getText() == "oinkgruik");
 end
 
-tests[#tests + 1] = {name = "Cursor navigation"};
+tests[#tests + 1] = { name = "Cursor navigation" };
 tests[#tests].body = function()
 	local textInput = TextInput:new();
 	textInput:setText("oink gruik");
@@ -42,7 +42,7 @@ tests[#tests].body = function()
 	assert(textInput:getTextLeftOfCursor() == "oink gruik");
 end
 
-tests[#tests + 1] = {name = "Undo and redo"};
+tests[#tests + 1] = { name = "Undo and redo" };
 tests[#tests].body = function()
 	local textInput = TextInput:new();
 	textInput:setText("oink");
@@ -69,7 +69,7 @@ tests[#tests].body = function()
 	assert(textInput:getText() == "oink");
 end
 
-tests[#tests + 1] = {name = "Backspace"};
+tests[#tests + 1] = { name = "Backspace" };
 tests[#tests].body = function()
 	local textInput = TextInput:new();
 	textInput:setText("gruik oink");
@@ -79,7 +79,7 @@ tests[#tests].body = function()
 	assert(textInput:getText() == "gruik ");
 end
 
-tests[#tests + 1] = {name = "Delete"};
+tests[#tests + 1] = { name = "Delete" };
 tests[#tests].body = function()
 	local textInput = TextInput:new();
 	textInput:setText("gruik oink");

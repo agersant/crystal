@@ -21,11 +21,11 @@ local installGlobals = function(self)
 	love.update = wrap(self, Engine.update);
 	love.textinput = wrap(self, Engine.textInput);
 
-	setmetatable(_G, {__index = self._globals});
+	setmetatable(_G, { __index = self._globals });
 end
 
 Engine.init = function(self, global)
-	self._globals = {ENGINE = self};
+	self._globals = { ENGINE = self };
 	self._scene = nil;
 	self._nextScene = nil;
 
@@ -58,7 +58,7 @@ Engine.init = function(self, global)
 	local Assets = require("engine/resources/Assets");
 	self._globals.ASSETS = Assets:new();
 
-	self._constants:define("Time Scale", 1.0, {minValue = 0.0, maxValue = 5.0});
+	self._constants:define("Time Scale", 1.0, { minValue = 0.0, maxValue = 5.0 });
 
 	self._terminal:addCommand("loadScene sceneName:string", function(sceneName)
 		local class = Class:getByName(sceneName);

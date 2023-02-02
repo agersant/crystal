@@ -10,7 +10,7 @@ local BehaviorSystem = Class("BehaviorSystem", System);
 BehaviorSystem.init = function(self, ecs)
 	BehaviorSystem.super.init(self, ecs);
 	self._activeEntities = {};
-	self._query = AllComponents:new({Behavior, ScriptRunner});
+	self._query = AllComponents:new({ Behavior, ScriptRunner });
 	self._ecs:addQuery(self._query);
 end
 
@@ -22,7 +22,7 @@ BehaviorSystem.beforeScripts = function(self, dt)
 		assert(script:isInstanceOf(Script));
 		scriptRunner:addScript(script);
 		if not self._activeEntities[entity] then
-			self._activeEntities[entity] = {scriptRunner = scriptRunner, behaviors = {}};
+			self._activeEntities[entity] = { scriptRunner = scriptRunner, behaviors = {} };
 		end
 		self._activeEntities[entity].behaviors[behavior] = script;
 	end

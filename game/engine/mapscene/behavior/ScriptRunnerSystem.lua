@@ -7,7 +7,7 @@ local ScriptRunnerSystem = Class("ScriptRunnerSystem", System);
 
 ScriptRunnerSystem.init = function(self, ecs)
 	ScriptRunnerSystem.super.init(self, ecs);
-	self._query = AllComponents:new({ScriptRunner});
+	self._query = AllComponents:new({ ScriptRunner });
 	self:getECS():addQuery(self._query);
 end
 

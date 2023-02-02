@@ -29,8 +29,8 @@ local attack = function(self)
 	self:endOn("disrupted");
 	self:setMovementAngle(nil);
 	self:resetMultiHitTracking();
-	local onHitEffects = {FlinchEffect:new()};
-	self:setDamagePayload({DamageUnit:new(10)}, onHitEffects);
+	local onHitEffects = { FlinchEffect:new() };
+	self:setDamagePayload({ DamageUnit:new(10) }, onHitEffects);
 	self:join(self:playAnimation("attack", self:getAngle4(), true));
 end
 

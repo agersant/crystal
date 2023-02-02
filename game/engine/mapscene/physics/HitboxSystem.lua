@@ -9,8 +9,8 @@ local HitboxSystem = Class("HitboxSystem", System);
 
 HitboxSystem.init = function(self, ecs)
 	HitboxSystem.super.init(self, ecs);
-	self._query = AllComponents:new({Hitbox, PhysicsBody});
-	self._withSpriteAnimator = AllComponents:new({Hitbox, PhysicsBody, SpriteAnimator});
+	self._query = AllComponents:new({ Hitbox, PhysicsBody });
+	self._withSpriteAnimator = AllComponents:new({ Hitbox, PhysicsBody, SpriteAnimator });
 	self:getECS():addQuery(self._query);
 	self:getECS():addQuery(self._withSpriteAnimator);
 end

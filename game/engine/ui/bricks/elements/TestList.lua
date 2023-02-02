@@ -4,7 +4,7 @@ local TableUtils = require("engine/utils/TableUtils");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Horizontal list aligns children"};
+tests[#tests + 1] = { name = "Horizontal list aligns children" };
 tests[#tests].body = function()
 	local box = List.Horizontal:new();
 	local a = box:addChild(Element:new());
@@ -14,12 +14,12 @@ tests[#tests].body = function()
 	local c = box:addChild(Element:new());
 	c:setGrow(1);
 	box:updateTree(0, 90, 40);
-	assert(TableUtils.equals({0, 30, 0, 0}, {a:getLocalPosition()}));
-	assert(TableUtils.equals({30, 60, 0, 0}, {b:getLocalPosition()}));
-	assert(TableUtils.equals({60, 90, 0, 0}, {c:getLocalPosition()}));
+	assert(TableUtils.equals({ 0, 30, 0, 0 }, { a:getLocalPosition() }));
+	assert(TableUtils.equals({ 30, 60, 0, 0 }, { b:getLocalPosition() }));
+	assert(TableUtils.equals({ 60, 90, 0, 0 }, { c:getLocalPosition() }));
 end
 
-tests[#tests + 1] = {name = "Vertical list aligns children"};
+tests[#tests + 1] = { name = "Vertical list aligns children" };
 tests[#tests].body = function()
 	local box = List.Vertical:new();
 	local a = box:addChild(Element:new());
@@ -29,12 +29,12 @@ tests[#tests].body = function()
 	local c = box:addChild(Element:new());
 	c:setGrow(1);
 	box:updateTree(0, 40, 90);
-	assert(TableUtils.equals({0, 0, 0, 30}, {a:getLocalPosition()}));
-	assert(TableUtils.equals({0, 0, 30, 60}, {b:getLocalPosition()}));
-	assert(TableUtils.equals({0, 0, 60, 90}, {c:getLocalPosition()}));
+	assert(TableUtils.equals({ 0, 0, 0, 30 }, { a:getLocalPosition() }));
+	assert(TableUtils.equals({ 0, 0, 30, 60 }, { b:getLocalPosition() }));
+	assert(TableUtils.equals({ 0, 0, 60, 90 }, { c:getLocalPosition() }));
 end
 
-tests[#tests + 1] = {name = "Horizontal list respects vertical alignment"};
+tests[#tests + 1] = { name = "Horizontal list respects vertical alignment" };
 tests[#tests].body = function()
 	local box = List.Horizontal:new();
 
@@ -64,13 +64,13 @@ tests[#tests].body = function()
 	end
 
 	box:updateTree(0, nil, 40);
-	assert(TableUtils.equals({0, 25, 0, 10}, {a:getLocalPosition()}));
-	assert(TableUtils.equals({25, 50, 15, 25}, {b:getLocalPosition()}));
-	assert(TableUtils.equals({50, 75, 30, 40}, {c:getLocalPosition()}));
-	assert(TableUtils.equals({75, 100, 0, 40}, {d:getLocalPosition()}));
+	assert(TableUtils.equals({ 0, 25, 0, 10 }, { a:getLocalPosition() }));
+	assert(TableUtils.equals({ 25, 50, 15, 25 }, { b:getLocalPosition() }));
+	assert(TableUtils.equals({ 50, 75, 30, 40 }, { c:getLocalPosition() }));
+	assert(TableUtils.equals({ 75, 100, 0, 40 }, { d:getLocalPosition() }));
 end
 
-tests[#tests + 1] = {name = "Vertical list respects horizontal alignment"};
+tests[#tests + 1] = { name = "Vertical list respects horizontal alignment" };
 tests[#tests].body = function()
 	local box = List.Vertical:new();
 
@@ -100,13 +100,13 @@ tests[#tests].body = function()
 	end
 
 	box:updateTree(0, 40);
-	assert(TableUtils.equals({0, 10, 0, 25}, {a:getLocalPosition()}));
-	assert(TableUtils.equals({15, 25, 25, 50}, {b:getLocalPosition()}));
-	assert(TableUtils.equals({30, 40, 50, 75}, {c:getLocalPosition()}));
-	assert(TableUtils.equals({0, 40, 75, 100}, {d:getLocalPosition()}));
+	assert(TableUtils.equals({ 0, 10, 0, 25 }, { a:getLocalPosition() }));
+	assert(TableUtils.equals({ 15, 25, 25, 50 }, { b:getLocalPosition() }));
+	assert(TableUtils.equals({ 30, 40, 50, 75 }, { c:getLocalPosition() }));
+	assert(TableUtils.equals({ 0, 40, 75, 100 }, { d:getLocalPosition() }));
 end
 
-tests[#tests + 1] = {name = "Horizontal list respects padding"};
+tests[#tests + 1] = { name = "Horizontal list respects padding" };
 tests[#tests].body = function()
 	local box = List.Horizontal:new();
 
@@ -141,13 +141,13 @@ tests[#tests].body = function()
 	end
 
 	box:updateTree(0);
-	assert(TableUtils.equals({5, 30, 0, 10}, {a:getLocalPosition()}));
-	assert(TableUtils.equals({30, 55, 16, 26}, {b:getLocalPosition()}));
-	assert(TableUtils.equals({55, 80, 30, 40}, {c:getLocalPosition()}));
-	assert(TableUtils.equals({100, 125, 10, 30}, {d:getLocalPosition()}));
+	assert(TableUtils.equals({ 5, 30, 0, 10 }, { a:getLocalPosition() }));
+	assert(TableUtils.equals({ 30, 55, 16, 26 }, { b:getLocalPosition() }));
+	assert(TableUtils.equals({ 55, 80, 30, 40 }, { c:getLocalPosition() }));
+	assert(TableUtils.equals({ 100, 125, 10, 30 }, { d:getLocalPosition() }));
 end
 
-tests[#tests + 1] = {name = "Vertical list respects padding"};
+tests[#tests + 1] = { name = "Vertical list respects padding" };
 tests[#tests].body = function()
 	local box = List.Vertical:new();
 
@@ -182,10 +182,10 @@ tests[#tests].body = function()
 	end
 
 	box:updateTree(0);
-	assert(TableUtils.equals({0, 10, 5, 30}, {a:getLocalPosition()}));
-	assert(TableUtils.equals({16, 26, 30, 55}, {b:getLocalPosition()}));
-	assert(TableUtils.equals({30, 40, 55, 80}, {c:getLocalPosition()}));
-	assert(TableUtils.equals({10, 30, 100, 125}, {d:getLocalPosition()}));
+	assert(TableUtils.equals({ 0, 10, 5, 30 }, { a:getLocalPosition() }));
+	assert(TableUtils.equals({ 16, 26, 30, 55 }, { b:getLocalPosition() }));
+	assert(TableUtils.equals({ 30, 40, 55, 80 }, { c:getLocalPosition() }));
+	assert(TableUtils.equals({ 10, 30, 100, 125 }, { d:getLocalPosition() }));
 end
 
 return tests;

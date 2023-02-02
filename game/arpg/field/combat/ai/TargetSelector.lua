@@ -78,19 +78,19 @@ local isAlive = function(self, target)
 end
 
 TargetSelector.getAllies = function(self)
-	return getAll(self, {isAlive, isAllyOf, isNotSelf});
+	return getAll(self, { isAlive, isAllyOf, isNotSelf });
 end
 
 TargetSelector.getEnemies = function(self)
-	return getAll(self, {isAlive, isEnemyOf, isNotSelf});
+	return getAll(self, { isAlive, isEnemyOf, isNotSelf });
 end
 
 TargetSelector.getNearestEnemy = function(self)
-	return getFittest(self, {isAlive, isEnemyOf, isNotSelf}, rankByDistance);
+	return getFittest(self, { isAlive, isEnemyOf, isNotSelf }, rankByDistance);
 end
 
 TargetSelector.getNearestAlly = function(self)
-	return getFittest(self, {isAlive, isAllyOf, isNotSelf}, rankByDistance);
+	return getFittest(self, { isAlive, isAllyOf, isNotSelf }, rankByDistance);
 end
 
 return TargetSelector;

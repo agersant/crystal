@@ -31,8 +31,8 @@ NavigationMesh.init = function(self, cMesh)
 		for p = 0, triangles.num_polygons - 1 do
 			local v = triangles.polygons[p].vertices;
 			local triangle = {};
-			triangle.vertices = {v[0].x, v[0].y, v[1].x, v[1].y, v[2].x, v[2].y};
-			triangle.center = {x = (v[0].x + v[1].x + v[2].x) / 3, y = (v[0].y + v[1].y + v[2].y) / 3};
+			triangle.vertices = { v[0].x, v[0].y, v[1].x, v[1].y, v[2].x, v[2].y };
+			triangle.center = { x = (v[0].x + v[1].x + v[2].x) / 3, y = (v[0].y + v[1].y + v[2].y) / 3 };
 			table.insert(self._triangles, triangle);
 		end
 	end

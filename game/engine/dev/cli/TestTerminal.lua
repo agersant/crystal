@@ -2,7 +2,7 @@ local Terminal = require("engine/dev/cli/Terminal");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Run command"};
+tests[#tests + 1] = { name = "Run command" };
 tests[#tests].body = function()
 	local terminal = Terminal:new();
 	local sentinel = 0;
@@ -14,7 +14,7 @@ tests[#tests].body = function()
 	assert(sentinel == 1);
 end
 
-tests[#tests + 1] = {name = "Validates argument count"};
+tests[#tests + 1] = { name = "Validates argument count" };
 tests[#tests].body = function()
 	local terminal = Terminal:new();
 	local sentinel = false
@@ -26,7 +26,7 @@ tests[#tests].body = function()
 	assert(not sentinel);
 end
 
-tests[#tests + 1] = {name = "Typechecks arguments"};
+tests[#tests + 1] = { name = "Typechecks arguments" };
 tests[#tests].body = function()
 	local terminal = Terminal:new();
 	local sentinel = false
@@ -38,7 +38,7 @@ tests[#tests].body = function()
 	assert(not sentinel);
 end
 
-tests[#tests + 1] = {name = "Number argument"};
+tests[#tests + 1] = { name = "Number argument" };
 tests[#tests].body = function()
 	local terminal = Terminal:new();
 	local sentinel = 0;
@@ -50,7 +50,7 @@ tests[#tests].body = function()
 	assert(sentinel == 2);
 end
 
-tests[#tests + 1] = {name = "String argument"};
+tests[#tests + 1] = { name = "String argument" };
 tests[#tests].body = function()
 	local terminal = Terminal:new();
 	local sentinel = "";
@@ -62,7 +62,7 @@ tests[#tests].body = function()
 	assert(sentinel == "oink");
 end
 
-tests[#tests + 1] = {name = "Execute from code"};
+tests[#tests + 1] = { name = "Execute from code" };
 tests[#tests].body = function()
 	local terminal = Terminal:new();
 	local sentinel = "";
@@ -73,7 +73,7 @@ tests[#tests].body = function()
 	assert(sentinel == "oink");
 end
 
-tests[#tests + 1] = {name = "Can navigate history"};
+tests[#tests + 1] = { name = "Can navigate history" };
 tests[#tests].body = function()
 	local terminal = Terminal:new();
 
@@ -98,7 +98,7 @@ tests[#tests].body = function()
 	assert(sentinel == "2");
 end
 
-tests[#tests + 1] = {name = "History size is capped"};
+tests[#tests + 1] = { name = "History size is capped" };
 tests[#tests].body = function()
 	local terminal = Terminal:new();
 
@@ -118,7 +118,7 @@ tests[#tests].body = function()
 	terminal:keyPressed("return");
 end
 
-tests[#tests + 1] = {name = "Performs autocomplete on TAB"};
+tests[#tests + 1] = { name = "Performs autocomplete on TAB" };
 tests[#tests].body = function()
 	local terminal = Terminal:new();
 
@@ -132,7 +132,7 @@ tests[#tests].body = function()
 	assert(sentinel == "oink");
 end
 
-tests[#tests + 1] = {name = "Can navigate autocomplete suggestions"};
+tests[#tests + 1] = { name = "Can navigate autocomplete suggestions" };
 tests[#tests].body = function()
 	local terminal = Terminal:new();
 
@@ -150,7 +150,7 @@ tests[#tests].body = function()
 	assert(sentinel == 3);
 end
 
-tests[#tests + 1] = {name = "Autocomplete updates after non-text input"};
+tests[#tests + 1] = { name = "Autocomplete updates after non-text input" };
 tests[#tests].body = function()
 	local terminal = Terminal:new();
 	local sentinel;
@@ -164,14 +164,14 @@ tests[#tests].body = function()
 	assert(sentinel);
 end
 
-tests[#tests + 1] = {name = "Swallows incorrect commands"};
+tests[#tests + 1] = { name = "Swallows incorrect commands" };
 tests[#tests].body = function()
 	local terminal = Terminal:new();
 	terminal:textInput("badcommand");
 	terminal:keyPressed("return");
 end
 
-tests[#tests + 1] = {name = "Swallows command errors"};
+tests[#tests + 1] = { name = "Swallows command errors" };
 tests[#tests].body = function()
 	local terminal = Terminal:new();
 	terminal:addCommand("testCommand", function()

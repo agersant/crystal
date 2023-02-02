@@ -1,1 +1,1 @@
-return {LEFT = 0, CENTER = 1, RIGHT = 2, STRETCH = 3}
+return { LEFT = 0, CENTER = 1, RIGHT = 2, STRETCH = 3 }

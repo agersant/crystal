@@ -2,7 +2,7 @@ local PositionGoal = require("engine/mapscene/behavior/ai/PositionGoal");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Get position"};
+tests[#tests + 1] = { name = "Get position" };
 tests[#tests].body = function()
 	local goal = PositionGoal:new(10, 20, 1);
 	local x, y = goal:getPosition();
@@ -10,7 +10,7 @@ tests[#tests].body = function()
 	assert(y == 20);
 end
 
-tests[#tests + 1] = {name = "Accept"};
+tests[#tests + 1] = { name = "Accept" };
 tests[#tests].body = function()
 	local goal = PositionGoal:new(10, 20, 1);
 	assert(goal:isPositionAcceptable(10, 20));
@@ -19,7 +19,7 @@ tests[#tests].body = function()
 	assert(goal:isPositionAcceptable(11, 20));
 end
 
-tests[#tests + 1] = {name = "Reject"};
+tests[#tests + 1] = { name = "Reject" };
 tests[#tests].body = function()
 	local goal = PositionGoal:new(10, 20, 1);
 	assert(not goal:isPositionAcceptable(11.5, 20));

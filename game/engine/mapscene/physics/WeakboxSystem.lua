@@ -9,8 +9,8 @@ local WeakboxSystem = Class("WeakboxSystem", System);
 
 WeakboxSystem.init = function(self, ecs)
 	WeakboxSystem.super.init(self, ecs);
-	self._query = AllComponents:new({Weakbox, PhysicsBody});
-	self._withSpriteAnimator = AllComponents:new({Weakbox, PhysicsBody, SpriteAnimator});
+	self._query = AllComponents:new({ Weakbox, PhysicsBody });
+	self._withSpriteAnimator = AllComponents:new({ Weakbox, PhysicsBody, SpriteAnimator });
 	self:getECS():addQuery(self._query);
 	self:getECS():addQuery(self._withSpriteAnimator);
 end

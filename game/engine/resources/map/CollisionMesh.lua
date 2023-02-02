@@ -37,7 +37,7 @@ CollisionMesh.init = function(self, mapWidth, mapHeight, cMesh)
 		addChain(self, chain);
 	end
 
-	self._outerChain = addChain(self, {0, 0, mapWidth, 0, mapWidth, mapHeight, 0, mapHeight});
+	self._outerChain = addChain(self, { 0, 0, mapWidth, 0, mapWidth, mapHeight, 0, mapHeight });
 end
 
 CollisionMesh.isOuterEdge = function(self, chain)

@@ -17,8 +17,8 @@ local action = function(self)
 	self:scope(self:disableLocomotion());
 
 	self:resetMultiHitTracking();
-	local onHitEffects = {FlinchEffect:new(FlinchAmounts.LARGE)};
-	self:setDamagePayload({DamageUnit:new(10)}, onHitEffects);
+	local onHitEffects = { FlinchEffect:new(FlinchAmounts.LARGE) };
+	self:setDamagePayload({ DamageUnit:new(10) }, onHitEffects);
 
 	self:setAnimation("dash", self:getAngle4());
 

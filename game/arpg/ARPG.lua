@@ -7,7 +7,7 @@ ARPG.init = function(self)
 	ARPG.super.init(self);
 	self.classes.MapScene = require("arpg/field/Field");
 	self.classes.SaveData = require("arpg/persistence/SaveData");
-	self.sourceDirectories = {"arpg/content", "arpg/field", "arpg/frontend", "arpg/graphics", "arpg/persistence"};
+	self.sourceDirectories = { "arpg/content", "arpg/field", "arpg/frontend", "arpg/graphics", "arpg/persistence" };
 	self.assetsDirectory = "arpg/assets";
 	self.mapDirectory = "arpg/assets/map";
 	self.testFiles = {
@@ -24,14 +24,14 @@ ARPG.init = function(self)
 	};
 	self.defaultBindings = {
 		{
-			left = {"moveLeft"},
-			right = {"moveRight"},
-			up = {"moveUp"},
-			down = {"moveDown"},
-			q = {"interact", "useSkill1", "advanceDialog"},
-			w = {"useSkill2"},
-			e = {"useSkill3"},
-			r = {"useSkill4"},
+			left = { "moveLeft" },
+			right = { "moveRight" },
+			up = { "moveUp" },
+			down = { "moveDown" },
+			q = { "interact", "useSkill1", "advanceDialog" },
+			w = { "useSkill2" },
+			e = { "useSkill3" },
+			r = { "useSkill4" },
 		},
 	};
 end

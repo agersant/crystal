@@ -2,7 +2,7 @@ local MapScene = require("engine/mapscene/MapScene");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Draws camera overlay", gfx = "on"};
+tests[#tests + 1] = { name = "Draws camera overlay", gfx = "on" };
 tests[#tests].body = function(context)
 	local scene = MapScene:new("test-data/empty_map.lua");
 

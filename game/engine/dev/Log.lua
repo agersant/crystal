@@ -6,14 +6,14 @@ local logDir = "logs";
 
 local Log = Class("Log");
 
-Log.Levels = {DEBUG = 1, INFO = 2, WARNING = 3, ERROR = 4, FATAL = 5};
+Log.Levels = { DEBUG = 1, INFO = 2, WARNING = 3, ERROR = 4, FATAL = 5 };
 
 local logLevelDetails = {
-	[Log.Levels.DEBUG] = {name = "DEBUG"},
-	[Log.Levels.INFO] = {name = "INFO"},
-	[Log.Levels.WARNING] = {name = "WARNING"},
-	[Log.Levels.ERROR] = {name = "ERROR"},
-	[Log.Levels.FATAL] = {name = "FATAL"},
+	[Log.Levels.DEBUG] = { name = "DEBUG" },
+	[Log.Levels.INFO] = { name = "INFO" },
+	[Log.Levels.WARNING] = { name = "WARNING" },
+	[Log.Levels.ERROR] = { name = "ERROR" },
+	[Log.Levels.FATAL] = { name = "FATAL" },
 };
 
 if not Features.logging then

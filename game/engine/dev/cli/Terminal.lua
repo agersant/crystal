@@ -71,7 +71,7 @@ end
 Terminal.init = function(self)
 	self._commandStore = CommandStore:new();
 	self._autoComplete = AutoComplete:new(self._commandStore);
-	self._inputs = {TextInput:new(maxUndo)};
+	self._inputs = { TextInput:new(maxUndo) };
 	self._inputCursor = 1;
 	updateAutoComplete(self);
 end
@@ -98,7 +98,7 @@ Terminal.run = function(self, command)
 		local requiredType = command:getArg(i).type;
 		if not command:typeCheckArgument(i, arg) then
 			LOG:error("Argument #" .. i .. " (" .. command:getArg(i).name .. ") of command " .. command:getName() ..
-          							" must be a " .. requiredType);
+				" must be a " .. requiredType);
 			return;
 		end
 		table.insert(useArgs, command:castArgument(i, arg));

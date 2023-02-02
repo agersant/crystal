@@ -10,7 +10,7 @@ local DialogBox = require("arpg/field/hud/dialog/DialogBox");
 
 local tests = {};
 
-tests[#tests + 1] = {name = "Blocks script during dialog", gfx = "mock"};
+tests[#tests + 1] = { name = "Blocks script during dialog", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
@@ -58,7 +58,7 @@ tests[#tests].body = function()
 	assert(a == 2);
 end
 
-tests[#tests + 1] = {name = "Can't start concurrent dialogs", gfx = "mock"};
+tests[#tests + 1] = { name = "Can't start concurrent dialogs", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
@@ -103,7 +103,7 @@ tests[#tests].body = function()
 	assert(Dialog:new(dialogBox):beginDialog(player));
 end
 
-tests[#tests + 1] = {name = "Dialog is cleaned up if entity despawns while speaking", gfx = "mock"};
+tests[#tests + 1] = { name = "Dialog is cleaned up if entity despawns while speaking", gfx = "mock" };
 tests[#tests].body = function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 

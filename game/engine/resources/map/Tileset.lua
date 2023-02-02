@@ -13,7 +13,7 @@ Tileset.init = function(self, tilesetData, image)
 
 	self._tiles = {};
 	for tileIndex, tileData in ipairs(tilesetData.tiles) do
-		local tile = {collisionPolygons = {}};
+		local tile = { collisionPolygons = {} };
 		if tileData.objectGroup and tileData.objectGroup.objects then
 			for objectIndex, objectData in ipairs(tileData.objectGroup.objects) do
 				if objectData.shape == "polygon" then
@@ -21,7 +21,7 @@ Tileset.init = function(self, tilesetData, image)
 					for vertIndex, vertData in ipairs(objectData.polygon) do
 						local x = MathUtils.round(objectData.x + vertData.x);
 						local y = MathUtils.round(objectData.y + vertData.y);
-						table.insert(polygon, {x = x, y = y});
+						table.insert(polygon, { x = x, y = y });
 					end
 					table.insert(tile.collisionPolygons, polygon);
 				end
@@ -31,10 +31,10 @@ Tileset.init = function(self, tilesetData, image)
 					local y = MathUtils.round(objectData.y);
 					local w = MathUtils.round(objectData.width);
 					local h = MathUtils.round(objectData.height);
-					table.insert(polygon, {x = x, y = y});
-					table.insert(polygon, {x = x + w, y = y});
-					table.insert(polygon, {x = x + w, y = y + h});
-					table.insert(polygon, {x = x, y = y + h});
+					table.insert(polygon, { x = x, y = y });
+					table.insert(polygon, { x = x + w, y = y });
+					table.insert(polygon, { x = x + w, y = y + h });
+					table.insert(polygon, { x = x, y = y + h });
 					table.insert(tile.collisionPolygons, polygon);
 				end
 			end
