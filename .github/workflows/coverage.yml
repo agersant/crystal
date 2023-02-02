@@ -57,7 +57,7 @@ jobs:
           --excl-br-start "mod tests \{"
         working-directory: lib
       - name: Build native libs
-        run: build_libs_windows.ps1
+        run: .\build_libs_windows.ps1
       - name: Run Lua Tests
         run: lovec . /test-unit /test-gfx /coverage
         working-directory: game
