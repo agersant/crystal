@@ -17,8 +17,8 @@ jobs:
         run: |
           curl.exe -L --output mesa.7z --url https://github.com/pal1000/mesa-dist-win/releases/download/22.3.4/mesa3d-22.3.4-release-msvc.7z
           "C:\Program Files\7-Zip\7z.exe" x mesa.7z
-          Move-Item -Path x64/opengl32.dll -Destination game/opengl32.dll
-          Move-Item -Path x64/libglapi.dll -Destination game/libglapi.dll
+          Move-Item -Path x64/opengl32.dll -Destination opengl32.dll
+          Move-Item -Path x64/libglapi.dll -Destination libglapi.dll
         working-directory: game
       - name: Install Love2D
         shell: bash
