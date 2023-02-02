@@ -8,4 +8,4 @@ edition = "2018"
 crate-type = ["lib"]
 
 [dependencies]
-cbindgen = "0.13"
+cbindgen = "0.24.3"
