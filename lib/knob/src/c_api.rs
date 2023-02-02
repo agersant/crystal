@@ -71,31 +71,37 @@ pub unsafe extern "C" fn disconnect_from_device() {
 	io::disconnect(HARDWARE_STATE.clone());
 }
 
-#[test]
-fn omnibus() {
-	unsafe {
-		set_mode(io::Mode::Absolute);
-		connect_to_device(0);
-		write_knob(70, 1.0);
-		read_knob(70);
-		disconnect_from_device();
-	}
-}
+#[cfg(test)]
+mod tests {
 
-#[test]
-fn get_and_free_current_device() {
-	unsafe {
-		let device = get_current_device();
-		free_device(device);
-	}
-}
+	use super::*;
 
-#[test]
-fn list_and_free_devices() {
-	unsafe {
-		let mut num_devices: c_int = -1;
-		let devices = list_devices(&mut num_devices);
-		assert!(num_devices == 1);
-		free_device_list(devices, num_devices);
+	#[test]
+	fn omnibus() {
+		unsafe {
+			set_mode(io::Mode::Absolute);
+			connect_to_device(0);
+			write_knob(70, 1.0);
+			read_knob(70);
+			disconnect_from_device();
+		}
+	}
+
+	#[test]
+	fn get_and_free_current_device() {
+		unsafe {
+			let device = get_current_device();
+			free_device(device);
+		}
+	}
+
+	#[test]
+	fn list_and_free_devices() {
+		unsafe {
+			let mut num_devices: c_int = -1;
+			let devices = list_devices(&mut num_devices);
+			assert!(num_devices == 1);
+			free_device_list(devices, num_devices);
+		}
 	}
 }
