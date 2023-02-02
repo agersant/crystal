@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  tests:
+    name: Run Tests
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Love2D
+        shell: bash
+        run: |
+          curl -L -o love.zip https://github.com/love2d/love/releases/download/11.3/love-11.3-win64.zip
+          unzip love.zip
+          echo "${{ github.workspace }}\love-11.3-win64" >> $GITHUB_PATH
+      - name: Build native libs
+        run: .\build_libs_windows.ps1
+      - name: Run Rust tests
+        run: cargo test --release
+        working-directory: lib
+      - name: Run Lua tests
+        run: lovec . /test-unit /test-gfx
+        working-directory: game
+      - uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: test-output
+          path: game/test-output

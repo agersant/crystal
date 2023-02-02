@@ -1,6 +1,11 @@
+codecov:
+  disable_default_path_fixes: true
 coverage:
   range: "0...100"
   status:
+    patch:
+      default:
+        informational: true
     project:
       default:
         informational: true
