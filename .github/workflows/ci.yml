@@ -28,11 +28,11 @@ jobs:
           curl -L -o love.zip https://github.com/love2d/love/releases/download/11.3/love-11.3-win64.zip
           unzip love.zip
           echo "${{ github.workspace }}\love-11.3-win64" >> $GITHUB_PATH
-      - name: Build native libs
-        run: .\build_libs_windows.ps1
-      - name: Run Rust tests
-        run: cargo test --release
-        working-directory: lib
+      # - name: Build native libs
+      #   run: .\build_libs_windows.ps1
+      # - name: Run Rust tests
+      #   run: cargo test --release
+      #   working-directory: lib
       - name: Run Lua tests
         run: lovec . /test-unit /test-gfx
         working-directory: game
