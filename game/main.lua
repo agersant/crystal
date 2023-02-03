@@ -14,12 +14,13 @@ if Features.testing then
 	local TestSuite = require("engine/dev/TestSuite");
 	local success = TestSuite:execute();
 	if luacov then
+		print("Shutting down luacov");
 		luacov.shutdown();
 	end
 	local exitCode = success and 0 or 1;
-	love.load = nil;
 	love.run = function()
 		return function()
+			print("Exiting love.run with code " .. exitCode);
 			return exitCode;
 		end
 	end
