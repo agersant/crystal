@@ -1,10 +1,6 @@
 luacov.report.out
 luacov.stats.out
 
-*.dll
-*.lib
-
-lib/**/target
-lib/**/ffi
-game/engine/ffi
+bin
+lib/target
 test-output/
