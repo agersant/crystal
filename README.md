@@ -33,5 +33,6 @@ This screenshot illustrates usage of the dev CLI to spawn entities of various ty
 # Build instructions
 
 1. Install the stable version of the [Rust compiler](https://www.rust-lang.org/learn/get-started) (pick MSVC toolchain if prompted)
-2. From the top level of this repository, execute `.\build.ps1`. This downloads the correct version of Love2D and compiles crystal native libraries.
-3. From the top level of this repository, execute `.\bin\love.exe game` to launch the game
+2. Clone this repository and submodules
+3. From the top level of this repository, execute `.\build.ps1`. This downloads the correct version of Love2D and compiles crystal native libraries.
+4. From the top level of this repository, execute `.\bin\love.exe game` to launch the game

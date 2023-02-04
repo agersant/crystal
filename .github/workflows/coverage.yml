@@ -13,6 +13,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: true
       - name: Install Mesa
         run: |
           curl.exe -L --output mesa.7z --url https://github.com/pal1000/mesa-dist-win/releases/download/22.3.4/mesa3d-22.3.4-release-msvc.7z
