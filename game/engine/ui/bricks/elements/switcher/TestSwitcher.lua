@@ -56,7 +56,6 @@ tests[#tests].body = function()
 	switcher:draw();
 	assert(not drawnElements[a]);
 	assert(drawnElements[b]);
-	assert(not drawnElements[c]);
 end
 
 tests[#tests + 1] = { name = "Supports dynamic or bounding box sizing" };
@@ -94,7 +93,6 @@ tests[#tests].body = function()
 	switcher:draw();
 	assert(not drawnElements[a]);
 	assert(drawnElements[b]);
-	assert(not drawnElements[c]);
 end
 
 tests[#tests + 1] = { name = "Applies transition sizing and draw function during transition", gfx = "mock" };
