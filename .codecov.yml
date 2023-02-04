@@ -7,6 +7,3 @@ coverage:
     project:
       default:
         informational: true
-fixes:
-  - "engine/::game/engine/" # eg. remaps `engine/Scene.lua` to `game/engine/Scene.lua`
-  - "arpg/::game/arpg/"
