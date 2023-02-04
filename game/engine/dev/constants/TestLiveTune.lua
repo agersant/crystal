@@ -17,7 +17,7 @@ end
 tests[#tests + 1] = { name = "Can choose mode" };
 tests[#tests].body = function()
 	local liveTune = LiveTune:new();
-	liveTune:setMode(LiveTune.Modes.ABSOLUTE);
+	liveTune:setMode("ABSOLUTE");
 end
 
 tests[#tests + 1] = { name = "Unmapped knob reads as initial value" };

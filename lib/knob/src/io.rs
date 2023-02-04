@@ -1,15 +1,15 @@
 use device::DeviceAPI;
 use hal::Hal;
 use state::StateHandle;
-use strum::EnumIter;
+use strum::{EnumIter, EnumString};
 
 pub mod device;
 pub mod hal;
 pub mod state;
 
 // https://www.yamahasynth.com/ask-a-question/relative-mode-for-control-knobs#reply-102919
-#[repr(C)]
-#[derive(Clone, Copy, Debug, EnumIter, PartialEq, Eq)]
+#[derive(Clone, Copy, Debug, EnumIter, EnumString, PartialEq, Eq)]
+#[strum(ascii_case_insensitive)]
 pub enum Mode {
     Absolute,
     RelativeAkai,
