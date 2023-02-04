@@ -1,6 +1,7 @@
 {
   "search.exclude": {
-    "**/external": true
+    "**/external": true,
+    "lib/luajit/**": true
   },
   "Lua.runtime.version": "LuaJIT",
   "Lua.workspace.ignoreDir": [".vscode", "**/external"],
