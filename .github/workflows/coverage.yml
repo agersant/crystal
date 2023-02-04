@@ -26,6 +26,12 @@ jobs:
           cmd /c systemwidedeploy.cmd
       - name: Build
         run: .\build.ps1
+      - name: Run Lua Tests
+        run: ..\bin\lovec.exe . /test-unit /test-gfx /coverage
+        working-directory: game
+      - name: Fix line endings in Lua coverage report
+        run: (Get-Content -raw luacov.report.out) -replace "`r`n","`n" | Set-Content -nonewline luacov.report.out
+        working-directory: game
       - name: Install Rust toolchain with coverage tooling
         uses: dtolnay/rust-toolchain@nightly
         with:
@@ -54,9 +60,6 @@ jobs:
           --excl-start "mod tests \{"
           --excl-br-start "mod tests \{"
         working-directory: lib
-      - name: Run Lua Tests
-        run: ..\bin\lovec.exe . /test-unit /test-gfx /coverage
-        working-directory: game
       - name: Upload Results
         uses: codecov/codecov-action@v3
         with:
