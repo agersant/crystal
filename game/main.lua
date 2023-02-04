@@ -19,6 +19,7 @@ if Features.testing then
 	local exitCode = success and 0 or 1;
 	love.run = function()
 		return function()
+			love.timer.sleep(1);
 			return exitCode;
 		end
 	end

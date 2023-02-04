@@ -55,7 +55,8 @@ jobs:
           --excl-br-start "mod tests \{"
         working-directory: lib
       - name: Run Lua Tests
-        run: .\bin\lovec.exe game /test-unit /test-gfx /coverage
+        run: ..\bin\lovec.exe . /test-unit /test-gfx /coverage
+        working-directory: game
       - name: Upload Results
         uses: codecov/codecov-action@v3
         with:

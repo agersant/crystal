@@ -1,7 +1,7 @@
 local Features = require("engine/dev/Features");
 
-io.stdout:setvbuf("line");
-io.stderr:setvbuf("line");
+io.stdout:setvbuf("no");
+io.stderr:setvbuf("no");
 
 love.filesystem.setIdentity("crystal");
 
