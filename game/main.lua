@@ -13,6 +13,7 @@ if Features.testing then
 	local engine = Engine:new(true);
 	local TestSuite = require("engine/dev/TestSuite");
 	local success = TestSuite:execute();
+	engine:quit();
 	if luacov then
 		luacov.shutdown();
 	end
