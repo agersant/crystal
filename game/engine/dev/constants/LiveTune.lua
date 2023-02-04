@@ -1,7 +1,5 @@
 require("engine/utils/OOP");
-require("engine/ffi/Knob");
-local FFI = require("ffi");
-local Knob = FFI.load("knob");
+local Knob = require("knob");
 local Features = require("engine/dev/Features");
 local MathUtils = require("engine/utils/MathUtils");
 
@@ -10,14 +8,6 @@ local LiveTune = Class("LiveTune");
 if not Features.liveTune then
 	Features.stub(LiveTune);
 end
-
-LiveTune.Modes = {
-	ABSOLUTE = Knob.Absolute,
-	RELATIVE_AKAI = Knob.RelativeAkai,
-	RELATIVE_ARTURIA1 = Knob.RelativeArturia1,
-	RELATIVE_ARTURIA2 = Knob.RelativeArturia2,
-	RELATIVE_ARTURIA3 = Knob.RelativeArturia3,
-};
 
 LiveTune.Mock = Class("LiveTuneMock", LiveTune);
 
@@ -40,7 +30,7 @@ LiveTune.Mock.getCurrentDevice = function(self)
 end
 
 LiveTune.init = function(self)
-	self:setMode(LiveTune.Modes.RELATIVE_ARTURIA1);
+	self:setMode("RelativeArturia1");
 	self:connectToDevice(1);
 	-- Table of knob index -> MIDI CC Index
 	-- Default values setup for the factory settings of Arturia MINILAB mkII
@@ -48,15 +38,15 @@ LiveTune.init = function(self)
 end
 
 LiveTune.disconnectFromDevice = function(self)
-	Knob.disconnect_from_device();
+	Knob.disconnectFromDevice();
 end
 
 LiveTune.connectToDevice = function(self, portNumber)
-	Knob.connect_to_device(portNumber - 1);
+	Knob.connectToDevice(portNumber - 1);
 end
 
 LiveTune.setMode = function(self, mode)
-	Knob.set_mode(mode);
+	Knob.setMode(mode);
 end
 
 LiveTune.mapKnobsToMIDI = function(self, ccIndices)
@@ -73,9 +63,9 @@ LiveTune.getValue = function(self, knobIndex, initialValue, minValue, maxValue)
 	if not ccIndex then
 		return initialValue;
 	end
-	local rawValue = Knob.read_knob(ccIndex);
+	local rawValue = Knob.readKnob(ccIndex);
 	if rawValue < 0 then
-		Knob.write_knob(ccIndex, (initialValue - minValue) / (maxValue - minValue));
+		Knob.writeKnob(ccIndex, (initialValue - minValue) / (maxValue - minValue));
 		return initialValue;
 	else
 		return MathUtils.lerp(rawValue, minValue, maxValue);
@@ -83,29 +73,11 @@ LiveTune.getValue = function(self, knobIndex, initialValue, minValue, maxValue)
 end
 
 LiveTune.listDevices = function(self)
-	local cNumDevices = FFI.new("int[1]");
-	local cDevices = Knob.list_devices(cNumDevices);
-
-	local devices = {};
-	local numDevices = cNumDevices[0];
-	for i = 0, numDevices - 1 do
-		local device = FFI.string(cDevices[i]);
-		table.insert(devices, device);
-	end
-
-	Knob.free_device_list(cDevices, numDevices);
-	return devices;
+	return Knob.listDevices();
 end
 
 LiveTune.getCurrentDevice = function(self)
-	local cDevice = Knob.get_current_device();
-	local device = FFI.string(cDevice);
-	Knob.free_device(cDevice);
-	if #device == 0 then
-		return nil;
-	else
-		return device;
-	end
+	return Knob.getCurrentDevice();
 end
 
 TERMINAL:addCommand("connectToMIDIDevice port:number", function(port)

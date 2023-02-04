@@ -1,27 +1,10 @@
 require("engine/utils/OOP");
-require("engine/ffi/Diamond");
-local FFI = require("ffi");
-local Diamond = FFI.load("diamond");
+local Diamond = require("diamond");
 local CollisionMesh = require("engine/resources/map/CollisionMesh");
 local NavigationMesh = require("engine/resources/map/NavigationMesh");
 local MathUtils = require("engine/utils/MathUtils");
 
 local MeshBuilder = Class("MeshBuilder");
-
-local newMeshBuilder = function(numTilesX, numTilesY, tileWidth, tileHeight, navigationPadding)
-	local output = FFI.gc(Diamond.mesh_builder_new(numTilesX, numTilesY, tileWidth, tileHeight, navigationPadding),
-		function(builder)
-			Diamond.mesh_builder_delete(builder);
-		end);
-	return output;
-end
-
-local newMesh = function()
-	local output = FFI.gc(Diamond.mesh_new(), function(mesh)
-		Diamond.mesh_delete(mesh);
-	end);
-	return output;
-end
 
 MeshBuilder.init = function(self, width, height, tileWidth, tileHeight, navigationPadding)
 	assert(width);
@@ -35,18 +18,17 @@ MeshBuilder.init = function(self, width, height, tileWidth, tileHeight, navigati
 	assert(navigationPadding >= 0);
 	self._w = width * tileWidth;
 	self._h = height * tileHeight;
-	self._cBuilder = newMeshBuilder(width, height, tileWidth, tileHeight, navigationPadding);
-	assert(self._cBuilder);
+	self._builder = Diamond.newMeshBuilder(width, height, tileWidth, tileHeight, navigationPadding);
+	assert(self._builder);
 end
 
 MeshBuilder.addPolygon = function(self, tileX, tileY, vertices)
-	assert(self._cBuilder);
-	local cVertices = FFI.new(FFI.typeof("CVertex[?]"), #vertices, vertices);
-	Diamond.mesh_builder_add_polygon(self._cBuilder, tileX, tileY, cVertices, #vertices);
+	assert(self._builder);
+	self._builder:addPolygon(tileX, tileY, vertices);
 end
 
 MeshBuilder.addLayer = function(self, tileset, layerData)
-	assert(self._cBuilder);
+	assert(self._builder);
 	local tileWidth = tileset:getTileWidth();
 	local tileHeight = tileset:getTileHeight();
 	for tileNum, tileID in ipairs(layerData.data) do
@@ -60,7 +42,7 @@ MeshBuilder.addLayer = function(self, tileset, layerData)
 				for _, vert in ipairs(localPolygon) do
 					local vertX = MathUtils.round(vert.x);
 					local vertY = MathUtils.round(vert.y);
-					table.insert(polygon, { x = x + vertX, y = y + vertY });
+					table.insert(polygon, { x + vertX, y + vertY });
 				end
 				self:addPolygon(tileX, tileY, polygon);
 			end
@@ -69,15 +51,11 @@ MeshBuilder.addLayer = function(self, tileset, layerData)
 end
 
 MeshBuilder.buildMesh = function(self)
-	assert(self._cBuilder);
-
-	local cMesh = newMesh();
-	Diamond.mesh_builder_build_mesh(self._cBuilder, cMesh);
-	self._cBuilder = nil;
-
-	local collisionMesh = CollisionMesh:new(self._w, self._h, cMesh);
-	local navigationMesh = NavigationMesh:new(cMesh);
-
+	assert(self._builder);
+	local mesh = self._builder:buildMesh();
+	self._builder = nil;
+	local collisionMesh = CollisionMesh:new(self._w, self._h, mesh);
+	local navigationMesh = NavigationMesh:new(mesh);
 	return collisionMesh, navigationMesh;
 end
 

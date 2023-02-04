@@ -3,14 +3,14 @@ use midir::{MidiInput, MidiInputConnection, MidiInputPort};
 use parking_lot::Mutex;
 use std::sync::{mpsc::*, Arc};
 
-use crate::io::device::{Device, DeviceAPI};
-use crate::io::Mode;
+use crate::device::{Device, DeviceAPI};
+use crate::Mode;
 
 static MIDI_CLIENT_NAME: &str = "crystal-knob-client-input";
 static MIDI_PORT_NAME: &str = "crystal-knob-input-port";
 static UNKNOWN_DEVICE_NAME: &str = "Unknown MIDI Device";
 
-pub trait Hal: Send + 'static {
+pub(crate) trait Hal: Send + 'static {
     type Device: DeviceAPI;
 
     fn connect(
@@ -31,7 +31,7 @@ pub trait Hal: Send + 'static {
     ) -> Result<usize, anyhow::Error>;
 }
 
-pub struct MidiHardware {}
+pub(crate) struct MidiHardware {}
 
 impl MidiHardware {
     fn get_midi_input() -> Result<MidiInput, anyhow::Error> {
@@ -126,7 +126,7 @@ impl Hal for MidiHardware {
 }
 
 #[cfg(test)]
-pub struct SampleHardware {}
+pub(crate) struct SampleHardware {}
 
 #[cfg(test)]
 impl Hal for SampleHardware {
@@ -163,7 +163,7 @@ impl Hal for SampleHardware {
 }
 
 #[cfg(test)]
-pub struct MockHardware {
+pub(crate) struct MockHardware {
     pub devices: Option<Vec<String>>,
 }
 

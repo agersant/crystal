@@ -1,13 +1,6 @@
 local MeshBuilder = require("engine/resources/map/MeshBuilder");
 local tests = {};
 
-tests[#tests + 1] = { name = "Load Diamond library" };
-tests[#tests].body = function()
-	require("engine/ffi/Diamond");
-	local FFI = require("ffi");
-	local Diamond = FFI.load("diamond");
-end
-
 tests[#tests + 1] = { name = "Generate navmesh for empty map" };
 tests[#tests].body = function()
 	local builder = MeshBuilder:new(50, 50, 10, 10, 0);

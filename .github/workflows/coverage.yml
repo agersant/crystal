@@ -13,6 +13,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: true
       - name: Install Mesa
         run: |
           curl.exe -L --output mesa.7z --url https://github.com/pal1000/mesa-dist-win/releases/download/22.3.4/mesa3d-22.3.4-release-msvc.7z
@@ -22,13 +24,15 @@ jobs:
           $setup_script = $setup_script -replace '^.*deploy complete.*$', '@exit'
           $setup_script | Set-Content -Path systemwidedeploy.cmd
           cmd /c systemwidedeploy.cmd
-      - name: Install Love2D
-        shell: bash
-        run: |
-          curl -L -o love.zip https://github.com/love2d/love/releases/download/11.3/love-11.3-win64.zip
-          unzip love.zip
-          echo "${{ github.workspace }}\love-11.3-win64" >> $GITHUB_PATH
-      - name: Install Rust toolchain
+      - name: Build
+        run: .\build.ps1
+      - name: Run Lua Tests
+        run: ..\bin\lovec.exe . /test-unit /test-gfx /coverage
+        working-directory: game
+      - name: Fix line endings in Lua coverage report
+        run: (Get-Content -raw luacov.report.out) -replace "`r`n","`n" | Set-Content -nonewline luacov.report.out
+        working-directory: game
+      - name: Install Rust toolchain with coverage tooling
         uses: dtolnay/rust-toolchain@nightly
         with:
           components: llvm-tools-preview
@@ -56,18 +60,8 @@ jobs:
           --excl-start "mod tests \{"
           --excl-br-start "mod tests \{"
         working-directory: lib
-      - name: Build native libs
-        run: .\build_libs_windows.ps1
-      - name: Run Lua Tests
-        run: lovec . /test-unit /test-gfx /coverage
-        working-directory: game
       - name: Upload Results
         uses: codecov/codecov-action@v3
         with:
           fail_ci_if_error: true
-          path_to_write_report: codecov_report.txt
           verbose: true
-      - uses: actions/upload-artifact@v2
-        with:
-          name: codecov_report
-          path: codecov_report.txt

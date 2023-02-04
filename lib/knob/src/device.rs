@@ -4,11 +4,11 @@ use std::sync::{mpsc::*, Arc};
 #[cfg(test)]
 use strum::IntoEnumIterator;
 
-use crate::io::Mode;
+use crate::Mode;
 
 static MIDI_MESSAGE_CONTROL_CHANGE: u8 = 176;
 
-pub trait DeviceAPI: Send {
+pub(crate) trait DeviceAPI: Send {
     type Port: Clone + Send;
     fn set_mode(&mut self, mode: Mode);
     fn read(&self, cc_index: u8) -> f32;
@@ -20,7 +20,7 @@ pub trait DeviceAPI: Send {
     fn drop_connection(&mut self);
 }
 
-pub struct Device<C, P> {
+pub(crate) struct Device<C, P> {
     mode: Mode,
     name: String,
     port: P,

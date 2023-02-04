@@ -4,12 +4,12 @@ use parking_lot::Mutex;
 use std::sync::{mpsc::*, Arc};
 use std::time::Duration;
 
-use crate::io::device::DeviceAPI;
-use crate::io::hal::Hal;
-use crate::io::Mode;
+use crate::device::DeviceAPI;
+use crate::hal::Hal;
+use crate::Mode;
 
-pub type StateHandle<H> = Arc<Mutex<State<H>>>;
-pub type DeviceHandle<H> = Arc<Mutex<<H as Hal>::Device>>;
+pub(crate) type StateHandle<H> = Arc<Mutex<State<H>>>;
+pub(crate) type DeviceHandle<H> = Arc<Mutex<<H as Hal>::Device>>;
 
 enum ConnectionTarget<H: Hal> {
     PortNumber(usize),
@@ -30,7 +30,7 @@ impl<H: Hal> Drop for ConnectionState<H> {
     }
 }
 
-pub struct State<H: Hal> {
+pub(crate) struct State<H: Hal> {
     pub hal: H,
     mode: Mode,
     _ticker: Option<Sender<()>>,
@@ -140,7 +140,7 @@ mod tests {
 
     #[test]
     fn fails_to_connect_without_device_list() {
-        let hal = crate::io::hal::MockHardware { devices: None };
+        let hal = crate::hal::MockHardware { devices: None };
         let state = State::new(hal);
         state.lock().connect(0);
         assert!(!state.lock().is_connected());
@@ -148,7 +148,7 @@ mod tests {
 
     #[test]
     fn fails_to_connect_with_empty_device_list() {
-        let hal = crate::io::hal::MockHardware {
+        let hal = crate::hal::MockHardware {
             devices: Some(vec![]),
         };
         let state = State::new(hal);
@@ -158,7 +158,7 @@ mod tests {
 
     #[test]
     fn keeps_track_of_connection() {
-        let hal = crate::io::hal::MockHardware {
+        let hal = crate::hal::MockHardware {
             devices: Some(vec!["device 1".to_owned()]),
         };
         let state = State::new(hal);
@@ -171,13 +171,13 @@ mod tests {
 
     #[test]
     fn current_device_removal_causes_disconnect() {
-        let hal = crate::io::hal::MockHardware {
+        let hal = crate::hal::MockHardware {
             devices: Some(vec!["device 1".to_owned(), "device 2".to_owned()]),
         };
         let state = State::new(hal);
         state.lock().connect(0);
         assert!(state.lock().is_connected());
-        state.lock().hal = crate::io::hal::MockHardware {
+        state.lock().hal = crate::hal::MockHardware {
             devices: Some(vec!["device 2".to_owned()]),
         };
         assert!(!state.lock().is_connected());
@@ -185,13 +185,13 @@ mod tests {
 
     #[test]
     fn other_device_removal_does_not_cause_disconnect() {
-        let hal = crate::io::hal::MockHardware {
+        let hal = crate::hal::MockHardware {
             devices: Some(vec!["device 1".to_owned(), "device 2".to_owned()]),
         };
         let state = State::new(hal);
         state.lock().connect(1);
         assert!(state.lock().is_connected());
-        state.lock().hal = crate::io::hal::MockHardware {
+        state.lock().hal = crate::hal::MockHardware {
             devices: Some(vec!["device 2".to_owned()]),
         };
         assert!(state.lock().is_connected());
@@ -199,17 +199,17 @@ mod tests {
 
     #[test]
     fn reconnects_on_different_port_number() {
-        let hal = crate::io::hal::MockHardware {
+        let hal = crate::hal::MockHardware {
             devices: Some(vec!["device 1".to_owned(), "device 2".to_owned()]),
         };
         let state = State::new(hal);
         state.lock().connect(1);
         assert!(state.lock().is_connected());
-        state.lock().hal = crate::io::hal::MockHardware {
+        state.lock().hal = crate::hal::MockHardware {
             devices: Some(vec![]),
         };
         assert!(!state.lock().is_connected());
-        state.lock().hal = crate::io::hal::MockHardware {
+        state.lock().hal = crate::hal::MockHardware {
             devices: Some(vec!["device 2".to_owned()]),
         };
         assert!(state.lock().is_connected());
@@ -217,7 +217,7 @@ mod tests {
 
     #[test]
     fn mode_change_does_not_cause_disconnect() {
-        let hal = crate::io::hal::MockHardware {
+        let hal = crate::hal::MockHardware {
             devices: Some(vec!["device 1".to_owned(), "device 2".to_owned()]),
         };
         let state = State::new(hal);
@@ -230,7 +230,7 @@ mod tests {
 
     #[test]
     fn mode_change_applies_to_current_device() {
-        let hal = crate::io::hal::MockHardware {
+        let hal = crate::hal::MockHardware {
             devices: Some(vec!["device 1".to_owned(), "device 2".to_owned()]),
         };
         let state = State::new(hal);
@@ -244,7 +244,7 @@ mod tests {
 
     #[test]
     fn mode_change_applies_to_future_device() {
-        let hal = crate::io::hal::MockHardware {
+        let hal = crate::hal::MockHardware {
             devices: Some(vec!["device 1".to_owned(), "device 2".to_owned()]),
         };
         let state = State::new(hal);
