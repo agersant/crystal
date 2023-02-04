@@ -50,7 +50,7 @@
         "clear": true
       },
       "command": "bin\\lovec.exe",
-      "args": [".", "/test-unit", "/test-gfx"],
+      "args": ["game", "/test-unit", "/test-gfx"],
       "problemMatcher": {
         "owner": "lua",
         "fileLocation": ["relative", "${workspaceRoot}\\game"],

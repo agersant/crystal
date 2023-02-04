@@ -370,6 +370,7 @@ dependencies = [
  "geo-booleanop",
  "geo-types",
  "itertools 0.9.0",
+ "mlua",
  "ndarray",
  "ordered-float 2.0.0",
  "pathfinding",

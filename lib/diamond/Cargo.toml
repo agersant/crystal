@@ -12,6 +12,7 @@ geo-types = "0.6"
 geo-booleanop = "0.3"
 geo = { version = "0.14", features = ["use-serde"] }
 itertools = "0.9"
+mlua = { version = "0.8", features = ["luajit", "module"] }
 ndarray = { version = "0.13", features = ["rayon"] }
 ordered-float = "2.0"
 pathfinding = "2.0"

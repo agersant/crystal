@@ -77,7 +77,7 @@ LiveTune.listDevices = function(self)
 end
 
 LiveTune.getCurrentDevice = function(self)
-	return Knob.get_current_device();
+	return Knob.getCurrentDevice();
 end
 
 TERMINAL:addCommand("connectToMIDIDevice port:number", function(port)

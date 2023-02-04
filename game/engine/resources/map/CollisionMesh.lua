@@ -1,16 +1,7 @@
 require("engine/utils/OOP");
-local FFI = require("ffi");
-local Diamond = FFI.load("diamond");
 local Colors = require("engine/resources/Colors");
 
 local CollisionMesh = Class("CollisionMesh");
-
-local newPolygons = function()
-	local output = FFI.gc(Diamond.polygons_new(), function(polygons)
-		Diamond.polygons_delete(polygons);
-	end);
-	return output;
-end
 
 local addChain = function(self, chain)
 	assert(chain);
@@ -18,22 +9,20 @@ local addChain = function(self, chain)
 	return chain;
 end
 
-CollisionMesh.init = function(self, mapWidth, mapHeight, cMesh)
+CollisionMesh.init = function(self, mapWidth, mapHeight, mesh)
 	assert(mapWidth);
 	assert(mapHeight);
-	assert(cMesh);
+	assert(mesh);
 
 	self._chains = {};
-	local obstacles = newPolygons();
-	Diamond.mesh_list_collision_polygons(cMesh, obstacles);
-	for chainIndex = 0, obstacles.num_polygons - 1 do
+	for _, obstacle in ipairs(mesh:listCollisionPolygons()) do
 		local chain = {};
-		local cPolygon = obstacles.polygons[chainIndex];
-		for i = 0, cPolygon.num_vertices - 2 do
-			local cVertex = cPolygon.vertices[i];
-			table.insert(chain, cVertex.x);
-			table.insert(chain, cVertex.y);
+		for _, vertex in ipairs(obstacle) do
+			table.insert(chain, vertex[1]);
+			table.insert(chain, vertex[2]);
 		end
+		table.remove(chain, #chain);
+		table.remove(chain, #chain);
 		addChain(self, chain);
 	end
 
