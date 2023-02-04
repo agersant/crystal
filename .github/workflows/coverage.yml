@@ -22,13 +22,9 @@ jobs:
           $setup_script = $setup_script -replace '^.*deploy complete.*$', '@exit'
           $setup_script | Set-Content -Path systemwidedeploy.cmd
           cmd /c systemwidedeploy.cmd
-      - name: Install Love2D
-        shell: bash
-        run: |
-          curl -L -o love.zip https://github.com/love2d/love/releases/download/11.3/love-11.3-win64.zip
-          unzip love.zip
-          echo "${{ github.workspace }}\love-11.3-win64" >> $GITHUB_PATH
-      - name: Install Rust toolchain
+      - name: Build
+        run: .\build.ps1
+      - name: Install Rust toolchain with coverage tooling
         uses: dtolnay/rust-toolchain@nightly
         with:
           components: llvm-tools-preview
@@ -56,11 +52,8 @@ jobs:
           --excl-start "mod tests \{"
           --excl-br-start "mod tests \{"
         working-directory: lib
-      - name: Build native libs
-        run: .\build_libs_windows.ps1
       - name: Run Lua Tests
-        run: lovec . /test-unit /test-gfx /coverage
-        working-directory: game
+        run: .\bin\lovec.exe game /test-unit /test-gfx /coverage
       - name: Upload Results
         uses: codecov/codecov-action@v3
         with:
