@@ -100,10 +100,10 @@
     },
     "export_settings": {
       "Template": {
-        "template_file": "..\\..\\crystal.template",
-        "texture_file": "..\\..\\..\\game\\test-data\\blankey.png",
-        "metadata_file": "..\\..\\..\\game\\test-data\\blankey.lua",
-        "metadata_paths_root": "..\\..\\..\\game"
+        "template_file": "..\\crystal.template",
+        "texture_file": "..\\..\\runtime\\test-data\\blankey.png",
+        "metadata_file": "..\\..\\runtime\\test-data\\blankey.lua",
+        "metadata_paths_root": "..\\..\\runtime"
       }
     }
   }
