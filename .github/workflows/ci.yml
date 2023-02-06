@@ -24,15 +24,16 @@ jobs:
           $setup_script = $setup_script -replace '^.*deploy complete.*$', '@exit'
           $setup_script | Set-Content -Path systemwidedeploy.cmd
           cmd /c systemwidedeploy.cmd
-      - name: Build game
+      - name: Build binaries
         run: .\build.ps1
       - name: Run Rust tests
         run: cargo test --release
         working-directory: lib
       - name: Run Lua tests
-        run: .\bin\lovec.exe game /test-unit /test-gfx
+        run: .\bin\lovec.exe . /test /test-gfx
+        working-directory: runtime
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
           name: test-output
-          path: game/test-output
+          path: runtime/test-output

@@ -24,14 +24,14 @@ jobs:
           $setup_script = $setup_script -replace '^.*deploy complete.*$', '@exit'
           $setup_script | Set-Content -Path systemwidedeploy.cmd
           cmd /c systemwidedeploy.cmd
-      - name: Build
+      - name: Build binaries
         run: .\build.ps1
       - name: Run Lua Tests
-        run: ..\bin\lovec.exe . /test-unit /test-gfx /coverage
-        working-directory: game
+        run: ..\bin\lovec.exe . /test /test-gfx /coverage
+        working-directory: runtime
       - name: Fix line endings in Lua coverage report
         run: (Get-Content -raw luacov.report.out) -replace "`r`n","`n" | Set-Content -nonewline luacov.report.out
-        working-directory: game
+        working-directory: runtime
       - name: Install Rust toolchain with coverage tooling
         uses: dtolnay/rust-toolchain@nightly
         with:
