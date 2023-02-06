@@ -1,1 +1,1 @@
-💎 Welcome the Crystal documentation.
+💎 Welcome to the Crystal documentation.
