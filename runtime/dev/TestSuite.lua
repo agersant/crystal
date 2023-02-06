@@ -2,45 +2,44 @@ local Features = require("dev/Features");
 local MockGraphics = require("dev/mock/love/graphics");
 
 local engineTestFiles = {
-	"engine/dev/cli/TestConsole",
-	"engine/dev/cli/TestTerminal",
-	"engine/dev/constants/TestConstants",
-	"engine/dev/constants/TestLiveTune",
-	"engine/dev/constants/TestLiveTuneOverlay",
-	"engine/ecs/TestECS",
-	"engine/input/TestInputDevice",
-	"engine/mapscene/behavior/TestActor",
-	"engine/mapscene/behavior/TestBehavior",
-	"engine/mapscene/behavior/ai/TestAlignGoal",
-	"engine/mapscene/behavior/ai/TestEntityGoal",
-	"engine/mapscene/behavior/ai/TestNavigation",
-	"engine/mapscene/behavior/ai/TestPath",
-	"engine/mapscene/behavior/ai/TestPositionGoal",
-	"engine/mapscene/display/TestCameraSystem",
-	"engine/mapscene/display/TestSprite",
-	"engine/mapscene/display/TestSpriteAnimator",
-	"engine/mapscene/display/TestWorldWidget",
-	"engine/mapscene/TestMapScene",
-	"engine/mapscene/physics/TestContacts",
-	"engine/mapscene/physics/TestDebugDraw",
-	"engine/mapscene/physics/TestPhysicsBody",
-	"engine/persistence/TestPersistence",
-	"engine/resources/TestAssets",
-	"engine/resources/map/TestCollisionMesh",
-	"engine/resources/map/TestNavigationMesh",
-	"engine/script/TestScript",
-	"engine/ui/bricks/core/TestContainer",
-	"engine/ui/bricks/core/TestWrapper",
-	"engine/ui/bricks/elements/TestList",
-	"engine/ui/bricks/elements/TestOverlay",
-	"engine/ui/bricks/elements/TestWidget",
-	"engine/ui/bricks/elements/switcher/TestSwitcher",
-	"engine/ui/TestTextInput",
-	"engine/utils/TestAlias",
-	"engine/utils/TestMathUtils",
-	"engine/utils/TestOOP",
-	"engine/utils/TestStringUtils",
-	"engine/utils/TestTableUtils",
+	"dev/cli/TestConsole",
+	"dev/cli/TestTerminal",
+	"dev/constants/TestConstants",
+	"dev/constants/TestLiveTune",
+	"dev/constants/TestLiveTuneOverlay",
+	"ecs/TestECS",
+	"input/TestInputDevice",
+	"mapscene/behavior/TestActor",
+	"mapscene/behavior/TestBehavior",
+	"mapscene/behavior/ai/TestAlignGoal",
+	"mapscene/behavior/ai/TestEntityGoal",
+	"mapscene/behavior/ai/TestNavigation",
+	"mapscene/behavior/ai/TestPath",
+	"mapscene/behavior/ai/TestPositionGoal",
+	"mapscene/display/TestCameraSystem",
+	"mapscene/display/TestSprite",
+	"mapscene/display/TestSpriteAnimator",
+	"mapscene/display/TestWorldWidget",
+	"mapscene/TestMapScene",
+	"mapscene/physics/TestContacts",
+	"mapscene/physics/TestDebugDraw",
+	"mapscene/physics/TestPhysicsBody",
+	"resources/TestAssets",
+	"resources/map/TestCollisionMesh",
+	"resources/map/TestNavigationMesh",
+	"script/TestScript",
+	"ui/bricks/core/TestContainer",
+	"ui/bricks/core/TestWrapper",
+	"ui/bricks/elements/TestList",
+	"ui/bricks/elements/TestOverlay",
+	"ui/bricks/elements/TestWidget",
+	"ui/bricks/elements/switcher/TestSwitcher",
+	"ui/TestTextInput",
+	"utils/TestAlias",
+	"utils/TestMathUtils",
+	"utils/TestOOP",
+	"utils/TestStringUtils",
+	"utils/TestTableUtils",
 };
 
 local Context = { currentTest = "", resolution = {} };
@@ -199,10 +198,7 @@ Context.resetGlobalState = function(self, test)
 end
 
 Context.shouldRunTest = function(self, test)
-	if test.gfx == "on" and not Features.gfxTesting then
-		return false;
-	end
-	if test.gfx ~= "on" and not Features.unitTesting then
+	if test.gfx == "on" and not Features.gfxTests then
 		return false;
 	end
 	return true;
@@ -221,19 +217,6 @@ end
 return {
 	execute = function(self)
 		LOG:setVerbosity(LOG.Levels.ERROR);
-
-		local testFiles = {};
-		for _, file in ipairs(engineTestFiles) do
-			table.insert(testFiles, file);
-		end
-
-		-- TODO run engine tests before loading game
-
-		ENGINE:loadGame(STARTUP_GAME);
-		for _, file in ipairs(GAME.testFiles) do
-			table.insert(testFiles, file);
-		end
-
-		return Context:runTestSuite(testFiles);
+		return Context:runTestSuite(engineTestFiles);
 	end,
 };

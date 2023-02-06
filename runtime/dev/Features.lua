@@ -3,12 +3,11 @@ local TableUtils = require("utils/TableUtils");
 local Features = {};
 
 local release = love.filesystem.isFused();
-Features.unitTesting = TableUtils.contains(arg, "/test-unit");
-Features.gfxTesting = TableUtils.contains(arg, "/test-gfx");
-Features.testing = Features.unitTesting or Features.gfxTesting;
+Features.tests = TableUtils.contains(arg, "/test");
+Features.gfxTests = TableUtils.contains(arg, "/test-gfx");
 Features.codeCoverage = TableUtils.contains(arg, "/coverage");
-Features.audioOutput = not Features.testing;
-Features.display = Features.gfxTesting or not Features.testing;
+Features.audioOutput = not Features.tests;
+Features.display = Features.gfxTests or not Features.tests;
 Features.logging = not release;
 Features.cli = not release;
 Features.fpsCounter = not release;
