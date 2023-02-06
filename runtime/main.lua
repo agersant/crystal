@@ -1,4 +1,4 @@
-require("crystal");
+require("init");
 
 local Features = require("dev/Features");
 
