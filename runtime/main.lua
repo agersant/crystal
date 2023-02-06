@@ -16,13 +16,13 @@ if Features.tests then
 	if luacov then
 		luacov.shutdown();
 	end
-end
 
-love.quit();
+	love.quit();
 
-local exitCode = success and 0 or 1;
-love.run = function()
-	return function()
-		return exitCode;
+	local exitCode = success and 0 or 1;
+	love.run = function()
+		return function()
+			return exitCode;
+		end
 	end
 end
