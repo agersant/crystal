@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<objecttypes>
- <objecttype name="Teleport" color="#ff1eb0">
-  <property name="targetMap" type="string" default="destination.lua"/>
-  <property name="targetX" type="int" default="8"/>
-  <property name="targetY" type="int" default="8"/>
- </objecttype>
- <objecttype name="Sahagin" color="#ff0000"/>
-</objecttypes>
