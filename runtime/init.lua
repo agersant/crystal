@@ -7,25 +7,33 @@ if tail == "init" or tail == "init.lua" then
 	table.remove(pathChunks, #pathChunks);
 end
 local crystalRoot = table.concat(pathChunks, "/");
-package.path = package.path .. ";" .. crystalRoot .. "/?.lua";
+package.path      = package.path .. ";" .. crystalRoot .. "/?.lua";
 
-crystal = {};
-crystal.conf = {
-	root = crystalRoot,
-};
+CRYSTAL_CONTEXT   = "self";
+CRYSTAL_ROOT      = crystalRoot;
 
 require("utils/OOP");
-local Features = require("dev/Features");
 
-LOG            = require("dev/Log"):new();
-TERMINAL       = require("dev/cli/Terminal"):new();
-LIVE_TUNE      = require("dev/constants/LiveTune"):new();
-CONSTANTS      = require("dev/constants/Constants"):new(TERMINAL, LIVE_TUNE);
-VIEWPORT       = require("graphics/Viewport"):new();
-FONTS          = require("resources/Fonts"):new({});
-ASSETS         = require("resources/Assets"):new();
-ASSETS         = require("resources/Assets"):new();
-INPUT          = require("input/Input"):new(8);
+crystal          = {};
+
+local testRunner = require("test/TestRunner"):new();
+crystal.test     = {
+	add = function(...)
+		testRunner:add(...);
+	end,
+};
+
+local Features   = require("dev/Features");
+
+LOG              = require("dev/Log"):new();
+TERMINAL         = require("dev/cli/Terminal"):new();
+LIVE_TUNE        = require("dev/constants/LiveTune"):new();
+CONSTANTS        = require("dev/constants/Constants"):new(TERMINAL, LIVE_TUNE);
+VIEWPORT         = require("graphics/Viewport"):new();
+FONTS            = require("resources/Fonts"):new({});
+ASSETS           = require("resources/Assets"):new();
+ASSETS           = require("resources/Assets"):new();
+INPUT            = require("input/Input"):new(8);
 
 CONSTANTS:define("Time Scale", 1.0, { minValue = 0.0, maxValue = 5.0 });
 
@@ -58,6 +66,7 @@ love.load = function()
 	-- self._globals.FONTS = Fonts:new(game.fonts);
 
 	-- TODO figure out how much to load on game startup
+	CRYSTAL_CONTEXT = "game";
 	-- for _, path in ipairs(self._globals.GAME.sourceDirectories) do
 	-- 	Content:requireAll(path);
 	-- end
@@ -146,8 +155,8 @@ if Features.tests then
 		luacov.init({ runreport = true, exclude = luacovExcludes });
 	end
 
-	local TestSuite = require("dev/TestSuite");
-	local success = TestSuite:execute();
+	LOG:setVerbosity(LOG.Levels.FATAL);
+	local success = testRunner:runAll();
 
 	if luacov then
 		luacov.shutdown();

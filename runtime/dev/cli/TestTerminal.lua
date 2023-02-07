@@ -150,34 +150,4 @@ tests[#tests].body = function()
 	assert(sentinel == 3);
 end
 
-tests[#tests + 1] = { name = "Autocomplete updates after non-text input" };
-tests[#tests].body = function()
-	local terminal = Terminal:new();
-	local sentinel;
-	terminal:addCommand("testCommand", function()
-		sentinel = true;
-	end);
-	terminal:textInput("testB");
-	terminal:keyPressed("backspace");
-	terminal:keyPressed("tab");
-	terminal:keyPressed("return");
-	assert(sentinel);
-end
-
-tests[#tests + 1] = { name = "Swallows incorrect commands" };
-tests[#tests].body = function()
-	local terminal = Terminal:new();
-	terminal:textInput("badcommand");
-	terminal:keyPressed("return");
-end
-
-tests[#tests + 1] = { name = "Swallows command errors" };
-tests[#tests].body = function()
-	local terminal = Terminal:new();
-	terminal:addCommand("testCommand", function()
-		error("bonk");
-	end);
-	terminal:textInput("testCommand");
-end
-
 return tests;

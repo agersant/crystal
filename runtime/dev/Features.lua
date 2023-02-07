@@ -3,8 +3,9 @@ local TableUtils = require("utils/TableUtils");
 local Features = {};
 
 local release = love.filesystem.isFused();
-Features.tests = TableUtils.contains(arg, "/test");
-Features.gfxTests = TableUtils.contains(arg, "/test-gfx");
+Features.gameTests = TableUtils.contains(arg, "/test");
+Features.engineTests = TableUtils.contains(arg, "/test-self");
+Features.tests = Features.engineTests or Features.gameTests;
 Features.codeCoverage = TableUtils.contains(arg, "/coverage");
 Features.logging = not release;
 Features.cli = not release;

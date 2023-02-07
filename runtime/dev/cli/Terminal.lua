@@ -96,8 +96,8 @@ Terminal.run = function(self, command)
 		end
 		local requiredType = command:getArg(i).type;
 		if not command:typeCheckArgument(i, arg) then
-			LOG:error("Argument #" .. i .. " (" .. command:getArg(i).name .. ") of command " .. command:getName() ..
-				" must be a " .. requiredType);
+			LOG:error("Argument #" ..
+			i .. " (" .. command:getArg(i).name .. ") of command " .. command:getName() .. " must be a " .. requiredType);
 			return;
 		end
 		table.insert(useArgs, command:castArgument(i, arg));
@@ -122,7 +122,6 @@ Terminal.textInput = function(self, text)
 end
 
 Terminal.keyPressed = function(self, key, scanCode, ctrl)
-
 	if key == "return" or key == "kpenter" then
 		submitInput(self);
 		return;
@@ -181,5 +180,32 @@ end
 Terminal.getParsedInput = function(self)
 	return self._parsedInput;
 end
+
+crystal.test.add("Autocomplete updates after non-text input", function()
+	local terminal = Terminal:new();
+	local sentinel;
+	terminal:addCommand("testCommand", function()
+		sentinel = true;
+	end);
+	terminal:textInput("testB");
+	terminal:keyPressed("backspace");
+	terminal:keyPressed("tab");
+	terminal:keyPressed("return");
+	assert(sentinel);
+end);
+
+crystal.test.add("Swallows incorrect commands", function()
+	local terminal = Terminal:new();
+	terminal:textInput("badcommand");
+	terminal:keyPressed("return");
+end);
+
+crystal.test.add("Swallows command errors", function()
+	local terminal = Terminal:new();
+	terminal:addCommand("testCommand", function()
+		error("bonk");
+	end);
+	terminal:textInput("testCommand");
+end);
 
 return Terminal;
