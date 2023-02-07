@@ -1,11 +1,12 @@
 # Crystal 0.1.0
 
-- [ ] Extract `arpg` into a separate repository
+- [ ] Extract `arpg` into a new repository
 - [ ] Sumneko diagnostics enabled and cleaned up
-- [ ] Engine setup instructions in readme
+- [ ] Getting Started instructions in readme
 - [ ] Engine release process
 - [ ] Sample game release process
 - [ ] VSCode tasks for engine and sample game
+- [ ] snake_case all variables and file names 🐍
 - [ ] API revamp: `crystal.*` globals + docs + private functions as ---@package or ---@private
   - [ ] AI
   - [ ] Assets
