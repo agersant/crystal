@@ -27,6 +27,9 @@ local fpsCounter;
 local console;
 local liveTuneOverlay;
 
+io.stdout:setvbuf("no");
+io.stderr:setvbuf("no");
+
 love.load = function()
 	love.keyboard.setTextInput(false);
 	fpsCounter = require("dev/FPSCounter"):new();
