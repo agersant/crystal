@@ -2,6 +2,9 @@
 
 - [ ] Extract `arpg` into a separate repository
 - [ ] Sumneko diagnostics enabled and cleaned up
+- [ ] Engine setup instructions in readme
+- [ ] Engine release process
+- [ ] Sample game release process
 - [ ] API revamp: `crystal.*` globals + docs + private functions as ---@package or ---@private
   - [ ] AI
   - [ ] Assets
@@ -15,6 +18,7 @@
   - [ ] Script
   - [ ] Tool
   - [ ] UI
+  - [ ] Utils
   - [ ] Var
   - [ ] Window
 
