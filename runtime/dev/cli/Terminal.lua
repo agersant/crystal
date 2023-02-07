@@ -181,6 +181,8 @@ Terminal.getParsedInput = function(self)
 	return self._parsedInput;
 end
 
+--#region Tests
+
 crystal.test.add("Autocomplete updates after non-text input", function()
 	local terminal = Terminal:new();
 	local sentinel;
@@ -207,5 +209,7 @@ crystal.test.add("Swallows command errors", function()
 	end);
 	terminal:textInput("testCommand");
 end);
+
+--#endregion
 
 return Terminal;
