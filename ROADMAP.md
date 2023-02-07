@@ -5,6 +5,7 @@
 - [ ] Engine setup instructions in readme
 - [ ] Engine release process
 - [ ] Sample game release process
+- [ ] VSCode tasks for engine and sample game
 - [ ] API revamp: `crystal.*` globals + docs + private functions as ---@package or ---@private
   - [ ] AI
   - [ ] Assets
