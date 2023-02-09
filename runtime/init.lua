@@ -1,3 +1,6 @@
+io.stdout:setvbuf("no");
+io.stderr:setvbuf("no");
+
 -- Add this directory to `package.path` so crystal source files can include each other
 local thisModulePath = ...;
 local pathChunks = {};
@@ -32,6 +35,7 @@ local Features    = require("dev/Features");
 local Content     = require("resources/Content");
 local StringUtils = require("utils/StringUtils");
 local TableUtils  = require("utils/TableUtils");
+local Scene       = require("Scene");
 
 local conf        = {
 	assetsDirectory = nil,
@@ -49,6 +53,7 @@ FONTS             = require("resources/Fonts"):new({});
 ASSETS            = require("resources/Assets"):new();
 ASSETS            = require("resources/Assets"):new();
 INPUT             = require("input/Input"):new(8);
+ENGINE            = {};
 
 CONSTANTS:define("Time Scale", 1.0, { minValue = 0.0, maxValue = 5.0 });
 
@@ -57,18 +62,21 @@ TERMINAL:addCommand("loadScene sceneName:string", function(sceneName)
 	assert(class);
 	assert(class:isInstanceOf(Scene));
 	local newScene = class:new();
-	-- TODO fix load scene command
-	self:loadScene(newScene);
+	ENGINE:loadScene(newScene);
 end);
 
 local scene = nil;
+local SCENE = nil;
 local nextScene = nil;
 local fpsCounter;
 local console;
 local liveTuneOverlay;
 
-io.stdout:setvbuf("no");
-io.stderr:setvbuf("no");
+ENGINE.loadScene = function(self, scene)
+	-- Change applies before next update, so that the current frame
+	-- can continue with a consistent SCENE global
+	nextScene = scene;
+end
 
 love.load = function()
 	love.keyboard.setTextInput(false);
@@ -150,13 +158,6 @@ end
 love.resize = function(self, width, height)
 	viewport:setWindowSize(width, height);
 end
-
--- TODO fix loadscene command
--- ENGINE.loadScene = function(scene)
--- 	-- Change applies before next update, so that the current frame
--- 	-- can continue with a consistent SCENE global
--- 	nextScene = scene;
--- end
 
 love.quit = function()
 	LIVE_TUNE:disconnectFromDevice();
