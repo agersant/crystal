@@ -1,4 +1,4 @@
--- local Diamond = require("diamond"); -- TODO re-enable
+local Diamond = require("diamond");
 local CollisionMesh = require("resources/map/CollisionMesh");
 local NavigationMesh = require("resources/map/NavigationMesh");
 local MathUtils = require("utils/MathUtils");

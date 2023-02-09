@@ -198,6 +198,8 @@ if Features.tests then
 
 			love.quit();
 
+			collectgarbage("collect");
+
 			return 0;
 			-- return success and 0 or 1; -- TODO re-enable
 		end
