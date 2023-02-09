@@ -76,17 +76,12 @@ love.load = function()
 	console = require("dev/cli/Console"):new(TERMINAL);
 	liveTuneOverlay = require("dev/constants/LiveTuneOverlay"):new(CONSTANTS, LIVE_TUNE);
 
-	-- TODO fix fonts
-	-- local Fonts = require("resources/Fonts");
-	-- self._globals.FONTS = Fonts:new(game.fonts);
-
 	CRYSTAL_CONTEXT = "game";
 	-- TODO may or may not worked in fused build
 	for _, path in ipairs(Content:listAllFiles("", "%.lua$")) do
 		local isCrystal = path:match("^" .. CRYSTAL_ROOT);
 		local isAsset = conf.assetsDirectory and path:match("^" .. conf.assetsDirectory);
 		if not isCrystal and not isAsset then
-			print(path);
 			require(StringUtils.stripFileExtension(path));
 		end
 	end
