@@ -58,4 +58,93 @@ MeshBuilder.buildMesh = function(self)
 	return collisionMesh, navigationMesh;
 end
 
+--#region Tests
+
+crystal.test.add("Single square", function()
+	local builder = MeshBuilder:new(50, 50, 10, 10, 4);
+	builder:addPolygon(1, 1, { { 10, 10 }, { 20, 10 }, { 20, 20 }, { 10, 20 } });
+	local collisionMesh = builder:buildMesh();
+	assert(#collisionMesh:getChains() == 2);
+end);
+
+crystal.test.add("Simple merge", function()
+	local builder = MeshBuilder:new(50, 50, 10, 10, 4);
+	builder:addPolygon(1, 1, { { 10, 10 }, { 20, 10 }, { 20, 20 }, { 10, 20 } });
+	builder:addPolygon(2, 1, { { 20, 10 }, { 30, 10 }, { 30, 20 }, { 20, 20 } });
+	builder:addPolygon(0, 0, { { 0, 0 }, { 5, 0 }, { 5, 5 }, { 0, 5 } });
+	local collisionMesh = builder:buildMesh();
+	assert(#collisionMesh:getChains() == 3);
+end);
+
+
+crystal.test.add("Generate navmesh for empty map", function()
+	local builder = MeshBuilder:new(50, 50, 10, 10, 0);
+	local _, navigationMesh = builder:buildMesh();
+	assert(navigationMesh);
+end);
+
+crystal.test.add("Generate navmesh for empty map with padding", function()
+	local builder = MeshBuilder:new(50, 50, 10, 10, 4);
+	local _, navigationMesh = builder:buildMesh();
+	assert(navigationMesh);
+end);
+
+crystal.test.add("Generate navmesh for empty map with extreme padding", function()
+	local padding = 20;
+	local builder = MeshBuilder:new(50, 50, 10, 10, padding);
+	local _, navigationMesh = builder:buildMesh();
+	assert(navigationMesh);
+end);
+
+crystal.test.add("Find path in empty map", function()
+	local builder = MeshBuilder:new(50, 50, 10, 10, 4);
+	local _, navigationMesh = builder:buildMesh();
+	local success, path = navigationMesh:findPath(5, 8, 20, 30);
+	assert(success);
+	assert(path:getNumVertices() == 2);
+	for i, x, y in path:vertices() do
+		assert(i ~= 1 or (x == 5 and y == 8));
+		assert(i ~= 2 or (x == 20 and y == 30));
+	end
+end);
+
+crystal.test.add("Find path from outside navmesh", function()
+	local builder = MeshBuilder:new(50, 50, 10, 10, 0);
+	local _, navigationMesh = builder:buildMesh();
+	local success, path = navigationMesh:findPath( -4, 2, 8, 9);
+	assert(success);
+	assert(path:getNumVertices() == 3);
+	for i, x, y in path:vertices() do
+		assert(i ~= 1 or (x == -4 and y == 2));
+		assert(i ~= 2 or (x == 0 and y == 2));
+		assert(i ~= 3 or (x == 8 and y == 9));
+	end
+end);
+
+crystal.test.add("Find path to outside navmesh", function()
+	local builder = MeshBuilder:new(1, 1, 10, 10, 0);
+	local _, navigationMesh = builder:buildMesh();
+	local success, path = navigationMesh:findPath(3, 5, 8, 14);
+	assert(success);
+	assert(path:getNumVertices() == 3);
+	for i, x, y in path:vertices() do
+		assert(i ~= 1 or (x == 3 and y == 5));
+		assert(i ~= 2 or (x == 8 and y == 10));
+		assert(i ~= 3 or (x == 8 and y == 14));
+	end
+end);
+
+crystal.test.add("Project point on navmesh", function()
+	local builder = MeshBuilder:new(10, 10, 16, 16, 0);
+	local _, navigationMesh = builder:buildMesh();
+	local px, py = navigationMesh:getNearestPointOnNavmesh( -5, -5);
+	assert(px == 0);
+	assert(py == 0);
+	local px, py = navigationMesh:getNearestPointOnNavmesh(5, -5);
+	assert(px == 5);
+	assert(py == 0);
+end);
+
+--#endregion
+
 return MeshBuilder;

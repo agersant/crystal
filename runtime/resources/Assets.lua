@@ -320,4 +320,96 @@ Assets.getShader = function(self, path)
 	return getAsset(self, "shader", path);
 end
 
+--#region Tests
+
+crystal.test.add("Load empty map", { gfx = "mock" }, function()
+	local assets = Assets:new();
+	local mapName = "test-data/empty_map.lua";
+	assets:load(mapName);
+	local map = assets:getMap(mapName);
+	assert(map);
+	assets:unload(mapName);
+end);
+
+crystal.test.add("Load shader", { gfx = "on" }, function()
+	local assets = Assets:new();
+	local shaderPath = "test-data/TestAssets/shader.glsl";
+	assets:load(shaderPath);
+	local shader = assets:getShader(shaderPath);
+	assert(shader);
+	assets:unload(shaderPath);
+end);
+
+crystal.test.add("Load spritesheet", { gfx = "on" }, function()
+	local assets = Assets:new();
+	local sheetName = "test-data/blankey.lua";
+	assets:load(sheetName);
+
+	local sheet = assets:getSpritesheet(sheetName);
+	assert(sheet);
+
+	local animation = sheet:getAnimation("hurt");
+	local sequence = animation:getSequence(0);
+	assert(sequence:getDuration());
+
+	local animationFrame = sequence:getFrameAtTime(0);
+	assert(animationFrame:getFrame());
+	assert(animationFrame:getDuration());
+	assert(animationFrame:getTagShape("test"));
+	local ox, oy = animationFrame:getFrame():getOrigin();
+	assert(ox);
+	assert(oy);
+
+	assets:unload(sheetName);
+end);
+
+crystal.test.add("Load package", { gfx = "mock" }, function()
+	local assets = Assets:new();
+	local packageName = "test-data/TestAssets/package.lua";
+	local sheetName = "test-data/blankey.lua";
+	assert(not assets:isAssetLoaded(packageName));
+	assert(not assets:isAssetLoaded(sheetName));
+	assets:load(packageName);
+	assert(assets:isAssetLoaded(packageName));
+	assert(assets:isAssetLoaded(sheetName));
+	assets:unload(packageName);
+	assert(not assets:isAssetLoaded(packageName));
+	assert(not assets:isAssetLoaded(sheetName));
+end);
+
+crystal.test.add("Nested packages work", { gfx = "mock" }, function()
+	local assets = Assets:new();
+	local wrapperPackageName = "test-data/TestAssets/wrapper_package.lua";
+	local packageName = "test-data/TestAssets/package.lua";
+	local sheetName = "test-data/blankey.lua";
+	assert(not assets:isAssetLoaded(packageName));
+	assert(not assets:isAssetLoaded(sheetName));
+	assets:load(wrapperPackageName);
+	assert(assets:isAssetLoaded(packageName));
+	assert(assets:isAssetLoaded(sheetName));
+	assets:unload(wrapperPackageName);
+	assert(not assets:isAssetLoaded(packageName));
+	assert(not assets:isAssetLoaded(sheetName));
+end);
+
+crystal.test.add("A single reference keeps assets loaded", { gfx = "mock" }, function()
+	local assets = Assets:new();
+	local wrapperPackageName = "test-data/TestAssets/wrapper_package.lua";
+	local packageName = "test-data/TestAssets/package.lua";
+	local sheetName = "test-data/blankey.lua";
+	assert(not assets:isAssetLoaded(sheetName));
+	assets:load(wrapperPackageName);
+	assets:load(packageName);
+	assets:unload(wrapperPackageName);
+	assert(assets:isAssetLoaded(sheetName));
+	assets:unload(packageName);
+	assert(not assets:isAssetLoaded(sheetName));
+end);
+
+crystal.test.add("Has global API", function()
+	assert(ASSETS);
+end);
+
+--#endregion
+
 return Assets;
