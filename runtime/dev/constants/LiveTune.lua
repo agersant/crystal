@@ -1,4 +1,4 @@
--- local Knob = require("knob");
+-- local Knob = require("knob"); -- TODO re-enable
 local Features = require("dev/Features");
 local MathUtils = require("utils/MathUtils");
 
@@ -85,7 +85,7 @@ TERMINAL:addCommand("connectToMIDIDevice port:number", function(port)
 	LIVE_TUNE:connectToDevice(port);
 end);
 
---#region Tests
+--#region Tests -- TODO re-enable
 
 -- crystal.test.add("Lists devices", function()
 -- 	local liveTune = LiveTune:new();
