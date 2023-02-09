@@ -62,4 +62,19 @@ Widget.arrangeChild = function(self)
 	end
 end
 
+--#region Tests
+
+crystal.test.add("Runs scripts", function()
+	local widget = Widget:new();
+	local sentinel;
+	widget:addScript(Script:new(function()
+		sentinel = 1;
+	end));
+	assert(sentinel == nil);
+	widget:update(0);
+	assert(sentinel == 1);
+end);
+
+--#endregion
+
 return Widget;

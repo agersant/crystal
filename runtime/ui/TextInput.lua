@@ -124,7 +124,6 @@ TextInput.textInput = function(self, text)
 end
 
 TextInput.keyPressed = function(self, key, scanCode, ctrl)
-
 	local oldText = self._text;
 	local oldCursor = self._cursor;
 
@@ -182,5 +181,92 @@ TextInput.keyPressed = function(self, key, scanCode, ctrl)
 
 	return textChanged, cursorMoved;
 end
+
+--#region Tests
+
+
+crystal.test.add("Setting and clearing text", function()
+	local textInput = TextInput:new();
+	assert(textInput:getText() == "");
+	textInput:setText("oink");
+	assert(textInput:getText() == "oink");
+	textInput:clear();
+	assert(textInput:getText() == "");
+end);
+
+crystal.test.add("Letters entry", function()
+	local textInput = TextInput:new();
+	textInput:setText("oink");
+	textInput:textInput("g");
+	textInput:textInput("r");
+	textInput:textInput("u");
+	textInput:textInput("i");
+	textInput:textInput("k");
+	assert(textInput:getText() == "oinkgruik");
+end);
+
+crystal.test.add("Cursor navigation", function()
+	local textInput = TextInput:new();
+	textInput:setText("oink gruik");
+	textInput:keyPressed("left", nil, false);
+	assert(textInput:getTextLeftOfCursor() == "oink grui");
+	textInput:keyPressed("left", nil, true);
+	assert(textInput:getTextLeftOfCursor() == "oink ");
+	textInput:keyPressed("home", nil, false);
+	assert(textInput:getTextLeftOfCursor() == "");
+	textInput:keyPressed("right", nil, true);
+	assert(textInput:getTextLeftOfCursor() == "oink ");
+	textInput:keyPressed("right", nil, false);
+	assert(textInput:getTextLeftOfCursor() == "oink g");
+	textInput:keyPressed("end", nil, false);
+	assert(textInput:getTextLeftOfCursor() == "oink gruik");
+end);
+
+crystal.test.add("Undo and redo", function()
+	local textInput = TextInput:new();
+	textInput:setText("oink");
+	textInput:textInput("g");
+	textInput:textInput("r");
+	textInput:textInput("u");
+	textInput:textInput("i");
+	textInput:textInput("k");
+	assert(textInput:getText() == "oinkgruik");
+
+	textInput:keyPressed("z", nil, true);
+	textInput:keyPressed("z", nil, true);
+	assert(textInput:getText() == "oinkgru");
+
+	textInput:keyPressed("y", nil, true);
+	textInput:keyPressed("y", nil, true);
+	assert(textInput:getText() == "oinkgruik");
+
+	textInput:setText("oink");
+	textInput:setText("gruik");
+	textInput:keyPressed("y", nil, true);
+	assert(textInput:getText() == "gruik");
+	textInput:keyPressed("z", nil, true);
+	assert(textInput:getText() == "oink");
+end);
+
+crystal.test.add("Backspace", function()
+	local textInput = TextInput:new();
+	textInput:setText("gruik oink");
+	textInput:keyPressed("backspace", nil, false);
+	assert(textInput:getText() == "gruik oin");
+	textInput:keyPressed("backspace", nil, true);
+	assert(textInput:getText() == "gruik ");
+end);
+
+crystal.test.add("Delete", function()
+	local textInput = TextInput:new();
+	textInput:setText("gruik oink");
+	textInput:keyPressed("home", nil, false);
+	textInput:keyPressed("delete", nil, false);
+	assert(textInput:getText() == "ruik oink");
+	textInput:keyPressed("delete", nil, true);
+	assert(textInput:getText() == "oink");
+end);
+
+--#endregion
 
 return TextInput;

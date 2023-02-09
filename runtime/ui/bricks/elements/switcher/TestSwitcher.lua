@@ -18,10 +18,7 @@ TestTransition.draw = function(self, width, height)
 	self.drawnAtProgress = self:getProgress();
 end
 
-local tests = {};
-
-tests[#tests + 1] = { name = "Shows first child by default", gfx = "mock" };
-tests[#tests].body = function()
+crystal.test.add("Shows first child by default", { gfx = "mock" }, function()
 	local drawnElements = {};
 	local draw = function(self)
 		drawnElements[self] = true;
@@ -38,8 +35,7 @@ tests[#tests].body = function()
 	assert(not drawnElements[b]);
 end
 
-tests[#tests + 1] = { name = "Can snap to different child", gfx = "mock" };
-tests[#tests].body = function()
+crystal.test.add("Can snap to different child", { gfx = "mock" }, function()
 	local drawnElements = {};
 	local draw = function(self)
 		drawnElements[self] = true;
@@ -57,8 +53,7 @@ tests[#tests].body = function()
 	assert(drawnElements[b]);
 end
 
-tests[#tests + 1] = { name = "Supports dynamic or bounding box sizing" };
-tests[#tests].body = function()
+crystal.test.add("Supports dynamic or bounding box sizing", function()
 	for _, test in pairs({
 		{ method = "sizeToActiveChild", expectedSize = { 0, 50, 0, 100 } },
 		{ method = "sizeToFitAnyChild", expectedSize = { 0, 100, 0, 100 } },
@@ -72,10 +67,9 @@ tests[#tests].body = function()
 		switcher:updateTree(0);
 		assert(TableUtils.equals(test.expectedSize, { switcher:getLocalPosition() }));
 	end
-end
+end);
 
-tests[#tests + 1] = { name = "Can transition to a different child", gfx = "mock" };
-tests[#tests].body = function()
+crystal.test.add("Can transition to a different child", { gfx = "mock" }, function()
 	local drawnElements = {};
 	local draw = function(self)
 		drawnElements[self] = true;
@@ -94,8 +88,7 @@ tests[#tests].body = function()
 	assert(drawnElements[b]);
 end
 
-tests[#tests + 1] = { name = "Applies transition sizing and draw function during transition", gfx = "mock" };
-tests[#tests].body = function()
+crystal.test.add("Applies transition sizing and draw function during transition", { gfx = "mock" }, function()
 	local transition = TestTransition:new();
 	local switcher = Switcher:new(transition);
 	local a = switcher:addChild(Image:new());
@@ -110,8 +103,7 @@ tests[#tests].body = function()
 	assert(transition.drawnAtProgress == 0.5);
 end
 
-tests[#tests + 1] = { name = "Can interrupt a transition by setting active child", gfx = "mock" };
-tests[#tests].body = function()
+crystal.test.add("Can interrupt a transition by setting active child", { gfx = "mock" }, function()
 	local transition = TestTransition:new();
 	local switcher = Switcher:new(transition);
 	local a = switcher:addChild(Image:new());
@@ -126,8 +118,7 @@ tests[#tests].body = function()
 	assert(transition.drawnAtProgress == nil);
 end
 
-tests[#tests + 1] = { name = "Can interrupt a transition by starting another one", gfx = "mock" };
-tests[#tests].body = function()
+crystal.test.add("Can interrupt a transition by starting another one", { gfx = "mock" }, function()
 	local transition = TestTransition:new();
 	local switcher = Switcher:new(transition);
 	local a = switcher:addChild(Image:new());
@@ -145,8 +136,7 @@ tests[#tests].body = function()
 	assert(transition.drawnAtProgress == 0.2);
 end
 
-tests[#tests + 1] = { name = "Ignores transition to current child", gfx = "mock" };
-tests[#tests].body = function()
+crystal.test.add("Ignores transition to current child", { gfx = "mock" }, function()
 	local transition = TestTransition:new();
 	local switcher = Switcher:new(transition);
 	local a = switcher:addChild(Image:new());

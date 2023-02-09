@@ -76,4 +76,88 @@ Container.drawSelf = function(self)
 	end
 end
 
+--#region Tests
+
+local Joint = require("ui/bricks/core/Joint");
+
+crystal.test.add("Can add and remove children", function()
+	local a = Element:new();
+	local b = Element:new();
+	local container = Container:new(Joint);
+
+	container:addChild(a);
+	assert(a:getParent() == container);
+	assert(b:getParent() == nil);
+	container:addChild(b);
+	assert(a:getParent() == container);
+	assert(b:getParent() == container);
+	container:removeChild(a);
+	assert(a:getParent() == nil);
+	assert(b:getParent() == container);
+
+	local otherContainer = Container:new(Joint);
+	otherContainer:addChild(b);
+	assert(b:getParent() == otherContainer);
+end);
+
+crystal.test.add("Add child returns newly added child", function()
+	local a = Element:new();
+	local container = Container:new(Joint);
+	assert(container:addChild(a) == a);
+end);
+
+crystal.test.add("Can nest containers", function()
+	local a = Container:new(Joint);
+	local b = Container:new(Joint);
+	local c = Element:new(Joint);
+	a:addChild(b);
+	b:addChild(c);
+	assert(a:getParent() == nil);
+	assert(b:getParent() == a);
+	assert(c:getParent() == b);
+end);
+
+crystal.test.add("Calls update on children", function()
+	local a = Element:new(Joint);
+	local b = Element:new(Joint);
+	local sentinel = 0;
+	a.update = function()
+		sentinel = sentinel + 1;
+	end
+	b.update = function()
+		sentinel = sentinel + 10;
+	end
+	local container = Container:new(Joint);
+	container.arrangeChildren = function()
+	end
+	container:addChild(a);
+	container:addChild(b);
+	container:updateTree(0);
+	assert(sentinel == 11)
+end);
+
+crystal.test.add("Layouts and draws children", { gfx = "mock" }, function()
+	local a = Element:new(Joint);
+	local b = Element:new(Joint);
+	local sentinel = 0;
+	a.draw = function()
+		sentinel = sentinel + 1;
+	end
+	b.draw = function()
+		sentinel = sentinel + 10;
+	end
+	local container = Container:new(Joint);
+	container.arrangeChildren = function(self)
+		sentinel = 1;
+	end;
+	container:addChild(a);
+	container:addChild(b);
+	container:updateTree(0);
+	assert(sentinel == 1)
+	container:draw();
+	assert(sentinel == 12)
+end);
+
+--#endregion
+
 return Container;
