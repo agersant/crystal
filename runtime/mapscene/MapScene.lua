@@ -147,7 +147,6 @@ MapScene.draw = function(self)
 	self._renderer:draw(function()
 		self._ecs:notifySystems("drawOverlay");
 	end);
-
 end
 
 MapScene.spawnEntityNearPlayer = function(self, class)
@@ -180,8 +179,8 @@ MapScene.spawnEntityNearPlayer = function(self, class)
 end
 
 TERMINAL:addCommand("loadMap mapName:string", function(mapName)
-	local sceneClass = GAME.classes.MapScene;
-	local sceneFile = StringUtils.mergePaths(GAME.mapDirectory, mapName .. ".lua");
+	local sceneClass = Class:getByName(crystal.conf.mapSceneClass);
+	local sceneFile = StringUtils.mergePaths(crystal.conf.mapDirectory, mapName .. ".lua");
 	local newScene = sceneClass:new(sceneFile);
 	ENGINE:loadScene(newScene);
 end);

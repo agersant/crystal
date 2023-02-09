@@ -37,11 +37,14 @@ local StringUtils = require("utils/StringUtils");
 local TableUtils  = require("utils/TableUtils");
 local Scene       = require("Scene");
 
-local conf        = {
+crystal.conf      = {
 	assetsDirectory = nil,
+	mapDirectory = "", -- TODO remove when mapscene is no longer part of crystal
+	mapSceneClass = "MapScene", -- TODO remove when mapscene is no longer part of crystal
+	saveDataClass = "BaseSaveData", -- TODO remove when reworking persistence
 };
 crystal.configure = function(c)
-	TableUtils.merge(conf, c);
+	TableUtils.merge(crystal.conf, c);
 end
 
 LOG               = require("dev/Log"):new();
@@ -80,19 +83,21 @@ end
 
 love.load = function()
 	love.keyboard.setTextInput(false);
-	fpsCounter = require("dev/FPSCounter"):new();
-	console = require("dev/cli/Console"):new(TERMINAL);
+	fpsCounter      = require("dev/FPSCounter"):new();
+	console         = require("dev/cli/Console"):new(TERMINAL);
 	liveTuneOverlay = require("dev/constants/LiveTuneOverlay"):new(CONSTANTS, LIVE_TUNE);
 
 	CRYSTAL_CONTEXT = "game";
 	-- TODO may or may not worked in fused build
 	for _, path in ipairs(Content:listAllFiles("", "%.lua$")) do
 		local isCrystal = path:match("^" .. CRYSTAL_ROOT);
-		local isAsset = conf.assetsDirectory and path:match("^" .. conf.assetsDirectory);
+		local isAsset = crystal.conf.assetsDirectory and path:match("^" .. crystal.conf.assetsDirectory);
 		if not isCrystal and not isAsset then
 			require(StringUtils.stripFileExtension(path));
 		end
 	end
+
+	PERSISTENCE = require("persistence/Persistence"):new(Class:getByName(crystal.conf.saveDataClass));
 end
 
 love.update = function(dt)
