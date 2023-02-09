@@ -198,8 +198,6 @@ if Features.tests then
 
 			love.quit();
 
-			collectgarbage("collect");
-
 			return success and 0 or 1;
 		end
 	end

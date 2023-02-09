@@ -139,6 +139,8 @@ TestRunner.runAll = function(self)
 	print();
 	print(report);
 	print();
+
+	return #failures == 0;
 end
 
 TestRunner.createOutputDirectories = function(self)
