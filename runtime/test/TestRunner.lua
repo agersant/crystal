@@ -1,5 +1,4 @@
 local Features = require("dev/Features");
-local MockGraphics = require("dev/mock/love/graphics");
 
 local TestRunner = {};
 
@@ -47,6 +46,8 @@ TestRunner.add = function(self, name, optionsOrBody, body)
 end
 
 TestRunner.resetGlobalState = function(self, test)
+	local MockGraphics = require("dev/mock/love/graphics");
+
 	ASSETS:unloadAll();
 
 	test.resolution = test.resolution or { 200, 200 };

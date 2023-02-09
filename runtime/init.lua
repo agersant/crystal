@@ -16,6 +16,8 @@ local crystalRoot = table.concat(pathChunks, "/");
 -- TODO may or may not worked in fused build
 package.path      = package.path .. ";" .. crystalRuntime .. "/?.lua";
 
+local Features    = require("dev/Features");
+
 CRYSTAL_CONTEXT   = "self";
 CRYSTAL_ROOT      = crystalRoot;
 CRYSTAL_RUNTIME   = crystalRuntime;
@@ -27,10 +29,12 @@ crystal.test      = {
 	add = function(...)
 		testRunner:add(...);
 	end,
+	isRunningTests = function()
+		return Features.tests;
+	end,
 };
 
 require("utils/OOP");
-local Features    = require("dev/Features");
 local Content     = require("resources/Content");
 local StringUtils = require("utils/StringUtils");
 local TableUtils  = require("utils/TableUtils");
