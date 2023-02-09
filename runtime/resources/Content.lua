@@ -2,30 +2,25 @@ local StringUtils = require("utils/StringUtils");
 
 local Content = Class("Content");
 
-local forEachLuaFile;
-forEachLuaFile = function(path, action)
+local browse;
+browse = function(path, files, pattern)
 	for _, item in ipairs(love.filesystem.getDirectoryItems(path)) do
 		local file = StringUtils.mergePaths(path, item);
 		local info = love.filesystem.getInfo(file);
 		if info.type == "file" then
-			if StringUtils.fileExtension(file) == "lua" then
-				local stripped = StringUtils.stripFileExtension(file);
-				action(stripped);
+			if not pattern or file:match(pattern) then
+				table.insert(files, file);
 			end
 		elseif info.type == "directory" then
-			forEachLuaFile(file, action);
+			browse(file, files, pattern);
 		end
 	end
 end
 
-Content.requireAll = function(self, path)
-	forEachLuaFile(path, require)
-end
-
-Content.unrequireAll = function(self, path)
-	forEachLuaFile(path, function(fileName)
-		package.loaded[fileName] = nil;
-	end)
+Content.listAllFiles = function(self, root, pattern)
+	local files = {};
+	browse(root, files, pattern);
+	return files;
 end
 
 return Content;

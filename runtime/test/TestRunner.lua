@@ -34,7 +34,7 @@ TestRunner.add = function(self, name, optionsOrBody, body)
 	assert(type(test.body) == "function");
 
 	local source = debug.getinfo(3).source;
-	source = source:gsub(CRYSTAL_ROOT, "");
+	source = source:gsub(CRYSTAL_RUNTIME, "");
 	source = source:gsub("^[^%w]+", "");
 	if not self._tests[source] then
 		self._tests[source] = {};

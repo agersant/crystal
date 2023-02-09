@@ -6,34 +6,49 @@ local tail = pathChunks[#pathChunks];
 if tail == "init" or tail == "init.lua" then
 	table.remove(pathChunks, #pathChunks);
 end
+local crystalRuntime = table.concat(pathChunks, "/");
+table.remove(pathChunks, #pathChunks);
 local crystalRoot = table.concat(pathChunks, "/");
-package.path      = package.path .. ";" .. crystalRoot .. "/?.lua";
+
+-- TODO may or may not worked in fused build
+package.path      = package.path .. ";" .. crystalRuntime .. "/?.lua";
 
 CRYSTAL_CONTEXT   = "self";
 CRYSTAL_ROOT      = crystalRoot;
+CRYSTAL_RUNTIME   = crystalRuntime;
 
 require("utils/OOP");
 
-crystal          = {};
+crystal           = {};
 
-local testRunner = require("test/TestRunner"):new();
-crystal.test     = {
+local testRunner  = require("test/TestRunner"):new();
+crystal.test      = {
 	add = function(...)
 		testRunner:add(...);
 	end,
 };
 
-local Features   = require("dev/Features");
+local Features    = require("dev/Features");
+local Content     = require("resources/Content");
+local StringUtils = require("utils/StringUtils");
+local TableUtils  = require("utils/TableUtils");
 
-LOG              = require("dev/Log"):new();
-TERMINAL         = require("dev/cli/Terminal"):new();
-LIVE_TUNE        = require("dev/constants/LiveTune"):new();
-CONSTANTS        = require("dev/constants/Constants"):new(TERMINAL, LIVE_TUNE);
-VIEWPORT         = require("graphics/Viewport"):new();
-FONTS            = require("resources/Fonts"):new({});
-ASSETS           = require("resources/Assets"):new();
-ASSETS           = require("resources/Assets"):new();
-INPUT            = require("input/Input"):new(8);
+local conf        = {
+	assetsDirectory = nil,
+};
+crystal.configure = function(c)
+	TableUtils.merge(conf, c);
+end
+
+LOG               = require("dev/Log"):new();
+TERMINAL          = require("dev/cli/Terminal"):new();
+LIVE_TUNE         = require("dev/constants/LiveTune"):new();
+CONSTANTS         = require("dev/constants/Constants"):new(TERMINAL, LIVE_TUNE);
+VIEWPORT          = require("graphics/Viewport"):new();
+FONTS             = require("resources/Fonts"):new({});
+ASSETS            = require("resources/Assets"):new();
+ASSETS            = require("resources/Assets"):new();
+INPUT             = require("input/Input"):new(8);
 
 CONSTANTS:define("Time Scale", 1.0, { minValue = 0.0, maxValue = 5.0 });
 
@@ -65,11 +80,16 @@ love.load = function()
 	-- local Fonts = require("resources/Fonts");
 	-- self._globals.FONTS = Fonts:new(game.fonts);
 
-	-- TODO figure out how much to load on game startup
 	CRYSTAL_CONTEXT = "game";
-	-- for _, path in ipairs(self._globals.GAME.sourceDirectories) do
-	-- 	Content:requireAll(path);
-	-- end
+	-- TODO may or may not worked in fused build
+	for _, path in ipairs(Content:listAllFiles("", "%.lua$")) do
+		local isCrystal = path:match("^" .. CRYSTAL_ROOT);
+		local isAsset = conf.assetsDirectory and path:match("^" .. conf.assetsDirectory);
+		if not isCrystal and not isAsset then
+			print(path);
+			require(StringUtils.stripFileExtension(path));
+		end
+	end
 end
 
 love.update = function(dt)

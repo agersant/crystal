@@ -17,7 +17,6 @@ TableUtils.shallowCopy = function(t)
 end
 
 TableUtils.serialize = function(t)
-
 	local refCounts = {};
 	local verifyRefs;
 	verifyRefs = function(t)
@@ -92,6 +91,12 @@ TableUtils.equals = function(t, u)
 		end
 	end
 	return true;
+end
+
+TableUtils.merge = function(recipient, otherTable)
+	for k, v in pairs(otherTable) do
+		recipient[k] = v;
+	end
 end
 
 return TableUtils;
