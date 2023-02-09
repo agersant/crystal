@@ -1,6 +1,6 @@
 # Crystal 0.1.0
 
-- [ ] Extract `arpg` into a new repository
+- [x] Extract `arpg` into a new repository
 - [ ] Sumneko diagnostics enabled and cleaned up
 - [ ] Getting Started instructions in readme
 - [ ] Engine release process
