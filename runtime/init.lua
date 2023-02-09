@@ -200,8 +200,7 @@ if Features.tests then
 
 			collectgarbage("collect");
 
-			return 0;
-			-- return success and 0 or 1; -- TODO re-enable
+			return success and 0 or 1;
 		end
 	end
 end
