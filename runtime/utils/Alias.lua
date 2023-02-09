@@ -6,7 +6,6 @@ local Alias = {};
 local search;
 
 if not Features.slowAssertions then
-
 	search = function(originalIndex)
 		return function(from, key)
 			local value = originalIndex[key];
@@ -25,9 +24,7 @@ if not Features.slowAssertions then
 			end
 		end
 	end
-
 else
-
 	search = function(originalIndex)
 		return function(from, key)
 			local value = originalIndex[key];
@@ -56,7 +53,7 @@ else
 			local numResults = TableUtils.countKeys(results);
 			if numResults > 1 then
 				local errorMessage = string.format("Ambiguous method call, %s.%s can resolve to any of the followings:",
-					from:getClassName(), key);
+						from:getClassName(), key);
 				for _, result in ipairs(results) do
 					errorMessage = errorMessage .. string.format("\n\t- %s.%s", result.alias:getClassName(), key);
 				end
@@ -68,7 +65,6 @@ else
 			end
 		end
 	end
-
 end
 
 Alias.add = function(self, from, to)
@@ -88,5 +84,115 @@ Alias.remove = function(self, from, to)
 	assert(from.__aliases[to]);
 	from.__aliases[to] = nil;
 end
+
+--#region Tests
+
+
+crystal.test.add("Basic usage", function()
+	local From = Class:test("From");
+	local To = Class:test("To");
+	To.method = function()
+		return true;
+	end
+	local from = From:new();
+	local to = To:new();
+	assert(not from.method);
+	Alias:add(from, to);
+	assert(from.method());
+end);
+
+crystal.test.add("Transitive", function()
+	local From = Class:test("From");
+	local Middle = Class:test("Middle");
+	local To = Class:test("To");
+	To.method = function()
+		return true;
+	end
+	local from = From:new();
+	local middle = Middle:new();
+	local to = To:new();
+	Alias:add(from, middle);
+	Alias:add(middle, to);
+	assert(from.method());
+end);
+
+crystal.test.add("Works for inherited methods", function()
+	local From = Class:test("From");
+	local Base = Class:test("Base");
+	local To = Class:test("To", Base);
+	Base.method = function()
+		return true;
+	end
+	local from = From:new();
+	local to = To:new();
+	assert(not from.method);
+	Alias:add(from, to);
+	assert(from.method());
+end);
+
+-- TODO consider supporting this (doesnt break existing tests outside of this one) and also writing to existing aliased variables
+crystal.test.add("Does not alias variables", function()
+	local From = Class:test("From");
+	local To = Class:test("To");
+	local from = From:new();
+	local to = To:new();
+	to.member = true;
+	Alias:add(from, to);
+	assert(not from.member);
+end);
+
+crystal.test.add("Overrides self parameter", function()
+	local From = Class:test("From");
+	local To = Class:test("To");
+	To.getMyClass = function(self)
+		return self:getClass();
+	end
+	local from = From:new();
+	local to = To:new();
+	Alias:add(from, to);
+	assert(from:getMyClass() == To);
+end);
+
+crystal.test.add("Errors on ambiguous call", function()
+	local From = Class:test("From");
+	local ToA = Class:test("ToA");
+	local ToB = Class:test("ToB");
+	ToA.example = function()
+	end
+	ToB.example = function()
+	end
+	local from = From:new();
+	local toA = ToA:new();
+	local toB = ToB:new();
+	Alias:add(from, toA);
+	Alias:add(from, toB);
+
+	local success, errorMessage = pcall(function()
+			from:example();
+		end);
+	assert(not success);
+	assert(#errorMessage > 1);
+end);
+
+crystal.test.add("Shared base methods are not ambiguous", function()
+	local From = Class:test("From");
+	local Base = Class:test("Base");
+	local DerivedA = Class:test("DerivedA", Base);
+	local DerivedB = Class:test("DerivedB", Base);
+	Base.example = function()
+	end
+	local from = From:new();
+	local derivedA = DerivedA:new();
+	local derivedB = DerivedB:new();
+	Alias:add(from, derivedA);
+	Alias:add(from, derivedB);
+
+	local success = pcall(function()
+			from:example();
+		end);
+	assert(success);
+end);
+
+--#endregion
 
 return Alias;

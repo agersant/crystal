@@ -64,4 +64,73 @@ StringUtils.mergePaths = function(a, b)
 	return out;
 end
 
+--#region Tests
+
+
+crystal.test.add("Trim before", function()
+	assert("oink" == StringUtils.trim(" 	 	  	oink"));
+end);
+
+crystal.test.add("Trim after", function()
+	assert("oink" == StringUtils.trim("oink  	 	"));
+end);
+
+crystal.test.add("Trim preserves spaces in the middle", function()
+	assert("oink 	gruik" == StringUtils.trim(" 	oink 	gruik	 "));
+end);
+
+crystal.test.add("Remove whitespace removes spaces", function()
+	assert(StringUtils.removeWhitespace("  oink  gruik  ") == "oinkgruik");
+end);
+
+crystal.test.add("Remove whitespace removes tabs", function()
+	assert(StringUtils.removeWhitespace("	oink	gruik	") == "oinkgruik");
+end);
+
+crystal.test.add("Valid file extension", function()
+	assert("png" == StringUtils.fileExtension("gruik.png"));
+end);
+
+crystal.test.add("Valid file extension relative path", function()
+	assert("png" == StringUtils.fileExtension("../gruik.png"));
+end);
+
+crystal.test.add("Bad file extension", function()
+	assert(nil == StringUtils.fileExtension("gruikpng"));
+end);
+
+crystal.test.add("Strip file extension", function()
+	assert("gruik" == StringUtils.stripFileExtension("gruik.png"));
+end);
+
+crystal.test.add("Strip file extension relative path", function()
+	assert("../gruik" == StringUtils.stripFileExtension("../gruik.png"));
+end);
+
+crystal.test.add("Strip file from path", function()
+	assert("aa/b/c" == StringUtils.stripFileFromPath("aa/b\\c/gruik.png"));
+end);
+
+crystal.test.add("Strip file from path without extension", function()
+	assert("aa/b/c" == StringUtils.stripFileFromPath("aa/b\\c/gruikpng"));
+end);
+
+crystal.test.add("Merge with empty", function()
+	assert("a/b/c" == StringUtils.mergePaths("a/b/c", ""));
+end);
+
+crystal.test.add("Merge from empty", function()
+	assert("a/b/c" == StringUtils.mergePaths("", "a/b/c"));
+end);
+
+crystal.test.add("Merge simple", function()
+	assert("a/b/c" == StringUtils.mergePaths("a/b", "c"));
+end);
+
+crystal.test.add("Merge with parent directory", function()
+	assert("a/c" == StringUtils.mergePaths("a/b", "../c"));
+end);
+
+--#endregion
+
 return StringUtils;

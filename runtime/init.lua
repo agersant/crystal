@@ -20,8 +20,6 @@ CRYSTAL_CONTEXT   = "self";
 CRYSTAL_ROOT      = crystalRoot;
 CRYSTAL_RUNTIME   = crystalRuntime;
 
-require("utils/OOP");
-
 crystal           = {};
 
 local testRunner  = require("test/TestRunner"):new();
@@ -31,6 +29,7 @@ crystal.test      = {
 	end,
 };
 
+require("utils/OOP");
 local Features    = require("dev/Features");
 local Content     = require("resources/Content");
 local StringUtils = require("utils/StringUtils");

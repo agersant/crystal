@@ -1,12 +1,14 @@
 local Features = require("dev/Features");
 local MockGraphics = require("dev/mock/love/graphics");
 
-local TestRunner = Class("TestRunner");
+local TestRunner = {};
 
-TestRunner.init = function(self)
+TestRunner.new = function(self)
+	local self = setmetatable({}, { __index = self });
 	self._tests = {};
 	self._currentTest = nil;
 	self._resolution = {};
+	return self;
 end
 
 TestRunner.add = function(self, name, optionsOrBody, body)
