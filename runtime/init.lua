@@ -88,16 +88,21 @@ love.load = function()
 	liveTuneOverlay = require("dev/constants/LiveTuneOverlay"):new(CONSTANTS, LIVE_TUNE);
 
 	CRYSTAL_CONTEXT = "game";
+	requireGameSource();
+
+	PERSISTENCE = require("persistence/Persistence"):new(Class:getByName(crystal.conf.saveDataClass));
+end
+
+local requireGameSource = function()
 	-- TODO may or may not worked in fused build
 	for _, path in ipairs(Content:listAllFiles("", "%.lua$")) do
+		local isMain = path:match("main%.lua");
 		local isCrystal = path:match("^" .. CRYSTAL_ROOT);
 		local isAsset = crystal.conf.assetsDirectory and path:match("^" .. crystal.conf.assetsDirectory);
-		if not isCrystal and not isAsset then
+		if not isCrystal and not isAsset and not isMain then
 			require(StringUtils.stripFileExtension(path));
 		end
 	end
-
-	PERSISTENCE = require("persistence/Persistence"):new(Class:getByName(crystal.conf.saveDataClass));
 end
 
 love.update = function(dt)
@@ -177,6 +182,8 @@ if Features.tests then
 	end
 
 	LOG:setVerbosity(LOG.Levels.FATAL);
+	CRYSTAL_CONTEXT = "game";
+	requireGameSource();
 	local success = testRunner:runAll();
 
 	if luacov then
