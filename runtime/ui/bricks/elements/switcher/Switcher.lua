@@ -148,7 +148,7 @@ crystal.test.add("Shows first child by default", { gfx = "mock" }, function()
 	switcher:draw();
 	assert(drawnElements[a]);
 	assert(not drawnElements[b]);
-end
+end);
 
 crystal.test.add("Can snap to different child", { gfx = "mock" }, function()
 	local drawnElements = {};
@@ -166,7 +166,7 @@ crystal.test.add("Can snap to different child", { gfx = "mock" }, function()
 	switcher:draw();
 	assert(not drawnElements[a]);
 	assert(drawnElements[b]);
-end
+end);
 
 crystal.test.add("Supports dynamic or bounding box sizing", function()
 	for _, test in pairs({
@@ -201,7 +201,7 @@ crystal.test.add("Can transition to a different child", { gfx = "mock" }, functi
 	switcher:draw();
 	assert(not drawnElements[a]);
 	assert(drawnElements[b]);
-end
+end);
 
 crystal.test.add("Applies transition sizing and draw function during transition", { gfx = "mock" }, function()
 	local transition = TestTransition:new();
@@ -216,7 +216,7 @@ crystal.test.add("Applies transition sizing and draw function during transition"
 
 	switcher:draw();
 	assert(transition.drawnAtProgress == 0.5);
-end
+end);
 
 crystal.test.add("Can interrupt a transition by setting active child", { gfx = "mock" }, function()
 	local transition = TestTransition:new();
@@ -231,7 +231,7 @@ crystal.test.add("Can interrupt a transition by setting active child", { gfx = "
 
 	switcher:jumpToChild(b);
 	assert(transition.drawnAtProgress == nil);
-end
+end);
 
 crystal.test.add("Can interrupt a transition by starting another one", { gfx = "mock" }, function()
 	local transition = TestTransition:new();
@@ -249,7 +249,7 @@ crystal.test.add("Can interrupt a transition by starting another one", { gfx = "
 	switcher:draw();
 
 	assert(transition.drawnAtProgress == 0.2);
-end
+end);
 
 crystal.test.add("Ignores transition to current child", { gfx = "mock" }, function()
 	local transition = TestTransition:new();
@@ -267,7 +267,7 @@ crystal.test.add("Ignores transition to current child", { gfx = "mock" }, functi
 	switcher:draw();
 
 	assert(transition.drawnAtProgress == 0.7);
-end
+end);
 
 --#endregion
 

@@ -176,6 +176,8 @@ end
 
 --#region Tests
 
+local Terminal = require("dev/cli/Terminal");
+
 crystal.test.add("Can toggle console", { gfx = "mock" }, function()
 	local console = Console:new(Terminal:new());
 	local wasActive = console:isActive();

@@ -80,15 +80,6 @@ ENGINE.loadScene = function(self, scene)
 	nextScene = scene;
 end
 
-love.load = function()
-	love.keyboard.setTextInput(false);
-	fpsCounter      = require("dev/FPSCounter"):new();
-	console         = require("dev/cli/Console"):new(TERMINAL);
-	liveTuneOverlay = require("dev/constants/LiveTuneOverlay"):new(CONSTANTS, LIVE_TUNE);
-	PERSISTENCE     = require("persistence/Persistence"):new(Class:getByName(crystal.conf.saveDataClass));
-
-	requireGameSource();
-end
 
 local requireGameSource = function()
 	CRYSTAL_CONTEXT = "game";
@@ -101,6 +92,17 @@ local requireGameSource = function()
 			require(StringUtils.stripFileExtension(path));
 		end
 	end
+end
+
+love.load = function()
+	love.keyboard.setTextInput(false);
+	fpsCounter      = require("dev/FPSCounter"):new();
+	console         = require("dev/cli/Console"):new(TERMINAL);
+	liveTuneOverlay = require("dev/constants/LiveTuneOverlay"):new(CONSTANTS, LIVE_TUNE);
+
+	requireGameSource();
+
+	PERSISTENCE = require("persistence/Persistence"):new(Class:getByName(crystal.conf.saveDataClass));
 end
 
 love.update = function(dt)
@@ -172,27 +174,27 @@ love.quit = function()
 end
 
 if Features.tests then
-	local luacov;
-	if Features.codeCoverage then
-		luacov = require("external/luacov/runner");
-		local luacovExcludes = { "assets/.*$", "^main$", "Test", "test" };
-		luacov.init({ runreport = true, exclude = luacovExcludes });
-	end
-
-	LOG:setVerbosity(LOG.Levels.FATAL);
-	requireGameSource();
-	local success = testRunner:runAll();
-
-	if luacov then
-		luacov.shutdown();
-	end
-
-	love.quit();
-
-	local exitCode = success and 0 or 1;
 	love.run = function()
 		return function()
-			return exitCode;
+			love.load();
+
+			local luacov;
+			if Features.codeCoverage then
+				luacov = require("external/luacov/runner");
+				local luacovExcludes = { "assets/.*$", "^main$", "Test", "test" };
+				luacov.init({ runreport = true, exclude = luacovExcludes });
+			end
+
+			LOG:setVerbosity(LOG.Levels.FATAL);
+			local success = testRunner:runAll();
+
+			if luacov then
+				luacov.shutdown();
+			end
+
+			love.quit();
+
+			return success and 0 or 1;
 		end
 	end
 end

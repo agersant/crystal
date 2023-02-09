@@ -244,6 +244,8 @@ end);
 
 --#region Tests
 
+local Terminal = require("dev/cli/Terminal");
+
 crystal.test.add("Overlay lifecycle", { gfx = "mock" }, function()
 	local testCases = {
 		{ deviceList = {},                           currentDevice = nil,         tuneValue = false },
