@@ -35,7 +35,6 @@ Fonts.get = function(self, name, size)
 	local fontFile = pickFont(self, name);
 	self._fontObjects[name][size] = love.graphics.newFont(fontFile, size);
 	self._fontObjects[name][size]:setFilter("nearest");
-	LOG:info("Registered font " .. fontFile .. " at size " .. size);
 	return self._fontObjects[name][size];
 end
 
