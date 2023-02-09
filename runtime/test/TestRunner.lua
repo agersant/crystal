@@ -1,4 +1,5 @@
 local Features = require("dev/Features");
+local MockGraphics = require("dev/mock/love/graphics");
 
 local TestRunner = Class("TestRunner");
 
@@ -42,6 +43,27 @@ TestRunner.add = function(self, name, optionsOrBody, body)
 	table.insert(self._tests[source], test);
 end
 
+TestRunner.resetGlobalState = function(self, test)
+	ASSETS:unloadAll();
+
+	test.resolution = test.resolution or { 200, 200 };
+	VIEWPORT:setRenderSize(test.resolution[1], test.resolution[2]);
+
+	if test.gfx == "mock" then
+		MockGraphics:enable();
+	else
+		MockGraphics:disable();
+		if test.gfx == "on" then
+			if test.resolution[1] ~= self.resolution[1] or test.resolution[2] ~= self.resolution[2] then
+				VIEWPORT:setWindowSize(test.resolution[1], test.resolution[2]);
+				self.resolution = test.resolution;
+			end
+			love.graphics.reset();
+			love.graphics.clear(love.graphics.getBackgroundColor());
+		end
+	end
+end
+
 TestRunner.runAll = function(self)
 	local numSuccess = 0;
 	local numTests = 0;
@@ -60,8 +82,7 @@ TestRunner.runAll = function(self)
 			assert(type(test.name) == "string");
 			assert(type(test.body) == "function");
 
-			-- TODO
-			-- self:resetGlobalState(test);
+			self:resetGlobalState(test);
 
 			self._currentTest = test;
 			local traceback = nil;
