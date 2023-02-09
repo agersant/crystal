@@ -183,6 +183,144 @@ end
 
 --#region Tests
 
+crystal.test.add("Run command", function()
+	local terminal = Terminal:new();
+	local sentinel = 0;
+	terminal:addCommand("testCommand", function()
+		sentinel = 1;
+	end);
+	terminal:textInput("testCommand");
+	terminal:keyPressed("return");
+	assert(sentinel == 1);
+end);
+
+crystal.test.add("Validates argument count", function()
+	local terminal = Terminal:new();
+	local sentinel = false
+	terminal:addCommand("testCommand value:number", function(value)
+		sentinel = true;
+	end);
+	terminal:textInput("testCommand");
+	terminal:keyPressed("return");
+	assert(not sentinel);
+end);
+
+crystal.test.add("Typechecks arguments", function()
+	local terminal = Terminal:new();
+	local sentinel = false
+	terminal:addCommand("testCommand value:number", function()
+		sentinel = true;
+	end);
+	terminal:textInput("testCommand badArgument");
+	terminal:keyPressed("return");
+	assert(not sentinel);
+end);
+
+crystal.test.add("Number argument", function()
+	local terminal = Terminal:new();
+	local sentinel = 0;
+	terminal:addCommand("testCommand value:number", function(value)
+		sentinel = value;
+	end);
+	terminal:textInput("testCommand 2");
+	terminal:keyPressed("return");
+	assert(sentinel == 2);
+end);
+
+crystal.test.add("String argument", function()
+	local terminal = Terminal:new();
+	local sentinel = "";
+	terminal:addCommand("testCommand value:string", function(value)
+		sentinel = value;
+	end);
+	terminal:textInput("testCommand oink");
+	terminal:keyPressed("return");
+	assert(sentinel == "oink");
+end);
+
+crystal.test.add("Execute from code", function()
+	local terminal = Terminal:new();
+	local sentinel = "";
+	terminal:addCommand("testCommand value:string", function(value)
+		sentinel = value;
+	end);
+	terminal:run("testCommand oink");
+	assert(sentinel == "oink");
+end);
+
+crystal.test.add("Can navigate history", function()
+	local terminal = Terminal:new();
+
+	local sentinel = "";
+	terminal:addCommand("testCommand value:string", function(value)
+		sentinel = value;
+	end);
+
+	terminal:textInput("testCommand 1");
+	terminal:keyPressed("return");
+	terminal:textInput("testCommand 2");
+	terminal:keyPressed("return");
+	terminal:textInput("testCommand 3");
+	terminal:keyPressed("return");
+	assert(sentinel == "3");
+
+	terminal:keyPressed("up");
+	terminal:keyPressed("up");
+	terminal:keyPressed("up");
+	terminal:keyPressed("down");
+	terminal:keyPressed("return");
+	assert(sentinel == "2");
+end);
+
+crystal.test.add("History size is capped", function()
+	local terminal = Terminal:new();
+
+	local sentinel = "";
+	terminal:addCommand("testCommand value:string", function(value)
+		sentinel = value;
+	end);
+
+	for i = 1, 150 do
+		terminal:textInput("testCommand " .. i);
+		terminal:keyPressed("return");
+	end
+
+	for i = 1, 200 do
+		terminal:keyPressed("up");
+	end
+	terminal:keyPressed("return");
+end);
+
+crystal.test.add("Performs autocomplete on TAB", function()
+	local terminal = Terminal:new();
+
+	local sentinel = "";
+	terminal:addCommand("testCommand", function()
+		sentinel = "oink";
+	end);
+	terminal:textInput("testcomm");
+	terminal:keyPressed("tab");
+	terminal:keyPressed("return");
+	assert(sentinel == "oink");
+end);
+
+crystal.test.add("Can navigate autocomplete suggestions", function()
+	local terminal = Terminal:new();
+
+	local sentinel;
+	for i = 1, 3 do
+		terminal:addCommand("testCommand" .. i, function()
+			sentinel = i;
+		end);
+	end
+	terminal:textInput("test");
+	terminal:keyPressed("tab");
+	terminal:keyPressed("tab");
+	terminal:keyPressed("tab");
+	terminal:keyPressed("return");
+	assert(sentinel == 3);
+end);
+
 crystal.test.add("Autocomplete updates after non-text input", function()
 	local terminal = Terminal:new();
 	local sentinel;

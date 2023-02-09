@@ -148,7 +148,8 @@ Console.draw = function(self)
 		local autoCompleteBoxWidth = suggestionsWidth + 2 * autoCompletePaddingX;
 		local autoCompleteBoxHeight = #autoComplete.lines * font:getHeight() + 2 * autoCompletePaddingY;
 		love.graphics.setColor(Colors.greyA);
-		love.graphics.rectangle("fill", autoCompleteBoxX, autoCompleteBoxY, autoCompleteBoxWidth, autoCompleteBoxHeight, 2, 2);
+		love.graphics.rectangle("fill", autoCompleteBoxX, autoCompleteBoxY, autoCompleteBoxWidth, autoCompleteBoxHeight,
+			2, 2);
 
 		-- Draw autocomplete arrow
 		love.graphics.polygon("fill", autoCompleteBoxX + autoCompleteArrowMargin, autoCompleteBoxY,
@@ -171,7 +172,35 @@ Console.draw = function(self)
 			love.graphics.print(suggestion.text, suggestionX, suggestionY);
 		end
 	end
-
 end
+
+--#region Tests
+
+crystal.test.add("Can toggle console", { gfx = "mock" }, function()
+	local console = Console:new(Terminal:new());
+	local wasActive = console:isActive();
+	console:toggle();
+	assert(console:isActive() ~= wasActive);
+	console:toggle();
+	assert(console:isActive() == wasActive);
+end);
+
+crystal.test.add("Can draw console", { gfx = "mock" }, function()
+	local terminal = Terminal:new();
+	terminal:addCommand("example arg1:string arg2:number", function()
+	end);
+
+	local console = Console:new(terminal);
+	console:enable();
+
+	local command = "example foo bar";
+	for i = 1, #command do
+		local char = command:sub(i, i)
+		console:textInput(char);
+		console:draw();
+	end
+end);
+
+--#endregion
 
 return Console;

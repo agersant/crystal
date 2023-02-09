@@ -131,4 +131,119 @@ TERMINAL:addCommand("liveTune constant:string knob:number", function(name, knobI
 	CONSTANTS:mapToKnob(name, knobIndex);
 end)
 
+--#region Tests
+
+local Terminal = require("dev/cli/Terminal");
+local LiveTune = require("dev/constants/LiveTune");
+local TableUtils = require("utils/TableUtils");
+
+crystal.test.add("Can read initial value", function()
+	local constants = Constants:new(Terminal:new(), LiveTune:new());
+	constants:define("piggy", "oink");
+	assert(constants:get("piggy") == "oink");
+end);
+
+crystal.test.add("Ignores repeated registrations", function()
+	local constants = Constants:new(Terminal:new(), LiveTune:new());
+	constants:define("piggy", "oink");
+	constants:define("piggy", "meow");
+	assert(constants:get("piggy") == "oink");
+end);
+
+crystal.test.add("Can read/write values", function()
+	local constants = Constants:new(Terminal:new(), LiveTune:new());
+	constants:define("piggy", "oink");
+	constants:set("piggy", "oinque");
+	assert(constants:get("piggy") == "oinque");
+end);
+
+crystal.test.add("Is case insensitive", function()
+	local constants = Constants:new(Terminal:new(), LiveTune:new());
+	constants:define("piggy", "oink");
+	assert(constants:get("PIGGY") == "oink");
+end);
+
+crystal.test.add("Ignores whitespace in names", function()
+	local constants = Constants:new(Terminal:new(), LiveTune:new());
+	constants:define("piggy pig", "oink");
+	assert(constants:get("piggypig") == "oink");
+end);
+
+crystal.test.add("Clamps numeric constants", function()
+	local constants = Constants:new(Terminal:new(), LiveTune:new());
+	constants:define("foo", 5, { minValue = 0, maxValue = 10 });
+	constants:set("foo", 100);
+	assert(constants:get("foo") == 10);
+	constants:set("foo", -1);
+	assert(constants:get("foo") == 0);
+end);
+
+crystal.test.add("Enforces consistent types", function()
+	local constants = Constants:new(Terminal:new(), LiveTune:new());
+	constants:define("piggy", "oink");
+	local success, errorMessage = pcall(function()
+			constants:set("piggy", 0);
+		end);
+	assert(not success);
+	assert(#errorMessage > 1);
+end);
+
+crystal.test.add("Can map to knob", function()
+	local constants = Constants:new(Terminal:new(), LiveTune:new());
+	constants:define("piggy", true);
+	constants:mapToKnob("piggy", 2);
+	constants:mapToKnob("piggy", 3);
+end);
+
+crystal.test.add("Has a global API", function()
+	assert(CONSTANTS);
+end);
+
+crystal.test.add("Can set value via CLI", function()
+	local terminal = Terminal:new();
+	local constants = Constants:new(terminal, LiveTune:new());
+	constants:define("piggy", "oink");
+	terminal:run("piggy oinque");
+	assert(constants:get("piggy") == "oinque");
+end);
+
+crystal.test.add("Can map to livetune knobs", function()
+	local liveTune = LiveTune.Mock:new();
+	local constants = Constants:new(Terminal:new(), liveTune);
+	constants:define("piggy", 0, { minValue = 0, maxValue = 100 });
+	assert(constants:get("piggy") == 0);
+	constants:mapToKnob("piggy", 1);
+	liveTune.values[1] = 50;
+	constants:update();
+	assert(constants:get("piggy") == 50);
+end);
+
+crystal.test.add("Can list constants mapped to livetune knobs", function()
+	local liveTune = LiveTune.Mock:new();
+	local constants = Constants:new(Terminal:new(), liveTune);
+	constants:define("piggy", 0, { minValue = 0, maxValue = 100 });
+	constants:define("donkey", 0, { minValue = 0, maxValue = 100 });
+	constants:mapToKnob("donkey", 8);
+	constants:mapToKnob("piggy", 1);
+	local mapped = constants:getMappedKnobs();
+	assert(#mapped == 2);
+	assert(TableUtils.equals(mapped[1], { knobIndex = 1, constantName = "piggy", minValue = 0, maxValue = 100 }));
+	assert(TableUtils.equals(mapped[2], { knobIndex = 8, constantName = "donkey", minValue = 0, maxValue = 100 }));
+end);
+
+crystal.test.add("Can re-assign knob to a different constant", function()
+	local liveTune = LiveTune.Mock:new();
+	local constants = Constants:new(Terminal:new(), liveTune);
+	constants:define("piggy", 0, { minValue = 0, maxValue = 100 });
+	constants:define("donkey", 0, { minValue = 0, maxValue = 100 });
+	constants:mapToKnob("piggy", 1);
+	constants:mapToKnob("donkey", 1);
+	liveTune.values[1] = 50;
+	constants:update();
+	assert(constants:get("piggy") == 0);
+	assert(constants:get("donkey") == 50);
+end);
+
+--#endregion
+
 return Constants;

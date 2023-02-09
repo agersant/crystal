@@ -54,7 +54,8 @@ KnobDonut.draw = function(self)
 	local width, height = self:getSize();
 	love.graphics.setLineWidth(self._thickness);
 	love.graphics.setColor(colors.knobInactive);
-	love.graphics.arc("line", "open", width / 2, height / 2, self._radius, self._arcStart, self._arcEnd, self._numSegments);
+	love.graphics.arc("line", "open", width / 2, height / 2, self._radius, self._arcStart, self._arcEnd,
+		self._numSegments);
 	love.graphics.setColor(colors.knobActive);
 	love.graphics.arc("line", "open", width / 2, height / 2, self._radius,
 		self._arcEnd + self.value * (self._arcStart - self._arcEnd), self._arcEnd, self._numSegments);
@@ -93,7 +94,7 @@ KnobInfo.init = function(self)
 	self._donut = donutContainer:addChild(KnobDonut:new());
 	self._knobIndexText = donutContainer:addChild(Text:new());
 	self._knobIndexText:setAlignment("center", "bottom");
-	self._knobIndexText:setBottomPadding(-6);
+	self._knobIndexText:setBottomPadding( -6);
 	self._knobIndexText:setColor(colors.knobIndex);
 	self._knobIndexText:setFont(FONTS:get("devBold", 12));
 
@@ -166,7 +167,6 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 end
 
 LiveTuneOverlay.update = function(self, dt)
-
 	local mappedKnobs = self._constants:getMappedKnobs();
 	if #mappedKnobs > 0 and self._previousNumMappedKnobs == 0 then
 		drawOverlay = true;
@@ -197,7 +197,6 @@ LiveTuneOverlay.update = function(self, dt)
 			end
 			self._helpText:setContent(text);
 		end
-
 	elseif #mappedKnobs == 0 then
 		self._content:jumpToChild(self._helpText);
 		self._helpText:setContent(
@@ -242,5 +241,34 @@ end);
 TERMINAL:addCommand("hideLiveTuneOverlay", function()
 	drawOverlay = false;
 end);
+
+--#region Tests
+
+crystal.test.add("Overlay lifecycle", { gfx = "mock" }, function()
+	local testCases = {
+		{ deviceList = {},                           currentDevice = nil,         tuneValue = false },
+		{ deviceList = { "example 1", "example 2" }, currentDevice = nil,         tuneValue = false },
+		{ deviceList = { "example 1", "example 2" }, currentDevice = "example 1", tuneValue = false },
+		{ deviceList = { "example 1", "example 2" }, currentDevice = "example 1", tuneValue = true },
+	};
+
+	local liveTune = LiveTune.Mock:new();
+	local constants = Constants:new(Terminal:new(), liveTune);
+	local overlay = LiveTuneOverlay:new(constants, liveTune);
+	constants:define("testConstant", 0, { minValue = -10, maxValue = 10 });
+
+	for _, testCase in ipairs(testCases) do
+		liveTune.deviceList = testCase.deviceList;
+		liveTune.currentDevice = testCase.currentDevice;
+		if testCase.tuneValue then
+			constants:mapToKnob("testConstant", 1);
+		end
+		overlay:update(0);
+		overlay:draw();
+	end
+end);
+
+--#endregion
+
 
 return LiveTuneOverlay;
