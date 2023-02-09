@@ -53,4 +53,20 @@ TERMINAL:addCommand("hideCameraOverlay", function()
 	drawCameraOverlay = false;
 end);
 
+--#region Tests
+
+crystal.test.add("Draws camera overlay", { gfx = "on" }, function(context)
+	local MapScene = require("mapscene/MapScene");
+	local scene = MapScene:new("test-data/empty_map.lua");
+
+	TERMINAL:run("showCameraOverlay");
+	scene:update(0);
+	scene:draw();
+	TERMINAL:run("hideCameraOverlay");
+
+	context:compareFrame("test-data/TestCameraSystem/draws-camera-overlay.png");
+end);
+
+--#endregion
+
 return CameraSystem;

@@ -8,8 +8,7 @@ local Weakbox = require("mapscene/physics/Weakbox");
 
 local tests = {};
 
-tests[#tests + 1] = { name = "Draws physics objects", gfx = "on" };
-tests[#tests].body = function(context)
+crystal.test.add("Draws physics objects", { gfx = "on" }, function(context)
 	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local entityA = scene:spawn(Entity);
@@ -40,10 +39,9 @@ tests[#tests].body = function(context)
 
 	-- TODO Test disabled due to https://github.com/love2d/love/issues/1618
 	-- context:compareFrame("test-data/TestDebugDraw/draws-physics-objects.png");
-end
+end);
 
-tests[#tests + 1] = { name = "Draw navigation mesh", gfx = "on" };
-tests[#tests].body = function(context)
+crystal.test.add("Draw navigation mesh", { gfx = "on" }, function(context)
 	local scene = MapScene:new("test-data/empty_map.lua");
 
 	TERMINAL:run("showNavmeshOverlay");
@@ -53,6 +51,6 @@ tests[#tests].body = function(context)
 
 	-- TODO Test disabled due to https://github.com/love2d/love/issues/1618
 	-- context:compareFrame("test-data/TestDebugDraw/draws-navigation-mesh.png");
-end
+end);
 
 return tests;

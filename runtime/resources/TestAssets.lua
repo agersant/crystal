@@ -12,8 +12,7 @@ tests[#tests].body = function()
 	assets:unload(mapName);
 end
 
-tests[#tests + 1] = { name = "Load shader", gfx = "on" };
-tests[#tests].body = function()
+crystal.test.add("Load shader", { gfx = "on" }, function()
 	local assets = Assets:new();
 	local shaderPath = "test-data/TestAssets/shader.glsl";
 	assets:load(shaderPath);

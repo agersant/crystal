@@ -191,4 +191,78 @@ TERMINAL:addCommand("spawn className:string", function(className)
 	end
 end);
 
+--#region Tests
+
+local InputDevice = require("input/InputDevice");
+local TableUtils = require("utils/TableUtils");
+
+crystal.test.add("Draws all layers", { gfx = "on" }, function(context)
+	local scene = MapScene:new("test-data/TestMapScene/all_features.lua");
+	scene:draw();
+	context:compareFrame("test-data/TestMapScene/draws-all-layers.png");
+end);
+
+crystal.test.add("Loads entities", { gfx = "mock" }, function()
+	local scene = MapScene:new("test-data/TestMapScene/all_features.lua");
+	local entities = scene:getECS():getAllEntities();
+	assert(TableUtils.countKeys(entities) == 10); -- 8 dynamic tiles + 2 map entities
+end);
+
+crystal.test.add("Can spawn and despawn entities", { gfx = "mock" }, function()
+	local scene = MapScene:new("test-data/empty_map.lua");
+	local Piggy = Class:test("Piggy", Entity);
+	local piggy = scene:spawn(Piggy);
+	scene:update(0);
+	assert(scene:getECS():getAllEntities()[piggy]);
+	scene:despawn(piggy);
+	scene:update(0);
+	assert(not scene:getECS():getAllEntities()[piggy]);
+end);
+
+crystal.test.add("Can use the `spawn` command", { gfx = "mock" }, function()
+	local TestSpawnCommand = Class("TestSpawnCommand", Entity);
+
+	local scene = MapScene:new("test-data/empty_map.lua");
+
+	scene:spawnEntityNearPlayer(TestSpawnCommand);
+	scene:update(0);
+
+	for entity in pairs(scene:getECS():getAllEntities()) do
+		if entity:isInstanceOf(TestSpawnCommand) then
+			return;
+		end
+	end
+	error("Spawned entity not found");
+end);
+
+crystal.test.add("Spawn command puts entity near player", { gfx = "mock" }, function()
+	local TestSpawnCommandProximity = Class("TestSpawnCommandProximity", Entity);
+	TestSpawnCommandProximity.init = function(self, scene)
+		TestSpawnCommandProximity.super.init(self, scene);
+		self:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+	end
+
+	local scene = MapScene:new("test-data/empty_map.lua");
+
+	local player = scene:spawn(Entity);
+	player:addComponent(InputListener:new(InputDevice:new(1)));
+	player:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+	player:setPosition(200, 200);
+	scene:update(0);
+
+	scene:spawnEntityNearPlayer(TestSpawnCommandProximity);
+	scene:update(0);
+
+	for entity in pairs(scene:getECS():getAllEntities()) do
+		if entity:isInstanceOf(TestSpawnCommandProximity) then
+			assert(entity:distanceToEntity(player) < 100);
+			return;
+		end
+	end
+	error("Spawned entity not found");
+end);
+
+--#endregion
+
+
 return MapScene;

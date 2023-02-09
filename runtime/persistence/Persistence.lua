@@ -40,4 +40,50 @@ TERMINAL:addCommand("load fileName:string", function(fileName)
 	PERSISTENCE:getSaveData():load();
 end);
 
+--#region Tests
+
+local BaseSaveData = require("persistence/BaseSaveData");
+
+crystal.test.add("Starts with blank save", function()
+	local persistence = Persistence:new(BaseSaveData);
+	assert(persistence:getSaveData():isInstanceOf(BaseSaveData));
+end);
+
+crystal.test.add("Saves and loads data", function()
+	local foo;
+
+	local SaveData = Class("TestSaveData", BaseSaveData);
+	SaveData.toPOD = function(self)
+		return { foo = self.foo };
+	end;
+	SaveData.fromPOD = function(self, pod)
+		local saveData = SaveData:new();
+		saveData.foo = pod.foo;
+		return saveData;
+	end;
+	SaveData.save = function(self, scene)
+		self.foo = foo;
+	end;
+	SaveData.load = function(self)
+		foo = self.foo;
+	end;
+
+	local persistence = Persistence:new(SaveData);
+
+	foo = "bar";
+	persistence:getSaveData():save(nil);
+	persistence:writeToDisk("test.crystal");
+	foo = "not bar";
+	persistence:loadFromDisk("test.crystal");
+	assert(foo == "not bar");
+	persistence:getSaveData():load();
+	assert(foo == "bar");
+end);
+
+crystal.test.add("Has global API", function()
+	assert(PERSISTENCE);
+end);
+
+--#endregion
+
 return Persistence;

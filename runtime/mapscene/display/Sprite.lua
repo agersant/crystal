@@ -36,4 +36,25 @@ Sprite.draw = function(self)
 	love.graphics.draw(self._frame:getImage(), self._frame:getQuad(), x, y, 0, 1, 1, originX, originY);
 end
 
+--#region Tests
+
+local Frame = require("resources/Frame");
+
+crystal.test.add("Blank sprites don't error", { gfx = "on" }, function()
+	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
+	local sprite = Sprite:new(sheet);
+	sprite:draw();
+end);
+
+crystal.test.add("Sprites can draw", { gfx = "on" }, function(context)
+	local image = ASSETS:getImage("test-data/blankey.png");
+	local sprite = Sprite:new();
+	sprite:setSpritePosition(10, 10);
+	sprite:setFrame(Frame:new(image));
+	sprite:draw();
+	context:compareFrame("test-data/TestSprite/sprites-can-draw.png");
+end);
+
+--#endregion
+
 return Sprite;

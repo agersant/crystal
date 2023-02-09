@@ -31,4 +31,61 @@ AlignGoal.isPositionAcceptable = function(self, x, y)
 	return (dx * dx <= self._radius2) or (dy * dy <= self._radius2);
 end
 
+--#region Tests
+
+local MapScene = require("mapscene/MapScene");
+local Entity = require("ecs/Entity");
+local PhysicsBody = require("mapscene/physics/PhysicsBody");
+
+crystal.test.add("Get position", { gfx = "mock" }, function()
+	local scene = MapScene:new("test-data/empty_map.lua");
+
+	local me = scene:spawn(Entity);
+	me:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+	me:setPosition(1, .5);
+
+	local target = scene:spawn(Entity);
+	target:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+
+	local goal = AlignGoal:new(me, target, 1);
+	local x, y = goal:getPosition();
+	assert(x == 1);
+	assert(y == 0);
+end);
+
+crystal.test.add("Accept", { gfx = "mock" }, function()
+	local scene = MapScene:new("test-data/empty_map.lua");
+
+	local me = scene:spawn(Entity);
+	me:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+	me:setPosition(1, .5);
+
+	local target = scene:spawn(Entity);
+	target:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+
+	local goal = AlignGoal:new(me, target, 1);
+	assert(goal:isPositionAcceptable(0, 5));
+	assert(goal:isPositionAcceptable(0, -5));
+	assert(goal:isPositionAcceptable(5, 0));
+	assert(goal:isPositionAcceptable( -5, 0));
+	assert(goal:isPositionAcceptable(0, .5));
+end);
+
+crystal.test.add("Reject", { gfx = "mock" }, function()
+	local scene = MapScene:new("test-data/empty_map.lua");
+
+	local me = scene:spawn(Entity);
+	me:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+	me:setPosition(1, .5);
+
+	local target = scene:spawn(Entity);
+	target:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+
+	local goal = AlignGoal:new(me, target, 1);
+	assert(not goal:isPositionAcceptable(2, 2));
+	assert(not goal:isPositionAcceptable( -1.5, 1.5));
+end);
+
+--#endregion
+
 return AlignGoal;

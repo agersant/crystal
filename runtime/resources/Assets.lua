@@ -33,6 +33,10 @@ end
 -- IMAGE
 
 local loadImage = function(self, path)
+	if not love.filesystem.getInfo(path) then
+		-- TODO hack :(
+		path = CRYSTAL_RUNTIME .. "/" .. path;
+	end
 	local image = love.graphics.newImage(path);
 	image:setFilter("nearest");
 	return "image", image;
@@ -45,6 +49,10 @@ end
 -- SHADER
 
 local loadShader = function(self, path)
+	if not love.filesystem.getInfo(path) then
+		-- TODO hack :(
+		path = CRYSTAL_RUNTIME .. "/" .. path;
+	end
 	local shaderCode = love.filesystem.read(path);
 	assert(shaderCode);
 	local shader = love.graphics.newShader(shaderCode);

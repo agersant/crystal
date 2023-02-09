@@ -86,14 +86,13 @@ love.load = function()
 	fpsCounter      = require("dev/FPSCounter"):new();
 	console         = require("dev/cli/Console"):new(TERMINAL);
 	liveTuneOverlay = require("dev/constants/LiveTuneOverlay"):new(CONSTANTS, LIVE_TUNE);
+	PERSISTENCE     = require("persistence/Persistence"):new(Class:getByName(crystal.conf.saveDataClass));
 
-	CRYSTAL_CONTEXT = "game";
 	requireGameSource();
-
-	PERSISTENCE = require("persistence/Persistence"):new(Class:getByName(crystal.conf.saveDataClass));
 end
 
 local requireGameSource = function()
+	CRYSTAL_CONTEXT = "game";
 	-- TODO may or may not worked in fused build
 	for _, path in ipairs(Content:listAllFiles("", "%.lua$")) do
 		local isMain = path:match("main%.lua");
@@ -182,7 +181,6 @@ if Features.tests then
 	end
 
 	LOG:setVerbosity(LOG.Levels.FATAL);
-	CRYSTAL_CONTEXT = "game";
 	requireGameSource();
 	local success = testRunner:runAll();
 
