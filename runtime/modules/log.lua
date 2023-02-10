@@ -1,5 +1,3 @@
-local Features = require("dev/Features");
-
 ---@alias LogLevel "debug" | "info" | "warning" | "error" | "fatal"
 
 local priorities = {
@@ -15,13 +13,12 @@ local priorities = {
 ---@field private file_handle love.File
 local Logger = Class("Logger");
 
-if not Features.logging then
-	Features.stub(Logger);
-end
-
 Logger.init = function(self)
 	self.verbosity = "debug";
+	self.file_handle = nil;
+end
 
+Logger.create_log_file = function(self)
 	local buffer_size = 1024; -- in bytes
 	local log_directory = "logs";
 
@@ -32,7 +29,7 @@ Logger.init = function(self)
 	end
 
 	local now = tostring(os.time());
-	local log_file = log_directory .. "/crystal_" .. "_" .. now .. ".log";
+	local log_file = log_directory .. "/" .. now .. ".log";
 	self.file_handle, error_message = love.filesystem.newFile(log_file, "w");
 	if not self.file_handle then
 		error(error_message);
@@ -45,7 +42,7 @@ Logger.init = function(self)
 end
 
 ---@param verbosity LogLevel
-Logger.setVerbosity = function(self, verbosity)
+Logger.set_verbosity = function(self, verbosity)
 	assert(verbosity);
 	assert(priorities[verbosity]);
 	self.verbosity = verbosity;
@@ -86,11 +83,15 @@ return {
 		info = function(text)
 			logger:append("info", text);
 		end,
-		setVerbosity = function(verbosity)
-			logger:setVerbosity(verbosity);
+		set_verbosity = function(verbosity)
+			logger:set_verbosity(verbosity);
 		end,
 		warning = function(text)
 			logger:append("warning", text);
 		end,
 	},
+	init = function()
+		logger:create_log_file();
+		print("created");
+	end,
 };

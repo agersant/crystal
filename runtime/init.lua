@@ -35,12 +35,6 @@ for name, module in pairs(modules) do
 	crystal[name] = module.api;
 end
 
-for _, module in pairs(modules) do
-	if module.init then
-		module.init();
-	end
-end
-
 local Content     = require("resources/Content");
 local StringUtils = require("utils/StringUtils");
 local Scene       = require("Scene");
@@ -106,6 +100,12 @@ love.load = function()
 	fpsCounter      = require("dev/FPSCounter"):new();
 	console         = require("dev/cli/Console"):new(TERMINAL);
 	liveTuneOverlay = require("dev/constants/LiveTuneOverlay"):new(CONSTANTS, LIVE_TUNE);
+
+	for _, module in pairs(modules) do
+		if module.init then
+			module.init();
+		end
+	end
 
 	if not CRYSTAL_NO_GAME then
 		requireGameSource();
@@ -194,7 +194,7 @@ if Features.tests then
 				luacov.init({ runreport = true, exclude = luacovExcludes });
 			end
 
-			crystal.log.setVerbosity("fatal");
+			crystal.log.set_verbosity("fatal");
 			local success = modules.test.run();
 
 			if luacov then

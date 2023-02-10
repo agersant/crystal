@@ -12,7 +12,6 @@ local Features = {};
 local release = love.filesystem.isFused();
 Features.tests = hasFlag("/test");
 Features.codeCoverage = hasFlag("/coverage");
-Features.logging = not release;
 Features.cli = not release;
 Features.fpsCounter = not release;
 Features.debugDraw = not release;
