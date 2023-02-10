@@ -45,14 +45,14 @@ The `options` table supports the following values:
 
 ```lua
 crystal.test.add("Can do basic math", function(context)
-	assert(1 + 1 == 2);
+  assert(1 + 1 == 2);
 end);
 ```
 
 ```lua
 crystal.test.add("Can draw blank screen", { resolution = [1280, 720] }, function(context)
-	love.draw();
-	-- Validate that the game drew a 1280x720 black frame by comparing the screen with a known image.
-	context:expect_frame("test-data/black_1280x720.png");
+  love.draw();
+  -- Validate that the game drew a 1280x720 black frame by comparing the screen with a known image.
+  context:expect_frame("test-data/black_1280x720.png");
 end);
 ```

@@ -24,8 +24,8 @@ context:expect_frame(path)
 
 ```lua
 crystal.test.add("Can draw blank screen", { resolution = [1280, 720] }, function(context)
-	love.draw();
-	-- Validate that the game drew a 1280x720 black frame by comparing the screen with a known image.
-	context:expect_frame("test-data/black_1280x720.png");
+  love.draw();
+  -- Validate that the game drew a 1280x720 black frame by comparing the screen with a known image.
+  context:expect_frame("test-data/black_1280x720.png");
 end);
 ```

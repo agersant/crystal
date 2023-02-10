@@ -14,12 +14,12 @@ Tests can be defined in any `.lua` file that is part of your game. For example, 
 local Adder = Class("Adder");
 
 Adder.add = function(self, a, b)
-	return a + b;
+  return a + b;
 end
 
 crystal.test.add("Can add numbers", function()
-	local adder = Adder:new();
-	assert(adder:add(4, 6) == 10);
+  local adder = Adder:new();
+  assert(adder:add(4, 6) == 10);
 end);
 
 return Adder;
