@@ -5,6 +5,7 @@
 - [ ] Getting Started instructions in readme
 - [ ] Engine release process
 - [ ] Sample game release process
+- [ ] Game packaging
 - [ ] VSCode tasks for engine and sample game
 - [ ] snake_case all variables and file names 🐍
 - [ ] API revamp: `crystal.*` globals + docs + private functions as ---@package or ---@private
@@ -14,10 +15,11 @@
   - [ ] ECS
   - [ ] Gfx
   - [ ] Input
-  - [ ] Log
+  - [x] Log
   - [ ] Physics
   - [ ] Scene
   - [ ] Script
+  - [x] Test
   - [ ] Tool
   - [ ] UI
   - [ ] Utils
@@ -30,7 +32,7 @@
 - [ ] Auto-complete for command args supports arbitrary types/logic
 - [ ] Window/viewport/scene/camera system rework
 - [ ] Continuous hot reload for game files
-- [ ] Game packaging
+- [ ] Better color-scheme for code examples in docs (https://github.com/just-the-docs/just-the-docs/issues/679)
 
 # Crystal 0.3.0
 
@@ -39,7 +41,6 @@
 - [ ] Bricks layout caching
 - [ ] create-crystal-app starter script
 - [ ] Particles
-- [ ] Audio
 
 # Crystal 0.4.0
 
