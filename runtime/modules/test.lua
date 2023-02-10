@@ -257,6 +257,6 @@ return {
 		end,
 	},
 	run = function()
-		test_runner:runAll();
+		return test_runner:runAll();
 	end,
 };
