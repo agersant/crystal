@@ -25,7 +25,7 @@ end);
 return Adder;
 ```
 
-Tests are executed when the game is executed with the `/test` command line argument (for example `../bin/lovec.exe . /test`). The console output for this would be:
+Tests are executed when the game is launched with the `/test` command line argument (for example `../bin/lovec.exe . /test`). The console output for this command would be:
 
 ```
 Running tests
@@ -37,7 +37,7 @@ Test result: ok. 1/1 tests passed.
 ```
 
 {: .note }
-Tests are not limited to validating individual classes or functions. They have access to the entire `crystal` and `love` APIs, including spawning scenes and simulating player input. Since the main game loop is not running during tests, you must manually advance the game simulation by calling `update(dt)` on your scene or `love.update(dt)`.
+Tests are not limited to validating individual classes or functions. They have access to the entire `crystal` and `love` APIs, including spawning scenes and simulating player inputs. Since the main game loop is not running during tests, you must manually advance the game simulation by calling `update(dt)` on your scene or `love.update(dt)`.
 
 ## Functions
 

@@ -26,6 +26,7 @@ crystal.test.is_running_tests()
 -- in conf.lua
 
 love.conf = {
-	options.modules.audio = not crystal.test.is_running_tests(); -- Disable the audio module of Love 2D when running tests
+	-- Disable the audio module of Love 2D when running tests
+	options.modules.audio = not crystal.test.is_running_tests();
 }
 ```

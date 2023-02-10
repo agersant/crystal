@@ -37,9 +37,9 @@ crystal.test.add(name, options, body)
 
 The `options` table supports the following values:
 
-| Name         | Type               | Default    | Description                                               |
-| :----------- | :----------------- | ---------- | --------------------------------------------------------- |
-| `resolution` | `{number, number}` | {200, 200} | Size of the game window in pixels when running this test. |
+| Name         | Type               | Default    | Description                                     |
+| :----------- | :----------------- | ---------- | ----------------------------------------------- |
+| `resolution` | `{number, number}` | {200, 200} | Size of the game window when running this test. |
 
 ## Examples
 
