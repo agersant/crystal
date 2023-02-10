@@ -1,5 +1,4 @@
 ---
-nav_exclude: true
 parent: crystal.log
 grand_parent: API Reference
 ---
