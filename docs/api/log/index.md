@@ -1,5 +1,6 @@
 ---
 parent: API Reference
+title: log
 ---
 
 # crystal.log
