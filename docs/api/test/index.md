@@ -41,10 +41,10 @@ Tests are not limited to validating individual classes or functions. They have a
 
 ## Functions
 
-| Name                                                | Description                                                             |
-| :-------------------------------------------------- | :---------------------------------------------------------------------- |
-| [crystal.test.add()](add)                           | Defines a test.                                                         |
-| [crystal.test.is_running_tests()](is_running_tests) | Returns whether the game is running its test suite or running normally. |
+| Name                                              | Description                                                             |
+| :------------------------------------------------ | :---------------------------------------------------------------------- |
+| [crystal.test.add](add)                           | Defines a test.                                                         |
+| [crystal.test.is_running_tests](is_running_tests) | Returns whether the game is running its test suite or running normally. |
 
 ## Classes
 
