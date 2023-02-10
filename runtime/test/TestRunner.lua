@@ -11,11 +11,12 @@ TestRunner.new = function(self)
 end
 
 TestRunner.add = function(self, name, optionsOrBody, body)
-	if CRYSTAL_CONTEXT == "self" and not Features.engineTests then
-		return;
-	end
+	local source = debug.getinfo(3).source;
+	local isEngineTest = source:match("^@" .. CRYSTAL_RUNTIME);
+	source = source:gsub(CRYSTAL_RUNTIME, "");
+	source = source:gsub("^[^%w]+", "");
 
-	if CRYSTAL_CONTEXT == "game" and not Features.gameTests then
+	if isEngineTest and not CRYSTAL_NO_GAME then
 		return;
 	end
 
@@ -36,9 +37,6 @@ TestRunner.add = function(self, name, optionsOrBody, body)
 	end
 	assert(type(test.body) == "function");
 
-	local source = debug.getinfo(3).source;
-	source = source:gsub(CRYSTAL_RUNTIME, "");
-	source = source:gsub("^[^%w]+", "");
 	if not self._tests[source] then
 		self._tests[source] = {};
 	end

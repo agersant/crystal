@@ -27,7 +27,7 @@ jobs:
       - name: Build binaries
         run: .\build.ps1
       - name: Run Lua Tests
-        run: ..\bin\lovec.exe . /test-self /coverage
+        run: ..\bin\lovec.exe . /test /coverage
         working-directory: runtime
       - name: Fix line endings in Lua coverage report
         run: (Get-Content -raw luacov.report.out) -replace "`r`n","`n" | Set-Content -nonewline luacov.report.out

@@ -10,9 +10,7 @@ end
 local Features = {};
 
 local release = love.filesystem.isFused();
-Features.gameTests = hasFlag("/test");
-Features.engineTests = hasFlag("/test-self");
-Features.tests = Features.engineTests or Features.gameTests;
+Features.tests = hasFlag("/test");
 Features.codeCoverage = hasFlag("/coverage");
 Features.logging = not release;
 Features.cli = not release;

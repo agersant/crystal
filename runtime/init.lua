@@ -13,14 +13,14 @@ local crystalRuntime = table.concat(pathChunks, "/");
 table.remove(pathChunks, #pathChunks);
 local crystalRoot = table.concat(pathChunks, "/");
 
--- TODO may or may not worked in fused build
+-- TODO may or may not work in fused build
 package.path      = package.path .. ";" .. crystalRuntime .. "/?.lua";
 
 local Features    = require("dev/Features");
 
-CRYSTAL_CONTEXT   = "self";
 CRYSTAL_ROOT      = crystalRoot;
 CRYSTAL_RUNTIME   = crystalRuntime;
+CRYSTAL_NO_GAME   = crystalRoot == "";
 
 crystal           = {};
 
@@ -86,7 +86,6 @@ end
 
 
 local requireGameSource = function()
-	CRYSTAL_CONTEXT = "game";
 	-- TODO may or may not worked in fused build
 	for _, path in ipairs(Content:listAllFiles("", "%.lua$")) do
 		local isMain = path:match("main%.lua");
@@ -104,7 +103,9 @@ love.load = function()
 	console         = require("dev/cli/Console"):new(TERMINAL);
 	liveTuneOverlay = require("dev/constants/LiveTuneOverlay"):new(CONSTANTS, LIVE_TUNE);
 
-	requireGameSource();
+	if not CRYSTAL_NO_GAME then
+		requireGameSource();
+	end
 
 	PERSISTENCE = require("persistence/Persistence"):new(Class:getByName(crystal.conf.saveDataClass));
 end

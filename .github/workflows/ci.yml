@@ -30,7 +30,7 @@ jobs:
         run: cargo test --release
         working-directory: lib
       - name: Run Lua tests
-        run: ..\bin\lovec.exe . /test-self
+        run: ..\bin\lovec.exe . /test
         working-directory: runtime
       - uses: actions/upload-artifact@v2
         if: failure()
