@@ -9,14 +9,26 @@ local Features = require("dev/Features");
 ---@field gfx "mock" | "on"
 ---@field resolution { [1]: integer, [2]: integer }?
 
+---@class TestContext
+---@field runner TestRunner
+local TestContext = Class("TestContext");
+
+---@param runner TestRunner
+TestContext.init = function(self, runner)
+	assert(runner);
+	self.runner = runner;
+end
+
 ---@class TestRunner
+---@field package context TestContext
 ---@field private tests Test[]
----@field private current_test Test
+---@field package current_test Test
 ---@field private resolution { [1]: integer, [2]: integer }
 ---@field private screenshot_directory string
 local TestRunner = Class("TestRunner");
 
 TestRunner.init = function(self)
+	self.context = TestContext:new(self);
 	self.tests = {};
 	self.current_test = nil;
 	self.resolution = {};
@@ -59,6 +71,7 @@ TestRunner.add = function(self, name, options_or_body, body)
 	table.insert(self.tests[source], test);
 end
 
+---@private
 TestRunner.reset_global_state = function(self, test)
 	local MockGraphics = require("dev/mock/love/graphics");
 
@@ -82,6 +95,7 @@ TestRunner.reset_global_state = function(self, test)
 	end
 end
 
+---@return boolean success
 TestRunner.runAll = function(self)
 	self:create_output_directories();
 
@@ -108,7 +122,7 @@ TestRunner.runAll = function(self)
 			local traceback = nil;
 			local success, err = xpcall(
 					function()
-						test.body(self)
+						test.body(self.context)
 					end,
 					function(err)
 						table.insert(failures, {
@@ -157,11 +171,13 @@ TestRunner.runAll = function(self)
 	return #failures == 0;
 end
 
+---@package
 TestRunner.create_output_directories = function(self)
 	io.popen("mkdir " .. self.screenshot_directory .. ">nul 2>nul"):close();
 	love.timer.sleep(0.1); -- Give the `mkdir` process some time to complete
 end
 
+---@package
 ---@param image_data love.ImageData
 ---@param name string
 ---@return string path
@@ -177,6 +193,7 @@ TestRunner.save_screenshot = function(self, image_data, name)
 	return path;
 end
 
+---@package
 ---@return love.ImageData
 TestRunner.take_screenshot = function(self)
 	local screenshot;
@@ -193,6 +210,7 @@ end
 ---@field expected { r: number, g: number, b: number, a: number }
 ---@field actual { r: number, g: number, b: number, a: number }
 
+---@package
 ---@param actual love.ImageData
 ---@param expected love.ImageData
 ---@return boolean identical
@@ -221,14 +239,14 @@ TestRunner.diff_screenshots = function(self, actual, expected)
 end
 
 ---@param reference string
-TestRunner.expect_frame = function(self, reference)
+TestContext.expect_frame = function(self, reference)
 	assert(reference);
-	local actual = self:take_screenshot();
+	local actual = self.runner:take_screenshot();
 	local expected = love.image.newImageData(reference);
-	local identical, pixel_diff = self:diff_screenshots(actual, expected);
+	local identical, pixel_diff = self.runner:diff_screenshots(actual, expected);
 	if not identical then
-		local name = string.gsub(string.lower(self.current_test.name), "%s+", "-");
-		local screnshot_path = self:save_screenshot(actual, name);
+		local name = string.gsub(string.lower(self.runner.current_test.name), "%s+", "-");
+		local screnshot_path = self.runner:save_screenshot(actual, name);
 		local error_message = string.format("Screenshot did not match reference image.\n\tExpected: %s\n\tActual: %s",
 				reference, screnshot_path);
 		if pixel_diff then
