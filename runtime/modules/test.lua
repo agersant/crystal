@@ -48,6 +48,10 @@ TestRunner.add = function(self, name, options_or_body, body)
 		return;
 	end
 
+	if not Features.tests then
+		return;
+	end
+
 	assert(type(name) == "string");
 	local test = { name = name };
 
@@ -80,18 +84,16 @@ TestRunner.reset_global_state = function(self, test)
 	test.resolution = test.resolution or { 200, 200 };
 	VIEWPORT:setRenderSize(test.resolution[1], test.resolution[2]);
 
-	if test.gfx == "mock" then
+	if test.gfx then
 		MockGraphics:enable();
+		if test.resolution[1] ~= self.resolution[1] or test.resolution[2] ~= self.resolution[2] then
+			VIEWPORT:setWindowSize(test.resolution[1], test.resolution[2]);
+			self.resolution = test.resolution;
+		end
+		love.graphics.reset();
+		love.graphics.clear(love.graphics.getBackgroundColor());
 	else
 		MockGraphics:disable();
-		if test.gfx == "on" then
-			if test.resolution[1] ~= self.resolution[1] or test.resolution[2] ~= self.resolution[2] then
-				VIEWPORT:setWindowSize(test.resolution[1], test.resolution[2]);
-				self.resolution = test.resolution;
-			end
-			love.graphics.reset();
-			love.graphics.clear(love.graphics.getBackgroundColor());
-		end
 	end
 end
 

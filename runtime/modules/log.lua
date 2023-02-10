@@ -92,6 +92,5 @@ return {
 	},
 	init = function()
 		logger:create_log_file();
-		print("created");
 	end,
 };
