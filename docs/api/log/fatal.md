@@ -4,7 +4,7 @@ nav_exclude: true
 
 # crystal.log.fatal
 
-Prints a message to the log at the [fatal](api/log/verbosity) level.
+Prints a message to the log at the [fatal](verbosity) level.
 
 ## Usage
 

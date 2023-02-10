@@ -19,7 +19,7 @@ has_toc: false
 | [crystal.physics](physics/index) |                                                                     |
 | [crystal.scene](scene/index)     |                                                                     |
 | [crystal.script](script/index)   |                                                                     |
-| [crystal.test](test/index)       |                                                                     |
+| [crystal.test](test/index)       | Provides an interface to define unit or integration tests.          |
 | [crystal.tool](tool/index)       |                                                                     |
 | [crystal.ui](ui/index)           |                                                                     |
 | [crystal.var](var/index)         |                                                                     |

@@ -8,17 +8,17 @@ Utility functions to emit log messages. Messages appear in both the console atta
 
 ## Functions
 
-| Name                                                 | Description                                                     |
-| :--------------------------------------------------- | :-------------------------------------------------------------- |
-| [crystal.log.debug()](api/log/debug)                 | Emits a log message with the `debug` verbosity.                 |
-| [crystal.log.error()](api/log/error)                 | Emits a log message with the `error` verbosity.                 |
-| [crystal.log.fatal()](api/log/fatal)                 | Emits a log message with the `fatal` verbosity.                 |
-| [crystal.log.info()](api/log/info)                   | Emits a log message with the `info` verbosity.                  |
-| [crystal.log.set_verbosity()](api/log/set_verbosity) | Sets the verbosity cutoff below which log messages are ignored. |
-| [crystal.log.warning()](api/log/warning)             | Emits a log message with the `warning` verbosity.               |
+| Name                                         | Description                                                     |
+| :------------------------------------------- | :-------------------------------------------------------------- |
+| [crystal.log.debug()](debug)                 | Emits a log message with the `debug` verbosity.                 |
+| [crystal.log.error()](error)                 | Emits a log message with the `error` verbosity.                 |
+| [crystal.log.fatal()](fatal)                 | Emits a log message with the `fatal` verbosity.                 |
+| [crystal.log.info()](info)                   | Emits a log message with the `info` verbosity.                  |
+| [crystal.log.set_verbosity()](set_verbosity) | Sets the verbosity cutoff below which log messages are ignored. |
+| [crystal.log.warning()](warning)             | Emits a log message with the `warning` verbosity.               |
 
 ## Enums
 
-| Name                           | Description                       |
-| :----------------------------- | :-------------------------------- |
-| [Verbosity](api/log/verbosity) | Verbosity level of a log message. |
+| Name                   | Description                       |
+| :--------------------- | :-------------------------------- |
+| [Verbosity](verbosity) | Verbosity level of a log message. |

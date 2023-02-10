@@ -4,7 +4,7 @@ nav_exclude: true
 
 # crystal.log.info
 
-Prints a message to the log at the [info](api/log/verbosity) level.
+Prints a message to the log at the [info](verbosity) level.
 
 ## Usage
 

@@ -270,7 +270,7 @@ return {
 		add = function(...)
 			test_runner:add(...);
 		end,
-		isRunningTests = function()
+		is_running_tests = function()
 			return Features.tests;
 		end,
 	},

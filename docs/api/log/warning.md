@@ -4,7 +4,7 @@ nav_exclude: true
 
 # crystal.log.warning
 
-Prints a message to the log at the [warning](api/log/verbosity) level.
+Prints a message to the log at the [warning](verbosity) level.
 
 ## Usage
 
