@@ -20,7 +20,7 @@ crystal.log.set_verbosity(verbosity)
 | :---------- | :----------------------- | ------------------------------------------------------- |
 | `verbosity` | [`Verbosity`](verbosity) | Most verbose message level that will appear in the log. |
 
-### Example
+## Examples
 
 ```lua
 crystal.log.set_verbosity("error"); -- Ignore all `debug`, `info` and `warning` messages.

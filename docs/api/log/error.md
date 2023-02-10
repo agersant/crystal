@@ -20,7 +20,7 @@ crystal.log.error(message)
 | :-------- | :------- | -------------------------------- |
 | `message` | `string` | The message to print in the log. |
 
-### Example
+## Examples
 
 ```lua
 crystal.log.error("Could not find spawn location for Monster");

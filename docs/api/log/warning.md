@@ -20,7 +20,7 @@ crystal.log.warning(message)
 | :-------- | :------- | -------------------------------- |
 | `message` | `string` | The message to print in the log. |
 
-### Example
+## Examples
 
 ```lua
 crystal.log.warning("Could not find valid target for Fireball spell");

@@ -20,7 +20,7 @@ crystal.log.fatal(message)
 | :-------- | :------- | -------------------------------- |
 | `message` | `string` | The message to print in the log. |
 
-### Example
+## Examples
 
 ```lua
 crystal.log.fatal("Division by 0");

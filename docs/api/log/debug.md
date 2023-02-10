@@ -20,7 +20,7 @@ crystal.log.debug(message)
 | :-------- | :------- | -------------------------------- |
 | `message` | `string` | The message to print in the log. |
 
-### Example
+## Examples
 
 ```lua
 crystal.log.debug("Handling jump input");
