@@ -47,6 +47,6 @@ Tests are not limited to validating individual classes or functions. They have a
 
 ## Classes
 
-| Name                   | Description                                                   |
-| :--------------------- | :------------------------------------------------------------ |
-| [TestContext](context) | Context object exposing functionality available during tests. |
+| Name                        | Description                                                   |
+| :-------------------------- | :------------------------------------------------------------ |
+| [TestContext](test_context) | Context object exposing functionality available during tests. |

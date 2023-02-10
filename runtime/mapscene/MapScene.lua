@@ -196,7 +196,7 @@ end);
 local InputDevice = require("input/InputDevice");
 local TableUtils = require("utils/TableUtils");
 
-crystal.test.add("Draws all layers", { gfx = true }, function(context)
+crystal.test.add("Draws all layers", function(context)
 	local scene = MapScene:new("test-data/TestMapScene/all_features.lua");
 	scene:draw();
 	context:expect_frame("test-data/TestMapScene/draws-all-layers.png");

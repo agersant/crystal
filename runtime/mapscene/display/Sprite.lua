@@ -40,13 +40,13 @@ end
 
 local Frame = require("resources/Frame");
 
-crystal.test.add("Blank sprites don't error", { gfx = true }, function()
+crystal.test.add("Blank sprites don't error", function()
 	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
 	local sprite = Sprite:new(sheet);
 	sprite:draw();
 end);
 
-crystal.test.add("Sprites can draw", { gfx = true }, function(context)
+crystal.test.add("Sprites can draw", function(context)
 	local image = ASSETS:getImage("test-data/blankey.png");
 	local sprite = Sprite:new();
 	sprite:setSpritePosition(10, 10);

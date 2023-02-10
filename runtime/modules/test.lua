@@ -77,24 +77,17 @@ end
 
 ---@private
 TestRunner.reset_global_state = function(self, test)
-	local MockGraphics = require("dev/mock/love/graphics");
-
 	ASSETS:unloadAll();
 
 	test.resolution = test.resolution or { 200, 200 };
 	VIEWPORT:setRenderSize(test.resolution[1], test.resolution[2]);
 
-	if test.gfx then
-		MockGraphics:disable();
-		if test.resolution[1] ~= self.resolution[1] or test.resolution[2] ~= self.resolution[2] then
-			VIEWPORT:setWindowSize(test.resolution[1], test.resolution[2]);
-			self.resolution = test.resolution;
-		end
-		love.graphics.reset();
-		love.graphics.clear(love.graphics.getBackgroundColor());
-	else
-		MockGraphics:enable();
+	if test.resolution[1] ~= self.resolution[1] or test.resolution[2] ~= self.resolution[2] then
+		VIEWPORT:setWindowSize(test.resolution[1], test.resolution[2]);
+		self.resolution = test.resolution;
 	end
+	love.graphics.reset();
+	love.graphics.clear(love.graphics.getBackgroundColor());
 end
 
 ---@return boolean success

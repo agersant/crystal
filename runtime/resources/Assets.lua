@@ -323,7 +323,7 @@ crystal.test.add("Load empty map", function()
 	assets:unload(mapName);
 end);
 
-crystal.test.add("Load shader", { gfx = true }, function()
+crystal.test.add("Load shader", function()
 	local assets = Assets:new();
 	local shaderPath = "test-data/TestAssets/shader.glsl";
 	assets:load(shaderPath);
@@ -332,7 +332,7 @@ crystal.test.add("Load shader", { gfx = true }, function()
 	assets:unload(shaderPath);
 end);
 
-crystal.test.add("Load spritesheet", { gfx = true }, function()
+crystal.test.add("Load spritesheet", function()
 	local assets = Assets:new();
 	local sheetName = "test-data/blankey.lua";
 	assets:load(sheetName);
