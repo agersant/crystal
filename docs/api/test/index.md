@@ -6,9 +6,9 @@ has_toc: false
 
 # crystal.test
 
-With games having many moving parts and Lua being a dynamic language, the best way to know your code is correct is to run it. As the game grows, it can be difficult or tedious to manually validate that everything is working as intended. Tests are a great way to automate these verifications, and to avoid surprise breakages during actual playtests.
+With games having many moving parts and Lua being a dynamic language, the best way to know your code is correct is to run it. As the game grows, it can be difficult or tedious to manually validate that everything is working as intended. Tests are a great way to automate these verifications and to avoid surprise breakages during actual playtests.
 
-Tests can be defined in any `.lua` file that is part of your games. For example, you could implement and test a class performing addition this way:
+Tests can be defined in any `.lua` file that is part of your game. For example, you could implement and test a class performing additions like this:
 
 ```lua
 local Adder = Class("Adder");
