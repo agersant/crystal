@@ -1,6 +1,6 @@
 ---
 parent: API Reference
-title: log
+has_children: true
 ---
 
 # crystal.log

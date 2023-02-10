@@ -1,6 +1,6 @@
 ---
 nav_exclude: true
-parent: log
+parent: crystal.log
 grand_parent: API Reference
 ---
 
