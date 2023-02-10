@@ -41,7 +41,7 @@ local Scene       = require("Scene");
 
 local TableUtils  = require("utils/TableUtils");
 crystal.conf      = {
-	assetsDirectory = nil,
+	assetsDirectories = {},
 	mapDirectory = "", -- TODO remove when mapscene is no longer part of crystal
 	mapSceneClass = "MapScene", -- TODO remove when mapscene is no longer part of crystal
 	saveDataClass = "BaseSaveData", -- TODO remove when reworking persistence
@@ -84,11 +84,19 @@ ENGINE.loadScene = function(self, scene)
 end
 
 local requireGameSource = function()
+	local assetsDirectories = TableUtils.shallowCopy(crystal.conf.assetsDirectories);
+	-- TODO TableUtils.map
+	for i, directory in ipairs(assetsDirectories) do
+		assetsDirectories[i] = directory:gsub("%-", "%%-");
+	end
 	-- TODO may or may not worked in fused build
 	for _, path in ipairs(Content:listAllFiles("", "%.lua$")) do
 		local isMain = path:match("main%.lua");
 		local isCrystal = path:match("^" .. CRYSTAL_ROOT);
-		local isAsset = crystal.conf.assetsDirectory and path:match("^" .. crystal.conf.assetsDirectory);
+		local isAsset = false;
+		for _, directory in ipairs(assetsDirectories) do
+			isAsset = isAsset or path:match("^" .. directory);
+		end
 		if not isCrystal and not isAsset and not isMain then
 			require(StringUtils.stripFileExtension(path));
 		end
