@@ -136,7 +136,7 @@ crystal.test.add("Calls update on children", function()
 	assert(sentinel == 11)
 end);
 
-crystal.test.add("Layouts and draws children", { gfx = "mock" }, function()
+crystal.test.add("Layouts and draws children", function()
 	local a = Element:new(Joint);
 	local b = Element:new(Joint);
 	local sentinel = 0;

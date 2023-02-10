@@ -178,7 +178,7 @@ end
 
 local Terminal = require("dev/cli/Terminal");
 
-crystal.test.add("Can toggle console", { gfx = "mock" }, function()
+crystal.test.add("Can toggle console", function()
 	local console = Console:new(Terminal:new());
 	local wasActive = console:isActive();
 	console:toggle();
@@ -187,7 +187,7 @@ crystal.test.add("Can toggle console", { gfx = "mock" }, function()
 	assert(console:isActive() == wasActive);
 end);
 
-crystal.test.add("Can draw console", { gfx = "mock" }, function()
+crystal.test.add("Can draw console", function()
 	local terminal = Terminal:new();
 	terminal:addCommand("example arg1:string arg2:number", function()
 	end);

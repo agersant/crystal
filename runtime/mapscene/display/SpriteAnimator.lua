@@ -72,7 +72,7 @@ local Entity = require("ecs/Entity");
 local ScriptRunner = require("mapscene/behavior/ScriptRunner");
 local Script = require("script/Script");
 
-crystal.test.add("Set animation updates current frame", { gfx = "mock" }, function()
+crystal.test.add("Set animation updates current frame", function()
 	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
 	local sprite = Sprite:new();
 	local animator = SpriteAnimator:new(sprite, sheet);
@@ -81,7 +81,7 @@ crystal.test.add("Set animation updates current frame", { gfx = "mock" }, functi
 	assert(sprite:getFrame());
 end);
 
-crystal.test.add("Cycles through animation frames", { gfx = "mock" }, function()
+crystal.test.add("Cycles through animation frames", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
@@ -103,7 +103,7 @@ crystal.test.add("Cycles through animation frames", { gfx = "mock" }, function()
 	end
 end);
 
-crystal.test.add("Animation blocks script", { gfx = "mock" }, function()
+crystal.test.add("Animation blocks script", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
@@ -126,7 +126,7 @@ crystal.test.add("Animation blocks script", { gfx = "mock" }, function()
 	assert(sentinel);
 end);
 
-crystal.test.add("Looping animation thread never ends", { gfx = "mock" }, function()
+crystal.test.add("Looping animation thread never ends", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");

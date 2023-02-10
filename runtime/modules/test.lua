@@ -85,7 +85,7 @@ TestRunner.reset_global_state = function(self, test)
 	VIEWPORT:setRenderSize(test.resolution[1], test.resolution[2]);
 
 	if test.gfx then
-		MockGraphics:enable();
+		MockGraphics:disable();
 		if test.resolution[1] ~= self.resolution[1] or test.resolution[2] ~= self.resolution[2] then
 			VIEWPORT:setWindowSize(test.resolution[1], test.resolution[2]);
 			self.resolution = test.resolution;
@@ -93,7 +93,7 @@ TestRunner.reset_global_state = function(self, test)
 		love.graphics.reset();
 		love.graphics.clear(love.graphics.getBackgroundColor());
 	else
-		MockGraphics:disable();
+		MockGraphics:enable();
 	end
 end
 

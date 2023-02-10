@@ -196,19 +196,19 @@ end);
 local InputDevice = require("input/InputDevice");
 local TableUtils = require("utils/TableUtils");
 
-crystal.test.add("Draws all layers", { gfx = "on" }, function(context)
+crystal.test.add("Draws all layers", { gfx = true }, function(context)
 	local scene = MapScene:new("test-data/TestMapScene/all_features.lua");
 	scene:draw();
 	context:expect_frame("test-data/TestMapScene/draws-all-layers.png");
 end);
 
-crystal.test.add("Loads entities", { gfx = "mock" }, function()
+crystal.test.add("Loads entities", function()
 	local scene = MapScene:new("test-data/TestMapScene/all_features.lua");
 	local entities = scene:getECS():getAllEntities();
 	assert(TableUtils.countKeys(entities) == 10); -- 8 dynamic tiles + 2 map entities
 end);
 
-crystal.test.add("Can spawn and despawn entities", { gfx = "mock" }, function()
+crystal.test.add("Can spawn and despawn entities", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local Piggy = Class:test("Piggy", Entity);
 	local piggy = scene:spawn(Piggy);
@@ -219,7 +219,7 @@ crystal.test.add("Can spawn and despawn entities", { gfx = "mock" }, function()
 	assert(not scene:getECS():getAllEntities()[piggy]);
 end);
 
-crystal.test.add("Can use the `spawn` command", { gfx = "mock" }, function()
+crystal.test.add("Can use the `spawn` command", function()
 	local TestSpawnCommand = Class("TestSpawnCommand", Entity);
 
 	local scene = MapScene:new("test-data/empty_map.lua");
@@ -235,7 +235,7 @@ crystal.test.add("Can use the `spawn` command", { gfx = "mock" }, function()
 	error("Spawned entity not found");
 end);
 
-crystal.test.add("Spawn command puts entity near player", { gfx = "mock" }, function()
+crystal.test.add("Spawn command puts entity near player", function()
 	local TestSpawnCommandProximity = Class("TestSpawnCommandProximity", Entity);
 	TestSpawnCommandProximity.init = function(self, scene)
 		TestSpawnCommandProximity.super.init(self, scene);

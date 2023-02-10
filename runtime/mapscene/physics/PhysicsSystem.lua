@@ -78,7 +78,7 @@ local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
 -- TODO Duplicate calls to scene:update() are used in this file as a workaround to https://github.com/love2d/love/issues/1617
 
-crystal.test.add("Hitbox components register contacts against weakbox components", { gfx = "mock" }, function()
+crystal.test.add("Hitbox components register contacts against weakbox components", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 
@@ -119,7 +119,7 @@ crystal.test.add("Hitbox components register contacts against weakbox components
 	assert(not touching);
 end);
 
-crystal.test.add("Hitbox components stop generating contacts when removed", { gfx = "mock" }, function()
+crystal.test.add("Hitbox components stop generating contacts when removed", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 
@@ -158,7 +158,7 @@ crystal.test.add("Hitbox components stop generating contacts when removed", { gf
 	assert(not touching);
 end);
 
-crystal.test.add("Collision components register contacts against trigger components", { gfx = "mock" }, function()
+crystal.test.add("Collision components register contacts against trigger components", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 
@@ -197,7 +197,7 @@ crystal.test.add("Collision components register contacts against trigger compone
 	assert(not touching);
 end);
 
-crystal.test.add("Trigger components stop generating contacts when removed", { gfx = "mock" }, function()
+crystal.test.add("Trigger components stop generating contacts when removed", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 
@@ -223,7 +223,7 @@ crystal.test.add("Trigger components stop generating contacts when removed", { g
 	assert(not touching);
 end);
 
-crystal.test.add("Collision components register contacts against each other", { gfx = "mock" }, function()
+crystal.test.add("Collision components register contacts against each other", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 

@@ -314,7 +314,7 @@ end
 
 --#region Tests
 
-crystal.test.add("Load empty map", { gfx = "mock" }, function()
+crystal.test.add("Load empty map", function()
 	local assets = Assets:new();
 	local mapName = "test-data/empty_map.lua";
 	assets:load(mapName);
@@ -323,7 +323,7 @@ crystal.test.add("Load empty map", { gfx = "mock" }, function()
 	assets:unload(mapName);
 end);
 
-crystal.test.add("Load shader", { gfx = "on" }, function()
+crystal.test.add("Load shader", { gfx = true }, function()
 	local assets = Assets:new();
 	local shaderPath = "test-data/TestAssets/shader.glsl";
 	assets:load(shaderPath);
@@ -332,7 +332,7 @@ crystal.test.add("Load shader", { gfx = "on" }, function()
 	assets:unload(shaderPath);
 end);
 
-crystal.test.add("Load spritesheet", { gfx = "on" }, function()
+crystal.test.add("Load spritesheet", { gfx = true }, function()
 	local assets = Assets:new();
 	local sheetName = "test-data/blankey.lua";
 	assets:load(sheetName);
@@ -355,7 +355,7 @@ crystal.test.add("Load spritesheet", { gfx = "on" }, function()
 	assets:unload(sheetName);
 end);
 
-crystal.test.add("Load package", { gfx = "mock" }, function()
+crystal.test.add("Load package", function()
 	local assets = Assets:new();
 	local packageName = "test-data/TestAssets/package.lua";
 	local sheetName = "test-data/blankey.lua";
@@ -369,7 +369,7 @@ crystal.test.add("Load package", { gfx = "mock" }, function()
 	assert(not assets:isAssetLoaded(sheetName));
 end);
 
-crystal.test.add("Nested packages work", { gfx = "mock" }, function()
+crystal.test.add("Nested packages work", function()
 	local assets = Assets:new();
 	local wrapperPackageName = "test-data/TestAssets/wrapper_package.lua";
 	local packageName = "test-data/TestAssets/package.lua";
@@ -384,7 +384,7 @@ crystal.test.add("Nested packages work", { gfx = "mock" }, function()
 	assert(not assets:isAssetLoaded(sheetName));
 end);
 
-crystal.test.add("A single reference keeps assets loaded", { gfx = "mock" }, function()
+crystal.test.add("A single reference keeps assets loaded", function()
 	local assets = Assets:new();
 	local wrapperPackageName = "test-data/TestAssets/wrapper_package.lua";
 	local packageName = "test-data/TestAssets/package.lua";

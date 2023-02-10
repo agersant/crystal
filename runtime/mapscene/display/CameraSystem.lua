@@ -55,7 +55,7 @@ end);
 
 --#region Tests
 
-crystal.test.add("Draws camera overlay", { gfx = "on" }, function(context)
+crystal.test.add("Draws camera overlay", { gfx = true }, function(context)
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 

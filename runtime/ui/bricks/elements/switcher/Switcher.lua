@@ -133,7 +133,7 @@ TestTransition.draw = function(self, width, height)
 	self.drawnAtProgress = self:getProgress();
 end
 
-crystal.test.add("Shows first child by default", { gfx = "mock" }, function()
+crystal.test.add("Shows first child by default", function()
 	local drawnElements = {};
 	local draw = function(self)
 		drawnElements[self] = true;
@@ -150,7 +150,7 @@ crystal.test.add("Shows first child by default", { gfx = "mock" }, function()
 	assert(not drawnElements[b]);
 end);
 
-crystal.test.add("Can snap to different child", { gfx = "mock" }, function()
+crystal.test.add("Can snap to different child", function()
 	local drawnElements = {};
 	local draw = function(self)
 		drawnElements[self] = true;
@@ -184,7 +184,7 @@ crystal.test.add("Supports dynamic or bounding box sizing", function()
 	end
 end);
 
-crystal.test.add("Can transition to a different child", { gfx = "mock" }, function()
+crystal.test.add("Can transition to a different child", function()
 	local drawnElements = {};
 	local draw = function(self)
 		drawnElements[self] = true;
@@ -203,7 +203,7 @@ crystal.test.add("Can transition to a different child", { gfx = "mock" }, functi
 	assert(drawnElements[b]);
 end);
 
-crystal.test.add("Applies transition sizing and draw function during transition", { gfx = "mock" }, function()
+crystal.test.add("Applies transition sizing and draw function during transition", function()
 	local transition = TestTransition:new();
 	local switcher = Switcher:new(transition);
 	local a = switcher:addChild(Image:new());
@@ -218,7 +218,7 @@ crystal.test.add("Applies transition sizing and draw function during transition"
 	assert(transition.drawnAtProgress == 0.5);
 end);
 
-crystal.test.add("Can interrupt a transition by setting active child", { gfx = "mock" }, function()
+crystal.test.add("Can interrupt a transition by setting active child", function()
 	local transition = TestTransition:new();
 	local switcher = Switcher:new(transition);
 	local a = switcher:addChild(Image:new());
@@ -233,7 +233,7 @@ crystal.test.add("Can interrupt a transition by setting active child", { gfx = "
 	assert(transition.drawnAtProgress == nil);
 end);
 
-crystal.test.add("Can interrupt a transition by starting another one", { gfx = "mock" }, function()
+crystal.test.add("Can interrupt a transition by starting another one", function()
 	local transition = TestTransition:new();
 	local switcher = Switcher:new(transition);
 	local a = switcher:addChild(Image:new());
@@ -251,7 +251,7 @@ crystal.test.add("Can interrupt a transition by starting another one", { gfx = "
 	assert(transition.drawnAtProgress == 0.2);
 end);
 
-crystal.test.add("Ignores transition to current child", { gfx = "mock" }, function()
+crystal.test.add("Ignores transition to current child", function()
 	local transition = TestTransition:new();
 	local switcher = Switcher:new(transition);
 	local a = switcher:addChild(Image:new());

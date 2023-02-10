@@ -108,7 +108,7 @@ local Collision = require("mapscene/physics/Collision");
 local TouchTrigger = require("mapscene/physics/TouchTrigger");
 local Weakbox = require("mapscene/physics/Weakbox");
 
-crystal.test.add("Draws physics objects", { gfx = "on" }, function(context)
+crystal.test.add("Draws physics objects", { gfx = true }, function(context)
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 
@@ -142,7 +142,7 @@ crystal.test.add("Draws physics objects", { gfx = "on" }, function(context)
 	-- context:expect_frame("test-data/TestDebugDraw/draws-physics-objects.png");
 end);
 
-crystal.test.add("Draw navigation mesh", { gfx = "on" }, function(context)
+crystal.test.add("Draw navigation mesh", { gfx = true }, function(context)
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 

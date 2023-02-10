@@ -163,7 +163,7 @@ end
 
 local Entity = require("ecs/Entity");
 
-crystal.test.add("LookAt turns to correct direction", { gfx = "mock" }, function()
+crystal.test.add("LookAt turns to correct direction", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);
@@ -190,7 +190,7 @@ crystal.test.add("LookAt turns to correct direction", { gfx = "mock" }, function
 	assert(x == 0 and y == -1);
 end);
 
-crystal.test.add("Direction is preserved when switching to adjacent diagonal", { gfx = "mock" }, function()
+crystal.test.add("Direction is preserved when switching to adjacent diagonal", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);
@@ -213,7 +213,7 @@ crystal.test.add("Direction is preserved when switching to adjacent diagonal", {
 	assert(x == 0 and y == -1);
 end);
 
-crystal.test.add("Distance measurements", { gfx = "mock" }, function()
+crystal.test.add("Distance measurements", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);
@@ -229,7 +229,7 @@ crystal.test.add("Distance measurements", { gfx = "mock" }, function()
 	assert(entity:distance2To(target:getPosition()) == 100);
 end);
 
-crystal.test.add("Stores velocity", { gfx = "mock" }, function()
+crystal.test.add("Stores velocity", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);
@@ -245,7 +245,7 @@ crystal.test.add("Stores velocity", { gfx = "mock" }, function()
 	assert(vy == 2);
 end);
 
-crystal.test.add("Stores angle", { gfx = "mock" }, function()
+crystal.test.add("Stores angle", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);
@@ -255,7 +255,7 @@ crystal.test.add("Stores angle", { gfx = "mock" }, function()
 	assert(entity:getAngle() == 50);
 end);
 
-crystal.test.add("Stores altitude", { gfx = "mock" }, function()
+crystal.test.add("Stores altitude", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);
@@ -265,7 +265,7 @@ crystal.test.add("Stores altitude", { gfx = "mock" }, function()
 	assert(entity:getAltitude() == 50);
 end);
 
-crystal.test.add("Can save and restore state", { gfx = "mock" }, function()
+crystal.test.add("Can save and restore state", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);
@@ -286,7 +286,7 @@ crystal.test.add("Can save and restore state", { gfx = "mock" }, function()
 	assert(entity:getAngle() == 0);
 end);
 
-crystal.test.add("Can save and restore position", { gfx = "mock" }, function()
+crystal.test.add("Can save and restore position", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);

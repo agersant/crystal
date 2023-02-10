@@ -42,7 +42,7 @@ local Entity = require("ecs/Entity");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 local Image = require("ui/bricks/elements/Image");
 
-crystal.test.add("Draws widget", { gfx = "on" }, function(context)
+crystal.test.add("Draws widget", { gfx = true }, function(context)
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(Entity);

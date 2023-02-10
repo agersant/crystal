@@ -110,7 +110,7 @@ crystal.test.add("Can nest wrappers", function()
 	assert(c:getParent() == b);
 end);
 
-crystal.test.add("Layouts and draws child", { gfx = "mock" }, function()
+crystal.test.add("Layouts and draws child", function()
 	local a = Element:new(Joint);
 	local sentinel = 0;
 	a.draw = function()

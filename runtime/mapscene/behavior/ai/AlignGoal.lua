@@ -37,7 +37,7 @@ local MapScene = require("mapscene/MapScene");
 local Entity = require("ecs/Entity");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
-crystal.test.add("Get position", { gfx = "mock" }, function()
+crystal.test.add("Get position", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local me = scene:spawn(Entity);
@@ -53,7 +53,7 @@ crystal.test.add("Get position", { gfx = "mock" }, function()
 	assert(y == 0);
 end);
 
-crystal.test.add("Accept", { gfx = "mock" }, function()
+crystal.test.add("Accept", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local me = scene:spawn(Entity);
@@ -71,7 +71,7 @@ crystal.test.add("Accept", { gfx = "mock" }, function()
 	assert(goal:isPositionAcceptable(0, .5));
 end);
 
-crystal.test.add("Reject", { gfx = "mock" }, function()
+crystal.test.add("Reject", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local me = scene:spawn(Entity);

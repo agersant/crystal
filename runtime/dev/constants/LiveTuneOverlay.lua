@@ -246,7 +246,7 @@ end);
 
 local Terminal = require("dev/cli/Terminal");
 
-crystal.test.add("Overlay lifecycle", { gfx = "mock" }, function()
+crystal.test.add("Overlay lifecycle", function()
 	local testCases = {
 		{ deviceList = {},                           currentDevice = nil,         tuneValue = false },
 		{ deviceList = { "example 1", "example 2" }, currentDevice = nil,         tuneValue = false },

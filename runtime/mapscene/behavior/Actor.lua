@@ -36,7 +36,7 @@ local Entity = require("ecs/Entity");
 local ScriptRunner = require("mapscene/behavior/ScriptRunner");
 local MapScene = require("mapscene/MapScene");
 
-crystal.test.add("Is idle after completing action", { gfx = "mock" }, function()
+crystal.test.add("Is idle after completing action", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local entity = scene:spawn(Entity);
@@ -58,7 +58,7 @@ crystal.test.add("Is idle after completing action", { gfx = "mock" }, function()
 	assert(entity:isIdle());
 end);
 
-crystal.test.add("Can stop action", { gfx = "mock" }, function()
+crystal.test.add("Can stop action", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local entity = scene:spawn(Entity);

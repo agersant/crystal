@@ -18,7 +18,7 @@ end
 local Entity = require("ecs/Entity");
 local ScriptRunner = require("mapscene/behavior/ScriptRunner");
 
-crystal.test.add("Runs behavior script", { gfx = "mock" }, function()
+crystal.test.add("Runs behavior script", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 
@@ -42,7 +42,7 @@ crystal.test.add("Runs behavior script", { gfx = "mock" }, function()
 	assert(sentinel == 11);
 end);
 
-crystal.test.add("Can run multiple behaviors", { gfx = "mock" }, function()
+crystal.test.add("Can run multiple behaviors", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 
@@ -72,7 +72,7 @@ crystal.test.add("Can run multiple behaviors", { gfx = "mock" }, function()
 	assert(sentinel2 == 1);
 end);
 
-crystal.test.add("Stops running script when behavior is removed", { gfx = "mock" }, function()
+crystal.test.add("Stops running script when behavior is removed", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 
@@ -96,7 +96,7 @@ crystal.test.add("Stops running script when behavior is removed", { gfx = "mock"
 	assert(sentinel == 1);
 end);
 
-crystal.test.add("Behavior script cleanup functions are called on behavior removal", { gfx = "mock" }, function()
+crystal.test.add("Behavior script cleanup functions are called on behavior removal", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 
@@ -118,7 +118,7 @@ crystal.test.add("Behavior script cleanup functions are called on behavior remov
 	assert(sentinel);
 end);
 
-crystal.test.add("Behavior script cleanup functions are called on despawn", { gfx = "mock" }, function()
+crystal.test.add("Behavior script cleanup functions are called on despawn", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 

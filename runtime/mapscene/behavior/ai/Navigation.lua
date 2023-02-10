@@ -127,7 +127,7 @@ local ScriptRunner = require("mapscene/behavior/ScriptRunner");
 local MapScene = require("mapscene/MapScene");
 local Script = require("script/Script");
 
-crystal.test.add("Walk to point", { gfx = "mock" }, function()
+crystal.test.add("Walk to point", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local startX, startY = 20, 20;
@@ -149,7 +149,7 @@ crystal.test.add("Walk to point", { gfx = "mock" }, function()
 	assert(subject:distanceTo(endX, endY) < acceptanceRadius);
 end);
 
-crystal.test.add("Walk to entity", { gfx = "mock" }, function()
+crystal.test.add("Walk to entity", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local startX, startY = 20, 20;
@@ -175,7 +175,7 @@ crystal.test.add("Walk to entity", { gfx = "mock" }, function()
 	assert(subject:distanceToEntity(target) < acceptanceRadius);
 end);
 
-crystal.test.add("Can use blocking script function", { gfx = "mock" }, function()
+crystal.test.add("Can use blocking script function", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local startX, startY = 20, 20;
