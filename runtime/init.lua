@@ -22,24 +22,30 @@ CRYSTAL_ROOT      = crystalRoot;
 CRYSTAL_RUNTIME   = crystalRuntime;
 CRYSTAL_NO_GAME   = crystalRoot == "";
 
+---@diagnostic disable-next-line: lowercase-global
 crystal           = {};
 
-local testRunner  = require("test/TestRunner"):new();
-crystal.test      = {
-	add = function(...)
-		testRunner:add(...);
-	end,
-	isRunningTests = function()
-		return Features.tests;
-	end,
-};
+local modules     = {};
 
-require("utils/OOP");
+modules.oop       = require("modules/oop");
+modules.log       = require("modules/log");
+modules.test      = require("modules/test");
+
+for name, module in pairs(modules) do
+	crystal[name] = module.api;
+end
+
+for _, module in pairs(modules) do
+	if module.init then
+		module.init();
+	end
+end
+
 local Content     = require("resources/Content");
 local StringUtils = require("utils/StringUtils");
-local TableUtils  = require("utils/TableUtils");
 local Scene       = require("Scene");
 
+local TableUtils  = require("utils/TableUtils");
 crystal.conf      = {
 	assetsDirectory = nil,
 	mapDirectory = "", -- TODO remove when mapscene is no longer part of crystal
@@ -50,7 +56,6 @@ crystal.configure = function(c)
 	TableUtils.merge(crystal.conf, c);
 end
 
-LOG               = require("dev/Log"):new();
 TERMINAL          = require("dev/cli/Terminal"):new();
 LIVE_TUNE         = require("dev/constants/LiveTune"):new();
 CONSTANTS         = require("dev/constants/Constants"):new(TERMINAL, LIVE_TUNE);
@@ -72,7 +77,7 @@ TERMINAL:addCommand("loadScene sceneName:string", function(sceneName)
 end);
 
 local scene = nil;
-local SCENE = nil;
+SCENE = nil;
 local nextScene = nil;
 local fpsCounter;
 local console;
@@ -83,7 +88,6 @@ ENGINE.loadScene = function(self, scene)
 	-- can continue with a consistent SCENE global
 	nextScene = scene;
 end
-
 
 local requireGameSource = function()
 	-- TODO may or may not worked in fused build
@@ -171,7 +175,7 @@ love.textinput = function(text)
 end
 
 love.resize = function(self, width, height)
-	viewport:setWindowSize(width, height);
+	VIEWPORT:setWindowSize(width, height);
 end
 
 love.quit = function()
@@ -190,8 +194,8 @@ if Features.tests then
 				luacov.init({ runreport = true, exclude = luacovExcludes });
 			end
 
-			LOG:setVerbosity(LOG.Levels.FATAL);
-			local success = testRunner:runAll();
+			crystal.log.setVerbosity("fatal");
+			local success = modules.test.run();
 
 			if luacov then
 				luacov.shutdown();

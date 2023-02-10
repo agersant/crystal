@@ -54,7 +54,7 @@ crystal.test.add("Draws widget", { gfx = "on" }, function(context)
 
 	scene:update(0);
 	scene:draw();
-	context:compareFrame("test-data/TestWorldWidget/draws-widget.png");
+	context:expect_frame("test-data/TestWorldWidget/draws-widget.png");
 end);
 
 --#endregion

@@ -27,7 +27,7 @@ local StringUtils = require("utils/StringUtils");
 local MapScene = Class("MapScene", Scene);
 
 MapScene.init = function(self, mapName)
-	LOG:info("Instancing scene for map: " .. tostring(mapName));
+	crystal.log.info("Instancing scene for map: " .. tostring(mapName));
 	MapScene.super.init(self);
 
 	local ecs = ECS:new();
@@ -199,7 +199,7 @@ local TableUtils = require("utils/TableUtils");
 crystal.test.add("Draws all layers", { gfx = "on" }, function(context)
 	local scene = MapScene:new("test-data/TestMapScene/all_features.lua");
 	scene:draw();
-	context:compareFrame("test-data/TestMapScene/draws-all-layers.png");
+	context:expect_frame("test-data/TestMapScene/draws-all-layers.png");
 end);
 
 crystal.test.add("Loads entities", { gfx = "mock" }, function()

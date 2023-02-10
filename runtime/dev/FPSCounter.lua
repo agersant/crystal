@@ -27,7 +27,7 @@ end
 FPSCounter.update = function(self, dt)
 	assert(dt > 0);
 	if dt > 1 / 50 then
-		LOG:warning("Previous frame took " .. math.ceil(dt * 1000) .. "ms");
+		crystal.log.warning("Previous frame took " .. math.ceil(dt * 1000) .. "ms");
 	end
 	table.insert(state.frameDurations, dt);
 	while #state.frameDurations > numFramesRecorded do
@@ -40,7 +40,6 @@ FPSCounter.update = function(self, dt)
 end
 
 FPSCounter.draw = function(self)
-
 	if not state.isActive then
 		return;
 	end

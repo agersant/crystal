@@ -52,7 +52,7 @@ crystal.test.add("Sprites can draw", { gfx = "on" }, function(context)
 	sprite:setSpritePosition(10, 10);
 	sprite:setFrame(Frame:new(image));
 	sprite:draw();
-	context:compareFrame("test-data/TestSprite/sprites-can-draw.png");
+	context:expect_frame("test-data/TestSprite/sprites-can-draw.png");
 end);
 
 --#endregion

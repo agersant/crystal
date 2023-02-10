@@ -84,26 +84,26 @@ Terminal.run = function(self, command)
 	local command = self._commandStore:getCommand(parsedInput.command);
 	if not command then
 		if #parsedInput.command > 0 then
-			LOG:error(parsedInput.command .. " is not a valid command");
+			crystal.log.error(parsedInput.command .. " is not a valid command");
 		end
 		return;
 	end
 	local useArgs = {};
 	for i, arg in ipairs(parsedInput.arguments) do
 		if i > command:getNumArgs() then
-			LOG:error("Too many arguments for calling " .. command:getName());
+			crystal.log.error("Too many arguments for calling " .. command:getName());
 			return;
 		end
 		local requiredType = command:getArg(i).type;
 		if not command:typeCheckArgument(i, arg) then
-			LOG:error("Argument #" ..
+			crystal.log.error("Argument #" ..
 			i .. " (" .. command:getArg(i).name .. ") of command " .. command:getName() .. " must be a " .. requiredType);
 			return;
 		end
 		table.insert(useArgs, command:castArgument(i, arg));
 	end
 	if #useArgs < command:getNumArgs() then
-		LOG:error(command:getName() .. " requires " .. command:getNumArgs() .. " arguments");
+		crystal.log.error(command:getName() .. " requires " .. command:getNumArgs() .. " arguments");
 		return;
 	end
 	xpcall(function()
@@ -111,7 +111,7 @@ Terminal.run = function(self, command)
 	end, function(err)
 		err = "Error while running command '" .. parsedInput.fullText .. "':" .. err .. "\n";
 		err = err .. debug.traceback();
-		LOG:error(err);
+		crystal.log.error(err);
 	end);
 end
 

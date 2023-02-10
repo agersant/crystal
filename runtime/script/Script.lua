@@ -87,8 +87,8 @@ pumpThread = function(thread, resumeArgs)
 		local success = results[1];
 		if not success then
 			local errorText = results[2];
-			LOG:error(errorText);
-			LOG:error(debug.traceback(threadCoroutine));
+			crystal.log.error(errorText);
+			crystal.log.error(debug.traceback(threadCoroutine));
 		else
 			local instruction = results[2];
 			if instruction == "fork" then

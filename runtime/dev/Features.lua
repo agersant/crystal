@@ -20,13 +20,13 @@ Features.liveTune = not release;
 Features.slowAssertions = not release;
 Features.constants = not release;
 
-local doNothing = function()
+local noop = function()
 end
 
 local stubMetaTable = {
 	__newindex = function(t, k, v)
 		if type(v) == "function" then
-			rawset(t, k, doNothing);
+			rawset(t, k, noop);
 		end
 	end,
 };

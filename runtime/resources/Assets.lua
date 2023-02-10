@@ -199,7 +199,7 @@ loadAsset = function(self, path, source)
 
 		assert(not self._loadedAssets[assetID]);
 		self._loadedAssets[assetID] = { path = path, data = assetData, type = assetType, sources = {}, numSources = 0 };
-		LOG:info("Loaded asset: " .. path);
+		crystal.log.info("Loaded asset: " .. path);
 	end
 
 	assert(self._loadedAssets[assetID]);
@@ -237,7 +237,7 @@ unloadAsset = function(self, path, source)
 		end
 
 		self._loadedAssets[assetID] = nil;
-		LOG:info("Unloaded asset: " .. path);
+		crystal.log.info("Unloaded asset: " .. path);
 	end
 end
 
@@ -256,7 +256,7 @@ end
 getAsset = function(self, assetType, path)
 	assert(type(path) == "string");
 	if not isAssetLoaded(self, path) then
-		LOG:warning("Requested missing asset, loading at runtime: " .. path);
+		crystal.log.warning("Requested missing asset, loading at runtime: " .. path);
 		loadAsset(self, path, "emergency");
 	end
 	assert(isAssetLoaded(self, path));

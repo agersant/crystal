@@ -139,7 +139,7 @@ crystal.test.add("Draws physics objects", { gfx = "on" }, function(context)
 	TERMINAL:run("hidePhysicsOverlay");
 
 	-- TODO Test disabled due to https://github.com/love2d/love/issues/1618
-	-- context:compareFrame("test-data/TestDebugDraw/draws-physics-objects.png");
+	-- context:expect_frame("test-data/TestDebugDraw/draws-physics-objects.png");
 end);
 
 crystal.test.add("Draw navigation mesh", { gfx = "on" }, function(context)
@@ -152,7 +152,7 @@ crystal.test.add("Draw navigation mesh", { gfx = "on" }, function(context)
 	TERMINAL:run("hideNavmeshOverlay");
 
 	-- TODO Test disabled due to https://github.com/love2d/love/issues/1618
-	-- context:compareFrame("test-data/TestDebugDraw/draws-navigation-mesh.png");
+	-- context:expect_frame("test-data/TestDebugDraw/draws-navigation-mesh.png");
 end);
 
 --#endregion

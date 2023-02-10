@@ -64,7 +64,7 @@ crystal.test.add("Draws camera overlay", { gfx = "on" }, function(context)
 	scene:draw();
 	TERMINAL:run("hideCameraOverlay");
 
-	context:compareFrame("test-data/TestCameraSystem/draws-camera-overlay.png");
+	context:expect_frame("test-data/TestCameraSystem/draws-camera-overlay.png");
 end);
 
 --#endregion

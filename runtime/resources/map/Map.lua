@@ -23,11 +23,11 @@ end
 
 local parseEntity = function(self, objectData)
 	if objectData.shape ~= "rectangle" then
-		LOG:warning("Ignored map entity not defined as rectangle");
+		crystal.log.warning("Ignored map entity not defined as rectangle");
 		return;
 	end
 	if not objectData.type or #objectData.type == 0 then
-		LOG:warning("Ignored map entity because no type was specified");
+		crystal.log.warning("Ignored map entity because no type was specified");
 		return;
 	end
 	local options = TableUtils.shallowCopy(objectData.properties);
@@ -46,7 +46,6 @@ local parseObjectGroup = function(self, layerData)
 end
 
 Map.init = function(self, mapName, mapData, tileset)
-
 	assert(mapName);
 	assert(mapData);
 	assert(tileset);

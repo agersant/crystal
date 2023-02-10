@@ -18,7 +18,7 @@ Persistence.writeToDisk = function(self, path)
 	local fileContent = TableUtils.serialize(pod);
 	love.filesystem.write(path, fileContent);
 	local fullPath = StringUtils.mergePaths(love.filesystem.getRealDirectory(path), path);
-	LOG:info("Saved player save to " .. fullPath);
+	crystal.log.info("Saved player save to " .. fullPath);
 end
 
 Persistence.loadFromDisk = function(self, path)
@@ -26,7 +26,7 @@ Persistence.loadFromDisk = function(self, path)
 	local pod = TableUtils.unserialize(fileContent);
 	local newSaveData = self._saveDataClass:fromPOD(pod);
 	local fullPath = StringUtils.mergePaths(love.filesystem.getRealDirectory(path), path);
-	LOG:info("Loaded player save from " .. fullPath);
+	crystal.log.info("Loaded player save from " .. fullPath);
 	self._saveData = newSaveData;
 end
 
