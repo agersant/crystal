@@ -6,7 +6,7 @@ nav_exclude: true
 
 # TestContext:expect_frame
 
-Takes a screenshot of the last frame drawn by `love.draw`() and compares it with a reference image. The test will fail if the image is different. Incorrect screenshot can be found under `test-output/screenshots/`.
+Takes a screenshot of the latest frame drawn by `love.draw`() and compares it with a reference image. The test will fail if the two images are not identical. Upon failure, incorrect screenshots can be found under `test-output/screenshots/`.
 
 ## Usage
 
