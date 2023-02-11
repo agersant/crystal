@@ -11,7 +11,7 @@ ScriptRunner.init = function(self)
 end
 
 ScriptRunner.addScript = function(self, script)
-	assert(script:isInstanceOf(Script));
+	assert(script:is_instance_of(Script));
 	Alias:add(script, self:getEntity());
 	table.insert(self._scripts, script);
 	return script;
@@ -32,7 +32,7 @@ ScriptRunner.signalAllScripts = function(self, signal, ...)
 end
 
 ScriptRunner.removeScript = function(self, scriptToRemove)
-	assert(scriptToRemove:isInstanceOf(Script));
+	assert(scriptToRemove:is_instance_of(Script));
 	for i, script in ipairs(self._scripts) do
 		if script == scriptToRemove then
 			table.remove(self._scripts, i);

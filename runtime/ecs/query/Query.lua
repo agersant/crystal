@@ -66,7 +66,7 @@ end
 Query.onComponentAdded = function(self, entity, component)
 	if self._entities[entity] then
 		for _, class in ipairs(self._classes) do
-			if component:isInstanceOf(class) then
+			if component:is_instance_of(class) then
 				if not self._addedComponents[class] then
 					self._addedComponents[class] = {};
 				end
@@ -94,7 +94,7 @@ Query.onComponentRemoved = function(self, entity, component)
 	end
 	if self:matches(entity) then
 		for _, class in ipairs(self._classes) do
-			if component:isInstanceOf(class) then
+			if component:is_instance_of(class) then
 				if not self._removedComponents[class] then
 					self._removedComponents[class] = {};
 				end
@@ -109,7 +109,7 @@ Query.onComponentRemoved = function(self, entity, component)
 			if not self._removedComponents[class] then
 				self._removedComponents[class] = {};
 			end
-			if component:isInstanceOf(class) then
+			if component:is_instance_of(class) then
 				self._removedComponents[class][component] = entity;
 			end
 			for component in pairs(entity:getComponents(class)) do

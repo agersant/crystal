@@ -151,8 +151,8 @@ TestRunner.runAll = function(self)
 
 		print();
 		print("Failed tests:");
+		print();
 		for _, failure in ipairs(failures) do
-			print();
 			print("  [" .. failure.source .. "] " .. failure.name);
 		end
 	end

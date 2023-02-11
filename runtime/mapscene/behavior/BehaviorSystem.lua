@@ -18,7 +18,7 @@ BehaviorSystem.beforeScripts = function(self, dt)
 		local scriptRunner = entity:getComponent(ScriptRunner);
 		assert(scriptRunner);
 		local script = behavior:getScript();
-		assert(script:isInstanceOf(Script));
+		assert(script:is_instance_of(Script));
 		scriptRunner:addScript(script);
 		if not self._activeEntities[entity] then
 			self._activeEntities[entity] = { scriptRunner = scriptRunner, behaviors = {} };

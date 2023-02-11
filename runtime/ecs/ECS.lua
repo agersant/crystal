@@ -9,9 +9,9 @@ local ECS = Class("ECS");
 local registerComponent = function(self, entity, component)
 	assert(entity);
 	assert(component);
-	assert(component:isInstanceOf(Component));
+	assert(component:is_instance_of(Component));
 
-	local class = component:getClass();
+	local class = component:class();
 
 	if not self._entityToComponent[entity] then
 		self._entityToComponent[entity] = {};
@@ -48,9 +48,9 @@ end
 local unregisterComponent = function(self, entity, component)
 	assert(entity);
 	assert(component);
-	assert(component:isInstanceOf(Component));
+	assert(component:is_instance_of(Component));
 
-	local class = component:getClass();
+	local class = component:class();
 	assert(class);
 
 	assert(self._entityToComponent[entity][class]);
@@ -190,7 +190,7 @@ ECS.spawn = function(self, class, ...)
 	assert(class);
 	local entity = {};
 	self._entityNursery[entity] = {};
-	class:placementNew(entity, self, ...);
+	class:placement_new(entity, self, ...);
 	return entity;
 end
 
@@ -208,48 +208,48 @@ end
 
 ECS.addComponent = function(self, entity, component)
 	assert(component);
-	assert(component:isInstanceOf(Component));
+	assert(component:is_instance_of(Component));
 	assert(not component:getEntity());
 	assert(entity:isValid());
 	component:setEntity(entity);
 	local graveyard = self._componentGraveyard[entity];
-	if graveyard and graveyard[component:getClass()] then
-		graveyard[component:getClass()] = nil;
+	if graveyard and graveyard[component:class()] then
+		graveyard[component:class()] = nil;
 	else
-		assert(not entity:getExactComponent(component:getClass()));
+		assert(not entity:getExactComponent(component:class()));
 		local nursery = self._componentNursery[entity];
 		if not nursery then
 			nursery = {};
 			self._componentNursery[entity] = nursery;
 		end
-		nursery[component:getClass()] = component;
+		nursery[component:class()] = component;
 	end
 end
 
 ECS.removeComponent = function(self, entity, component)
 	assert(component);
-	assert(component:isInstanceOf(Component));
+	assert(component:is_instance_of(Component));
 	assert(component:getEntity() == entity);
 	assert(entity:isValid());
 	component:setEntity(nil);
 	local nursery = self._componentNursery[entity];
-	if nursery and nursery[component:getClass()] then
-		nursery[component:getClass()] = nil;
+	if nursery and nursery[component:class()] then
+		nursery[component:class()] = nil;
 	else
-		assert(entity:getExactComponent(component:getClass()) == component);
+		assert(entity:getExactComponent(component:class()) == component);
 		local graveyard = self._componentGraveyard[entity];
 		if not graveyard then
 			graveyard = {};
 			self._componentGraveyard[entity] = graveyard;
 		end
-		graveyard[component:getClass()] = component;
+		graveyard[component:class()] = component;
 	end
 end
 
 ECS.addQuery = function(self, query)
 	assert(TableUtils.countKeys(self._entities) == 0);
 	assert(not self._queries[query]);
-	assert(query:isInstanceOf(Query));
+	assert(query:is_instance_of(Query));
 	self._queries[query] = true;
 	for _, class in pairs(query:getClasses()) do
 		if not self._componentClassToQueries[class] then
@@ -261,15 +261,15 @@ end
 
 ECS.addSystem = function(self, system)
 	assert(system);
-	assert(system:isInstanceOf(System));
+	assert(system:is_instance_of(System));
 	table.insert(self._systems, system);
 end
 
 ECS.addEvent = function(self, event)
 	assert(event);
-	assert(event:isInstanceOf(Event));
+	assert(event:is_instance_of(Event));
 	assert(event:getEntity():isValid());
-	local baseClass = event:getClass();
+	local baseClass = event:class();
 	while baseClass do
 		local events = self._events[baseClass];
 		if not events then
@@ -283,7 +283,7 @@ end
 
 ECS.getSystem = function(self, class)
 	for _, system in ipairs(self._systems) do
-		if system:isInstanceOf(class) then
+		if system:is_instance_of(class) then
 			return system;
 		end
 	end
@@ -346,7 +346,7 @@ ECS.getComponents = function(self, entity, baseClass)
 	end
 	if self._componentNursery[entity] then
 		for _, component in pairs(self._componentNursery[entity]) do
-			if component:isInstanceOf(baseClass) then
+			if component:is_instance_of(baseClass) then
 				candidates[component] = true;
 			end
 		end
@@ -355,7 +355,7 @@ ECS.getComponents = function(self, entity, baseClass)
 	local output = {};
 	local graveyard = self._componentGraveyard[entity] or {};
 	for component in pairs(candidates) do
-		if graveyard[component:getClass()] ~= component then
+		if graveyard[component:class()] ~= component then
 			output[component] = true;
 		end
 	end

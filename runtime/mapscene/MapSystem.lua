@@ -5,7 +5,7 @@ local MapSystem = Class("MapSystem", System);
 
 MapSystem.init = function(self, ecs, map)
 	assert(map);
-	assert(map:isInstanceOf(Map));
+	assert(map:is_instance_of(Map));
 	MapSystem.super.init(self, ecs);
 	self._map = map;
 end

@@ -145,7 +145,7 @@ crystal.test.add("Overrides self parameter", function()
 	local From = Class:test("From");
 	local To = Class:test("To");
 	To.getMyClass = function(self)
-		return self:getClass();
+		return self:class();
 	end
 	local from = From:new();
 	local to = To:new();

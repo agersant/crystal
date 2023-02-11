@@ -163,7 +163,7 @@ MapScene.spawnEntityNearPlayer = function(self, class)
 	assert(navigationMesh);
 
 	assert(class);
-	assert(class:isInstanceOf(Entity));
+	assert(class:is_instance_of(Entity));
 	local entity = self:spawn(class);
 
 	local physicsBody = entity:getComponent(PhysicsBody);
@@ -179,7 +179,7 @@ MapScene.spawnEntityNearPlayer = function(self, class)
 end
 
 TERMINAL:addCommand("loadMap mapName:string", function(mapName)
-	local sceneClass = Class:getByName(crystal.conf.mapSceneClass);
+	local sceneClass = Class:get_by_name(crystal.conf.mapSceneClass);
 	local sceneFile = StringUtils.mergePaths(crystal.conf.mapDirectory, mapName .. ".lua");
 	local newScene = sceneClass:new(sceneFile);
 	ENGINE:loadScene(newScene);
@@ -187,7 +187,7 @@ end);
 
 TERMINAL:addCommand("spawn className:string", function(className)
 	if SCENE then
-		SCENE:spawnEntityNearPlayer(Class:getByName(className));
+		SCENE:spawnEntityNearPlayer(Class:get_by_name(className));
 	end
 end);
 
@@ -228,7 +228,7 @@ crystal.test.add("Can use the `spawn` command", function()
 	scene:update(0);
 
 	for entity in pairs(scene:getECS():getAllEntities()) do
-		if entity:isInstanceOf(TestSpawnCommand) then
+		if entity:is_instance_of(TestSpawnCommand) then
 			return;
 		end
 	end
@@ -254,7 +254,7 @@ crystal.test.add("Spawn command puts entity near player", function()
 	scene:update(0);
 
 	for entity in pairs(scene:getECS():getAllEntities()) do
-		if entity:isInstanceOf(TestSpawnCommandProximity) then
+		if entity:is_instance_of(TestSpawnCommandProximity) then
 			assert(entity:distanceToEntity(player) < 100);
 			return;
 		end

@@ -6,7 +6,7 @@ local InputListener = Class("InputListener", Component);
 
 InputListener.init = function(self, inputDevice)
 	assert(inputDevice);
-	assert(inputDevice:isInstanceOf(InputDevice));
+	assert(inputDevice:is_instance_of(InputDevice));
 	InputListener.super.init(self);
 	self._inputDevice = inputDevice;
 	self._inputContexts = {};

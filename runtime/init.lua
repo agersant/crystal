@@ -63,9 +63,9 @@ ENGINE            = {};
 CONSTANTS:define("Time Scale", 1.0, { minValue = 0.0, maxValue = 5.0 });
 
 TERMINAL:addCommand("loadScene sceneName:string", function(sceneName)
-	local class = Class:getByName(sceneName);
+	local class = Class:get_by_name(sceneName);
 	assert(class);
-	assert(class:isInstanceOf(Scene));
+	assert(class:is_instance_of(Scene));
 	local newScene = class:new();
 	ENGINE:loadScene(newScene);
 end);
@@ -119,7 +119,7 @@ love.load = function()
 		requireGameSource();
 	end
 
-	PERSISTENCE = require("persistence/Persistence"):new(Class:getByName(crystal.conf.saveDataClass));
+	PERSISTENCE = require("persistence/Persistence"):new(Class:get_by_name(crystal.conf.saveDataClass));
 end
 
 love.update = function(dt)

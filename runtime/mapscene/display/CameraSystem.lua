@@ -10,9 +10,9 @@ local drawCameraOverlay = false;
 
 CameraSystem.init = function(self, ecs, map, viewport)
 	assert(map);
-	assert(map:isInstanceOf(Map));
+	assert(map:is_instance_of(Map));
 	assert(viewport);
-	assert(viewport:isInstanceOf(Viewport));
+	assert(viewport:is_instance_of(Viewport));
 	CameraSystem.super.init(self, ecs);
 	self._camera = Camera:new(viewport, map:getWidthInPixels(), map:getHeightInPixels());
 end

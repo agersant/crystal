@@ -24,7 +24,7 @@ Widget.setRoot = Widget.super.setChild;
 
 Widget.addScript = function(self, script)
 	assert(script);
-	assert(script:isInstanceOf(Script));
+	assert(script:is_instance_of(Script));
 	self._scripts[script] = true;
 	Alias:add(script, self);
 	return script;
@@ -32,7 +32,7 @@ end
 
 Widget.removeScript = function(self, script)
 	assert(script);
-	assert(script:isInstanceOf(Script));
+	assert(script:is_instance_of(Script));
 	Alias:remove(script, self);
 	self._scripts[script] = nil;
 end

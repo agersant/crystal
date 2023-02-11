@@ -12,9 +12,9 @@ end
 
 MapEntity.spawn = function(self, scene)
 	xpcall(function()
-		local class = Class:getByName(self._class);
+		local class = Class:get_by_name(self._class);
 		assert(class);
-		assert(class:isInstanceOf(Entity));
+		assert(class:is_instance_of(Entity));
 		local entity = scene:spawn(class, self._options);
 		local physicsBody = entity:getComponent(PhysicsBody);
 		if physicsBody then

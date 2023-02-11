@@ -11,7 +11,7 @@ end
 TouchTrigger.init = function(self, physicsBody, shape)
 	TouchTrigger.super.init(self);
 	assert(physicsBody);
-	assert(physicsBody:isInstanceOf(PhysicsBody));
+	assert(physicsBody:is_instance_of(PhysicsBody));
 	assert(shape);
 	self._enabled = false;
 	self._fixture = love.physics.newFixture(physicsBody:getBody(), shape, 0);

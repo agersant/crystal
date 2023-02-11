@@ -93,7 +93,7 @@ pumpThread = function(thread, resumeArgs)
 			local instruction = results[2];
 			if instruction == "fork" then
 				local newThread = results[3];
-				assert(newThread:isInstanceOf(Thread));
+				assert(newThread:is_instance_of(Thread));
 				self._threads[newThread] = true;
 				pumpThread(newThread);
 				pumpThread(thread, newThread);

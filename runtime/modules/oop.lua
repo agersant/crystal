@@ -1,81 +1,81 @@
-local classIndex = {};
-local getClassByName = function(classPackage, name)
-	return classIndex[name];
+local classes = {};
+
+local get_class_by_name = function(_, name)
+	return classes[name];
 end
 
-local objectConstructorInPlace = function(class, obj, ...)
-	setmetatable(obj, class._objMetaTable);
+local object_in_place_constructor = function(class, obj, ...)
+	setmetatable(obj, class._obj_metatable);
 	if obj.init then
 		obj:init(...);
 	end
 	return obj;
 end
 
-local objectConstructor = function(class, ...)
+local object_constructor = function(class, ...)
 	local obj = {};
-	return objectConstructorInPlace(class, obj, ...);
+	return object_in_place_constructor(class, obj, ...);
 end
 
-local makeIsInstanceOf = function(class)
-	return function(self, otherClass)
-		assert(otherClass);
-		if class == otherClass then
+local make_is_instance_of = function(class)
+	return function(self, other_class)
+		assert(other_class);
+		if class == other_class then
 			return true;
 		end
 		if self.super then
-			return self.super.isInstanceOf(self.super, otherClass);
+			return self.super.is_instance_of(self.super, other_class);
 		end
 		return false;
 	end
 end
 
-local getClass = function(self)
+local get_class = function(self)
 	return self._class;
 end
 
-local getClassName = function(self)
+local get_class_name = function(self)
 	return self._class._name;
 end
 
-local declareClass = function(self, name, baseClass, options)
-	local classMetaTable = {};
-	classMetaTable.__index = baseClass;
-	classMetaTable.__tostring = function(class)
+local declare_class = function(self, name, base_class, options)
+	local class_metatable = {};
+	class_metatable.__index = base_class;
+	class_metatable.__tostring = function(class)
 		return "Class definition of: " .. class._name;
 	end
-	local class = setmetatable({}, classMetaTable);
+	local class = setmetatable({}, class_metatable);
 
-	local objMetaTable = {};
-	objMetaTable.__index = class;
-	objMetaTable.__tostring = function(obj)
+	local obj_metatable = {};
+	obj_metatable.__index = class;
+	obj_metatable.__tostring = function(obj)
 		return "Instance of class: " .. obj._class._name;
 	end
 
 	class._class = class;
 	class._name = name;
-	class._objMetaTable = objMetaTable;
+	class._obj_metatable = obj_metatable;
 
-	class.super = baseClass;
-	class.new = objectConstructor;
-	class.placementNew = objectConstructorInPlace;
-	class.getClass = getClass;
-	class.getClassName = getClassName;
-	class.isInstanceOf = makeIsInstanceOf(class);
+	class.super = base_class;
+	class.new = object_constructor;
+	class.placement_new = object_in_place_constructor;
+	class.class = get_class;
+	class.get_class_name = get_class_name;
+	class.is_instance_of = make_is_instance_of(class);
 
-	local allowRedefinition = _G["hotReloading"];
-	allowRedefinition = allowRedefinition or (options and options.allowRedefinition);
-	if not allowRedefinition then
-		assert(not classIndex[name]);
+	local allow_redefinition = options and options.allow_redefinition;
+	if not allow_redefinition then
+		assert(not classes[name]);
 	end
-	classIndex[name] = class;
+	classes[name] = class;
 
 	return class;
 end
 
-Class = setmetatable({}, { __call = declareClass });
-Class.getByName = getClassByName;
-Class.test = function(self, name, baseClass)
-	return declareClass(self, name, baseClass, { allowRedefinition = true });
+Class = setmetatable({}, { __call = declare_class });
+Class.get_by_name = get_class_by_name;
+Class.test = function(self, name, base_class)
+	return declare_class(self, name, base_class, { allow_redefinition = true });
 end;
 
 return {
@@ -95,28 +95,28 @@ return {
 		crystal.test.add("Get class", function()
 			local Fruit = Class:test("Fruit");
 			local Peach = Class:test("Peach", Fruit);
-			local myFruit = Fruit:new();
-			local myPeach = Peach:new();
-			assert(myFruit:getClass() == Fruit);
-			assert(myPeach:getClass() == Peach);
+			local my_fruit = Fruit:new();
+			local my_peach = Peach:new();
+			assert(my_fruit:class() == Fruit);
+			assert(my_peach:class() == Peach);
 		end);
 
 		crystal.test.add("Get class name", function()
 			local Fruit = Class:test("Fruit");
 			local Peach = Class:test("Peach", Fruit);
-			local myFruit = Fruit:new();
-			local myPeach = Peach:new();
-			assert(myFruit:getClassName() == "Fruit");
-			assert(myPeach:getClassName() == "Peach");
+			local my_fruit = Fruit:new();
+			local my_peach = Peach:new();
+			assert(my_fruit:get_class_name() == "Fruit");
+			assert(my_peach:get_class_name() == "Peach");
 		end);
 
 		crystal.test.add("Is instance of", function()
 			local Fruit = Class:test("Fruit");
-			local myFruit = Fruit:new();
-			assert(myFruit:isInstanceOf(Fruit));
+			local my_fruit = Fruit:new();
+			assert(my_fruit:is_instance_of(Fruit));
 
 			local Bird = Class:test("Bird");
-			assert(not myFruit:isInstanceOf(Bird));
+			assert(not my_fruit:is_instance_of(Bird));
 		end);
 
 		crystal.test.add("Is instance of inheritance", function()
@@ -124,29 +124,29 @@ return {
 			local Peach = Class:test("Peach", Fruit);
 			local Apple = Class:test("Apple", Fruit);
 
-			local myPeach = Peach:new();
-			assert(myPeach:isInstanceOf(Fruit));
-			assert(myPeach:isInstanceOf(Peach));
-			assert(not myPeach:isInstanceOf(Apple));
+			local my_peach = Peach:new();
+			assert(my_peach:is_instance_of(Fruit));
+			assert(my_peach:is_instance_of(Peach));
+			assert(not my_peach:is_instance_of(Apple));
 
-			local myFruit = Fruit:new();
-			assert(myFruit:isInstanceOf(Fruit));
-			assert(not myFruit:isInstanceOf(Peach));
+			local my_fruit = Fruit:new();
+			assert(my_fruit:is_instance_of(Fruit));
+			assert(not my_fruit:is_instance_of(Peach));
 		end);
 
 		crystal.test.add("Get by name", function()
 			local Fruit = Class("MostUniqueFruit");
 			local Peach = Class("VeryUniqueDerivedPeach", Fruit);
-			assert(Class:getByName("MostUniqueFruit") == Fruit);
-			assert(Class:getByName("VeryUniqueDerivedPeach") == Peach);
-			assert(Class:getByName("Berry") == nil);
+			assert(Class:get_by_name("MostUniqueFruit") == Fruit);
+			assert(Class:get_by_name("VeryUniqueDerivedPeach") == Peach);
+			assert(Class:get_by_name("Berry") == nil);
 		end);
 
 		crystal.test.add("Placement new", function()
 			local Fruit = Class:test("Fruit");
 			local fruit = {};
-			Fruit:placementNew(fruit);
-			assert(fruit:getClass() == Fruit);
+			Fruit:placement_new(fruit);
+			assert(fruit:class() == Fruit);
 		end);
 
 		--#endregion
