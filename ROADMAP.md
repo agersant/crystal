@@ -2,7 +2,6 @@
 
 - [x] Extract `arpg` into a new repository
 - [ ] Sumneko diagnostics enabled and cleaned up
-- [ ] Getting Started instructions in readme
 - [ ] Engine release process
 - [ ] Sample game release process
 - [ ] Game packaging
@@ -22,12 +21,16 @@
   - [x] Test
   - [ ] Tool
   - [ ] UI
-  - [ ] Utils
+  - [ ] OOP
+  - [ ] StringUtils
+  - [ ] TableUtils
   - [ ] Var
   - [ ] Window
 
 # Crystal 0.2.0
 
+- [ ] Docs website in readme
+- [ ] Getting Started instructions in readme and/or docs
 - [ ] More lenient autocomplete for command names
 - [ ] Auto-complete for command args supports arbitrary types/logic
 - [ ] Window/viewport/scene/camera system rework
