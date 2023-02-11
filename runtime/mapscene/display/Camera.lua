@@ -1,4 +1,4 @@
-local Features = require("dev/Features");
+local features = require("features");
 local Colors = require("resources/Colors");
 local MathUtils = require("utils/MathUtils");
 
@@ -44,7 +44,6 @@ local computeIdealPosition = function(self, trackedEntities)
 end
 
 Camera.init = function(self, viewport, mapWidth, mapHeight)
-
 	assert(viewport);
 	assert(mapWidth);
 	assert(mapHeight);
@@ -100,7 +99,6 @@ Camera.setPosition = function(self, x, y)
 end
 
 Camera.update = function(self, trackedEntities)
-
 	local z = self._viewport:getZoom();
 	local tx, ty = computeIdealPosition(self, trackedEntities);
 
@@ -121,7 +119,7 @@ Camera.update = function(self, trackedEntities)
 end
 
 Camera.drawDebug = function(self)
-	if not Features.debugDraw then
+	if not features.debug_draw then
 		return;
 	end
 

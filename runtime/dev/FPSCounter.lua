@@ -1,10 +1,10 @@
-local Features = require("dev/Features");
+local features = require("features");
 local Colors = require("resources/Colors");
 
 local FPSCounter = Class("FPSCounter");
 
-if not Features.fpsCounter then
-	Features.stub(FPSCounter);
+if not features.fps_counter then
+	features.stub(FPSCounter);
 end
 
 local numFramesRecorded = 255;

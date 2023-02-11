@@ -1,10 +1,10 @@
-local Features = require("dev/Features");
+local features = require("features");
 local StringUtils = require("utils/StringUtils");
 
 local Command = Class("Command");
 
-if not Features.cli then
-	Features.stub(Command);
+if not features.cli then
+	features.stub(Command);
 end
 
 Command.init = function(self, description, func)

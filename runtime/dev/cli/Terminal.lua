@@ -1,13 +1,13 @@
 local AutoComplete = require("dev/cli/AutoComplete");
 local CommandStore = require("dev/cli/CommandStore");
-local Features = require("dev/Features");
+local features = require("features");
 local TextInput = require("ui/TextInput");
 local StringUtils = require("utils/StringUtils");
 
 local Terminal = Class("Terminal");
 
-if not Features.cli then
-	Features.stub(Terminal);
+if not features.cli then
+	features.stub(Terminal);
 end
 
 local maxHistory = 100;

@@ -1,4 +1,4 @@
-local Features = require("dev/Features");
+local features = require("features");
 
 ---@class Test
 ---@field name string
@@ -48,7 +48,7 @@ TestRunner.add = function(self, name, options_or_body, body)
 		return;
 	end
 
-	if not Features.tests then
+	if not features.tests then
 		return;
 	end
 
@@ -266,7 +266,7 @@ return {
 			test_runner:add(...);
 		end,
 		is_running_tests = function()
-			return Features.tests;
+			return features.tests;
 		end,
 	},
 	run = function()

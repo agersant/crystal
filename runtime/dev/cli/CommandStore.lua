@@ -1,11 +1,11 @@
 local Command = require("dev/cli/Command");
-local Features = require("dev/Features");
+local features = require("features");
 local StringUtils = require("utils/StringUtils");
 
 local CommandStore = Class("CommandStore");
 
-if not Features.cli then
-	Features.stub(CommandStore);
+if not features.cli then
+	features.stub(CommandStore);
 end
 
 CommandStore.init = function(self)

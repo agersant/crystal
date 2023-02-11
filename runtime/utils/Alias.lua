@@ -1,11 +1,11 @@
-local Features = require("dev/Features");
+local features = require("features");
 local TableUtils = require("utils/TableUtils");
 
 local Alias = {};
 
 local search;
 
-if not Features.slowAssertions then
+if not features.slow_assertions then
 	search = function(originalIndex)
 		return function(from, key)
 			local value = originalIndex[key];

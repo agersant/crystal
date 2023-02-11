@@ -1,5 +1,5 @@
 local Path = require("mapscene/behavior/ai/Path");
-local Features = require("dev/Features");
+local features = require("features");
 local Colors = require("resources/Colors");
 
 local NavigationMesh = Class("NavigationMesh");
@@ -7,7 +7,7 @@ local NavigationMesh = Class("NavigationMesh");
 NavigationMesh.init = function(self, mesh)
 	assert(mesh);
 	self._mesh = mesh;
-	if Features.debugDraw then
+	if features.debug_draw then
 		self._triangles = {};
 		for _, t in ipairs(mesh:listNavigationPolygons()) do
 			table.insert(self._triangles, {

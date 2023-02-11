@@ -16,7 +16,7 @@ local crystalRoot = table.concat(pathChunks, "/");
 -- TODO may or may not work in fused build
 package.path      = package.path .. ";" .. crystalRuntime .. "/?.lua";
 
-local Features    = require("dev/Features");
+local features    = require("features");
 
 CRYSTAL_ROOT      = crystalRoot;
 CRYSTAL_RUNTIME   = crystalRuntime;
@@ -190,13 +190,13 @@ love.quit = function()
 	LIVE_TUNE:disconnectFromDevice();
 end
 
-if Features.tests then
+if features.tests then
 	love.run = function()
 		return function()
 			love.load();
 
 			local luacov;
-			if Features.codeCoverage then
+			if features.test_coverage then
 				luacov = require("external/luacov/runner");
 				local luacovExcludes = { "assets/.*$", "^main$", "Test", "test" };
 				luacov.init({ runreport = true, exclude = luacovExcludes });

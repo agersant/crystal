@@ -1,10 +1,10 @@
-local Features = require("dev/Features");
+local features = require("features");
 local Colors = require("resources/Colors");
 
 local Console = Class("Console");
 
-if not Features.cli then
-	Features.stub(Console);
+if not features.cli then
+	features.stub(Console);
 end
 
 local fontSize = 20;

@@ -1,4 +1,4 @@
-local Features = require("dev/Features");
+local features = require("features");
 local System = require("ecs/System");
 local AllComponents = require("ecs/query/AllComponents");
 local CollisionFilters = require("mapscene/physics/CollisionFilters");
@@ -8,8 +8,8 @@ local MathUtils = require("utils/MathUtils");
 
 local DebugDrawSystem = Class("DebugDrawSystem", System);
 
-if not Features.debugDraw then
-	Features.stub(DebugDrawSystem);
+if not features.debug_draw then
+	features.stub(DebugDrawSystem);
 end
 
 local drawPhysics = false;

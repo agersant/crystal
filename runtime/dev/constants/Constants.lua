@@ -1,4 +1,4 @@
-local Features = require("dev/Features");
+local features = require("features");
 local MathUtils = require("utils/MathUtils");
 local StringUtils = require("utils/StringUtils");
 
@@ -65,7 +65,7 @@ Constants.get = function(self, name)
 end
 
 Constants.set = function(self, name, value)
-	if not Features.constants then
+	if not features.constants then
 		return;
 	end
 	local constant = findConstant(self, name);
@@ -78,7 +78,7 @@ Constants.set = function(self, name, value)
 end
 
 Constants.mapToKnob = function(self, name, knobIndex)
-	if not Features.liveTune then
+	if not features.live_tune then
 		return;
 	end
 	local name = normalizeName(name);
@@ -100,7 +100,7 @@ Constants.mapToKnob = function(self, name, knobIndex)
 end
 
 Constants.update = function(self)
-	if not Features.liveTune then
+	if not features.live_tune then
 		return;
 	end
 	for name, knobIndex in pairs(self._knobMappings) do

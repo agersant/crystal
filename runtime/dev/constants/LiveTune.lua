@@ -1,11 +1,11 @@
 local Knob = require("knob");
-local Features = require("dev/Features");
+local features = require("features");
 local MathUtils = require("utils/MathUtils");
 
 local LiveTune = Class("LiveTune");
 
-if not Features.liveTune then
-	Features.stub(LiveTune);
+if not features.live_tune then
+	features.stub(LiveTune);
 end
 
 LiveTune.Mock = Class("LiveTuneMock", LiveTune);

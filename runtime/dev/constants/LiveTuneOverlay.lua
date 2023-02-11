@@ -1,6 +1,6 @@
 local Constants = require("dev/constants/Constants");
 local LiveTune = require("dev/constants/LiveTune");
-local Features = require("dev/Features");
+local features = require("features");
 local Colors = require("resources/Colors");
 local Element = require("ui/bricks/core/Element");
 local Border = require("ui/bricks/elements/Border");
@@ -14,8 +14,8 @@ local Widget = require("ui/bricks/elements/Widget");
 
 local LiveTuneOverlay = Class("LiveTuneOverlay");
 
-if not Features.liveTune then
-	Features.stub(LiveTuneOverlay);
+if not features.live_tune then
+	features.stub(LiveTuneOverlay);
 end
 
 local drawOverlay = false;
