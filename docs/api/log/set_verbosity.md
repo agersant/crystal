@@ -17,7 +17,7 @@ crystal.log.set_verbosity(verbosity)
 ### Arguments
 
 | Name        | Type                     | Description                                             |
-| :---------- | :----------------------- | ------------------------------------------------------- |
+| :---------- | :----------------------- | :------------------------------------------------------ |
 | `verbosity` | [`Verbosity`](verbosity) | Most verbose message level that will appear in the log. |
 
 ## Examples

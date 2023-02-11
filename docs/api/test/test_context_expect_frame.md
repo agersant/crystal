@@ -17,7 +17,7 @@ context:expect_frame(path)
 ### Arguments
 
 | Name   | Type     | Description                  |
-| :----- | :------- | ---------------------------- |
+| :----- | :------- | :--------------------------- |
 | `path` | `string` | Path to the reference image. |
 
 ## Examples

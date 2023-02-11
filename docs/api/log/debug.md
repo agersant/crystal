@@ -17,7 +17,7 @@ crystal.log.debug(message)
 ### Arguments
 
 | Name      | Type     | Description                      |
-| :-------- | :------- | -------------------------------- |
+| :-------- | :------- | :------------------------------- |
 | `message` | `string` | The message to print in the log. |
 
 ## Examples

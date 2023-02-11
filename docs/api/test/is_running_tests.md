@@ -17,7 +17,7 @@ crystal.test.is_running_tests()
 ### Returns
 
 | Name            | Type      | Description                                                           |
-| :-------------- | :-------- | --------------------------------------------------------------------- |
+| :-------------- | :-------- | :-------------------------------------------------------------------- |
 | `running_tests` | `boolean` | True if the game was launched to run its test suite, false otherwise. |
 
 ## Examples

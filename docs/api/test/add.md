@@ -17,7 +17,7 @@ crystal.test.add(name, body)
 ### Arguments
 
 | Name   | Type                                      | Description                                                                                |
-| :----- | :---------------------------------------- | ------------------------------------------------------------------------------------------ |
+| :----- | :---------------------------------------- | :----------------------------------------------------------------------------------------- |
 | `name` | `string`                                  | The name of the test to display in console output.                                         |
 | `body` | `function(`[TestContext](test_context)`)` | The test function to run. Runtime errors or failed `assert()` will cause the test to fail. |
 
@@ -30,7 +30,7 @@ crystal.test.add(name, options, body)
 ### Arguments
 
 | Name      | Type                                      | Description                                                                                |
-| :-------- | :---------------------------------------- | ------------------------------------------------------------------------------------------ |
+| :-------- | :---------------------------------------- | :----------------------------------------------------------------------------------------- |
 | `name`    | `string`                                  | The name of the test to display in console output.                                         |
 | `options` | `table`                                   | Options determining the pre-conditions before this test runs.                              |
 | `body`    | `function(`[TestContext](test_context)`)` | The test function to run. Runtime errors or failed `assert()` will cause the test to fail. |
@@ -38,7 +38,7 @@ crystal.test.add(name, options, body)
 The `options` table supports the following values:
 
 | Name         | Type               | Default    | Description                                     |
-| :----------- | :----------------- | ---------- | ----------------------------------------------- |
+| :----------- | :----------------- | :--------- | :---------------------------------------------- |
 | `resolution` | `{number, number}` | {200, 200} | Size of the game window when running this test. |
 
 ## Examples
