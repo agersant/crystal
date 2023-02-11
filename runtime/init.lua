@@ -14,6 +14,7 @@ table.remove(pathChunks, #pathChunks);
 local crystalRoot = table.concat(pathChunks, "/");
 
 -- TODO may or may not work in fused build
+-- TODO Manually add CRYSTAL_RUNTIME to `require` calls and leave package.path alone?
 package.path      = package.path .. ";" .. crystalRuntime .. "/?.lua";
 
 local features    = require("features");
