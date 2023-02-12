@@ -28,8 +28,10 @@ crystal           = {};
 
 local modules     = {};
 modules.oop       = require("modules/oop");
-modules.log       = require("modules/log");
 modules.test      = require("modules/test");
+crystal.test      = modules.test.module_api;
+
+modules.log       = require("modules/log");
 modules.tool      = require("modules/tool");
 
 for name, module in pairs(modules) do
