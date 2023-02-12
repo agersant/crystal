@@ -5,17 +5,17 @@ local toolkit = Toolkit:new();
 
 return {
 	module_api = {
-		add = function(...)
-			toolkit:add(...);
+		add = function(tool, options)
+			toolkit:add(tool, options);
 		end,
-		show = function(...)
-			toolkit:show(...);
+		show = function(tool_name)
+			toolkit:show(tool_name);
 		end,
-		hide = function(...)
-			toolkit:hide(...);
+		hide = function(tool_name)
+			toolkit:hide(tool_name);
 		end,
-		is_visible = function(...)
-			return toolkit:is_visible(...);
+		is_visible = function(tool_name)
+			return toolkit:is_visible(tool_name);
 		end,
 	},
 	global_api = {
