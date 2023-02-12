@@ -261,7 +261,7 @@ end
 local test_runner = TestRunner:new();
 
 return {
-	api = {
+	module_api = {
 		add = function(...)
 			test_runner:add(...);
 		end,
@@ -269,7 +269,5 @@ return {
 			return features.tests;
 		end,
 	},
-	run = function()
-		return test_runner:runAll();
-	end,
+	runner = test_runner,
 };

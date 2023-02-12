@@ -70,7 +70,7 @@ end
 local logger = Logger:new();
 
 return {
-	api = {
+	module_api = {
 		debug = function(text)
 			logger:append("debug", text);
 		end,

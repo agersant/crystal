@@ -27,13 +27,18 @@ CRYSTAL_NO_GAME   = crystalRoot == "";
 crystal           = {};
 
 local modules     = {};
-
 modules.oop       = require("modules/oop");
 modules.log       = require("modules/log");
 modules.test      = require("modules/test");
+modules.tool      = require("modules/tool");
 
 for name, module in pairs(modules) do
-	crystal[name] = module.api;
+	crystal[name] = module.module_api;
+	if module.global_api then
+		for k, v in pairs(module.global_api) do
+			crystal[k] = v;
+		end
+	end
 end
 
 local Content     = require("resources/Content");
@@ -74,7 +79,6 @@ end);
 local scene = nil;
 SCENE = nil;
 local nextScene = nil;
-local fpsCounter;
 local console;
 local liveTuneOverlay;
 
@@ -106,9 +110,9 @@ end
 
 love.load = function()
 	love.keyboard.setTextInput(false);
-	fpsCounter      = require("dev/FPSCounter"):new();
 	console         = require("dev/cli/Console"):new(TERMINAL);
 	liveTuneOverlay = require("dev/constants/LiveTuneOverlay"):new(CONSTANTS, LIVE_TUNE);
+	require("tools/fps_counter");
 
 	for _, module in pairs(modules) do
 		if module.init then
@@ -124,10 +128,8 @@ love.load = function()
 end
 
 love.update = function(dt)
+	modules.tool.toolkit:update(dt);
 	CONSTANTS:update();
-	if fpsCounter then
-		fpsCounter:update(dt);
-	end
 	if liveTuneOverlay then
 		liveTuneOverlay:update(dt);
 	end
@@ -150,9 +152,7 @@ love.draw = function()
 		scene:draw();
 	end
 	love.graphics.reset();
-	if fpsCounter then
-		fpsCounter:draw();
-	end
+	modules.tool.toolkit:draw();
 	if liveTuneOverlay then
 		liveTuneOverlay:draw();
 	end
@@ -162,6 +162,7 @@ love.draw = function()
 end
 
 love.keypressed = function(key, scanCode, isRepeat)
+	modules.tool.toolkit:key_pressed(key, scanCode, isRepeat);
 	local ctrl = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl");
 	console:keyPressed(key, scanCode, ctrl);
 	if INPUT then
@@ -180,6 +181,7 @@ love.keyreleased = function(key, scanCode)
 end
 
 love.textinput = function(text)
+	modules.tool.toolkit:text_input(text);
 	console:textInput(text);
 end
 
@@ -204,7 +206,7 @@ if features.tests then
 			end
 
 			crystal.log.set_verbosity("fatal");
-			local success = modules.test.run();
+			local success = modules.test.runner:run();
 
 			if luacov then
 				luacov.shutdown();

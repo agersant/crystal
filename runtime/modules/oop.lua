@@ -60,7 +60,7 @@ local declare_class = function(self, name, base_class, options)
 	class.new = object_constructor;
 	class.placement_new = object_in_place_constructor;
 	class.class = get_class;
-	class.get_class_name = get_class_name;
+	class.class_name = get_class_name;
 	class.is_instance_of = make_is_instance_of(class);
 
 	local allow_redefinition = options and options.allow_redefinition;
@@ -106,8 +106,8 @@ return {
 			local Peach = Class:test("Peach", Fruit);
 			local my_fruit = Fruit:new();
 			local my_peach = Peach:new();
-			assert(my_fruit:get_class_name() == "Fruit");
-			assert(my_peach:get_class_name() == "Peach");
+			assert(my_fruit:class_name() == "Fruit");
+			assert(my_peach:class_name() == "Peach");
 		end);
 
 		crystal.test.add("Is instance of", function()
