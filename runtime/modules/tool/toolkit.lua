@@ -2,8 +2,8 @@ local features = require("features");
 local Tool = require("modules/tool/tool");
 
 ---@class Toolkit
----@field private tools Tool[]
----@field private keybinds { [love.KeyConstant]: Tool }
+---@field private tools { [string]: Tool }
+---@field private keybinds { [love.KeyConstant]: string }
 ---@field private visible_tools { [Tool]: boolean }
 local Toolkit = Class("Toolkit");
 
@@ -19,16 +19,20 @@ end
 
 ---@class ToolOptions
 ---@field keybind love.KeyConstant
+---@field name string
 
 ---@param tool Tool
 ---@param options ToolOptions
 Toolkit.add = function(self, tool, options)
 	assert(tool:is_instance_of(Tool));
-	self.tools[tool:class_name()] = tool;
-	if options then
-		if options.keybind then
-			self.keybinds[options.keybind] = tool;
-		end
+	options = options or {};
+
+	local tool_name = options.name or tool:class_name();
+	assert(not self.tools[tool_name]);
+	self.tools[tool_name] = tool;
+
+	if options.keybind then
+		self.keybinds[options.keybind] = tool_name;
 	end
 end
 
@@ -78,9 +82,8 @@ Toolkit.key_pressed = function(self, key, scan_code, is_repeat)
 		tool:key_pressed(key, scan_code, is_repeat);
 	end
 
-	local tool = self.keybinds[key];
-	if tool then
-		local tool_name = tool:class_name();
+	local tool_name = self.keybinds[key];
+	if tool_name then
 		if self:is_visible(tool_name) then
 			self:hide(tool_name);
 		else
