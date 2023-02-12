@@ -212,6 +212,7 @@ mod tests {
         state.lock().hal = crate::hal::MockHardware {
             devices: Some(vec!["device 2".to_owned()]),
         };
+        state.lock().tick();
         assert!(state.lock().is_connected());
     }
 
