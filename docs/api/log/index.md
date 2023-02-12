@@ -6,7 +6,7 @@ has_toc: false
 
 # crystal.log
 
-Utility functions to emit log messages. Messages appear in both the console attached to the process and in a log file. Log files are located under the game's save directory (as determined by Love 2D), inside a directory named `logs`. Log files are named based on the timestamp they were created at.
+Utility functions to emit log messages. Messages appear in both the console attached to the process and in a log file. Log files are located under the game's save directory (as determined by LÖVE), inside a directory named `logs`. Log files are named based on the timestamp they were created at.
 
 ## Functions
 
