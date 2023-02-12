@@ -1,3 +1,5 @@
+local features = require("features");
+
 io.stdout:setvbuf("no");
 io.stderr:setvbuf("no");
 
@@ -17,22 +19,21 @@ local crystalRoot = table.concat(pathChunks, "/");
 -- TODO Manually add CRYSTAL_RUNTIME to `require` calls and leave package.path alone?
 package.path      = package.path .. ";" .. crystalRuntime .. "/?.lua";
 
-local features    = require("features");
 
-CRYSTAL_ROOT      = crystalRoot;
-CRYSTAL_RUNTIME   = crystalRuntime;
-CRYSTAL_NO_GAME   = crystalRoot == "";
+CRYSTAL_ROOT    = crystalRoot;
+CRYSTAL_RUNTIME = crystalRuntime;
+CRYSTAL_NO_GAME = crystalRoot == "";
 
 ---@diagnostic disable-next-line: lowercase-global
-crystal           = {};
+crystal         = {};
 
-local modules     = {};
-modules.oop       = require("modules/oop");
-modules.test      = require("modules/test");
-crystal.test      = modules.test.module_api;
+local modules   = {};
+modules.oop     = require("modules/oop");
+modules.test    = require("modules/test");
+crystal.test    = modules.test.module_api;
 
-modules.log       = require("modules/log");
-modules.tool      = require("modules/tool");
+modules.log     = require("modules/log");
+modules.tool    = require("modules/tool");
 
 for name, module in pairs(modules) do
 	crystal[name] = module.module_api;
