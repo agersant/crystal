@@ -3,8 +3,7 @@ local Tool = require("modules/tool/tool");
 
 ---@class Toolkit
 ---@field private tools { [string]: Tool }
----@field private keybinds { [love.KeyConstant]: string }
----@field private visible_tools { [Tool]: boolean }
+---@field private keybinds { [love.KeyConstant]: Tool }
 local Toolkit = Class("Toolkit");
 
 if not features.tools then
@@ -14,7 +13,6 @@ end
 Toolkit.init = function(self)
 	self.tools = {};
 	self.keybinds = {};
-	self.visible_tools = {};
 end
 
 ---@class ToolOptions
@@ -41,7 +39,7 @@ Toolkit.show = function(self, tool_name)
 	assert(type(tool_name) == "string");
 	local tool = self.tools[tool_name];
 	assert(tool);
-	self.visible_tools[tool] = true;
+	tool.visible = true;
 	tool:show();
 end
 
@@ -50,7 +48,7 @@ Toolkit.hide = function(self, tool_name)
 	assert(type(tool_name) == "string");
 	local tool = self.tools[tool_name];
 	assert(tool);
-	self.visible_tools[tool] = nil;
+	tool.visible = false;
 	tool:hide();
 end
 
@@ -58,7 +56,8 @@ end
 Toolkit.is_visible = function(self, tool_name)
 	assert(type(tool_name) == "string");
 	local tool = self.tools[tool_name];
-	return self.visible_tools[tool];
+	assert(tool);
+	return tool.visible;
 end
 
 ---@param dt number
@@ -69,8 +68,10 @@ Toolkit.update = function(self, dt)
 end
 
 Toolkit.draw = function(self)
-	for tool, _ in pairs(self.visible_tools) do
-		tool:draw();
+	for _, tool in pairs(self.tools) do
+		if tool.visible then
+			tool:draw();
+		end
 	end
 end
 
@@ -78,8 +79,10 @@ end
 ---@param scan_code love.Scancode
 ---@param is_repeat boolean
 Toolkit.key_pressed = function(self, key, scan_code, is_repeat)
-	for tool, _ in pairs(self.visible_tools) do
-		tool:key_pressed(key, scan_code, is_repeat);
+	for _, tool in pairs(self.tools) do
+		if tool.visible then
+			tool:key_pressed(key, scan_code, is_repeat);
+		end
 	end
 
 	local tool_name = self.keybinds[key];
@@ -94,8 +97,10 @@ end
 
 ---@param text string
 Toolkit.text_input = function(self, text)
-	for tool, _ in pairs(self.visible_tools) do
-		tool:text_input(text);
+	for _, tool in pairs(self.tools) do
+		if tool.visible then
+			tool:text_input(text);
+		end
 	end
 end
 
@@ -124,8 +129,6 @@ end);
 
 crystal.test.add("Can toggle via keybind", function()
 	local MyTool = Class:test("MyTool", Tool);
-	MyTool.show = function(self) self.visible = true; end
-	MyTool.hide = function(self) self.visible = false; end
 
 	local toolkit = Toolkit:new();
 	local tool = MyTool:new();

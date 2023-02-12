@@ -1,4 +1,5 @@
 ---@class Tool
+---@field visible boolean
 local Tool = Class("Tool");
 
 Tool.init = function(self)
@@ -25,11 +26,6 @@ end
 
 ---@param text string
 Tool.text_input = function(self, text)
-end
-
----@return boolean
-Tool.is_visible = function(self)
-	return crystal.tool.is_visible(self:class_name());
 end
 
 return Tool;
