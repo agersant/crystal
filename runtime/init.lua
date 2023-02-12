@@ -1,5 +1,3 @@
-local features = require("features");
-
 io.stdout:setvbuf("no");
 io.stderr:setvbuf("no");
 
@@ -19,6 +17,8 @@ local crystalRoot = table.concat(pathChunks, "/");
 -- TODO Manually add CRYSTAL_RUNTIME to `require` calls and leave package.path alone?
 package.path      = package.path .. ";" .. crystalRuntime .. "/?.lua";
 
+
+local features  = require("features");
 
 CRYSTAL_ROOT    = crystalRoot;
 CRYSTAL_RUNTIME = crystalRuntime;

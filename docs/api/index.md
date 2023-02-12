@@ -20,7 +20,7 @@ has_toc: false
 | [crystal.scene](scene/index)     |                                                                     |
 | [crystal.script](script/index)   |                                                                     |
 | [crystal.test](test/index)       | Provides an interface to define unit or integration tests.          |
-| [crystal.tool](tool/index)       |                                                                     |
+| [crystal.tool](tool/index)       | Allows you to define visual development tools.                      |
 | [crystal.ui](ui/index)           |                                                                     |
 | [crystal.var](var/index)         |                                                                     |
 | [crystal.window](window/index)   |                                                                     |
