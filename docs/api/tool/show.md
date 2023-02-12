@@ -16,9 +16,9 @@ crystal.tool.show(tool_name)
 
 ### Arguments
 
-| Name        | Type     | Description                                                                                                                    |
-| :---------- | :------- | :----------------------------------------------------------------------------------------------------------------------------- |
-| `tool_name` | `string` | Name of the tool to show. Unless specified otherwise when calling [crystal.tool.add](add), tool are named after their classes. |
+| Name        | Type     | Description               |
+| :---------- | :------- | :------------------------ |
+| `tool_name` | `string` | Name of the tool to show. |
 
 ## Examples
 

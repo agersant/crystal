@@ -16,9 +16,9 @@ crystal.tool.hide(tool_name)
 
 ### Arguments
 
-| Name        | Type     | Description                                                                                                                    |
-| :---------- | :------- | :----------------------------------------------------------------------------------------------------------------------------- |
-| `tool_name` | `string` | Name of the tool to hide. Unless specified otherwise when calling [crystal.tool.add](add), tool are named after their classes. |
+| Name        | Type     | Description               |
+| :---------- | :------- | :------------------------ |
+| `tool_name` | `string` | Name of the tool to hide. |
 
 ## Examples
 

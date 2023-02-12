@@ -46,7 +46,7 @@ The `options` table supports the following values:
 local MyTool = Class("MyTool", crystal.Tool);
 
 MyTool.draw = function()
-	love.graphics.rectangle("fill", 20, 50, 60, 120);
+  love.graphics.rectangle("fill", 20, 50, 60, 120);
 end
 
 crystal.tool.add(MyTool:new());
@@ -57,7 +57,7 @@ crystal.tool.show("MyTool");
 local MyTool = Class("MyTool", crystal.Tool);
 
 MyTool.draw = function()
-	love.graphics.rectangle("fill", 20, 50, 60, 120);
+  love.graphics.rectangle("fill", 20, 50, 60, 120);
 end
 
 crystal.tool.add(MyTool:new(), { name = "my-favorite-tool" });

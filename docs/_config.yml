@@ -14,4 +14,4 @@ callouts:
     color: blue
   warning:
     title: Warning
-    color: red
+    color: yellow

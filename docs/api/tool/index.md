@@ -10,7 +10,7 @@ This module facilitates the implementation of development tools, like performanc
 
 All tools should inherit from the globally available [crystal.Tool](tool) class. Tool classes can override methods (like `update` and `draw`) from the base class.
 
-Some common tools are already implemented by Crystal. Please refer to the [Built-in Tools](/tools) page for more details.
+Some common tools are already implemented by Crystal. Please refer to the [Built-in Tools](/crystal/tools) page for more details.
 
 {: .warning }
 Tools are intended for development functionality and are not available in [fused builds](https://love2d.org/wiki/love.filesystem.isFused).
@@ -21,15 +21,15 @@ The example below implements a tool counting the number of frames elapsed so far
 local FrameCounter = Class("FrameCounter", crystal.Tool);
 
 FrameCounter.init = function(self)
-	self.num_frames = 0;
+  self.num_frames = 0;
 end
 
 FrameCounter.update = function(self, dt)
-	self.num_frames = self.num_frames + 1;
+  self.num_frames = self.num_frames + 1;
 end
 
 FrameCounter.draw = function(self)
-	love.graphics.print(self.num_frames, 10, 10)
+  love.graphics.print(self.num_frames, 10, 10)
 end
 
 crystal.tool.add(FrameCounter:new(), { keybind = "f1" });
