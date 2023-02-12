@@ -29,7 +29,7 @@ FrameCounter.update = function(self, dt)
 end
 
 FrameCounter.draw = function(self)
-  love.graphics.print(self.num_frames, 10, 10)
+  love.graphics.print(self.num_frames, 10, 10);
 end
 
 crystal.tool.add(FrameCounter:new(), { keybind = "f1" });
@@ -39,7 +39,7 @@ crystal.tool.add(FrameCounter:new(), { keybind = "f1" });
 
 | Name                                  | Description                                  |
 | :------------------------------------ | :------------------------------------------- |
-| [crystal.tool.add](add)               | Defines a new tool                           |
+| [crystal.tool.add](add)               | Defines a new tool.                          |
 | [crystal.tool.hide](hide)             | Makes a tool no longer draw on the screen.   |
 | [crystal.tool.is_visible](is_visible) | Returns whether a tool is currently visible. |
 | [crystal.tool.show](show)             | Makes a tool draw on the screen.             |
