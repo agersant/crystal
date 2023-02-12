@@ -30,6 +30,8 @@
 # Crystal 0.2.0
 
 - [ ] Docs website in readme
+- [ ] Immediate mode UI kit for dev tools
+- [ ] Mouse support (in tools)
 - [ ] Getting Started instructions in readme and/or docs
 - [ ] More lenient autocomplete for command names
 - [ ] Auto-complete for command args supports arbitrary types/logic
@@ -39,15 +41,13 @@
 
 # Crystal 0.3.0
 
-- [ ] Immediate mode UI kit for dev tools
-- [ ] Mouse support (in tools)
 - [ ] Bricks layout caching
-- [ ] create-crystal-app starter script
+- [ ] Mouse support (gameplay)
+- [ ] Mouse support (bricks)
 - [ ] Particles
 
 # Crystal 0.4.0
 
 - [ ] LDTk maps
+- [ ] create-crystal-app starter script
 - [ ] Curves / timelines
-- [ ] Mouse support (gameplay)
-- [ ] Mouse support (bricks)

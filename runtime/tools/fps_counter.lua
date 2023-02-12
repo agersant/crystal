@@ -1,5 +1,9 @@
 local Colors = require("resources/Colors");
 
+---@class FPSCounter: Tool
+---@field private font love.Font
+---@field private frame_durations number[]
+---@field private text string
 local FPSCounter = Class("FPSCounter", crystal.Tool);
 
 local num_frames_recorded = 255;
@@ -15,8 +19,10 @@ local text_padding_y = 5;
 FPSCounter.init = function(self)
 	self.font = FONTS:get("devBold", font_size);
 	self.frame_durations = {};
+	self.text = "";
 end
 
+---@param dt number
 FPSCounter.update = function(self, dt)
 	assert(dt > 0);
 	table.insert(self.frame_durations, dt);
@@ -26,7 +32,7 @@ FPSCounter.update = function(self, dt)
 
 	local delta = love.timer.getAverageDelta();
 	local averageFPS = math.floor(1 / delta);
-	self._text = string.format("FPS: %d", averageFPS);
+	self.text = string.format("FPS: %d", averageFPS);
 end
 
 FPSCounter.draw = function(self)
@@ -49,7 +55,7 @@ FPSCounter.draw = function(self)
 	y = padding_y + text_padding_y;
 	love.graphics.setFont(self.font);
 	love.graphics.setColor(Colors.greyD);
-	love.graphics.print(self._text, x, y);
+	love.graphics.print(self.text, x, y);
 end
 
 TERMINAL:addCommand("showFPSCounter", function()

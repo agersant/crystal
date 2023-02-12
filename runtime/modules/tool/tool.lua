@@ -1,23 +1,30 @@
+---@class Tool
 local Tool = Class("Tool");
 
-Tool.update = function()
+---@param dt number
+Tool.update = function(self, dt)
 end
 
-Tool.draw = function()
+Tool.draw = function(self)
 end
 
-Tool.show = function()
+Tool.show = function(self)
 end
 
-Tool.hide = function()
+Tool.hide = function(self)
 end
 
-Tool.key_pressed = function()
+---@param key love.KeyConstant
+---@param scan_code love.Scancode
+---@param is_repeat boolean
+Tool.key_pressed = function(self, key, scan_code, is_repeat)
 end
 
-Tool.text_input = function()
+---@param text string
+Tool.text_input = function(self, text)
 end
 
+---@return boolean
 Tool.is_visible = function(self)
 	return crystal.tool.is_visible(self:class_name());
 end
