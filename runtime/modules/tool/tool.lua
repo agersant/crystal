@@ -1,6 +1,9 @@
 ---@class Tool
 local Tool = Class("Tool");
 
+Tool.init = function(self)
+end
+
 ---@param dt number
 Tool.update = function(self, dt)
 end

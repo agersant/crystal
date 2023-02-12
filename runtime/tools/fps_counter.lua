@@ -17,6 +17,7 @@ local text_padding_x = 5;
 local text_padding_y = 5;
 
 FPSCounter.init = function(self)
+	FPSCounter.super.init(self);
 	self.font = FONTS:get("devBold", font_size);
 	self.frame_durations = {};
 	self.text = "";
