@@ -33,6 +33,7 @@ modules.test    = require("modules/test");
 crystal.test    = modules.test.module_api;
 
 modules.cmd     = require("modules/cmd");
+modules.const   = require("modules/const");
 modules.log     = require("modules/log");
 modules.tool    = require("modules/tool");
 
@@ -61,7 +62,6 @@ crystal.configure = function(c)
 end
 
 LIVE_TUNE         = require("dev/constants/LiveTune"):new();
-CONSTANTS         = require("dev/constants/Constants"):new(TERMINAL, LIVE_TUNE);
 VIEWPORT          = require("graphics/Viewport"):new();
 FONTS             = require("resources/Fonts"):new({});
 ASSETS            = require("resources/Assets"):new();
@@ -69,7 +69,7 @@ ASSETS            = require("resources/Assets"):new();
 INPUT             = require("input/Input"):new(8);
 ENGINE            = {};
 
-CONSTANTS:define("Time Scale", 1.0, { minValue = 0.0, maxValue = 5.0 });
+crystal.const.define("Time Scale", 1.0, { min = 0.0, max = 100.0 });
 
 crystal.cmd.add("loadScene sceneName:string", function(sceneName)
 	local class = Class:get_by_name(sceneName);
@@ -131,7 +131,6 @@ end
 
 love.update = function(dt)
 	modules.tool.toolkit:update(dt);
-	CONSTANTS:update();
 	if liveTuneOverlay then
 		liveTuneOverlay:update(dt);
 	end
@@ -141,7 +140,7 @@ love.update = function(dt)
 		nextScene = nil;
 	end
 	if scene then
-		scene:update(dt * CONSTANTS:get("timeScale"));
+		scene:update(dt * crystal.const.get("timescale"));
 	end
 	if INPUT then
 		INPUT:flushEvents();

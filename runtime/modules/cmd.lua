@@ -19,4 +19,5 @@ return {
 		local console = require("modules/cmd/console"):new(terminal);
 		crystal.tool.add(console, { keybind = "`" });
 	end,
+	terminal = terminal,
 }
