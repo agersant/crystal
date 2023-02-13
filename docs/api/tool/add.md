@@ -52,6 +52,7 @@ MyTool.draw = function()
 end
 
 crystal.tool.add(MyTool:new());
+
 crystal.tool.show("MyTool");
 ```
 
@@ -62,6 +63,11 @@ MyTool.draw = function()
   love.graphics.rectangle("fill", 20, 50, 60, 120);
 end
 
-crystal.tool.add(MyTool:new(), { name = "my-favorite-tool" });
-crystal.tool.show("my-favorite-tool");
+crystal.tool.add(MyTool:new(), {
+  name = "my-favorite-tool",
+  show_command = "ShowMyTool",
+  hide_command = "HideMyTool",
+});
+
+crystal.cmd.run("ShowMyTool");
 ```
