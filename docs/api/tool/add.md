@@ -35,10 +35,12 @@ crystal.tool.add(tool, options)
 
 The `options` table supports the following values:
 
-| Name      | Type                                                    | Default                                      | Description                                                                                |
-| :-------- | :------------------------------------------------------ | :------------------------------------------- | :----------------------------------------------------------------------------------------- |
-| `keybind` | [love.KeyConstant](https://love2d.org/wiki/KeyConstant) | `nil`                                        | Associates a keybind with this tool. Pressing this key will toggle visibility of the tool. |
-| `name`    | `string`                                                | Class name of the tool (`tool:class_name()`) | A name used to identify this tool when calling other `crystal.tool.*` functions.           |
+| Name           | Type                                                    | Default                                      | Description                                                                                |
+| :------------- | :------------------------------------------------------ | :------------------------------------------- | :----------------------------------------------------------------------------------------- |
+| `keybind`      | [love.KeyConstant](https://love2d.org/wiki/KeyConstant) | `nil`                                        | Associates a keybind with this tool. Pressing this key will toggle visibility of the tool. |
+| `hide_command` | `string`                                                | `nil`                                        | Automatically registers a [console command](/crystal/api/cmd) to hide this tool.           |
+| `name`         | `string`                                                | Class name of the tool (`tool:class_name()`) | A name used to identify this tool when calling other `crystal.tool.*` functions.           |
+| `show_command` | `string`                                                | `nil`                                        | Automatically registers a [console command](/crystal/api/cmd) to show this tool.           |
 
 ## Examples
 

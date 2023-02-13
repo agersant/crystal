@@ -18,6 +18,8 @@ end
 ---@class ToolOptions
 ---@field keybind love.KeyConstant
 ---@field name string
+---@field show_command string
+---@field hide_command string
 
 ---@param tool Tool
 ---@param options ToolOptions
@@ -31,6 +33,18 @@ Toolkit.add = function(self, tool, options)
 
 	if options.keybind then
 		self.keybinds[options.keybind] = tool_name;
+	end
+
+	if options.show_command then
+		crystal.cmd.add(options.show_command, function()
+			self:show(tool_name);
+		end);
+	end
+
+	if options.hide_command then
+		crystal.cmd.add(options.hide_command, function()
+			self:hide(tool_name);
+		end);
 	end
 end
 
@@ -72,6 +86,12 @@ Toolkit.draw = function(self)
 		if tool.visible then
 			tool:draw();
 		end
+	end
+end
+
+Toolkit.quit = function(self)
+	for _, tool in pairs(self.tools) do
+		tool:quit();
 	end
 end
 
