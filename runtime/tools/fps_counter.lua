@@ -59,11 +59,11 @@ FPSCounter.draw = function(self)
 	love.graphics.print(self.text, x, y);
 end
 
-TERMINAL:addCommand("showFPSCounter", function()
+crystal.cmd.add("showFPSCounter", function()
 	crystal.tool.show("FPSCounter");
 end);
 
-TERMINAL:addCommand("hideFPSCounter", function()
+crystal.cmd.add("hideFPSCounter", function()
 	crystal.tool.hide("FPSCounter");
 end);
 

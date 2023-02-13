@@ -84,19 +84,19 @@ DebugDrawSystem.duringDebugDraw = function(self, viewport)
 	end
 end
 
-TERMINAL:addCommand("showNavmeshOverlay", function()
+crystal.cmd.add("showNavmeshOverlay", function()
 	drawNavigation = true;
 end);
 
-TERMINAL:addCommand("hideNavmeshOverlay", function()
+crystal.cmd.add("hideNavmeshOverlay", function()
 	drawNavigation = false;
 end);
 
-TERMINAL:addCommand("showPhysicsOverlay", function()
+crystal.cmd.add("showPhysicsOverlay", function()
 	drawPhysics = true;
 end);
 
-TERMINAL:addCommand("hidePhysicsOverlay", function()
+crystal.cmd.add("hidePhysicsOverlay", function()
 	drawPhysics = false;
 end);
 
@@ -133,10 +133,10 @@ crystal.test.add("Draws physics objects", function(context)
 	local touchTrigger = TouchTrigger:new(physicsBodyD, love.physics.newCircleShape(10));
 	entityD:addComponent(touchTrigger);
 
-	TERMINAL:run("showPhysicsOverlay");
+	crystal.cmd.run("showPhysicsOverlay");
 	scene:update(0);
 	scene:draw();
-	TERMINAL:run("hidePhysicsOverlay");
+	crystal.cmd.run("hidePhysicsOverlay");
 
 	-- TODO Test disabled due to https://github.com/love2d/love/issues/1618
 	-- context:expect_frame("test-data/TestDebugDraw/draws-physics-objects.png");
@@ -146,10 +146,10 @@ crystal.test.add("Draw navigation mesh", function(context)
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 
-	TERMINAL:run("showNavmeshOverlay");
+	crystal.cmd.run("showNavmeshOverlay");
 	scene:update(0);
 	scene:draw();
-	TERMINAL:run("hideNavmeshOverlay");
+	crystal.cmd.run("hideNavmeshOverlay");
 
 	-- TODO Test disabled due to https://github.com/love2d/love/issues/1618
 	-- context:expect_frame("test-data/TestDebugDraw/draws-navigation-mesh.png");

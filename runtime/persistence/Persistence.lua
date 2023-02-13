@@ -30,12 +30,12 @@ Persistence.loadFromDisk = function(self, path)
 	self._saveData = newSaveData;
 end
 
-TERMINAL:addCommand("save fileName:string", function(fileName)
+crystal.cmd.add("save fileName:string", function(fileName)
 	PERSISTENCE:getSaveData():save(SCENE);
 	PERSISTENCE:writeToDisk(fileName);
 end);
 
-TERMINAL:addCommand("load fileName:string", function(fileName)
+crystal.cmd.add("load fileName:string", function(fileName)
 	PERSISTENCE:loadFromDisk(fileName);
 	PERSISTENCE:getSaveData():load();
 end);

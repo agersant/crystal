@@ -51,7 +51,7 @@ Constants.define = function(self, name, initialValue, options)
 	end
 
 	if valueType == "number" or valueType == "string" or valueType == "boolean" then
-		self._terminal:addCommand(name .. " value:" .. valueType, function(value)
+		self._terminal:add_command(name .. " value:" .. valueType, function(value)
 			self:set(name, value);
 		end)
 	end
@@ -127,7 +127,7 @@ Constants.getMappedKnobs = function(self)
 	return knobs;
 end
 
-TERMINAL:addCommand("liveTune constant:string knob:number", function(name, knobIndex)
+crystal.cmd.add("liveTune constant:string knob:number", function(name, knobIndex)
 	CONSTANTS:mapToKnob(name, knobIndex);
 end)
 

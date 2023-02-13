@@ -184,7 +184,6 @@ end
 
 --#region Tests
 
-
 crystal.test.add("Setting and clearing text", function()
 	local textInput = TextInput:new();
 	assert(textInput:getText() == "");

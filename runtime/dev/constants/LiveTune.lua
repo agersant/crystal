@@ -79,7 +79,7 @@ LiveTune.getCurrentDevice = function(self)
 	return Knob.getCurrentDevice();
 end
 
-TERMINAL:addCommand("connectToMIDIDevice port:number", function(port)
+crystal.cmd.add("connectToMIDIDevice port:number", function(port)
 	LIVE_TUNE:connectToDevice(port);
 end);
 

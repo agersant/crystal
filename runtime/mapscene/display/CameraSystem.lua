@@ -45,11 +45,11 @@ CameraSystem.duringDebugDraw = function(self)
 	end
 end
 
-TERMINAL:addCommand("showCameraOverlay", function()
+crystal.cmd.add("showCameraOverlay", function()
 	drawCameraOverlay = true;
 end);
 
-TERMINAL:addCommand("hideCameraOverlay", function()
+crystal.cmd.add("hideCameraOverlay", function()
 	drawCameraOverlay = false;
 end);
 
@@ -59,10 +59,10 @@ crystal.test.add("Draws camera overlay", function(context)
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 
-	TERMINAL:run("showCameraOverlay");
+	crystal.cmd.run("showCameraOverlay");
 	scene:update(0);
 	scene:draw();
-	TERMINAL:run("hideCameraOverlay");
+	crystal.cmd.run("hideCameraOverlay");
 
 	context:expect_frame("test-data/TestCameraSystem/draws-camera-overlay.png");
 end);

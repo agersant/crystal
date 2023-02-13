@@ -32,6 +32,7 @@ modules.oop     = require("modules/oop");
 modules.test    = require("modules/test");
 crystal.test    = modules.test.module_api;
 
+modules.cmd     = require("modules/cmd");
 modules.log     = require("modules/log");
 modules.tool    = require("modules/tool");
 
@@ -59,7 +60,6 @@ crystal.configure = function(c)
 	TableUtils.merge(crystal.conf, c);
 end
 
-TERMINAL          = require("dev/cli/Terminal"):new();
 LIVE_TUNE         = require("dev/constants/LiveTune"):new();
 CONSTANTS         = require("dev/constants/Constants"):new(TERMINAL, LIVE_TUNE);
 VIEWPORT          = require("graphics/Viewport"):new();
@@ -71,7 +71,7 @@ ENGINE            = {};
 
 CONSTANTS:define("Time Scale", 1.0, { minValue = 0.0, maxValue = 5.0 });
 
-TERMINAL:addCommand("loadScene sceneName:string", function(sceneName)
+crystal.cmd.add("loadScene sceneName:string", function(sceneName)
 	local class = Class:get_by_name(sceneName);
 	assert(class);
 	assert(class:is_instance_of(Scene));
@@ -113,7 +113,6 @@ end
 
 love.load = function()
 	love.keyboard.setTextInput(false);
-	console         = require("dev/cli/Console"):new(TERMINAL);
 	liveTuneOverlay = require("dev/constants/LiveTuneOverlay"):new(CONSTANTS, LIVE_TUNE);
 	require("tools/fps_counter");
 
@@ -159,33 +158,26 @@ love.draw = function()
 	if liveTuneOverlay then
 		liveTuneOverlay:draw();
 	end
-	if console then
-		console:draw();
-	end
 end
 
 love.keypressed = function(key, scanCode, isRepeat)
 	modules.tool.toolkit:key_pressed(key, scanCode, isRepeat);
 	local ctrl = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl");
-	console:keyPressed(key, scanCode, ctrl);
 	if INPUT then
-		if not console:isActive() then
-			INPUT:keyPressed(key, scanCode, isRepeat);
-		end
+		-- TODO block input from tools
+		INPUT:keyPressed(key, scanCode, isRepeat);
 	end
 end
 
 love.keyreleased = function(key, scanCode)
 	if INPUT then
-		if not console:isActive() then
-			INPUT:keyReleased(key, scanCode);
-		end
+		-- TODO block input from tools
+		INPUT:keyReleased(key, scanCode);
 	end
 end
 
 love.textinput = function(text)
 	modules.tool.toolkit:text_input(text);
-	console:textInput(text);
 end
 
 love.resize = function(self, width, height)

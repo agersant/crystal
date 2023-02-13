@@ -20,6 +20,7 @@ TestContext.init = function(self, runner)
 end
 
 ---@class TestRunner
+---@field private busy boolean
 ---@field package context TestContext
 ---@field private tests Test[]
 ---@field package current_test Test
@@ -28,6 +29,7 @@ end
 local TestRunner = Class("TestRunner");
 
 TestRunner.init = function(self)
+	self.busy = false;
 	self.context = TestContext:new(self);
 	self.tests = {};
 	self.current_test = nil;
@@ -39,6 +41,10 @@ end
 ---@param options_or_body TestOptions | fun(context: TestRunner)
 ---@param body? fun(context: TestRunner)
 TestRunner.add = function(self, name, options_or_body, body)
+	if self.busy then
+		return;
+	end
+
 	local source = debug.getinfo(3).source;
 	local is_engine_test = source:match("^@" .. CRYSTAL_RUNTIME);
 	source = source:gsub(CRYSTAL_RUNTIME, "");
@@ -92,6 +98,7 @@ end
 
 ---@return boolean success
 TestRunner.runAll = function(self)
+	self.busy = true;
 	self:create_output_directories();
 
 	local num_success = 0;
@@ -163,6 +170,7 @@ TestRunner.runAll = function(self)
 	print(report);
 	print();
 
+	self.busy = false;
 	return #failures == 0;
 end
 

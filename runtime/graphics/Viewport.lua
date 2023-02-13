@@ -56,15 +56,15 @@ Viewport.getWindowSize = function(self)
 	return self._windowWidth, self._windowHeight;
 end
 
-TERMINAL:addCommand("setZoom zoom:number", function(zoom)
+crystal.cmd.add("setZoom zoom:number", function(zoom)
 	VIEWPORT:setZoom(zoom);
 end);
 
-TERMINAL:addCommand("enableFullscreen", function()
+crystal.cmd.add("enableFullscreen", function()
 	VIEWPORT:setFullscreenEnabled(true);
 end);
 
-TERMINAL:addCommand("disableFullscreen", function()
+crystal.cmd.add("disableFullscreen", function()
 	VIEWPORT:setFullscreenEnabled(false);
 end);
 

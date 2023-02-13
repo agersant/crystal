@@ -234,11 +234,11 @@ LiveTuneOverlay.draw = function(self)
 	self._widget:draw();
 end
 
-TERMINAL:addCommand("showLiveTuneOverlay", function()
+crystal.cmd.add("showLiveTuneOverlay", function()
 	drawOverlay = true;
 end);
 
-TERMINAL:addCommand("hideLiveTuneOverlay", function()
+crystal.cmd.add("hideLiveTuneOverlay", function()
 	drawOverlay = false;
 end);
 
