@@ -9,7 +9,6 @@ crate-type = ["cdylib"]
 
 [dependencies]
 anyhow = "1.0"
-lazy_static = "1.4"
 midir = "0.9.1"
 mlua = { version = "0.8", features = ["luajit", "module"] }
 parking_lot = "0.11"

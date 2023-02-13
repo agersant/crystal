@@ -33,7 +33,7 @@ impl<H: Hal> Drop for ConnectionState<H> {
 pub(crate) struct State<H: Hal> {
     pub hal: H,
     mode: Mode,
-    _ticker: Option<Sender<()>>,
+    ticker: Option<Sender<()>>,
     connection_state: ConnectionState<H>,
 }
 
@@ -43,23 +43,29 @@ impl<H: Hal> State<H> {
         let state = Arc::new(Mutex::new(State {
             hal,
             mode: Mode::Absolute,
-            _ticker: Some(sender),
+            ticker: Some(sender),
             connection_state: ConnectionState::Disconnected,
         }));
 
         let poll_state = state.clone();
-        std::thread::spawn(move || loop {
-            {
-                let mut state = poll_state.lock();
+        std::thread::Builder::new()
+            .name("LiveTune tick".to_owned())
+            .spawn(move || loop {
                 if let Err(TryRecvError::Disconnected) = receiver.try_recv() {
                     return;
                 }
-                state.tick();
-            }
-            std::thread::sleep(Duration::from_millis(500));
-        });
+                if let Some(mut state) = poll_state.try_lock() {
+                    state.tick();
+                }
+                std::thread::sleep(Duration::from_millis(1));
+            })
+            .unwrap();
 
         state
+    }
+
+    pub fn quit(&mut self) {
+        self.ticker = None;
     }
 
     pub fn device(&self) -> Option<&DeviceHandle<H>> {

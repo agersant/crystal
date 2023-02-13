@@ -730,7 +730,6 @@ name = "knob"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "lazy_static",
  "midir",
  "mlua",
  "parking_lot",
