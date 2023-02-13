@@ -4,7 +4,7 @@ local StringUtils = require("utils/StringUtils");
 ---@class Command
 ---@field private display_name string
 ---@field private normalized_name string
----@field private _impl func()
+---@field private _impl fun()
 ---@field private args { name: string, type: string }[]
 local Command = Class("Command");
 
