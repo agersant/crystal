@@ -18,6 +18,9 @@ end
 Tool.hide = function(self)
 end
 
+Tool.quit = function(self)
+end
+
 ---@param key love.KeyConstant
 ---@param scan_code love.Scancode
 ---@param is_repeat boolean
