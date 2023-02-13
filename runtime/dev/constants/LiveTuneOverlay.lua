@@ -14,10 +14,6 @@ local Widget = require("ui/bricks/elements/Widget");
 
 local LiveTuneOverlay = Class("LiveTuneOverlay");
 
-if not features.live_tune then
-	features.stub(LiveTuneOverlay);
-end
-
 local drawOverlay = false;
 
 local colors = {

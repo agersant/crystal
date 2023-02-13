@@ -61,7 +61,6 @@ crystal.configure = function(c)
 	TableUtils.merge(crystal.conf, c);
 end
 
-LIVE_TUNE         = require("dev/constants/LiveTune"):new();
 VIEWPORT          = require("graphics/Viewport"):new();
 FONTS             = require("resources/Fonts"):new({});
 ASSETS            = require("resources/Assets"):new();
@@ -83,7 +82,6 @@ local scene = nil;
 SCENE = nil;
 local nextScene = nil;
 local console;
-local liveTuneOverlay;
 
 ENGINE.loadScene = function(self, scene)
 	-- Change applies before next update, so that the current frame
@@ -113,8 +111,8 @@ end
 
 love.load = function()
 	love.keyboard.setTextInput(false);
-	liveTuneOverlay = require("dev/constants/LiveTuneOverlay"):new(CONSTANTS, LIVE_TUNE);
 	require("tools/fps_counter");
+	require("tools/live_tune")(modules.const.constants);
 
 	for _, module in pairs(modules) do
 		if module.init then
@@ -131,9 +129,6 @@ end
 
 love.update = function(dt)
 	modules.tool.toolkit:update(dt);
-	if liveTuneOverlay then
-		liveTuneOverlay:update(dt);
-	end
 	if nextScene then
 		scene = nextScene;
 		SCENE = nextScene;
@@ -154,9 +149,6 @@ love.draw = function()
 	end
 	love.graphics.reset();
 	modules.tool.toolkit:draw();
-	if liveTuneOverlay then
-		liveTuneOverlay:draw();
-	end
 end
 
 love.keypressed = function(key, scanCode, isRepeat)
@@ -184,7 +176,7 @@ love.resize = function(self, width, height)
 end
 
 love.quit = function()
-	LIVE_TUNE:disconnectFromDevice();
+	modules.tool.toolkit:quit();
 end
 
 if features.tests then

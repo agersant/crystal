@@ -15,7 +15,6 @@ features.test_coverage = has_flag("/coverage");
 features.cli = not release;
 features.tools = not release;
 features.debug_draw = not release;
-features.live_tune = not release;
 features.slow_assertions = not release;
 features.constants = not release;
 

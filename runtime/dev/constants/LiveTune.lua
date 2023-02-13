@@ -4,29 +4,9 @@ local MathUtils = require("utils/MathUtils");
 
 local LiveTune = Class("LiveTune");
 
-if not features.live_tune then
-	features.stub(LiveTune);
-end
-
 LiveTune.Mock = Class("LiveTuneMock", LiveTune);
 
-LiveTune.Mock.init = function(self)
-	self.deviceList = {};
-	self.values = {};
-	self.currentDevice = nil;
-end
 
-LiveTune.Mock.getValue = function(self, knobIndex, initialValue)
-	return self.values[knobIndex];
-end
-
-LiveTune.Mock.listDevices = function(self)
-	return self.deviceList;
-end
-
-LiveTune.Mock.getCurrentDevice = function(self)
-	return self.currentDevice;
-end
 
 LiveTune.init = function(self)
 	self:setMode("RelativeArturia1");
@@ -36,16 +16,8 @@ LiveTune.init = function(self)
 	self._ccIndices = { 112, 74, 71, 76, 77, 93, 73, 75, 114, 18, 19, 16, 17, 91, 79, 72 };
 end
 
-LiveTune.disconnectFromDevice = function(self)
-	Knob.disconnectFromDevice();
-end
-
 LiveTune.connectToDevice = function(self, portNumber)
 	Knob.connectToDevice(portNumber - 1);
-end
-
-LiveTune.setMode = function(self, mode)
-	Knob.setMode(mode);
 end
 
 LiveTune.mapKnobsToMIDI = function(self, ccIndices)
@@ -53,23 +25,6 @@ LiveTune.mapKnobsToMIDI = function(self, ccIndices)
 	self._ccIndices = ccIndices;
 end
 
-LiveTune.getValue = function(self, knobIndex, initialValue, minValue, maxValue)
-	assert(knobIndex);
-	assert(maxValue >= minValue)
-	assert(initialValue >= minValue)
-	assert(initialValue <= maxValue)
-	local ccIndex = self._ccIndices[knobIndex];
-	if not ccIndex then
-		return initialValue;
-	end
-	local rawValue = Knob.readKnob(ccIndex);
-	if rawValue < 0 then
-		Knob.writeKnob(ccIndex, (initialValue - minValue) / (maxValue - minValue));
-		return initialValue;
-	else
-		return MathUtils.lerp(rawValue, minValue, maxValue);
-	end
-end
 
 LiveTune.listDevices = function(self)
 	return Knob.listDevices();
@@ -79,46 +34,18 @@ LiveTune.getCurrentDevice = function(self)
 	return Knob.getCurrentDevice();
 end
 
-crystal.cmd.add("connectToMIDIDevice port:number", function(port)
-	LIVE_TUNE:connectToDevice(port);
-end);
 
---#region Tests
 
 crystal.test.add("Lists devices", function()
-	local liveTune = LiveTune:new();
-	assert(type(liveTune:listDevices()) == "table")
+	local live_tune = LiveTune:new(Knob, Constants:new());
+	assert(type(live_tune:list_devices()) == "table")
 end);
 
-crystal.test.add("Can choose device", function()
-	local liveTune = LiveTune:new();
-	liveTune:connectToDevice(1);
-end);
-
-crystal.test.add("Can choose mode", function()
-	local liveTune = LiveTune:new();
-	liveTune:setMode("ABSOLUTE");
-end);
-
-crystal.test.add("Unmapped knob reads as initial value", function()
-	local liveTune = LiveTune:new();
-	liveTune:mapKnobsToMIDI({});
-	local knobIndex = 1;
-	local initialValue = 5;
-	local value = liveTune:getValue(knobIndex, initialValue, 0, 10);
-	assert(value == initialValue);
-end);
 
 crystal.test.add("Retrieve current device", function()
 	local liveTune = LiveTune:new();
 	local device = liveTune:getCurrentDevice();
 	assert(type(device) == "nil" or type(device) == "string");
 end);
-
-crystal.test.add("Has global API", function()
-	assert(LIVE_TUNE);
-end);
-
---#endregion
 
 return LiveTune;
