@@ -97,7 +97,7 @@ end
 
 ---@private
 Terminal.submit_input = function(self)
-	local command = self:raw_input();
+	local command = StringUtils.trim(self:raw_input());
 	if #command == 0 then
 		return;
 	end

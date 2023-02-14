@@ -89,6 +89,17 @@ Toolkit.draw = function(self)
 	end
 end
 
+-- TODO remove this when there is a real UI system with text focus
+---@return boolean
+Toolkit.consumes_inputs = function(self)
+	for _, tool in pairs(self.tools) do
+		if tool.visible and tool.consumes_inputs then
+			return true;
+		end
+	end
+	return false;
+end
+
 Toolkit.quit = function(self)
 	for _, tool in pairs(self.tools) do
 		tool:quit();

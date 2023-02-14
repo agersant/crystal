@@ -154,8 +154,7 @@ end
 
 love.keypressed = function(key, scanCode, isRepeat)
 	modules.tool.toolkit:key_pressed(key, scanCode, isRepeat);
-	local ctrl = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl");
-	if INPUT then
+	if INPUT and not modules.tool.toolkit:consumes_inputs() then
 		-- TODO block input from tools
 		INPUT:keyPressed(key, scanCode, isRepeat);
 	end

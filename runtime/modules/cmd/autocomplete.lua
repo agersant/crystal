@@ -88,7 +88,7 @@ Autocomplete.suggest_arg_values = function(self, input)
 		local arg = command:arg(i);
 
 		local type_check_result = nil;
-		if input.args[i] then
+		if input.args[i] and #input.args[i] > 0 then
 			local cast_result = self.type_store:cast(input.args[i], arg.type);
 			type_check_result = cast_result ~= nil;
 		end

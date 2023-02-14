@@ -71,8 +71,9 @@ InputDevice.keyReleased = function(self, key, scanCode)
 	end
 	for _, command in ipairs(self._keyBindings[key]) do
 		assert(self._commandBindings[command]);
-		assert(self._commandBindings[command].numInputsDown > 0);
-		self._commandBindings[command].numInputsDown = self._commandBindings[command].numInputsDown - 1;
+		if self._commandBindings[command].numInputsDown > 0 then
+			self._commandBindings[command].numInputsDown = self._commandBindings[command].numInputsDown - 1;
+		end
 		assert(self._commandBindings[command].numInputsDown >= 0);
 		if self._commandBindings[command].numInputsDown == 0 then
 			table.insert(self._events, "-" .. command);
