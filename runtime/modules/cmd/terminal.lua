@@ -198,7 +198,8 @@ Terminal.key_pressed = function(self, key, scan_code, is_repeat)
 		return;
 	end
 
-	local text_changed, _ = self:input():keyPressed(key, scan_code, is_repeat);
+	local ctrl = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl");
+	local text_changed, _ = self:input():keyPressed(key, scan_code, is_repeat, ctrl);
 	self.unguided_input = self:raw_input();
 	if text_changed then
 		self:on_input_changed();

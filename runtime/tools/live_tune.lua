@@ -172,7 +172,9 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 	self.knob_infos = self.content:addChild(List.Horizontal:new());
 end
 
-LiveTuneOverlay.update = function(self)
+LiveTuneOverlay.update = function(self, dt)
+	LiveTuneOverlay.super.update(self, dt);
+
 	local title = "LIVETUNE";
 	if self.device_name then
 		title = title .. " / " .. self.device_name;
@@ -254,7 +256,6 @@ LiveTune.update = function(self, dt)
 	end
 	self.overlay.device_name = self.knob:current_device();
 	self.overlay.device_list = self.knob:list_devices();
-	self.overlay:update(dt);
 	self.overlay:updateTree(dt, love.graphics.getDimensions());
 end
 
@@ -422,8 +423,7 @@ crystal.test.add("Overlay lifecycle", function()
 				max = 10,
 			};
 		end
-		overlay:update(0);
-		overlay:updateTree(0, love.graphics.getDimensions());
+		overlay:updateTree(0);
 		overlay:draw();
 	end
 end);
