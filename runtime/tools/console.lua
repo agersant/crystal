@@ -37,8 +37,8 @@ end
 ---@param key love.KeyConstant
 ---@param scan_code love.Scancode
 ---@param ctrl boolean
-Console.key_pressed = function(self, key, scan_code, ctrl)
-	self.terminal:key_pressed(key, scan_code, ctrl);
+Console.key_pressed = function(self, key, scan_code, is_repeat)
+	self.terminal:key_pressed(key, scan_code, is_repeat);
 end
 
 Console.draw = function(self)

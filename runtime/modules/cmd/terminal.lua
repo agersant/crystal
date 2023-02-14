@@ -166,7 +166,7 @@ end
 ---@param key love.KeyConstant
 ---@param scan_code love.Scancode
 ---@param ctrl boolean
-Terminal.key_pressed = function(self, key, scan_code, ctrl)
+Terminal.key_pressed = function(self, key, scan_code, is_repeat)
 	if key == "return" or key == "kpenter" then
 		self:submit_input();
 		return;
@@ -198,7 +198,7 @@ Terminal.key_pressed = function(self, key, scan_code, ctrl)
 		return;
 	end
 
-	local text_changed, _ = self:input():keyPressed(key, scan_code, ctrl);
+	local text_changed, _ = self:input():keyPressed(key, scan_code, is_repeat);
 	self.unguided_input = self:raw_input();
 	if text_changed then
 		self:on_input_changed();

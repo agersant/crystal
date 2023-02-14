@@ -123,9 +123,10 @@ TextInput.textInput = function(self, text)
 	pushUndoState(self);
 end
 
-TextInput.keyPressed = function(self, key, scanCode, ctrl)
+TextInput.keyPressed = function(self, key, scanCode, is_repeat)
 	local oldText = self._text;
 	local oldCursor = self._cursor;
+	local ctrl = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl");
 
 	if key == "home" then
 		moveToHome(self);

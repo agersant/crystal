@@ -10,7 +10,13 @@ end
 TypeStore.init = function(self)
 	self.types = {};
 	self:add_type("number", tonumber);
-	self:add_type("string", tostring);
+	self:add_type("string", function(s)
+		local as_string = tostring(s);
+		if #as_string == 0 then
+			return nil;
+		end
+		return as_string;
+	end);
 	self:add_type("boolean", function(v)
 		return v == "1" or v == "true";
 	end);
