@@ -6,7 +6,7 @@
 
 Opinionated gamedev framework built on top of LÖVE.
 
-[Documenation](https://agersant.github.io/crystal/)
+[Documentation](https://agersant.github.io/crystal/)
 
 ## Build instructions
 
