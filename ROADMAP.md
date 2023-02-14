@@ -31,9 +31,11 @@
 
 - [ ] Docs website in readme
 - [ ] Immediate mode UI kit for dev tools
-- [ ] Mouse support (in tools)
+- [ ] Livetune improvements:
+  - [ ] Add device dropdown as alternative for liveTuneConnect command
+  - [ ] Add mode dropdown as alternative to liveTuneMode command
+  - [ ] Twist knob to assign CC index, remove hard coded CC indices list (update livetune command to use raw cc index)
 - [ ] Getting Started instructions in readme and/or docs
-- [ ] More lenient autocomplete for command names
 - [ ] Auto-complete for command args supports arbitrary types/logic
 - [ ] Window/viewport/scene/camera system rework
 - [ ] Continuous hot reload for game files
@@ -42,6 +44,7 @@
 # Crystal 0.3.0
 
 - [ ] Bricks layout caching
+- [ ] Mouse support (in tools)
 - [ ] Mouse support (gameplay)
 - [ ] Mouse support (bricks)
 - [ ] Particles
