@@ -11,7 +11,8 @@ has_toc: false
 | :------------------------------- | :------------------------------------------------------------------ |
 | [crystal.ai](ai/index)           |                                                                     |
 | [crystal.assets](assets/index)   |                                                                     |
-| [crystal.cmd](cmd/index)         |                                                                     |
+| [crystal.cmd](cmd)               | Allows you to define and run console commands.                      |
+| [crystal.const](const/index)     |                                                                     |
 | [crystal.ecs](ecs/index)         |                                                                     |
 | [crystal.gfx](gfx/index)         |                                                                     |
 | [crystal.input](input/index)     |                                                                     |
@@ -22,7 +23,6 @@ has_toc: false
 | [crystal.test](test/index)       | Provides an interface to define unit or integration tests.          |
 | [crystal.tool](tool/index)       | Allows you to define visual development tools.                      |
 | [crystal.ui](ui/index)           |                                                                     |
-| [crystal.var](var/index)         |                                                                     |
 | [crystal.window](window/index)   |                                                                     |
 
 ## Callbacks
