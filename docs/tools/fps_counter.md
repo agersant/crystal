@@ -2,6 +2,6 @@
 parent: Built-in Tools
 ---
 
-# Console
+# FPS Counter
 
 TODO
