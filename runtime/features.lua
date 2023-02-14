@@ -16,7 +16,7 @@ features.cli = not release;
 features.tools = not release;
 features.debug_draw = not release;
 features.slow_assertions = not release;
-features.constants = not release;
+features.writable_constants = not release;
 
 local noop = function()
 end

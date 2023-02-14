@@ -71,7 +71,7 @@ Constants.get = function(self, name)
 end
 
 Constants.set = function(self, name, value)
-	if not features.constants then
+	if not features.writable_constants then
 		return;
 	end
 	local constant = self:find(name);
