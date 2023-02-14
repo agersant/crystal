@@ -7,36 +7,37 @@
 - [ ] Game packaging
 - [ ] VSCode tasks for engine and sample game
 - [ ] snake_case all variables and file names 🐍
+- [x] Docs website in readme
 - [ ] API revamp: `crystal.*` globals + docs + private functions as ---@package or ---@private
-  - [ ] AI
-  - [ ] Assets
-  - [ ] Cmd
-  - [ ] ECS
-  - [ ] Gfx
-  - [ ] Input
-  - [x] Log
-  - [ ] Physics
-  - [ ] Scene
-  - [ ] Script
-  - [x] Test
-  - [ ] Tool
-  - [ ] UI
-  - [ ] OOP
-  - [ ] StringUtils
-  - [ ] TableUtils
-  - [ ] Var
-  - [ ] Window
+  - [ ] ai
+  - [ ] assets
+  - [x] cmd
+  - [x] const
+  - [ ] ecs
+  - [ ] gfx
+  - [ ] input
+  - [x] log
+  - [ ] physics
+  - [ ] scene
+  - [ ] script
+  - [x] test
+  - [ ] tool
+  - [ ] ui
+  - [ ] oop
+  - [ ] stringutils
+  - [ ] tableutils
+  - [ ] window
 
 # Crystal 0.2.0
 
-- [ ] Docs website in readme
 - [ ] Immediate mode UI kit for dev tools
 - [ ] Livetune improvements:
-  - [ ] Add device dropdown as alternative for liveTuneConnect command
-  - [ ] Add mode dropdown as alternative to liveTuneMode command
-  - [ ] Twist knob to assign CC index, remove hard coded CC indices list (update livetune command to use raw cc index)
-- [ ] Getting Started instructions in readme and/or docs
-- [ ] Auto-complete for command args supports arbitrary types/logic
+  - [ ] Add Lua API to connect
+  - [ ] Add device dropdown in overlay
+  - [ ] Support set_mode per knob (?)
+  - [ ] Remove console commands
+- [ ] Getting Started instructions in readme and docs
+- [ ] Auto-complete for command args supports custom types
 - [ ] Window/viewport/scene/camera system rework
 - [ ] Continuous hot reload for game files
 - [ ] Better color-scheme for code examples in docs (https://github.com/just-the-docs/just-the-docs/issues/679)
