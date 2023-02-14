@@ -173,4 +173,8 @@ end);
 
 --#endregion
 
-return Console;
+return function(terminal)
+	assert(terminal)
+	local console = Console:new(terminal);
+	crystal.tool.add(console, { keybind = "`" });
+end

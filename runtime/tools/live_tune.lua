@@ -440,7 +440,7 @@ return function(constants)
 	end);
 
 	crystal.cmd.add("liveTuneSetMode mode:string", function(mode)
-		live_tune:setMode(mode);
+		live_tune:set_mode(mode);
 	end);
 
 	crystal.cmd.add("liveTune constant:string knob:number", function(name, knob_index)
