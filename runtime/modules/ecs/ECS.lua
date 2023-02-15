@@ -468,7 +468,6 @@ end
 
 --#region
 
-local EitherComponent = require("ecs/query/EitherComponent");
 local AllComponents = require("ecs/query/AllComponents");
 
 crystal.test.add("Spawn and despawn entity", function()
@@ -918,35 +917,6 @@ crystal.test.add("Query component changelog works for intersection query", funct
 	assert(query:getRemovedComponents(CompA)[compA]);
 	assert(query:getRemovedComponents(CompB)[compB]);
 	assert(query:getRemovedComponents(CompC)[compC]);
-end);
-
-crystal.test.add("Query component changelog works for union query", function()
-	local ecs = ECS:new();
-	local BaseComp = Class:test("BaseComp", Component);
-	local CompA = Class:test("CompA", BaseComp);
-	local CompB = Class:test("CompB", BaseComp);
-	local CompC = Class:test("CompC", BaseComp);
-	local query = EitherComponent:new({ CompA, CompB, CompC });
-	ecs:add_query(query);
-
-	local a = ecs:spawn(Entity);
-	local compA = a:add_component(CompA);
-	local compB = a:add_component(CompB);
-	ecs:update();
-	assert(query:getAddedComponents(CompA)[compA]);
-	assert(query:getAddedComponents(CompB)[compB]);
-
-	local compC = a:add_component(CompC);
-	ecs:update();
-	assert(not query:getAddedComponents(CompA)[compA]);
-	assert(not query:getAddedComponents(CompB)[compB]);
-	assert(query:getAddedComponents(CompC)[compC]);
-
-	a:remove_component(compA);
-	ecs:update();
-	assert(query:getRemovedComponents(CompA)[compA]);
-	assert(not query:getRemovedComponents(CompB)[compB]);
-	assert(not query:getRemovedComponents(CompC)[compC]);
 end);
 
 crystal.test.add("Events can be retrieved within the rest of the frame", function()
