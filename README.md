@@ -6,6 +6,8 @@
 
 Opinionated gamedev framework built on top of LÖVE.
 
+[Documentation](https://agersant.github.io/crystal/)
+
 ## Build instructions
 
 1. Install the stable version of the [Rust compiler](https://www.rust-lang.org/learn/get-started) (pick MSVC toolchain if prompted)
