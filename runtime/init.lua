@@ -34,6 +34,7 @@ crystal.test    = modules.test.module_api;
 
 modules.cmd     = require("modules/cmd");
 modules.const   = require("modules/const");
+modules.ecs     = require("modules/ecs");
 modules.log     = require("modules/log");
 modules.tool    = require("modules/tool");
 

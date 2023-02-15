@@ -3,8 +3,8 @@ local MathUtils = require("utils/MathUtils");
 
 local WorldWidget = Class("WorldWidget", Drawable);
 
-WorldWidget.init = function(self, widget)
-	WorldWidget.super.init(self);
+WorldWidget.init = function(self, entity, widget)
+	WorldWidget.super.init(self, entity);
 	self._widget = widget;
 	self._x = 0;
 	self._y = 0;
@@ -38,18 +38,17 @@ end
 
 --#region Tests
 
-local Entity = require("ecs/Entity");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 local Image = require("ui/bricks/elements/Image");
 
 crystal.test.add("Draws widget", function(context)
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
-	local entity = scene:spawn(Entity);
+	local entity = scene:spawn(crystal.Entity);
 	local widget = Image:new();
 	widget:setImageSize(48, 32);
-	entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	entity:addComponent(WorldWidget:new(widget));
+	entity:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
+	entity:add_component(WorldWidget, widget);
 	entity:setPosition(160, 120);
 
 	scene:update(0);

@@ -1,12 +1,11 @@
 local features = require("features");
-local System = require("ecs/System");
 local AllComponents = require("ecs/query/AllComponents");
 local CollisionFilters = require("mapscene/physics/CollisionFilters");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 local Colors = require("resources/Colors");
 local MathUtils = require("utils/MathUtils");
 
-local DebugDrawSystem = Class("DebugDrawSystem", System);
+local DebugDrawSystem = Class("DebugDrawSystem", crystal.System);
 
 if not features.debug_draw then
 	features.stub(DebugDrawSystem);
@@ -18,7 +17,7 @@ local drawNavigation = false;
 DebugDrawSystem.init = function(self, ecs)
 	DebugDrawSystem.super.init(self, ecs);
 	self._query = AllComponents:new({ PhysicsBody });
-	self:getECS():addQuery(self._query);
+	self:ecs():add_query(self._query);
 end
 
 local pickFixtureColor = function(self, fixture)
@@ -72,7 +71,7 @@ DebugDrawSystem.duringDebugDraw = function(self, viewport)
 	if drawPhysics then
 		map:drawCollisionMesh(viewport);
 		for entity in pairs(self._query:getEntities()) do
-			local physicsBody = entity:getComponent(PhysicsBody):getBody();
+			local physicsBody = entity:component(PhysicsBody):getBody();
 			local x, y = physicsBody:getX(), physicsBody:getY();
 			x = MathUtils.round(x);
 			y = MathUtils.round(y);
@@ -102,7 +101,6 @@ end);
 
 --#region Tests
 
-local Entity = require("ecs/Entity");
 local Hitbox = require("mapscene/physics/Hitbox");
 local Collision = require("mapscene/physics/Collision");
 local TouchTrigger = require("mapscene/physics/TouchTrigger");
@@ -112,26 +110,26 @@ crystal.test.add("Draws physics objects", function(context)
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 
-	local entityA = scene:spawn(Entity);
-	local physicsBodyA = entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local entityA = scene:spawn(crystal.Entity);
+	local physicsBodyA = entityA:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
 	entityA:setPosition(95, 55);
-	entityA:addComponent(Collision:new(physicsBodyA, 10));
+	entityA:add_component(Collision, physicsBodyA, 10);
 
-	local entityB = scene:spawn(Entity);
-	local physicsBodyB = entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local entityB = scene:spawn(crystal.Entity);
+	local physicsBodyB = entityB:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
 	entityB:setPosition(135, 55);
-	entityB:addComponent(Hitbox:new(physicsBodyB, love.physics.newRectangleShape(20, 20)));
+	entityB:add_component(Hitbox, physicsBodyB, love.physics.newRectangleShape(20, 20));
 
-	local entityC = scene:spawn(Entity);
-	local physicsBodyC = entityC:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local entityC = scene:spawn(crystal.Entity);
+	local physicsBodyC = entityC:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
 	entityC:setPosition(175, 55);
-	entityC:addComponent(Weakbox:new(physicsBodyC, love.physics.newRectangleShape(20, 20)));
+	entityC:add_component(Weakbox, physicsBodyC, love.physics.newRectangleShape(20, 20));
 
-	local entityD = scene:spawn(Entity);
-	local physicsBodyD = entityD:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local entityD = scene:spawn(crystal.Entity);
+	local physicsBodyD = entityD:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
 	entityD:setPosition(215, 55);
 	local touchTrigger = TouchTrigger:new(physicsBodyD, love.physics.newCircleShape(10));
-	entityD:addComponent(touchTrigger);
+	entityD:add_component(touchTrigger);
 
 	crystal.cmd.run("showPhysicsOverlay");
 	scene:update(0);

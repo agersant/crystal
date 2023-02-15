@@ -6,7 +6,7 @@ Goal.init = function(self, radius)
 	self._radius2 = radius * radius;
 end
 
-Goal.isValid = function(self)
+Goal.is_valid = function(self)
 	return true;
 end
 

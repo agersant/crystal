@@ -1,17 +1,16 @@
-local System = require("ecs/System");
 local AllComponents = require("ecs/query/AllComponents");
 local SpriteAnimator = require("mapscene/display/SpriteAnimator");
 local Hitbox = require("mapscene/physics/Hitbox");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
-local HitboxSystem = Class("HitboxSystem", System);
+local HitboxSystem = Class("HitboxSystem", crystal.System);
 
 HitboxSystem.init = function(self, ecs)
 	HitboxSystem.super.init(self, ecs);
 	self._query = AllComponents:new({ Hitbox, PhysicsBody });
 	self._withSpriteAnimator = AllComponents:new({ Hitbox, PhysicsBody, SpriteAnimator });
-	self:getECS():addQuery(self._query);
-	self:getECS():addQuery(self._withSpriteAnimator);
+	self:ecs():add_query(self._query);
+	self:ecs():add_query(self._withSpriteAnimator);
 end
 
 HitboxSystem.beforePhysics = function(self, dt)
@@ -25,8 +24,8 @@ HitboxSystem.beforePhysics = function(self, dt)
 
 	local entities = self._withSpriteAnimator:getEntities();
 	for entity in pairs(entities) do
-		local animator = entity:getComponent(SpriteAnimator);
-		for hitbox in pairs(entity:getComponents(Hitbox)) do
+		local animator = entity:component(SpriteAnimator);
+		for hitbox in pairs(entity:components(Hitbox)) do
 			local shape = animator:getTagShape("hit");
 			hitbox:setShape(shape);
 		end

@@ -40,8 +40,8 @@ local playAnimationInternal = function(self, animationName, angle, forceRestart)
 	return self._script:addThreadAndRun(playback(self, sequence));
 end
 
-SpriteAnimator.init = function(self, sprite, sheet)
-	SpriteAnimator.super.init(self);
+SpriteAnimator.init = function(self, entity, sprite, sheet)
+	SpriteAnimator.super.init(self, entity);
 	assert(sprite);
 	assert(sprite:is_instance_of(Sprite));
 	self._sprite = sprite;
@@ -68,7 +68,6 @@ end
 
 --#region Tests
 
-local Entity = require("ecs/Entity");
 local ScriptRunner = require("mapscene/behavior/ScriptRunner");
 local Script = require("script/Script");
 
@@ -86,10 +85,10 @@ crystal.test.add("Cycles through animation frames", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
 
-	local entity = scene:spawn(Entity);
-	local sprite = entity:addComponent(Sprite:new());
-	local animator = entity:addComponent(SpriteAnimator:new(sprite, sheet));
-	entity:addComponent(ScriptRunner:new());
+	local entity = scene:spawn(crystal.Entity);
+	local sprite = entity:add_component(Sprite);
+	local animator = entity:add_component(SpriteAnimator, sprite, sheet);
+	entity:add_component(ScriptRunner);
 
 	animator:playAnimation("floating");
 
@@ -108,10 +107,10 @@ crystal.test.add("Animation blocks script", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
 
-	local entity = scene:spawn(Entity);
-	local sprite = entity:addComponent(Sprite:new());
-	entity:addComponent(SpriteAnimator:new(sprite, sheet));
-	entity:addComponent(ScriptRunner:new());
+	local entity = scene:spawn(crystal.Entity);
+	local sprite = entity:add_component(Sprite);
+	entity:add_component(SpriteAnimator, sprite, sheet);
+	entity:add_component(ScriptRunner);
 
 	local sentinel = false;
 	entity:addScript(Script:new(function(self)
@@ -131,10 +130,10 @@ crystal.test.add("Looping animation thread never ends", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
 
-	local entity = scene:spawn(Entity);
-	local sprite = entity:addComponent(Sprite:new());
-	entity:addComponent(SpriteAnimator:new(sprite, sheet));
-	entity:addComponent(ScriptRunner:new());
+	local entity = scene:spawn(crystal.Entity);
+	local sprite = entity:add_component(Sprite);
+	entity:add_component(SpriteAnimator, sprite, sheet);
+	entity:add_component(ScriptRunner);
 
 	local sentinel = false;
 	entity:addScript(Script:new(function(self)

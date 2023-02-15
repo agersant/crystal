@@ -1,9 +1,7 @@
-local Component = require("ecs/Component");
+local Drawable = Class("Drawable", crystal.Component);
 
-local Drawable = Class("Drawable", Component);
-
-Drawable.init = function(self)
-	Drawable.super.init(self);
+Drawable.init = function(self, entity)
+	Drawable.super.init(self, entity);
 	self._zOrder = 0;
 end
 

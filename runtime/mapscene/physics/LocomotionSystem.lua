@@ -1,21 +1,20 @@
-local System = require("ecs/System");
 local AllComponents = require("ecs/query/AllComponents");
 local Locomotion = require("mapscene/physics/Locomotion");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
-local LocomotionSystem = Class("LocomotionSystem", System);
+local LocomotionSystem = Class("LocomotionSystem", crystal.System);
 
 LocomotionSystem.init = function(self, ecs)
 	LocomotionSystem.super.init(self, ecs);
 	self._query = AllComponents:new({ Locomotion, PhysicsBody });
-	self:getECS():addQuery(self._query);
+	self:ecs():add_query(self._query);
 end
 
 LocomotionSystem.beforePhysics = function(self, dt)
 	local entities = self._query:getEntities();
 	for entity in pairs(entities) do
-		local locomotion = entity:getComponent(Locomotion);
-		local physicsBody = entity:getComponent(PhysicsBody);
+		local locomotion = entity:component(Locomotion);
+		local physicsBody = entity:component(PhysicsBody);
 		local speed = locomotion:getSpeed();
 		local angle = locomotion:getMovementAngle();
 		if locomotion:isEnabled() then

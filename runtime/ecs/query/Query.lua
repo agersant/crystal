@@ -1,4 +1,4 @@
-local Component = require("ecs/Component");
+local Component = require("modules/ecs/Component");
 local TableUtils = require("utils/TableUtils");
 
 local Query = Class("Query");
@@ -34,7 +34,7 @@ Query.onEntityAdded = function(self, entity)
 		if not self._addedComponents[class] then
 			self._addedComponents[class] = {};
 		end
-		for component in pairs(entity:getComponents(class)) do
+		for component in pairs(entity:components(class)) do
 			self._addedComponents[class][component] = entity;
 		end
 	end
@@ -49,7 +49,7 @@ Query.onEntityRemoved = function(self, entity)
 	self._removedEntities[entity] = true;
 	for _, class in ipairs(self._classes) do
 		self._removedComponents[class] = {};
-		for component in pairs(entity:getComponents(class)) do
+		for component in pairs(entity:components(class)) do
 			self._removedComponents[class][component] = entity;
 		end
 	end
@@ -81,7 +81,7 @@ Query.onComponentAdded = function(self, entity, component)
 			if not self._addedComponents[class] then
 				self._addedComponents[class] = {};
 			end
-			for component in pairs(entity:getComponents(class)) do
+			for component in pairs(entity:components(class)) do
 				self._addedComponents[class][component] = entity;
 			end
 		end
@@ -112,7 +112,7 @@ Query.onComponentRemoved = function(self, entity, component)
 			if component:is_instance_of(class) then
 				self._removedComponents[class][component] = entity;
 			end
-			for component in pairs(entity:getComponents(class)) do
+			for component in pairs(entity:components(class)) do
 				self._removedComponents[class][component] = entity;
 			end
 		end

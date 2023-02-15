@@ -1,14 +1,13 @@
-local System = require("ecs/System");
 local AllComponents = require("ecs/query/AllComponents");
 local Collision = require("mapscene/physics/Collision");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
-local CollisionSystem = Class("CollisionSystem", System);
+local CollisionSystem = Class("CollisionSystem", crystal.System);
 
 CollisionSystem.init = function(self, ecs)
 	CollisionSystem.super.init(self, ecs);
 	self._query = AllComponents:new({ Collision, PhysicsBody });
-	self:getECS():addQuery(self._query);
+	self:ecs():add_query(self._query);
 end
 
 CollisionSystem.beforePhysics = function(self, dt)

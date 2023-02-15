@@ -1,9 +1,7 @@
-local Component = require("ecs/Component");
+local Locomotion = Class("Locomotion", crystal.Component);
 
-local Locomotion = Class("Locomotion", Component);
-
-Locomotion.init = function(self, speed)
-	Locomotion.super.init(self);
+Locomotion.init = function(self, entity, speed)
+	Locomotion.super.init(self, entity);
 	self._speed = speed or 0;
 	self._movementAngle = nil;
 	self._disabledCount = 0;

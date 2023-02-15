@@ -1,17 +1,16 @@
-local System = require("ecs/System");
 local AllComponents = require("ecs/query/AllComponents");
 local SpriteAnimator = require("mapscene/display/SpriteAnimator");
 local Weakbox = require("mapscene/physics/Weakbox");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
-local WeakboxSystem = Class("WeakboxSystem", System);
+local WeakboxSystem = Class("WeakboxSystem", crystal.System);
 
 WeakboxSystem.init = function(self, ecs)
 	WeakboxSystem.super.init(self, ecs);
 	self._query = AllComponents:new({ Weakbox, PhysicsBody });
 	self._withSpriteAnimator = AllComponents:new({ Weakbox, PhysicsBody, SpriteAnimator });
-	self:getECS():addQuery(self._query);
-	self:getECS():addQuery(self._withSpriteAnimator);
+	self:ecs():add_query(self._query);
+	self:ecs():add_query(self._withSpriteAnimator);
 end
 
 WeakboxSystem.beforePhysics = function(self, dt)
@@ -25,8 +24,8 @@ WeakboxSystem.beforePhysics = function(self, dt)
 
 	local entities = self._withSpriteAnimator:getEntities();
 	for entity in pairs(entities) do
-		local animator = entity:getComponent(SpriteAnimator);
-		for weakbox in pairs(entity:getComponents(Weakbox)) do
+		local animator = entity:component(SpriteAnimator);
+		for weakbox in pairs(entity:components(Weakbox)) do
 			local shape = animator:getTagShape("weak");
 			weakbox:setShape(shape);
 		end

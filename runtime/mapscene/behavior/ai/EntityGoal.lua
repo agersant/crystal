@@ -7,8 +7,8 @@ EntityGoal.init = function(self, entity, radius)
 	self._entity = entity;
 end
 
-EntityGoal.isValid = function(self)
-	return self._entity:isValid();
+EntityGoal.is_valid = function(self)
+	return self._entity:is_valid();
 end
 
 EntityGoal.getPosition = function(self)
@@ -18,14 +18,13 @@ end
 --#region Tests
 
 local MapScene = require("mapscene/MapScene");
-local Entity = require("ecs/Entity");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
 crystal.test.add("Get position", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
-	local target = scene:spawn(Entity);
-	target:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+	local target = scene:spawn(crystal.Entity);
+	target:add_component(PhysicsBody, scene:getPhysicsWorld());
 	target:setPosition(8, 12);
 
 	local goal = EntityGoal:new(target, 1);
@@ -37,8 +36,8 @@ end);
 crystal.test.add("Accept", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
-	local target = scene:spawn(Entity);
-	target:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+	local target = scene:spawn(crystal.Entity);
+	target:add_component(PhysicsBody, scene:getPhysicsWorld());
 	target:setPosition(8, 12);
 
 	local goal = EntityGoal:new(target, 1);
@@ -49,8 +48,8 @@ end);
 crystal.test.add("Reject", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
-	local target = scene:spawn(Entity);
-	target:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+	local target = scene:spawn(crystal.Entity);
+	target:add_component(PhysicsBody, scene:getPhysicsWorld());
 	target:setPosition(8, 12);
 
 	local goal = EntityGoal:new(target, 1);

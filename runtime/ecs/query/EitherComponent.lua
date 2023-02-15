@@ -9,7 +9,7 @@ end
 
 EitherComponent.matches = function(self, entity)
 	for _, class in ipairs(self:getClasses()) do
-		if TableUtils.countKeys(entity:getComponents(class)) ~= 0 then
+		if TableUtils.countKeys(entity:components(class)) ~= 0 then
 			return true;
 		end
 	end

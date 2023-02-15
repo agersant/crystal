@@ -1,4 +1,3 @@
-local Entity = require("ecs/Entity");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
 local MapEntity = Class("MapEntity");
@@ -12,11 +11,8 @@ end
 
 MapEntity.spawn = function(self, scene)
 	xpcall(function()
-		local class = Class:get_by_name(self._class);
-		assert(class);
-		assert(class:is_instance_of(Entity));
-		local entity = scene:spawn(class, self._options);
-		local physicsBody = entity:getComponent(PhysicsBody);
+		local entity = scene:spawn(self._class, self._options);
+		local physicsBody = entity:component(PhysicsBody);
 		if physicsBody then
 			assert(self._options.x);
 			assert(self._options.y);

@@ -1,7 +1,6 @@
-local System = require("ecs/System");
 local Map = require("resources/map/Map");
 
-local MapSystem = Class("MapSystem", System);
+local MapSystem = Class("MapSystem", crystal.System);
 
 MapSystem.init = function(self, ecs, map)
 	assert(map);

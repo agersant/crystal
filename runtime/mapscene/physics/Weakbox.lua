@@ -1,7 +1,6 @@
-local Component = require("ecs/Component");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
-local Weakbox = Class("Weakbox", Component);
+local Weakbox = Class("Weakbox", crystal.Component);
 
 local updateFilterData = function(self)
 	if self._fixture then
@@ -24,8 +23,8 @@ local updateFixture = function(self)
 	end
 end
 
-Weakbox.init = function(self, physicsBody, shape)
-	Weakbox.super.init(self);
+Weakbox.init = function(self, entity, physicsBody, shape)
+	Weakbox.super.init(self, entity);
 	assert(physicsBody);
 	assert(physicsBody:is_instance_of(PhysicsBody));
 	self._enabled = false;

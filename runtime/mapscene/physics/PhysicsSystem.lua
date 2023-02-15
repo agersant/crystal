@@ -1,10 +1,9 @@
-local System = require("ecs/System");
 local Collision = require("mapscene/physics/Collision");
 local Hitbox = require("mapscene/physics/Hitbox");
 local TouchTrigger = require("mapscene/physics/TouchTrigger");
 local Weakbox = require("mapscene/physics/Weakbox");
 
-local PhysicsSystem = Class("PhysicsSystem", System);
+local PhysicsSystem = Class("PhysicsSystem", crystal.System);
 
 local beginContact, endContact;
 
@@ -73,7 +72,6 @@ end
 
 --#region Tests
 
-local Entity = require("ecs/Entity");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
 -- TODO Duplicate calls to scene:update() are used in this file as a workaround to https://github.com/love2d/love/issues/1617
@@ -82,14 +80,14 @@ crystal.test.add("Hitbox components register contacts against weakbox components
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 
-	local entityA = scene:spawn(Entity);
-	local physicsBodyA = entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	local hitbox = entityA:addComponent(Hitbox:new(physicsBodyA));
+	local entityA = scene:spawn(crystal.Entity);
+	local physicsBodyA = entityA:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
+	local hitbox = entityA:add_component(Hitbox, physicsBodyA);
 	hitbox:setShape(love.physics.newRectangleShape(10, 10));
 
-	local entityB = scene:spawn(Entity);
-	local physicsBodyB = entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	local weakbox = entityB:addComponent(Weakbox:new(physicsBodyB));
+	local entityB = scene:spawn(crystal.Entity);
+	local physicsBodyB = entityB:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
+	local weakbox = entityB:add_component(Weakbox, physicsBodyB);
 	weakbox:setShape(love.physics.newRectangleShape(5, 5));
 
 	local touching = false;
@@ -123,14 +121,14 @@ crystal.test.add("Hitbox components stop generating contacts when removed", func
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 
-	local entityA = scene:spawn(Entity);
-	local physicsBodyA = entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	local hitbox = entityA:addComponent(Hitbox:new(physicsBodyA));
+	local entityA = scene:spawn(crystal.Entity);
+	local physicsBodyA = entityA:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
+	local hitbox = entityA:add_component(Hitbox, physicsBodyA);
 	hitbox:setShape(love.physics.newRectangleShape(10, 10));
 
-	local entityB = scene:spawn(Entity);
-	local physicsBodyB = entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	local weakbox = entityB:addComponent(Weakbox:new(physicsBodyB));
+	local entityB = scene:spawn(crystal.Entity);
+	local physicsBodyB = entityB:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
+	local weakbox = entityB:add_component(Weakbox, physicsBodyB);
 	weakbox:setShape(love.physics.newRectangleShape(5, 5));
 
 	local touching = false;
@@ -150,7 +148,7 @@ crystal.test.add("Hitbox components stop generating contacts when removed", func
 	scene:update(1);
 	assert(not touching);
 
-	entityA:removeComponent(hitbox);
+	entityA:remove_component(hitbox);
 	entityA:setPosition(3, 1);
 	scene:update(1);
 	scene:update(1);
@@ -162,13 +160,13 @@ crystal.test.add("Collision components register contacts against trigger compone
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 
-	local entityA = scene:spawn(Entity);
-	local physicsBodyA = entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	local collision = entityA:addComponent(Collision:new(physicsBodyA, 5));
+	local entityA = scene:spawn(crystal.Entity);
+	local physicsBodyA = entityA:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
+	local collision = entityA:add_component(Collision, physicsBodyA, 5);
 
-	local entityB = scene:spawn(Entity);
-	local physicsBodyB = entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	local trigger = entityB:addComponent(TouchTrigger:new(physicsBodyB, love.physics.newRectangleShape(10, 10)));
+	local entityB = scene:spawn(crystal.Entity);
+	local physicsBodyB = entityB:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
+	local trigger = entityB:add_component(TouchTrigger, physicsBodyB, love.physics.newRectangleShape(10, 10));
 
 	local touching = false;
 	trigger.onBeginTouch = function(self, other)
@@ -201,13 +199,13 @@ crystal.test.add("Trigger components stop generating contacts when removed", fun
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 
-	local entityA = scene:spawn(Entity);
-	local physicsBody = entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	entityA:addComponent(Collision:new(physicsBody, 5));
+	local entityA = scene:spawn(crystal.Entity);
+	local physicsBody = entityA:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
+	entityA:add_component(Collision, physicsBody, 5);
 
-	local entityB = scene:spawn(Entity);
-	local physicsBody = entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	local trigger = entityB:addComponent(TouchTrigger:new(physicsBody, love.physics.newRectangleShape(10, 10)));
+	local entityB = scene:spawn(crystal.Entity);
+	local physicsBody = entityB:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
+	local trigger = entityB:add_component(TouchTrigger, physicsBody, love.physics.newRectangleShape(10, 10));
 
 	local touching = false;
 	trigger.onBeginTouch = function(self, other)
@@ -216,7 +214,7 @@ crystal.test.add("Trigger components stop generating contacts when removed", fun
 
 	entityA:setPosition(40, 0);
 	scene:update(1);
-	entityB:removeComponent(trigger);
+	entityB:remove_component(trigger);
 	entityA:setPosition(5, 5);
 	scene:update(1);
 	scene:update(1);
@@ -227,15 +225,13 @@ crystal.test.add("Collision components register contacts against each other", fu
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 
-	local entityA = scene:spawn(Entity);
-	local physicsBodyA = entityA:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	local collisionA = Collision:new(physicsBodyA, 5);
-	entityA:addComponent(collisionA);
+	local entityA = scene:spawn(crystal.Entity);
+	local physicsBodyA = entityA:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
+	local collisionA = entityA:add_component(Collision, physicsBodyA, 5);
 
-	local entityB = scene:spawn(Entity);
-	local physicsBodyB = entityB:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	local collisionB = Collision:new(physicsBodyB, 5);
-	entityB:addComponent(collisionB);
+	local entityB = scene:spawn(crystal.Entity);
+	local physicsBodyB = entityB:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
+	local collisionB = entityB:add_component(Collision, physicsBodyB, 5);
 
 	local touching = false;
 	collisionA.onBeginTouch = function(self, other)

@@ -1,10 +1,8 @@
-local Component = require("ecs/Component");
+local Parent = Class("Parent", crystal.Component);
 
-local Parent = Class("Parent", Component);
-
-Parent.init = function(self, otherEntity)
+Parent.init = function(self, entity, otherEntity)
 	assert(otherEntity);
-	Parent.super.init(self);
+	Parent.super.init(self, entity);
 	self._parent = otherEntity;
 end
 

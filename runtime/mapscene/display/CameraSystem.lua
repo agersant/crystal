@@ -1,10 +1,9 @@
-local System = require("ecs/System");
 local Viewport = require("graphics/Viewport");
 local InputListener = require("mapscene/behavior/InputListener");
 local Camera = require("mapscene/display/Camera");
 local Map = require("resources/map/Map");
 
-local CameraSystem = Class("CameraSystem", System);
+local CameraSystem = Class("CameraSystem", crystal.System);
 
 local drawCameraOverlay = false;
 
@@ -23,7 +22,7 @@ end
 
 CameraSystem.afterScripts = function(self, dt)
 	local trackedEntities = {};
-	for entity in pairs(self._ecs:getAllEntitiesWith(InputListener)) do
+	for entity in pairs(self._ecs:entities_with(InputListener)) do
 		table.insert(trackedEntities, entity);
 	end
 	self._camera:update(trackedEntities);

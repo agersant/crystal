@@ -1,18 +1,17 @@
-local Component = require("ecs/Component");
 local Script = require("script/Script");
 local Alias = require("utils/Alias");
 local TableUtils = require("utils/TableUtils");
 
-local ScriptRunner = Class("ScriptRunner", Component);
+local ScriptRunner = Class("ScriptRunner", crystal.Component);
 
-ScriptRunner.init = function(self)
-	ScriptRunner.super.init(self);
+ScriptRunner.init = function(self, entity)
+	ScriptRunner.super.init(self, entity);
 	self._scripts = {};
 end
 
 ScriptRunner.addScript = function(self, script)
 	assert(script:is_instance_of(Script));
-	Alias:add(script, self:getEntity());
+	Alias:add(script, self:entity());
 	table.insert(self._scripts, script);
 	return script;
 end

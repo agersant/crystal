@@ -1,15 +1,14 @@
-local Component = require("ecs/Component");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
-local TouchTrigger = Class("TouchTrigger", Component);
+local TouchTrigger = Class("TouchTrigger", crystal.Component);
 
 local updateFilterData = function(self)
 	local collideWith = self._enabled and CollisionFilters.SOLID or 0;
 	self._fixture:setFilterData(CollisionFilters.TRIGGER, collideWith, 0);
 end
 
-TouchTrigger.init = function(self, physicsBody, shape)
-	TouchTrigger.super.init(self);
+TouchTrigger.init = function(self, entity, physicsBody, shape)
+	TouchTrigger.super.init(self, entity);
 	assert(physicsBody);
 	assert(physicsBody:is_instance_of(PhysicsBody));
 	assert(shape);

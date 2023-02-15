@@ -1,3 +1,4 @@
+---@class Event
 local Event = Class("Event");
 
 Event.init = function(self, entity)
@@ -5,7 +6,8 @@ Event.init = function(self, entity)
 	self._entity = entity;
 end
 
-Event.getEntity = function(self)
+---@return Entity
+Event.entity = function(self)
 	return self._entity;
 end
 

@@ -9,8 +9,8 @@ AlignGoal.init = function(self, movingEntity, targetEntity, radius)
 	self._targetEntity = targetEntity;
 end
 
-AlignGoal.isValid = function(self)
-	return self._targetEntity:isValid();
+AlignGoal.is_valid = function(self)
+	return self._targetEntity:is_valid();
 end
 
 AlignGoal.getPosition = function(self)
@@ -34,18 +34,17 @@ end
 --#region Tests
 
 local MapScene = require("mapscene/MapScene");
-local Entity = require("ecs/Entity");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
 crystal.test.add("Get position", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
-	local me = scene:spawn(Entity);
-	me:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+	local me = scene:spawn(crystal.Entity);
+	me:add_component(PhysicsBody, scene:getPhysicsWorld());
 	me:setPosition(1, .5);
 
-	local target = scene:spawn(Entity);
-	target:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+	local target = scene:spawn(crystal.Entity);
+	target:add_component(PhysicsBody, scene:getPhysicsWorld());
 
 	local goal = AlignGoal:new(me, target, 1);
 	local x, y = goal:getPosition();
@@ -56,12 +55,12 @@ end);
 crystal.test.add("Accept", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
-	local me = scene:spawn(Entity);
-	me:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+	local me = scene:spawn(crystal.Entity);
+	me:add_component(PhysicsBody, scene:getPhysicsWorld());
 	me:setPosition(1, .5);
 
-	local target = scene:spawn(Entity);
-	target:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+	local target = scene:spawn(crystal.Entity);
+	target:add_component(PhysicsBody, scene:getPhysicsWorld());
 
 	local goal = AlignGoal:new(me, target, 1);
 	assert(goal:isPositionAcceptable(0, 5));
@@ -74,12 +73,12 @@ end);
 crystal.test.add("Reject", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
-	local me = scene:spawn(Entity);
-	me:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+	local me = scene:spawn(crystal.Entity);
+	me:add_component(PhysicsBody, scene:getPhysicsWorld());
 	me:setPosition(1, .5);
 
-	local target = scene:spawn(Entity);
-	target:addComponent(PhysicsBody:new(scene:getPhysicsWorld()));
+	local target = scene:spawn(crystal.Entity);
+	target:add_component(PhysicsBody, scene:getPhysicsWorld());
 
 	local goal = AlignGoal:new(me, target, 1);
 	assert(not goal:isPositionAcceptable(2, 2));

@@ -1,7 +1,6 @@
-local Component = require("ecs/Component");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
-local Hitbox = Class("Hitbox", Component);
+local Hitbox = Class("Hitbox", crystal.Component);
 
 local updateFilterData = function(self)
 	if self._fixture then
@@ -24,8 +23,8 @@ local updateFixture = function(self)
 	end
 end
 
-Hitbox.init = function(self, physicsBody, shape)
-	Hitbox.super.init(self);
+Hitbox.init = function(self, entity, physicsBody, shape)
+	Hitbox.super.init(self, entity);
 	assert(physicsBody);
 	assert(physicsBody:is_instance_of(PhysicsBody));
 	self._enabled = false;

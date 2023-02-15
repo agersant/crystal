@@ -1,7 +1,6 @@
-local Component = require("ecs/Component");
 local MathUtils = require("utils/MathUtils");
 
-local PhysicsBody = Class("PhysicsBody", Component);
+local PhysicsBody = Class("PhysicsBody", crystal.Component);
 
 local getState = function(self)
 	local x, y = self:getPosition();
@@ -28,8 +27,8 @@ local setState = function(self, state)
 	self:setAngle(state.angle);
 end
 
-PhysicsBody.init = function(self, physicsWorld, bodyType)
-	PhysicsBody.super.init(self);
+PhysicsBody.init = function(self, entity, physicsWorld, bodyType)
+	PhysicsBody.super.init(self, entity);
 	self._body = love.physics.newBody(physicsWorld, 0, 0, bodyType);
 	self._body:setFixedRotation(true);
 	self._body:setUserData(self);
@@ -161,13 +160,11 @@ end
 
 --#region Tests
 
-local Entity = require("ecs/Entity");
-
 crystal.test.add("LookAt turns to correct direction", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
-	local entity = scene:spawn(Entity);
-	entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local entity = scene:spawn(crystal.Entity);
+	entity:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
 
 	entity:lookAt(10, 0);
 	assert(entity:getAngle() == 0);
@@ -193,8 +190,8 @@ end);
 crystal.test.add("Direction is preserved when switching to adjacent diagonal", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
-	local entity = scene:spawn(Entity);
-	entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local entity = scene:spawn(crystal.Entity);
+	entity:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
 
 	entity:setAngle(0.25 * math.pi);
 	local x, y = entity:getDirection4();
@@ -216,11 +213,11 @@ end);
 crystal.test.add("Distance measurements", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
-	local entity = scene:spawn(Entity);
-	entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local entity = scene:spawn(crystal.Entity);
+	entity:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
 
-	local target = scene:spawn(Entity);
-	target:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local target = scene:spawn(crystal.Entity);
+	target:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
 	target:setPosition(10, 0);
 
 	assert(entity:distanceToEntity(target) == 10);
@@ -232,8 +229,8 @@ end);
 crystal.test.add("Stores velocity", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
-	local entity = scene:spawn(Entity);
-	entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local entity = scene:spawn(crystal.Entity);
+	entity:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
 
 	local vx, vy = entity:getLinearVelocity();
 	assert(vx == 0);
@@ -248,8 +245,8 @@ end);
 crystal.test.add("Stores angle", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
-	local entity = scene:spawn(Entity);
-	entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local entity = scene:spawn(crystal.Entity);
+	entity:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
 	assert(entity:getAngle() == 0);
 	entity:setAngle(50);
 	assert(entity:getAngle() == 50);
@@ -258,8 +255,8 @@ end);
 crystal.test.add("Stores altitude", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
-	local entity = scene:spawn(Entity);
-	entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local entity = scene:spawn(crystal.Entity);
+	entity:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
 	assert(entity:getAltitude() == 0);
 	entity:setAltitude(50);
 	assert(entity:getAltitude() == 50);
@@ -268,8 +265,8 @@ end);
 crystal.test.add("Can save and restore state", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
-	local entity = scene:spawn(Entity);
-	entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local entity = scene:spawn(crystal.Entity);
+	entity:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
 
 	local restore = entity:pushPhysicsBodyState();
 
@@ -289,8 +286,8 @@ end);
 crystal.test.add("Can save and restore position", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
-	local entity = scene:spawn(Entity);
-	entity:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local entity = scene:spawn(crystal.Entity);
+	entity:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
 
 	local restore = entity:pushPhysicsBodyState({ includePosition = true });
 	entity:setPosition(100, 150);

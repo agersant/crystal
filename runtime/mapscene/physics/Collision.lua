@@ -1,8 +1,7 @@
-local Component = require("ecs/Component");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 local TableUtils = require("utils/TableUtils");
 
-local Collision = Class("Collision", Component);
+local Collision = Class("Collision", crystal.Component);
 
 local updateFilterData = function(self)
 	local collideWith = 0;
@@ -30,8 +29,8 @@ local setState = function(self, state)
 	self:setRestitution(state.restitution);
 end
 
-Collision.init = function(self, physicsBody, radius)
-	Collision.super.init(self);
+Collision.init = function(self, entity, physicsBody, radius)
+	Collision.super.init(self, entity);
 	assert(physicsBody);
 	assert(physicsBody:is_instance_of(PhysicsBody));
 	assert(radius);
@@ -73,12 +72,12 @@ Collision.setRestitution = function(self, restitution)
 end
 
 Collision.onBeginTouch = function(self, otherComponent)
-	local entity = otherComponent:getEntity();
+	local entity = otherComponent:entity();
 	self._contactEntities[entity] = true;
 end
 
 Collision.onEndTouch = function(self, otherComponent)
-	local entity = otherComponent:getEntity();
+	local entity = otherComponent:entity();
 	self._contactEntities[entity] = nil;
 end
 

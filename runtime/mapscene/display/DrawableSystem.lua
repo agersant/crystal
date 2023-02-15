@@ -1,8 +1,7 @@
-local System = require("ecs/System");
 local Drawable = require("mapscene/display/Drawable");
 local Shader = require("mapscene/display/Shader");
 
-local DrawableSystem = Class("DrawableSystem", System);
+local DrawableSystem = Class("DrawableSystem", crystal.System);
 
 local sortDrawables = function(a, b)
 	return a:getZOrder() < b:getZOrder();
@@ -13,12 +12,12 @@ DrawableSystem.init = function(self, ecs)
 end
 
 DrawableSystem.duringEntitiesDraw = function(self)
-	local ecs = self:getECS();
-	local drawables = ecs:getAllComponents(Drawable);
+	local ecs = self:ecs();
+	local drawables = ecs:components(Drawable);
 	table.sort(drawables, sortDrawables);
 	for _, drawable in ipairs(drawables) do
-		local entity = drawable:getEntity();
-		local shader = entity:getComponent(Shader);
+		local entity = drawable:entity();
+		local shader = entity:component(Shader);
 		if shader then
 			shader:apply();
 		end

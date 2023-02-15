@@ -1,9 +1,7 @@
-local Component = require("ecs/Component");
+local Shader = Class("Shader", crystal.Component);
 
-local Shader = Class("Shader", Component);
-
-Shader.init = function(self, shaderResource)
-	Shader.super.init(self);
+Shader.init = function(self, entity, shaderResource)
+	Shader.super.init(self, entity);
 	self:setShaderResource(shaderResource);
 end
 

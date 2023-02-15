@@ -9,7 +9,7 @@ local MathUtils = require("utils/MathUtils");
 local Navigation = Class("Navigation", Behavior);
 
 local navigate = function(self, navigationMesh, goal, physicsBody, locomotion)
-	if not goal:isValid() then
+	if not goal:is_valid() then
 		return false;
 	end
 
@@ -22,7 +22,7 @@ local navigate = function(self, navigationMesh, goal, physicsBody, locomotion)
 
 	local vertexIndex = 1;
 	while true do
-		if goal:isValid() and goal:isPositionAcceptable(physicsBody:getPosition()) then
+		if goal:is_valid() and goal:isPositionAcceptable(physicsBody:getPosition()) then
 			return true;
 		end
 
@@ -47,8 +47,8 @@ local navigate = function(self, navigationMesh, goal, physicsBody, locomotion)
 	return false;
 end
 
-Navigation.init = function(self)
-	Navigation.super.init(self);
+Navigation.init = function(self, entity)
+	Navigation.super.init(self, entity);
 	assert(self._script);
 end
 
@@ -71,58 +71,57 @@ Navigation.alignWithEntity = function(self, targetEntity, targetRadius)
 	assert(targetEntity);
 	assert(targetRadius >= 0);
 	local repathDelay = 0.5;
-	return self:navigateToGoal(AlignGoal:new(self:getEntity(), targetEntity, targetRadius), repathDelay);
+	return self:navigateToGoal(AlignGoal:new(self:entity(), targetEntity, targetRadius), repathDelay);
 end
 
 Navigation.navigateToGoal = function(self, goal, repathDelay)
 	assert(goal);
 
-	local physicsBody = self:getEntity():getComponent(PhysicsBody);
-	local locomotion = self:getEntity():getComponent(Locomotion);
-	local navigationMesh = self:getEntity():getECS():getMap():getNavigationMesh();
+	local physicsBody = self:entity():component(PhysicsBody);
+	local locomotion = self:entity():component(Locomotion);
+	local navigationMesh = self:entity():ecs():getMap():getNavigationMesh();
 	assert(physicsBody);
 	assert(locomotion);
 	assert(navigationMesh);
 
 	self._script:stopAllThreads();
 	return self._script:addThreadAndRun(function(self)
-			self:scope(function()
-				locomotion:setMovementAngle(nil);
-			end);
-
-			local completion = self:thread(function(self)
-					local signal = self:waitForAny({ "success", "failure" });
-					return signal == "success";
-				end);
-
-			self:thread(function(self)
-				while true do
-					self:wait(repathDelay);
-					self:signal("repath");
-				end
-			end);
-
-			self:thread(function(self)
-				while true do
-					self:thread(function(self)
-						self:endOn("repath");
-						if navigate(self, navigationMesh, goal, physicsBody, locomotion) then
-							self:signal("success");
-						else
-							self:signal("failure");
-						end
-					end);
-					self:waitFor("repath");
-				end
-			end);
-
-			return self:join(completion);
+		self:scope(function()
+			locomotion:setMovementAngle(nil);
 		end);
+
+		local completion = self:thread(function(self)
+			local signal = self:waitForAny({ "success", "failure" });
+			return signal == "success";
+		end);
+
+		self:thread(function(self)
+			while true do
+				self:wait(repathDelay);
+				self:signal("repath");
+			end
+		end);
+
+		self:thread(function(self)
+			while true do
+				self:thread(function(self)
+					self:endOn("repath");
+					if navigate(self, navigationMesh, goal, physicsBody, locomotion) then
+						self:signal("success");
+					else
+						self:signal("failure");
+					end
+				end);
+				self:waitFor("repath");
+			end
+		end);
+
+		return self:join(completion);
+	end);
 end
 
 --#region Tests
 
-local Entity = require("ecs/Entity");
 local ScriptRunner = require("mapscene/behavior/ScriptRunner");
 local MapScene = require("mapscene/MapScene");
 local Script = require("script/Script");
@@ -134,12 +133,12 @@ crystal.test.add("Walk to point", function()
 	local endX, endY = 300, 200;
 	local acceptanceRadius = 6;
 
-	local subject = scene:spawn(Entity);
-	subject:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	subject:addComponent(Locomotion:new(50));
+	local subject = scene:spawn(crystal.Entity);
+	subject:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
+	subject:add_component(Locomotion, 50);
 	subject:setPosition(startX, startY);
-	subject:addComponent(Navigation:new());
-	subject:addComponent(ScriptRunner:new());
+	subject:add_component(Navigation);
+	subject:add_component(ScriptRunner);
 
 	subject:navigateToPoint(endX, endY, acceptanceRadius);
 
@@ -156,15 +155,15 @@ crystal.test.add("Walk to entity", function()
 	local endX, endY = 300, 200;
 	local acceptanceRadius = 6;
 
-	local subject = scene:spawn(Entity);
-	subject:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	subject:addComponent(Locomotion:new(50));
+	local subject = scene:spawn(crystal.Entity);
+	subject:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
+	subject:add_component(Locomotion, 50);
 	subject:setPosition(startX, startY);
-	subject:addComponent(Navigation:new());
-	subject:addComponent(ScriptRunner:new());
+	subject:add_component(Navigation);
+	subject:add_component(ScriptRunner);
 
-	local target = scene:spawn(Entity);
-	target:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
+	local target = scene:spawn(crystal.Entity);
+	target:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
 	target:setPosition(endX, endY);
 
 	subject:navigateToEntity(target, acceptanceRadius);
@@ -184,14 +183,14 @@ crystal.test.add("Can use blocking script function", function()
 
 	local sentinel = false;
 
-	local subject = scene:spawn(Entity);
-	subject:addComponent(PhysicsBody:new(scene:getPhysicsWorld(), "dynamic"));
-	subject:addComponent(Locomotion:new(50));
+	local subject = scene:spawn(crystal.Entity);
+	subject:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
+	subject:add_component(Locomotion, 50);
 	subject:setPosition(startX, startY);
-	subject:addComponent(Navigation:new());
+	subject:add_component(Navigation);
 
 	local scriptRunner = ScriptRunner:new();
-	subject:addComponent(scriptRunner);
+	subject:add_component(scriptRunner);
 	scriptRunner:addScript(Script:new(function(self)
 		local success = self:join(self:navigateToPoint(endX, endY, acceptanceRadius));
 		sentinel = success;
