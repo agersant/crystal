@@ -9,7 +9,7 @@ LocomotionSystem.init = function(self, ecs)
 end
 
 LocomotionSystem.beforePhysics = function(self, dt)
-	local entities = self._query:getEntities();
+	local entities = self._query:entities();
 	for entity in pairs(entities) do
 		local locomotion = entity:component(Locomotion);
 		local physicsBody = entity:component(PhysicsBody);

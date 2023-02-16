@@ -9,11 +9,11 @@ CollisionSystem.init = function(self, ecs)
 end
 
 CollisionSystem.beforePhysics = function(self, dt)
-	for collision in pairs(self._query:getAddedComponents(Collision)) do
+	for collision in pairs(self._query:added_components(Collision)) do
 		collision:setEnabled(true);
 	end
 
-	for collision in pairs(self._query:getRemovedComponents(Collision)) do
+	for collision in pairs(self._query:removed_components(Collision)) do
 		collision:setEnabled(false);
 	end
 end

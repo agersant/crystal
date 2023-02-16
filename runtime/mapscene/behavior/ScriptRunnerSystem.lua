@@ -8,7 +8,7 @@ ScriptRunnerSystem.init = function(self, ecs)
 end
 
 ScriptRunnerSystem.beforeScripts = function(self, dt)
-	for scriptRunner in pairs(self._query:getRemovedComponents(ScriptRunner)) do
+	for scriptRunner in pairs(self._query:removed_components(ScriptRunner)) do
 		scriptRunner:removeAllScripts();
 	end
 end

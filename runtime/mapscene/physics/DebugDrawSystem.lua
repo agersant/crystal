@@ -68,7 +68,7 @@ DebugDrawSystem.duringDebugDraw = function(self, viewport)
 
 	if drawPhysics then
 		map:drawCollisionMesh(viewport);
-		for entity in pairs(self._query:getEntities()) do
+		for entity in pairs(self._query:entities()) do
 			local physicsBody = entity:component(PhysicsBody):getBody();
 			local x, y = physicsBody:getX(), physicsBody:getY();
 			x = MathUtils.round(x);

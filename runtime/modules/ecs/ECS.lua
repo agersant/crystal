@@ -53,7 +53,7 @@ ECS.update = function(self)
 				while base_class ~= Component do
 					if self.queries_by_class[base_class] then
 						for query in pairs(self.queries_by_class[base_class]) do
-							query:onComponentRemoved(entity, component);
+							query:on_component_removed(entity, component);
 						end
 					end
 					base_class = base_class.super;
@@ -66,7 +66,7 @@ ECS.update = function(self)
 
 	for entity in pairs(self.entity_graveyard) do
 		for query in pairs(self.queries) do
-			query:onEntityRemoved(entity);
+			query:on_entity_despawned(entity);
 		end
 		self:unregister_entity(entity);
 	end
@@ -81,7 +81,7 @@ ECS.update = function(self)
 				while base_class ~= Component do
 					if self.queries_by_class[base_class] then
 						for query in pairs(self.queries_by_class[base_class]) do
-							query:onComponentAdded(entity, component);
+							query:on_component_added(entity, component);
 						end
 					end
 					base_class = base_class.super;
@@ -95,7 +95,7 @@ ECS.update = function(self)
 	for entity in pairs(self.entity_nursery) do
 		self:register_entity(entity);
 		for query in pairs(self.queries) do
-			query:onEntityAdded(entity);
+			query:on_entity_spawned(entity);
 		end
 	end
 
@@ -190,7 +190,7 @@ ECS.add_query = function(self, classes)
 	assert(TableUtils.countKeys(self._entities) == 0);
 	local query = Query:new(classes);
 	self.queries[query] = true;
-	for _, class in pairs(query:getClasses()) do
+	for _, class in pairs(query:classes()) do
 		if not self.queries_by_class[class] then
 			self.queries_by_class[class] = {};
 		end
@@ -776,26 +776,26 @@ crystal.test.add("Query maintains list of entities", function()
 	local a = ecs:spawn(Entity);
 	local b = ecs:spawn(Entity);
 	local snoot = b:add_component(Snoot);
-	assert(not query:getEntities()[a]);
-	assert(not query:getEntities()[b]);
+	assert(not query:entities()[a]);
+	assert(not query:entities()[b]);
 	assert(not query:contains(a));
 	assert(not query:contains(b));
 
 	ecs:update();
-	assert(not query:getEntities()[a]);
-	assert(query:getEntities()[b]);
+	assert(not query:entities()[a]);
+	assert(query:entities()[b]);
 	assert(not query:contains(a));
 	assert(query:contains(b));
 
 	b:remove_component(snoot);
-	assert(not query:getEntities()[a]);
-	assert(query:getEntities()[b]);
+	assert(not query:entities()[a]);
+	assert(query:entities()[b]);
 	assert(not query:contains(a));
 	assert(query:contains(b));
 
 	ecs:update();
-	assert(not query:getEntities()[a]);
-	assert(not query:getEntities()[b]);
+	assert(not query:entities()[a]);
+	assert(not query:entities()[b]);
 	assert(not query:contains(a));
 	assert(not query:contains(b));
 end);
@@ -809,11 +809,11 @@ crystal.test.add("Query entity list captures derived components", function()
 	local a = ecs:spawn(Entity);
 	local boop = a:add_component(Boop);
 	ecs:update();
-	assert(query:getEntities()[a]);
+	assert(query:entities()[a]);
 
 	a:remove_component(boop);
 	ecs:update();
-	assert(not query:getEntities()[a]);
+	assert(not query:entities()[a]);
 end);
 
 crystal.test.add("Query maintains changelog of entities", function()
@@ -824,22 +824,22 @@ crystal.test.add("Query maintains changelog of entities", function()
 	local a = ecs:spawn(Entity);
 	local b = ecs:spawn(Entity);
 	local snoot = b:add_component(Snoot);
-	assert(not query:getAddedEntities()[b]);
+	assert(not query:added_entities()[b]);
 
 	ecs:update();
-	assert(not query:getAddedEntities()[a]);
-	assert(query:getAddedEntities()[b]);
+	assert(not query:added_entities()[a]);
+	assert(query:added_entities()[b]);
 	ecs:update();
-	assert(not query:getAddedEntities()[b]);
+	assert(not query:added_entities()[b]);
 
 	b:remove_component(snoot);
-	assert(not query:getRemovedEntities()[b]);
+	assert(not query:removed_entities()[b]);
 
 	ecs:update();
-	assert(query:getRemovedEntities()[b]);
+	assert(query:removed_entities()[b]);
 
 	ecs:update();
-	assert(not query:getRemovedEntities()[b]);
+	assert(not query:removed_entities()[b]);
 end);
 
 crystal.test.add("Query maintains changelog of components", function()
@@ -854,18 +854,18 @@ crystal.test.add("Query maintains changelog of components", function()
 	local a = ecs:spawn(Entity);
 	local compA = a:add_component(CompA);
 	local compB = a:add_component(CompB);
-	assert(TableUtils.equals({}, query:getAddedComponents(BaseComp)));
+	assert(TableUtils.equals({}, query:added_components(BaseComp)));
 
 	ecs:update();
-	assert(TableUtils.equals({ [compA] = a,[compB] = a }, query:getAddedComponents(BaseComp)));
+	assert(TableUtils.equals({ [compA] = a,[compB] = a }, query:added_components(BaseComp)));
 
 	local compC = a:add_component(CompC);
 	ecs:update();
-	assert(TableUtils.equals({ [compC] = a }, query:getAddedComponents(BaseComp)));
+	assert(TableUtils.equals({ [compC] = a }, query:added_components(BaseComp)));
 
 	a:remove_component(compA);
 	ecs:update();
-	assert(TableUtils.equals({ [compA] = a }, query:getRemovedComponents(BaseComp)));
+	assert(TableUtils.equals({ [compA] = a }, query:removed_components(BaseComp)));
 end);
 
 crystal.test.add("Changelog of components is updated when entity despawns", function()
@@ -876,11 +876,11 @@ crystal.test.add("Changelog of components is updated when entity despawns", func
 	local a = ecs:spawn(Entity);
 	local comp = a:add_component(Comp);
 	ecs:update();
-	assert(query:getAddedComponents(Comp)[comp] == a);
+	assert(query:added_components(Comp)[comp] == a);
 
 	a:despawn();
 	ecs:update();
-	assert(query:getRemovedComponents(Comp)[comp] == a);
+	assert(query:removed_components(Comp)[comp] == a);
 end);
 
 crystal.test.add("Query component changelog works for intersection query", function()
@@ -895,20 +895,20 @@ crystal.test.add("Query component changelog works for intersection query", funct
 	local compA = a:add_component(CompA);
 	local compB = a:add_component(CompB);
 	ecs:update();
-	assert(not query:getAddedComponents(CompA)[compA]);
-	assert(not query:getAddedComponents(CompB)[compB]);
+	assert(not query:added_components(CompA)[compA]);
+	assert(not query:added_components(CompB)[compB]);
 
 	local compC = a:add_component(CompC);
 	ecs:update();
-	assert(query:getAddedComponents(CompA)[compA]);
-	assert(query:getAddedComponents(CompB)[compB]);
-	assert(query:getAddedComponents(CompC)[compC]);
+	assert(query:added_components(CompA)[compA]);
+	assert(query:added_components(CompB)[compB]);
+	assert(query:added_components(CompC)[compC]);
 
 	a:remove_component(compA);
 	ecs:update();
-	assert(query:getRemovedComponents(CompA)[compA]);
-	assert(query:getRemovedComponents(CompB)[compB]);
-	assert(query:getRemovedComponents(CompC)[compC]);
+	assert(query:removed_components(CompA)[compA]);
+	assert(query:removed_components(CompB)[compB]);
+	assert(query:removed_components(CompC)[compC]);
 end);
 
 crystal.test.add("Events can be retrieved within the rest of the frame", function()

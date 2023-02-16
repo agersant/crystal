@@ -11,15 +11,15 @@ HitboxSystem.init = function(self, ecs)
 end
 
 HitboxSystem.beforePhysics = function(self, dt)
-	for hitbox in pairs(self._query:getAddedComponents(Hitbox)) do
+	for hitbox in pairs(self._query:added_components(Hitbox)) do
 		hitbox:setEnabled(true);
 	end
 
-	for hitbox in pairs(self._query:getRemovedComponents(Hitbox)) do
+	for hitbox in pairs(self._query:removed_components(Hitbox)) do
 		hitbox:setEnabled(false);
 	end
 
-	local entities = self._withSpriteAnimator:getEntities();
+	local entities = self._withSpriteAnimator:entities();
 	for entity in pairs(entities) do
 		local animator = entity:component(SpriteAnimator);
 		for hitbox in pairs(entity:components(Hitbox)) do

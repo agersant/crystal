@@ -11,7 +11,7 @@ BehaviorSystem.init = function(self, ecs)
 end
 
 BehaviorSystem.beforeScripts = function(self, dt)
-	for behavior, entity in pairs(self._query:getAddedComponents(Behavior)) do
+	for behavior, entity in pairs(self._query:added_components(Behavior)) do
 		local scriptRunner = entity:component(ScriptRunner);
 		assert(scriptRunner);
 		local script = behavior:getScript();
@@ -23,7 +23,7 @@ BehaviorSystem.beforeScripts = function(self, dt)
 		self._activeEntities[entity].behaviors[behavior] = script;
 	end
 
-	for behavior, entity in pairs(self._query:getRemovedComponents(Behavior)) do
+	for behavior, entity in pairs(self._query:removed_components(Behavior)) do
 		local activeEntity = self._activeEntities[entity];
 		assert(activeEntity);
 		assert(activeEntity.behaviors[behavior]);

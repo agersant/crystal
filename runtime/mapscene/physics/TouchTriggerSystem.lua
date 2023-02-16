@@ -9,11 +9,11 @@ TouchTriggerSystem.init = function(self, ecs)
 end
 
 TouchTriggerSystem.beforePhysics = function(self, dt)
-	for touchTrigger in pairs(self._query:getAddedComponents(TouchTrigger)) do
+	for touchTrigger in pairs(self._query:added_components(TouchTrigger)) do
 		touchTrigger:setEnabled(true);
 	end
 
-	for touchTrigger in pairs(self._query:getRemovedComponents(TouchTrigger)) do
+	for touchTrigger in pairs(self._query:removed_components(TouchTrigger)) do
 		touchTrigger:setEnabled(false);
 	end
 end

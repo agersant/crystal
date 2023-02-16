@@ -11,15 +11,15 @@ WeakboxSystem.init = function(self, ecs)
 end
 
 WeakboxSystem.beforePhysics = function(self, dt)
-	for weakbox in pairs(self._query:getAddedComponents(Weakbox)) do
+	for weakbox in pairs(self._query:added_components(Weakbox)) do
 		weakbox:setEnabled(true);
 	end
 
-	for weakbox in pairs(self._query:getRemovedComponents(Weakbox)) do
+	for weakbox in pairs(self._query:removed_components(Weakbox)) do
 		weakbox:setEnabled(false);
 	end
 
-	local entities = self._withSpriteAnimator:getEntities();
+	local entities = self._withSpriteAnimator:entities();
 	for entity in pairs(entities) do
 		local animator = entity:component(SpriteAnimator);
 		for weakbox in pairs(entity:components(Weakbox)) do

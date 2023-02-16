@@ -9,7 +9,7 @@ WorldWidgetSystem.init = function(self, ecs)
 end
 
 WorldWidgetSystem.afterScripts = function(self, dt)
-	local entities = self._query:getEntities();
+	local entities = self._query:entities();
 	for entity in pairs(entities) do
 		local WorldWidget = entity:component(WorldWidget);
 		local physicsBody = entity:component(PhysicsBody);

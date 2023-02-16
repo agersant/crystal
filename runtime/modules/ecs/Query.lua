@@ -27,12 +27,15 @@ Query.init = function(self, classes)
 	self._removed_components = {};
 end
 
-Query.getClasses = function(self)
+---@return Class[]
+Query.classes = function(self)
 	return self._classes;
 end
 
+---@param entity Entity
+---@return boolean
 Query.matches = function(self, entity)
-	for _, class in ipairs(self:getClasses()) do
+	for _, class in ipairs(self:classes()) do
 		if TableUtils.countKeys(entity:components(class)) == 0 then
 			return false;
 		end
@@ -40,7 +43,8 @@ Query.matches = function(self, entity)
 	return true;
 end
 
-Query.onEntityAdded = function(self, entity)
+---@param entity Entity
+Query.on_entity_spawned = function(self, entity)
 	if not self:matches(entity) then
 		return;
 	end
@@ -58,7 +62,8 @@ Query.onEntityAdded = function(self, entity)
 	end
 end
 
-Query.onEntityRemoved = function(self, entity)
+---@param entity Entity
+Query.on_entity_despawned = function(self, entity)
 	if not self._entities[entity] then
 		return;
 	end
@@ -73,15 +78,19 @@ Query.onEntityRemoved = function(self, entity)
 	end
 end
 
-Query.getAddedEntities = function(self)
+---@return { [Entity]: boolean }
+Query.added_entities = function(self)
 	return TableUtils.shallowCopy(self._added_entities);
 end
 
-Query.getRemovedEntities = function(self)
+---@return { [Entity]: boolean }
+Query.removed_entities = function(self)
 	return TableUtils.shallowCopy(self._removed_entities);
 end
 
-Query.onComponentAdded = function(self, entity, component)
+---@param entity Entity
+---@param component Component
+Query.on_component_added = function(self, entity, component)
 	if self._entities[entity] then
 		for _, class in ipairs(self._classes) do
 			if component:is_instance_of(class) then
@@ -106,7 +115,9 @@ Query.onComponentAdded = function(self, entity, component)
 	end
 end
 
-Query.onComponentRemoved = function(self, entity, component)
+---@param entity Entity
+---@param component Component
+Query.on_component_removed = function(self, entity, component)
 	if not self._entities[entity] then
 		return;
 	end
@@ -137,20 +148,24 @@ Query.onComponentRemoved = function(self, entity, component)
 	end
 end
 
-Query.getAddedComponents = function(self, class)
+---@return { [Component]: Entity }
+Query.added_components = function(self, class)
 	assert(class);
 	return TableUtils.shallowCopy(self._added_components[class] or {});
 end
 
-Query.getRemovedComponents = function(self, class)
+---@return { [Component]: Entity }
+Query.removed_components = function(self, class)
 	assert(class);
 	return TableUtils.shallowCopy(self._removed_components[class] or {});
 end
 
-Query.getEntities = function(self)
+---@return { [Entity]: boolean }
+Query.entities = function(self)
 	return TableUtils.shallowCopy(self._entities);
 end
 
+---@param entity Entity
 Query.contains = function(self, entity)
 	return self._entities[entity];
 end
