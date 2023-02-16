@@ -1,4 +1,3 @@
-local AllComponents = require("ecs/query/AllComponents");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 local Parent = require("mapscene/physics/Parent");
 
@@ -6,8 +5,7 @@ local ParentSystem = Class("ParentSystem", crystal.System);
 
 ParentSystem.init = function(self, ecs)
 	ParentSystem.super.init(self, ecs);
-	self._query = AllComponents:new({ Parent, PhysicsBody });
-	self:ecs():add_query(self._query);
+	self._query = self:ecs():add_query({ Parent, PhysicsBody });
 end
 
 ParentSystem.afterPhysics = function(self, dt)

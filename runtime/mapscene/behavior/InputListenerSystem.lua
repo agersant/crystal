@@ -1,4 +1,3 @@
-local AllComponents = require("ecs/query/AllComponents");
 local InputListener = require("mapscene/behavior/InputListener");
 local ScriptRunner = require("mapscene/behavior/ScriptRunner");
 
@@ -6,8 +5,7 @@ local InputListenerSystem = Class("InputListenerSystem", crystal.System);
 
 InputListenerSystem.init = function(self, ecs)
 	InputListenerSystem.super.init(self, ecs);
-	self._query = AllComponents:new({ InputListener, ScriptRunner });
-	self:ecs():add_query(self._query);
+	self._query = self:ecs():add_query({ InputListener, ScriptRunner });
 end
 
 InputListenerSystem.duringScripts = function(self, dt)

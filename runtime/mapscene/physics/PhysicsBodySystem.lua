@@ -1,12 +1,10 @@
-local AllComponents = require("ecs/query/AllComponents");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
 local PhysicsBodySystem = Class("PhysicsBodySystem", crystal.System);
 
 PhysicsBodySystem.init = function(self, ecs)
 	PhysicsBodySystem.super.init(self, ecs);
-	self._query = AllComponents:new({ PhysicsBody });
-	self:ecs():add_query(self._query);
+	self._query = self:ecs():add_query({ PhysicsBody });
 end
 
 PhysicsBodySystem.beforePhysics = function(self, dt)

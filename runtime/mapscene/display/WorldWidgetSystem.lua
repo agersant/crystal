@@ -1,4 +1,3 @@
-local AllComponents = require("ecs/query/AllComponents");
 local WorldWidget = require("mapscene/display/WorldWidget");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
@@ -6,12 +5,11 @@ local WorldWidgetSystem = Class("WorldWidgetSystem", crystal.System);
 
 WorldWidgetSystem.init = function(self, ecs)
 	WorldWidgetSystem.super.init(self, ecs);
-	self._bodyQuery = AllComponents:new({ WorldWidget, PhysicsBody });
-	self:ecs():add_query(self._bodyQuery);
+	self._query = self:ecs():add_query({ WorldWidget, PhysicsBody });
 end
 
 WorldWidgetSystem.afterScripts = function(self, dt)
-	local entities = self._bodyQuery:getEntities();
+	local entities = self._query:getEntities();
 	for entity in pairs(entities) do
 		local WorldWidget = entity:component(WorldWidget);
 		local physicsBody = entity:component(PhysicsBody);

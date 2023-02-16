@@ -1,4 +1,3 @@
-local AllComponents = require("ecs/query/AllComponents");
 local Behavior = require("mapscene/behavior/Behavior");
 local ScriptRunner = require("mapscene/behavior/ScriptRunner");
 local Script = require("script/Script");
@@ -8,8 +7,7 @@ local BehaviorSystem = Class("BehaviorSystem", crystal.System);
 BehaviorSystem.init = function(self, ecs)
 	BehaviorSystem.super.init(self, ecs);
 	self._activeEntities = {};
-	self._query = AllComponents:new({ Behavior, ScriptRunner });
-	self._ecs:add_query(self._query);
+	self._query = self:ecs():add_query({ Behavior, ScriptRunner });
 end
 
 BehaviorSystem.beforeScripts = function(self, dt)

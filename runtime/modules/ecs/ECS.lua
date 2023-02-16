@@ -3,7 +3,7 @@ local Component = require("modules/ecs/Component");
 local Entity = require("modules/ecs/Entity");
 local Event = require("modules/ecs/Event");
 local System = require("modules/ecs/System");
-local Query = require("ecs/query/Query");
+local Query = require("modules/ecs/Query");
 
 ---@class ECS
 ---@field private _entities { [Entity]: boolean }
@@ -186,10 +186,9 @@ ECS.remove_component = function(self, entity, component)
 end
 
 ---@param Query
-ECS.add_query = function(self, query)
+ECS.add_query = function(self, classes)
 	assert(TableUtils.countKeys(self._entities) == 0);
-	assert(not self.queries[query]);
-	assert(query:is_instance_of(Query));
+	local query = Query:new(classes);
 	self.queries[query] = true;
 	for _, class in pairs(query:getClasses()) do
 		if not self.queries_by_class[class] then
@@ -197,6 +196,7 @@ ECS.add_query = function(self, query)
 		end
 		self.queries_by_class[class][query] = true;
 	end
+	return query;
 end
 
 ---@param System
@@ -467,8 +467,6 @@ ECS.unregister_entity = function(self, entity)
 end
 
 --#region
-
-local AllComponents = require("ecs/query/AllComponents");
 
 crystal.test.add("Spawn and despawn entity", function()
 	local ecs = ECS:new();
@@ -773,8 +771,7 @@ end);
 crystal.test.add("Query maintains list of entities", function()
 	local ecs = ECS:new();
 	local Snoot = Class:test("Snoot", Component);
-	local query = AllComponents:new({ Snoot });
-	ecs:add_query(query);
+	local query = ecs:add_query({ Snoot });
 
 	local a = ecs:spawn(Entity);
 	local b = ecs:spawn(Entity);
@@ -807,8 +804,7 @@ crystal.test.add("Query entity list captures derived components", function()
 	local ecs = ECS:new();
 	local Snoot = Class:test("Snoot", Component);
 	local Boop = Class:test("Boop", Snoot);
-	local query = AllComponents:new({ Snoot });
-	ecs:add_query(query);
+	local query = ecs:add_query({ Snoot });
 
 	local a = ecs:spawn(Entity);
 	local boop = a:add_component(Boop);
@@ -823,8 +819,7 @@ end);
 crystal.test.add("Query maintains changelog of entities", function()
 	local ecs = ECS:new();
 	local Snoot = Class:test("Snoot", Component);
-	local query = AllComponents:new({ Snoot });
-	ecs:add_query(query);
+	local query = ecs:add_query({ Snoot });
 
 	local a = ecs:spawn(Entity);
 	local b = ecs:spawn(Entity);
@@ -850,8 +845,7 @@ end);
 crystal.test.add("Query maintains changelog of components", function()
 	local ecs = ECS:new();
 	local BaseComp = Class:test("BaseComp", Component);
-	local query = AllComponents:new({ BaseComp });
-	ecs:add_query(query);
+	local query = ecs:add_query({ BaseComp });
 
 	local CompA = Class:test("CompA", BaseComp);
 	local CompB = Class:test("CompB", BaseComp);
@@ -877,8 +871,7 @@ end);
 crystal.test.add("Changelog of components is updated when entity despawns", function()
 	local ecs = ECS:new();
 	local Comp = Class:test("Comp", Component);
-	local query = AllComponents:new({ Comp });
-	ecs:add_query(query);
+	local query = ecs:add_query({ Comp });
 
 	local a = ecs:spawn(Entity);
 	local comp = a:add_component(Comp);
@@ -896,8 +889,7 @@ crystal.test.add("Query component changelog works for intersection query", funct
 	local CompA = Class:test("CompA", BaseComp);
 	local CompB = Class:test("CompB", BaseComp);
 	local CompC = Class:test("CompC", BaseComp);
-	local query = AllComponents:new({ CompA, CompB, CompC });
-	ecs:add_query(query);
+	local query = ecs:add_query({ CompA, CompB, CompC });
 
 	local a = ecs:spawn(Entity);
 	local compA = a:add_component(CompA);

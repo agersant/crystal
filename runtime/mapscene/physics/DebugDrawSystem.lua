@@ -1,5 +1,4 @@
 local features = require("features");
-local AllComponents = require("ecs/query/AllComponents");
 local CollisionFilters = require("mapscene/physics/CollisionFilters");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 local Colors = require("resources/Colors");
@@ -16,8 +15,7 @@ local drawNavigation = false;
 
 DebugDrawSystem.init = function(self, ecs)
 	DebugDrawSystem.super.init(self, ecs);
-	self._query = AllComponents:new({ PhysicsBody });
-	self:ecs():add_query(self._query);
+	self._query = self:ecs():add_query({ PhysicsBody });
 end
 
 local pickFixtureColor = function(self, fixture)

@@ -1,4 +1,3 @@
-local AllComponents = require("ecs/query/AllComponents");
 local Locomotion = require("mapscene/physics/Locomotion");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
@@ -6,8 +5,7 @@ local LocomotionSystem = Class("LocomotionSystem", crystal.System);
 
 LocomotionSystem.init = function(self, ecs)
 	LocomotionSystem.super.init(self, ecs);
-	self._query = AllComponents:new({ Locomotion, PhysicsBody });
-	self:ecs():add_query(self._query);
+	self._query = self:ecs():add_query({ Locomotion, PhysicsBody });
 end
 
 LocomotionSystem.beforePhysics = function(self, dt)

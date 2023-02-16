@@ -1,4 +1,3 @@
-local AllComponents = require("ecs/query/AllComponents");
 local SpriteAnimator = require("mapscene/display/SpriteAnimator");
 local Hitbox = require("mapscene/physics/Hitbox");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
@@ -7,10 +6,8 @@ local HitboxSystem = Class("HitboxSystem", crystal.System);
 
 HitboxSystem.init = function(self, ecs)
 	HitboxSystem.super.init(self, ecs);
-	self._query = AllComponents:new({ Hitbox, PhysicsBody });
-	self._withSpriteAnimator = AllComponents:new({ Hitbox, PhysicsBody, SpriteAnimator });
-	self:ecs():add_query(self._query);
-	self:ecs():add_query(self._withSpriteAnimator);
+	self._query = self:ecs():add_query({ Hitbox, PhysicsBody });
+	self._withSpriteAnimator = self:ecs():add_query({ Hitbox, PhysicsBody, SpriteAnimator });
 end
 
 HitboxSystem.beforePhysics = function(self, dt)

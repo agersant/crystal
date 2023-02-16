@@ -1,4 +1,3 @@
-local AllComponents = require("ecs/query/AllComponents");
 local TouchTrigger = require("mapscene/physics/TouchTrigger");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
@@ -6,8 +5,7 @@ local TouchTriggerSystem = Class("TouchTriggerSystem", crystal.System);
 
 TouchTriggerSystem.init = function(self, ecs)
 	TouchTriggerSystem.super.init(self, ecs);
-	self._query = AllComponents:new({ TouchTrigger, PhysicsBody });
-	self:ecs():add_query(self._query);
+	self._query = self:ecs():add_query({ TouchTrigger, PhysicsBody });
 end
 
 TouchTriggerSystem.beforePhysics = function(self, dt)

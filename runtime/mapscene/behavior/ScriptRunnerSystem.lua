@@ -1,12 +1,10 @@
-local AllComponents = require("ecs/query/AllComponents");
 local ScriptRunner = require("mapscene/behavior/ScriptRunner");
 
 local ScriptRunnerSystem = Class("ScriptRunnerSystem", crystal.System);
 
 ScriptRunnerSystem.init = function(self, ecs)
 	ScriptRunnerSystem.super.init(self, ecs);
-	self._query = AllComponents:new({ ScriptRunner });
-	self:ecs():add_query(self._query);
+	self._query = self:ecs():add_query({ ScriptRunner });
 end
 
 ScriptRunnerSystem.beforeScripts = function(self, dt)
