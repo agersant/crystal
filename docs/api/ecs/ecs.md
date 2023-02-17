@@ -5,6 +5,8 @@ grand_parent: API Reference
 
 # crystal.ECS
 
+## Constructor
+
 ## Methods
 
 | Name             | Description |
@@ -15,7 +17,6 @@ grand_parent: API Reference
 | `entities`       |             |
 | `entities_with`  |             |
 | `events`         |             |
-| `new`            |             |
 | `notify_systems` |             |
 | `spawn`          |             |
 | `system`         |             |
