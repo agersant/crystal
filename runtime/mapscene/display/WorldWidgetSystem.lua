@@ -5,7 +5,7 @@ local WorldWidgetSystem = Class("WorldWidgetSystem", crystal.System);
 
 WorldWidgetSystem.init = function(self, ecs)
 	WorldWidgetSystem.super.init(self, ecs);
-	self._query = self:ecs():add_query({ WorldWidget, PhysicsBody });
+	self._query = self:add_query({ WorldWidget, PhysicsBody });
 end
 
 WorldWidgetSystem.afterScripts = function(self, dt)

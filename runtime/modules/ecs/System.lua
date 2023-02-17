@@ -12,6 +12,10 @@ System.ecs = function(self)
 	return self._ecs;
 end
 
+System.add_query = function(self, classes)
+	return self._ecs:add_query(classes);
+end
+
 System.update = function(self)
 end
 

@@ -4,7 +4,7 @@ local ScriptRunnerSystem = Class("ScriptRunnerSystem", crystal.System);
 
 ScriptRunnerSystem.init = function(self, ecs)
 	ScriptRunnerSystem.super.init(self, ecs);
-	self._query = self:ecs():add_query({ ScriptRunner });
+	self._query = self:add_query({ ScriptRunner });
 end
 
 ScriptRunnerSystem.beforeScripts = function(self, dt)

@@ -5,7 +5,7 @@ local ParentSystem = Class("ParentSystem", crystal.System);
 
 ParentSystem.init = function(self, ecs)
 	ParentSystem.super.init(self, ecs);
-	self._query = self:ecs():add_query({ Parent, PhysicsBody });
+	self._query = self:add_query({ Parent, PhysicsBody });
 end
 
 ParentSystem.afterPhysics = function(self, dt)

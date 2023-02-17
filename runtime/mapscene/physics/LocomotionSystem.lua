@@ -5,7 +5,7 @@ local LocomotionSystem = Class("LocomotionSystem", crystal.System);
 
 LocomotionSystem.init = function(self, ecs)
 	LocomotionSystem.super.init(self, ecs);
-	self._query = self:ecs():add_query({ Locomotion, PhysicsBody });
+	self._query = self:add_query({ Locomotion, PhysicsBody });
 end
 
 LocomotionSystem.beforePhysics = function(self, dt)

@@ -5,7 +5,7 @@ local SpriteSystem = Class("SpriteSystem", crystal.System);
 
 SpriteSystem.init = function(self, ecs)
 	SpriteSystem.super.init(self, ecs);
-	self._query = self:ecs():add_query({ Sprite, PhysicsBody });
+	self._query = self:add_query({ Sprite, PhysicsBody });
 end
 
 SpriteSystem.afterScripts = function(self, dt)

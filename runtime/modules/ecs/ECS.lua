@@ -185,7 +185,7 @@ ECS.remove_component = function(self, entity, component)
 	end
 end
 
----@param Query
+---@param classes string[]
 ECS.add_query = function(self, classes)
 	assert(TableUtils.countKeys(self._entities) == 0);
 	local query = Query:new(classes);

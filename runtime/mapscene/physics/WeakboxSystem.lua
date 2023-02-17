@@ -6,8 +6,8 @@ local WeakboxSystem = Class("WeakboxSystem", crystal.System);
 
 WeakboxSystem.init = function(self, ecs)
 	WeakboxSystem.super.init(self, ecs);
-	self._query = self:ecs():add_query({ Weakbox, PhysicsBody });
-	self._withSpriteAnimator = self:ecs():add_query({ Weakbox, PhysicsBody, SpriteAnimator });
+	self._query = self:add_query({ Weakbox, PhysicsBody });
+	self._withSpriteAnimator = self:add_query({ Weakbox, PhysicsBody, SpriteAnimator });
 end
 
 WeakboxSystem.beforePhysics = function(self, dt)

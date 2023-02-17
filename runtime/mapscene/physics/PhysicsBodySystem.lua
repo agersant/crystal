@@ -4,7 +4,7 @@ local PhysicsBodySystem = Class("PhysicsBodySystem", crystal.System);
 
 PhysicsBodySystem.init = function(self, ecs)
 	PhysicsBodySystem.super.init(self, ecs);
-	self._query = self:ecs():add_query({ PhysicsBody });
+	self._query = self:add_query({ PhysicsBody });
 end
 
 PhysicsBodySystem.beforePhysics = function(self, dt)

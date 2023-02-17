@@ -6,8 +6,8 @@ local HitboxSystem = Class("HitboxSystem", crystal.System);
 
 HitboxSystem.init = function(self, ecs)
 	HitboxSystem.super.init(self, ecs);
-	self._query = self:ecs():add_query({ Hitbox, PhysicsBody });
-	self._withSpriteAnimator = self:ecs():add_query({ Hitbox, PhysicsBody, SpriteAnimator });
+	self._query = self:add_query({ Hitbox, PhysicsBody });
+	self._withSpriteAnimator = self:add_query({ Hitbox, PhysicsBody, SpriteAnimator });
 end
 
 HitboxSystem.beforePhysics = function(self, dt)

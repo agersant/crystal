@@ -7,7 +7,7 @@ local BehaviorSystem = Class("BehaviorSystem", crystal.System);
 BehaviorSystem.init = function(self, ecs)
 	BehaviorSystem.super.init(self, ecs);
 	self._activeEntities = {};
-	self._query = self:ecs():add_query({ Behavior, ScriptRunner });
+	self._query = self:add_query({ Behavior, ScriptRunner });
 end
 
 BehaviorSystem.beforeScripts = function(self, dt)

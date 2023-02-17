@@ -15,7 +15,7 @@ local drawNavigation = false;
 
 DebugDrawSystem.init = function(self, ecs)
 	DebugDrawSystem.super.init(self, ecs);
-	self._query = self:ecs():add_query({ PhysicsBody });
+	self._query = self:add_query({ PhysicsBody });
 end
 
 local pickFixtureColor = function(self, fixture)

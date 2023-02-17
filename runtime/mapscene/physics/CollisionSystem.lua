@@ -5,7 +5,7 @@ local CollisionSystem = Class("CollisionSystem", crystal.System);
 
 CollisionSystem.init = function(self, ecs)
 	CollisionSystem.super.init(self, ecs);
-	self._query = self:ecs():add_query({ Collision, PhysicsBody });
+	self._query = self:add_query({ Collision, PhysicsBody });
 end
 
 CollisionSystem.beforePhysics = function(self, dt)

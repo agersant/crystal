@@ -5,7 +5,7 @@ local InputListenerSystem = Class("InputListenerSystem", crystal.System);
 
 InputListenerSystem.init = function(self, ecs)
 	InputListenerSystem.super.init(self, ecs);
-	self._query = self:ecs():add_query({ InputListener, ScriptRunner });
+	self._query = self:add_query({ InputListener, ScriptRunner });
 end
 
 InputListenerSystem.duringScripts = function(self, dt)

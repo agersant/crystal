@@ -5,7 +5,7 @@ local TouchTriggerSystem = Class("TouchTriggerSystem", crystal.System);
 
 TouchTriggerSystem.init = function(self, ecs)
 	TouchTriggerSystem.super.init(self, ecs);
-	self._query = self:ecs():add_query({ TouchTrigger, PhysicsBody });
+	self._query = self:add_query({ TouchTrigger, PhysicsBody });
 end
 
 TouchTriggerSystem.beforePhysics = function(self, dt)
