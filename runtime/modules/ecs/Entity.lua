@@ -58,7 +58,7 @@ Entity.create_event = function(self, class, ...)
 		class = Class:get_by_name(class);
 	end
 	local event = class:new(self, ...);
-	self._ecs:addEvent(event);
+	self._ecs:add_event(event);
 end
 
 Entity.despawn = function(self)

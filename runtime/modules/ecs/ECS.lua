@@ -207,7 +207,7 @@ ECS.add_system = function(self, system)
 end
 
 ---@param event Event
-ECS.addEvent = function(self, event)
+ECS.add_event = function(self, event)
 	assert(event);
 	assert(event:is_instance_of(Event));
 	assert(event:entity():is_valid());
