@@ -1,12 +1,18 @@
 ---
 parent: API Reference
+has_children: true
+has_toc: false
 ---
 
 # crystal.ecs
 
-- crystal.ecs.Component
-- crystal.ecs.ECS
-- crystal.ecs.Entity
-- crystal.ecs.Event
-- crystal.ecs.Query
-- crystal.ecs.System
+## Classes
+
+| Name                           | Description |
+| :----------------------------- | :---------- |
+| [crystal.Component](component) |             |
+| [crystal.ECS](ecs)             |             |
+| [crystal.Entity](entity)       |             |
+| [crystal.Event](event)         |             |
+| [crystal.Query](query)         |             |
+| [crystal.System](system)       |             |

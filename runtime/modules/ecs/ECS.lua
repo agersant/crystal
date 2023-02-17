@@ -136,6 +136,8 @@ end
 ---@param entity Entity
 ECS.despawn = function(self, entity)
 	assert(entity);
+	assert(entity:is_valid());
+	entity:invalidate();
 	if self.entity_nursery[entity] then
 		self.entity_nursery[entity] = nil;
 	else

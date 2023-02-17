@@ -67,8 +67,11 @@ Entity.create_event = function(self, class, ...)
 end
 
 Entity.despawn = function(self)
-	self._is_valid = false;
 	self._ecs:despawn(self);
+end
+
+Entity.invalidate = function(self)
+	self._is_valid = false;
 end
 
 ---@return boolean
