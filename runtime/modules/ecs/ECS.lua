@@ -7,7 +7,7 @@ local Query = require("modules/ecs/Query");
 
 ---@class ECS
 ---@field private _entities { [Entity]: boolean }
----@field private entity_to_component { [Entity]: { [Class]: Component } }
+---@field private entity_to_component { [Entity]: { [Class]: { [Component]: boolean } } }
 ---@field private entity_to_components { [Entity]: { [Class]: { [Component]: boolean } } }
 ---@field private components_by_class { [Class]: { [Entity]: { [Component]: boolean } } }
 ---@field private queries { [Query]: boolean }
@@ -15,9 +15,9 @@ local Query = require("modules/ecs/Query");
 ---@field private systems System[]
 ---@field private _events { [Class]: Event[] }
 ---@field private entity_nursery { [Entity]: boolean }
----@field private entity_nursery { [Entity]: boolean }
----@field private component_nursery { [Entity]: { [Class]: Component } }
----@field private component_graveyard { [Entity]: { [Class]: Component } }
+---@field private entity_graveyard { [Entity]: boolean }
+---@field private component_nursery { [Entity]: { [Class]: { [Component]: boolean } } }
+---@field private component_graveyard { [Entity]: { [Class]: { [Component]: boolean } } }
 local ECS = Class("ECS");
 
 ECS.init = function(self)
@@ -45,18 +45,20 @@ ECS.update = function(self)
 
 	-- Remove components
 
-	for entity, components in pairs(self.component_graveyard) do
-		for class, component in pairs(components) do
-			self:unregister_component(entity, component);
-			if not self.entity_graveyard[entity] then
-				local base_class = class;
-				while base_class ~= Component do
-					if self.queries_by_class[base_class] then
-						for query in pairs(self.queries_by_class[base_class]) do
-							query:on_component_removed(entity, component);
+	for entity, components_by_class in pairs(self.component_graveyard) do
+		for class, components in pairs(components_by_class) do
+			for component, _ in pairs(components) do
+				self:unregister_component(entity, component);
+				if not self.entity_graveyard[entity] then
+					local base_class = class;
+					while base_class ~= Component do
+						if self.queries_by_class[base_class] then
+							for query in pairs(self.queries_by_class[base_class]) do
+								query:on_component_removed(entity, component);
+							end
 						end
+						base_class = base_class.super;
 					end
-					base_class = base_class.super;
 				end
 			end
 		end
@@ -73,18 +75,20 @@ ECS.update = function(self)
 
 	-- Add components
 
-	for entity, components in pairs(self.component_nursery) do
-		for class, component in pairs(components) do
-			self:register_component(entity, component);
-			if not self.entity_nursery[entity] then
-				local base_class = class;
-				while base_class ~= Component do
-					if self.queries_by_class[base_class] then
-						for query in pairs(self.queries_by_class[base_class]) do
-							query:on_component_added(entity, component);
+	for entity, components_by_class in pairs(self.component_nursery) do
+		for class, components in pairs(components_by_class) do
+			for component, _ in pairs(components) do
+				self:register_component(entity, component);
+				if not self.entity_nursery[entity] then
+					local base_class = class;
+					while base_class ~= Component do
+						if self.queries_by_class[base_class] then
+							for query in pairs(self.queries_by_class[base_class]) do
+								query:on_component_added(entity, component);
+							end
 						end
+						base_class = base_class.super;
 					end
-					base_class = base_class.super;
 				end
 			end
 		end
@@ -151,15 +155,15 @@ ECS.add_component = function(self, entity, component)
 	assert(entity:is_valid());
 	local graveyard = self.component_graveyard[entity];
 	if graveyard and graveyard[component:class()] then
-		graveyard[component:class()] = nil;
+		graveyard[component:class()][component] = nil;
 	else
-		assert(not entity:exact_component(component:class()));
-		local nursery = self.component_nursery[entity];
-		if not nursery then
-			nursery = {};
-			self.component_nursery[entity] = nursery;
+		if not self.component_nursery[entity] then
+			self.component_nursery[entity] = {};
 		end
-		nursery[component:class()] = component;
+		if not self.component_nursery[entity][component:class()] then
+			self.component_nursery[entity][component:class()] = {};
+		end
+		self.component_nursery[entity][component:class()][component] = true;
 	end
 end
 
@@ -173,15 +177,15 @@ ECS.remove_component = function(self, entity, component)
 	component:remove_from_entity();
 	local nursery = self.component_nursery[entity];
 	if nursery and nursery[component:class()] then
-		nursery[component:class()] = nil;
+		nursery[component:class()][component] = nil;
 	else
-		assert(entity:exact_component(component:class()) == component);
-		local graveyard = self.component_graveyard[entity];
-		if not graveyard then
-			graveyard = {};
-			self.component_graveyard[entity] = graveyard;
+		if not self.component_graveyard[entity] then
+			self.component_graveyard[entity] = {};
 		end
-		graveyard[component:class()] = component;
+		if not self.component_graveyard[entity][component:class()] then
+			self.component_graveyard[entity][component:class()] = {};
+		end
+		self.component_graveyard[entity][component:class()][component] = true;
 	end
 end
 
@@ -263,30 +267,51 @@ end
 ---@param class `T`
 ---@return T
 ECS.component_exact_on_entity = function(self, entity, class)
+	local components = self:components_exact_on_entity(entity, class);
+	for component, _ in pairs(components) do
+		return component;
+	end
+end
+
+
+---@generic T
+---@param entity Entity
+---@param class `T`
+---@return { [T]: boolean }
+ECS.components_exact_on_entity = function(self, entity, class)
 	if type(class) == "string" then
 		class = Class:get_by_name(class);
 	end
 	assert(entity);
 	assert(class);
 
+	local output = {};
+
 	if self.component_nursery[entity] then
 		if self.component_nursery[entity][class] then
-			return self.component_nursery[entity][class];
+			for component, _ in pairs(self.component_nursery[entity][class]) do
+				output[component] = true;
+			end
+		end
+	end
+
+	if self.entity_to_component[entity] then
+		if self.entity_to_component[entity][class] then
+			for component, _ in pairs(self.entity_to_component[entity][class]) do
+				output[component] = true;
+			end
 		end
 	end
 
 	if self.component_graveyard[entity] then
 		if self.component_graveyard[entity][class] then
-			return nil;
+			for component, _ in pairs(self.component_graveyard[entity][class]) do
+				output[component] = nil;
+			end
 		end
 	end
 
-	if self.entity_to_component[entity] then
-		local exactMatch = self.entity_to_component[entity][class];
-		if exactMatch then
-			return exactMatch;
-		end
-	end
+	return output;
 end
 
 ---@generic T
@@ -314,27 +339,35 @@ ECS.components_on_entity = function(self, entity, base_class)
 		base_class = Class:get_by_name(base_class);
 	end
 
-	local candidates = {};
+	local output = {};
+
 	if self.entity_to_components[entity] then
 		if self.entity_to_components[entity][base_class] then
-			candidates = TableUtils.shallowCopy(self.entity_to_components[entity][base_class]);
+			output = TableUtils.shallowCopy(self.entity_to_components[entity][base_class]);
 		end
 	end
+
 	if self.component_nursery[entity] then
-		for _, component in pairs(self.component_nursery[entity]) do
-			if component:is_instance_of(base_class) then
-				candidates[component] = true;
+		for class, components in pairs(self.component_nursery[entity]) do
+			for component, _ in pairs(components) do
+				if component:is_instance_of(base_class) then
+					output[component] = true;
+				end
 			end
 		end
 	end
 
-	local output = {};
-	local graveyard = self.component_graveyard[entity] or {};
-	for component in pairs(candidates) do
-		if graveyard[component:class()] ~= component then
-			output[component] = true;
+	local output_copy = TableUtils.shallowCopy(output);
+	if self.component_graveyard[entity] then
+		for component in pairs(output_copy) do
+			if self.component_graveyard[entity][component:class()] then
+				if self.component_graveyard[entity][component:class()][component] then
+					output[component] = nil;
+				end
+			end
 		end
 	end
+
 	return output;
 end
 
@@ -383,8 +416,10 @@ ECS.register_component = function(self, entity, component)
 	if not self.entity_to_component[entity] then
 		self.entity_to_component[entity] = {};
 	end
-	assert(not self.entity_to_component[entity][class]);
-	self.entity_to_component[entity][class] = component;
+	if not self.entity_to_component[entity][class] then
+		self.entity_to_component[entity][class] = {};
+	end
+	self.entity_to_component[entity][class][component] = true;
 
 	if not self.entity_to_components[entity] then
 		self.entity_to_components[entity] = {};
@@ -424,7 +459,7 @@ ECS.unregister_component = function(self, entity, component)
 	assert(class);
 
 	assert(self.entity_to_component[entity][class]);
-	self.entity_to_component[entity][class] = nil;
+	self.entity_to_component[entity][class][component] = nil;
 
 	local base_class = class;
 	while base_class ~= Component do
@@ -455,8 +490,13 @@ end
 ---@param entity Entity
 ECS.unregister_entity = function(self, entity)
 	if self.entity_to_component[entity] then
-		local components = TableUtils.shallowCopy(self.entity_to_component[entity]);
-		for _, component in pairs(components) do
+		local components_to_unregister = {};
+		for class, components in pairs(self.entity_to_component[entity]) do
+			for component, _ in pairs(components) do
+				table.insert(components_to_unregister, component);
+			end
+		end
+		for _, component in ipairs(components_to_unregister) do
 			self:unregister_component(entity, component);
 		end
 	end
@@ -519,6 +559,19 @@ crystal.test.add("Add and remove component", function()
 	assert(snoot:entity() == nil);
 end);
 
+crystal.test.add("Add and remove components of same class", function()
+	local ecs = ECS:new();
+	local Snoot = Class:test("Snoot", Component);
+
+	local a = ecs:spawn(Entity);
+	local snoot1 = a:add_component(Snoot);
+	local snoot2 = a:add_component(Snoot);
+	a:remove_component(snoot2);
+	ecs:update();
+	assert(a:exact_components(Snoot)[snoot1]);
+	assert(not a:exact_components(Snoot)[snoot2]);
+end);
+
 crystal.test.add("Add and remove component between updates", function()
 	local ecs = ECS:new();
 	local Snoot = Class:test("Snoot", Component);
@@ -553,28 +606,7 @@ crystal.test.add("Cannot add component to despawned entity", function()
 	assert(not a:exact_component(Component));
 end);
 
-crystal.test.add("Prevent duplicate components", function()
-	local ecs = ECS:new();
-
-	local a = ecs:spawn(Entity);
-
-	local Snoot = Class:test("Snoot", Component);
-	a:add_component(Snoot);
-
-	local success = pcall(function()
-		a:add_component(Snoot);
-	end);
-	assert(not success);
-
-	ecs:update();
-
-	local success = pcall(function()
-		a:add_component(Snoot);
-	end);
-	assert(not success);
-end);
-
-crystal.test.add("Get exact component", function()
+crystal.test.add("Can get component by exact class", function()
 	local ecs = ECS:new();
 	local a = ecs:spawn(Entity);
 
@@ -610,7 +642,40 @@ crystal.test.add("Get exact component", function()
 	assert(a:exact_component(Snoot) == nil);
 end);
 
-crystal.test.add("Get component", function()
+
+crystal.test.add("Can get multiple components by exact class", function()
+	local ecs = ECS:new();
+	local a = ecs:spawn(Entity);
+
+	local Snoot = Class:test("Snoot", Component);
+	local Boop = Class:test("Boop", Snoot);
+	local Bonk = Class:test("Bonk", Snoot);
+
+	local boop1 = a:add_component(Boop);
+	local boop2 = a:add_component(Boop);
+	assert(a:exact_components(Boop)[boop1]);
+	assert(a:exact_components(Boop)[boop2]);
+	assert(#a:exact_components(Bonk) == 0);
+	assert(#a:exact_components(Snoot) == 0);
+	ecs:update();
+	assert(a:exact_components(Boop)[boop1]);
+	assert(a:exact_components(Boop)[boop2]);
+	assert(#a:exact_components(Bonk) == 0);
+	assert(#a:exact_components(Snoot) == 0);
+
+	a:remove_component(boop1);
+	assert(a:exact_components(Boop)[boop1] == nil);
+	assert(a:exact_components(Boop)[boop2]);
+	assert(#a:exact_components(Bonk) == 0);
+	assert(#a:exact_components(Snoot) == 0);
+	ecs:update();
+	assert(a:exact_components(Boop)[boop1] == nil);
+	assert(a:exact_components(Boop)[boop2]);
+	assert(#a:exact_components(Bonk) == 0);
+	assert(#a:exact_components(Snoot) == 0);
+end);
+
+crystal.test.add("Can get component by base class", function()
 	local ecs = ECS:new();
 	local a = ecs:spawn(Entity);
 
@@ -646,19 +711,25 @@ crystal.test.add("Get component", function()
 	assert(a:component(Snoot) == bonk);
 end);
 
-crystal.test.add("Get components", function()
+crystal.test.add("Can get components by base class", function()
 	local ecs = ECS:new();
 	local a = ecs:spawn(Entity);
 	local Snoot = Class:test("Snoot", Component);
 	local Boop = Class:test("Boop", Snoot);
 
-	local boop = a:add_component(Boop);
-	assert(TableUtils.equals({ [boop] = true }, a:components(Snoot)));
+	local boop1 = a:add_component(Boop);
+	assert(TableUtils.equals({ [boop1] = true }, a:components(Snoot)));
+
+	local boop2 = a:add_component(Boop);
+	assert(TableUtils.equals({ [boop1] = true,[boop2] = true }, a:components(Snoot)));
 
 	ecs:update();
-	assert(TableUtils.equals({ [boop] = true }, a:components(Snoot)));
+	assert(TableUtils.equals({ [boop1] = true,[boop2] = true }, a:components(Snoot)));
 
-	a:remove_component(boop);
+	a:remove_component(boop1);
+	assert(TableUtils.equals({ [boop2] = true }, a:components(Snoot)));
+
+	a:remove_component(boop2);
 	assert(TableUtils.equals({}, a:components(Snoot)));
 
 	ecs:update();

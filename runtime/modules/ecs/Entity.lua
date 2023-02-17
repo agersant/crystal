@@ -43,6 +43,11 @@ Entity.exact_component = function(self, class)
 end
 
 ---@return Component
+Entity.exact_components = function(self, class)
+	return self._ecs:components_exact_on_entity(self, class);
+end
+
+---@return Component
 Entity.component = function(self, class)
 	return self._ecs:component_on_entity(self, class);
 end
