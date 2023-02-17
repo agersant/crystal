@@ -266,8 +266,8 @@ end
 ---@param entity Entity
 ---@param class `T`
 ---@return T
-ECS.component_exact_on_entity = function(self, entity, class)
-	local components = self:components_exact_on_entity(entity, class);
+ECS.component_on_entity_exact = function(self, entity, class)
+	local components = self:components_on_entity_exact(entity, class);
 	for component, _ in pairs(components) do
 		return component;
 	end
@@ -278,7 +278,7 @@ end
 ---@param entity Entity
 ---@param class `T`
 ---@return { [T]: boolean }
-ECS.components_exact_on_entity = function(self, entity, class)
+ECS.components_on_entity_exact = function(self, entity, class)
 	if type(class) == "string" then
 		class = Class:get_by_name(class);
 	end
@@ -568,8 +568,8 @@ crystal.test.add("Add and remove components of same class", function()
 	local snoot2 = a:add_component(Snoot);
 	a:remove_component(snoot2);
 	ecs:update();
-	assert(a:exact_components(Snoot)[snoot1]);
-	assert(not a:exact_components(Snoot)[snoot2]);
+	assert(a:components_exact(Snoot)[snoot1]);
+	assert(not a:components_exact(Snoot)[snoot2]);
 end);
 
 crystal.test.add("Add and remove component between updates", function()
@@ -603,7 +603,7 @@ crystal.test.add("Cannot add component to despawned entity", function()
 	a:despawn();
 	ecs:update(0);
 	assert(not ecs:entities()[a]);
-	assert(not a:exact_component(Component));
+	assert(not a:component_exact(Component));
 end);
 
 crystal.test.add("Can get component by exact class", function()
@@ -615,31 +615,31 @@ crystal.test.add("Can get component by exact class", function()
 	local Bonk = Class:test("Bonk", Snoot);
 
 	local boop = a:add_component(Boop);
-	assert(a:exact_component(Boop) == boop);
-	assert(a:exact_component(Bonk) == nil);
-	assert(a:exact_component(Snoot) == nil);
+	assert(a:component_exact(Boop) == boop);
+	assert(a:component_exact(Bonk) == nil);
+	assert(a:component_exact(Snoot) == nil);
 	ecs:update();
-	assert(a:exact_component(Boop) == boop);
-	assert(a:exact_component(Bonk) == nil);
-	assert(a:exact_component(Snoot) == nil);
+	assert(a:component_exact(Boop) == boop);
+	assert(a:component_exact(Bonk) == nil);
+	assert(a:component_exact(Snoot) == nil);
 
 	local bonk = a:add_component(Bonk);
-	assert(a:exact_component(Boop) == boop);
-	assert(a:exact_component(Bonk) == bonk);
-	assert(a:exact_component(Snoot) == nil);
+	assert(a:component_exact(Boop) == boop);
+	assert(a:component_exact(Bonk) == bonk);
+	assert(a:component_exact(Snoot) == nil);
 	ecs:update();
-	assert(a:exact_component(Boop) == boop);
-	assert(a:exact_component(Bonk) == bonk);
-	assert(a:exact_component(Snoot) == nil);
+	assert(a:component_exact(Boop) == boop);
+	assert(a:component_exact(Bonk) == bonk);
+	assert(a:component_exact(Snoot) == nil);
 
 	a:remove_component(boop);
-	assert(a:exact_component(Boop) == nil);
-	assert(a:exact_component(Bonk) == bonk);
-	assert(a:exact_component(Snoot) == nil);
+	assert(a:component_exact(Boop) == nil);
+	assert(a:component_exact(Bonk) == bonk);
+	assert(a:component_exact(Snoot) == nil);
 	ecs:update();
-	assert(a:exact_component(Boop) == nil);
-	assert(a:exact_component(Bonk) == bonk);
-	assert(a:exact_component(Snoot) == nil);
+	assert(a:component_exact(Boop) == nil);
+	assert(a:component_exact(Bonk) == bonk);
+	assert(a:component_exact(Snoot) == nil);
 end);
 
 
@@ -653,26 +653,26 @@ crystal.test.add("Can get multiple components by exact class", function()
 
 	local boop1 = a:add_component(Boop);
 	local boop2 = a:add_component(Boop);
-	assert(a:exact_components(Boop)[boop1]);
-	assert(a:exact_components(Boop)[boop2]);
-	assert(#a:exact_components(Bonk) == 0);
-	assert(#a:exact_components(Snoot) == 0);
+	assert(a:components_exact(Boop)[boop1]);
+	assert(a:components_exact(Boop)[boop2]);
+	assert(#a:components_exact(Bonk) == 0);
+	assert(#a:components_exact(Snoot) == 0);
 	ecs:update();
-	assert(a:exact_components(Boop)[boop1]);
-	assert(a:exact_components(Boop)[boop2]);
-	assert(#a:exact_components(Bonk) == 0);
-	assert(#a:exact_components(Snoot) == 0);
+	assert(a:components_exact(Boop)[boop1]);
+	assert(a:components_exact(Boop)[boop2]);
+	assert(#a:components_exact(Bonk) == 0);
+	assert(#a:components_exact(Snoot) == 0);
 
 	a:remove_component(boop1);
-	assert(a:exact_components(Boop)[boop1] == nil);
-	assert(a:exact_components(Boop)[boop2]);
-	assert(#a:exact_components(Bonk) == 0);
-	assert(#a:exact_components(Snoot) == 0);
+	assert(a:components_exact(Boop)[boop1] == nil);
+	assert(a:components_exact(Boop)[boop2]);
+	assert(#a:components_exact(Bonk) == 0);
+	assert(#a:components_exact(Snoot) == 0);
 	ecs:update();
-	assert(a:exact_components(Boop)[boop1] == nil);
-	assert(a:exact_components(Boop)[boop2]);
-	assert(#a:exact_components(Bonk) == 0);
-	assert(#a:exact_components(Snoot) == 0);
+	assert(a:components_exact(Boop)[boop1] == nil);
+	assert(a:components_exact(Boop)[boop2]);
+	assert(#a:components_exact(Bonk) == 0);
+	assert(#a:components_exact(Snoot) == 0);
 end);
 
 crystal.test.add("Can get component by base class", function()

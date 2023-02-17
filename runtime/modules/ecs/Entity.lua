@@ -38,13 +38,13 @@ Entity.remove_component = function(self, component)
 end
 
 ---@return Component
-Entity.exact_component = function(self, class)
-	return self._ecs:component_exact_on_entity(self, class);
+Entity.component_exact = function(self, class)
+	return self._ecs:component_on_entity_exact(self, class);
 end
 
 ---@return Component
-Entity.exact_components = function(self, class)
-	return self._ecs:components_exact_on_entity(self, class);
+Entity.components_exact = function(self, class)
+	return self._ecs:components_on_entity_exact(self, class);
 end
 
 ---@return Component
