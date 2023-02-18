@@ -7,6 +7,6 @@ grand_parent: API Reference
 
 ## Methods
 
-| Name     | Description |
-| :------- | :---------- |
-| `entity` |             |
+| Name     | Description                                             |
+| :------- | :------------------------------------------------------ |
+| `entity` | Returns the [Entity](entity) this component belongs to. |

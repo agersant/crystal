@@ -7,7 +7,7 @@ grand_parent: API Reference
 
 ## Methods
 
-| Name        | Description |
-| :---------- | :---------- |
-| `add_query` |             |
-| `ecs`       |             |
+| Name        | Description                                      |
+| :---------- | :----------------------------------------------- |
+| `add_query` | Instantiates and registers a new [Query](query). |
+| `ecs`       | Returns the [ECS](ecs) this system belongs to.   |
