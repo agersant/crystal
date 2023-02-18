@@ -13,10 +13,8 @@ end
 
 DrawableSystem.duringEntitiesDraw = function(self)
 	local sorted_drawables = {};
-	for entity in pairs(self.query:entities()) do
-		for drawable in pairs(entity:components("Drawable")) do
-			table.insert(sorted_drawables, drawable);
-		end
+	for drawable in pairs(self.query:components("Drawable")) do
+		table.insert(sorted_drawables, drawable);
 	end
 	table.sort(sorted_drawables, sortDrawables);
 

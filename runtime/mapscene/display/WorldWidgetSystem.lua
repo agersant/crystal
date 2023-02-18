@@ -9,8 +9,7 @@ WorldWidgetSystem.init = function(self)
 end
 
 WorldWidgetSystem.afterScripts = function(self, dt)
-	local entities = self.with_body:entities();
-	for entity in pairs(entities) do
+	for entity in pairs(self.with_body:entities()) do
 		local body = entity:component(PhysicsBody);
 		local x, y = body:getPosition();
 		for widget in pairs(entity:components(WorldWidget)) do
@@ -19,11 +18,8 @@ WorldWidgetSystem.afterScripts = function(self, dt)
 		end
 	end
 
-	local entities = self.with_widget:entities();
-	for entity in pairs(entities) do
-		for widget in pairs(entity:components(WorldWidget)) do
-			widget:updateWidget(dt);
-		end
+	for widget in pairs(self.with_widget:components()) do
+		widget:updateWidget(dt);
 	end
 end
 

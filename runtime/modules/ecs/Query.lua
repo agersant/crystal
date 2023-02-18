@@ -3,6 +3,7 @@ local TableUtils = require("utils/TableUtils");
 ---@class Query
 ---@field _classes Class[]
 ---@field _entities { [Entity]: boolean }
+---@field _components { [Component]: boolean }
 ---@field _added_entities { [Entity]: boolean }
 ---@field _removed_entities { [Entity]: boolean }
 ---@field _added_components { [Class]: { [Component]: Entity } }
@@ -21,6 +22,7 @@ Query.init = function(self, classes)
 		table.insert(self._classes, class);
 	end
 	self._entities = {};
+	self._components = {};
 	self._added_entities = {};
 	self._removed_entities = {};
 	self._added_components = {};
@@ -58,6 +60,7 @@ Query.on_entity_spawned = function(self, entity)
 		end
 		for component in pairs(entity:components(class)) do
 			self._added_components[class][component] = entity;
+			self._components[component] = true;
 		end
 	end
 end
@@ -74,6 +77,7 @@ Query.on_entity_despawned = function(self, entity)
 		self._removed_components[class] = {};
 		for component in pairs(entity:components(class)) do
 			self._removed_components[class][component] = entity;
+			self._components[component] = nil;
 		end
 	end
 end
@@ -98,6 +102,7 @@ Query.on_component_added = function(self, entity, component)
 					self._added_components[class] = {};
 				end
 				self._added_components[class][component] = entity;
+				self._components[component] = true;
 			end
 		end
 	elseif self:matches(entity) then
@@ -110,6 +115,7 @@ Query.on_component_added = function(self, entity, component)
 			end
 			for component in pairs(entity:components(class)) do
 				self._added_components[class][component] = entity;
+				self._components[component] = true;
 			end
 		end
 	end
@@ -121,6 +127,7 @@ Query.on_component_removed = function(self, entity, component)
 	if not self._entities[entity] then
 		return;
 	end
+	self._components[component] = nil;
 	if self:matches(entity) then
 		for _, class in ipairs(self._classes) do
 			if component:is_instance_of(class) then
@@ -170,7 +177,10 @@ Query.contains = function(self, entity)
 	return self._entities[entity];
 end
 
--- TODO expose components()
+---@return { [Component]: boolean }
+Query.components = function(self)
+	return TableUtils.shallowCopy(self._components);
+end
 
 Query.flush = function(self)
 	self._added_entities = {};

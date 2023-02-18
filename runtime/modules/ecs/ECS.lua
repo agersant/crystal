@@ -177,7 +177,8 @@ ECS.remove_component = function(self, entity, component)
 	assert(component:is_instance_of(Component));
 	assert(component:entity() == entity);
 	assert(entity:is_valid());
-	component:remove_from_entity();
+	assert(component:is_valid());
+	component:invalidate();
 	local nursery = self.component_nursery[entity];
 	if nursery and nursery[component:class()] then
 		nursery[component:class()][component] = nil;
@@ -553,9 +554,11 @@ crystal.test.add("Add and remove component", function()
 	assert(snoot:entity() == a);
 
 	a:remove_component(snoot);
-	assert(snoot:entity() == nil);
+	assert(not snoot:is_valid());
+	assert(snoot:entity());
 	ecs:update();
-	assert(snoot:entity() == nil);
+	assert(not snoot:is_valid());
+	assert(snoot:entity());
 end);
 
 crystal.test.add("Add and remove components of same class", function()
@@ -834,7 +837,7 @@ crystal.test.add("Query maintains list of entities", function()
 	assert(not query:contains(b));
 end);
 
-crystal.test.add("Query entity list captures derived components", function()
+crystal.test.add("Query entity list includes derived components", function()
 	local ecs = ECS:new();
 	local Snoot = Class:test("Snoot", Component);
 	local Boop = Class:test("Boop", Snoot);
@@ -876,6 +879,56 @@ crystal.test.add("Query maintains changelog of entities", function()
 	assert(not query:removed_entities()[b]);
 end);
 
+
+crystal.test.add("Query maintains list of components", function()
+	local ecs = ECS:new();
+	local Snoot = Class:test("Snoot", Component);
+	local query = ecs:add_query({ Snoot });
+
+	local a = ecs:spawn(Entity);
+
+	-- Add component
+	local snoot = a:add_component(Snoot);
+	assert(TableUtils.equals({}, query:components()));
+	ecs:update();
+	assert(TableUtils.equals({ [snoot] = true }, query:components()));
+
+	-- Bonus component
+	local bonus_snoot = a:add_component(Snoot);
+	assert(TableUtils.equals({ [snoot] = true }, query:components()));
+	ecs:update();
+	assert(TableUtils.equals({ [snoot] = true,[bonus_snoot] = true }, query:components()));
+	a:remove_component(bonus_snoot);
+	ecs:update();
+	assert(TableUtils.equals({ [snoot] = true }, query:components()));
+
+	-- Remove component
+	a:remove_component(snoot);
+	assert(TableUtils.equals({ [snoot] = true }, query:components()));
+	ecs:update();
+	assert(TableUtils.equals({}, query:components()));
+
+	-- Add/remove component without update
+	local snoot = a:add_component(Snoot);
+	a:remove_component(snoot);
+	ecs:update();
+	assert(TableUtils.equals({}, query:components()));
+
+	-- Despawn
+	a:add_component(Snoot);
+	ecs:update();
+	a:despawn();
+	ecs:update();
+	assert(TableUtils.equals({}, query:components()));
+
+	-- Despawn with no intermediate update
+	local a = ecs:spawn(Entity);
+	a:add_component(Snoot);
+	a:despawn();
+	ecs:update();
+	assert(TableUtils.equals({}, query:components()));
+end);
+
 crystal.test.add("Query maintains changelog of components", function()
 	local ecs = ECS:new();
 	local BaseComp = Class:test("BaseComp", Component);
@@ -902,7 +955,7 @@ crystal.test.add("Query maintains changelog of components", function()
 	assert(TableUtils.equals({ [compA] = a }, query:removed_components(BaseComp)));
 end);
 
-crystal.test.add("Changelog of components is updated when entity despawns", function()
+crystal.test.add("Query changelog of components is updated when entity despawns", function()
 	local ecs = ECS:new();
 	local Comp = Class:test("Comp", Component);
 	local query = ecs:add_query({ Comp });
@@ -917,7 +970,7 @@ crystal.test.add("Changelog of components is updated when entity despawns", func
 	assert(query:removed_components(Comp)[comp] == a);
 end);
 
-crystal.test.add("Query component changelog works for intersection query", function()
+crystal.test.add("Query changelog of components works for queries involving multiple components", function()
 	local ecs = ECS:new();
 	local BaseComp = Class:test("BaseComp", Component);
 	local CompA = Class:test("CompA", BaseComp);

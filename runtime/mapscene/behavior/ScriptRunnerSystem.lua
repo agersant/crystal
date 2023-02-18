@@ -13,10 +13,7 @@ ScriptRunnerSystem.beforeScripts = function(self, dt)
 end
 
 ScriptRunnerSystem.duringScripts = function(self, dt)
-	local ecs = self:ecs();
-	local entities = self.query:entities();
-	for entity in pairs(entities) do
-		local script_runner = entity:component("ScriptRunner");
+	for script_runner in pairs(self.query:components()) do
 		script_runner:runScripts(dt);
 	end
 end

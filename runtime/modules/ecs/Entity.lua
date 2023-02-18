@@ -22,9 +22,10 @@ Entity.add_component = function(self, class, ...)
 	if type(class) == "string" then
 		class = Class:get_by_name(class);
 	end
-	local component = { _entity = self };
+	local component = { _entity = self, _is_valid = true };
 	class:placement_new(component, ...);
 	assert(component:entity() == self);
+	assert(component:is_valid());
 	self._ecs:add_component(self, component);
 	Alias:add(self, component);
 	return component;
