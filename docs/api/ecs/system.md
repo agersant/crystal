@@ -37,25 +37,25 @@ local Poison = Class("Poison", crystal.Component);
 local Health = Class("Health", crystal.Component);
 
 Health.init = function(self)
-	self.amount = 100;
+  self.amount = 100;
 end
 
 Health.take_damage(self, damage)
-	self.amount = math.max(0, self.amount - damage);
+  self.amount = math.max(0, self.amount - damage);
 end
 
 -- Poison system
 local PoisonSystem = Class("PoisonSystem", crystal.System);
 
 PoisonSystem.init = function(self)
-	self.query = self:add_query("Health", "Poison");
+  self.query = self:add_query("Health", "Poison");
 end
 
 PoisonSystem.combat = function(self)
-	for entity in pairs(self.query:entities()) do
-		-- Poisoned entities take 1 damage per frame
-		entity:take_damage(1);
-	end
+  for entity in pairs(self.query:entities()) do
+    -- Poisoned entities take 1 damage per frame
+    entity:take_damage(1);
+  end
 end
 
 -- Somewhere in your scene's update code:

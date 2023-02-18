@@ -27,18 +27,18 @@ local Bark = Class("Bark", crystal.Component);
 
 local Dog = Class("Dog", crystal.Entity);
 Dog.init = function(self)
-	self:add_component("Bark");
+  self:add_component("Bark");
 end
 
 local BarkSystem = Class("BarkSystem", crystal.System);
 BarkSystem.init = function(self)
-	self.query = self:add_query({ "Bark" });
+  self.query = self:add_query({ "Bark" });
 end
 
 BarkSystem.run_systems = function(self) -- this function name is arbitrary but needs to match the call below to `notify_systems`
-	for entity in pairs(self.query:entities()) do -- iterates on all entities with a Bark component
-		print("bark bark");
-	end
+  for entity in pairs(self.query:entities()) do -- iterates on all entities with a Bark component
+    print("bark bark");
+  end
 end
 
 -- Outside of a toy example, this would belong in your scene's constructor

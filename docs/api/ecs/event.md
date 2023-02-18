@@ -31,12 +31,12 @@ The only way to create events is to call [Entity:create_event](entity_create_eve
 local DragonSpawned = class("DragonSpawned", crystal.Event);
 local Dragon = class("Dragon", crystal.Entity);
 Dragon.init = function(self)
-	self:create_event(DragonSpawned);
+  self:create_event(DragonSpawned);
 end
 
 local ecs = crystal.ECS:new();
 ecs:spawn(Dragon);
 for event in pairs(ecs:events("DragonSpawned")) do
-	print(event);
+  print(event);
 end
 ```
