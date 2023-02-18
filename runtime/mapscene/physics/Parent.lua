@@ -1,8 +1,7 @@
 local Parent = Class("Parent", crystal.Component);
 
-Parent.init = function(self, entity, otherEntity)
+Parent.init = function(self, otherEntity)
 	assert(otherEntity);
-	Parent.super.init(self, entity);
 	self._parent = otherEntity;
 end
 

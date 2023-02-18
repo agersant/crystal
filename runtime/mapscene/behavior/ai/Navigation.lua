@@ -47,11 +47,6 @@ local navigate = function(self, navigationMesh, goal, physicsBody, locomotion)
 	return false;
 end
 
-Navigation.init = function(self, entity)
-	Navigation.super.init(self, entity);
-	assert(self._script);
-end
-
 Navigation.navigateToPoint = function(self, x, y, targetRadius)
 	assert(x);
 	assert(y);

@@ -1,9 +1,8 @@
 ---@class Component
 local Component = Class("Component");
 
-Component.init = function(self, entity)
-	assert(entity);
-	self._entity = entity;
+Component.init = function(self)
+	-- self._entity setup by Entity:add_component
 end
 
 ---@return Entity

@@ -1,7 +1,6 @@
 local Shader = Class("Shader", crystal.Component);
 
-Shader.init = function(self, entity, shaderResource)
-	Shader.super.init(self, entity);
+Shader.init = function(self, shaderResource)
 	self:setShaderResource(shaderResource);
 end
 

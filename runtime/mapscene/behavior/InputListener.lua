@@ -3,10 +3,9 @@ local InputContext = require("mapscene/behavior/InputContext");
 
 local InputListener = Class("InputListener", crystal.Component);
 
-InputListener.init = function(self, entity, inputDevice)
+InputListener.init = function(self, inputDevice)
 	assert(inputDevice);
 	assert(inputDevice:is_instance_of(InputDevice));
-	InputListener.super.init(self, entity);
 	self._inputDevice = inputDevice;
 	self._inputContexts = {};
 	self._disabled = 0;

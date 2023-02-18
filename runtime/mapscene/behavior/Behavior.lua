@@ -2,8 +2,7 @@ local Script = require("script/Script");
 
 local Behavior = Class("Behavior", crystal.Component);
 
-Behavior.init = function(self, entity, scriptFunction)
-	Behavior.super.init(self, entity);
+Behavior.init = function(self, scriptFunction)
 	assert(scriptFunction == nil or type(scriptFunction) == "function");
 	self._script = Script:new(scriptFunction);
 end

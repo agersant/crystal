@@ -1,7 +1,6 @@
 local Drawable = Class("Drawable", crystal.Component);
 
-Drawable.init = function(self, entity)
-	Drawable.super.init(self, entity);
+Drawable.init = function(self)
 	self._zOrder = 0;
 end
 

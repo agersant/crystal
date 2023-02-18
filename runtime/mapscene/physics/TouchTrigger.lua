@@ -7,8 +7,7 @@ local updateFilterData = function(self)
 	self._fixture:setFilterData(CollisionFilters.TRIGGER, collideWith, 0);
 end
 
-TouchTrigger.init = function(self, entity, physicsBody, shape)
-	TouchTrigger.super.init(self, entity);
+TouchTrigger.init = function(self, physicsBody, shape)
 	assert(physicsBody);
 	assert(physicsBody:is_instance_of(PhysicsBody));
 	assert(shape);

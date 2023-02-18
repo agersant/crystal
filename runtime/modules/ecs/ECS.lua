@@ -127,9 +127,10 @@ ECS.spawn = function(self, class, ...)
 		class = Class:get_by_name(class);
 	end
 	assert(class);
-	local entity = {};
+	local entity = { _ecs = self, _is_valid = true };
 	self.entity_nursery[entity] = true;
-	class:placement_new(entity, self, ...);
+	class:placement_new(entity, ...);
+	assert(entity:ecs() == self);
 	return entity;
 end
 

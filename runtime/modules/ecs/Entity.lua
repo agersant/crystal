@@ -5,10 +5,9 @@ local Alias = require("utils/Alias");
 ---@field private _is_valid boolean
 local Entity = Class("Entity");
 
-Entity.init = function(self, ecs)
-	assert(ecs);
-	self._ecs = ecs;
-	self._is_valid = true;
+Entity.init = function(self)
+	-- self._ecs setup by ECS:spawn
+	-- self._is_valid setup by ECS:spawn
 end
 
 ---@return ECS
@@ -23,8 +22,9 @@ Entity.add_component = function(self, class, ...)
 	if type(class) == "string" then
 		class = Class:get_by_name(class);
 	end
-	local component = class:new(self, ...);
-	assert(component);
+	local component = { _entity = self };
+	class:placement_new(component, ...);
+	assert(component:entity() == self);
 	self._ecs:add_component(self, component);
 	Alias:add(self, component);
 	return component;
@@ -62,7 +62,9 @@ Entity.create_event = function(self, class, ...)
 	if type(class) == "string" then
 		class = Class:get_by_name(class);
 	end
-	local event = class:new(self, ...);
+	local event = { _entity = self };
+	class:placement_new(event, ...);
+	assert(event:entity() == self);
 	self._ecs:add_event(event);
 end
 

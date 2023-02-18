@@ -3,8 +3,7 @@ local MathUtils = require("utils/MathUtils");
 
 local Sprite = Class("Sprite", Drawable);
 
-Sprite.init = function(self, entity)
-	Sprite.super.init(self, entity);
+Sprite.init = function(self)
 	self._x = 0;
 	self._y = 0;
 	self._frame = nil;

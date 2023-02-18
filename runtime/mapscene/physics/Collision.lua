@@ -29,8 +29,7 @@ local setState = function(self, state)
 	self:setRestitution(state.restitution);
 end
 
-Collision.init = function(self, entity, physicsBody, radius)
-	Collision.super.init(self, entity);
+Collision.init = function(self, physicsBody, radius)
 	assert(physicsBody);
 	assert(physicsBody:is_instance_of(PhysicsBody));
 	assert(radius);

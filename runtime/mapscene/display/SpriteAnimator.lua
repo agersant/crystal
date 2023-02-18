@@ -40,8 +40,8 @@ local playAnimationInternal = function(self, animationName, angle, forceRestart)
 	return self._script:addThreadAndRun(playback(self, sequence));
 end
 
-SpriteAnimator.init = function(self, entity, sprite, sheet)
-	SpriteAnimator.super.init(self, entity);
+SpriteAnimator.init = function(self, sprite, sheet)
+	SpriteAnimator.super.init(self);
 	assert(sprite);
 	assert(sprite:is_instance_of(Sprite));
 	self._sprite = sprite;

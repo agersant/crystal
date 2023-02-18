@@ -23,8 +23,7 @@ local updateFixture = function(self)
 	end
 end
 
-Weakbox.init = function(self, entity, physicsBody, shape)
-	Weakbox.super.init(self, entity);
+Weakbox.init = function(self, physicsBody, shape)
 	assert(physicsBody);
 	assert(physicsBody:is_instance_of(PhysicsBody));
 	self._enabled = false;

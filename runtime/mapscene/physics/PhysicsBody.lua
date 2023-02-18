@@ -27,8 +27,7 @@ local setState = function(self, state)
 	self:setAngle(state.angle);
 end
 
-PhysicsBody.init = function(self, entity, physicsWorld, bodyType)
-	PhysicsBody.super.init(self, entity);
+PhysicsBody.init = function(self, physicsWorld, bodyType)
 	self._body = love.physics.newBody(physicsWorld, 0, 0, bodyType);
 	self._body:setFixedRotation(true);
 	self._body:setUserData(self);

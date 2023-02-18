@@ -4,8 +4,7 @@ local TableUtils = require("utils/TableUtils");
 
 local ScriptRunner = Class("ScriptRunner", crystal.Component);
 
-ScriptRunner.init = function(self, entity)
-	ScriptRunner.super.init(self, entity);
+ScriptRunner.init = function(self)
 	self._scripts = {};
 end
 
