@@ -38,16 +38,6 @@ Entity.remove_component = function(self, component)
 end
 
 ---@return Component
-Entity.component_exact = function(self, class)
-	return self._ecs:component_on_entity_exact(self, class);
-end
-
----@return Component
-Entity.components_exact = function(self, class)
-	return self._ecs:components_on_entity_exact(self, class);
-end
-
----@return Component
 Entity.component = function(self, class)
 	return self._ecs:component_on_entity(self, class);
 end
