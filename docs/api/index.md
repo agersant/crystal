@@ -13,7 +13,7 @@ has_toc: false
 | [crystal.assets](assets)   |                                                                     |
 | [crystal.cmd](cmd)         | Allows you to define and run console commands.                      |
 | [crystal.const](const)     |                                                                     |
-| [crystal.ecs](ecs)         |                                                                     |
+| [crystal.ecs](ecs)         | Implements the Entity Component System pattern.                     |
 | [crystal.gfx](gfx)         |                                                                     |
 | [crystal.input](input)     |                                                                     |
 | [crystal.log](log)         | Provides an interface to write log messages to console and to disk. |

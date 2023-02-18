@@ -18,14 +18,12 @@ The following example illustrates basic functionality of the [Entity](entity)/[C
 local Bark = Class("Noise", crystal.Component);
 
 local Dog = Class("Dog", crystal.Entity);
-Dog.init = function(self, ecs)
-	Dog.super.init(self, ecs);
+Dog.init = function(self)
 	self:add_component("Bark");
 end
 
 local BarkSystem = Class("BarkSystem", crystal.System);
-BarkSystem.init = function(self, ecs)
-	BarkSystem.super.init(self, ecs);
+BarkSystem.init = function(self)
 	self.query = self:add_query({ "Bark" });
 end
 
