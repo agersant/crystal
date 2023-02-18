@@ -170,6 +170,8 @@ Query.contains = function(self, entity)
 	return self._entities[entity];
 end
 
+-- TODO expose components()
+
 Query.flush = function(self)
 	self._added_entities = {};
 	self._removed_entities = {};

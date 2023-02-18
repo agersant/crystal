@@ -266,11 +266,33 @@ ECS.entities_with = function(self, class)
 		class = Class:get_by_name(class);
 	end
 	assert(class);
-	local source = self.components_by_class[class] or {};
 	local output = {};
-	for entity in pairs(source) do
-		output[entity] = true;
+
+	if self.components_by_class[class] then
+		for entity, components in pairs(self.components_by_class[class]) do
+			if not self.entity_graveyard[entity] then
+				for component in pairs(components) do
+					if not (self.component_graveyard[entity]
+						and self.component_graveyard[entity][component:class()]
+						and self.component_graveyard[entity][component:class()][component])
+					then
+						output[entity] = true;
+						break;
+					end
+				end
+			end
+		end
 	end
+
+	for entity, component_by_class in pairs(self.component_nursery) do
+		for class_iter, components in pairs(component_by_class) do
+			if class_iter:is_instance_of(class) and next(components) then
+				output[entity] = true;
+				break;
+			end
+		end
+	end
+
 	return output;
 end
 
@@ -333,19 +355,44 @@ end
 
 ---@generic T
 ---@param class `T`
----@return T[]
+---@return { [T]: boolean }
 ECS.components = function(self, class)
 	if type(class) == "string" then
 		class = Class:get_by_name(class);
 	end
 	assert(class);
-	local source = self.components_by_class[class] or {};
 	local output = {};
-	for _, components in pairs(source) do
-		for component in pairs(components) do
-			table.insert(output, component);
+
+	if self.components_by_class[class] then
+		for entity, components in pairs(self.components_by_class[class]) do
+			if not self.entity_graveyard[entity] then
+				for component in pairs(components) do
+					output[component] = true;
+				end
+			end
 		end
 	end
+
+	for _, components_by_class in pairs(self.component_nursery) do
+		for class_iter, components in pairs(components_by_class) do
+			if class_iter:is_instance_of(class) then
+				for component in pairs(components) do
+					output[component] = true;
+				end
+			end
+		end
+	end
+
+	for _, components_by_class in pairs(self.component_graveyard) do
+		for class_iter, components in pairs(components_by_class) do
+			if class_iter:is_instance_of(class) then
+				for component in pairs(components) do
+					output[component] = nil;
+				end
+			end
+		end
+	end
+
 	return output;
 end
 
@@ -624,36 +671,68 @@ crystal.test.add("Get all entities with component", function()
 	local a = ecs:spawn(Entity);
 	local Snoot = Class:test("Snoot", Component);
 	local Boop = Class:test("Boop", Snoot);
-	local boop = a:add_component(Boop);
 
+	-- After add component
+	local boop = a:add_component(Boop);
+	assert(TableUtils.equals({ [a] = true }, ecs:entities_with(Snoot)));
 	ecs:update();
 	assert(TableUtils.equals({ [a] = true }, ecs:entities_with(Snoot)));
 
+	-- After remove component
 	a:remove_component(boop);
+	assert(TableUtils.equals({}, ecs:entities_with(Snoot)));
 	ecs:update();
+	assert(TableUtils.equals({}, ecs:entities_with(Snoot)));
+
+	-- After add/remove component with no update
+	local boop = a:add_component(Boop);
+	a:remove_component(boop);
+	assert(TableUtils.equals({}, ecs:entities_with(Snoot)));
+
+	-- After despawn
+	a:add_component(Boop);
+	ecs:update();
+	assert(TableUtils.equals({ [a] = true }, ecs:entities_with(Snoot)));
+	a:despawn();
+	assert(TableUtils.equals({}, ecs:entities_with(Snoot)));
+
+	-- After despawn with no update
+	local a = ecs:spawn(Entity);
+	a:add_component(Boop);
+	assert(TableUtils.equals({ [a] = true }, ecs:entities_with(Snoot)));
+	a:despawn();
 	assert(TableUtils.equals({}, ecs:entities_with(Snoot)));
 end);
 
-crystal.test.add("Get all components", function()
+crystal.test.add("Can get components by class", function()
 	local ecs = ECS:new();
 
 	local a = ecs:spawn(Entity);
 
 	local Snoot = Class:test("Snoot", Component);
 	local Boop = Class:test("Boop", Snoot);
+
 	local boop = a:add_component(Boop);
 	local snoot = a:add_component(Snoot);
+	assert(TableUtils.countKeys(ecs:components(Snoot)) == 2);
+	assert(TableUtils.countKeys(ecs:components(Boop)) == 1);
 	ecs:update();
-	assert(#ecs:components(Snoot) == 2);
-	assert(#ecs:components(Boop) == 1);
+	assert(TableUtils.countKeys(ecs:components(Snoot)) == 2);
+	assert(TableUtils.countKeys(ecs:components(Boop)) == 1);
+
 	a:remove_component(boop);
+	assert(TableUtils.countKeys(ecs:components(Snoot)) == 1);
+	assert(TableUtils.countKeys(ecs:components(Boop)) == 0);
 	ecs:update();
-	assert(#ecs:components(Snoot) == 1);
-	assert(#ecs:components(Boop) == 0);
+	assert(TableUtils.countKeys(ecs:components(Snoot)) == 1);
+	assert(TableUtils.countKeys(ecs:components(Boop)) == 0);
+
 	a:remove_component(snoot);
+	assert(TableUtils.countKeys(ecs:components(Snoot)) == 0);
+	assert(TableUtils.countKeys(ecs:components(Boop)) == 0);
 	ecs:update();
-	assert(#ecs:components(Snoot) == 0);
-	assert(#ecs:components(Boop) == 0);
+	assert(TableUtils.countKeys(ecs:components(Snoot)) == 0);
+	assert(TableUtils.countKeys(ecs:components(Boop)) == 0);
 end);
 
 crystal.test.add("Despawned entities don't leave components behind", function()
@@ -663,11 +742,14 @@ crystal.test.add("Despawned entities don't leave components behind", function()
 
 	local Comp = Class:test("Comp", Component);
 	local comp = a:add_component(Comp);
+	assert(TableUtils.countKeys(ecs:components(Comp)) == 1);
 	ecs:update();
-	assert(#ecs:components(Comp) == 1);
+	assert(TableUtils.countKeys(ecs:components(Comp)) == 1);
+
 	a:despawn();
+	assert(TableUtils.countKeys(ecs:components(Comp)) == 0);
 	ecs:update();
-	assert(#ecs:components(Comp) == 0);
+	assert(TableUtils.countKeys(ecs:components(Comp)) == 0);
 end);
 
 crystal.test.add("Get system", function()

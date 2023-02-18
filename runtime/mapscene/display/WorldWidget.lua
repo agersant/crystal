@@ -4,6 +4,7 @@ local MathUtils = require("utils/MathUtils");
 local WorldWidget = Class("WorldWidget", Drawable);
 
 WorldWidget.init = function(self, widget)
+	WorldWidget.super.init(self);
 	self._widget = widget;
 	self._x = 0;
 	self._y = 0;

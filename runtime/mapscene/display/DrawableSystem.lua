@@ -3,15 +3,24 @@ local Shader = require("mapscene/display/Shader");
 
 local DrawableSystem = Class("DrawableSystem", crystal.System);
 
+DrawableSystem.init = function(self)
+	self.query = self:add_query({ "Drawable" });
+end
+
 local sortDrawables = function(a, b)
 	return a:getZOrder() < b:getZOrder();
 end
 
 DrawableSystem.duringEntitiesDraw = function(self)
-	local ecs = self:ecs();
-	local drawables = ecs:components(Drawable);
-	table.sort(drawables, sortDrawables);
-	for _, drawable in ipairs(drawables) do
+	local sorted_drawables = {};
+	for entity in pairs(self.query:entities()) do
+		for drawable in pairs(entity:components("Drawable")) do
+			table.insert(sorted_drawables, drawable);
+		end
+	end
+	table.sort(sorted_drawables, sortDrawables);
+
+	for _, drawable in ipairs(sorted_drawables) do
 		local entity = drawable:entity();
 		local shader = entity:component(Shader);
 		if shader then

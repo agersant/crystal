@@ -9,6 +9,7 @@ Drawable.draw = function(self)
 end
 
 Drawable.setZOrder = function(self, zOrder)
+	assert(type(zOrder) == "number");
 	self._zOrder = zOrder;
 end
 

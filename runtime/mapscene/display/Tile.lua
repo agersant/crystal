@@ -7,6 +7,7 @@ Tile.init = function(self, tilesetImage, quad, x, y)
 	assert(quad);
 	assert(x);
 	assert(y);
+	Tile.super.init(self);
 	self._tileset = tilesetImage;
 	self._quad = quad;
 	self._x = x;

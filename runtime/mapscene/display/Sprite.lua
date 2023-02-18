@@ -4,6 +4,7 @@ local MathUtils = require("utils/MathUtils");
 local Sprite = Class("Sprite", Drawable);
 
 Sprite.init = function(self)
+	Sprite.super.init(self);
 	self._x = 0;
 	self._y = 0;
 	self._frame = nil;
