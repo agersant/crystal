@@ -13,8 +13,7 @@ end
 local drawPhysics = false;
 local drawNavigation = false;
 
-DebugDrawSystem.init = function(self, ecs)
-	DebugDrawSystem.super.init(self, ecs);
+DebugDrawSystem.init = function(self)
 	self._query = self:add_query({ PhysicsBody });
 end
 

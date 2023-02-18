@@ -3,8 +3,7 @@ local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
 local LocomotionSystem = Class("LocomotionSystem", crystal.System);
 
-LocomotionSystem.init = function(self, ecs)
-	LocomotionSystem.super.init(self, ecs);
+LocomotionSystem.init = function(self)
 	self._query = self:add_query({ Locomotion, PhysicsBody });
 end
 

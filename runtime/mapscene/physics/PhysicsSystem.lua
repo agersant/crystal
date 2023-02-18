@@ -7,8 +7,7 @@ local PhysicsSystem = Class("PhysicsSystem", crystal.System);
 
 local beginContact, endContact;
 
-PhysicsSystem.init = function(self, ecs)
-	PhysicsSystem.super.init(self, ecs);
+PhysicsSystem.init = function(self)
 	self._world = love.physics.newWorld(0, 0, false);
 	self._contactCallbacks = {};
 	self._world:setCallbacks(function(...)

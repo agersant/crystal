@@ -2,8 +2,7 @@ local ScriptRunner = require("mapscene/behavior/ScriptRunner");
 
 local ScriptRunnerSystem = Class("ScriptRunnerSystem", crystal.System);
 
-ScriptRunnerSystem.init = function(self, ecs)
-	ScriptRunnerSystem.super.init(self, ecs);
+ScriptRunnerSystem.init = function(self)
 	self._query = self:add_query({ ScriptRunner });
 end
 

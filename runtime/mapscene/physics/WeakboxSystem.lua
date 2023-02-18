@@ -4,8 +4,7 @@ local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
 local WeakboxSystem = Class("WeakboxSystem", crystal.System);
 
-WeakboxSystem.init = function(self, ecs)
-	WeakboxSystem.super.init(self, ecs);
+WeakboxSystem.init = function(self)
 	self._query = self:add_query({ Weakbox, PhysicsBody });
 	self._withSpriteAnimator = self:add_query({ Weakbox, PhysicsBody, SpriteAnimator });
 end

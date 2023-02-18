@@ -4,8 +4,7 @@ local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
 local HitboxSystem = Class("HitboxSystem", crystal.System);
 
-HitboxSystem.init = function(self, ecs)
-	HitboxSystem.super.init(self, ecs);
+HitboxSystem.init = function(self)
 	self._query = self:add_query({ Hitbox, PhysicsBody });
 	self._withSpriteAnimator = self:add_query({ Hitbox, PhysicsBody, SpriteAnimator });
 end

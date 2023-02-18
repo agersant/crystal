@@ -3,8 +3,7 @@ local Parent = require("mapscene/physics/Parent");
 
 local ParentSystem = Class("ParentSystem", crystal.System);
 
-ParentSystem.init = function(self, ecs)
-	ParentSystem.super.init(self, ecs);
+ParentSystem.init = function(self)
 	self._query = self:add_query({ Parent, PhysicsBody });
 end
 

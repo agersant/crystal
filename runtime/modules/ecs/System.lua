@@ -2,9 +2,8 @@
 ---@field private _ecs ECS
 local System = Class("System");
 
-System.init = function(self, ecs)
-	assert(ecs);
-	self._ecs = ecs;
+System.init = function(self)
+	-- self._ecs setup by ECS:add_system
 end
 
 ---@return ECS

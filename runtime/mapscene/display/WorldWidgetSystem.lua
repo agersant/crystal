@@ -3,8 +3,7 @@ local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
 local WorldWidgetSystem = Class("WorldWidgetSystem", crystal.System);
 
-WorldWidgetSystem.init = function(self, ecs)
-	WorldWidgetSystem.super.init(self, ecs);
+WorldWidgetSystem.init = function(self)
 	self._query = self:add_query({ WorldWidget, PhysicsBody });
 end
 

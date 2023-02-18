@@ -2,8 +2,7 @@ local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
 local PhysicsBodySystem = Class("PhysicsBodySystem", crystal.System);
 
-PhysicsBodySystem.init = function(self, ecs)
-	PhysicsBodySystem.super.init(self, ecs);
+PhysicsBodySystem.init = function(self)
 	self._query = self:add_query({ PhysicsBody });
 end
 

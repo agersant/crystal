@@ -4,8 +4,7 @@ local Script = require("script/Script");
 
 local BehaviorSystem = Class("BehaviorSystem", crystal.System);
 
-BehaviorSystem.init = function(self, ecs)
-	BehaviorSystem.super.init(self, ecs);
+BehaviorSystem.init = function(self)
 	self._activeEntities = {};
 	self._query = self:add_query({ Behavior, ScriptRunner });
 end

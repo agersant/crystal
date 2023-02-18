@@ -214,8 +214,10 @@ ECS.add_system = function(self, class, ...)
 		class = Class:get_by_name(class);
 	end
 	assert(class);
-	local system = class:new(self, ...);
+	local system = { _ecs = self };
+	class:placement_new(system, ...);
 	assert(system:is_instance_of(System));
+	assert(system:ecs() == self);
 	table.insert(self.systems, system);
 	return system;
 end

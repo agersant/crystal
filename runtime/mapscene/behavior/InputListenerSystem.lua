@@ -3,8 +3,7 @@ local ScriptRunner = require("mapscene/behavior/ScriptRunner");
 
 local InputListenerSystem = Class("InputListenerSystem", crystal.System);
 
-InputListenerSystem.init = function(self, ecs)
-	InputListenerSystem.super.init(self, ecs);
+InputListenerSystem.init = function(self)
 	self._query = self:add_query({ InputListener, ScriptRunner });
 end
 

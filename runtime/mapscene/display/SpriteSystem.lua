@@ -3,8 +3,7 @@ local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
 local SpriteSystem = Class("SpriteSystem", crystal.System);
 
-SpriteSystem.init = function(self, ecs)
-	SpriteSystem.super.init(self, ecs);
+SpriteSystem.init = function(self)
 	self._query = self:add_query({ Sprite, PhysicsBody });
 end
 

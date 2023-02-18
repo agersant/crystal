@@ -7,12 +7,11 @@ local CameraSystem = Class("CameraSystem", crystal.System);
 
 local drawCameraOverlay = false;
 
-CameraSystem.init = function(self, ecs, map, viewport)
+CameraSystem.init = function(self, map, viewport)
 	assert(map);
 	assert(map:is_instance_of(Map));
 	assert(viewport);
 	assert(viewport:is_instance_of(Viewport));
-	CameraSystem.super.init(self, ecs);
 	self._camera = Camera:new(viewport, map:getWidthInPixels(), map:getHeightInPixels());
 end
 

@@ -2,10 +2,9 @@ local Map = require("resources/map/Map");
 
 local MapSystem = Class("MapSystem", crystal.System);
 
-MapSystem.init = function(self, ecs, map)
+MapSystem.init = function(self, map)
 	assert(map);
 	assert(map:is_instance_of(Map));
-	MapSystem.super.init(self, ecs);
 	self._map = map;
 end
 

@@ -3,8 +3,7 @@ local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
 local CollisionSystem = Class("CollisionSystem", crystal.System);
 
-CollisionSystem.init = function(self, ecs)
-	CollisionSystem.super.init(self, ecs);
+CollisionSystem.init = function(self)
 	self._query = self:add_query({ Collision, PhysicsBody });
 end
 

@@ -7,10 +7,6 @@ local sortDrawables = function(a, b)
 	return a:getZOrder() < b:getZOrder();
 end
 
-DrawableSystem.init = function(self, ecs)
-	DrawableSystem.super.init(self, ecs);
-end
-
 DrawableSystem.duringEntitiesDraw = function(self)
 	local ecs = self:ecs();
 	local drawables = ecs:components(Drawable);

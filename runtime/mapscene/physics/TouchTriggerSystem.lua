@@ -3,8 +3,7 @@ local PhysicsBody = require("mapscene/physics/PhysicsBody");
 
 local TouchTriggerSystem = Class("TouchTriggerSystem", crystal.System);
 
-TouchTriggerSystem.init = function(self, ecs)
-	TouchTriggerSystem.super.init(self, ecs);
+TouchTriggerSystem.init = function(self)
 	self._query = self:add_query({ TouchTrigger, PhysicsBody });
 end
 
