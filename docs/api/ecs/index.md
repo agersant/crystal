@@ -23,7 +23,7 @@ The main goals of this ECS implementation are flexibility and usability over per
 The following example illustrates basic functionality of the [Entity](entity)/[Component](component)/[System](system) trifecta. You can find more examples throughout the documentation of this module.
 
 ```lua
-local Bark = Class("Noise", crystal.Component);
+local Bark = Class("Bark", crystal.Component);
 
 local Dog = Class("Dog", crystal.Entity);
 Dog.init = function(self)
