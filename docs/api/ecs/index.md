@@ -6,11 +6,19 @@ has_toc: false
 
 # crystal.ecs
 
-[Entity Component System](https://en.wikipedia.org/wiki/Entity_component_system) is a popular pattern to structure game programming. In the context of Crystal, game objects like characters, enemies, collectable items, etc. should be implemented by inheriting from the [crystal.Entity](entity) class. Crystal provides a number of components which can be added to these entities to grant them functionality, like drawing sprites or moving around the world. You can define you own components by making classes that inherit from [crystal.Component](component). Accompanying systems can be defined by inheriting from [crystal.System](system).
+## Overview
 
-The ECS pattern is often described in contrast to Object Oriented Programming (OOP), but they are not mutually exclusive. In Crystal, you can create derived classes of your entities, components or even systems. Crystal's ECS module is designed with this usage in mind. This allows it to efficiently answer questions like [get all components on this entity which inherit from a given class](entity_components).
+[Entity Component System](https://en.wikipedia.org/wiki/Entity_component_system) is a popular pattern to structure game programming.
 
-This module is designed with flexibility and correctness as its main goal (over performance). Being entirely written in Lua, this ECS implementation does not follow data-oriented design techniques. The most expensive operations are spawning/despawning entities and adding/removing components.
+In the context of Crystal, game objects like characters, enemies, collectable items, etc. should be implemented by inheriting from [crystal.Entity](entity). Crystal provides a number of components which can be added to these entities to grant them functionality, like drawing sprites or moving around the world. You can define you own components by making classes that inherit from [crystal.Component](component). Accompanying systems can be defined by inheriting from [crystal.System](system).
+
+The ECS pattern is often described in contrast to Object Oriented Programming (OOP), but they are not mutually exclusive. In Crystal, you can subclass your entities, components or even systems. Crystal's ECS module was designed with this usage in mind.
+
+## Performance
+
+The main goals of this ECS implementation are flexibility and usability over performance. It is entirely written in Lua, does not implement [SoA](https://en.wikipedia.org/wiki/AoS_and_SoA), and will not win any benchmark contests. However, the overhead is almost entirely frontloaded in entity/component creation.
+
+## Example
 
 The following example illustrates basic functionality of the [Entity](entity)/[Component](component)/[System](system) trifecta. You can find more examples throughout the documentation of this module.
 

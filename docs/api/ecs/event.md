@@ -11,7 +11,8 @@ Events are a complement to the traditional ECS pattern which allows systems to g
 
 The only way to create events is to call [Entity:create_event](entity_create_event). You can retrieve and filter events by calling the [ECS:events](ecs_events) method. Events are cleared when calling [ECS:update](ecs_update), which you should be doing at the start of every frame.
 
-{: .info }
+{: .note }
+
 > This pattern is a bit different from the eventing system in most game engines. In most engines, events support some kind of subscription mechanism to bind callback functions. In Crystal, the only way to respond to events is to poll them by calling [ECS:events](ecs_events). While this approach is more restrictive, it makes it easier to write systems which:
 >
 > - Have consistent order of operation
