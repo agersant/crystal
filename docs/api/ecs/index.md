@@ -36,7 +36,7 @@ BarkSystem.init = function(self)
 end
 
 BarkSystem.run_systems = function(self) -- this function name is arbitrary but needs to match the call below to `notify_systems`
-	for entity in self.query:entities() do -- iterates on all entities with a Bark component
+	for entity in pairs(self.query:entities()) do -- iterates on all entities with a Bark component
 		print("bark bark");
 	end
 end
