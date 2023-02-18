@@ -48,7 +48,7 @@ end
 local PoisonSystem = Class("PoisonSystem", crystal.System);
 
 PoisonSystem.init = function(self)
-  self.query = self:add_query("Health", "Poison");
+  self.query = self:add_query({ "Health", "Poison" });
 end
 
 PoisonSystem.combat = function(self)

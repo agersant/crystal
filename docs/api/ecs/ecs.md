@@ -19,4 +19,4 @@ grand_parent: API Reference
 | `notify_systems` | Calls a method by name on all systems that support it.                                             |
 | `spawn`          | Instantiates and registers a new [Entity](entity).                                                 |
 | `system`         | Returns a [System](system) of a specific class or inheriting from it.                              |
-| `update`         | Updates the internal state of the ECS to reflect changes to entities and components.               |
+| `update`         | Clears events and updates all queries.                                                             |
