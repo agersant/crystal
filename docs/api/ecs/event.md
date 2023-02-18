@@ -35,7 +35,7 @@ Dragon.init = function(self)
 end
 
 local ecs = crystal.ECS:new();
-local puff = ecs:spawn(Dragon);
+ecs:spawn(Dragon);
 for event in pairs(ecs:events("DragonSpawned")) do
 	print(event);
 end
