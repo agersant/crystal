@@ -205,11 +205,18 @@ ECS.add_query = function(self, classes)
 	return query;
 end
 
----@param System
-ECS.add_system = function(self, system)
-	assert(system);
+---@generic T
+---@param class `T`
+---@return T
+ECS.add_system = function(self, class, ...)
+	if type(class) == "string" then
+		class = Class:get_by_name(class);
+	end
+	assert(class);
+	local system = class:new(self, ...);
 	assert(system:is_instance_of(System));
 	table.insert(self.systems, system);
+	return system;
 end
 
 ---@param event Event
@@ -792,16 +799,14 @@ end);
 crystal.test.add("Get system", function()
 	local ecs = ECS:new();
 
-	local SystemA = Class:test("SystemA", crystal.System);
-	local SystemB = Class:test("SystemB", crystal.System);
+	local SystemA = Class:test("SystemA", System);
+	local SystemB = Class:test("SystemB", System);
 
-	local systemA = SystemA:new(ecs);
-	ecs:add_system(systemA);
+	local systemA = ecs:add_system(SystemA);
 	assert(ecs:system(SystemA) == systemA);
 	assert(ecs:system(SystemB) == nil);
 
-	local systemB = SystemB:new(ecs);
-	ecs:add_system(systemB);
+	local systemB = ecs:add_system(SystemB);
 	assert(ecs:system(SystemA) == systemA);
 	assert(ecs:system(SystemB) == systemB);
 end);
@@ -810,17 +815,18 @@ crystal.test.add("Systems run when notified", function()
 	local ecs = ECS:new();
 
 	local sentinel = 0;
+	local MySystem = Class:test("MySystem", System);
+	MySystem.update = function(self)
+		assert(sentinel == self.value - 1);
+		sentinel = self.value;
+	end
+
 	for i = 1, 10 do
-		local j = i;
-		local system = System:new(ecs);
-		system.update = function()
-			assert(sentinel == j - 1);
-			sentinel = j;
-		end
-		ecs:add_system(system);
+		local system = ecs:add_system(MySystem);
+		system.value = i;
 	end
 	assert(sentinel == 0);
-	ecs:notify_systems("randomEvent");
+	ecs:notify_systems("random_event");
 	assert(sentinel == 0);
 	ecs:notify_systems("update");
 	assert(sentinel == 10);
@@ -830,13 +836,12 @@ crystal.test.add("Systems receive parameters", function()
 	local ecs = ECS:new();
 
 	local ran = false;
-	local system = System:new(ecs);
-	system.update = function(self, value)
-		assert(self == system);
+	local MySystem = Class:test("MySystem", System);
+	MySystem.update = function(self, value)
 		assert(value);
 		ran = true;
 	end
-	ecs:add_system(system);
+	ecs:add_system(MySystem);
 	ecs:notify_systems("update", true);
 	assert(ran);
 end);

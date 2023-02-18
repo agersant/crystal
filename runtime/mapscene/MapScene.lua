@@ -36,37 +36,37 @@ MapScene.init = function(self, mapName)
 	self._renderer = Renderer:new(VIEWPORT);
 
 	-- Before physics
-	ecs:add_system(PhysicsBodySystem:new(ecs));
-	ecs:add_system(TouchTriggerSystem:new(ecs));
-	ecs:add_system(CollisionSystem:new(ecs));
-	ecs:add_system(LocomotionSystem:new(ecs));
-	ecs:add_system(HitboxSystem:new(ecs));
-	ecs:add_system(WeakboxSystem:new(ecs));
-	ecs:add_system(ParentSystem:new(ecs));
+	ecs:add_system(PhysicsBodySystem);
+	ecs:add_system(TouchTriggerSystem);
+	ecs:add_system(CollisionSystem);
+	ecs:add_system(LocomotionSystem);
+	ecs:add_system(HitboxSystem);
+	ecs:add_system(WeakboxSystem);
+	ecs:add_system(ParentSystem);
 
 	-- During Physics
-	ecs:add_system(PhysicsSystem:new(ecs));
+	ecs:add_system(PhysicsSystem);
 
 	-- After physics
 
 	-- Before scripts
-	ecs:add_system(BehaviorSystem:new(ecs));
-	ecs:add_system(SpriteSystem:new(ecs)); -- (also has some duringScripts and afterScripts logic)
+	ecs:add_system(BehaviorSystem);
+	ecs:add_system(SpriteSystem); -- (also has some duringScripts and afterScripts logic)
 
 	-- During scripts
-	ecs:add_system(ScriptRunnerSystem:new(ecs)); -- (also has dome beforeScripts logic)
-	ecs:add_system(InputListenerSystem:new(ecs));
+	ecs:add_system(ScriptRunnerSystem); -- (also has dome beforeScripts logic)
+	ecs:add_system(InputListenerSystem);
 
 	-- After scripts
-	ecs:add_system(WorldWidgetSystem:new(ecs));
+	ecs:add_system(WorldWidgetSystem);
 
 	-- Before draw
-	ecs:add_system(CameraSystem:new(ecs, map, self._renderer:getViewport())); -- (also has afterScripts logic)
-	ecs:add_system(MapSystem:new(ecs, map));
-	ecs:add_system(DebugDrawSystem:new(ecs));
+	ecs:add_system(CameraSystem, map, self._renderer:getViewport()); -- (also has afterScripts logic)
+	ecs:add_system(MapSystem, map);
+	ecs:add_system(DebugDrawSystem);
 
 	-- During draw
-	ecs:add_system(DrawableSystem:new(ecs));
+	ecs:add_system(DrawableSystem);
 
 	-- After Draw
 
