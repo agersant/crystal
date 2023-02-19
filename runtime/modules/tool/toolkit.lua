@@ -3,6 +3,7 @@ local Tool = require("modules/tool/tool");
 
 ---@class Toolkit
 ---@field private tools { [string]: Tool }
+---@field private visible_tools { [string]: boolean }
 ---@field private keybinds { [love.KeyConstant]: Tool }
 local Toolkit = Class("Toolkit");
 
@@ -12,6 +13,7 @@ end
 
 Toolkit.init = function(self)
 	self.tools = {};
+	self.visible_tools = {};
 	self.keybinds = {};
 end
 
@@ -53,6 +55,7 @@ Toolkit.show = function(self, tool_name)
 	assert(type(tool_name) == "string");
 	local tool = self.tools[tool_name];
 	assert(tool);
+	self.visible_tools[tool_name] = true;
 	tool.visible = true;
 	tool:show();
 end
@@ -62,6 +65,7 @@ Toolkit.hide = function(self, tool_name)
 	assert(type(tool_name) == "string");
 	local tool = self.tools[tool_name];
 	assert(tool);
+	self.visible_tools[tool_name] = nil;
 	tool.visible = false;
 	tool:hide();
 end
@@ -69,9 +73,7 @@ end
 ---@param tool_name string
 Toolkit.is_visible = function(self, tool_name)
 	assert(type(tool_name) == "string");
-	local tool = self.tools[tool_name];
-	assert(tool);
-	return tool.visible;
+	return self.visible_tools[tool_name];
 end
 
 ---@param dt number
@@ -82,8 +84,8 @@ Toolkit.update = function(self, dt)
 end
 
 Toolkit.draw = function(self)
-	for _, tool in pairs(self.tools) do
-		if tool.visible then
+	for tool_name, tool in pairs(self.tools) do
+		if self.visible_tools[tool_name] then
 			tool:draw();
 		end
 	end
@@ -92,8 +94,8 @@ end
 -- TODO remove this when there is a real UI system with text focus
 ---@return boolean
 Toolkit.consumes_inputs = function(self)
-	for _, tool in pairs(self.tools) do
-		if tool.visible and tool.consumes_inputs then
+	for tool_name, tool in pairs(self.tools) do
+		if self.visible_tools[tool_name] and tool.consumes_inputs then
 			return true;
 		end
 	end
@@ -110,15 +112,15 @@ end
 ---@param scan_code love.Scancode
 ---@param is_repeat boolean
 Toolkit.key_pressed = function(self, key, scan_code, is_repeat)
-	for _, tool in pairs(self.tools) do
-		if tool.visible then
+	for tool_name, tool in pairs(self.tools) do
+		if self.visible_tools[tool_name] then
 			tool:key_pressed(key, scan_code, is_repeat);
 		end
 	end
 
 	local tool_name = self.keybinds[key];
 	if tool_name then
-		if self:is_visible(tool_name) then
+		if self.visible_tools[tool_name] then
 			self:hide(tool_name);
 		else
 			self:show(tool_name);
@@ -128,8 +130,8 @@ end
 
 ---@param text string
 Toolkit.text_input = function(self, text)
-	for _, tool in pairs(self.tools) do
-		if tool.visible then
+	for tool_name, tool in pairs(self.tools) do
+		if self.visible_tools[tool_name] then
 			tool:text_input(text);
 		end
 	end
