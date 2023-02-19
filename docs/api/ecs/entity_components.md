@@ -40,7 +40,7 @@ local ecs = crystal.ECS:new();
 local entity = ecs:spawn(crystal.Entity);
 local left_arm = entity:add_component("Arm", "left");
 local right_arm = entity:add_component("Arm", "right");
-for arm in entity:components("Arm") do
+for arm in pairs(entity:components("Arm")) do
   print(arm.side);
 end
 ```
