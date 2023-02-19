@@ -29,7 +29,7 @@ In addition to the methods documented on this page, entities transparently expos
 local Slime = Class("Slime", crystal.Entity);
 
 Slime.init = function(self)
-	self:add_component("OozeTrail");
+  self:add_component("OozeTrail");
 end
 
 local ecs = crystal.ECS:new();
@@ -49,7 +49,7 @@ end
 local Slime = Class("Slime", crystal.Entity);
 
 Slime.init = function(self)
-	self:add_component("Health", 100);
+  self:add_component("Health", 100);
 end
 
 local ecs = crystal.ECS:new();

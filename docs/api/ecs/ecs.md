@@ -33,13 +33,13 @@ crystal.ECS:new()
 local MyScene = Class("MyScene", crystal.Scene);
 
 MyScene.init = function()
-	self.ecs = crystal.ECS:new();
+  self.ecs = crystal.ECS:new();
 end
 
 MyScene.update = function(self, dt)
-	self.ecs:update();
-	self.ecs:notify_systems("input");
-	self.ecs:notify_systems("physics");
-	self.ecs:notify_systems("draw");
+  self.ecs:update();
+  self.ecs:notify_systems("input");
+  self.ecs:notify_systems("physics");
+  self.ecs:notify_systems("draw");
 end
 ```

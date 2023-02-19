@@ -36,6 +36,6 @@ local Poison = Class("Poison", crystal.Component);
 local PoisonSystem = Class("MySystem", crystal.System);
 
 PoisonSystem.init = function(self)
-	self.query = self:add_query({ "Health", Poison });
+  self.query = self:add_query({ "Health", Poison });
 end
 ```

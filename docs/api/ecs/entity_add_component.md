@@ -32,7 +32,7 @@ entity:component(class, ...)
 ```lua
 local Arm = Class("Arm", crystal.Component);
 Arm.init = function(self, side)
-	self.side = side;
+  self.side = side;
 end
 
 local ecs = crystal.ECS:new();

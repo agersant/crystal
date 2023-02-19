@@ -32,7 +32,7 @@ entity:create_event(class, ...)
 ```lua
 local DamageEvent = class("DamageEvent", crystal.Event);
 DamageEvent.init = function(self, amount)
-	self.amount = amount;
+  self.amount = amount;
 end
 
 local ecs = crystal.ECS:new();

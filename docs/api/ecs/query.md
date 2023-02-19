@@ -33,12 +33,12 @@ HealthSystem.init = function(self)
 end
 
 HealthSystem.do_things = function(self)
- for health in pairs(self.query:components()) do
-	-- Do something with each health component
+  for health in pairs(self.query:components()) do
+    -- Do something with each health component
   end
 
   for entity in pairs(self.query:entities()) do
-	-- Do something with each entity that has a Health component
+    -- Do something with each entity that has a Health component
   end
 end
 ```

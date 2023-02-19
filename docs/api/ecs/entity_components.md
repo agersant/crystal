@@ -33,7 +33,7 @@ If the entity has no component of the specified class (or inheriting from it), t
 ```lua
 local Arm = Class("Arm", crystal.Component);
 Arm.init = function(self, side)
-	self.side = side;
+  self.side = side;
 end
 
 local ecs = crystal.ECS:new();
@@ -41,6 +41,6 @@ local entity = ecs:spawn(crystal.Entity);
 local left_arm = entity:add_component("Arm", "left");
 local right_arm = entity:add_component("Arm", "right");
 for arm in entity:components("Arm") do
-	print(arm.side);
+  print(arm.side);
 end
 ```
