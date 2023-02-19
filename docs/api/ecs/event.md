@@ -28,8 +28,8 @@ The only way to create events is to call [Entity:create_event](entity_create_eve
 ## Example
 
 ```lua
-local DragonSpawned = class("DragonSpawned", crystal.Event);
-local Dragon = class("Dragon", crystal.Entity);
+local DragonSpawned = Class("DragonSpawned", crystal.Event);
+local Dragon = Class("Dragon", crystal.Entity);
 Dragon.init = function(self)
   self:create_event(DragonSpawned);
 end

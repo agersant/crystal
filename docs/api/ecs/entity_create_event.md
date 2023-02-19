@@ -30,7 +30,7 @@ entity:create_event(class, ...)
 ## Example
 
 ```lua
-local DamageEvent = class("DamageEvent", crystal.Event);
+local DamageEvent = Class("DamageEvent", crystal.Event);
 DamageEvent.init = function(self, amount)
   self.amount = amount;
 end

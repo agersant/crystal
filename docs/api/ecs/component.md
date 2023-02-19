@@ -21,7 +21,7 @@ Health.init = function(self, value)
   self.value = value;
 end
 
-local Dragon = class("Dragon", crystal.Entity);
+local Dragon = Class("Dragon", crystal.Entity);
 Dragon.init = function(self)
   self:add_component("Health", 400);
 end
