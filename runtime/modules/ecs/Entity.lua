@@ -52,6 +52,7 @@ end
 ---@param class `T`
 ---@return T
 Entity.create_event = function(self, class, ...)
+	assert(self:is_valid());
 	if type(class) == "string" then
 		class = Class:get_by_name(class);
 	end

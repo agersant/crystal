@@ -20,7 +20,7 @@ In addition to the methods documented on this page, entities transparently expos
 | `create_event`     | Instantiates and creates a new [Event](event) associated with this entity.  |
 | `despawn`          | Unregisters this entity from the [ECS](ecs).                                |
 | `ecs`              | Returns the [ECS](ecs) this entity belongs to.                              |
-| `is_valid`         | Returns whether this entity has despawned.                                  |
+| `is_valid`         | Returns whether this entity is still in play (ie. not despawned).           |
 | `remove_component` | Removes a component from this entity.                                       |
 
 ## Examples

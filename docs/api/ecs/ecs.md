@@ -10,7 +10,7 @@ Entry-point to the [crystal.ecs](index) module. Instances of this class manage a
 ## Constructor
 
 ```lua
-local ecs = crystal.ECS:new();
+crystal.ECS:new()
 ```
 
 ## Methods
