@@ -17,13 +17,13 @@ crystal.ECS:new()
 
 | Name             | Description                                                                                        |
 | :--------------- | :------------------------------------------------------------------------------------------------- |
-| `add_system`     | Instantiates and registers a new [System](system).                                                 |
+| `add_system`     | Instantiates a new [System](system).                                                               |
 | `components`     | Returns all components of a specific class or inheriting from it.                                  |
 | `despawn`        | Destroys an [Entity](entity).                                                                      |
 | `entities_with`  | Returns all entities that have a [Component](component) of a specific class or inheriting from it. |
 | `events`         | Returns a list of events of a specific class or inheriting from it.                                |
 | `notify_systems` | Calls a method by name on all systems that support it.                                             |
-| `spawn`          | Instantiates and registers a new [Entity](entity).                                                 |
+| `spawn`          | Instantiates a new [Entity](entity).                                                               |
 | `system`         | Returns a [System](system) of a specific class or inheriting from it.                              |
 | `update`         | Clears events and updates all queries.                                                             |
 

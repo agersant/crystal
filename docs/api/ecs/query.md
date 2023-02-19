@@ -17,7 +17,7 @@ Freshly created or destroyed entities/components will not immediately appear in 
 | `added_components`   | Returns all components that became part of a match for this query during the last ECS update.        |
 | `added_entities`     | Returns all entities that started matching this query during the last ECS update.                    |
 | `components`         | Returns all components that are part of a match for this query.                                      |
-| `contains`           | Returns whether a specific [Entity](entity) matches this query.                                      |
+| `contains`           | Returns whether a specific [Entity](entity) was matched by this query.                               |
 | `entities`           | Returns all entities matching this query.                                                            |
 | `removed_components` | Returns all components that stopped being part of a match for this query during the last ECS update. |
 | `removed_entities`   | Returns all entities that stopped matching this query during the last ECS update.                    |

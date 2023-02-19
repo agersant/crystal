@@ -6,7 +6,7 @@ nav_exclude: true
 
 # System:add_query
 
-Instantiates and registers a new [Query](query).
+Instantiates a new [Query](query).
 
 ## Usage
 
