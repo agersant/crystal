@@ -7,6 +7,12 @@ grand_parent: API Reference
 
 Context object exposing functionality available during tests.
 
+## Properties
+
+| Name      | Type     | Description                                |
+| :-------- | :------- | :----------------------------------------- |
+| test_name | `string` | Name of the test currently being executed. |
+
 ## Methods
 
 | Name                                      | Description                                                              |
