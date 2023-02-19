@@ -15,17 +15,17 @@ crystal.ECS:new()
 
 ## Methods
 
-| Name             | Description                                                                                        |
-| :--------------- | :------------------------------------------------------------------------------------------------- |
-| `add_system`     | Instantiates a new [System](system).                                                               |
-| `components`     | Returns all components of a specific class or inheriting from it.                                  |
-| `despawn`        | Destroys an [Entity](entity).                                                                      |
-| `entities_with`  | Returns all entities that have a [Component](component) of a specific class or inheriting from it. |
-| `events`         | Returns a list of events of a specific class or inheriting from it.                                |
-| `notify_systems` | Calls a method by name on all systems that support it.                                             |
-| `spawn`          | Instantiates a new [Entity](entity).                                                               |
-| `system`         | Returns a [System](system) of a specific class or inheriting from it.                              |
-| `update`         | Clears events and updates all queries.                                                             |
+| Name                                 | Description                                                                                        |
+| :----------------------------------- | :------------------------------------------------------------------------------------------------- |
+| [add_system](ecs_add_system)         | Instantiates a new [System](system).                                                               |
+| [components](ecs_components)         | Returns all components of a specific class or inheriting from it.                                  |
+| [despawn](ecs_despawn)               | Unregisters an [Entity](entity) from this ECS.                                                     |
+| [entities_with](ecs_entities_with)   | Returns all entities that have a [Component](component) of a specific class or inheriting from it. |
+| [events](ecs_events)                 | Returns a list of events of a specific class or inheriting from it.                                |
+| [notify_systems](ecs_notify_systems) | Calls a method by name on all systems that support it.                                             |
+| [spawn](ecs_spawn)                   | Instantiates a new [Entity](entity).                                                               |
+| [system](ecs_system)                 | Returns an existing [System](system) of a specific class or inheriting from it.                    |
+| [update](ecs_update)                 | Clears [events](event) and updates all [queries](query).                                           |
 
 ## Example
 
