@@ -32,7 +32,7 @@ ecs:add_system(class, ...);
 ```lua
 local MySystem = Class("MySystem", crystal.System);
 MySystem.init = function(self, color)
-	self.color = color;
+  self.color = color;
 end
 
 local ecs = crystal.ECS:new();

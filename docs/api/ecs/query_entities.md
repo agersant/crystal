@@ -32,7 +32,7 @@ end
 
 HealthSystem.do_things = function(self)
   for entity in pairs(self.query:entities()) do
-	-- Do something with entity that has a health component
+    -- Do something with entity that has a health component
   end
 end
 ```

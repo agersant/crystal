@@ -32,7 +32,7 @@ ecs:spawn(class, ...)
 ```lua
 local Character = Class("Character", crystal.Entity);
 Character.init = function(self, name)
-	self.name = name;
+  self.name = name;
 end
 
 local ecs = crystal.ECS:new();

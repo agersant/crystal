@@ -41,7 +41,7 @@ end
 
 HealthSystem.do_things = function(self)
   for entity in pairs(self.query:entities()) do
-	assert(self.query:contains(entity));
+    assert(self.query:contains(entity));
   end
 end
 ```

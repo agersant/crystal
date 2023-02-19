@@ -8,7 +8,7 @@ grand_parent: API Reference
 Queries are used to keep track of all entities that have a predefined set of components. In this documention, entities with all the required components are referred to as matching the query. The only way to create a query is to call [System:add_query](system_add_query), passing in a table listing the required components.
 
 {: .note}
-Freshly created or destroyed entities/components will not immediately appear in query results. Query results are updated during [ECS:update()](ecs_update), which you should be calling at the beginning of each frame. In addition to helping performance, this prevents systems from having to handle entities that may be in inconsistent state due to spawning partway through a frame.
+Freshly created or destroyed entities/components will not immediately appear in query results. Query results are updated during [ECS:update](ecs_update), which you should be calling at the beginning of each frame. In addition to helping performance, this prevents systems from having to handle entities that may be in inconsistent state due to spawning partway through a frame.
 
 ## Methods
 
