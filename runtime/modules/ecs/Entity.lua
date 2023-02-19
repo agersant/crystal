@@ -48,7 +48,9 @@ Entity.components = function(self, baseClass)
 	return self._ecs:components_on_entity(self, baseClass);
 end
 
----@param class string
+---@generic T
+---@param class `T`
+---@return T
 Entity.create_event = function(self, class, ...)
 	if type(class) == "string" then
 		class = Class:get_by_name(class);
@@ -57,6 +59,7 @@ Entity.create_event = function(self, class, ...)
 	class:placement_new(event, ...);
 	assert(event:entity() == self);
 	self._ecs:add_event(event);
+	return event;
 end
 
 Entity.despawn = function(self)

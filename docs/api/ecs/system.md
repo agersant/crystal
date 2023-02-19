@@ -20,10 +20,10 @@ The important questions to think about when defining a system are:
 
 ## Methods
 
-| Name        | Description                                      |
-| :---------- | :----------------------------------------------- |
-| `add_query` | Instantiates and registers a new [Query](query). |
-| `ecs`       | Returns the [ECS](ecs) this system belongs to.   |
+| Name                          | Description                                      |
+| :---------------------------- | :----------------------------------------------- |
+| [add_query](system_add_query) | Instantiates and registers a new [Query](query). |
+| [ecs](system_ecs)             | Returns the [ECS](ecs) this system belongs to.   |
 
 ## Example
 

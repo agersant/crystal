@@ -9,9 +9,9 @@ Base class to inherit from to define components.
 
 ## Methods
 
-| Name     | Description                                             |
-| :------- | :------------------------------------------------------ |
-| `entity` | Returns the [Entity](entity) this component belongs to. |
+| Name                       | Description                                             |
+| :------------------------- | :------------------------------------------------------ |
+| [entity](component_entity) | Returns the [Entity](entity) this component belongs to. |
 
 ## Example
 

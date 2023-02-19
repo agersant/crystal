@@ -21,9 +21,9 @@ The only way to create events is to call [Entity:create_event](entity_create_eve
 
 ## Methods
 
-| Name     | Description                                           |
-| :------- | :---------------------------------------------------- |
-| `entity` | Returns the [Entity](entity) that emitted this event. |
+| Name                   | Description                                           |
+| :--------------------- | :---------------------------------------------------- |
+| [entity](event_entity) | Returns the [Entity](entity) that emitted this event. |
 
 ## Example
 
