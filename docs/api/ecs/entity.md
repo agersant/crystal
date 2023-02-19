@@ -12,16 +12,16 @@ In addition to the methods documented on this page, entities transparently expos
 
 ## Methods
 
-| Name               | Description                                                                 |
-| :----------------- | :-------------------------------------------------------------------------- |
-| `add_component`    | Instantiates and adds a new [Component](component) to this entity.          |
-| `component`        | Returns a [Component](component) of a specific class or inheriting from it. |
-| `components`       | Returns all components of a specific class or inheriting fom it.            |
-| `create_event`     | Instantiates and creates a new [Event](event) associated with this entity.  |
-| `despawn`          | Unregisters this entity from the [ECS](ecs).                                |
-| `ecs`              | Returns the [ECS](ecs) this entity belongs to.                              |
-| `is_valid`         | Returns whether this entity is still in play (ie. not despawned).           |
-| `remove_component` | Removes a component from this entity.                                       |
+| Name                                        | Description                                                                 |
+| :------------------------------------------ | :-------------------------------------------------------------------------- |
+| [add_component](entity_add_component)       | Instantiates and adds a new [Component](component) to this entity.          |
+| [component](entity_component)               | Returns a [Component](component) of a specific class or inheriting from it. |
+| [components](entity_components)             | Returns all components of a specific class or inheriting fom it.            |
+| [create_event](entity_create_event)         | Instantiates and creates a new [Event](event) associated with this entity.  |
+| [despawn](entity_despawn)                   | Unregisters this entity from the [ECS](ecs).                                |
+| [ecs](entity_ecs)                           | Returns the [ECS](ecs) this entity belongs to.                              |
+| [is_valid](entity_is_valid)                 | Returns whether this entity is still in play (ie. not despawned).           |
+| [remove_component](entity_remove_component) | Removes a component from this entity.                                       |
 
 ## Examples
 
