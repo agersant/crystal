@@ -13,7 +13,7 @@
   - [ ] assets
   - [x] cmd
   - [x] const
-  - [ ] ecs
+  - [x] ecs
   - [ ] gfx
   - [ ] input
   - [x] log
