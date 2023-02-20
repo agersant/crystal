@@ -7,23 +7,23 @@ has_toc: false
 
 ## Modules
 
-| Name                       | Description                                                         |
-| :------------------------- | :------------------------------------------------------------------ |
-| [crystal.ai](ai)           |                                                                     |
-| [crystal.assets](assets)   |                                                                     |
-| [crystal.cmd](cmd)         | Allows you to define and run console commands.                      |
-| [crystal.const](const)     |                                                                     |
-| [crystal.ecs](ecs)         | Implements the Entity Component System pattern.                     |
-| [crystal.gfx](gfx)         |                                                                     |
-| [crystal.input](input)     |                                                                     |
-| [crystal.log](log)         | Provides an interface to write log messages to console and to disk. |
-| [crystal.physics](physics) |                                                                     |
-| [crystal.scene](scene)     |                                                                     |
-| [crystal.script](script)   |                                                                     |
-| [crystal.test](test)       | Provides an interface to define unit or integration tests.          |
-| [crystal.tool](tool)       | Allows you to define visual development tools.                      |
-| [crystal.ui](ui)           |                                                                     |
-| [crystal.window](window)   |                                                                     |
+| Name                       | Description                                                                            |
+| :------------------------- | :------------------------------------------------------------------------------------- |
+| [crystal.ai](ai)           |                                                                                        |
+| [crystal.assets](assets)   |                                                                                        |
+| [crystal.cmd](cmd)         | Allows you to define and run console commands.                                         |
+| [crystal.const](const)     |                                                                                        |
+| [crystal.ecs](ecs)         | Implements the Entity Component System pattern.                                        |
+| [crystal.gfx](gfx)         |                                                                                        |
+| [crystal.input](input)     |                                                                                        |
+| [crystal.log](log)         | Provides an interface to write log messages to console and to disk.                    |
+| [crystal.physics](physics) |                                                                                        |
+| [crystal.scene](scene)     |                                                                                        |
+| [crystal.script](script)   | Coroutine-based scripting system to write logic that takes place over multiple frames. |
+| [crystal.test](test)       | Provides an interface to define unit or integration tests.                             |
+| [crystal.tool](tool)       | Allows you to define visual development tools.                                         |
+| [crystal.ui](ui)           |                                                                                        |
+| [crystal.window](window)   |                                                                                        |
 
 ## Callbacks
 
