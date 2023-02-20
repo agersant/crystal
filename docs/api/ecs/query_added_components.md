@@ -31,9 +31,9 @@ query:added_components(class)
 
 ### Returns
 
-| Name         | Type    | Description                                                                                     |
-| :----------- | :------ | :---------------------------------------------------------------------------------------------- |
-| `components` | `table` | A table where every key is a [Component](component) of the specified class or inherits from it. |
+| Name         | Type    | Description                                                                                                        |
+| :----------- | :------ | :----------------------------------------------------------------------------------------------------------------- |
+| `components` | `table` | A table where every key is an added [Component](component). Table values are the entities owning these components. |
 
 ## Example
 

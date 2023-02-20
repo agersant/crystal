@@ -33,9 +33,9 @@ query:removed_components(class)
 
 ### Returns
 
-| Name         | Type    | Description                                          |
-| :----------- | :------ | :--------------------------------------------------- |
-| `components` | `table` | A table where every key is a [Component](component). |
+| Name         | Type    | Description                                                                                                           |
+| :----------- | :------ | :-------------------------------------------------------------------------------------------------------------------- |
+| `components` | `table` | A table where every key is a removed [Component](component). . Table values are the entities owning these components. |
 
 ## Example
 
