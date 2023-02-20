@@ -78,8 +78,8 @@ Navigation.navigateToGoal = function(self, goal, repathDelay)
 	assert(locomotion);
 	assert(navigationMesh);
 
-	self._script:stop_all_threads();
-	return self._script:run_thread(function(self)
+	self:script():stop_all_threads();
+	return self:script():run_thread(function(self)
 		self:defer(function()
 			locomotion:setMovementAngle(nil);
 		end);
@@ -182,10 +182,10 @@ crystal.test.add("Can use blocking script function", function()
 	subject:add_component(Navigation);
 
 	local scriptRunner = subject:add_component(crystal.ScriptRunner);
-	scriptRunner:add_script(crystal.Script:new(function(self)
+	scriptRunner:add_script(function(self)
 		local success = self:join(self:navigateToPoint(endX, endY, acceptanceRadius));
 		sentinel = success;
-	end));
+	end);
 
 	for i = 1, 10 do
 		scene:update(16 / 1000);

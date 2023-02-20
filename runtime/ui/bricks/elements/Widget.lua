@@ -16,25 +16,15 @@ end
 
 Widget.init = function(self)
 	Widget.super.init(self, WidgetJoint);
-	self._scripts = {};
+	self._script = crystal.Script:new();
+	Alias:add(self._script, self);
+end
+
+Widget.script = function(self)
+	return self._script;
 end
 
 Widget.setRoot = Widget.super.setChild;
-
-Widget.add_script = function(self, script)
-	assert(script);
-	assert(script:is_instance_of(crystal.Script));
-	self._scripts[script] = true;
-	Alias:add(script, self);
-	return script;
-end
-
-Widget.remove_script = function(self, script)
-	assert(script);
-	assert(script:is_instance_of(crystal.Script));
-	Alias:remove(script, self);
-	self._scripts[script] = nil;
-end
 
 Widget.computeDesiredSize = function(self)
 	if self._child then
@@ -45,10 +35,7 @@ Widget.computeDesiredSize = function(self)
 end
 
 Widget.update = function(self, dt)
-	local scripts = TableUtils.shallowCopy(self._scripts);
-	for script in pairs(scripts) do
-		script:update(dt);
-	end
+	self._script:update(dt);
 	Widget.super.update(self, dt);
 end
 
@@ -66,9 +53,9 @@ end
 crystal.test.add("Runs scripts", function()
 	local widget = Widget:new();
 	local sentinel;
-	widget:add_script(crystal.Script:new(function()
+	widget:script():add_thread(function()
 		sentinel = 1;
-	end));
+	end);
 	assert(sentinel == nil);
 	widget:update(0);
 	assert(sentinel == 1);

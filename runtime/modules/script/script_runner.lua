@@ -9,7 +9,12 @@ ScriptRunner.init = function(self)
 	self._scripts = {};
 end
 
+---@param script_or_function Script | fun(self: Thread): any
 ScriptRunner.add_script = function(self, script)
+	assert(script);
+	if type(script) == "function" then
+		script = Script:new(script);
+	end
 	assert(script:is_instance_of(Script));
 	Alias:add(script, self:entity());
 	table.insert(self._scripts, script);

@@ -49,12 +49,12 @@ crystal.test.add("Despawning entity runs deferred script functions", function()
 	entity:add_component(ScriptRunner);
 
 	local sentinel = 0;
-	entity:add_script(crystal.Script:new(function(self)
+	entity:add_script(function(self)
 		self:defer(function()
 			sentinel = 1;
 		end);
 		self:hang();
-	end));
+	end);
 
 	assert(sentinel == 0);
 	scene:update(0);

@@ -109,10 +109,10 @@ crystal.test.add("Animation blocks script", function()
 	entity:add_component(crystal.ScriptRunner);
 
 	local sentinel = false;
-	entity:add_script(crystal.Script:new(function(self)
+	entity:add_script(function(self)
 		self:join(self:playAnimation("hurt"));
 		sentinel = true;
-	end));
+	end);
 
 	assert(not sentinel);
 	scene:update(0.05);
@@ -132,10 +132,10 @@ crystal.test.add("Looping animation thread never ends", function()
 	entity:add_component(crystal.ScriptRunner);
 
 	local sentinel = false;
-	entity:add_script(crystal.Script:new(function(self)
+	entity:add_script(function(self)
 		self:join(self:playAnimation("floating"));
 		sentinel = true;
-	end));
+	end);
 
 	assert(not sentinel);
 	scene:update(0.05);
