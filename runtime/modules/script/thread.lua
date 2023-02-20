@@ -99,6 +99,9 @@ end
 Thread.wait_for_any = function(self, signals)
 	assert(not self:is_dead());
 	assert(type(signals) == "table");
+	if coroutine.running() ~= self._coroutine then
+		error("Called `wait_for` or `wait_for_any` on a thread that is not currently running");
+	end
 	local returns = coroutine.yield("wait_for_signals", signals);
 	return unpack(returns);
 end
@@ -119,12 +122,18 @@ end
 ---@return any
 Thread.join_any = function(self, threads)
 	assert(not self:is_dead());
+	if coroutine.running() ~= self._coroutine then
+		error("Called `join` or `join_any` on a thread that is not currently running");
+	end
 	local returns = coroutine.yield("join", threads);
 	return unpack(returns);
 end
 
 Thread.hang = function(self)
 	assert(not self:is_dead());
+	if coroutine.running() ~= self._coroutine then
+		error("Called `hang` on a thread that is not currently running");
+	end
 	coroutine.yield("hang");
 end
 

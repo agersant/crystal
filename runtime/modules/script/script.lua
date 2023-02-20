@@ -1026,6 +1026,39 @@ crystal.test.add("Stopping all threads, in any order, does not cause siblings to
 	assert(sentinel == 1);
 end);
 
+crystal.test.add("Cannot block a thread that isn't running", function()
+	local script = Script:new();
+	local t0 = script:run_thread(function(self)
+		self:hang();
+	end);
+	local t1 = script:add_thread(function()
+	end);
+
+	local can_wait = true;
+	script:run_thread(function(self)
+		can_wait = pcall(function()
+			t0:wait_for("s0");
+		end);
+	end);
+	assert(not can_wait);
+
+	local can_join = true;
+	script:run_thread(function(self)
+		can_join = pcall(function()
+			t0:join(t1);
+		end);
+	end);
+	assert(not can_join);
+
+	local can_hang = true;
+	script:run_thread(function(self)
+		can_hang = pcall(function()
+			t0:hang();
+		end);
+	end);
+	assert(not can_hang);
+end);
+
 --#endregion
 
 return Script;
