@@ -116,6 +116,9 @@ end
 Script.stop_all_threads = function(self)
 	local threads = TableUtils.shallowCopy(self.threads);
 	for thread in pairs(threads) do
+		thread:mark_as_ended();
+	end
+	for thread in pairs(threads) do
 		self:end_thread(thread);
 	end
 	health_check();
@@ -260,7 +263,9 @@ Script.end_thread = function(self, thread)
 	self:cleanup_thread(thread);
 	if threads_to_unblock then
 		for blocked_thread in pairs(threads_to_unblock) do
-			blocked_thread:script():unblock_thread(blocked_thread, thread:output() or { false });
+			if not blocked_thread:ended() then
+				blocked_thread:script():unblock_thread(blocked_thread, thread:output() or { false });
+			end
 		end
 	end
 end
@@ -967,6 +972,58 @@ crystal.test.add("Child thread can immediately end parent", function()
 	assert(sentinel == 1)
 	script:update(0);
 	assert(sentinel == 1)
+end);
+
+crystal.test.add("Stopping parent does not cause siblings to unblock each other", function()
+	local sentinel = 0;
+
+	local script = Script:new();
+	local parent = script:run_thread(function(self)
+		local t0, t1;
+		t0 = self:thread(function(self)
+			self:wait_for("ready");
+			sentinel = 1;
+			self:join(t1);
+			sentinel = 2;
+		end);
+		t1 = self:thread(function(self)
+			self:wait_for("ready");
+			sentinel = 1;
+			self:join(t0);
+			sentinel = 2;
+		end);
+		self:hang();
+	end);
+
+	script:signal("ready");
+	parent:stop();
+	assert(sentinel == 1);
+end);
+
+crystal.test.add("Stopping all threads, in any order, does not cause siblings to unblock each other", function()
+	local sentinel = 0;
+
+	local script = Script:new();
+	local parent = script:run_thread(function(self)
+		local t0, t1;
+		t0 = self:thread(function(self)
+			self:wait_for("ready");
+			sentinel = 1;
+			self:join(t1);
+			sentinel = 2;
+		end);
+		t1 = self:thread(function(self)
+			self:wait_for("ready");
+			sentinel = 1;
+			self:join(t0);
+			sentinel = 2;
+		end);
+		self:hang();
+	end);
+
+	script:signal("ready");
+	script:stop_all_threads();
+	assert(sentinel == 1);
 end);
 
 --#endregion
