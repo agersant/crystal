@@ -36,7 +36,7 @@ PoisonSystem.init = function(self)
 end
 
 PoisonSystem.frame = function(self)
-  for entity in pairs(self.query:added_components()) do
+  for entity in pairs(self.query:removed_entities()) do
     print((tostring(entity)) .. " is no longer poisoned");
   end
 end
