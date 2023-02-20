@@ -40,6 +40,7 @@
 - [ ] Auto-complete for command args supports custom types
 - [ ] Window/viewport/scene/camera system rework
 - [ ] Continuous hot reload for game files
+- [ ] Curves / timelines to replace `Thread.tween`
 - [ ] Better color-scheme for code examples in docs (https://github.com/just-the-docs/just-the-docs/issues/679)
 
 # Crystal 0.3.0
@@ -54,4 +55,3 @@
 
 - [ ] LDTk maps
 - [ ] create-crystal-app starter script
-- [ ] Curves / timelines

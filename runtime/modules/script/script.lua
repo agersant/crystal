@@ -22,14 +22,15 @@ end
 
 ---@param thread Thread
 ---@param resume_args any[]
-local pumpThread;
-pumpThread = function(thread, resume_args)
+local pump_thread;
+pump_thread = function(thread, resume_args)
+	assert(not thread:ended())
 	local self = thread:script();
 	local thread_coroutine = thread:coroutine();
 	local status = coroutine.status(thread_coroutine);
 	assert(status ~= "running");
 	local results;
-	if status == "suspended" and not thread:ended() and not self.blocked_threads[thread] then
+	if status == "suspended" and not self.blocked_threads[thread] then
 		table.insert(running_threads, thread);
 		if resume_args ~= nil then
 			assert(type(resume_args) == "table");
@@ -49,15 +50,17 @@ pumpThread = function(thread, resume_args)
 				local new_thread = results[3];
 				assert(new_thread:is_instance_of(Thread));
 				self.threads[new_thread] = true;
-				pumpThread(new_thread);
-				pumpThread(thread, new_thread);
-			elseif instruction == "waitForSignals" then
+				pump_thread(new_thread);
+				if not thread:ended() then
+					pump_thread(thread, new_thread);
+				end
+			elseif instruction == "wait_for_signals" then
 				local signals = results[3];
 				self:block_thread_on_signals(thread, signals);
-			elseif instruction == "endOnSignal" then
+			elseif instruction == "end_on_signal" then
 				local signal = results[3];
 				self:end_thread_on_signal(thread, signal);
-				pumpThread(thread);
+				pump_thread(thread);
 			elseif instruction == "join" then
 				local threads = results[3];
 				self:block_thread_on_threads(thread, threads);
@@ -98,7 +101,9 @@ Script.update = function(self, dt)
 	self._time = self._time + dt;
 	local threads = TableUtils.shallowCopy(self.threads);
 	for thread in pairs(threads) do
-		pumpThread(thread);
+		if not thread:ended() then
+			pump_thread(thread);
+		end
 	end
 end
 
@@ -134,7 +139,7 @@ end
 ---@param function_to_thread fun(self: Thread): any
 Script.run_thread = function(self, function_to_thread)
 	local thread = self:add_thread(function_to_thread);
-	pumpThread(thread);
+	pump_thread(thread);
 	health_check();
 	return thread;
 end
@@ -165,6 +170,7 @@ end
 ---@private
 Script.block_thread_on_signals = function(self, thread, signals)
 	assert(self == thread:script());
+	assert(not thread:ended());
 	for _, signal in ipairs(signals) do
 		assert(type(signal) == "string");
 
@@ -184,9 +190,10 @@ end
 Script.block_thread_on_threads = function(self, thread, threads_to_join)
 	assert(self == thread:script());
 	assert(#threads_to_join > 0);
+	assert(not thread:ended());
 	for _, other_thread in ipairs(threads_to_join) do
 		if other_thread:ended() then
-			pumpThread(thread, other_thread:output());
+			pump_thread(thread, other_thread:output());
 			return;
 		end
 	end
@@ -209,6 +216,7 @@ end
 Script.unblock_thread = function(self, thread, resume_args)
 	assert(self == thread:script());
 	assert(self.blocked_threads[thread]);
+	assert(not thread:ended());
 	for blocker in pairs(self.blocked_threads[thread]) do
 		if type(blocker) == "string" then
 			self.blockers[blocker][thread] = nil;
@@ -217,13 +225,14 @@ Script.unblock_thread = function(self, thread, resume_args)
 		end
 	end
 	self.blocked_threads[thread] = nil;
-	pumpThread(thread, resume_args);
+	pump_thread(thread, resume_args);
 end
 
 ---@private
 Script.end_thread_on_signal = function(self, thread, signal)
 	assert(self == thread:script());
 	assert(type(signal) == "string");
+	assert(not thread:ended());
 	if not self.ending_signals[signal] then
 		self.ending_signals[signal] = {};
 	end
@@ -281,6 +290,7 @@ Script.cleanup_thread = function(self, thread)
 		end
 	end
 	self.blocked_threads[thread] = nil;
+	self.endable_threads[thread] = nil;
 	self.blockers[thread] = nil;
 	self.threads[thread] = nil;
 end
@@ -624,13 +634,17 @@ crystal.test.add("Joining dead threads is no-op", function()
 		self:wait_for("s1");
 		self:join(t0);
 		self:join(t1);
-		sentinel = true;
+		sentinel = 1;
+		self:wait_frame();
+		sentinel = 2;
 	end);
 
 	script:update(0);
 	assert(sentinel == nil);
 	script:signal("s1");
-	assert(sentinel);
+	assert(sentinel == 1);
+	script:update(0);
+	assert(sentinel == 2);
 end);
 
 crystal.test.add("Cross script join keeps execution context", function()
@@ -755,7 +769,7 @@ crystal.test.add("Successive waits not treated as wait_for_any", function()
 	assert(sentinel);
 end);
 
-crystal.test.add("Scope cleanup functions run after thread finishes", function()
+crystal.test.add("Deferred functions run after thread finishes", function()
 	local sentinel = false;
 	local script = Script:new(function(self)
 		self:defer(function()
@@ -770,7 +784,7 @@ crystal.test.add("Scope cleanup functions run after thread finishes", function()
 	assert(sentinel);
 end);
 
-crystal.test.add("Scope cleanup functions run after thread is stopped", function()
+crystal.test.add("Deferred functions run when thread is stopped", function()
 	local sentinel = false;
 	local script = Script:new();
 	local t = script:run_thread(function(self)
@@ -785,7 +799,7 @@ crystal.test.add("Scope cleanup functions run after thread is stopped", function
 	assert(sentinel);
 end);
 
-crystal.test.add("Scope cleanup functions from child threads also run", function()
+crystal.test.add("Deferred functions from child threads also run", function()
 	local sentinel = false;
 	local script = Script:new(function(self)
 		self:end_on("s1");
@@ -933,6 +947,25 @@ crystal.test.add("Cross-script stop using a signal", function()
 	end);
 
 	scriptA:update(0);
+	assert(sentinel == 1)
+end);
+
+crystal.test.add("Child thread can immediately end parent", function()
+	local sentinel = 0;
+
+	local script = Script:new();
+	script:run_thread(function(self)
+		self:end_on("s1");
+		self:thread(function()
+			sentinel = 1;
+			self:signal("s1");
+			sentinel = 2;
+		end);
+	end);
+
+	script:update(0);
+	assert(sentinel == 1)
+	script:update(0);
 	assert(sentinel == 1)
 end);
 

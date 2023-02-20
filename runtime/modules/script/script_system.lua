@@ -132,7 +132,7 @@ crystal.test.add("Stops running script when behavior is removed", function()
 	assert(sentinel == 1);
 end);
 
-crystal.test.add("Behavior script cleanup functions are called on behavior removal", function()
+crystal.test.add("Deferred functions in Behavior are called on behavior removal", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(crystal.Entity);
@@ -153,7 +153,7 @@ crystal.test.add("Behavior script cleanup functions are called on behavior remov
 	assert(sentinel);
 end);
 
-crystal.test.add("Behavior script cleanup functions are called on despawn", function()
+crystal.test.add("Deferred functions in Behavior are called on despawn", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(crystal.Entity);

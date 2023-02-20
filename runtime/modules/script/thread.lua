@@ -6,7 +6,7 @@ local TableUtils = require("utils/TableUtils");
 ---@field private _coroutine coroutine
 ---@field private _script Script
 ---@field private _children { [Thread]: boolean }
----@field private _deferred_functions fun()[]
+---@field private deferred_functions fun()[]
 local Thread = Class("Thread");
 
 Thread.init = function(self, script, parent, function_to_thread)
@@ -14,7 +14,7 @@ Thread.init = function(self, script, parent, function_to_thread)
 	self._coroutine = coroutine.create(function_to_thread);
 	self._script = script;
 	self._children = {};
-	self._deferred_functions = {};
+	self.deferred_functions = {};
 	if parent then
 		parent._children[self] = true;
 	end
@@ -53,28 +53,29 @@ Thread.mark_as_ended = function(self)
 	end
 end
 
+---@return boolean
 Thread.ended = function(self)
 	return self._ended;
 end
 
----@return { [Thread]: true }
+---@return { [Thread]: boolean }
 Thread.children = function(self)
 	return self._children;
 end
 
 Thread.run_deferred_functions = function(self)
-	for i = #self._deferred_functions, 1, -1 do
-		self._deferred_functions[i]();
+	for i = #self.deferred_functions, 1, -1 do
+		self.deferred_functions[i]();
 	end
 end
 
 Thread.wait_frame = function(self)
-	coroutine.yield("waitFrame");
+	coroutine.yield("wait_frame");
 end
 
 Thread.wait = function(self, seconds)
-	local endTime = self._script:time() + seconds;
-	while self._script:time() < endTime do
+	local end_time = self._script:time() + seconds;
+	while self._script:time() < end_time do
 		coroutine.yield("wait");
 	end
 end
@@ -98,14 +99,14 @@ end
 Thread.wait_for_any = function(self, signals)
 	assert(not self:is_dead());
 	assert(type(signals) == "table");
-	local returns = coroutine.yield("waitForSignals", signals);
+	local returns = coroutine.yield("wait_for_signals", signals);
 	return unpack(returns);
 end
 
 Thread.end_on = function(self, signal)
 	assert(not self:is_dead());
 	assert(type(signal) == "string");
-	coroutine.yield("endOnSignal", signal);
+	coroutine.yield("end_on_signal", signal);
 end
 
 ---@return any
@@ -142,7 +143,7 @@ end
 Thread.defer = function(self, deferred_function)
 	assert(not self:is_dead());
 	assert(type(deferred_function) == "function");
-	table.insert(self._deferred_functions, deferred_function);
+	table.insert(self.deferred_functions, deferred_function);
 end
 
 ---@return Thread
@@ -162,15 +163,15 @@ Thread.wait_tween = function(self, from, to, duration, easing, callback, arg)
 		end
 		return;
 	end
-	local startTime = self._script:time();
-	while self._script:time() <= startTime + duration do
-		local t = (self._script:time() - startTime) / duration;
+	local start_time = self._script:time();
+	while self._script:time() <= start_time + duration do
+		local t = (self._script:time() - start_time) / duration;
 		local t = MathUtils.ease(t, easing);
-		local currentValue = from + t * (to - from);
+		local current_value = from + t * (to - from);
 		if arg then
-			callback(arg, currentValue);
+			callback(arg, current_value);
 		else
-			callback(currentValue);
+			callback(current_value);
 		end
 		self:wait_frame();
 	end
