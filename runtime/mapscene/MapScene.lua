@@ -48,13 +48,13 @@ MapScene.init = function(self, mapName)
 	-- After physics
 
 	-- Before scripts
-	ecs:add_system(SpriteSystem); -- (also has some duringScripts and afterScripts logic)
 
 	-- During scripts
 	ecs:add_system(crystal.ScriptSystem);
 	ecs:add_system(InputListenerSystem);
 
 	-- After scripts
+	ecs:add_system(SpriteSystem);
 	ecs:add_system(WorldWidgetSystem);
 
 	-- Before draw
