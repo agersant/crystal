@@ -18,7 +18,7 @@ Thread.init = function(self, script, parent, function_to_thread)
 	if parent then
 		parent._children[self] = true;
 	end
-	Alias:add(self, script); -- TODO remove this
+	Alias:add(self, script);
 end
 
 ---@return Script
