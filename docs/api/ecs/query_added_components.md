@@ -6,7 +6,7 @@ nav_exclude: true
 
 # Query:added_components
 
-Returns all components that became part of a match for this query during the last call to [ECS:update](ecs_update).
+Returns all components of a specific class (or inheriting from it) that became part of a match for this query during the last call to [ECS:update](ecs_update).
 
 A component is considered part of a match when two conditions are met:
 
@@ -17,20 +17,23 @@ A component is considered part of a match when two conditions are met:
    - Component was already on the entity. Another component was just added and made the entity match the query.
    - Entity was already matching the query. This component was just added and also happens to be one of the requested classes for this query.
 
-{: .info}
-This method is mostly useful when working with queries that match against a single component class. For queries working with multiple component classes, it is often more convenient to call [added_entities](query_added_entities).
-
 ## Usage
 
 ```lua
-query:added_components()
+query:added_components(class)
 ```
+
+### Arguments
+
+| Name    | Type                        | Description                                                                                      |
+| :------ | :-------------------------- | :----------------------------------------------------------------------------------------------- |
+| `class` | `string` or component class | Base class of the newly added components that will be returned, as a `string` or as a reference. |
 
 ### Returns
 
-| Name         | Type    | Description                                          |
-| :----------- | :------ | :--------------------------------------------------- |
-| `components` | `table` | A table where every key is a [Component](component). |
+| Name         | Type    | Description                                                                                     |
+| :----------- | :------ | :---------------------------------------------------------------------------------------------- |
+| `components` | `table` | A table where every key is a [Component](component) of the specified class or inherits from it. |
 
 ## Example
 
@@ -43,7 +46,7 @@ PoisonSystem.init = function(self)
 end
 
 PoisonSystem.frame = function(self)
-  for poison in pairs(self.query:added_components()) do
+  for poison in pairs(self.query:added_components("Poison")) do
     print((tostring(poison:entity())) .. " just got poisoned");
   end
 end
