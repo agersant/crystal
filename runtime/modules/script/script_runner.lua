@@ -2,6 +2,7 @@ local Script = require("modules/script/script");
 local Alias = require("utils/Alias");
 local TableUtils = require("utils/TableUtils");
 
+---@class ScriptRunner : Component
 local ScriptRunner = Class("ScriptRunner", crystal.Component);
 
 ScriptRunner.init = function(self)
@@ -15,24 +16,28 @@ ScriptRunner.add_script = function(self, script)
 	return script;
 end
 
-ScriptRunner.runScripts = function(self, dt)
+---@param dt number
+ScriptRunner.run_scripts = function(self, dt)
 	local scripts = TableUtils.shallowCopy(self._scripts);
 	for i, script in ipairs(scripts) do
 		script:update(dt);
 	end
 end
 
-ScriptRunner.signalAllScripts = function(self, signal, ...)
+---@param signal string
+---@param ... any
+ScriptRunner.signal_all_scripts = function(self, signal, ...)
 	local scripts = TableUtils.shallowCopy(self._scripts);
 	for _, script in ipairs(scripts) do
 		script:signal(signal, ...);
 	end
 end
 
-ScriptRunner.remove_script = function(self, scriptToRemove)
-	assert(scriptToRemove:is_instance_of(Script));
+---@param script_to_remove Script
+ScriptRunner.remove_script = function(self, script_to_remove)
+	assert(script_to_remove:is_instance_of(Script));
 	for i, script in ipairs(self._scripts) do
-		if script == scriptToRemove then
+		if script == script_to_remove then
 			table.remove(self._scripts, i);
 			script:stop_all_threads();
 			return;
@@ -40,7 +45,7 @@ ScriptRunner.remove_script = function(self, scriptToRemove)
 	end
 end
 
-ScriptRunner.removeAllScripts = function(self)
+ScriptRunner.remove_all_scripts = function(self)
 	local scripts = TableUtils.shallowCopy(self._scripts);
 	self._scripts = {};
 	for _, script in ipairs(scripts) do

@@ -15,7 +15,7 @@ Actor.doAction = function(self, actionFunction)
 	self._actionThread = self._script:run_thread(function(script)
 		actionFunction(script);
 		self._actionThread = nil;
-		self:entity():signalAllScripts("idle");
+		self:entity():signal_all_scripts("idle");
 	end);
 	return self._actionThread;
 end
@@ -50,7 +50,7 @@ crystal.test.add("Is idle after completing action", function()
 	scene:update(0);
 	assert(not entity:isIdle());
 
-	entity:signalAllScripts("s1");
+	entity:signal_all_scripts("s1");
 	assert(entity:isIdle());
 end);
 
@@ -72,7 +72,7 @@ crystal.test.add("Can stop action", function()
 	entity:stopAction();
 	assert(entity:isIdle());
 
-	entity:signalAllScripts("s1");
+	entity:signal_all_scripts("s1");
 	assert(not sentinel);
 end);
 

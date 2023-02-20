@@ -19,7 +19,7 @@ InputListenerSystem.duringScripts = function(self, dt)
 			if inputContext then
 				inputContext:getContext():signal(commandEvent);
 			else
-				scriptRunner:signalAllScripts(commandEvent);
+				scriptRunner:signal_all_scripts(commandEvent);
 			end
 		end
 	end
