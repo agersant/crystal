@@ -1,9 +1,7 @@
 local Renderer = require("graphics/Renderer");
 local MapSystem = require("mapscene/MapSystem");
-local BehaviorSystem = require("mapscene/behavior/BehaviorSystem");
 local InputListener = require("mapscene/behavior/InputListener");
 local InputListenerSystem = require("mapscene/behavior/InputListenerSystem");
-local ScriptRunnerSystem = require("mapscene/behavior/ScriptRunnerSystem");
 local CameraSystem = require("mapscene/display/CameraSystem");
 local SpriteSystem = require("mapscene/display/SpriteSystem");
 local DrawableSystem = require("mapscene/display/DrawableSystem");
@@ -50,11 +48,10 @@ MapScene.init = function(self, mapName)
 	-- After physics
 
 	-- Before scripts
-	ecs:add_system(BehaviorSystem);
 	ecs:add_system(SpriteSystem); -- (also has some duringScripts and afterScripts logic)
 
 	-- During scripts
-	ecs:add_system(ScriptRunnerSystem); -- (also has dome beforeScripts logic)
+	ecs:add_system(crystal.ScriptSystem);
 	ecs:add_system(InputListenerSystem);
 
 	-- After scripts

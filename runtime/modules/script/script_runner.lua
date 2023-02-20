@@ -1,4 +1,4 @@
-local Script = require("script/Script");
+local Script = require("modules/script/script");
 local Alias = require("utils/Alias");
 local TableUtils = require("utils/TableUtils");
 
@@ -8,7 +8,7 @@ ScriptRunner.init = function(self)
 	self._scripts = {};
 end
 
-ScriptRunner.addScript = function(self, script)
+ScriptRunner.add_script = function(self, script)
 	assert(script:is_instance_of(Script));
 	Alias:add(script, self:entity());
 	table.insert(self._scripts, script);
@@ -29,12 +29,12 @@ ScriptRunner.signalAllScripts = function(self, signal, ...)
 	end
 end
 
-ScriptRunner.removeScript = function(self, scriptToRemove)
+ScriptRunner.remove_script = function(self, scriptToRemove)
 	assert(scriptToRemove:is_instance_of(Script));
 	for i, script in ipairs(self._scripts) do
 		if script == scriptToRemove then
 			table.remove(self._scripts, i);
-			script:stopAllThreads();
+			script:stop_all_threads();
 			return;
 		end
 	end
@@ -44,7 +44,7 @@ ScriptRunner.removeAllScripts = function(self)
 	local scripts = TableUtils.shallowCopy(self._scripts);
 	self._scripts = {};
 	for _, script in ipairs(scripts) do
-		script:stopAllThreads();
+		script:stop_all_threads();
 	end
 end
 

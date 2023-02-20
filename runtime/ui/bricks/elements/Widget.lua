@@ -1,4 +1,3 @@
-local Script = require("script/Script");
 local Joint = require("ui/bricks/core/Joint");
 local Padding = require("ui/bricks/core/Padding");
 local Wrapper = require("ui/bricks/core/Wrapper");
@@ -22,17 +21,17 @@ end
 
 Widget.setRoot = Widget.super.setChild;
 
-Widget.addScript = function(self, script)
+Widget.add_script = function(self, script)
 	assert(script);
-	assert(script:is_instance_of(Script));
+	assert(script:is_instance_of(crystal.Script));
 	self._scripts[script] = true;
 	Alias:add(script, self);
 	return script;
 end
 
-Widget.removeScript = function(self, script)
+Widget.remove_script = function(self, script)
 	assert(script);
-	assert(script:is_instance_of(Script));
+	assert(script:is_instance_of(crystal.Script));
 	Alias:remove(script, self);
 	self._scripts[script] = nil;
 end
@@ -67,7 +66,7 @@ end
 crystal.test.add("Runs scripts", function()
 	local widget = Widget:new();
 	local sentinel;
-	widget:addScript(Script:new(function()
+	widget:add_script(crystal.Script:new(function()
 		sentinel = 1;
 	end));
 	assert(sentinel == nil);

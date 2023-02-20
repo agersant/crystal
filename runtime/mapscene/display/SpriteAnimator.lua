@@ -1,7 +1,6 @@
-local Behavior = require("mapscene/behavior/Behavior");
 local Sprite = require("mapscene/display/Sprite");
 
-local SpriteAnimator = Class("SpriteAnimator", Behavior);
+local SpriteAnimator = Class("SpriteAnimator", crystal.Behavior);
 
 local jumpToFrame = function(self, animationFrame)
 	assert(animationFrame);
@@ -14,14 +13,14 @@ local playback = function(self, sequence)
 	assert(sequence);
 	local animator = self;
 	return function(self)
-		local startTime = self:getTime();
+		local startTime = self:time();
 		while true do
-			local timeElasped = self:getTime() - startTime;
+			local timeElasped = self:time() - startTime;
 			jumpToFrame(animator, sequence:getFrameAtTime(timeElasped));
 			if timeElasped >= sequence:getDuration() and not sequence:isLooping() then
 				break
 			else
-				self:waitFrame();
+				self:wait_frame();
 			end
 		end
 	end;
@@ -36,8 +35,8 @@ local playAnimationInternal = function(self, animationName, angle, forceRestart)
 		return;
 	end
 	self._sequence = sequence;
-	self._script:stopAllThreads();
-	return self._script:addThreadAndRun(playback(self, sequence));
+	self._script:stop_all_threads();
+	return self._script:run_thread(playback(self, sequence));
 end
 
 SpriteAnimator.init = function(self, sprite, sheet)
@@ -68,9 +67,6 @@ end
 
 --#region Tests
 
-local ScriptRunner = require("mapscene/behavior/ScriptRunner");
-local Script = require("script/Script");
-
 crystal.test.add("Set animation updates current frame", function()
 	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
 	local sprite = Sprite:new();
@@ -88,7 +84,7 @@ crystal.test.add("Cycles through animation frames", function()
 	local entity = scene:spawn(crystal.Entity);
 	local sprite = entity:add_component(Sprite);
 	local animator = entity:add_component(SpriteAnimator, sprite, sheet);
-	entity:add_component(ScriptRunner);
+	entity:add_component(crystal.ScriptRunner);
 
 	animator:playAnimation("floating");
 
@@ -110,10 +106,10 @@ crystal.test.add("Animation blocks script", function()
 	local entity = scene:spawn(crystal.Entity);
 	local sprite = entity:add_component(Sprite);
 	entity:add_component(SpriteAnimator, sprite, sheet);
-	entity:add_component(ScriptRunner);
+	entity:add_component(crystal.ScriptRunner);
 
 	local sentinel = false;
-	entity:addScript(Script:new(function(self)
+	entity:add_script(crystal.Script:new(function(self)
 		self:join(self:playAnimation("hurt"));
 		sentinel = true;
 	end));
@@ -133,10 +129,10 @@ crystal.test.add("Looping animation thread never ends", function()
 	local entity = scene:spawn(crystal.Entity);
 	local sprite = entity:add_component(Sprite);
 	entity:add_component(SpriteAnimator, sprite, sheet);
-	entity:add_component(ScriptRunner);
+	entity:add_component(crystal.ScriptRunner);
 
 	local sentinel = false;
-	entity:addScript(Script:new(function(self)
+	entity:add_script(crystal.Script:new(function(self)
 		self:join(self:playAnimation("floating"));
 		sentinel = true;
 	end));

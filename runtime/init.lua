@@ -18,27 +18,19 @@ local crystalRoot = table.concat(pathChunks, "/");
 package.path      = package.path .. ";" .. crystalRuntime .. "/?.lua";
 
 
-local features  = require("features");
+local features   = require("features");
 
-CRYSTAL_ROOT    = crystalRoot;
-CRYSTAL_RUNTIME = crystalRuntime;
-CRYSTAL_NO_GAME = crystalRoot == "";
+CRYSTAL_ROOT     = crystalRoot;
+CRYSTAL_RUNTIME  = crystalRuntime;
+CRYSTAL_NO_GAME  = crystalRoot == "";
 
 ---@diagnostic disable-next-line: lowercase-global
-crystal         = {};
+crystal          = {};
 
-local modules   = {};
-modules.oop     = require("modules/oop");
-modules.test    = require("modules/test");
-crystal.test    = modules.test.module_api;
-
-modules.cmd     = require("modules/cmd");
-modules.const   = require("modules/const");
-modules.ecs     = require("modules/ecs");
-modules.log     = require("modules/log");
-modules.tool    = require("modules/tool");
-
-for name, module in pairs(modules) do
+local modules    = {};
+local add_module = function(name, path)
+	local module = require(path);
+	modules[name] = module;
 	crystal[name] = module.module_api;
 	if module.global_api then
 		for k, v in pairs(module.global_api) do
@@ -46,6 +38,16 @@ for name, module in pairs(modules) do
 		end
 	end
 end
+
+add_module("oop", "modules/oop");
+add_module("test", "modules/test");
+
+add_module("cmd", "modules/cmd");
+add_module("const", "modules/const");
+add_module("ecs", "modules/ecs");
+add_module("log", "modules/log");
+add_module("script", "modules/script");
+add_module("tool", "modules/tool");
 
 local Content     = require("resources/Content");
 local StringUtils = require("utils/StringUtils");

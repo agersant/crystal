@@ -22,6 +22,7 @@ Entity.add_component = function(self, class, ...)
 	if type(class) == "string" then
 		class = Class:get_by_name(class);
 	end
+	assert(class);
 	local component = { _entity = self, _is_valid = true };
 	class:placement_new(component, ...);
 	assert(component:entity() == self);

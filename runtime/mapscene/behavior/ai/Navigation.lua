@@ -1,12 +1,11 @@
 local AlignGoal = require("mapscene/behavior/ai/AlignGoal");
 local EntityGoal = require("mapscene/behavior/ai/EntityGoal");
 local PositionGoal = require("mapscene/behavior/ai/PositionGoal");
-local Behavior = require("mapscene/behavior/Behavior");
 local Locomotion = require("mapscene/physics/Locomotion");
 local PhysicsBody = require("mapscene/physics/PhysicsBody");
 local MathUtils = require("utils/MathUtils");
 
-local Navigation = Class("Navigation", Behavior);
+local Navigation = Class("Navigation", crystal.Behavior);
 
 local navigate = function(self, navigationMesh, goal, physicsBody, locomotion)
 	if not goal:is_valid() then
@@ -32,12 +31,12 @@ local navigate = function(self, navigationMesh, goal, physicsBody, locomotion)
 		end
 		local x, y = physicsBody:getPosition();
 		local distToWaypoint2 = MathUtils.distance2(x, y, waypointX, waypointY);
-		local epsilon = locomotion:getSpeed() * self:getDeltaTime();
+		local epsilon = locomotion:getSpeed() * self:delta_time();
 		if distToWaypoint2 >= epsilon * epsilon then
 			local deltaX, deltaY = waypointX - x, waypointY - y;
 			local angle = math.atan2(deltaY, deltaX);
 			locomotion:setMovementAngle(angle);
-			self:waitFrame();
+			self:wait_frame();
 		else
 			physicsBody:setPosition(waypointX, waypointY);
 			vertexIndex = vertexIndex + 1;
@@ -79,14 +78,14 @@ Navigation.navigateToGoal = function(self, goal, repathDelay)
 	assert(locomotion);
 	assert(navigationMesh);
 
-	self._script:stopAllThreads();
-	return self._script:addThreadAndRun(function(self)
-		self:scope(function()
+	self._script:stop_all_threads();
+	return self._script:run_thread(function(self)
+		self:defer(function()
 			locomotion:setMovementAngle(nil);
 		end);
 
 		local completion = self:thread(function(self)
-			local signal = self:waitForAny({ "success", "failure" });
+			local signal = self:wait_for_any({ "success", "failure" });
 			return signal == "success";
 		end);
 
@@ -100,14 +99,14 @@ Navigation.navigateToGoal = function(self, goal, repathDelay)
 		self:thread(function(self)
 			while true do
 				self:thread(function(self)
-					self:endOn("repath");
+					self:end_on("repath");
 					if navigate(self, navigationMesh, goal, physicsBody, locomotion) then
 						self:signal("success");
 					else
 						self:signal("failure");
 					end
 				end);
-				self:waitFor("repath");
+				self:wait_for("repath");
 			end
 		end);
 
@@ -117,9 +116,7 @@ end
 
 --#region Tests
 
-local ScriptRunner = require("mapscene/behavior/ScriptRunner");
 local MapScene = require("mapscene/MapScene");
-local Script = require("script/Script");
 
 crystal.test.add("Walk to point", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
@@ -133,7 +130,7 @@ crystal.test.add("Walk to point", function()
 	subject:add_component(Locomotion, 50);
 	subject:setPosition(startX, startY);
 	subject:add_component(Navigation);
-	subject:add_component(ScriptRunner);
+	subject:add_component(crystal.ScriptRunner);
 
 	subject:navigateToPoint(endX, endY, acceptanceRadius);
 
@@ -155,7 +152,7 @@ crystal.test.add("Walk to entity", function()
 	subject:add_component(Locomotion, 50);
 	subject:setPosition(startX, startY);
 	subject:add_component(Navigation);
-	subject:add_component(ScriptRunner);
+	subject:add_component(crystal.ScriptRunner);
 
 	local target = scene:spawn(crystal.Entity);
 	target:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
@@ -184,9 +181,8 @@ crystal.test.add("Can use blocking script function", function()
 	subject:setPosition(startX, startY);
 	subject:add_component(Navigation);
 
-	local scriptRunner = ScriptRunner:new();
-	subject:add_component(scriptRunner);
-	scriptRunner:addScript(Script:new(function(self)
+	local scriptRunner = subject:add_component(crystal.ScriptRunner);
+	scriptRunner:add_script(crystal.Script:new(function(self)
 		local success = self:join(self:navigateToPoint(endX, endY, acceptanceRadius));
 		sentinel = success;
 	end));

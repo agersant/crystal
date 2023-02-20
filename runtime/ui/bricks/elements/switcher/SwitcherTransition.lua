@@ -1,4 +1,3 @@
-local Script = require("script/Script");
 local MathUtils = require("utils/MathUtils");
 
 local SwitcherTransition = Class("SwitcherTransition");
@@ -6,7 +5,7 @@ local SwitcherTransition = Class("SwitcherTransition");
 SwitcherTransition.init = function(self, duration, easing)
 	self._duration = duration or 0;
 	self._easing = easing or "outQuadratic";
-	self._script = Script:new();
+	self._script = crystal.Script:new();
 	self._progress = 0;
 	self._from = nil;
 	self._to = nil;
@@ -46,15 +45,15 @@ SwitcherTransition.play = function(self, from, to)
 	local easing = self:getEasing();
 	local transition = self;
 
-	self._script:stopAllThreads();
-	return self._script:addThreadAndRun(function(self)
-		self:waitTween(0, 1, duration, easing, transition.setProgress, transition);
+	self._script:stop_all_threads();
+	return self._script:run_thread(function(self)
+		self:wait_tween(0, 1, duration, easing, transition.setProgress, transition);
 	end);
 end
 
 SwitcherTransition.skipToEnd = function(self)
 	self:setProgress(1);
-	self._script:stopAllThreads();
+	self._script:stop_all_threads();
 end
 
 SwitcherTransition.handleChildRemoved = function(self, child)

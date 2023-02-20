@@ -1,6 +1,4 @@
-local Behavior = require("mapscene/behavior/Behavior");
-
-local Actor = Class("Actor", Behavior);
+local Actor = Class("Actor", crystal.Behavior);
 
 Actor.init = function(self, entity)
 	Actor.super.init(self, entity, nil);
@@ -9,12 +7,12 @@ Actor.init = function(self, entity)
 end
 
 Actor.isIdle = function(self)
-	return not self._actionThread or self._actionThread:isDead();
+	return not self._actionThread or self._actionThread:is_dead();
 end
 
 Actor.doAction = function(self, actionFunction)
 	assert(self:isIdle());
-	self._actionThread = self._script:addThreadAndRun(function(script)
+	self._actionThread = self._script:run_thread(function(script)
 		actionFunction(script);
 		self._actionThread = nil;
 		self:entity():signalAllScripts("idle");
@@ -30,16 +28,15 @@ Actor.stopAction = function(self)
 	self._actionThread = nil;
 end
 
---#region
+--#region Tests
 
-local ScriptRunner = require("mapscene/behavior/ScriptRunner");
 local MapScene = require("mapscene/MapScene");
 
 crystal.test.add("Is idle after completing action", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local entity = scene:spawn(crystal.Entity);
-	entity:add_component(ScriptRunner);
+	entity:add_component(crystal.ScriptRunner);
 	entity:add_component(Actor);
 
 	assert(entity:isIdle());
@@ -47,7 +44,7 @@ crystal.test.add("Is idle after completing action", function()
 	assert(entity:isIdle());
 
 	entity:doAction(function(self)
-		self:waitFor("s1");
+		self:wait_for("s1");
 	end);
 	assert(not entity:isIdle());
 	scene:update(0);
@@ -61,14 +58,14 @@ crystal.test.add("Can stop action", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local entity = scene:spawn(crystal.Entity);
-	entity:add_component(ScriptRunner);
+	entity:add_component(crystal.ScriptRunner);
 	entity:add_component(Actor);
 
 	local sentinel = false;
 
 	scene:update(0);
 	entity:doAction(function(self)
-		self:waitFor("s1");
+		self:wait_for("s1");
 		sentinel = true;
 	end);
 	assert(not entity:isIdle());

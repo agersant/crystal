@@ -157,12 +157,18 @@ end
 
 ---@return { [Component]: Entity }
 Query.added_components = function(self, class)
+	if type(class) == "string" then
+		class = Class:get_by_name(class);
+	end
 	assert(class);
 	return TableUtils.shallowCopy(self._added_components[class] or {});
 end
 
 ---@return { [Component]: Entity }
 Query.removed_components = function(self, class)
+	if type(class) == "string" then
+		class = Class:get_by_name(class);
+	end
 	assert(class);
 	return TableUtils.shallowCopy(self._removed_components[class] or {});
 end
