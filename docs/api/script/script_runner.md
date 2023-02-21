@@ -5,9 +5,9 @@ grand_parent: API Reference
 
 # crystal.ScriptRunner
 
-As its name implies, `ScriptRunner` is a component which allows an entity to run [scripts][script]. Entities should have at most one `ScriptRunner` component. Scripts can be added or removed throughout the lifetime of the entity.
+As its name implies, `ScriptRunner` is a component which allows an entity to run [scripts](script). Entities should have at most one `ScriptRunner` component. Scripts can be added or removed throughout the lifetime of the entity.
 
-This component is designed to work in tandem with a [ScriptSystem][script_system].
+This component is designed to work in tandem with a [ScriptSystem](script_system).
 
 If you want to re-use the same script on multiple entities, you can define a [Behavior](behavior) component instead of manually adding scripts to a `ScriptRunner`.
 
