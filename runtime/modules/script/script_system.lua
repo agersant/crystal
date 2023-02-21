@@ -33,7 +33,7 @@ end
 
 ScriptSystem.duringScripts = function(self, dt)
 	for runner in pairs(self.with_runner:components("ScriptRunner")) do
-		runner:run_scripts(dt);
+		runner:run_all_scripts(dt);
 	end
 end
 

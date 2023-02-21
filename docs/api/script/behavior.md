@@ -5,7 +5,7 @@ grand_parent: API Reference
 
 # crystal.Behavior
 
-Behaviors are components which manage a [Script](script). This class is of little use on its own as the managed script does nothing by default.
+Behaviors are components which manage a [Script](script) and automatically add it to their entity's [ScriptRunner](script_runner).
 
 The recommended usage pattern is to define components that bundle specific logic by inheriting from `crystal.Behavior`. The example on this page follows this pattern to define a component which makes an entity print a string every second.
 

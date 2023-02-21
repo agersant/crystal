@@ -65,7 +65,7 @@ end
 
 Thread.run_deferred_functions = function(self)
 	for i = #self.deferred_functions, 1, -1 do
-		self.deferred_functions[i]();
+		self.deferred_functions[i](self);
 	end
 end
 

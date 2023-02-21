@@ -22,7 +22,7 @@ ScriptRunner.add_script = function(self, script)
 end
 
 ---@param dt number
-ScriptRunner.run_scripts = function(self, dt)
+ScriptRunner.run_all_scripts = function(self, dt)
 	local scripts = TableUtils.shallowCopy(self._scripts);
 	for i, script in ipairs(scripts) do
 		script:update(dt);
@@ -45,6 +45,7 @@ ScriptRunner.remove_script = function(self, script_to_remove)
 		if script == script_to_remove then
 			table.remove(self._scripts, i);
 			script:stop_all_threads();
+			Alias:remove(script, self:entity());
 			return;
 		end
 	end
@@ -55,6 +56,7 @@ ScriptRunner.remove_all_scripts = function(self)
 	self._scripts = {};
 	for _, script in ipairs(scripts) do
 		script:stop_all_threads();
+		Alias:remove(script, self:entity());
 	end
 end
 
