@@ -31,12 +31,12 @@ script:add_thread(startup_function);
 
 ### Working with threads
 
-| Name                            | Description                                                                                                                                  |
-| :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------- |
-| [delta_time](script_delta_time) | Returns the delta time that was passed to the last [update](script_update) call.                                                             |
-| [signal](script_signal)         | Ends all threads that were scheduled to [end upon it](thread_end_on) a signal. Runs all threads that were [waiting](thread_wait_for) for it. |
-| [time](script_time)             | Returns the cumulative time passed to all [update](script_update) calls.                                                                     |
-| [update](script_update)         | Runs all threads that are not currently blocked by a call like [join](thread_join) or [wait_for](thread_wait_for).                           |
+| Name                            | Description                                                                                                                                        |
+| :------------------------------ | :------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [delta_time](script_delta_time) | Returns the delta time that was passed to the last [update](script_update) call.                                                                   |
+| [signal](script_signal)         | Ends all threads that were scheduled to [end](thread_end_on) upon a specific signal. Runs all threads that were [waiting](thread_wait_for) for it. |
+| [time](script_time)             | Returns the cumulative time passed to all [update](script_update) calls.                                                                           |
+| [update](script_update)         | Runs all threads that are not currently blocked by a call like [join](thread_join) or [wait_for](thread_wait_for).                                 |
 
 ### Stopping threads
 
