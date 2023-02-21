@@ -10,7 +10,7 @@ ScriptSystem.init = function(self)
 	self.active_scripts = {};
 end
 
-ScriptSystem.beforeScripts = function(self, dt)
+ScriptSystem.before_scripts = function(self, dt)
 	for runner in pairs(self.with_runner:removed_components("ScriptRunner")) do
 		runner:remove_all_scripts();
 	end
@@ -31,7 +31,7 @@ ScriptSystem.beforeScripts = function(self, dt)
 	end
 end
 
-ScriptSystem.duringScripts = function(self, dt)
+ScriptSystem.during_scripts = function(self, dt)
 	for runner in pairs(self.with_runner:components("ScriptRunner")) do
 		runner:run_all_scripts(dt);
 	end

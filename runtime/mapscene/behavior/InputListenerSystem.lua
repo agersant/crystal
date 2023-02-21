@@ -6,7 +6,7 @@ InputListenerSystem.init = function(self)
 	self._query = self:add_query({ InputListener, ScriptRunner });
 end
 
-InputListenerSystem.duringScripts = function(self, dt)
+InputListenerSystem.during_scripts = function(self, dt)
 	local entities = self._query:entities();
 	for entity in pairs(entities) do
 		local inputListener = entity:component(InputListener);

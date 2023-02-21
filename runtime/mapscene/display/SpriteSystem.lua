@@ -7,7 +7,7 @@ SpriteSystem.init = function(self)
 	self._query = self:add_query({ Sprite, PhysicsBody });
 end
 
-SpriteSystem.afterScripts = function(self, dt)
+SpriteSystem.after_scripts = function(self, dt)
 	local entities = self._query:entities();
 	for entity in pairs(entities) do
 		local sprite = entity:component(Sprite);

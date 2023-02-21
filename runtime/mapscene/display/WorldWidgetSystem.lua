@@ -8,7 +8,7 @@ WorldWidgetSystem.init = function(self)
 	self.with_body = self:add_query({ WorldWidget, PhysicsBody });
 end
 
-WorldWidgetSystem.afterScripts = function(self, dt)
+WorldWidgetSystem.after_scripts = function(self, dt)
 	for entity in pairs(self.with_body:entities()) do
 		local body = entity:component(PhysicsBody);
 		local x, y = body:getPosition();
