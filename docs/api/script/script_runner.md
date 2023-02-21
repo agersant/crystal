@@ -33,7 +33,7 @@ Like all other components, ScriptRunners are created by calling [Entity:add_comp
 ```lua
 local ecs = crystal.ECS:new();
 local entity = ecs:spawn(crystal.Entity);
-entity:add_component(crystal.ScriptRunner);
+local script_runner = entity:add_component(crystal.ScriptRunner);
 
 entity:add_script(function(self)
   while true do
@@ -42,6 +42,7 @@ entity:add_script(function(self)
   end
 end);
 
+script_runner:update(0); -- Runs the script until the `wait_for` statement
 entity:signal_all_scripts("greet", "Alvina"); -- prints "Hello Alvina"
 entity:signal_all_scripts("greet", "Tarkus"); -- prints "Hello Tarkus"
 ```

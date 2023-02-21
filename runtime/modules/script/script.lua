@@ -124,10 +124,12 @@ Script.stop_all_threads = function(self)
 	health_check();
 end
 
+---@return number
 Script.time = function(self)
 	return self._time;
 end
 
+---@return number
 Script.delta_time = function(self)
 	return self.dt;
 end

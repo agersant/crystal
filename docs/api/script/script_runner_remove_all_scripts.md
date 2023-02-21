@@ -19,7 +19,7 @@ script_runner:remove_all_scripts()
 ```lua
 local ecs = crystal.ECS:new();
 local entity = ecs:spawn(crystal.Entity);
-entity:add_component(crystal.ScriptRunner);
+local script_runner = entity:add_component(crystal.ScriptRunner);
 
 entity:add_script(function(self)
   self:defer(function(self)
@@ -31,6 +31,7 @@ entity:add_script(function(self)
   end
 end);
 
+script_runner:update(0); -- Runs the script until the `wait_for` statement
 entity:signal_all_scripts("visitor"); -- prints "Hello"
 entity:signal_all_scripts("visitor"); -- prints "Hello"
 entity:remove_all_scripts(); -- prints "Goodbye"
