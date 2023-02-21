@@ -63,9 +63,9 @@ script:update(0); -- Nothing happens, script is blocked on the `wait_for` statem
 The script has a single thread which is repeatedly waiting for the `greet` signal. The `greet` signal is accompanied by some data, the name of the person to greet. Every time the script is unblocked, it prints out a line of text.
 
 {: .note}
-Threads can also wait for multiple signals at the same time using [Thread:wait_for_any]. They will resume execution when any of the specified signals is received.
+Threads can also wait for multiple signals at the same time using [Thread:wait_for_any](thread_wait_for_any). They will resume execution when any of the specified signals is received.
 
-Signals can also be used to stop threads thanks to [Thread:end_on]. Building up on the greeting example above:
+Signals can also be used to stop threads thanks to [Thread:end_on](thread_end_on). Building up on the greeting example above:
 
 ```lua
 local script = crystal.Script:new();
