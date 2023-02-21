@@ -31,7 +31,7 @@ entity:add_component(crystal.ScriptRunner);
 
 local hello_goodbye = entity:add_script(function(self)
   self:defer(function(self)
-	print("Goodbye");
+    print("Goodbye");
   end);
   while true do
     self:wait_for("visitor");

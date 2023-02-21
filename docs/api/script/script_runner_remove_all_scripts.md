@@ -23,10 +23,10 @@ entity:add_component(crystal.ScriptRunner);
 
 entity:add_script(function(self)
   self:defer(function(self)
-	print("Goodbye");
+    print("Goodbye");
   end);
   while true do
-	self:wait_for("visitor");
+    self:wait_for("visitor");
     print("Hello");
   end
 end);

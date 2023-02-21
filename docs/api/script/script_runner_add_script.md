@@ -40,7 +40,7 @@ entity:add_component(crystal.ScriptRunner);
 entity:add_script(function(self)
   while true do
     print("Hello");
-	self:wait(1);
+    self:wait(1);
   end
 end);
 ```
@@ -55,7 +55,7 @@ entity:add_component(crystal.ScriptRunner);
 local script = crystal.Script:new(function(self)
   while true do
     print("Hello");
-	self:wait(1);
+    self:wait(1);
   end
 end);
 
