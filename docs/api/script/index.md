@@ -94,25 +94,25 @@ Let's look at an example of this too:
 ```lua
 local script = crystal.Script:new();
 script:add_thread(function(self)
-	local meal;
-	self:thread(function(self)
-		while true do
-			self:wait_frame();
-			print(meal);
-		end
-	end);
+  local meal;
+  self:thread(function(self)
+    while true do
+      self:wait_frame();
+      print(meal);
+    end
+  end);
 
-	meal = "breakfast";
-	self:wait(1);
-	meal = "lunch";
-	self:wait(1);
-	meal = "dinner";
-	self:wait(1);
+  meal = "breakfast";
+  self:wait(1);
+  meal = "lunch";
+  self:wait(1);
+  meal = "dinner";
+  self:wait(1);
 end);
 
 -- Advance the script by 0.2s a hundred times
 for i = 1, 100 do
-	script:update(0.2);
+  script:update(0.2);
 end
 ```
 

@@ -20,7 +20,7 @@ ecs:add_system(crystal.ScriptSystem);
 local entity = ecs:spawn(crystal.Entity);
 entity:add_component(crystal.ScriptRunner);
 entity:add_script(function(self)
-	print("Oink");
+  print("Oink");
 end);
 
 -- In your scene's update function:
