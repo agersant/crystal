@@ -35,7 +35,7 @@ query:added_components(class)
 | :----------- | :------ | :----------------------------------------------------------------------------------------------------------------- |
 | `components` | `table` | A table where every key is an added [Component](component). Table values are the entities owning these components. |
 
-## Example
+## Examples
 
 ```lua
 local Poison = Class("Poison", crystal.Component);

@@ -27,7 +27,7 @@ ecs:add_system(class, ...);
 | :------- | :--------------- | :------------------------------------ |
 | `system` | [System](system) | System that was created by this call. |
 
-## Example
+## Examples
 
 ```lua
 local MySystem = Class("MySystem", crystal.System);

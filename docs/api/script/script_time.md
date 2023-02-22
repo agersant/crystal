@@ -20,7 +20,7 @@ script:time()
 | :----- | :------- | :----------------------- |
 | `time` | `number` | Time elapsed in seconds. |
 
-## Example
+## Examples
 
 ```lua
 local script = crystal.Script:new();

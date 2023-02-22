@@ -22,7 +22,7 @@ script:stop_thread(thread)
 | :------- | :--------------- | :-------------- |
 | `thread` | [Thread](thread) | Thread to stop. |
 
-## Example
+## Examples
 
 ```lua
 local script = Script:new();

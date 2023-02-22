@@ -25,7 +25,7 @@ Threads transparently have access to all methods of the script that owns them.
 | wait_for_any | Blocks this thread until its parent [Script](script) receives any of several signals.    |
 | wait_frame   | Blocks this thread until the next [Script:update](script_update) call.                   |
 
-## Example
+## Examples
 
 ```lua
 

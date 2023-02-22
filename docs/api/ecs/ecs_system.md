@@ -30,7 +30,7 @@ If no matching system exists, this method returns `nil`.
 
 If multiple systems match the requested class, any of them may be returned.
 
-## Example
+## Examples
 
 ```lua
 local MySystem = Class("MySystem", crystal.System);

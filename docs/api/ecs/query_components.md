@@ -23,7 +23,7 @@ query:components()
 | :----------- | :------ | :--------------------------------------------------- |
 | `components` | `table` | A table where every key is a [Component](component). |
 
-## Example
+## Examples
 
 ```lua
 local Regen = Class("Regen", crystal.Component);

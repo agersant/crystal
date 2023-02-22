@@ -14,7 +14,7 @@ Stops all threads in this script. See [Thread:stop](thread_stop) for more detail
 script:stop_all_threads()
 ```
 
-## Example
+## Examples
 
 ```lua
 local script = Script:new();

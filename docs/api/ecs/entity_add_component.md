@@ -27,7 +27,7 @@ entity:component(class, ...)
 | :---------- | :--------------------- | :--------------------------------------- |
 | `component` | [Component](component) | Component that was created by this call. |
 
-## Example
+## Examples
 
 ```lua
 local Arm = Class("Arm", crystal.Component);

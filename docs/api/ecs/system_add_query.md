@@ -28,7 +28,7 @@ Each entry in the `classes` table can be either a component subclass, or its nam
 | :------ | :------------- | :----------------------------------- |
 | `query` | [Query](query) | Query that was created by this call. |
 
-## Example
+## Examples
 
 ```lua
 local Health = Class("Health", crystal.Component);

@@ -27,7 +27,7 @@ ecs:spawn(class, ...)
 | :------- | :--------------- | :------------------------------------ |
 | `entity` | [Entity](entity) | Entity that was created by this call. |
 
-## Example
+## Examples
 
 ```lua
 local Character = Class("Character", crystal.Entity);

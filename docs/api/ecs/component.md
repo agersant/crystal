@@ -13,7 +13,7 @@ Base class to inherit from to define components.
 | :------------------------- | :------------------------------------------------------ |
 | [entity](component_entity) | Returns the [Entity](entity) this component belongs to. |
 
-## Example
+## Examples
 
 ```lua
 local Health = Class("Health", crystal.Component);

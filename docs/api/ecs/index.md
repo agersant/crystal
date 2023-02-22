@@ -18,7 +18,7 @@ The ECS pattern is often described in contrast to Object Oriented Programming (O
 
 The main goals of this ECS implementation are flexibility and usability over performance. It is entirely written in Lua, does not implement [SoA](https://en.wikipedia.org/wiki/AoS_and_SoA), and will not win any benchmark contests. However, the overhead is almost entirely frontloaded in entity/component creation.
 
-## Example
+## Examples
 
 The following example illustrates basic functionality of the [Entity](entity)/[Component](component)/[System](system) trifecta. You can find more examples throughout the documentation of this module.
 

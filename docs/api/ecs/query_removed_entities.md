@@ -25,7 +25,7 @@ query:removed_entities()
 | :--------- | :------ | :---------------------------------------------- |
 | `entities` | `table` | A table where every key is an [Entity](entity). |
 
-## Example
+## Examples
 
 ```lua
 local Poison = Class("Poison", crystal.Component);

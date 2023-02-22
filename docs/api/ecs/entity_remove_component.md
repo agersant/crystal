@@ -23,7 +23,7 @@ entity:remove_component(component)
 | :---------- | :--------------------- | :----------------------- |
 | `component` | [Component](component) | The component to remove. |
 
-## Example
+## Examples
 
 ```lua
 local Health = Class("Health", crystal.Component);

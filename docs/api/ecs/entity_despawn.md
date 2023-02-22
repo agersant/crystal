@@ -23,7 +23,7 @@ Attempting to despawn an entity multiple times will emit an error.
 entity:despawn()
 ```
 
-## Example
+## Examples
 
 ```lua
 local ecs = crystal.ECS:new();

@@ -20,7 +20,7 @@ event:entity()
 | :------- | :--------------- | :------------------------------ |
 | `entity` | [Entity](entity) | Entity that emitted this event. |
 
-## Example
+## Examples
 
 ```lua
 local ecs = crystal.ECS:new();

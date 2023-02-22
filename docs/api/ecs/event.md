@@ -25,7 +25,7 @@ The only way to create events is to call [Entity:create_event](entity_create_eve
 | :--------------------- | :---------------------------------------------------- |
 | [entity](event_entity) | Returns the [Entity](entity) that emitted this event. |
 
-## Example
+## Examples
 
 ```lua
 local DragonSpawned = Class("DragonSpawned", crystal.Event);

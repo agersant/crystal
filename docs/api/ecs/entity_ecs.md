@@ -20,7 +20,7 @@ entity:ecs()
 | :---- | :--------- | :-------------------------- |
 | `ecs` | [ECS](ecs) | ECS this entity belongs to. |
 
-## Example
+## Examples
 
 ```lua
 local ecs = crystal.ECS:new();

@@ -17,7 +17,7 @@ You should call this method at the beginning of every frame. Failing to do so wo
 ecs:update()
 ```
 
-## Example
+## Examples
 
 ```lua
 local ecs = crystal.ECS:new();

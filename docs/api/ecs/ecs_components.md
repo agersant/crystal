@@ -26,7 +26,7 @@ ecs:components(class)
 | :----------- | :------ | :-------------------------------------------------------------------------------- |
 | `components` | `table` | A table where each key is a component of the specified class or inherits from it. |
 
-## Example
+## Examples
 
 ```lua
 local Stat = Class("Stat", crystal.Component);

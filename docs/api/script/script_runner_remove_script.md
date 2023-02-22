@@ -22,7 +22,7 @@ script_runner:remove_script(script)
 
 When passing in a function as the `script` argument, the function should expect one argument: the `Thread` that is running it.
 
-## Example
+## Examples
 
 ```lua
 local ecs = crystal.ECS:new();

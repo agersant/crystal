@@ -28,7 +28,7 @@ entity:components(class)
 
 If the entity has no component of the specified class (or inheriting from it), this method returns an empty table.
 
-## Example
+## Examples
 
 ```lua
 local Arm = Class("Arm", crystal.Component);

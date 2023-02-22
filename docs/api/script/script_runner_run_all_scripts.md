@@ -25,7 +25,7 @@ script_runner:run_all_scripts(delta_time)
 | :----------- | :------- | :----------------------------------------- |
 | `delta_time` | `number` | Time in seconds to advance the scripts by. |
 
-## Example
+## Examples
 
 ```lua
 local ecs = crystal.ECS:new();

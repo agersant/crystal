@@ -45,7 +45,7 @@ script:add_thread(startup_function);
 | [stop_all_threads](script_stop_all_threads) | Stops all threads in this script.  |
 | [stop_thread](script_stop_thread)           | Stops a specific [Thread](thread). |
 
-## Example
+## Examples
 
 ```lua
 local script = crystal.Script:new();

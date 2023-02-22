@@ -28,7 +28,7 @@ Like all other components, ScriptRunners are created by calling [Entity:add_comp
 | [run_all_scripts](script_runner_run_all_scripts)       | Runs all scripts until they are blocked. |
 | [signal_all_scripts](script_runner_signal_all_scripts) | Sends a signal to all scripts.           |
 
-## Example
+## Examples
 
 ```lua
 local ecs = crystal.ECS:new();

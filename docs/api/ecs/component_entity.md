@@ -20,7 +20,7 @@ component:entity()
 | :------- | :--------------- | :-------------------------------- |
 | `entity` | [Entity](entity) | Entity this component belongs to. |
 
-## Example
+## Examples
 
 ```lua
 local ecs = crystal.ECS:new();

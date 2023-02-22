@@ -26,7 +26,7 @@ ecs:events(class)
 | :------- | :------ | :---------------- |
 | `events` | `table` | A list of events. |
 
-## Example
+## Examples
 
 ```lua
 local DragonSpawned = Class("DragonSpawned", crystal.Event);

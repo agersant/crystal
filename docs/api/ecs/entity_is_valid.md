@@ -20,7 +20,7 @@ entity:is_valid()
 | :------ | :-------- | :------------------------------------------------------------------------- |
 | `valid` | `boolean` | False if this entity has been [despawned](entity_despawn), true otherwise. |
 
-## Example
+## Examples
 
 ```lua
 local ecs = crystal.ECS:new();

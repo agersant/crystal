@@ -23,7 +23,7 @@ script:delta_time()
 | :----------- | :------- | :--------------------- |
 | `delta_time` | `number` | Delta time in seconds. |
 
-## Example
+## Examples
 
 ```lua
 local script = crystal.Script:new(function(self)

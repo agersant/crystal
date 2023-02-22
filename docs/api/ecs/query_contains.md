@@ -29,7 +29,7 @@ query:contains(entity)
 | :---------- | :-------- | :-------------------------------------------- |
 | `contained` | `boolean` | True if the entity was matched by this query. |
 
-## Example
+## Examples
 
 ```lua
 local Health = Class("Health", crystal.Component);

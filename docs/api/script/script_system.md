@@ -11,7 +11,7 @@ When it receives the `before_scripts` [notification](/crystal/api/ecs/ecs_notify
 
 When it receives the `during_scripts` [notification](/crystal/api/ecs/ecs_notify_systems), this systems runs all scripts owned by `ScriptRunner` components.
 
-## Example
+## Examples
 
 ```lua
 local ecs = crystal.ECS:new();

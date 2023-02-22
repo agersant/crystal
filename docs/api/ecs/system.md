@@ -25,7 +25,7 @@ The important questions to think about when defining a system are:
 | [add_query](system_add_query) | Instantiates a new [Query](query).             |
 | [ecs](system_ecs)             | Returns the [ECS](ecs) this system belongs to. |
 
-## Example
+## Examples
 
 This example implements a `System` which operates on entities that have two components: a `Health` component and a `Poison` component. This system substract 1 health every frame on each poisoned entity. Note that outside of this toy example, it would be unwise to tie the poison's efficacy to the framerate of your game.
 

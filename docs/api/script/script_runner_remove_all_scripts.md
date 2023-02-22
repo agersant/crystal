@@ -14,7 +14,7 @@ Stops and removes all scripts on this `ScriptRunner`.
 script_runner:remove_all_scripts()
 ```
 
-## Example
+## Examples
 
 ```lua
 local ecs = crystal.ECS:new();

@@ -20,7 +20,7 @@ query:entities();
 | :--------- | :------ | :---------------------------------------------- |
 | `entities` | `table` | A table where every key is an [Entity](entity). |
 
-## Example
+## Examples
 
 ```lua
 local Health = Class("Health", crystal.Component);

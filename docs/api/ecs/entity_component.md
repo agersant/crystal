@@ -30,7 +30,7 @@ If the entity has no component of the specified class (or inheriting from it), t
 
 If the entity has multiple components of the specified class (or inheriting from it), this method may return any of them.
 
-## Example
+## Examples
 
 ```lua
 local Health = Class("Health", crystal.Component);

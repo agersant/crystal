@@ -27,7 +27,7 @@ entity:create_event(class, ...)
 | :------ | :------------- | :----------------------------------- |
 | `event` | [Event](event) | Event that was created by this call. |
 
-## Example
+## Examples
 
 ```lua
 local DamageEvent = Class("DamageEvent", crystal.Event);

@@ -27,7 +27,7 @@ crystal.ECS:new()
 | [system](ecs_system)                 | Returns an existing [System](system) of a specific class or inheriting from it.                    |
 | [update](ecs_update)                 | Clears [events](event) and updates all [queries](query).                                           |
 
-## Example
+## Examples
 
 ```lua
 local MyScene = Class("MyScene", crystal.Scene);

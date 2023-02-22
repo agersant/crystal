@@ -20,7 +20,7 @@ ecs:despawn(entity)
 | :------- | :--------------- | :--------------------- |
 | `entity` | [Entity](entity) | The entity to depsawn. |
 
-## Example
+## Examples
 
 ```lua
 local ecs = crystal.ECS:new();

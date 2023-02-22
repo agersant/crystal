@@ -25,7 +25,7 @@ ecs:notify_systems(method_name, ...)
 | `method_name` | `string` | Name of the method that will be called on all systems that implement it. |
 | `...`         | `any`    | Parameters for the method call.                                          |
 
-## Example
+## Examples
 
 ```lua
 -- Somewhere in your scene's update code:

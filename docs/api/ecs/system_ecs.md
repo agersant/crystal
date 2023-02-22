@@ -20,7 +20,7 @@ system:ecs()
 | :---- | :--------- | :-------------------------- |
 | `ecs` | [ECS](ecs) | ECS this system belongs to. |
 
-## Example
+## Examples
 
 ```lua
 local ecs = crystal.ECS:new();
