@@ -57,7 +57,7 @@ pump_thread = function(thread, resume_args)
 			elseif instruction == "wait_for_signals" then
 				local signals = results[3];
 				self:block_thread_on_signals(thread, signals);
-			elseif instruction == "end_on_signal" then
+			elseif instruction == "stop_on_signal" then
 				local signal = results[3];
 				self:end_thread_on_signal(thread, signal);
 				pump_thread(thread);
@@ -477,10 +477,10 @@ crystal.test.add("Signal doesn't wake dead threads", function()
 	assert(sentinel);
 end);
 
-crystal.test.add("End on", function()
+crystal.test.add("Stop on", function()
 	local a = 0;
 	local script = Script:new(function(self)
-		self:end_on("end");
+		self:stop_on("end");
 		self:wait_frame();
 		a = 1;
 	end);
@@ -491,10 +491,10 @@ crystal.test.add("End on", function()
 	assert(a == 0);
 end);
 
-crystal.test.add("Unblock after end on", function()
+crystal.test.add("Unblock after stop on", function()
 	local a = 0;
 	local script = Script:new(function(self)
-		self:end_on("end");
+		self:stop_on("end");
 		self:wait_for("signal");
 		a = 1;
 	end);
@@ -809,7 +809,7 @@ end);
 crystal.test.add("Deferred functions from child threads also run", function()
 	local sentinel = false;
 	local script = Script:new(function(self)
-		self:end_on("s1");
+		self:stop_on("s1");
 		self:thread(function(self)
 			self:defer(function()
 				sentinel = true
@@ -962,7 +962,7 @@ crystal.test.add("Child thread can immediately end parent", function()
 
 	local script = Script:new();
 	script:run_thread(function(self)
-		self:end_on("s1");
+		self:stop_on("s1");
 		self:thread(function()
 			sentinel = 1;
 			self:signal("s1");
@@ -1059,6 +1059,21 @@ crystal.test.add("Cannot block a thread that isn't running", function()
 		end);
 	end);
 	assert(not can_hang);
+end);
+
+
+crystal.test.add("Double thread stop does not re-run deferred functions", function()
+	local script = Script:new();
+	local sentinel = 0;
+	local t0 = script:run_thread(function(self)
+		self:defer(function()
+			sentinel = sentinel + 1;
+		end);
+		self:hang();
+	end);
+	script:stop_thread(t0);
+	script:stop_thread(t0);
+	assert(sentinel == 1);
 end);
 
 --#endregion

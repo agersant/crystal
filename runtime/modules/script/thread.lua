@@ -67,6 +67,7 @@ Thread.run_deferred_functions = function(self)
 	for i = #self.deferred_functions, 1, -1 do
 		self.deferred_functions[i](self);
 	end
+	self.deferred_functions = {};
 end
 
 Thread.wait_frame = function(self)
@@ -106,10 +107,10 @@ Thread.wait_for_any = function(self, signals)
 	return unpack(returns);
 end
 
-Thread.end_on = function(self, signal)
+Thread.stop_on = function(self, signal)
 	assert(not self:is_dead());
 	assert(type(signal) == "string");
-	coroutine.yield("end_on_signal", signal);
+	coroutine.yield("stop_on_signal", signal);
 end
 
 ---@return any

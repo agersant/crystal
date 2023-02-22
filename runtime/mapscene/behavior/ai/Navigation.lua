@@ -99,7 +99,7 @@ Navigation.navigateToGoal = function(self, goal, repathDelay)
 		self:thread(function(self)
 			while true do
 				self:thread(function(self)
-					self:end_on("repath");
+					self:stop_on("repath");
 					if navigate(self, navigationMesh, goal, physicsBody, locomotion) then
 						self:signal("success");
 					else

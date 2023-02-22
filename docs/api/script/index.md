@@ -65,13 +65,13 @@ The script has a single thread which is repeatedly waiting for the `greet` signa
 {: .note}
 Threads can also wait for multiple signals at the same time using [Thread:wait_for_any](thread_wait_for_any). They will resume execution when any of the specified signals is received.
 
-Signals can also be used to stop threads thanks to [Thread:end_on](thread_end_on). Building up on the greeting example above:
+Signals can also be used to stop threads thanks to [Thread:stop_on](thread_stop_on). Building up on the greeting example above:
 
 ```lua
 local script = crystal.Script:new();
 
 script:run_thread(function(self)
-  self:end_on("bye");
+  self:stop_on("bye");
   while true do
     local name = self:wait_for("greet");
     print("Hello " .. name);

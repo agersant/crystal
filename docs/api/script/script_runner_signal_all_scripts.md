@@ -6,22 +6,24 @@ nav_exclude: true
 
 # ScriptRunner:signal_all_scripts
 
-Sends a signal to every script owned by this `ScriptRunner`. This will stop all script threads that previously called [Thread:end_on](thread_end_on) for this signal, and resume execution of all threads that were waiting on this signal via [Thread:wait_for](thread_wait_for).
+Sends a signal to every script owned by this `ScriptRunner`. This will stop all script threads that previously called [Thread:stop_on](thread_stop_on) for this signal, and resume execution of all threads that were waiting on this signal via [Thread:wait_for](thread_wait_for).
 
 Additional arguments passed to this function will be received by threads that were waiting on this signal.
+
+See also: [Script:signal](script_signal).
 
 ## Usage
 
 ```lua
-script_runner:signal_all_scripts(signal, ...)
+script_runner:signal_all_scripts(signal_name, ...)
 ```
 
 ### Arguments
 
-| Name     | Type     | Description                                                     |
-| :------- | :------- | :-------------------------------------------------------------- |
-| `signal` | `string` | Signal to emit.                                                 |
-| `...`    | `any`    | Values that will be received by threads waiting for the signal. |
+| Name          | Type     | Description                                                     |
+| :------------ | :------- | :-------------------------------------------------------------- |
+| `signal_name` | `string` | Signal to emit.                                                 |
+| `...`         | `any`    | Values that will be received by threads waiting for the signal. |
 
 ## Examples
 
@@ -31,7 +33,7 @@ local entity = ecs:spawn(crystal.Entity);
 local script_runner = entity:add_component(crystal.ScriptRunner);
 
 entity:add_script(function(self)
-  self:end_on("bye");
+  self:stop_on("bye");
   while true do
     local name = self:wait_for("greet");
     print("Hello " .. name);
