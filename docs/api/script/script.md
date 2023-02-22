@@ -29,7 +29,7 @@ script:add_thread(startup_function);
 | [add_thread](script_add_thread) | Creates a new top-level [Thread](thread) in this script.                        |
 | [run_thread](script_run_thread) | Creates and immediately begins executing a new top-level thread in this script. |
 
-### Working with threads
+### Updating threads
 
 | Name                            | Description                                                                                                                                           |
 | :------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------------- |
