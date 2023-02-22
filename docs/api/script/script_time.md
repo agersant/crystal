@@ -6,7 +6,7 @@ nav_exclude: true
 
 # Script:time
 
-Returns the cumulative time passed to all [update](script_update) calls, in seconds.
+Returns the cumulative time passed to all [Script:update](script_update) calls, in seconds.
 
 ## Usage
 

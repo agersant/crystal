@@ -25,7 +25,7 @@ script_runner:signal_all_scripts(signal_name, ...)
 | `signal_name` | `string` | Signal to emit.                                                 |
 | `...`         | `any`    | Values that will be received by threads waiting for the signal. |
 
-## Examples
+## Example
 
 ```lua
 local ecs = crystal.ECS:new();

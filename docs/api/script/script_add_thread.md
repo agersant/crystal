@@ -28,7 +28,7 @@ script:add_thread(function_to_thread)
 | :------- | :--------------- | :------------------ |
 | `thread` | [Thread](thread) | New thread created. |
 
-## Examples
+## Example
 
 ```lua
 local script = crystal.Script:new();

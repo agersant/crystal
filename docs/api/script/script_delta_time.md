@@ -6,9 +6,10 @@ nav_exclude: true
 
 # Script:delta_time
 
-Returns the delta time that was passed to the last [update](script_update) call.
+Returns the delta time that was passed to the last [Script:update](script_update) call.
 
-Note that scripts do not always run within a [Script:update](script_update) call where this `delta_time` value makes sense. For instance, scripts can run in response to a [Script:signal](script_signal) call.
+{: .note}
+Scripts do not always run within a [Script:update](script_update) call where this `delta_time` value makes sense. For example, scripts can run in response to a [Script:signal](script_signal) call.
 
 ## Usage
 

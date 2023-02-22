@@ -22,14 +22,14 @@ local script = Script:new();
 script:run_thread(function(self)
   while true do
     self:wait_frame();
-	print("Hello");
+    print("Hello");
   end
 end);
 
 script:run_thread(function(self)
   while true do
     self:wait_frame();
-	print("Bonjour");
+    print("Bonjour");
   end
 end);
 
