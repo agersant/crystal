@@ -414,6 +414,7 @@ crystal.test.add("Stop thread", function()
 			a = 1;
 		end);
 		t:stop();
+		t:hang();
 	end);
 	script:update(0);
 	assert(a == 0);
