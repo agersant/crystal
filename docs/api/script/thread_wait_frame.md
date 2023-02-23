@@ -22,7 +22,7 @@ local script = crystal.Script:new();
 script:add_thread(function(self)
   while true do
     print(self:time());
-	self:wait_frame();
+    self:wait_frame();
   end
 end);
 

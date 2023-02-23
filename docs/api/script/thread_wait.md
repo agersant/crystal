@@ -28,8 +28,8 @@ thread:wait(duration)
 local script = crystal.Script:new();
 
 script:add_thread(function(self)
-	self:wait(2);
-	print("Waited 2 seconds");
+  self:wait(2);
+  print("Waited 2 seconds");
 end);
 
 script:update(0.8); -- 1.2s left to wait

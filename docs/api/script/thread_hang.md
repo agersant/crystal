@@ -32,14 +32,14 @@ script:run_thread(function(self)
     while true do
       self:wait_frame();
       print("singing");
-	end
+    end
   end);
 
   self:thread(function(self)
     while true do
       self:wait_frame();
       print("dancing");
-	end
+    end
   end);
 
   -- Without this statement, the two child threads would immediately stop

@@ -38,7 +38,7 @@ local script = crystal.Script:new();
 script:run_thread(function(self)
   self:thread(function(self)
     self:wait(5);
-	self:signal("timeout");
+    self:signal("timeout");
   end);
 
   self:stop_on("timeout");
