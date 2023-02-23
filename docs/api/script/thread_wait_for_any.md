@@ -22,10 +22,10 @@ thread:wait_for_any(signals)
 
 ### Returns
 
-| Name     | Type     | Description                                                                                                                      |
-| :------- | :------- | :------------------------------------------------------------------------------------------------------------------------------- |
-| `signal` | `string` | The signal which unblocked this thread. ⚠ This return value is skipped if the input list of `signals` only contained one signal. |
-| `...`    | `any`    | Additional arguments to the [Script:signal](script_signal) call which unblocked this thread.                                     |
+| Name     | Type     | Description                                                                                                                    |
+| :------- | :------- | :----------------------------------------------------------------------------------------------------------------------------- |
+| `signal` | `string` | The signal which unblocked this thread. This return value is skipped if the input list of `signals` only contained one signal. |
+| `...`    | `any`    | Additional arguments to the [Script:signal](script_signal) call which unblocked this thread.                                   |
 
 ## Examples
 
