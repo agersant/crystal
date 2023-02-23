@@ -6,12 +6,13 @@ nav_exclude: true
 
 # Thread:hang
 
-Blocks this thread forever. This thread can still be stopped in various circumstances:
+Blocks this thread forever. It will stop under any of the following circumstances:
 
-- Its parent thread finishes or stops
-- A stopping signal for this thread is emitted (see [Thread:stop_on](thread_stop_on))
-- Another thread manually calls [Thread:stop](thread_stop) on this one
+- Its parent thread finishes or stops.
+- A stopping signal for this thread is emitted (see [Thread:stop_on](thread_stop_on)).
+- [Thread:stop](thread_stop) is called on this thread.
 
+{: .note}
 This method is useful when a thread spawns child threads and needs to keep them alive.
 
 ## Usage
