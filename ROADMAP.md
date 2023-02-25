@@ -1,7 +1,6 @@
 # Crystal 0.1.0
 
 - [x] Extract `arpg` into a new repository
-- [ ] Sumneko diagnostics enabled and cleaned up
 - [ ] Engine release process
 - [ ] Sample game release process
 - [ ] Game packaging
@@ -19,9 +18,9 @@
   - [x] log
   - [ ] physics
   - [ ] scene
-  - [ ] script
+  - [x] script
   - [x] test
-  - [ ] tool
+  - [x] tool
   - [ ] ui
   - [ ] oop
   - [ ] stringutils
@@ -30,6 +29,7 @@
 
 # Crystal 0.2.0
 
+- [ ] Sumneko diagnostics enabled and cleaned up
 - [ ] Immediate mode UI kit for dev tools
 - [ ] Livetune improvements:
   - [ ] Add Lua API to connect
