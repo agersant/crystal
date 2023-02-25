@@ -19,6 +19,7 @@ Threads transparently have access to all methods of the script that owns them.
 | [is_dead](thread_is_dead)           | Returns whether this thread has ran to completion or stopped.                            |
 | [join](thread_join)                 | Blocks this thread until a specific thread runs to completion or stops.                  |
 | [join_any](thread_join_any)         | Blocks this thread until any of several other threads runs to completion or stops.       |
+| [script](thread_script)             | Returns the script owning this thread.                                                   |
 | [stop](thread_stop)                 | Stops this thread.                                                                       |
 | [stop_on](thread_stop_on)           | Stops this thread whenever its parent [Script](script) receives a specific signal.       |
 | [thread](thread_thread)             | Spawns and immediately begins executing a child thread.                                  |
