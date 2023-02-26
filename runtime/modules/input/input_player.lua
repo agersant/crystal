@@ -80,6 +80,27 @@ InputPlayer.is_action_active = function(self, action)
 	return self.actions[action].num_inputs_down > 0;
 end
 
+---@return number
+InputPlayer.action_axis_value = function(self, action)
+	if not self.actions[action] then
+		return 0;
+	end
+	if self._gamepad_id == nil then
+		return 0;
+	end
+	local joystick = love.joystick.getJoysticks(self._gamepad_id)[1];
+	if not joystick then
+		return 0;
+	end
+	for _, input in ipairs(self.actions[action].inputs) do
+		local value = joystick:getGamepadAxis(input);
+		if value then
+			return value;
+		end
+	end
+	return 0;
+end
+
 ---@param bindings { [string]: string[] } # List of actions mapped to each input
 InputPlayer.set_bindings = function(self, bindings)
 	self:build_binding_tables(bindings);

@@ -24,8 +24,14 @@ end
 
 ---@param input string
 ---@return boolean
-InputListener.is_action_input_down = function(self, input)
-	return self:input_player():is_action_active(input);
+InputListener.is_action_input_down = function(self, action)
+	return self:input_player():is_action_active(action);
+end
+
+---@param action string
+---@return number
+InputListener.action_axis_value = function(self, action)
+	return self:input_player():action_axis_value(action);
 end
 
 ---@param handler fun(input: string): boolean
