@@ -17,11 +17,11 @@ return {
 		player = function(player_index)
 			return input_manager:player(player_index);
 		end,
-		assign_gamepad_to_player = function(player_index, gamepad_id)
-			input_manager:assign_gamepad_to_player(player_index, gamepad_id);
+		assign_gamepad = function(player_index, gamepad_id)
+			input_manager:assign_gamepad(player_index, gamepad_id);
 		end,
-		unassign_gamepad_from_player = function(player_index)
-			input_manager:unassign_gamepad_from_player(player_index);
+		unassign_gamepad = function(player_index)
+			input_manager:unassign_gamepad(player_index);
 		end,
 	},
 	global_api = {

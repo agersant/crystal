@@ -21,7 +21,7 @@ end
 
 ---@param player_index number
 ---@param gamepad_id number
-InputManager.assign_gamepad_to_player = function(self, player_index, gamepad_id)
+InputManager.assign_gamepad = function(self, player_index, gamepad_id)
 	local old_player = self.gamepad_to_player[gamepad_id];
 	if old_player then
 		old_player:set_gamepad_id(nil);
@@ -32,7 +32,7 @@ InputManager.assign_gamepad_to_player = function(self, player_index, gamepad_id)
 end
 
 ---@param player_index number
-InputManager.unassign_gamepad_from_player = function(self, player_index)
+InputManager.unassign_gamepad = function(self, player_index)
 	local player = self.players[player_index];
 	local gamepad_id = player:gamepad_id();
 	if gamepad_id then
@@ -72,7 +72,7 @@ InputManager.gamepad_pressed = function(self, gamepad_id, button)
 	else
 		-- TODO this needs to get routed to active scene(s) instead
 		-- This logic is ok as default implementation
-		self:assign_gamepad_to_player(1, gamepad_id);
+		self:assign_gamepad(1, gamepad_id);
 	end
 end
 
@@ -88,8 +88,8 @@ end
 
 crystal.test.add("Gamepads events are sent to the assigned player", function()
 	local manager = InputManager:new();
-	manager:assign_gamepad_to_player(1, 1);
-	manager:assign_gamepad_to_player(2, 2);
+	manager:assign_gamepad(1, 1);
+	manager:assign_gamepad(2, 2);
 	manager:player(1):set_bindings({ pad_a = { "attack" } });
 	manager:player(2):set_bindings({ pad_a = { "attack" } });
 	manager:gamepad_pressed(2, "pad_a");
@@ -102,9 +102,9 @@ end);
 
 crystal.test.add("Gamepads are only assigned to one player", function()
 	local manager = InputManager:new();
-	manager:assign_gamepad_to_player(1, 1);
+	manager:assign_gamepad(1, 1);
 	assert(manager:player(1):gamepad_id() == 1);
-	manager:assign_gamepad_to_player(2, 1);
+	manager:assign_gamepad(2, 1);
 	assert(manager:player(1):gamepad_id() == nil);
 	assert(manager:player(2):gamepad_id() == 1);
 end);
@@ -112,10 +112,10 @@ end);
 crystal.test.add("Unassigned gamepad does not generate events", function()
 	local manager = InputManager:new();
 	manager:player(1):set_bindings({ pad_a = { "attack" } });
-	manager:assign_gamepad_to_player(1, 2);
+	manager:assign_gamepad(1, 2);
 	manager:gamepad_pressed(2, "pad_a");
 	assert(manager:player(1):is_action_active("attack"));
-	manager:unassign_gamepad_from_player(1);
+	manager:unassign_gamepad(1);
 	assert(not manager:player(1):is_action_active("attack"));
 	manager:gamepad_pressed(2, "pad_a");
 	assert(not manager:player(1):is_action_active("attack"));

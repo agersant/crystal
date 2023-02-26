@@ -6,11 +6,11 @@ parent: API Reference
 
 ## Functions
 
-| Name                                                                       | Description                                                             |
-| :------------------------------------------------------------------------- | :---------------------------------------------------------------------- |
-| [crystal.input.player](player)                                             | Returns the [InputPlayer](input_player) representing a physical player. |
-| [crystal.input.assign_gamepad_to_player](assign_gamepad_to_player)         | Assigns a gamepad to a player.                                          |
-| [crystal.input.unassign_gamepad_from_player](unassign_gamepad_from_player) | Unassign a player's current gamepad.                                    |
+| Name                                               | Description                                                             |
+| :------------------------------------------------- | :---------------------------------------------------------------------- |
+| [crystal.input.player](player)                     | Returns the [InputPlayer](input_player) representing a physical player. |
+| [crystal.input.assign_gamepad](assign_gamepad)     | Assigns a gamepad to a player.                                          |
+| [crystal.input.unassign_gamepad](unassign_gamepad) | Unassigns a player's current gamepad.                                   |
 
 ## Classes
 
