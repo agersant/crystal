@@ -70,7 +70,9 @@ InputManager.gamepad_pressed = function(self, gamepad_id, button)
 	if self.gamepad_to_player[gamepad_id] then
 		self.gamepad_to_player[gamepad_id]:gamepad_pressed(button);
 	else
-		crystal.input.handle_unassigned_gamepad_input(gamepad_id, button);
+		-- TODO this needs to get routed to active scene(s) instead
+		-- This logic is ok as default implementation
+		self:assign_gamepad_to_player(1, gamepad_id);
 	end
 end
 

@@ -23,9 +23,6 @@ return {
 		unassign_gamepad_from_player = function(player_index)
 			input_manager:unassign_gamepad_from_player(player_index);
 		end,
-		handle_unassigned_gamepad_input = function(gamepad_id, button)
-			input_manager:assign_gamepad_to_player(1, gamepad_id);
-		end,
 	},
 	global_api = {
 		InputListener = InputListener,
