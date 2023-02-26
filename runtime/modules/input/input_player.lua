@@ -107,10 +107,6 @@ InputPlayer.set_bindings = function(self, bindings)
 	self:build_binding_tables(bindings);
 end
 
-InputPlayer.clear_bindings = function(self)
-	self:build_binding_tables({});
-end
-
 ---@param key love.KeyConstant
 ---@param scan_code love.Scancode
 ---@param is_repeat boolean
