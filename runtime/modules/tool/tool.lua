@@ -18,6 +18,10 @@ end
 Tool.hide = function(self)
 end
 
+Tool.is_visible = function(self)
+	return false;
+end
+
 Tool.quit = function(self)
 end
 

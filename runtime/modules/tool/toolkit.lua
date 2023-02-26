@@ -56,7 +56,7 @@ Toolkit.show = function(self, tool_name)
 	local tool = self.tools[tool_name];
 	assert(tool);
 	self.visible_tools[tool_name] = true;
-	tool.visible = true;
+	tool.is_visible = function() return true end;
 	tool:show();
 end
 
@@ -66,7 +66,7 @@ Toolkit.hide = function(self, tool_name)
 	local tool = self.tools[tool_name];
 	assert(tool);
 	self.visible_tools[tool_name] = nil;
-	tool.visible = false;
+	tool.is_visible = function() return false end;
 	tool:hide();
 end
 
@@ -141,23 +141,27 @@ end
 
 crystal.test.add("Can show/hide tool", function()
 	local MyTool = Class:test("MyTool", Tool);
-	MyTool.show = function(self) self.visible = true; end
-	MyTool.hide = function(self) self.visible = false; end
+	local v;
+	MyTool.show = function(self) v = true; end
+	MyTool.hide = function(self) v = false; end
 
 	local toolkit = Toolkit:new();
 	local tool = MyTool:new();
 	toolkit:add(tool);
 
 	assert(not toolkit:is_visible("MyTool"));
-	assert(not tool.visible);
+	assert(not tool:is_visible());
+	assert(not v);
 
 	toolkit:show("MyTool");
 	assert(toolkit:is_visible("MyTool"));
-	assert(tool.visible);
+	assert(tool:is_visible());
+	assert(v);
 
 	toolkit:hide("MyTool");
 	assert(not toolkit:is_visible("MyTool"));
-	assert(not tool.visible);
+	assert(not tool:is_visible());
+	assert(not v);
 end);
 
 crystal.test.add("Can toggle via keybind", function()
@@ -168,15 +172,15 @@ crystal.test.add("Can toggle via keybind", function()
 	toolkit:add(tool, { keybind = "x" });
 
 	assert(not toolkit:is_visible("MyTool"));
-	assert(not tool.visible);
+	assert(not tool:is_visible());
 
 	toolkit:key_pressed("x", "x", false);
 	assert(toolkit:is_visible("MyTool"));
-	assert(tool.visible);
+	assert(tool:is_visible());
 
 	toolkit:key_pressed("x", "x", false);
 	assert(not toolkit:is_visible("MyTool"));
-	assert(not tool.visible);
+	assert(not tool:is_visible());
 end);
 
 crystal.test.add("Updates and draws tools", function()
