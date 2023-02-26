@@ -1,7 +1,5 @@
 local Renderer = require("graphics/Renderer");
 local MapSystem = require("mapscene/MapSystem");
-local InputListener = require("mapscene/behavior/InputListener");
-local InputListenerSystem = require("mapscene/behavior/InputListenerSystem");
 local CameraSystem = require("mapscene/display/CameraSystem");
 local SpriteSystem = require("mapscene/display/SpriteSystem");
 local DrawableSystem = require("mapscene/display/DrawableSystem");
@@ -51,7 +49,7 @@ MapScene.init = function(self, mapName)
 
 	-- During scripts
 	ecs:add_system(crystal.ScriptSystem);
-	ecs:add_system(InputListenerSystem);
+	ecs:add_system(crystal.InputSystem);
 
 	-- After scripts
 	ecs:add_system(SpriteSystem);
@@ -146,7 +144,7 @@ end
 ---@param class string
 MapScene.spawnEntityNearPlayer = function(self, class)
 	local playerPhysicsBody;
-	local players = self:ecs():entities_with(InputListener);
+	local players = self:ecs():entities_with("InputListener");
 	for entity in pairs(players) do
 		playerPhysicsBody = entity:component("PhysicsBody");
 		break;
@@ -187,7 +185,6 @@ end);
 
 --#region Tests
 
-local InputDevice = require("input/InputDevice");
 local TableUtils = require("utils/TableUtils");
 
 crystal.test.add("Draws all layers", function(context)
@@ -239,7 +236,7 @@ crystal.test.add("Spawn command puts entity near player", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local player = scene:spawn(crystal.Entity);
-	player:add_component("InputListener", InputDevice:new(1));
+	player:add_component("InputListener", 1);
 	player:add_component("PhysicsBody", scene:getPhysicsWorld());
 	player:setPosition(200, 200);
 	scene:update(0);

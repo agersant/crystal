@@ -7,6 +7,7 @@ local Behavior = Class("Behavior", crystal.Component);
 Behavior.init = function(self, script_function)
 	assert(script_function == nil or type(script_function) == "function");
 	self._script = Script:new(script_function);
+	-- TODO consider aliasing Behavior to its script (would remove a lot of :script() calls)
 end
 
 ---@return Script

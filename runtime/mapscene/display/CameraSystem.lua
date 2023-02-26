@@ -1,5 +1,4 @@
 local Viewport = require("graphics/Viewport");
-local InputListener = require("mapscene/behavior/InputListener");
 local Camera = require("mapscene/display/Camera");
 local Map = require("resources/map/Map");
 
@@ -21,7 +20,7 @@ end
 
 CameraSystem.after_scripts = function(self, dt)
 	local trackedEntities = {};
-	for entity in pairs(self._ecs:entities_with(InputListener)) do
+	for entity in pairs(self._ecs:entities_with("InputListener")) do
 		table.insert(trackedEntities, entity);
 	end
 	self._camera:update(trackedEntities);

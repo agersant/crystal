@@ -414,7 +414,7 @@ crystal.test.add("Stop thread", function()
 			a = 1;
 		end);
 		t:stop();
-		t:hang();
+		self:hang();
 	end);
 	script:update(0);
 	assert(a == 0);
@@ -715,7 +715,7 @@ crystal.test.add("Signal not propagated to thread it makes appear", function()
 	local script = Script:new(function(self)
 		self:wait_for("signal");
 		a = 1;
-		self:thread(function()
+		self:thread(function(self)
 			self:wait_for("signal");
 			a = 2;
 		end);

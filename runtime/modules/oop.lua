@@ -19,6 +19,9 @@ end
 
 local make_is_instance_of = function(class)
 	return function(self, other_class)
+		if type(other_class) == "string" then
+			other_class = classes[other_class];
+		end
 		assert(other_class);
 		if class == other_class then
 			return true;

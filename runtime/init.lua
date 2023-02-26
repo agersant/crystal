@@ -45,6 +45,7 @@ add_module("test", "modules/test");
 add_module("cmd", "modules/cmd");
 add_module("const", "modules/const");
 add_module("ecs", "modules/ecs");
+add_module("input", "modules/input");
 add_module("log", "modules/log");
 add_module("script", "modules/script");
 add_module("tool", "modules/tool");
@@ -68,7 +69,6 @@ VIEWPORT          = require("graphics/Viewport"):new();
 FONTS             = require("resources/Fonts"):new({});
 ASSETS            = require("resources/Assets"):new();
 ASSETS            = require("resources/Assets"):new();
-INPUT             = require("input/Input"):new(8);
 ENGINE            = {};
 
 crystal.const.define("Time Scale", 1.0, { min = 0.0, max = 100.0 });
@@ -141,9 +141,7 @@ love.update = function(dt)
 	if scene then
 		scene:update(dt * crystal.const.get("timescale"));
 	end
-	if INPUT then
-		INPUT:flushEvents();
-	end
+	modules.input.flush_events();
 end
 
 love.draw = function()
@@ -155,19 +153,15 @@ love.draw = function()
 	modules.tool.toolkit:draw();
 end
 
-love.keypressed = function(key, scanCode, isRepeat)
-	modules.tool.toolkit:key_pressed(key, scanCode, isRepeat);
-	if INPUT and not modules.tool.toolkit:consumes_inputs() then
-		-- TODO block input from tools
-		INPUT:keyPressed(key, scanCode, isRepeat);
+love.keypressed = function(key, scan_code, is_repeat)
+	modules.tool.toolkit:key_pressed(key, scan_code, is_repeat);
+	if not modules.tool.toolkit:consumes_inputs() then
+		modules.input.key_pressed(key, scan_code, is_repeat);
 	end
 end
 
-love.keyreleased = function(key, scanCode)
-	if INPUT then
-		-- TODO block input from tools
-		INPUT:keyReleased(key, scanCode);
-	end
+love.keyreleased = function(key, scan_code)
+	modules.input.key_released(key, scan_code);
 end
 
 love.textinput = function(text)
@@ -194,7 +188,7 @@ if features.tests then
 				luacov.init({ runreport = true, exclude = luacovExcludes });
 			end
 
-			crystal.log.set_verbosity("fatal");
+			crystal.log.set_verbosity("error");
 			local success = modules.test.runner:runAll();
 
 			if luacov then
