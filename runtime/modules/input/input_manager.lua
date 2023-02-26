@@ -109,6 +109,19 @@ crystal.test.add("Gamepads are only assigned to one player", function()
 	assert(manager:player(2):gamepad_id() == 1);
 end);
 
+crystal.test.add("Assigning gamepad updates input method", function()
+	local manager = InputManager:new();
+	local player = manager:player(1);
+	player:set_bindings({ dpad_a = { "attack" }, z = { "block" } });
+	assert(player:input_method() == nil);
+	manager:assign_gamepad(1, 1);
+	assert(player:input_method() == "gamepad");
+	manager:key_pressed("z");
+	assert(player:input_method() == "keyboard_and_mouse");
+	manager:assign_gamepad(1, 1);
+	assert(player:input_method() == "gamepad");
+end);
+
 crystal.test.add("Unassigned gamepad does not generate events", function()
 	local manager = InputManager:new();
 	manager:player(1):set_bindings({ pad_a = { "attack" } });

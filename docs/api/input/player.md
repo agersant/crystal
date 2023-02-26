@@ -4,7 +4,7 @@ grand_parent: API Reference
 nav_order: 1
 ---
 
-# crystal.input.device
+# crystal.input.player
 
 Returns the [InputPlayer](input_player) representing a physical player.
 

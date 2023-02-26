@@ -27,7 +27,6 @@ end
 
 ---@private
 ---@param input_method InputMethod
----@param device_id? number
 InputPlayer.set_input_method = function(self, input_method)
 	assert(input_method == "keyboard_and_mouse" or input_method == "gamepad");
 	if self._input_method == input_method then
@@ -49,7 +48,9 @@ InputPlayer.set_gamepad_id = function(self, id)
 	end
 	self:release_all_inputs();
 	self._gamepad_id = id;
-	if id == nil and self._input_method == "gamepad" then
+	if id then
+		self._input_method = "gamepad";
+	elseif self._input_method == "gamepad" then
 		self._input_method = nil;
 	end
 end
@@ -88,7 +89,7 @@ InputPlayer.action_axis_value = function(self, action)
 	if self._gamepad_id == nil then
 		return 0;
 	end
-	local joystick = love.joystick.getJoysticks(self._gamepad_id)[1];
+	local joystick = love.joystick.getJoysticks()[self._gamepad_id];
 	if not joystick then
 		return 0;
 	end
