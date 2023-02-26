@@ -21,6 +21,8 @@ Most methods on this class have blank implementations. Your own classes deriving
 | `show`        | Called when the tool becomes visible. Default implementation does nothing.                                                                                   |
 | `update`      | Called every frame. Default implementation does nothing. Arguments after `self` are the same as those of [love.update](https://love2d.org/wiki/love.update). |
 
+## Examples
+
 ```lua
 local MyTool = Class("MyTool", crystal.Tool);
 
