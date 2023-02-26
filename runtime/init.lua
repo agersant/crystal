@@ -170,6 +170,14 @@ love.keyreleased = function(key, scan_code)
 	modules.input.key_released(key, scan_code);
 end
 
+love.gamepadpressed = function(joystick, button)
+	modules.input.gamepad_pressed(joystick, button);
+end
+
+love.gamepadreleased = function(joystick, button)
+	modules.input.gamepad_released(joystick, button);
+end
+
 love.textinput = function(text)
 	modules.tool.toolkit:text_input(text);
 end

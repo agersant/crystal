@@ -12,22 +12,22 @@ end
 
 --#region Tests
 
-local InputDevice = require("modules/input/input_device");
+local InputPlayer = require("modules/input/input_player");
 
 crystal.test.add("Input handlers receives inputs", function()
 	local ecs = crystal.ECS:new();
 	ecs:add_system(InputSystem);
-	local device = InputDevice:new(1);
-	device:set_bindings({ z = { "attack" } });
+	local player = InputPlayer:new(1);
+	player:set_bindings({ z = { "attack" } });
 	local entity = ecs:spawn(crystal.Entity);
 	local handled;
 
-	entity:add_component("InputListener", device);
+	entity:add_component("InputListener", player);
 	entity:add_input_handler(function(input)
 		handled = input;
 	end);
 
-	device:key_pressed("z");
+	player:key_pressed("z");
 	assert(handled == nil);
 	ecs:update();
 	ecs:notify_systems("handle_inputs");
@@ -37,12 +37,12 @@ end);
 crystal.test.add("Input handlers can pass through to further handlers", function()
 	local ecs = crystal.ECS:new();
 	ecs:add_system(InputSystem);
-	local device = InputDevice:new(1);
-	device:set_bindings({ z = { "attack" } });
+	local player = InputPlayer:new(1);
+	player:set_bindings({ z = { "attack" } });
 	local entity = ecs:spawn(crystal.Entity);
 	local handled = 0;
 
-	entity:add_component("InputListener", device);
+	entity:add_component("InputListener", player);
 	entity:add_input_handler(function(input)
 		handled = handled + 1;
 	end);
@@ -50,7 +50,7 @@ crystal.test.add("Input handlers can pass through to further handlers", function
 		handled = handled + 10;
 	end);
 
-	device:key_pressed("z");
+	player:key_pressed("z");
 	assert(handled == 0);
 	ecs:update();
 	ecs:notify_systems("handle_inputs");
@@ -60,12 +60,12 @@ end);
 crystal.test.add("Input handlers can prevent further handlers", function()
 	local ecs = crystal.ECS:new();
 	ecs:add_system(InputSystem);
-	local device = InputDevice:new(1);
-	device:set_bindings({ z = { "attack" } });
+	local player = InputPlayer:new(1);
+	player:set_bindings({ z = { "attack" } });
 	local entity = ecs:spawn(crystal.Entity);
 	local handled;
 
-	entity:add_component("InputListener", device);
+	entity:add_component("InputListener", player);
 	entity:add_input_handler(function(input)
 		assert(false);
 	end);
@@ -74,7 +74,7 @@ crystal.test.add("Input handlers can prevent further handlers", function()
 		return true;
 	end);
 
-	device:key_pressed("z");
+	player:key_pressed("z");
 	assert(handled == nil);
 	ecs:update();
 	ecs:notify_systems("handle_inputs");

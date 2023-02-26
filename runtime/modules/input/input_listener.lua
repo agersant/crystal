@@ -1,31 +1,31 @@
 local TableUtils = require("utils/TableUtils");
 
 ---@class InputListener : Component
----@field private _device InputDevice
+---@field private _player InputPlayer
 ---@field private handlers (fun(input: string): boolean)[]
 local InputListener = Class("InputListener", crystal.Component);
 
-InputListener.init = function(self, device_or_device_index)
-	if type(device_or_device_index) == "number" then
-		self._device = crystal.input.device(device_or_device_index);
+InputListener.init = function(self, player_or_index)
+	if type(player_or_index) == "number" then
+		self._player = crystal.input.player(player_or_index);
 	else
-		assert(device_or_device_index:is_instance_of("InputDevice"));
-		self._device = device_or_device_index;
+		assert(player_or_index:is_instance_of("InputPlayer"));
+		self._player = player_or_index;
 	end
-	assert(self._device);
+	assert(self._player);
 	self.handlers = {};
 	self._disabled = 0;
 end
 
----@return InputDevice
-InputListener.input_device = function(self)
-	return self._device;
+---@return InputPlayer
+InputListener.input_player = function(self)
+	return self._player;
 end
 
 ---@param input string
 ---@return boolean
-InputListener.is_input_down = function(self, input)
-	return self:input_device():is_action_active(input);
+InputListener.is_action_input_down = function(self, input)
+	return self:input_player():is_action_active(input);
 end
 
 ---@param handler fun(input: string): boolean
@@ -49,7 +49,7 @@ InputListener.remove_input_handler = function(self, handler)
 end
 
 InputListener.dispatch_inputs = function(self)
-	for _, input in ipairs(self._device:events()) do
+	for _, input in ipairs(self._player:events()) do
 		local handlers = TableUtils.shallowCopy(self.handlers);
 		for i = #handlers, 1, -1 do
 			if handlers[i](input) then
