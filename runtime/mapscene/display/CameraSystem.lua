@@ -18,7 +18,7 @@ CameraSystem.getCamera = function(self)
 	return self._camera;
 end
 
-CameraSystem.after_scripts = function(self, dt)
+CameraSystem.after_run_scripts = function(self, dt)
 	local trackedEntities = {};
 	for entity in pairs(self._ecs:entities_with("InputListener")) do
 		table.insert(trackedEntities, entity);

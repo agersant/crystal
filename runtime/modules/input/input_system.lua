@@ -4,7 +4,7 @@ InputSystem.init = function(self)
 	self.query = self:add_query({ "InputListener" });
 end
 
-InputSystem.during_scripts = function(self, dt)
+InputSystem.handle_inputs = function(self, dt)
 	for input_listener in pairs(self.query:components()) do
 		input_listener:dispatch_inputs();
 	end
@@ -30,7 +30,7 @@ crystal.test.add("Input handlers receives inputs", function()
 	device:key_pressed("z");
 	assert(handled == nil);
 	ecs:update();
-	ecs:notify_systems("during_scripts");
+	ecs:notify_systems("handle_inputs");
 	assert(handled == "+attack");
 end);
 
@@ -53,7 +53,7 @@ crystal.test.add("Input handlers can pass through to further handlers", function
 	device:key_pressed("z");
 	assert(handled == 0);
 	ecs:update();
-	ecs:notify_systems("during_scripts");
+	ecs:notify_systems("handle_inputs");
 	assert(handled == 11);
 end);
 
@@ -77,7 +77,7 @@ crystal.test.add("Input handlers can prevent further handlers", function()
 	device:key_pressed("z");
 	assert(handled == nil);
 	ecs:update();
-	ecs:notify_systems("during_scripts");
+	ecs:notify_systems("handle_inputs");
 	assert(handled == 1);
 end);
 

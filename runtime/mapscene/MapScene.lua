@@ -56,7 +56,7 @@ MapScene.init = function(self, mapName)
 	ecs:add_system(WorldWidgetSystem);
 
 	-- Before draw
-	ecs:add_system(CameraSystem, map, self._renderer:getViewport()); -- (also has after_scripts logic)
+	ecs:add_system(CameraSystem, map, self._renderer:getViewport()); -- (also has after_run_scripts logic)
 	ecs:add_system(MapSystem, map);
 	ecs:add_system(DebugDrawSystem);
 
@@ -104,9 +104,10 @@ MapScene.update = function(self, dt)
 	self._ecs:notify_systems("duringPhysics", dt);
 	self._ecs:notify_systems("afterPhysics", dt);
 
-	self._ecs:notify_systems("before_scripts", dt);
-	self._ecs:notify_systems("during_scripts", dt);
-	self._ecs:notify_systems("after_scripts", dt);
+	self._ecs:notify_systems("before_run_scripts", dt);
+	self._ecs:notify_systems("run_scripts", dt);
+	self._ecs:notify_systems("handle_inputs", dt);
+	self._ecs:notify_systems("after_run_scripts", dt);
 end
 
 MapScene.draw = function(self)
