@@ -143,6 +143,7 @@ return {
 			assert(Class:get_by_name("MostUniqueFruit") == Fruit);
 			assert(Class:get_by_name("VeryUniqueDerivedPeach") == Peach);
 			assert(Class:get_by_name("Berry") == nil);
+			assert(Peach:new():is_instance_of("VeryUniqueDerivedPeach"));
 		end);
 
 		crystal.test.add("Placement new", function()
