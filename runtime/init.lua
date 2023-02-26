@@ -129,6 +129,12 @@ love.load = function()
 	end
 
 	PERSISTENCE = require("persistence/Persistence"):new(Class:get_by_name(crystal.conf.saveDataClass));
+
+	if features.developer_start and crystal.developer_start then
+		crystal.developer_start();
+	elseif crystal.player_start then
+		crystal.player_start();
+	end
 end
 
 love.update = function(dt)

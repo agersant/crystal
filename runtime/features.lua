@@ -10,6 +10,7 @@ end
 local features = {};
 
 local release = love.filesystem.isFused();
+features.developer_start = not release;
 features.tests = has_flag("/test");
 features.test_coverage = has_flag("/coverage");
 features.cli = not release;
