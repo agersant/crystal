@@ -1,0 +1,33 @@
+---
+parent: crystal.input
+grand_parent: API Reference
+---
+
+# crystal.InputSystem
+
+This ECS [System](system) powers [InputListener](input_listener) components.
+
+When it receives the `handle_inputs` [notification](/crystal/api/ecs/ecs_notify_systems), every [InputListener](input_listener) dispatches events to its [handlers](input_listener_add_input_handler).
+
+## Examples
+
+```lua
+crystal.input.player(1):set_bindings({
+	space = { "jump" }
+});
+
+local ecs = crystal.ECS:new();
+ecs:add_system(crystal.InputSystem);
+
+local entity = ecs:spawn(crystal.Entity);
+entity:add_component(crystal.InputListener);
+entity:add_input_handler(function(event)
+  -- Prints "+jump" when the player presses space, and "-jump" when they release it
+  print(event);
+  return false;
+end);
+
+-- In your scene's update function:
+ecs:update();
+ecs:notify_systems("handle_inputs");
+```

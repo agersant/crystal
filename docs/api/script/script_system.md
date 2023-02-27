@@ -7,9 +7,9 @@ grand_parent: API Reference
 
 This ECS [System](system) powers [Behavior](behavior) and [ScriptRunner](script_runner) components.
 
-When it receives the `before_scripts` [notification](/crystal/api/ecs/ecs_notify_systems), this system ensures all `Behavior` scripts are present on entities' `ScriptRunner` components.
+When it receives the `before_run_scripts` [notification](/crystal/api/ecs/ecs_notify_systems), this system ensures all `Behavior` scripts are present on entities' `ScriptRunner` components.
 
-When it receives the `during_scripts` [notification](/crystal/api/ecs/ecs_notify_systems), this systems runs all scripts owned by `ScriptRunner` components.
+When it receives the `run_scripts` [notification](/crystal/api/ecs/ecs_notify_systems), this systems runs all scripts owned by `ScriptRunner` components.
 
 ## Examples
 
@@ -25,6 +25,6 @@ end);
 
 -- In your scene's update function:
 ecs:update();
-ecs:notify_systems("before_scripts");
-ecs:notify_systems("during_scripts"); -- prints Oink
+ecs:notify_systems("before_run_scripts");
+ecs:notify_systems("run_scripts"); -- prints Oink
 ```
