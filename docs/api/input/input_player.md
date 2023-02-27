@@ -19,6 +19,8 @@ Object handling keybinds and input events for a player.
 | `set_bindings`      | Defines which actions are bound to which inputs for this player.                    |
 | `events`            | Returns a list of actions pressed or released this frame.                           |
 
+## Examples
+
 ```lua
 local player = crystal.input.player(1);
 player:set_bindings({ space = { "jump" } });
