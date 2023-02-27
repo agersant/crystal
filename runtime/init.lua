@@ -138,7 +138,7 @@ love.load = function()
 end
 
 love.update = function(dt)
-	modules.input:update(dt);
+	modules.input.update(dt);
 	modules.tool.toolkit:update(dt);
 	if nextScene then
 		scene = nextScene;

@@ -6,6 +6,8 @@
 - [ ] Game packaging
 - [ ] VSCode tasks for engine and sample game
 - [ ] snake_case all variables and file names 🐍
+- [x] Gamepad support
+- [x] Input auto-repeats
 - [x] Docs website in readme
 - [ ] API revamp: `crystal.*` globals + docs + private functions as ---@package or ---@private
   - [ ] ai

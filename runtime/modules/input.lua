@@ -27,6 +27,9 @@ return {
 		map_axis_to_binary_actions = function(map)
 			input_manager:map_axis_to_binary_actions(map);
 		end,
+		configure_autorepeat = function(config)
+			input_manager:configure_autorepeat(config);
+		end
 	},
 	global_api = {
 		InputListener = InputListener,

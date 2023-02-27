@@ -1,13 +1,16 @@
 local MathUtils = require("utils/MathUtils");
+local TableUtils = require("utils/TableUtils");
 local InputPlayer = require("modules/input/input_player");
 
 ---@alias AxisToButton { pressed_range: { [1]: number, [2]: number}, released_range: { [1]: number, [2]: number } }
+---@alias Autorepeat { initial_delay: number, period: number }
 
 ---@class InputManager
 ---@field private gamepad_api GamepadAPI
 ---@field private players { [number]: InputPlayer }
 ---@field private gamepad_to_player { [number]: InputPlayer }
 ---@field private axis_to_binary_actions { [string]: { [string]: AxisToButton } }
+---@field private autorepeat { [string] : Autorepeat }
 local InputManager = Class("InputManager");
 
 InputManager.init = function(self, gamepad_api)
@@ -16,6 +19,7 @@ InputManager.init = function(self, gamepad_api)
 	self.players = {};
 	self.gamepad_to_player = {};
 	self.axis_to_binary_actions = {};
+	self.autorepeat = {};
 end
 
 ---@param index number
@@ -69,9 +73,22 @@ InputManager.map_axis_to_binary_actions = function(self, map)
 	end
 end
 
+---@param config { [string]: Autorepeat }
+InputManager.configure_autorepeat = function(self, config)
+	self.autorepeat = {};
+	for action, config in pairs(config) do
+		assert(type(config.initial_delay) == "number");
+		assert(type(config.period) == "number");
+		assert(config.initial_delay >= 0);
+		assert(config.period > 0);
+		self.autorepeat[action] = { initial_delay = config.initial_delay, period = config.period };
+	end
+end
+
 InputManager.update = function(self, dt)
 	for _, player in pairs(self.players) do
 		player:trigger_axis_events(self.axis_to_binary_actions);
+		player:trigger_autorepeat_events(dt, self.autorepeat);
 	end
 end
 
@@ -196,6 +213,41 @@ crystal.test.add("Can map gamepad axis to a binary action", function()
 	gamepad_api:write_axis(2, "leftx", -0.1);
 	manager:update(0);
 	assert(not player:is_action_active("ui_left"));
+end);
+
+crystal.test.add("Can autorepeat events", function()
+	local manager = InputManager:new(GamepadAPI.Mock:new());
+	local player = manager:player(1);
+	player:set_bindings({ z = { "attack" } });
+	manager:configure_autorepeat({
+		attack = { initial_delay = 0.5, period = 0.1 },
+	});
+	manager:key_pressed("z");
+	assert(TableUtils.equals(player:events(), { "+attack" }));
+
+	manager:flush_events();
+	manager:update(0.4);
+	assert(TableUtils.equals(player:events(), {}));
+
+	manager:flush_events();
+	manager:update(0.15);
+	assert(TableUtils.equals(player:events(), { "~attack" }));
+
+	manager:flush_events();
+	manager:update(0.01);
+	assert(TableUtils.equals(player:events(), {}));
+
+	manager:flush_events();
+	manager:update(0.1);
+	assert(TableUtils.equals(player:events(), { "~attack" }));
+
+	manager:flush_events();
+	manager:key_released("z");
+	assert(TableUtils.equals(player:events(), { "-attack" }));
+
+	manager:flush_events();
+	manager:update(0.2);
+	assert(TableUtils.equals(player:events(), {}));
 end);
 
 --#endregion

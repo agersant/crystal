@@ -1,12 +1,13 @@
 local TableUtils = require("utils/TableUtils");
 
 ---@alias InputMethod "keyboard_and_mouse" | "gamepad"
+---@alias ActionState { inputs: string[], num_inputs_down: number, held_for: number }
 
 ---@class InputPlayer
 ---@field private index number
 ---@field private gamepad_api GamepadAPI
 ---@field private inputs { [string]: string[] }
----@field private actions { [string]: { inputs: string[], num_inputs_down: number } }
+---@field private actions { [string]: ActionState }
 ---@field private actions_pressed_via_axis { [string]: { [string]: boolean} }
 ---@field private input_method InputMethod
 ---@field private _gamepad_id number
@@ -164,6 +165,7 @@ InputPlayer.action_down = function(self, action)
 	self.actions[action].num_inputs_down = self.actions[action].num_inputs_down + 1;
 	if self.actions[action].num_inputs_down == 1 then
 		table.insert(self._events, "+" .. action);
+		self.actions[action].held_for = 0;
 	end
 end
 
@@ -177,6 +179,7 @@ InputPlayer.action_up = function(self, action)
 	assert(self.actions[action].num_inputs_down >= 0);
 	if self.actions[action].num_inputs_down == 0 then
 		table.insert(self._events, "-" .. action);
+		self.actions[action].held_for = nil;
 	end
 end
 
@@ -187,10 +190,12 @@ InputPlayer.release_all_inputs = function(self)
 			table.insert(self._events, "-" .. action);
 		end
 		state.num_inputs_down = 0;
+		state.held_for = nil;
 	end
 	self.actions_pressed_via_axis = {};
 end
 
+---@param axis_to_binary_actions { [string]: { [string]: AxisToButton } }
 InputPlayer.trigger_axis_events = function(self, axis_to_binary_actions)
 	for axis_action, actions in pairs(axis_to_binary_actions) do
 		if not self.actions_pressed_via_axis[axis_action] then
@@ -213,6 +218,25 @@ InputPlayer.trigger_axis_events = function(self, axis_to_binary_actions)
 				self.actions_pressed_via_axis[axis_action][action] = true;
 			elseif is_released then
 				self.actions_pressed_via_axis[axis_action][action] = false;
+			end
+		end
+	end
+end
+
+---@param dt number
+---@param config { [string]: Autorepeat }
+InputPlayer.trigger_autorepeat_events = function(self, dt, config)
+	for action, autorepeat in pairs(config) do
+		if self.actions[action] and self.actions[action].held_for then
+			local held_for = self.actions[action].held_for;
+			local new_held_for = self.actions[action].held_for + dt;
+			self.actions[action].held_for = new_held_for;
+			local d = autorepeat.initial_delay;
+			local p = autorepeat.period;
+			if new_held_for >= d then
+				if held_for < d or math.floor((new_held_for - d) / p) > math.floor((held_for - d) / p) then
+					table.insert(self._events, "~" .. action);
+				end
 			end
 		end
 	end
