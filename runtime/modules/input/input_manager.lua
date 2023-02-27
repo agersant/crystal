@@ -11,6 +11,7 @@ local InputPlayer = require("modules/input/input_player");
 ---@field private gamepad_to_player { [number]: InputPlayer }
 ---@field private axis_to_binary_actions { [string]: { [string]: AxisToButton } }
 ---@field private autorepeat { [string] : Autorepeat }
+---@field private unassigned_gamepad_handler fun(gamepad_id: number, button: love.GamepadButton)
 local InputManager = Class("InputManager");
 
 InputManager.init = function(self, gamepad_api)
@@ -20,6 +21,9 @@ InputManager.init = function(self, gamepad_api)
 	self.gamepad_to_player = {};
 	self.axis_to_binary_actions = {};
 	self.autorepeat = {};
+	self.unassigned_gamepad_handler = function(gamepad_id, button)
+		self:assign_gamepad(1, gamepad_id);
+	end
 end
 
 ---@param index number
@@ -51,6 +55,12 @@ InputManager.unassign_gamepad = function(self, player_index)
 		player:set_gamepad_id(nil);
 		self.gamepad_to_player[gamepad_id] = nil;
 	end
+end
+
+---@param handler fun(gamepad_id: number, button: love.GamepadButton)
+InputManager.set_unassigned_gamepad_handler = function(self, handler)
+	assert(type(handler) == "function");
+	self.unassigned_gamepad_handler = handler;
 end
 
 InputManager.map_axis_to_binary_actions = function(self, map)
@@ -115,9 +125,7 @@ InputManager.gamepad_pressed = function(self, gamepad_id, button)
 	if self.gamepad_to_player[gamepad_id] then
 		self.gamepad_to_player[gamepad_id]:gamepad_pressed(button);
 	else
-		-- TODO this needs to get routed to active scene(s) instead
-		-- This logic is ok as default implementation
-		self:assign_gamepad(1, gamepad_id);
+		self.unassigned_gamepad_handler(gamepad_id, button);
 	end
 end
 
@@ -138,6 +146,32 @@ end
 --#region Tests
 
 local GamepadAPI = require("modules/input/gamepad_api");
+
+crystal.test.add("Gamepad is auto-assigned to player 1", function()
+	local manager = InputManager:new(GamepadAPI.Mock:new());
+	local player = manager:player(1);
+	player:set_bindings({ pad_a = { "attack" } });
+	manager:gamepad_pressed(2, "pad_a");
+	assert(player:gamepad_id() == 2);
+end);
+
+crystal.test.add("Can change unassigned gamepad handler", function()
+	local manager = InputManager:new(GamepadAPI.Mock:new());
+	local player = manager:player(1);
+	player:set_bindings({ pad_a = { "attack" } });
+	local sentinel = 0;
+	manager:set_unassigned_gamepad_handler(function(gamepad_id, button)
+		assert(gamepad_id == 2)
+		assert(button == "pad_a")
+		sentinel = sentinel + 1;
+		manager:assign_gamepad(10, gamepad_id);
+	end);
+	manager:gamepad_pressed(2, "pad_a");
+	assert(sentinel == 1);
+	assert(manager:player(10):gamepad_id() == 2);
+	manager:gamepad_pressed(2, "pad_a");
+	assert(sentinel == 1);
+end);
 
 crystal.test.add("Gamepads events are sent to the assigned player", function()
 	local manager = InputManager:new(GamepadAPI.Mock:new());

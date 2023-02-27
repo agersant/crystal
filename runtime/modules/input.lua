@@ -24,6 +24,9 @@ return {
 		unassign_gamepad = function(player_index)
 			input_manager:unassign_gamepad(player_index);
 		end,
+		set_unassigned_gamepad_handler = function(handler)
+			input_manager:set_unassigned_gamepad_handler(handler);
+		end,
 		map_axis_to_binary_actions = function(map)
 			input_manager:map_axis_to_binary_actions(map);
 		end,
