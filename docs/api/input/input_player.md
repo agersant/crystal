@@ -15,7 +15,7 @@ Object handling keybinds and input events for a player.
 | `gamepad_id`        | Returns the gamepad assigned to this player, if any.                                |
 | `bindings`          | Returns a table describing which actions are bound to which inputs for this player. |
 | `is_action_active`  | Returns whether any input mapped to a specific action is currently being pressed.   |
-| `action_axis_value` | Returns the value of a gamepad axis associated with a specific action.              |
+| `axis_action_value` | Returns the value of a gamepad axis associated with a specific action.              |
 | `set_bindings`      | Defines which actions are bound to which inputs for this player.                    |
 | `events`            | Returns a list of actions pressed or released this frame.                           |
 

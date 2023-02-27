@@ -63,7 +63,7 @@ InputManager.set_unassigned_gamepad_handler = function(self, handler)
 	self.unassigned_gamepad_handler = handler;
 end
 
-InputManager.map_axis_to_binary_actions = function(self, map)
+InputManager.map_axis_to_actions = function(self, map)
 	self.axis_to_binary_actions = {};
 	for axis_action, actions in pairs(map) do
 		self.axis_to_binary_actions[axis_action] = {};
@@ -224,7 +224,7 @@ end);
 crystal.test.add("Can map gamepad axis to a binary action", function()
 	local gamepad_api = GamepadAPI.Mock:new();
 	local manager = InputManager:new(gamepad_api);
-	manager:map_axis_to_binary_actions({
+	manager:map_axis_to_actions({
 		ui_x = {
 			ui_left = { pressed_range = { -1.0, -0.9 }, released_range = { -0.2, 1.0 } },
 		},
@@ -265,7 +265,7 @@ crystal.test.add("Can autorepeat events", function()
 
 	manager:flush_events();
 	manager:update(0.15);
-	assert(TableUtils.equals(player:events(), { "~attack" }));
+	assert(TableUtils.equals(player:events(), { "+attack" }));
 
 	manager:flush_events();
 	manager:update(0.01);
@@ -273,7 +273,7 @@ crystal.test.add("Can autorepeat events", function()
 
 	manager:flush_events();
 	manager:update(0.1);
-	assert(TableUtils.equals(player:events(), { "~attack" }));
+	assert(TableUtils.equals(player:events(), { "+attack" }));
 
 	manager:flush_events();
 	manager:key_released("z");

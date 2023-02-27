@@ -88,7 +88,7 @@ InputPlayer.is_action_active = function(self, action)
 end
 
 ---@return number
-InputPlayer.action_axis_value = function(self, action)
+InputPlayer.axis_action_value = function(self, action)
 	if not self.actions[action] then
 		return 0;
 	end
@@ -205,7 +205,7 @@ InputPlayer.trigger_axis_events = function(self, axis_to_binary_actions)
 			if not self.actions[action] then
 				self.actions[action] = { inputs = {}, num_inputs_down = 0 };
 			end
-			local axis_value = self:action_axis_value(axis_action);
+			local axis_value = self:axis_action_value(axis_action);
 			local was_pressed = self.actions_pressed_via_axis[axis_action][action];
 			local is_pressed = axis_value >= config.pressed_range[1] and axis_value <= config.pressed_range[2];
 			local is_released = axis_value >= config.released_range[1] and axis_value <= config.released_range[2];
@@ -235,7 +235,7 @@ InputPlayer.trigger_autorepeat_events = function(self, dt, config)
 			local p = autorepeat.period;
 			if new_held_for >= d then
 				if held_for < d or math.floor((new_held_for - d) / p) > math.floor((held_for - d) / p) then
-					table.insert(self._events, "~" .. action);
+					table.insert(self._events, "+" .. action);
 				end
 			end
 		end

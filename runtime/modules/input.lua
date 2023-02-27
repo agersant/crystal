@@ -27,8 +27,8 @@ return {
 		set_unassigned_gamepad_handler = function(handler)
 			input_manager:set_unassigned_gamepad_handler(handler);
 		end,
-		map_axis_to_binary_actions = function(map)
-			input_manager:map_axis_to_binary_actions(map);
+		map_axis_to_actions = function(map)
+			input_manager:map_axis_to_actions(map);
 		end,
 		configure_autorepeat = function(config)
 			input_manager:configure_autorepeat(config);
