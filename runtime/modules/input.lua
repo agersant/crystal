@@ -1,9 +1,10 @@
+local GamepadAPI = require("modules/input/gamepad_api");
 local InputListener = require("modules/input/input_listener");
 local InputManager = require("modules/input/input_manager");
 local InputPlayer = require("modules/input/input_player");
 local InputSystem = require("modules/input/input_system");
 
-local input_manager = InputManager:new();
+local input_manager = InputManager:new(GamepadAPI:new());
 
 local gamepad_button_map = {
 	a = "pad_a",
@@ -22,6 +23,9 @@ return {
 		end,
 		unassign_gamepad = function(player_index)
 			input_manager:unassign_gamepad(player_index);
+		end,
+		map_axis_to_binary_actions = function(map)
+			input_manager:map_axis_to_binary_actions(map);
 		end,
 	},
 	global_api = {
@@ -46,5 +50,8 @@ return {
 		local gamepad_id = joystick:getID();
 		local button = gamepad_button_map[button] or button;
 		input_manager:gamepad_released(gamepad_id, button);
+	end,
+	update = function(dt)
+		input_manager:update(dt);
 	end,
 };

@@ -12,12 +12,13 @@ end
 
 --#region Tests
 
+local GamepadAPI = require("modules/input/gamepad_api");
 local InputPlayer = require("modules/input/input_player");
 
 crystal.test.add("Input handlers receives inputs", function()
 	local ecs = crystal.ECS:new();
 	ecs:add_system(InputSystem);
-	local player = InputPlayer:new(1);
+	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
 	player:set_bindings({ z = { "attack" } });
 	local entity = ecs:spawn(crystal.Entity);
 	local handled;
@@ -37,7 +38,7 @@ end);
 crystal.test.add("Input handlers can pass through to further handlers", function()
 	local ecs = crystal.ECS:new();
 	ecs:add_system(InputSystem);
-	local player = InputPlayer:new(1);
+	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
 	player:set_bindings({ z = { "attack" } });
 	local entity = ecs:spawn(crystal.Entity);
 	local handled = 0;
@@ -60,7 +61,7 @@ end);
 crystal.test.add("Input handlers can prevent further handlers", function()
 	local ecs = crystal.ECS:new();
 	ecs:add_system(InputSystem);
-	local player = InputPlayer:new(1);
+	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
 	player:set_bindings({ z = { "attack" } });
 	local entity = ecs:spawn(crystal.Entity);
 	local handled;

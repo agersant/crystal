@@ -3,20 +3,25 @@ local TableUtils = require("utils/TableUtils");
 ---@alias InputMethod "keyboard_and_mouse" | "gamepad"
 
 ---@class InputPlayer
+---@field private index number
+---@field private gamepad_api GamepadAPI
 ---@field private inputs { [string]: string[] }
 ---@field private actions { [string]: { inputs: string[], num_inputs_down: number } }
----@field private _events string[]
----@field private index number
+---@field private actions_pressed_via_axis { [string]: { [string]: boolean} }
 ---@field private input_method InputMethod
 ---@field private _gamepad_id number
+---@field private _events string[]
 local InputPlayer = Class("InputPlayer");
 
-InputPlayer.init = function(self, index)
+InputPlayer.init = function(self, index, gamepad_api)
 	assert(type(index) == "number");
-	self._events = {};
+	assert(gamepad_api:is_instance_of("GamepadAPI"));
 	self._index = index;
+	self.gamepad_api = gamepad_api;
+	self._events = {};
 	self._input_method = nil;
 	self._gamepad_id = nil;
+	self.actions_pressed_via_axis = {};
 	self:build_binding_tables({});
 end
 
@@ -89,15 +94,8 @@ InputPlayer.action_axis_value = function(self, action)
 	if self._gamepad_id == nil then
 		return 0;
 	end
-	local joystick = love.joystick.getJoysticks()[self._gamepad_id];
-	if not joystick then
-		return 0;
-	end
 	for _, input in ipairs(self.actions[action].inputs) do
-		local value = joystick:getGamepadAxis(input);
-		if value then
-			return value;
-		end
+		return self.gamepad_api:read_axis(self._gamepad_id, input);
 	end
 	return 0;
 end
@@ -144,11 +142,7 @@ InputPlayer.input_down = function(self, input)
 		return;
 	end
 	for _, action in ipairs(self.inputs[input]) do
-		assert(self.actions[action]);
-		self.actions[action].num_inputs_down = self.actions[action].num_inputs_down + 1;
-		if self.actions[action].num_inputs_down == 1 then
-			table.insert(self._events, "+" .. action);
-		end
+		self:action_down(action);
 	end
 end
 
@@ -159,14 +153,30 @@ InputPlayer.input_up = function(self, input)
 		return;
 	end
 	for _, action in ipairs(self.inputs[input]) do
-		assert(self.actions[action]);
-		if self.actions[action].num_inputs_down > 0 then
-			self.actions[action].num_inputs_down = self.actions[action].num_inputs_down - 1;
-		end
-		assert(self.actions[action].num_inputs_down >= 0);
-		if self.actions[action].num_inputs_down == 0 then
-			table.insert(self._events, "-" .. action);
-		end
+		self:action_up(action);
+	end
+end
+
+---@private
+---@param input string
+InputPlayer.action_down = function(self, action)
+	assert(self.actions[action]);
+	self.actions[action].num_inputs_down = self.actions[action].num_inputs_down + 1;
+	if self.actions[action].num_inputs_down == 1 then
+		table.insert(self._events, "+" .. action);
+	end
+end
+
+---@private
+---@param input string
+InputPlayer.action_up = function(self, action)
+	assert(self.actions[action]);
+	if self.actions[action].num_inputs_down > 0 then
+		self.actions[action].num_inputs_down = self.actions[action].num_inputs_down - 1;
+	end
+	assert(self.actions[action].num_inputs_down >= 0);
+	if self.actions[action].num_inputs_down == 0 then
+		table.insert(self._events, "-" .. action);
 	end
 end
 
@@ -177,6 +187,34 @@ InputPlayer.release_all_inputs = function(self)
 			table.insert(self._events, "-" .. action);
 		end
 		state.num_inputs_down = 0;
+	end
+	self.actions_pressed_via_axis = {};
+end
+
+InputPlayer.trigger_axis_events = function(self, axis_to_binary_actions)
+	for axis_action, actions in pairs(axis_to_binary_actions) do
+		if not self.actions_pressed_via_axis[axis_action] then
+			self.actions_pressed_via_axis[axis_action] = {};
+		end
+		for action, config in pairs(actions) do
+			if not self.actions[action] then
+				self.actions[action] = { inputs = {}, num_inputs_down = 0 };
+			end
+			local axis_value = self:action_axis_value(axis_action);
+			local was_pressed = self.actions_pressed_via_axis[axis_action][action];
+			local is_pressed = axis_value >= config.pressed_range[1] and axis_value <= config.pressed_range[2];
+			local is_released = axis_value >= config.released_range[1] and axis_value <= config.released_range[2];
+			if is_pressed and not was_pressed then
+				self:action_down(action);
+			elseif was_pressed and is_released then
+				self:action_up(action);
+			end
+			if is_pressed then
+				self.actions_pressed_via_axis[axis_action][action] = true;
+			elseif is_released then
+				self.actions_pressed_via_axis[axis_action][action] = false;
+			end
+		end
 	end
 end
 
@@ -207,13 +245,15 @@ end
 
 --#region Tests
 
+local GamepadAPI = require("modules/input/gamepad_api");
+
 crystal.test.add("Unbound action is not active", function()
-	local player = InputPlayer:new(1);
+	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
 	assert(not player:is_action_active("attack"));
 end);
 
 crystal.test.add("Single-key binding keeps track of activation", function()
-	local player = InputPlayer:new(1);
+	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
 	player:set_bindings({ z = { "attack" } });
 	assert(not player:is_action_active("attack"));
 	player:key_pressed("z");
@@ -223,7 +263,7 @@ crystal.test.add("Single-key binding keeps track of activation", function()
 end);
 
 crystal.test.add("Single-button binding keeps track of activation", function()
-	local player = InputPlayer:new(1);
+	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
 	player:set_bindings({ dpad_a = { "attack" } });
 	assert(not player:is_action_active("attack"));
 	player:gamepad_pressed("dpad_a");
@@ -233,7 +273,7 @@ crystal.test.add("Single-button binding keeps track of activation", function()
 end);
 
 crystal.test.add("Multi-key binding keeps track of activation", function()
-	local player = InputPlayer:new(1);
+	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
 	player:set_bindings({ z = { "attack" }, x = { "attack" } });
 	assert(not player:is_action_active("attack"));
 	player:key_pressed("z");
@@ -246,7 +286,7 @@ crystal.test.add("Multi-key binding keeps track of activation", function()
 end);
 
 crystal.test.add("Multi-action key emits +/- events", function()
-	local player = InputPlayer:new(1);
+	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
 	player:set_bindings({ z = { "attack", "talk" } });
 	assert(not player:is_action_active("attack"));
 	assert(not player:is_action_active("talk"));
@@ -268,7 +308,7 @@ crystal.test.add("Multi-action key emits +/- events", function()
 end);
 
 crystal.test.add("Updates input method based on latest input", function()
-	local player = InputPlayer:new(1);
+	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
 	player:set_bindings({ dpad_a = { "attack" }, z = { "attack" } });
 	assert(player:input_method() == nil);
 	player:gamepad_pressed("dpad_a");
@@ -278,7 +318,7 @@ crystal.test.add("Updates input method based on latest input", function()
 end);
 
 crystal.test.add("Changing input method releases all inputs", function()
-	local player = InputPlayer:new(1);
+	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
 	player:set_bindings({ dpad_a = { "attack" }, z = { "block" } });
 	player:gamepad_pressed("dpad_a");
 	player:key_pressed("z");
@@ -286,7 +326,7 @@ crystal.test.add("Changing input method releases all inputs", function()
 end);
 
 crystal.test.add("Swapping gamepad releases all inputs", function()
-	local player = InputPlayer:new(1);
+	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
 	player:set_bindings({ dpad_a = { "attack" } });
 	player:gamepad_pressed("dpad_a");
 	player:set_gamepad_id(1);
