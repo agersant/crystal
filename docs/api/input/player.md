@@ -31,7 +31,7 @@ crystal.input.player(player_index)
 ```lua
 local player_1 = crystal.input.player(1);
 player_1:set_bindings({
-	space = { "jump" },
-	z = { "dodge_roll" },
+  space = { "jump" },
+  z = { "dodge_roll" },
 });
 ```

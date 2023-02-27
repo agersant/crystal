@@ -30,15 +30,15 @@ Each key in the `configuration` table is an action, like `jump` or `attack`. Eac
 ```lua
 -- Map each arrow key to two actions: move_* to move the player character, and ui_* to navigate in a menu
 crystal.input.player(1):set_bindings({
-	up = { "move_up", "ui_up" },
-	down = { "move_down", "ui_down" },
-	left = { "move_left", "ui_left" },
-	right = { "move_right", "ui_right" },
+  up = { "move_up", "ui_up" },
+  down = { "move_down", "ui_down" },
+  left = { "move_left", "ui_left" },
+  right = { "move_right", "ui_right" },
 });
 
 -- Setup autorepeat so that holding up/down allows fast navigation in UI lists
 crystal.input.configure_autorepeat({
-	ui_up = { initial_delay = 0.5, period = 0.1 },
-	ui_down = { initial_delay = 0.5, period = 0.1 },
+  ui_up = { initial_delay = 0.5, period = 0.1 },
+  ui_down = { initial_delay = 0.5, period = 0.1 },
 });
 ```

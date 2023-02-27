@@ -28,7 +28,7 @@ The `button` received by the handler function is similar to a [love.GamepadButto
 
 ## Examples
 
-Example to assign gamepads sequentially by pressing `start` in a 4 player game.
+This example assigns gamepads sequentially when players press `start` in a 4 player game.
 
 ```lua
 crystal.input.set_unassigned_gamepad_handler(function(gamepad_id, button)
@@ -37,8 +37,8 @@ crystal.input.set_unassigned_gamepad_handler(function(gamepad_id, button)
   end
   for i = 1, 4 do
     if crystal.input.player(i):input_method() == nil then
-	    crystal.input.assign_gamepad(i, gamepad_id);
-	  end
+      crystal.input.assign_gamepad(i, gamepad_id);
+    end
   end
 end);
 ```

@@ -13,7 +13,7 @@ When it receives the `handle_inputs` [notification](/crystal/api/ecs/ecs_notify_
 
 ```lua
 crystal.input.player(1):set_bindings({
-	space = { "jump" }
+  space = { "jump" }
 });
 
 local ecs = crystal.ECS:new();
@@ -22,12 +22,15 @@ ecs:add_system(crystal.InputSystem);
 local entity = ecs:spawn(crystal.Entity);
 entity:add_component(crystal.InputListener);
 entity:add_input_handler(function(event)
-  -- Prints "+jump" when the player presses space, and "-jump" when they release it
   print(event);
   return false;
 end);
 
--- In your scene's update function:
+love.keypressed("space", "space", false);
 ecs:update();
-ecs:notify_systems("handle_inputs");
+ecs:notify_systems("handle_inputs"); -- Prints "+jump"
+
+love.keyreleased("space", "space", false);
+ecs:update();
+ecs:notify_systems("handle_inputs"); -- Prints "-jump"
 ```

@@ -32,11 +32,11 @@ Schema for the configuration table:
 
 ```lua
 {
-	[input_action] = {
-		[action] = { pressed_range = { min, max }, released_range = { min, max } }
-		...
-	},
-	...
+  [input_action] = {
+    [action] = { pressed_range = { min, max }, released_range = { min, max } }
+    ...
+  },
+  ...
 }
 ```
 
@@ -44,25 +44,28 @@ Schema for the configuration table:
 
 ```lua
 crystal.input.player(1):set_bindings({
-	-- Map each dpad button to two actions: move_* to move the player character, and ui_* to navigate in a menu
-	dpup = { "move_up", "ui_up" },
-	dpdown = { "move_down", "ui_down" },
-	dpleft = { "move_left", "ui_left" },
-	dpright = { "move_right", "ui_right" },
-	-- Map left stick to move and ui actions on each axis
-	leftx = { "move_x", "ui_x" },
-	lefty = { "move_y", "ui_y" },
+  --[[ Map each dpad button to two actions:
+    - `move_*` to move the player character
+    - `ui_*` to navigate in a menu
+  ]]
+  dpup = { "move_up", "ui_up" },
+  dpdown = { "move_down", "ui_down" },
+  dpleft = { "move_left", "ui_left" },
+  dpright = { "move_right", "ui_right" },
+  -- Map left stick to move and ui actions on each axis
+  leftx = { "move_x", "ui_x" },
+  lefty = { "move_y", "ui_y" },
 });
 
 -- Map flicks of ui_x and ui_y to corresponding discrete actions
 crystal.input.map_axis_to_actions({
-	ui_x = {
-		ui_left = { pressed_range = { -1.0, -0.9 }, released_range = { -0.2, 1.0 } },
-		ui_right = { pressed_range = { 0.9, 1.0 }, released_range = { -1.0, 0.2 } },
-	},
-	ui_y = {
-		ui_up = { pressed_range = { -1.0, -0.9 }, released_range = { -0.2, 1.0 } },
-		ui_down = { pressed_range = { 0.9, 1.0 }, released_range = { -1.0, 0.2 } },
-	},
+  ui_x = {
+    ui_left = { pressed_range = { -1.0, -0.9 }, released_range = { -0.2, 1.0 } },
+    ui_right = { pressed_range = { 0.9, 1.0 }, released_range = { -1.0, 0.2 } },
+  },
+  ui_y = {
+    ui_up = { pressed_range = { -1.0, -0.9 }, released_range = { -0.2, 1.0 } },
+    ui_down = { pressed_range = { 0.9, 1.0 }, released_range = { -1.0, 0.2 } },
+  },
 });
 ```
