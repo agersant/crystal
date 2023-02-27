@@ -8,7 +8,7 @@ nav_order: 1
 
 Defines a callback function which runs when a button is pressed on an unassigned gamepad.
 
-If you do not call this function to setup a handler, the default one will [assign](assign_gamepad) the new gamepad to player 1. This is sufficient for single player games. In multiplayer games, you should implement logic to decide which player the new gamepad should be assigned to and call [assign_gamepad](assign_gamepad), or ignore the input entirely.
+If you do not call this function to setup your own handler, the default handler will [assign](assign_gamepad) the new gamepad to player 1. This is sufficient for single player games. In multiplayer games, you should implement logic to decide which player the new gamepad should be assigned to and call [assign_gamepad](assign_gamepad), or ignore the input entirely.
 
 ## Usage
 
