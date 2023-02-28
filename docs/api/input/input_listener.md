@@ -12,6 +12,8 @@ A [Component](/crystal/api/ecs/component) which allows an entity to receive inpu
 
 Like all other components, InputListener are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
 
+The constructor for InputListener expects one argument, the [player_index](player) whose inputs this component will listen to.
+
 ## Methods
 
 | Name                                                        | Description                                                                                   |
