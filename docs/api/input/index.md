@@ -36,3 +36,9 @@ By adding an [InputListener](input_listener) component on an entity, you can mak
 | [crystal.InputListener](input_listener) | A [Component](/crystal/api/ecs/component) which allows an entity to receive input events. |
 | [crystal.InputSystem](input_system)     | A [System](/crystal/api/ecs/system) which dispatches input events.                        |
 | [InputPlayer](input_player)             | Object handling keybinds and input events for a player.                                   |
+
+## Enums
+
+| Name                        | Description                         |
+| :-------------------------- | :---------------------------------- |
+| [InputMethod](input_method) | Device being used to play the game. |
