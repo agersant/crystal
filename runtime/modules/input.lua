@@ -7,10 +7,10 @@ local InputSystem = require("modules/input/input_system");
 local input_manager = InputManager:new(GamepadAPI:new());
 
 local gamepad_button_map = {
-	a = "pad_a",
-	b = "pad_b",
-	x = "pad_x",
-	y = "pad_y",
+	a = "btna",
+	b = "btnb",
+	x = "btnx",
+	y = "btny",
 };
 
 return {

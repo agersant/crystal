@@ -9,7 +9,7 @@ nav_exclude: true
 Unregisters a function handling input events.
 
 {: .note}
-[InputListener:add_input_handler](input_listener_add_input_handler) returns a more convenient function you can call without arguments to remove the handler that was added.
+[InputListener:add_input_handler](input_listener_add_input_handler) returns a more convenient function you can call without arguments to remove a handler.
 
 ## Usage
 

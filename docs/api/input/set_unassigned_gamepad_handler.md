@@ -24,7 +24,7 @@ crystal.input.set_unassigned_gamepad_handler(handler)
 
 The `gamepad_id` received by the handler function is from LOVE's [Joystick:getID](https://love2d.org/wiki/Joystick:getID).
 
-The `button` received by the handler function is similar to a [love.GamepadButton](https://love2d.org/wiki/GamepadButton). The difference is that face-buttons in this handler are represented by `pad_a`, `pad_b`, `pad_x`, `pad_y` instead of `a`, `b`, `x`, `y`.
+The `button` received by the handler function is similar to a [love.GamepadButton](https://love2d.org/wiki/GamepadButton). The difference is that face-buttons in this handler are represented by `btna`, `btnb`, `btnx`, `btny` instead of `a`, `b`, `x`, `y`.
 
 ## Examples
 

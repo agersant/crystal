@@ -92,11 +92,16 @@ InputPlayer.axis_action_value = function(self, action)
 	if not self.actions[action] then
 		return 0;
 	end
+	if self._input_method ~= "gamepad" then
+		return 0;
+	end
 	if self._gamepad_id == nil then
 		return 0;
 	end
 	for _, input in ipairs(self.actions[action].inputs) do
-		return self.gamepad_api:read_axis(self._gamepad_id, input);
+		if input == "leftx" or input == "lefty" or input == "rightx" or input == "righty" or input == "triggerleft" or input == "triggerright" then
+			return self.gamepad_api:read_axis(self._gamepad_id, input);
+		end
 	end
 	return 0;
 end

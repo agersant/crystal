@@ -150,26 +150,26 @@ local GamepadAPI = require("modules/input/gamepad_api");
 crystal.test.add("Gamepad is auto-assigned to player 1", function()
 	local manager = InputManager:new(GamepadAPI.Mock:new());
 	local player = manager:player(1);
-	player:set_bindings({ pad_a = { "attack" } });
-	manager:gamepad_pressed(2, "pad_a");
+	player:set_bindings({ btna = { "attack" } });
+	manager:gamepad_pressed(2, "btna");
 	assert(player:gamepad_id() == 2);
 end);
 
 crystal.test.add("Can change unassigned gamepad handler", function()
 	local manager = InputManager:new(GamepadAPI.Mock:new());
 	local player = manager:player(1);
-	player:set_bindings({ pad_a = { "attack" } });
+	player:set_bindings({ btna = { "attack" } });
 	local sentinel = 0;
 	manager:set_unassigned_gamepad_handler(function(gamepad_id, button)
 		assert(gamepad_id == 2)
-		assert(button == "pad_a")
+		assert(button == "btna")
 		sentinel = sentinel + 1;
 		manager:assign_gamepad(10, gamepad_id);
 	end);
-	manager:gamepad_pressed(2, "pad_a");
+	manager:gamepad_pressed(2, "btna");
 	assert(sentinel == 1);
 	assert(manager:player(10):gamepad_id() == 2);
-	manager:gamepad_pressed(2, "pad_a");
+	manager:gamepad_pressed(2, "btna");
 	assert(sentinel == 1);
 end);
 
@@ -177,12 +177,12 @@ crystal.test.add("Gamepads events are sent to the assigned player", function()
 	local manager = InputManager:new(GamepadAPI.Mock:new());
 	manager:assign_gamepad(1, 1);
 	manager:assign_gamepad(2, 2);
-	manager:player(1):set_bindings({ pad_a = { "attack" } });
-	manager:player(2):set_bindings({ pad_a = { "attack" } });
-	manager:gamepad_pressed(2, "pad_a");
+	manager:player(1):set_bindings({ btna = { "attack" } });
+	manager:player(2):set_bindings({ btna = { "attack" } });
+	manager:gamepad_pressed(2, "btna");
 	assert(not manager:player(1):is_action_active("attack"));
 	assert(manager:player(2):is_action_active("attack"));
-	manager:gamepad_released(2, "pad_a");
+	manager:gamepad_released(2, "btna");
 	assert(not manager:player(1):is_action_active("attack"));
 	assert(not manager:player(2):is_action_active("attack"));
 end);
@@ -211,13 +211,13 @@ end);
 
 crystal.test.add("Unassigned gamepad does not generate events", function()
 	local manager = InputManager:new(GamepadAPI.Mock:new());
-	manager:player(1):set_bindings({ pad_a = { "attack" } });
+	manager:player(1):set_bindings({ btna = { "attack" } });
 	manager:assign_gamepad(1, 2);
-	manager:gamepad_pressed(2, "pad_a");
+	manager:gamepad_pressed(2, "btna");
 	assert(manager:player(1):is_action_active("attack"));
 	manager:unassign_gamepad(1);
 	assert(not manager:player(1):is_action_active("attack"));
-	manager:gamepad_pressed(2, "pad_a");
+	manager:gamepad_pressed(2, "btna");
 	assert(not manager:player(1):is_action_active("attack"));
 end);
 
