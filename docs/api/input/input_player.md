@@ -4,7 +4,7 @@ grand_parent: API Reference
 nav_order: 2
 ---
 
-# crystal.InputPlayer
+# InputPlayer
 
 Object handling keybinds and input events for a player.
 
