@@ -8,6 +8,10 @@ nav_order: 3
 
 Object handling keybinds and input events for a player.
 
+## Constructor
+
+InputPlayers are constructed on-demand when you try to access them via [crystal.input.player](player) or [crystal.input.assign_gamepad](assign_gamepad).
+
 ## Methods
 
 | Name                                                | Description                                                                         |

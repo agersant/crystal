@@ -6,7 +6,7 @@ nav_order: 1
 
 # crystal.input.map_axis_to_actions
 
-Map analog positions on gamepad sticks (axis) to binary actions.
+Map positions on gamepad analog axis to binary actions.
 
 When an action is bound to a [gamepad axis](https://love2d.org/wiki/GamepadAxis), it never emits `"+action"` or `"-action"` events like actions using buttons do. Its value can only be queried via [InputPlayer:axis_action_value](input_player:axis_action_value).
 

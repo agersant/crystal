@@ -6,7 +6,7 @@ nav_order: 1
 
 # crystal.input.configure_autorepeat
 
-Defines which actions emit events while inputs are being held, and how frequently. By default, actions emit a `"+action"` (eg. `"+jump"`) event when the corresponding input is pressed, and a `"-action"` event when it is released. With autorepeat, it is possible to configure an action to also emit periodic `"+action"` events while the input is being held.
+Defines which actions emit events while inputs are being held, and how frequently. By default, actions emit a `"+action"` event (eg. `"+jump"`) when the corresponding input is pressed, and a `"-action"` event when it is released. With autorepeat, it is possible to configure an action to emit periodic `"+action"` events while the input is being held.
 
 ## Usage
 

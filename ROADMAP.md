@@ -16,7 +16,7 @@
   - [x] const
   - [x] ecs
   - [ ] gfx
-  - [ ] input
+  - [x] input
   - [x] log
   - [ ] physics
   - [ ] scene

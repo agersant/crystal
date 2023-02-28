@@ -50,6 +50,9 @@ end
 ---@param player_index number
 InputManager.unassign_gamepad = function(self, player_index)
 	local player = self.players[player_index];
+	if not player then
+		return;
+	end
 	local gamepad_id = player:gamepad_id();
 	if gamepad_id then
 		player:set_gamepad_id(nil);
