@@ -6,7 +6,7 @@ nav_order: 1
 
 # crystal.tool.hide
 
-Stops a tool from drawing on the screen. This also sets the `.visible` field on the tool instance to `false`.
+Stops a tool from drawing on the screen.
 
 ## Usage
 

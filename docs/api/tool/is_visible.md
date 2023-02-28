@@ -8,8 +8,6 @@ nav_order: 1
 
 Returns whether a tool is currently visible or not.
 
-Note that from a tool's methods, you can also check visibility by reading the `.visible` field.
-
 ## Usage
 
 ```lua

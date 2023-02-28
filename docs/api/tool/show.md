@@ -6,7 +6,7 @@ nav_order: 1
 
 # crystal.tool.show
 
-Makes a tool start drawing on the screen every frame. This also sets the `.visible` field on the tool instance to `true`.
+Makes a tool start drawing on the screen every frame.
 
 ## Usage
 
