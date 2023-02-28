@@ -6,7 +6,7 @@ end
 
 InputSystem.handle_inputs = function(self, dt)
 	for input_listener in pairs(self.query:components()) do
-		input_listener:dispatch_inputs();
+		input_listener:handle_inputs();
 	end
 end
 

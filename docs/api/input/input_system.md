@@ -20,17 +20,13 @@ local ecs = crystal.ECS:new();
 ecs:add_system(crystal.InputSystem);
 
 local entity = ecs:spawn(crystal.Entity);
-entity:add_component(crystal.InputListener);
+entity:add_component(crystal.InputListener, 1);
 entity:add_input_handler(function(event)
   print(event);
   return false;
 end);
 
+ecs:update();
 love.keypressed("space", "space", false);
-ecs:update();
 ecs:notify_systems("handle_inputs"); -- Prints "+jump"
-
-love.keyreleased("space", "space", false);
-ecs:update();
-ecs:notify_systems("handle_inputs"); -- Prints "-jump"
 ```

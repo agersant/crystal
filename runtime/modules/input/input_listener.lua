@@ -41,7 +41,7 @@ InputListener.remove_input_handler = function(self, handler)
 	end
 end
 
-InputListener.dispatch_inputs = function(self)
+InputListener.handle_inputs = function(self)
 	for _, input in ipairs(self.player:events()) do
 		local handlers = TableUtils.shallowCopy(self.handlers);
 		for i = #handlers, 1, -1 do

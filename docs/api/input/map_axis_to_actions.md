@@ -10,7 +10,7 @@ Map analog positions on gamepad sticks (axis) to binary actions.
 
 When an action is bound to a [gamepad axis](https://love2d.org/wiki/GamepadAxis), it never emits `"+action"` or `"-action"` events like actions using buttons do. Its value can only be queried via [InputPlayer:axis_action_value](input_player:axis_action_value).
 
-This function allows axis to emit regular action events when they are pushed in specific positions. The most common use case for this is to map the X/Y axis of a stick to emit up/down/left/right action events.
+This function allows axis to emit input events when they are pushed in specific positions. The most common use case for this is to map the X/Y axis of a stick to emit up/down/left/right events.
 
 ## Usage
 
