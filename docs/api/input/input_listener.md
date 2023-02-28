@@ -1,6 +1,7 @@
 ---
 parent: crystal.input
 grand_parent: API Reference
+nav_order: 1
 ---
 
 # crystal.InputListener
