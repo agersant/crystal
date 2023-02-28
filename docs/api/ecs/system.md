@@ -27,7 +27,7 @@ The important questions to think about when defining a system are:
 
 ## Examples
 
-This example implements a `System` which operates on entities that have two components: a `Health` component and a `Poison` component. This system substract 1 health every frame on each poisoned entity. Note that outside of this toy example, it would be unwise to tie the poison's efficacy to the framerate of your game.
+This example implements a `System` which operates on entities that have two components: a `Health` component and a `Poison` component. This system substracts 1 health every frame on each poisoned entity. Note that outside of this toy example, it would be unwise to tie the poison's efficacy to the framerate of your game.
 
 ```lua
 -- Poison component
