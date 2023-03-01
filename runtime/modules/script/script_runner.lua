@@ -15,7 +15,7 @@ ScriptRunner.add_script = function(self, script)
 	if type(script) == "function" then
 		script = Script:new(script);
 	end
-	assert(script:is_instance_of(Script));
+	assert(script:inherits_from(Script));
 	Alias:add(script, self:entity());
 	table.insert(self._scripts, script);
 	return script;
@@ -40,7 +40,7 @@ end
 
 ---@param script_to_remove Script
 ScriptRunner.remove_script = function(self, script_to_remove)
-	assert(script_to_remove:is_instance_of(Script));
+	assert(script_to_remove:inherits_from(Script));
 	for i, script in ipairs(self._scripts) do
 		if script == script_to_remove then
 			table.remove(self._scripts, i);

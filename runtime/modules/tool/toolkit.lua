@@ -26,7 +26,7 @@ end
 ---@param tool Tool
 ---@param options ToolOptions
 Toolkit.add = function(self, tool, options)
-	assert(tool:is_instance_of(Tool));
+	assert(tool:inherits_from(Tool));
 	options = options or {};
 
 	local tool_name = options.name or tool:class_name();

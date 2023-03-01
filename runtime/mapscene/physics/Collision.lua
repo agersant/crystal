@@ -31,7 +31,7 @@ end
 
 Collision.init = function(self, physicsBody, radius)
 	assert(physicsBody);
-	assert(physicsBody:is_instance_of(PhysicsBody));
+	assert(physicsBody:inherits_from(PhysicsBody));
 	assert(radius);
 	self._contactEntities = {};
 	self._enabled = false;

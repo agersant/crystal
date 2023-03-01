@@ -9,7 +9,7 @@ end
 
 TouchTrigger.init = function(self, physicsBody, shape)
 	assert(physicsBody);
-	assert(physicsBody:is_instance_of(PhysicsBody));
+	assert(physicsBody:inherits_from(PhysicsBody));
 	assert(shape);
 	self._enabled = false;
 	self._fixture = love.physics.newFixture(physicsBody:getBody(), shape, 0);

@@ -220,7 +220,7 @@ crystal.test.add("Can use the `spawn` command", function()
 	scene:update(0);
 
 	for entity in pairs(scene:ecs():entities()) do
-		if entity:is_instance_of(TestSpawnCommand) then
+		if entity:inherits_from(TestSpawnCommand) then
 			return;
 		end
 	end
@@ -246,7 +246,7 @@ crystal.test.add("Spawn command puts entity near player", function()
 	scene:update(0);
 
 	for entity in pairs(scene:ecs():entities()) do
-		if entity:is_instance_of(TestSpawnCommandProximity) then
+		if entity:inherits_from(TestSpawnCommandProximity) then
 			assert(entity:distanceToEntity(player) < 100);
 			return;
 		end

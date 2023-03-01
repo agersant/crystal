@@ -48,7 +48,7 @@ pump_thread = function(thread, resume_args)
 			local instruction = results[2];
 			if instruction == "fork" then
 				local new_thread = results[3];
-				assert(new_thread:is_instance_of(Thread));
+				assert(new_thread:inherits_from(Thread));
 				self.threads[new_thread] = true;
 				pump_thread(new_thread);
 				if not thread:ended() then

@@ -15,7 +15,7 @@ local InputPlayer = require("modules/input/input_player");
 local InputManager = Class("InputManager");
 
 InputManager.init = function(self, gamepad_api)
-	assert(gamepad_api:is_instance_of("GamepadAPI"));
+	assert(gamepad_api:inherits_from("GamepadAPI"));
 	self.gamepad_api = gamepad_api;
 	self.players = {};
 	self.gamepad_to_player = {};

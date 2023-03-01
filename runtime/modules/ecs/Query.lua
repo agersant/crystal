@@ -97,7 +97,7 @@ end
 Query.on_component_added = function(self, entity, component)
 	if self._entities[entity] then
 		for _, class in ipairs(self._classes) do
-			if component:is_instance_of(class) then
+			if component:inherits_from(class) then
 				if not self._added_components[class] then
 					self._added_components[class] = {};
 				end
@@ -130,7 +130,7 @@ Query.on_component_removed = function(self, entity, component)
 	self._components[component] = nil;
 	if self:matches(entity) then
 		for _, class in ipairs(self._classes) do
-			if component:is_instance_of(class) then
+			if component:inherits_from(class) then
 				if not self._removed_components[class] then
 					self._removed_components[class] = {};
 				end
@@ -145,7 +145,7 @@ Query.on_component_removed = function(self, entity, component)
 			if not self._removed_components[class] then
 				self._removed_components[class] = {};
 			end
-			if component:is_instance_of(class) then
+			if component:inherits_from(class) then
 				self._removed_components[class][component] = entity;
 			end
 			for component in pairs(entity:components(class)) do

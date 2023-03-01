@@ -8,7 +8,7 @@ UIScene.init = function(self, widget)
 	UIScene.super.init(self);
 	self._renderer = Renderer:new(VIEWPORT);
 	assert(widget);
-	assert(widget:is_instance_of(Widget));
+	assert(widget:inherits_from(Widget));
 	self._widget = widget;
 	self:update(0);
 end

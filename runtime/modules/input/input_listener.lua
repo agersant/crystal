@@ -9,7 +9,7 @@ InputListener.init = function(self, player_or_index)
 	if type(player_or_index) == "number" then
 		self.player = crystal.input.player(player_or_index);
 	else
-		assert(player_or_index:is_instance_of("InputPlayer"));
+		assert(player_or_index:inherits_from("InputPlayer"));
 		self.player = player_or_index;
 	end
 	assert(self.player);

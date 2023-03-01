@@ -153,7 +153,7 @@ end
 ---@param component Component
 ECS.add_component = function(self, entity, component)
 	assert(component);
-	assert(component:is_instance_of(Component));
+	assert(component:inherits_from(Component));
 	assert(component:entity() == entity);
 	assert(entity:is_valid());
 	local graveyard = self.component_graveyard[entity];
@@ -174,7 +174,7 @@ end
 ---@param component Component
 ECS.remove_component = function(self, entity, component)
 	assert(component);
-	assert(component:is_instance_of(Component));
+	assert(component:inherits_from(Component));
 	assert(component:entity() == entity);
 	assert(entity:is_valid());
 	assert(component:is_valid());
@@ -217,7 +217,7 @@ ECS.add_system = function(self, class, ...)
 	assert(class);
 	local system = { _ecs = self };
 	class:placement_new(system, ...);
-	assert(system:is_instance_of(System));
+	assert(system:inherits_from(System));
 	assert(system:ecs() == self);
 	table.insert(self.systems, system);
 	return system;
@@ -226,7 +226,7 @@ end
 ---@param event Event
 ECS.add_event = function(self, event)
 	assert(event);
-	assert(event:is_instance_of(Event));
+	assert(event:inherits_from(Event));
 	assert(event:entity():is_valid());
 	local base_class = event:class();
 	while base_class do
@@ -248,7 +248,7 @@ ECS.system = function(self, class)
 		class = Class:get_by_name(class);
 	end
 	for _, system in ipairs(self.systems) do
-		if system:is_instance_of(class) then
+		if system:inherits_from(class) then
 			return system;
 		end
 	end
@@ -287,7 +287,7 @@ ECS.entities_with = function(self, class)
 
 	for entity, component_by_class in pairs(self.component_nursery) do
 		for class_iter, components in pairs(component_by_class) do
-			if class_iter:is_instance_of(class) and next(components) then
+			if class_iter:inherits_from(class) and next(components) then
 				output[entity] = true;
 				break;
 			end
@@ -333,7 +333,7 @@ ECS.components_on_entity = function(self, entity, base_class)
 	if self.component_nursery[entity] then
 		for class, components in pairs(self.component_nursery[entity]) do
 			for component, _ in pairs(components) do
-				if component:is_instance_of(base_class) then
+				if component:inherits_from(base_class) then
 					output[component] = true;
 				end
 			end
@@ -376,7 +376,7 @@ ECS.components = function(self, class)
 
 	for _, components_by_class in pairs(self.component_nursery) do
 		for class_iter, components in pairs(components_by_class) do
-			if class_iter:is_instance_of(class) then
+			if class_iter:inherits_from(class) then
 				for component in pairs(components) do
 					output[component] = true;
 				end
@@ -386,7 +386,7 @@ ECS.components = function(self, class)
 
 	for _, components_by_class in pairs(self.component_graveyard) do
 		for class_iter, components in pairs(components_by_class) do
-			if class_iter:is_instance_of(class) then
+			if class_iter:inherits_from(class) then
 				for component in pairs(components) do
 					output[component] = nil;
 				end
@@ -417,7 +417,7 @@ end
 ECS.register_component = function(self, entity, component)
 	assert(entity);
 	assert(component);
-	assert(component:is_instance_of(Component));
+	assert(component:inherits_from(Component));
 
 	local class = component:class();
 
@@ -458,7 +458,7 @@ end
 ECS.unregister_component = function(self, entity, component)
 	assert(entity);
 	assert(component);
-	assert(component:is_instance_of(Component));
+	assert(component:inherits_from(Component));
 
 	local class = component:class();
 	assert(class);

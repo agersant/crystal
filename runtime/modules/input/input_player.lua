@@ -16,7 +16,7 @@ local InputPlayer = Class("InputPlayer");
 
 InputPlayer.init = function(self, index, gamepad_api)
 	assert(type(index) == "number");
-	assert(gamepad_api:is_instance_of("GamepadAPI"));
+	assert(gamepad_api:inherits_from("GamepadAPI"));
 	self._index = index;
 	self.gamepad_api = gamepad_api;
 	self._events = {};

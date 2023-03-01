@@ -42,7 +42,7 @@ end
 SpriteAnimator.init = function(self, sprite, sheet)
 	SpriteAnimator.super.init(self);
 	assert(sprite);
-	assert(sprite:is_instance_of(Sprite));
+	assert(sprite:inherits_from(Sprite));
 	self._sprite = sprite;
 	self._sheet = sheet;
 	self._sequence = nil;

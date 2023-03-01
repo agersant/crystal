@@ -4,7 +4,7 @@ local MapSystem = Class("MapSystem", crystal.System);
 
 MapSystem.init = function(self, map)
 	assert(map);
-	assert(map:is_instance_of(Map));
+	assert(map:inherits_from(Map));
 	self._map = map;
 end
 

@@ -25,7 +25,7 @@ end
 
 Hitbox.init = function(self, physicsBody, shape)
 	assert(physicsBody);
-	assert(physicsBody:is_instance_of(PhysicsBody));
+	assert(physicsBody:inherits_from(PhysicsBody));
 	self._enabled = false;
 	self._body = physicsBody:getBody();
 	self._shape = shape;

@@ -14,7 +14,7 @@ end
 Console.init = function(self, terminal)
 	Console.super.init(self);
 	assert(terminal);
-	assert(terminal:is_instance_of(Terminal));
+	assert(terminal:inherits_from(Terminal));
 	self.terminal = terminal;
 	self.font = FONTS:get("dev", 20);
 	self.consumes_inputs = true; -- TODO remove this when there is a real UI system with text focus

@@ -76,7 +76,7 @@ crystal.const.define("Time Scale", 1.0, { min = 0.0, max = 100.0 });
 crystal.cmd.add("loadScene sceneName:string", function(sceneName)
 	local class = Class:get_by_name(sceneName);
 	assert(class);
-	assert(class:is_instance_of(Scene));
+	assert(class:inherits_from(Scene));
 	local newScene = class:new();
 	ENGINE:loadScene(newScene);
 end);

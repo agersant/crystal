@@ -46,7 +46,7 @@ local BaseSaveData = require("persistence/BaseSaveData");
 
 crystal.test.add("Starts with blank save", function()
 	local persistence = Persistence:new(BaseSaveData);
-	assert(persistence:getSaveData():is_instance_of(BaseSaveData));
+	assert(persistence:getSaveData():inherits_from(BaseSaveData));
 end);
 
 crystal.test.add("Saves and loads data", function()
