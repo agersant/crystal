@@ -15,19 +15,19 @@ local crystalRoot = table.concat(pathChunks, "/");
 
 -- TODO may or may not work in fused build
 -- TODO Manually add CRYSTAL_RUNTIME to `require` calls and leave package.path alone?
-package.path      = package.path .. ";" .. crystalRuntime .. "/?.lua";
+package.path = package.path .. ";" .. crystalRuntime .. "/?.lua";
 
 
-local features   = require("features");
+local features = require("features");
 
-CRYSTAL_ROOT     = crystalRoot;
-CRYSTAL_RUNTIME  = crystalRuntime;
-CRYSTAL_NO_GAME  = crystalRoot == "";
+CRYSTAL_ROOT = crystalRoot;
+CRYSTAL_RUNTIME = crystalRuntime;
+CRYSTAL_NO_GAME = crystalRoot == "";
 
 ---@diagnostic disable-next-line: lowercase-global
-crystal          = {};
+crystal = {};
 
-local modules    = {};
+local modules = {};
 local add_module = function(name, path)
 	local module = require(path);
 	modules[name] = module;
@@ -50,12 +50,12 @@ add_module("log", "modules/log");
 add_module("script", "modules/script");
 add_module("tool", "modules/tool");
 
-local Content     = require("resources/Content");
+local Content = require("resources/Content");
 local StringUtils = require("utils/StringUtils");
-local Scene       = require("Scene");
+local Scene = require("Scene");
 
-local TableUtils  = require("utils/TableUtils");
-crystal.conf      = {
+local TableUtils = require("utils/TableUtils");
+crystal.conf = {
 	assetsDirectories = {},
 	mapDirectory = "", -- TODO remove when mapscene is no longer part of crystal
 	mapSceneClass = "MapScene", -- TODO remove when mapscene is no longer part of crystal
@@ -65,11 +65,10 @@ crystal.configure = function(c)
 	TableUtils.merge(crystal.conf, c);
 end
 
-VIEWPORT          = require("graphics/Viewport"):new();
-FONTS             = require("resources/Fonts"):new({});
-ASSETS            = require("resources/Assets"):new();
-ASSETS            = require("resources/Assets"):new();
-ENGINE            = {};
+VIEWPORT = require("graphics/Viewport"):new();
+FONTS = require("resources/Fonts"):new({});
+ASSETS = require("resources/Assets"):new();
+ENGINE = {};
 
 crystal.const.define("Time Scale", 1.0, { min = 0.0, max = 100.0 });
 
