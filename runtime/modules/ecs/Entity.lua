@@ -20,7 +20,7 @@ end
 ---@return T
 Entity.add_component = function(self, class, ...)
 	if type(class) == "string" then
-		class = Class:get_by_name(class);
+		class = Class:by_name(class);
 	end
 	assert(class);
 	local component = { _entity = self, _is_valid = true };
@@ -55,7 +55,7 @@ end
 Entity.create_event = function(self, class, ...)
 	assert(self:is_valid());
 	if type(class) == "string" then
-		class = Class:get_by_name(class);
+		class = Class:by_name(class);
 	end
 	local event = { _entity = self };
 	class:placement_new(event, ...);

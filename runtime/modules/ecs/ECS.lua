@@ -124,7 +124,7 @@ end
 ---@return T
 ECS.spawn = function(self, class, ...)
 	if type(class) == "string" then
-		class = Class:get_by_name(class);
+		class = Class:by_name(class);
 	end
 	assert(class);
 	local entity = { _ecs = self, _is_valid = true };
@@ -212,7 +212,7 @@ end
 ---@return T
 ECS.add_system = function(self, class, ...)
 	if type(class) == "string" then
-		class = Class:get_by_name(class);
+		class = Class:by_name(class);
 	end
 	assert(class);
 	local system = { _ecs = self };
@@ -245,7 +245,7 @@ end
 ---@return T
 ECS.system = function(self, class)
 	if type(class) == "string" then
-		class = Class:get_by_name(class);
+		class = Class:by_name(class);
 	end
 	for _, system in ipairs(self.systems) do
 		if system:inherits_from(class) then
@@ -264,7 +264,7 @@ end
 ---@return { [Entity]: boolean }
 ECS.entities_with = function(self, class)
 	if type(class) == "string" then
-		class = Class:get_by_name(class);
+		class = Class:by_name(class);
 	end
 	assert(class);
 	local output = {};
@@ -303,7 +303,7 @@ end
 ---@return T
 ECS.component_on_entity = function(self, entity, class)
 	if type(class) == "string" then
-		class = Class:get_by_name(class);
+		class = Class:by_name(class);
 	end
 	assert(entity);
 	assert(class);
@@ -319,7 +319,7 @@ end
 ---@return { [Component]: boolean }
 ECS.components_on_entity = function(self, entity, base_class)
 	if type(base_class) == "string" then
-		base_class = Class:get_by_name(base_class);
+		base_class = Class:by_name(base_class);
 	end
 
 	local output = {};
@@ -359,7 +359,7 @@ end
 ---@return { [T]: boolean }
 ECS.components = function(self, class)
 	if type(class) == "string" then
-		class = Class:get_by_name(class);
+		class = Class:by_name(class);
 	end
 	assert(class);
 	local output = {};
@@ -402,7 +402,7 @@ end
 ---@return T[]
 ECS.events = function(self, class)
 	if type(class) == "string" then
-		class = Class:get_by_name(class);
+		class = Class:by_name(class);
 	end
 	assert(class);
 	if not self._events[class] then

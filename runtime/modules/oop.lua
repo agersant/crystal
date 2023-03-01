@@ -76,7 +76,7 @@ local declare_class = function(self, name, base_class, options)
 end
 
 Class = setmetatable({}, { __call = declare_class });
-Class.get_by_name = get_class_by_name;
+Class.by_name = get_class_by_name;
 Class.test = function(self, name, base_class)
 	return declare_class(self, name, base_class, { allow_redefinition = true });
 end;
@@ -148,9 +148,9 @@ return {
 		crystal.test.add("Can get class by name", function()
 			local Fruit = Class("MostUniqueFruit");
 			local Peach = Class("VeryUniqueDerivedPeach", Fruit);
-			assert(Class:get_by_name("MostUniqueFruit") == Fruit);
-			assert(Class:get_by_name("VeryUniqueDerivedPeach") == Peach);
-			assert(Class:get_by_name("Berry") == nil);
+			assert(Class:by_name("MostUniqueFruit") == Fruit);
+			assert(Class:by_name("VeryUniqueDerivedPeach") == Peach);
+			assert(Class:by_name("Berry") == nil);
 			assert(Peach:new():inherits_from("VeryUniqueDerivedPeach"));
 		end);
 

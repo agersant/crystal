@@ -16,7 +16,7 @@ Query.init = function(self, classes)
 	self._classes = {};
 	for _, class in ipairs(classes) do
 		if type(class) == "string" then
-			class = Class:get_by_name(class);
+			class = Class:by_name(class);
 		end
 		assert(class);
 		table.insert(self._classes, class);
@@ -158,7 +158,7 @@ end
 ---@return { [Component]: Entity }
 Query.added_components = function(self, class)
 	if type(class) == "string" then
-		class = Class:get_by_name(class);
+		class = Class:by_name(class);
 	end
 	assert(class);
 	return TableUtils.shallowCopy(self._added_components[class] or {});
@@ -167,7 +167,7 @@ end
 ---@return { [Component]: Entity }
 Query.removed_components = function(self, class)
 	if type(class) == "string" then
-		class = Class:get_by_name(class);
+		class = Class:by_name(class);
 	end
 	assert(class);
 	return TableUtils.shallowCopy(self._removed_components[class] or {});

@@ -172,7 +172,7 @@ MapScene.spawnEntityNearPlayer = function(self, class)
 end
 
 crystal.cmd.add("loadMap mapName:string", function(mapName)
-	local sceneClass = Class:get_by_name(crystal.conf.mapSceneClass);
+	local sceneClass = Class:by_name(crystal.conf.mapSceneClass);
 	local sceneFile = StringUtils.mergePaths(crystal.conf.mapDirectory, mapName .. ".lua");
 	local newScene = sceneClass:new(sceneFile);
 	ENGINE:loadScene(newScene);

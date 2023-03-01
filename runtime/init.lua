@@ -74,7 +74,7 @@ ENGINE            = {};
 crystal.const.define("Time Scale", 1.0, { min = 0.0, max = 100.0 });
 
 crystal.cmd.add("loadScene sceneName:string", function(sceneName)
-	local class = Class:get_by_name(sceneName);
+	local class = Class:by_name(sceneName);
 	assert(class);
 	assert(class:inherits_from(Scene));
 	local newScene = class:new();
@@ -128,7 +128,7 @@ love.load = function()
 		requireGameSource();
 	end
 
-	PERSISTENCE = require("persistence/Persistence"):new(Class:get_by_name(crystal.conf.saveDataClass));
+	PERSISTENCE = require("persistence/Persistence"):new(Class:by_name(crystal.conf.saveDataClass));
 
 	if features.developer_start and crystal.developer_start then
 		crystal.developer_start();
