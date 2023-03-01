@@ -33,6 +33,7 @@
 
 - [ ] Sumneko diagnostics enabled and cleaned up
 - [ ] Immediate mode UI kit for dev tools
+- [ ] Mouse support (in tools)
 - [ ] Livetune improvements:
   - [ ] Add Lua API to connect
   - [ ] Add device dropdown in overlay
@@ -48,7 +49,6 @@
 # Crystal 0.3.0
 
 - [ ] Bricks layout caching
-- [ ] Mouse support (in tools)
 - [ ] Mouse support (gameplay)
 - [ ] Mouse support (bricks)
 - [ ] Particles
@@ -56,4 +56,5 @@
 # Crystal 0.4.0
 
 - [ ] LDTk maps
+- [ ] Inspector tool
 - [ ] create-crystal-app starter script
