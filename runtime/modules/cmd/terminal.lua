@@ -130,9 +130,9 @@ Terminal.run = function(self, command)
 			local arg_name = command:arg(i).name;
 			local arg_type = command:arg(i).type;
 			local error_message = string.format(
-					"Argument #%d (%s) of command %s must be a %s",
-					i, arg_name, command:name(), arg_type
-				);
+				"Argument #%d (%s) of command %s must be a %s",
+				i, arg_name, command:name(), arg_type
+			);
 			crystal.log.error(error_message);
 			return;
 		end
@@ -227,8 +227,6 @@ Terminal.parsed_input = function(self)
 end
 
 --#region Tests
-
--- TODO these tests are getting registered twice somehow
 
 crystal.test.add("Run command", function()
 	local terminal = Terminal:new();
