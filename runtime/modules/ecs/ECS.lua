@@ -157,7 +157,7 @@ ECS.add_component = function(self, entity, component)
 	assert(component:entity() == entity);
 	assert(entity:is_valid());
 	local graveyard = self.component_graveyard[entity];
-	if graveyard and graveyard[component:class()] then
+	if graveyard and graveyard[component:class()] and graveyard[component:class()][component] then
 		graveyard[component:class()][component] = nil;
 	else
 		if not self.component_nursery[entity] then
@@ -180,7 +180,7 @@ ECS.remove_component = function(self, entity, component)
 	assert(component:is_valid());
 	component:invalidate();
 	local nursery = self.component_nursery[entity];
-	if nursery and nursery[component:class()] then
+	if nursery and nursery[component:class()] and nursery[component:class()][component] then
 		nursery[component:class()][component] = nil;
 	else
 		if not self.component_graveyard[entity] then
@@ -198,7 +198,7 @@ ECS.add_query = function(self, classes)
 	assert(TableUtils.countKeys(self._entities) == 0);
 	local query = Query:new(classes);
 	self.queries[query] = true;
-	for _, class in pairs(query:classes()) do
+	for _, class in ipairs(query:classes()) do
 		if not self.queries_by_class[class] then
 			self.queries_by_class[class] = {};
 		end
@@ -1029,6 +1029,33 @@ crystal.test.add("Events can be retrieved by base class", function()
 	assert(#ecs:events(Event) == 2);
 	assert(#ecs:events(MyEvent) == 1);
 	assert(#ecs:events(MyOtherEvent) == 1);
+end);
+
+crystal.test.add("Can swap components", function()
+	local MyComp = Class:test("MyComp", Component);
+
+	local ecs = ECS:new();
+	local entity = ecs:spawn(Entity);
+	local query = ecs:add_query({ MyComp });
+
+	ecs:update();
+	local a = entity:add_component(MyComp);
+	ecs:update();
+	assert(TableUtils.equals(query:added_components(MyComp), { [a] = entity }));
+
+	entity:remove_component(a);
+	local b = entity:add_component(MyComp);
+	ecs:update();
+	assert(TableUtils.equals(query:removed_components(MyComp), { [a] = entity }));
+	assert(TableUtils.equals(query:added_components(MyComp), { [b] = entity }));
+
+	local c = entity:add_component(MyComp);
+	entity:remove_component(b);
+	ecs:update();
+	assert(TableUtils.equals(query:removed_components(MyComp), { [b] = entity }));
+	assert(TableUtils.equals(query:added_components(MyComp), { [c] = entity }));
+
+	ecs:update();
 end);
 
 --#endregion
