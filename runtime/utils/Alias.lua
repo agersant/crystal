@@ -46,16 +46,16 @@ else
 							return value(alias, ...);
 						end,
 					};
-					results[value] = result;
+					results[alias] = result;
 				end
 			end
 
 			local numResults = TableUtils.countKeys(results);
 			if numResults > 1 then
 				local errorMessage = string.format("Ambiguous method call, %s.%s can resolve to any of the followings:",
-						from:getClassName(), key);
-				for _, result in ipairs(results) do
-					errorMessage = errorMessage .. string.format("\n\t- %s.%s", result.alias:getClassName(), key);
+					from:class_name(), key);
+				for _, result in pairs(results) do
+					errorMessage = errorMessage .. string.format("\n\t- %s.%s", result.alias:class_name(), key);
 				end
 				error(errorMessage);
 			elseif numResults == 1 then
@@ -86,7 +86,6 @@ Alias.remove = function(self, from, to)
 end
 
 --#region Tests
-
 
 crystal.test.add("Basic usage", function()
 	local From = Class:test("From");
@@ -168,29 +167,28 @@ crystal.test.add("Errors on ambiguous call", function()
 	Alias:add(from, toB);
 
 	local success, errorMessage = pcall(function()
-			from:example();
-		end);
+		from:example();
+	end);
 	assert(not success);
 	assert(#errorMessage > 1);
 end);
 
-crystal.test.add("Shared base methods are not ambiguous", function()
+crystal.test.add("Errors on ambiguous call to same method", function()
 	local From = Class:test("From");
-	local Base = Class:test("Base");
-	local DerivedA = Class:test("DerivedA", Base);
-	local DerivedB = Class:test("DerivedB", Base);
-	Base.example = function()
+	local To = Class:test("To");
+	To.example = function()
 	end
 	local from = From:new();
-	local derivedA = DerivedA:new();
-	local derivedB = DerivedB:new();
-	Alias:add(from, derivedA);
-	Alias:add(from, derivedB);
+	local toA = To:new();
+	local toB = To:new();
+	Alias:add(from, toA);
+	Alias:add(from, toB);
 
-	local success = pcall(function()
-			from:example();
-		end);
-	assert(success);
+	local success, errorMessage = pcall(function()
+		from:example();
+	end);
+	assert(not success);
+	assert(#errorMessage > 1);
 end);
 
 --#endregion

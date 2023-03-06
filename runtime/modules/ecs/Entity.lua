@@ -15,6 +15,11 @@ Entity.ecs = function(self)
 	return self._ecs;
 end
 
+---@return Entity
+Entity.entity = function(self)
+	return self;
+end
+
 ---@generic T
 ---@param class `T`
 ---@return T
