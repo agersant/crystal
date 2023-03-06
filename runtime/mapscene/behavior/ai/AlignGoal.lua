@@ -39,11 +39,11 @@ crystal.test.add("Get position", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local me = scene:spawn(crystal.Entity);
-	me:add_component(crystal.PhysicsBody, scene:physics_world());
+	me:add_component(crystal.Body, scene:physics_world());
 	me:set_position(1, .5);
 
 	local target = scene:spawn(crystal.Entity);
-	target:add_component(crystal.PhysicsBody, scene:physics_world());
+	target:add_component(crystal.Body, scene:physics_world());
 
 	local goal = AlignGoal:new(me, target, 1);
 	local x, y = goal:position();
@@ -55,17 +55,17 @@ crystal.test.add("Accept", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local me = scene:spawn(crystal.Entity);
-	me:add_component(crystal.PhysicsBody, scene:physics_world());
+	me:add_component(crystal.Body, scene:physics_world());
 	me:set_position(1, .5);
 
 	local target = scene:spawn(crystal.Entity);
-	target:add_component(crystal.PhysicsBody, scene:physics_world());
+	target:add_component(crystal.Body, scene:physics_world());
 
 	local goal = AlignGoal:new(me, target, 1);
 	assert(goal:isPositionAcceptable(0, 5));
 	assert(goal:isPositionAcceptable(0, -5));
 	assert(goal:isPositionAcceptable(5, 0));
-	assert(goal:isPositionAcceptable( -5, 0));
+	assert(goal:isPositionAcceptable(-5, 0));
 	assert(goal:isPositionAcceptable(0, .5));
 end);
 
@@ -73,15 +73,15 @@ crystal.test.add("Reject", function()
 	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local me = scene:spawn(crystal.Entity);
-	me:add_component(crystal.PhysicsBody, scene:physics_world());
+	me:add_component(crystal.Body, scene:physics_world());
 	me:set_position(1, .5);
 
 	local target = scene:spawn(crystal.Entity);
-	target:add_component(crystal.PhysicsBody, scene:physics_world());
+	target:add_component(crystal.Body, scene:physics_world());
 
 	local goal = AlignGoal:new(me, target, 1);
 	assert(not goal:isPositionAcceptable(2, 2));
-	assert(not goal:isPositionAcceptable( -1.5, 1.5));
+	assert(not goal:isPositionAcceptable(-1.5, 1.5));
 end);
 
 --#endregion

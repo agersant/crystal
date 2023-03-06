@@ -2,7 +2,7 @@ local bit = require("bit");
 
 local Collider = require("modules/physics/Collider");
 local Movement = require("modules/physics/Movement");
-local PhysicsBody = require("modules/physics/PhysicsBody");
+local Body = require("modules/physics/Body");
 local PhysicsSystem = require("modules/physics/PhysicsSystem");
 local Sensor = require("modules/physics/Sensor");
 
@@ -22,7 +22,7 @@ return {
 	global_api = {
 		Collider = Collider,
 		Movement = Movement,
-		PhysicsBody = PhysicsBody,
+		Body = Body,
 		PhysicsSystem = PhysicsSystem,
 		Sensor = Sensor,
 	},

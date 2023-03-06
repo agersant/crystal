@@ -128,10 +128,10 @@ end
 
 ---@param class string
 MapScene.spawnEntityNearPlayer = function(self, class)
-	local playerPhysicsBody;
+	local playerBody;
 	local players = self:ecs():entities_with("InputListener");
 	for entity in pairs(players) do
-		playerPhysicsBody = entity:component(crystal.PhysicsBody);
+		playerBody = entity:component(crystal.Body);
 		break;
 	end
 
@@ -143,15 +143,15 @@ MapScene.spawnEntityNearPlayer = function(self, class)
 	assert(class);
 	local entity = self:spawn(class);
 
-	local physics_body = entity:component(crystal.PhysicsBody);
-	if physics_body and playerPhysicsBody then
-		local x, y = playerPhysicsBody:position();
+	local body = entity:component(crystal.Body);
+	if body and playerBody then
+		local x, y = playerBody:position();
 		local angle = math.random(2 * math.pi);
 		local radius = 40;
 		x = x + radius * math.cos(angle);
 		y = y + radius * math.sin(angle);
 		x, y = navigationMesh:getNearestPointOnNavmesh(x, y);
-		physics_body:set_position(x, y);
+		body:set_position(x, y);
 	end
 end
 
@@ -215,14 +215,14 @@ crystal.test.add("Spawn command puts entity near player", function()
 	local TestSpawnCommandProximity = Class("TestSpawnCommandProximity", crystal.Entity);
 	TestSpawnCommandProximity.init = function(self, scene)
 		TestSpawnCommandProximity.super.init(self, scene);
-		self:add_component(crystal.PhysicsBody, scene:physics_world());
+		self:add_component(crystal.Body, scene:physics_world());
 	end
 
 	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local player = scene:spawn(crystal.Entity);
 	player:add_component("InputListener", 1);
-	player:add_component(crystal.PhysicsBody, scene:physics_world());
+	player:add_component(crystal.Body, scene:physics_world());
 	player:set_position(200, 200);
 	scene:update(0);
 

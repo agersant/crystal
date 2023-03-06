@@ -3,8 +3,8 @@ local Fixture = require("modules/physics/Fixture");
 ---@class Collider : Fixture
 local Collider = Class("Collider", Fixture);
 
-Collider.init = function(self, physics_body, shape)
-	Collider.super.init(self, physics_body, shape);
+Collider.init = function(self, body, shape)
+	Collider.super.init(self, body, shape);
 	assert(self.fixture);
 	self:set_friction(0);
 	self:set_restitution(0);

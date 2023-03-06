@@ -5,7 +5,7 @@ local DebugDrawSystem = Class("DebugDrawSystem", crystal.System);
 local drawNavigation = false;
 
 DebugDrawSystem.init = function(self)
-	self._query = self:add_query({ crystal.PhysicsBody });
+	self._query = self:add_query({ crystal.Body });
 end
 
 DebugDrawSystem.draw_debug = function(self, viewport)

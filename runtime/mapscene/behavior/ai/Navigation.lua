@@ -5,12 +5,12 @@ local MathUtils = require("utils/MathUtils");
 
 local Navigation = Class("Navigation", crystal.Behavior);
 
-local navigate = function(self, navigationMesh, goal, physics_body, movement)
+local navigate = function(self, navigationMesh, goal, body, movement)
 	if not goal:is_valid() then
 		return false;
 	end
 
-	local x, y = physics_body:position();
+	local x, y = body:position();
 	local targetX, targetY = goal:position();
 	local _, path = navigationMesh:findPath(x, y, targetX, targetY);
 	if not path then
@@ -19,7 +19,7 @@ local navigate = function(self, navigationMesh, goal, physics_body, movement)
 
 	local vertexIndex = 1;
 	while true do
-		if goal:is_valid() and goal:isPositionAcceptable(physics_body:position()) then
+		if goal:is_valid() and goal:isPositionAcceptable(body:position()) then
 			return true;
 		end
 
@@ -27,7 +27,7 @@ local navigate = function(self, navigationMesh, goal, physics_body, movement)
 		if not waypointX or not waypointY then
 			break
 		end
-		local x, y = physics_body:position();
+		local x, y = body:position();
 		local distToWaypoint2 = MathUtils.distance2(x, y, waypointX, waypointY);
 		local epsilon = movement:speed() * self:delta_time();
 		if distToWaypoint2 >= epsilon * epsilon then
@@ -36,7 +36,7 @@ local navigate = function(self, navigationMesh, goal, physics_body, movement)
 			movement:set_heading(angle);
 			self:wait_frame();
 		else
-			physics_body:set_position(waypointX, waypointY);
+			body:set_position(waypointX, waypointY);
 			vertexIndex = vertexIndex + 1;
 		end
 	end
@@ -69,10 +69,10 @@ end
 Navigation.navigateToGoal = function(self, goal, repathDelay)
 	assert(goal);
 
-	local physics_body = self:entity():component(crystal.PhysicsBody);
+	local body = self:entity():component(crystal.Body);
 	local movement = self:entity():component(crystal.Movement);
 	local navigationMesh = self:entity():ecs():getMap():getNavigationMesh();
-	assert(physics_body);
+	assert(body);
 	assert(movement);
 	assert(navigationMesh);
 
@@ -98,7 +98,7 @@ Navigation.navigateToGoal = function(self, goal, repathDelay)
 			while true do
 				self:thread(function(self)
 					self:stop_on("repath");
-					if navigate(self, navigationMesh, goal, physics_body, movement) then
+					if navigate(self, navigationMesh, goal, body, movement) then
 						self:signal("success");
 					else
 						self:signal("failure");
@@ -124,7 +124,7 @@ crystal.test.add("Walk to point", function()
 	local acceptanceRadius = 6;
 
 	local subject = scene:spawn(crystal.Entity);
-	subject:add_component(crystal.PhysicsBody, scene:physics_world(), "dynamic");
+	subject:add_component(crystal.Body, scene:physics_world(), "dynamic");
 	subject:add_component(crystal.Movement, 50);
 	subject:set_position(startX, startY);
 	subject:add_component(Navigation);
@@ -146,14 +146,14 @@ crystal.test.add("Walk to entity", function()
 	local acceptanceRadius = 6;
 
 	local subject = scene:spawn(crystal.Entity);
-	subject:add_component(crystal.PhysicsBody, scene:physics_world(), "dynamic");
+	subject:add_component(crystal.Body, scene:physics_world(), "dynamic");
 	subject:add_component(crystal.Movement, 50);
 	subject:set_position(startX, startY);
 	subject:add_component(Navigation);
 	subject:add_component(crystal.ScriptRunner);
 
 	local target = scene:spawn(crystal.Entity);
-	target:add_component(crystal.PhysicsBody, scene:physics_world(), "dynamic");
+	target:add_component(crystal.Body, scene:physics_world(), "dynamic");
 	target:set_position(endX, endY);
 
 	subject:navigateToEntity(target, acceptanceRadius);
@@ -174,7 +174,7 @@ crystal.test.add("Can use blocking script function", function()
 	local sentinel = false;
 
 	local subject = scene:spawn(crystal.Entity);
-	subject:add_component(crystal.PhysicsBody, scene:physics_world(), "dynamic");
+	subject:add_component(crystal.Body, scene:physics_world(), "dynamic");
 	subject:add_component(crystal.Movement, 50);
 	subject:set_position(startX, startY);
 	subject:add_component(Navigation);

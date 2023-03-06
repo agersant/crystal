@@ -13,9 +13,9 @@ local PhysicsSystem = Class("PhysicsSystem", crystal.System);
 PhysicsSystem.init = function(self, world)
 	assert(world);
 	self.world = world;
-	self.with_body = self:add_query({ "PhysicsBody" });
-	self.with_movement = self:add_query({ "PhysicsBody", "Movement" });
-	self.with_fixture = self:add_query({ "PhysicsBody", "Fixture" });
+	self.with_body = self:add_query({ "Body" });
+	self.with_movement = self:add_query({ "Body", "Movement" });
+	self.with_fixture = self:add_query({ "Body", "Fixture" });
 
 	self.contact_callbacks = {};
 	self.world:setCallbacks(
@@ -25,12 +25,12 @@ PhysicsSystem.init = function(self, world)
 end
 
 PhysicsSystem.before_physics = function(self, dt)
-	for physics_body in pairs(self.with_body:added_components("PhysicsBody")) do
-		physics_body:on_added();
+	for body in pairs(self.with_body:added_components("Body")) do
+		body:on_added();
 	end
 
-	for physics_body in pairs(self.with_body:removed_components("PhysicsBody")) do
-		physics_body:on_removed();
+	for body in pairs(self.with_body:removed_components("Body")) do
+		body:on_removed();
 	end
 
 	for fixture in pairs(self.with_fixture:added_components("Fixture")) do
@@ -43,17 +43,17 @@ PhysicsSystem.before_physics = function(self, dt)
 
 	for entity in pairs(self.with_movement:entities()) do
 		local movement = entity:component("Movement");
-		local physics_body = entity:component("PhysicsBody");
+		local body = entity:component("Body");
 		if movement:is_enabled() then
 			local speed = movement:speed();
 			local angle = movement:heading();
 			if angle then
-				physics_body:set_angle(angle);
+				body:set_angle(angle);
 				local dx = math.cos(angle);
 				local dy = math.sin(angle);
-				physics_body:set_velocity(speed * dx, speed * dy);
+				body:set_velocity(speed * dx, speed * dy);
 			else
-				physics_body:set_velocity(0, 0);
+				body:set_velocity(0, 0);
 			end
 		end
 	end
@@ -95,8 +95,8 @@ local draw_physics_debug = false;
 
 PhysicsSystem.draw_debug = function(self)
 	if draw_physics_debug then
-		for physics_body in pairs(self.with_body:components(crystal.PhysicsBody)) do
-			local body = physics_body:body();
+		for body in pairs(self.with_body:components(crystal.Body)) do
+			local body = body:inner();
 			local x, y = body:getX(), body:getY();
 			x = MathUtils.round(x);
 			y = MathUtils.round(y);

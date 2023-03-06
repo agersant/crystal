@@ -10,8 +10,8 @@ has_toc: false
 
 | Name                                    | Description |
 | :-------------------------------------- | :---------- |
+| [crystal.Body](body)                    |             |
 | [crystal.Collider](collider)            |             |
 | [crystal.Movement](movement)            |             |
-| [crystal.PhysicsBody](physics_body)     |             |
 | [crystal.PhysicsSystem](physics_system) |             |
 | [crystal.Sensor](sensor)                |             |

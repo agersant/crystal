@@ -3,8 +3,8 @@ local Fixture = require("modules/physics/Fixture");
 ---@class Sensor : Fixture
 local Sensor = Class("Sensor", Fixture);
 
-Sensor.init = function(self, physics_body, shape)
-	Sensor.super.init(self, physics_body, shape);
+Sensor.init = function(self, body, shape)
+	Sensor.super.init(self, body, shape);
 	assert(self.fixture);
 	self.fixture:setSensor(true);
 end

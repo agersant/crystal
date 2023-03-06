@@ -11,8 +11,8 @@ local TableUtils = require("utils/TableUtils");
 ---@field private contact_fixtures { [Fixture]: Entity }
 local Fixture = Class("Fixture", crystal.Component);
 
-Fixture.init = function(self, physics_body, shape)
-	assert(physics_body:inherits_from("PhysicsBody"));
+Fixture.init = function(self, body, shape)
+	assert(body:inherits_from("Body"));
 	assert(shape:typeOf("Shape"));
 	self.enabled = true;
 	self.active = false;
@@ -20,7 +20,7 @@ Fixture.init = function(self, physics_body, shape)
 	self.mask = 0;
 	self.group = 0;
 	self.contact_fixtures = {};
-	self.fixture = love.physics.newFixture(physics_body:body(), shape, 0);
+	self.fixture = love.physics.newFixture(body:inner(), shape, 0);
 	self.fixture:setUserData(self);
 	self:update_filter_data();
 end
