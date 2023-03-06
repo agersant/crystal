@@ -26,11 +26,11 @@ end
 
 PhysicsSystem.before_physics = function(self, dt)
 	for physics_body in pairs(self.with_body:added_components("PhysicsBody")) do
-		physics_body:body():setActive(true);
+		physics_body:on_added();
 	end
 
 	for physics_body in pairs(self.with_body:removed_components("PhysicsBody")) do
-		physics_body:body():setActive(false);
+		physics_body:on_removed();
 	end
 
 	for fixture in pairs(self.with_fixture:added_components("Fixture")) do

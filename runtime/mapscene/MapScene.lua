@@ -5,7 +5,6 @@ local DebugDrawSystem = require("mapscene/display/DebugDrawSystem");
 local SpriteSystem = require("mapscene/display/SpriteSystem");
 local DrawableSystem = require("mapscene/display/DrawableSystem");
 local WorldWidgetSystem = require("mapscene/display/WorldWidgetSystem");
-local ParentSystem = require("mapscene/physics/ParentSystem");
 local Scene = require("Scene");
 local Alias = require("utils/Alias");
 local StringUtils = require("utils/StringUtils");
@@ -24,9 +23,6 @@ MapScene.init = function(self, mapName)
 
 	self._renderer = Renderer:new(VIEWPORT);
 	self._physics_world = love.physics.newWorld(0, 0, false);
-
-	-- Before physics
-	ecs:add_system(ParentSystem);
 
 	-- During Physics
 	ecs:add_system(crystal.PhysicsSystem, self._physics_world);
