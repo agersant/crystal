@@ -18,13 +18,14 @@
   - [ ] gfx
   - [x] input
   - [x] log
+  - [ ] persistence
   - [ ] physics
   - [ ] scene
   - [x] script
   - [x] test
   - [x] tool
   - [ ] ui
-  - [ ] oop
+  - [x] oop
   - [ ] stringutils
   - [ ] tableutils
   - [ ] window
@@ -39,6 +40,7 @@
   - [ ] Add device dropdown in overlay
   - [ ] Support set_mode per knob (?)
   - [ ] Remove console commands
+- [ ] Document built-in tools
 - [ ] Getting Started instructions in readme and docs
 - [ ] Auto-complete for command args supports custom types
 - [ ] Window/viewport/scene/camera system rework
