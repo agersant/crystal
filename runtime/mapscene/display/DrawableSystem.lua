@@ -1,4 +1,5 @@
 local Drawable = require("mapscene/display/Drawable");
+local DrawEffect = require("mapscene/display/DrawEffect")
 local Shader = require("mapscene/display/Shader");
 
 local DrawableSystem = Class("DrawableSystem", crystal.System);
@@ -20,6 +21,10 @@ DrawableSystem.duringEntitiesDraw = function(self)
 
 	for _, drawable in ipairs(sorted_drawables) do
 		local entity = drawable:entity();
+		local effects = entity:components(DrawEffect);
+		for effect, _ in pairs(effects) do
+			effect:pre();
+		end
 		local shader = entity:component(Shader);
 		if shader then
 			shader:apply();
@@ -27,6 +32,9 @@ DrawableSystem.duringEntitiesDraw = function(self)
 		drawable:draw();
 		if shader then
 			love.graphics.setShader(nil);
+		end
+		for effect, _ in pairs(effects) do
+			effect:post();
 		end
 	end
 end

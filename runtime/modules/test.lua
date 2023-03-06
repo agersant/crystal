@@ -122,18 +122,18 @@ TestRunner.runAll = function(self)
 			self.context.test_name = test.name;
 			local traceback = nil;
 			local success, err = xpcall(
-					function()
-						test.body(self.context)
-					end,
-					function(err)
-						table.insert(failures, {
-							source = source,
-							name = test.name,
-							err = err,
-							traceback = debug.traceback(),
-						});
-					end
-				);
+				function()
+					test.body(self.context)
+				end,
+				function(err)
+					table.insert(failures, {
+						source = source,
+						name = test.name,
+						err = err,
+						traceback = debug.traceback(),
+					});
+				end
+			);
 
 			num_tests = num_tests + 1;
 			if success then
@@ -250,7 +250,7 @@ TestContext.expect_frame = function(self, reference)
 		local name = string.gsub(string.lower(self.test_name), "%s+", "-");
 		local screnshot_path = self.runner:save_screenshot(actual, name);
 		local error_message = string.format("Screenshot did not match reference image.\n\tExpected: %s\n\tActual: %s",
-				reference, screnshot_path);
+			reference, screnshot_path);
 		if pixel_diff then
 			error_message = error_message ..
 				string.format(

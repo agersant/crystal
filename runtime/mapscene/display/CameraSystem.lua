@@ -31,12 +31,12 @@ CameraSystem.beforeEntitiesDraw = function(self)
 	love.graphics.translate(ox, oy);
 end
 
-CameraSystem.beforeDebugDraw = function(self)
+CameraSystem.before_draw_debug = function(self)
 	local ox, oy = self._camera:getExactRenderOffset();
 	love.graphics.translate(ox, oy);
 end
 
-CameraSystem.duringDebugDraw = function(self)
+CameraSystem.draw_debug = function(self)
 	if drawCameraOverlay then
 		self._camera:drawDebug();
 	end

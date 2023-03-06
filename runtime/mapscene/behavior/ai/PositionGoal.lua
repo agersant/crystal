@@ -8,7 +8,7 @@ PositionGoal.init = function(self, x, y, radius)
 	self._y = y;
 end
 
-PositionGoal.getPosition = function(self)
+PositionGoal.position = function(self)
 	return self._x, self._y;
 end
 
@@ -16,7 +16,7 @@ end
 
 crystal.test.add("Get position", function()
 	local goal = PositionGoal:new(10, 20, 1);
-	local x, y = goal:getPosition();
+	local x, y = goal:position();
 	assert(x == 10);
 	assert(y == 20);
 end);

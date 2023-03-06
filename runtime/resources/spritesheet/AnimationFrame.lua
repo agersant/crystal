@@ -32,7 +32,6 @@ AnimationFrame.init = function(self, frame, duration, tags)
 			self._tags[tagName] = shape;
 		end
 	end
-
 end
 
 AnimationFrame.getDuration = function(self)

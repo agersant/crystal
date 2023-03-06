@@ -33,19 +33,19 @@ CollisionMesh.isOuterEdge = function(self, chain)
 end
 
 CollisionMesh.spawnBody = function(self, scene)
-	local world = scene:getPhysicsWorld();
+	local world = scene:physics_world();
 	local body = love.physics.newBody(world, 0, 0);
 	body:setUserData(self);
 	for _, chain in ipairs(self._chains) do
 		local shape = love.physics.newChainShape(true, chain);
 		local fixture = love.physics.newFixture(body, shape, 0);
-		fixture:setFilterData(CollisionFilters.GEO, CollisionFilters.SOLID, 0);
+		fixture:setFilterData(crystal.physics.category("level"), 65535, 0);
 	end
 	return body;
 end
 
 CollisionMesh.draw = function(self, viewport)
-	love.graphics.setColor(Colors.redOrange);
+	love.graphics.setColor(Colors.puffins_bill);
 	love.graphics.setLineWidth(2);
 	love.graphics.setLineJoin("bevel");
 	love.graphics.setPointSize(6 * viewport:getZoom());

@@ -1,18 +1,11 @@
 local Renderer = require("graphics/Renderer");
 local MapSystem = require("mapscene/MapSystem");
 local CameraSystem = require("mapscene/display/CameraSystem");
+local DebugDrawSystem = require("mapscene/display/DebugDrawSystem");
 local SpriteSystem = require("mapscene/display/SpriteSystem");
 local DrawableSystem = require("mapscene/display/DrawableSystem");
 local WorldWidgetSystem = require("mapscene/display/WorldWidgetSystem");
-local CollisionSystem = require("mapscene/physics/CollisionSystem");
-local DebugDrawSystem = require("mapscene/physics/DebugDrawSystem");
-local HitboxSystem = require("mapscene/physics/HitboxSystem");
-local LocomotionSystem = require("mapscene/physics/LocomotionSystem");
 local ParentSystem = require("mapscene/physics/ParentSystem");
-local PhysicsBodySystem = require("mapscene/physics/PhysicsBodySystem");
-local PhysicsSystem = require("mapscene/physics/PhysicsSystem");
-local TouchTriggerSystem = require("mapscene/physics/TouchTriggerSystem");
-local WeakboxSystem = require("mapscene/physics/WeakboxSystem");
 local Scene = require("Scene");
 local Alias = require("utils/Alias");
 local StringUtils = require("utils/StringUtils");
@@ -30,18 +23,13 @@ MapScene.init = function(self, mapName)
 	Alias:add(ecs, self);
 
 	self._renderer = Renderer:new(VIEWPORT);
+	self._physics_world = love.physics.newWorld(0, 0, false);
 
 	-- Before physics
-	ecs:add_system(PhysicsBodySystem);
-	ecs:add_system(TouchTriggerSystem);
-	ecs:add_system(CollisionSystem);
-	ecs:add_system(LocomotionSystem);
-	ecs:add_system(HitboxSystem);
-	ecs:add_system(WeakboxSystem);
 	ecs:add_system(ParentSystem);
 
 	-- During Physics
-	ecs:add_system(PhysicsSystem);
+	ecs:add_system(crystal.PhysicsSystem, self._physics_world);
 
 	-- After physics
 
@@ -80,8 +68,8 @@ MapScene.getMap = function(self)
 	return self._ecs:system(MapSystem):getMap();
 end
 
-MapScene.getPhysicsWorld = function(self)
-	return self._ecs:system(PhysicsSystem):getWorld();
+MapScene.physics_world = function(self)
+	return self._physics_world;
 end
 
 MapScene.spawn = function(self, ...)
@@ -100,9 +88,9 @@ MapScene.update = function(self, dt)
 
 	self._ecs:update();
 
-	self._ecs:notify_systems("beforePhysics", dt);
-	self._ecs:notify_systems("duringPhysics", dt);
-	self._ecs:notify_systems("afterPhysics", dt);
+	self._ecs:notify_systems("before_physics", dt);
+	self._ecs:notify_systems("during_physics", dt);
+	self._ecs:notify_systems("after_physics", dt);
 
 	self._ecs:notify_systems("before_run_scripts", dt);
 	self._ecs:notify_systems("run_scripts", dt);
@@ -132,9 +120,9 @@ MapScene.draw = function(self)
 	});
 
 	self._renderer:draw(function()
-		self._ecs:notify_systems("beforeDebugDraw", viewport);
-		self._ecs:notify_systems("duringDebugDraw", viewport);
-		self._ecs:notify_systems("afterDebugDraw", viewport);
+		self._ecs:notify_systems("before_draw_debug", viewport);
+		self._ecs:notify_systems("draw_debug", viewport);
+		self._ecs:notify_systems("after_draw_debug", viewport);
 	end, { nativeResolution = true, sceneSizeX = sceneSizeX, sceneSizeY = sceneSizeY });
 
 	self._renderer:draw(function()
@@ -147,7 +135,7 @@ MapScene.spawnEntityNearPlayer = function(self, class)
 	local playerPhysicsBody;
 	local players = self:ecs():entities_with("InputListener");
 	for entity in pairs(players) do
-		playerPhysicsBody = entity:component("PhysicsBody");
+		playerPhysicsBody = entity:component(crystal.PhysicsBody);
 		break;
 	end
 
@@ -159,15 +147,15 @@ MapScene.spawnEntityNearPlayer = function(self, class)
 	assert(class);
 	local entity = self:spawn(class);
 
-	local physicsBody = entity:component("PhysicsBody");
-	if physicsBody and playerPhysicsBody then
-		local x, y = playerPhysicsBody:getPosition();
+	local physics_body = entity:component(crystal.PhysicsBody);
+	if physics_body and playerPhysicsBody then
+		local x, y = playerPhysicsBody:position();
 		local angle = math.random(2 * math.pi);
 		local radius = 40;
 		x = x + radius * math.cos(angle);
 		y = y + radius * math.sin(angle);
 		x, y = navigationMesh:getNearestPointOnNavmesh(x, y);
-		physicsBody:setPosition(x, y);
+		physics_body:set_position(x, y);
 	end
 end
 
@@ -231,15 +219,15 @@ crystal.test.add("Spawn command puts entity near player", function()
 	local TestSpawnCommandProximity = Class("TestSpawnCommandProximity", crystal.Entity);
 	TestSpawnCommandProximity.init = function(self, scene)
 		TestSpawnCommandProximity.super.init(self, scene);
-		self:add_component("PhysicsBody", scene:getPhysicsWorld());
+		self:add_component(crystal.PhysicsBody, scene:physics_world());
 	end
 
 	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local player = scene:spawn(crystal.Entity);
 	player:add_component("InputListener", 1);
-	player:add_component("PhysicsBody", scene:getPhysicsWorld());
-	player:setPosition(200, 200);
+	player:add_component(crystal.PhysicsBody, scene:physics_world());
+	player:set_position(200, 200);
 	scene:update(0);
 
 	scene:spawnEntityNearPlayer(TestSpawnCommandProximity);
@@ -247,7 +235,7 @@ crystal.test.add("Spawn command puts entity near player", function()
 
 	for entity in pairs(scene:ecs():entities()) do
 		if entity:inherits_from(TestSpawnCommandProximity) then
-			assert(entity:distanceToEntity(player) < 100);
+			assert(entity:distance_to_entity(player) < 100);
 			return;
 		end
 	end

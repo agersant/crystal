@@ -38,7 +38,6 @@ end
 
 --#region Tests
 
-local PhysicsBody = require("mapscene/physics/PhysicsBody");
 local Image = require("ui/bricks/elements/Image");
 
 crystal.test.add("Draws widget", function(context)
@@ -47,9 +46,9 @@ crystal.test.add("Draws widget", function(context)
 	local entity = scene:spawn(crystal.Entity);
 	local widget = Image:new();
 	widget:setImageSize(48, 32);
-	entity:add_component(PhysicsBody, scene:getPhysicsWorld(), "dynamic");
+	entity:add_component(crystal.PhysicsBody, scene:physics_world(), "dynamic");
 	entity:add_component(WorldWidget, widget);
-	entity:setPosition(160, 120);
+	entity:set_position(160, 120);
 
 	scene:update(0);
 	scene:draw();

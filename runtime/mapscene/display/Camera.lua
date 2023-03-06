@@ -7,7 +7,7 @@ local Camera = Class("Camera");
 local computeAveragePosition = function(self, trackedEntities)
 	local tx, ty = 0, 0;
 	for _, entity in ipairs(trackedEntities) do
-		local x, y = entity:getPosition();
+		local x, y = entity:position();
 		tx = tx + MathUtils.round(x);
 		ty = ty + MathUtils.round(y);
 	end
@@ -87,7 +87,7 @@ Camera.getSubpixelOffset = function(self)
 	return exactX - roundedX, exactY - roundedY;
 end
 
-Camera.setPosition = function(self, x, y)
+Camera.set_position = function(self, x, y)
 	assert(type(x) == "number");
 	assert(type(y) == "number");
 	self._x = x;
@@ -115,7 +115,7 @@ Camera.update = function(self, trackedEntities)
 		end
 	end
 
-	self:setPosition(newX, newY);
+	self:set_position(newX, newY);
 end
 
 Camera.drawDebug = function(self)
@@ -127,7 +127,7 @@ Camera.drawDebug = function(self)
 	local screenW, screenH = self:getScreenSize();
 	love.graphics.setLineStyle("rough");
 	love.graphics.setLineWidth(2);
-	love.graphics.setColor(Colors.jadeDust);
+	love.graphics.setColor(Colors.turkish_aqua);
 
 	love.graphics.line(self._x - buffer, self._y - screenH / 2, self._x - buffer, self._y + screenH / 2);
 	love.graphics.line(self._x + buffer, self._y - screenH / 2, self._x + buffer, self._y + screenH / 2);

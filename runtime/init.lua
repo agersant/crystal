@@ -47,6 +47,7 @@ add_module("const", "modules/const");
 add_module("ecs", "modules/ecs");
 add_module("input", "modules/input");
 add_module("log", "modules/log");
+add_module("physics", "modules/physics");
 add_module("script", "modules/script");
 add_module("tool", "modules/tool");
 
@@ -57,8 +58,9 @@ local Scene = require("Scene");
 local TableUtils = require("utils/TableUtils");
 crystal.conf = {
 	assetsDirectories = {},
-	mapDirectory = "", -- TODO remove when mapscene is no longer part of crystal
-	mapSceneClass = "MapScene", -- TODO remove when mapscene is no longer part of crystal
+	physicsCategories = {},
+	mapDirectory = "",           -- TODO remove when mapscene is no longer part of crystal
+	mapSceneClass = "MapScene",  -- TODO remove when mapscene is no longer part of crystal
 	saveDataClass = "BaseSaveData", -- TODO remove when reworking persistence
 };
 crystal.configure = function(c)
