@@ -70,7 +70,9 @@ Fixture.on_added = function(self)
 end
 
 Fixture.on_removed = function(self)
-	self.fixture:destroy();
+	if not self.fixture:isDestroyed() then
+		self.fixture:destroy();
+	end
 	self.fixture = nil;
 end
 
