@@ -26,14 +26,17 @@ crystal.input.map_axis_to_actions(configuration)
 
 Each key in the `configuration` table is an action bound to a [gamepad axis](https://love2d.org/wiki/GamepadAxis).
 
-The value associated with each axis action is a table where each key is a (regular) action that can be emitted by this axis. The value associated with each of these actions is a table listing the range of [axis values](https://love2d.org/wiki/Joystick:getGamepadAxis) where the input is considered pressed / released.
+The value associated with each axis action is a table where each key is a (regular) action that can be emitted by this axis. The value associated with each of these actions is a table listing:
+
+- `pressed_range`: the range of [axis values](https://love2d.org/wiki/Joystick:getGamepadAxis) where the input is considered pressed.
+- `stickiness`: a `number` specifying how far from the `pressed_range` the axis is allowed to travel before being considered released.
 
 Schema for the configuration table:
 
 ```lua
 {
   [input_action] = {
-    [action] = { pressed_range = { min, max }, released_range = { min, max } }
+    [action] = { pressed_range = { number, number }, stickiness = number }
     ...
   },
   ...
@@ -60,12 +63,15 @@ crystal.input.player(1):set_bindings({
 -- Map flicks of ui_x and ui_y to corresponding discrete actions
 crystal.input.map_axis_to_actions({
   ui_x = {
-    ui_left = { pressed_range = { -1.0, -0.9 }, released_range = { -0.2, 1.0 } },
-    ui_right = { pressed_range = { 0.9, 1.0 }, released_range = { -1.0, 0.2 } },
+    -- When the left stick X axis gets into the [-1, -0.9] range, ui_left is pressed.
+    -- When this same axis gets 0.7 away from [-1, -0.9], ui_left is released.
+    -- In other words, ui_left is released when the axis reaches -0.2 or higher.
+    ui_left = { pressed_range = { -1.0, -0.9 }, stickiness = 0.7 },
+    ui_right = { pressed_range = { 0.9, 1.0 }, stickiness = 0.7 },
   },
   ui_y = {
-    ui_up = { pressed_range = { -1.0, -0.9 }, released_range = { -0.2, 1.0 } },
-    ui_down = { pressed_range = { 0.9, 1.0 }, released_range = { -1.0, 0.2 } },
+    ui_up = { pressed_range = { -1.0, -0.9 }, stickiness = 0.7 },
+    ui_down = { pressed_range = { 0.9, 1.0 }, stickiness = 0.7 },
   },
 });
 ```

@@ -213,7 +213,11 @@ InputPlayer.trigger_axis_events = function(self, axis_to_binary_actions)
 			local axis_value = self:axis_action_value(axis_action);
 			local was_pressed = self.actions_pressed_via_axis[axis_action][action];
 			local is_pressed = axis_value >= config.pressed_range[1] and axis_value <= config.pressed_range[2];
-			local is_released = axis_value >= config.released_range[1] and axis_value <= config.released_range[2];
+			local distance_to_pressed = math.min(
+				math.abs(axis_value - config.pressed_range[1]),
+				math.abs(axis_value - config.pressed_range[2])
+			);
+			local is_released = not is_pressed and distance_to_pressed >= config.stickiness;
 			if is_pressed and not was_pressed then
 				self:action_down(action);
 			elseif was_pressed and is_released then

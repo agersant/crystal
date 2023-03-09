@@ -2,7 +2,7 @@ local MathUtils = require("utils/MathUtils");
 local TableUtils = require("utils/TableUtils");
 local InputPlayer = require("modules/input/input_player");
 
----@alias AxisToButton { pressed_range: { [1]: number, [2]: number}, released_range: { [1]: number, [2]: number } }
+---@alias AxisToButton { pressed_range: { [1]: number, [2]: number}, stickiness: number }
 ---@alias Autorepeat { initial_delay: number, period: number }
 
 ---@class InputManager
@@ -73,11 +73,10 @@ InputManager.map_axis_to_actions = function(self, map)
 		for action, config in pairs(actions) do
 			assert(type(config.pressed_range[1]) == "number");
 			assert(type(config.pressed_range[2]) == "number");
-			assert(type(config.released_range[1]) == "number");
-			assert(type(config.released_range[2]) == "number");
+			assert(type(config.stickiness) == "number");
 			self.axis_to_binary_actions[axis_action][action] = {
 				pressed_range = { config.pressed_range[1], config.pressed_range[2] },
-				released_range = { config.released_range[1], config.released_range[2] },
+				stickiness = config.stickiness,
 			};
 		end
 	end
@@ -229,7 +228,7 @@ crystal.test.add("Can map gamepad axis to a binary action", function()
 	local manager = InputManager:new(gamepad_api);
 	manager:map_axis_to_actions({
 		ui_x = {
-			ui_left = { pressed_range = { -1.0, -0.9 }, released_range = { -0.2, 1.0 } },
+			ui_left = { pressed_range = { -1.0, -0.9 }, stickiness = 0.6 },
 		},
 	});
 	local player = manager:player(1);
