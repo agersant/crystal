@@ -11,14 +11,14 @@ Like all other components, `Movement` components are created by calling [Entity:
 
 ## Methods
 
-| Name                | Description |
-| :------------------ | :---------- |
-| disable_movement    |             |
-| enable_movement     |             |
-| heading             |             |
-| is_movement_enabled |             |
-| set_heading         |             |
-| set_speed           |             |
-| speed               |             |
+| Name                | Description                                                   |
+| :------------------ | :------------------------------------------------------------ |
+| disable_movement    | Prevents this component from affecting entity physics.        |
+| enable_movement     | Allows this component to affect entity physics.               |
+| heading             | Returns the direction this entity is moving towards.          |
+| is_movement_enabled | Returns whether this movement component is currently enabled. |
+| set_heading         | Sets the direction this entity is moving towards.             |
+| set_speed           | Sets how fast this entity can move.                           |
+| speed               | Returns how fast this entity can move.                        |
 
 ## Examples

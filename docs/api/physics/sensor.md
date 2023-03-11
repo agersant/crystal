@@ -16,18 +16,16 @@ entity:add_component(crystal.Sensor, body, love.physics.newCircleShape(4));
 
 ## Methods
 
-| Name                      | Description |
-| :------------------------ | :---------- |
-| active_contacts           |             |
-| add_category_to_mask      |             |
-| disable_activation_by     |             |
-| disable_sensor            |             |
-| enable_activation_by      |             |
-| enable_sensor             |             |
-| on_begin_contact          |             |
-| on_end_contact            |             |
-| remove_category_from_mask |             |
-| set_categories            |             |
-| shape                     |             |
+| Name                  | Description                                                      |
+| :-------------------- | :--------------------------------------------------------------- |
+| activations           | Returns all components currently overlapping this sensor.        |
+| disable_activation_by | Prevents a physics category from activating this sensor.         |
+| disable_sensor        | Prevents this sensor from being activated.                       |
+| enable_activation_by  | Allows a physics category to activate this sensor.               |
+| enable_sensor         | Allows this sensor to be activated.                              |
+| on_activate           | Called when a collider or sensor starts overlapping this sensor. |
+| on_deactivate         | Called when a collider or sensor stops overlapping this sensor.  |
+| set_categories        | Sets which physics categories describe this sensor.              |
+| shape                 | Returns the shape of this sensor.                                |
 
 ## Examples

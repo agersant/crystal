@@ -1,7 +1,12 @@
 local Fixture = require("modules/physics/Fixture");
 
 ---@class Collider : Fixture
+---@field on_collide fun(Sensor, Fixture, Entity, Contact)
+---@field on_uncollide fun(Sensor, Fixture, Entity, Contact)
 local Collider = Class("Collider", Fixture);
+
+local noop = function()
+end
 
 Collider.init = function(self, body, shape)
 	Collider.super.init(self, body, shape);
@@ -9,6 +14,8 @@ Collider.init = function(self, body, shape)
 	self:set_friction(0);
 	self:set_restitution(0);
 	self:enable_collision_with("level");
+	self.on_collide = noop;
+	self.on_uncollide = noop;
 end
 
 Collider.enable_collider = function(self)
@@ -37,6 +44,25 @@ end
 ---@param restitution number
 Collider.set_restitution = function(self, restitution)
 	self.fixture:setRestitution(restitution);
+end
+
+---@param other_fixture Fixture
+---@param other_entity Entity
+---@param contact love.Contact
+Collider.on_begin_contact = function(self, other_fixture, other_entity, contact)
+	self:on_collide(other_fixture, other_entity, contact);
+end
+
+---@param other_fixture Fixture
+---@param other_entity Entity
+---@param contact love.Contact
+Collider.on_end_contact = function(self, other_fixture, other_entity, contact)
+	self:on_uncollide(other_fixture, other_entity, contact);
+end
+
+---@return { [Fixture]: Entity }
+Collider.collisions = function(self)
+	return self:active_contacts();
 end
 
 return Collider;

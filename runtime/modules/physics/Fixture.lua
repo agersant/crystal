@@ -101,10 +101,4 @@ Fixture.end_contact = function(self, other_fixture, contact)
 	self:on_end_contact(other_fixture, other_fixture:entity(), contact);
 end
 
-Fixture.on_begin_contact = function(self, other_fixture, other_entity, contact)
-end
-
-Fixture.on_end_contact = function(self, other_fixture, other_entity, contact)
-end
-
 return Fixture;
