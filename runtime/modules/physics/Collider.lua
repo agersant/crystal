@@ -11,14 +11,22 @@ Collider.init = function(self, body, shape)
 	self:enable_collision_with("level");
 end
 
+Collider.enable_collider = function(self)
+	self:enable();
+end
+
+Collider.disable_collider = function(self)
+	self:disable();
+end
+
 ---@param ... string
 Collider.enable_collision_with = function(self, ...)
-	self:add_to_mask(...);
+	self:add_category_to_mask(...);
 end
 
 ---@param ... string
 Collider.disable_collision_with = function(self, ...)
-	self:remove_from_mask(...);
+	self:remove_category_from_mask(...);
 end
 
 ---@param friction number

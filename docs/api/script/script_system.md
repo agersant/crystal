@@ -7,9 +7,10 @@ grand_parent: API Reference
 
 This ECS [System](system) powers [Behavior](behavior) and [ScriptRunner](script_runner) components.
 
-When it receives the `before_run_scripts` [notification](/crystal/api/ecs/ecs_notify_systems), this system ensures all `Behavior` scripts are present on entities' `ScriptRunner` components.
+When it receives the `run_scripts` [notification](/crystal/api/ecs/ecs_notify_systems), this system:
 
-When it receives the `run_scripts` [notification](/crystal/api/ecs/ecs_notify_systems), this systems runs all scripts owned by `ScriptRunner` components.
+1. Registers or unregisters `Behavior` scripts with the corresponding `ScriptRunner` components.
+2. Runs all scripts owned by `ScriptRunner` components.
 
 ## Examples
 

@@ -11,7 +11,7 @@ Movement.init = function(self, speed)
 end
 
 ---@return boolean
-Movement.is_enabled = function(self)
+Movement.is_movement_enabled = function(self)
 	return self.enabled;
 end
 

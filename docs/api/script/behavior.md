@@ -15,7 +15,7 @@ When a Behavior component is removed from an entity, all its threads are stopped
 
 ## Constructor
 
-Like all other components, Behaviors are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
+Like all other components, `Behavior` components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
 
 When inheriting from `crystal.Behavior` and writing a constructor for your component class, you must call the `super` constructor. The `super` constructor supports one optional argument: a function that contains initial logic for the script to run. Specifying this argument is equivalent to calling [self:script():add_thread(f)](script_add_thread).
 

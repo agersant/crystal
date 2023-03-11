@@ -84,9 +84,7 @@ MapScene.update = function(self, dt)
 
 	self._ecs:update();
 
-	self._ecs:notify_systems("before_physics", dt);
-	self._ecs:notify_systems("during_physics", dt);
-	self._ecs:notify_systems("after_physics", dt);
+	self._ecs:notify_systems("simulate_physics", dt);
 
 	self._ecs:notify_systems("before_run_scripts", dt);
 	self._ecs:notify_systems("run_scripts", dt);

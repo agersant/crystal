@@ -24,7 +24,7 @@ PhysicsSystem.init = function(self, world)
 	);
 end
 
-PhysicsSystem.before_physics = function(self, dt)
+PhysicsSystem.simulate_physics = function(self, dt)
 	for body in pairs(self.with_body:added_components("Body")) do
 		body:on_added();
 	end
@@ -44,7 +44,7 @@ PhysicsSystem.before_physics = function(self, dt)
 	for entity in pairs(self.with_movement:entities()) do
 		local movement = entity:component("Movement");
 		local body = entity:component("Body");
-		if movement:is_enabled() then
+		if movement:is_movement_enabled() then
 			local speed = movement:speed();
 			local angle = movement:heading();
 			if angle then
@@ -57,9 +57,7 @@ PhysicsSystem.before_physics = function(self, dt)
 			end
 		end
 	end
-end
 
-PhysicsSystem.during_physics = function(self, dt)
 	self.world:update(dt);
 	for _, callback in ipairs(self.contact_callbacks) do
 		callback.func(unpack(callback.args));

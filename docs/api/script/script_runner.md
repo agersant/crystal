@@ -16,7 +16,7 @@ Scripts added to a `ScriptRunner` transparently have access to all methods of th
 
 ## Constructor
 
-Like all other components, ScriptRunners are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
+Like all other components, `ScriptRunner` components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
 
 ## Methods
 

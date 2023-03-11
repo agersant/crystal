@@ -42,7 +42,7 @@ Fixture.set_categories = function(self, ...)
 end
 
 ---@param ... string
-Fixture.add_to_mask = function(self, ...)
+Fixture.add_category_to_mask = function(self, ...)
 	for i = 1, select("#", ...) do
 		local category = crystal.physics.category(select(i, ...));
 		self.mask = bit.bor(self.mask, category);
@@ -51,7 +51,7 @@ Fixture.add_to_mask = function(self, ...)
 end
 
 ---@param ... string
-Fixture.remove_from_mask = function(self, ...)
+Fixture.remove_category_from_mask = function(self, ...)
 	for i = 1, select("#", ...) do
 		local category = crystal.physics.category(select(i, ...));
 		self.mask = bit.band(self.mask, bit.bnot(category));
