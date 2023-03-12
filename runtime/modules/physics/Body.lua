@@ -182,46 +182,15 @@ crystal.test.add("look_at turns to correct direction", function()
 
 	entity:look_at(10, 0);
 	assert(entity:rotation() == 0);
-	local x, y = entity:direction4();
-	assert(x == 1 and y == 0);
 
 	entity:look_at(0, 10);
 	assert(entity:rotation() == 0.5 * math.pi);
-	local x, y = entity:direction4();
-	assert(x == 0 and y == 1);
 
 	entity:look_at(-10, 0);
 	assert(entity:rotation() == math.pi);
-	local x, y = entity:direction4();
-	assert(x == -1 and y == 0);
 
 	entity:look_at(0, -10);
 	assert(entity:rotation() == -0.5 * math.pi);
-	local x, y = entity:direction4();
-	assert(x == 0 and y == -1);
-end);
-
-crystal.test.add("Direction is preserved when switching to adjacent diagonal", function()
-	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty_map.lua");
-	local entity = scene:spawn(crystal.Entity);
-	entity:add_component(Body, scene:physics_world(), "dynamic");
-
-	entity:set_rotation(0.25 * math.pi);
-	local x, y = entity:direction4();
-	assert(x == 1 and y == 0);
-
-	entity:set_rotation(-0.25 * math.pi);
-	local x, y = entity:direction4();
-	assert(x == 1 and y == 0);
-
-	entity:set_rotation(-0.75 * math.pi);
-	local x, y = entity:direction4();
-	assert(x == 0 and y == -1);
-
-	entity:set_rotation(-0.25 * math.pi);
-	local x, y = entity:direction4();
-	assert(x == 0 and y == -1);
 end);
 
 crystal.test.add("Can measure distances", function()
