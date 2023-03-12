@@ -28,14 +28,14 @@ has_toc: false
 
 ## Callbacks
 
-|                         |     |
-| :---------------------- | :-- |
-| crystal.developer_start |     |
-| crystal.player_start    |     |
-| crystal.prelude         |     |
+| Name                    | Description |
+| :---------------------- | :---------- |
+| crystal.developer_start |             |
+| crystal.player_start    |             |
+| crystal.prelude         |             |
 
 ## Functions
 
-|                   |     |
-| :---------------- | :-- |
-| crystal.configure |     |
+| Name                           | Description                    |
+| :----------------------------- | :----------------------------- |
+| [crystal.configure](configure) | Configures crystal's behavior. |

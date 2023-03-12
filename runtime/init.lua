@@ -131,6 +131,10 @@ love.load = function()
 
 	PERSISTENCE = require("persistence/Persistence"):new(Class:by_name(crystal.conf.saveDataClass));
 
+	if crystal.prelude then
+		crystal.prelude();
+	end
+
 	if features.developer_start and crystal.developer_start then
 		crystal.developer_start();
 	elseif crystal.player_start then
