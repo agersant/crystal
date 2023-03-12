@@ -37,7 +37,7 @@ return {
 	},
 	init = function()
 		local categories = { level = true };
-		for _, category in ipairs(crystal.conf.physicsCategories) do
+		for _, category in ipairs(crystal.conf.physics_categories) do
 			categories[category] = true;
 		end
 		define_fixture_categories(categories);

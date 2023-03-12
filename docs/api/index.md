@@ -28,11 +28,11 @@ has_toc: false
 
 ## Callbacks
 
-|                     |     |
-| :------------------ | :-- |
-| crystal.devStart    |     |
-| crystal.playerStart |     |
-| crystal.prelude     |     |
+|                         |     |
+| :---------------------- | :-- |
+| crystal.developer_start |     |
+| crystal.player_start    |     |
+| crystal.prelude         |     |
 
 ## Functions
 
