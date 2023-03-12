@@ -3,6 +3,7 @@ local TableUtils = require("utils/TableUtils");
 
 ---@class Fixture : Component
 ---@field protected fixture love.Fixture
+---@field private all_categories { [string]: number}
 ---@field private enabled boolean # user-driven
 ---@field private active boolean # driven by lifecycle of the component
 ---@field private categories number
@@ -10,6 +11,8 @@ local TableUtils = require("utils/TableUtils");
 ---@field private group number
 ---@field private contact_fixtures { [Fixture]: Entity }
 local Fixture = Class("Fixture", crystal.Component);
+
+Fixture.all_categories = {};
 
 Fixture.init = function(self, body, shape)
 	assert(body:inherits_from("Body"));
@@ -31,11 +34,20 @@ Fixture.update_filter_data = function(self)
 	self.fixture:setFilterData(self.categories, effective and self.mask or 0, self.group);
 end
 
+---@private
+---@param name string
+---@returns number
+Fixture.category = function(self, name)
+	assert(type(name) == "string");
+	assert(Fixture.all_categories[name]);
+	return Fixture.all_categories[name];
+end
+
 ---@param ... string
 Fixture.set_categories = function(self, ...)
 	self.categories = 0;
 	for i = 1, select("#", ...) do
-		local category = crystal.physics.category(select(i, ...));
+		local category = self:category(select(i, ...));
 		self.categories = bit.bor(self.categories, category);
 	end
 	self:update_filter_data();
@@ -44,7 +56,7 @@ end
 ---@param ... string
 Fixture.add_category_to_mask = function(self, ...)
 	for i = 1, select("#", ...) do
-		local category = crystal.physics.category(select(i, ...));
+		local category = self:category(select(i, ...));
 		self.mask = bit.bor(self.mask, category);
 	end
 	self:update_filter_data();
@@ -53,7 +65,7 @@ end
 ---@param ... string
 Fixture.remove_category_from_mask = function(self, ...)
 	for i = 1, select("#", ...) do
-		local category = crystal.physics.category(select(i, ...));
+		local category = self:category(select(i, ...));
 		self.mask = bit.band(self.mask, bit.bnot(category));
 	end
 	self:update_filter_data();

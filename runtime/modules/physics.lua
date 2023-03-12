@@ -1,6 +1,7 @@
 local bit = require("bit");
 
 local Collider = require("modules/physics/Collider");
+local Fixture = require("modules/physics/Fixture")
 local Movement = require("modules/physics/Movement");
 local Body = require("modules/physics/Body");
 local PhysicsSystem = require("modules/physics/PhysicsSystem");
@@ -8,12 +9,12 @@ local Sensor = require("modules/physics/Sensor");
 
 ---@param fixture_categories string[]
 local define_fixture_categories = function(categories)
-	crystal.physics.categories = {};
+	Fixture.all_categories = {};
 	local i = 0;
 	for category, _ in pairs(categories) do
 		assert(type(category) == "string");
 		assert(i < 16);
-		crystal.physics.categories[category] = bit.lshift(1, i);
+		Fixture.all_categories[category] = bit.lshift(1, i);
 		i = i + 1;
 	end
 end
@@ -27,10 +28,11 @@ return {
 		Sensor = Sensor,
 	},
 	module_api = {
+		-- TOOD remove this function, currently only used by CollisionMesh!
 		category = function(name)
 			assert(type(name) == "string");
-			assert(crystal.physics.categories[name]);
-			return crystal.physics.categories[name];
+			assert(Fixture.all_categories[name]);
+			return Fixture.all_categories[name];
 		end,
 	},
 	init = function()

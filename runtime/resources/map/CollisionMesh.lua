@@ -39,6 +39,7 @@ CollisionMesh.spawnBody = function(self, scene)
 	for _, chain in ipairs(self._chains) do
 		local shape = love.physics.newChainShape(true, chain);
 		local fixture = love.physics.newFixture(body, shape, 0);
+		-- TODO use collider components instead
 		fixture:setFilterData(crystal.physics.category("level"), 65535, 0);
 	end
 	return body;

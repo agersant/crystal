@@ -144,10 +144,10 @@ MapScene.spawnEntityNearPlayer = function(self, class)
 	local body = entity:component(crystal.Body);
 	if body and playerBody then
 		local x, y = playerBody:position();
-		local angle = math.random(2 * math.pi);
+		local rotation = math.random(2 * math.pi);
 		local radius = 40;
-		x = x + radius * math.cos(angle);
-		y = y + radius * math.sin(angle);
+		x = x + radius * math.cos(rotation);
+		y = y + radius * math.sin(rotation);
 		x, y = navigationMesh:getNearestPointOnNavmesh(x, y);
 		body:set_position(x, y);
 	end

@@ -46,11 +46,11 @@ PhysicsSystem.simulate_physics = function(self, dt)
 		local body = entity:component("Body");
 		if movement:is_movement_enabled() then
 			local speed = movement:speed();
-			local angle = movement:heading();
-			if angle then
-				body:set_angle(angle);
-				local dx = math.cos(angle);
-				local dy = math.sin(angle);
+			local rotation = movement:heading();
+			if rotation then
+				body:set_rotation(rotation);
+				local dx = math.cos(rotation);
+				local dy = math.sin(rotation);
 				body:set_velocity(speed * dx, speed * dy);
 			else
 				body:set_velocity(0, 0);

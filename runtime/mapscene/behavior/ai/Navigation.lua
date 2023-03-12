@@ -32,8 +32,8 @@ local navigate = function(self, navigationMesh, goal, body, movement)
 		local epsilon = movement:speed() * self:delta_time();
 		if distToWaypoint2 >= epsilon * epsilon then
 			local deltaX, deltaY = waypointX - x, waypointY - y;
-			local angle = math.atan2(deltaY, deltaX);
-			movement:set_heading(angle);
+			local rotation = math.atan2(deltaY, deltaX);
+			movement:set_heading(rotation);
 			self:wait_frame();
 		else
 			body:set_position(waypointX, waypointY);

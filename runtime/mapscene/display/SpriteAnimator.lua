@@ -26,10 +26,10 @@ local playback = function(self, sequence)
 	end;
 end
 
-local playAnimationInternal = function(self, animationName, angle, forceRestart)
+local playAnimationInternal = function(self, animationName, rotation, forceRestart)
 	local animation = self._sheet:getAnimation(animationName);
 	assert(animation);
-	local sequence = animation:getSequence(angle or math.pi / 2);
+	local sequence = animation:getSequence(rotation or math.pi / 2);
 	assert(sequence);
 	if sequence == self._sequence and not forceRestart then
 		return;
@@ -49,12 +49,12 @@ SpriteAnimator.init = function(self, sprite, sheet)
 	self._animationFrame = nil;
 end
 
-SpriteAnimator.setAnimation = function(self, animationName, angle)
-	playAnimationInternal(self, animationName, angle, false);
+SpriteAnimator.setAnimation = function(self, animationName, rotation)
+	playAnimationInternal(self, animationName, rotation, false);
 end
 
-SpriteAnimator.playAnimation = function(self, animationName, angle)
-	local thread = playAnimationInternal(self, animationName, angle, true);
+SpriteAnimator.playAnimation = function(self, animationName, rotation)
+	local thread = playAnimationInternal(self, animationName, rotation, true);
 	assert(thread);
 	return thread;
 end

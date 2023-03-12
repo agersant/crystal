@@ -17,22 +17,20 @@ entity:add_component(crystal.Body, my_world, "dynamic");
 
 | Name                       | Description |
 | :------------------------- | :---------- |
-| angle                      |             |
 | angle4                     |             |
 | apply_linear_impulse       |             |
 | attach_to                  |             |
 | damping                    |             |
 | detach_from_parent         |             |
-| direction4                 |             |
 | distance_to                |             |
 | distance_to_entity         |             |
 | distance_squared_to        |             |
 | distance_squared_to_entity |             |
 | look_at                    |             |
 | position                   |             |
-| set_angle                  |             |
+| rotation                   |             |
+| set_rotation               |             |
 | set_damping                |             |
-| set_direction8             |             |
 | set_position               |             |
 | set_velocity               |             |
 | velocity                   |             |

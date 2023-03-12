@@ -4,7 +4,7 @@ local MathUtils = require("utils/MathUtils");
 
 ---@class Body
 ---@field private _inner love.Body
----@field private _angle number # in radians
+---@field private _rotation number # in radians
 ---@field private dir4_x number
 ---@field private dir4_y number
 ---@field private dir8_y number
@@ -19,7 +19,7 @@ Body.init = function(self, world, body_type)
 	self._inner:setUserData(self);
 	self._inner:setActive(false);
 	self._inner:setMass(1);
-	self:set_angle(0);
+	self:set_rotation(0);
 	self.parent_joint = nil;
 	self.child_joints = {};
 end
@@ -93,14 +93,14 @@ Body.set_position = function(self, x, y)
 end
 
 ---@return number # in radians
-Body.angle = function(self)
-	return self._angle;
+Body.rotation = function(self)
+	return self._rotation;
 end
 
----@param angle number # in radians
-Body.set_angle = function(self, angle)
-	self:set_direction8(MathUtils.angleToDir8(angle));
-	self._angle = angle;
+---@param rotation number # in radians
+Body.set_rotation = function(self, rotation)
+	self:set_direction8(MathUtils.angleToDir8(rotation));
+	self._rotation = rotation;
 end
 
 ---@param target_x number
@@ -108,10 +108,11 @@ end
 Body.look_at = function(self, target_x, target_y)
 	local x, y = self:position();
 	local delta_x, delta_y = target_x - x, target_y - y;
-	local angle = math.atan2(delta_y, delta_x);
-	self:set_angle(angle);
+	local rotation = math.atan2(delta_y, delta_x);
+	self:set_rotation(rotation);
 end
 
+---@private
 ---@param dir8_x number
 ---@param dir8_y number
 Body.set_direction8 = function(self, dir8_x, dir8_y)
@@ -139,13 +140,6 @@ Body.set_direction8 = function(self, dir8_x, dir8_y)
 
 	self.dir8_x = dir8_x;
 	self.dir8_y = dir8_y;
-	self._angle = math.atan2(dir8_y, dir8_x);
-end
-
----@return number x
----@return number y
-Body.direction4 = function(self)
-	return self.dir4_x, self.dir4_y;
 end
 
 ---@return number # in radians
@@ -227,22 +221,22 @@ crystal.test.add("look_at turns to correct direction", function()
 	entity:add_component(Body, scene:physics_world(), "dynamic");
 
 	entity:look_at(10, 0);
-	assert(entity:angle() == 0);
+	assert(entity:rotation() == 0);
 	local x, y = entity:direction4();
 	assert(x == 1 and y == 0);
 
 	entity:look_at(0, 10);
-	assert(entity:angle() == 0.5 * math.pi);
+	assert(entity:rotation() == 0.5 * math.pi);
 	local x, y = entity:direction4();
 	assert(x == 0 and y == 1);
 
 	entity:look_at(-10, 0);
-	assert(entity:angle() == math.pi);
+	assert(entity:rotation() == math.pi);
 	local x, y = entity:direction4();
 	assert(x == -1 and y == 0);
 
 	entity:look_at(0, -10);
-	assert(entity:angle() == -0.5 * math.pi);
+	assert(entity:rotation() == -0.5 * math.pi);
 	local x, y = entity:direction4();
 	assert(x == 0 and y == -1);
 end);
@@ -253,19 +247,19 @@ crystal.test.add("Direction is preserved when switching to adjacent diagonal", f
 	local entity = scene:spawn(crystal.Entity);
 	entity:add_component(Body, scene:physics_world(), "dynamic");
 
-	entity:set_angle(0.25 * math.pi);
+	entity:set_rotation(0.25 * math.pi);
 	local x, y = entity:direction4();
 	assert(x == 1 and y == 0);
 
-	entity:set_angle(-0.25 * math.pi);
+	entity:set_rotation(-0.25 * math.pi);
 	local x, y = entity:direction4();
 	assert(x == 1 and y == 0);
 
-	entity:set_angle(-0.75 * math.pi);
+	entity:set_rotation(-0.75 * math.pi);
 	local x, y = entity:direction4();
 	assert(x == 0 and y == -1);
 
-	entity:set_angle(-0.25 * math.pi);
+	entity:set_rotation(-0.25 * math.pi);
 	local x, y = entity:direction4();
 	assert(x == 0 and y == -1);
 end);
@@ -302,14 +296,14 @@ crystal.test.add("Can read/write velocity", function()
 	assert(vy == 2);
 end);
 
-crystal.test.add("Can read/write angle", function()
+crystal.test.add("Can read/write rotation", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(crystal.Entity);
 	entity:add_component(Body, scene:physics_world(), "dynamic");
-	assert(entity:angle() == 0);
-	entity:set_angle(50);
-	assert(entity:angle() == 50);
+	assert(entity:rotation() == 0);
+	entity:set_rotation(50);
+	assert(entity:rotation() == 50);
 end);
 
 crystal.test.add("Can read/write damping", function()
