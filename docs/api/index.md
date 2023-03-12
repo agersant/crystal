@@ -18,7 +18,7 @@ has_toc: false
 | [crystal.input](input)     |                                                                                        |
 | [crystal.log](log)         | Provides an interface to write log messages to console and to disk.                    |
 | [crystal.oop](oop)         | Allows you to define classes for Object Oriented Programming.                          |
-| [crystal.physics](physics) |                                                                                        |
+| [crystal.physics](physics) | Components allowing entities to move and collide with each other.                      |
 | [crystal.scene](scene)     |                                                                                        |
 | [crystal.script](script)   | Coroutine-based scripting system to write logic that takes place over multiple frames. |
 | [crystal.test](test)       | Provides an interface to define unit or integration tests.                             |
