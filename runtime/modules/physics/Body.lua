@@ -5,10 +5,6 @@ local MathUtils = require("utils/MathUtils");
 ---@class Body
 ---@field private _inner love.Body
 ---@field private _rotation number # in radians
----@field private dir4_x number
----@field private dir4_y number
----@field private dir8_y number
----@field private dir8_y number
 ---@field private parent_joint love.Joint
 ---@field private child_joints { [love.Joint]: boolean }
 local Body = Class("Body", crystal.Component);
@@ -19,7 +15,7 @@ Body.init = function(self, world, body_type)
 	self._inner:setUserData(self);
 	self._inner:setActive(false);
 	self._inner:setMass(1);
-	self:set_rotation(0);
+	self._rotation = 0;
 	self.parent_joint = nil;
 	self.child_joints = {};
 end
@@ -99,7 +95,6 @@ end
 
 ---@param rotation number # in radians
 Body.set_rotation = function(self, rotation)
-	self:set_direction8(MathUtils.angleToDir8(rotation));
 	self._rotation = rotation;
 end
 
@@ -110,41 +105,6 @@ Body.look_at = function(self, target_x, target_y)
 	local delta_x, delta_y = target_x - x, target_y - y;
 	local rotation = math.atan2(delta_y, delta_x);
 	self:set_rotation(rotation);
-end
-
----@private
----@param dir8_x number
----@param dir8_y number
-Body.set_direction8 = function(self, dir8_x, dir8_y)
-	assert(dir8_x == 0 or dir8_x == 1 or dir8_x == -1);
-	assert(dir8_y == 0 or dir8_y == 1 or dir8_y == -1);
-	assert(dir8_x ~= 0 or dir8_y ~= 0);
-
-	if dir8_x == self.dir8_x and dir8_y == self.dir8_y then
-		return;
-	end
-
-	if dir8_x * dir8_y == 0 then
-		self.dir4_x = dir8_x;
-		self.dir4_y = dir8_y;
-	else
-		if dir8_x ~= self.dir8_x then
-			self.dir4_x = 0;
-			self.dir4_y = dir8_y;
-		end
-		if dir8_y ~= self.dir8_y then
-			self.dir4_x = dir8_x;
-			self.dir4_y = 0;
-		end
-	end
-
-	self.dir8_x = dir8_x;
-	self.dir8_y = dir8_y;
-end
-
----@return number # in radians
-Body.angle4 = function(self)
-	return math.atan2(self.dir4_y, self.dir4_x);
 end
 
 ---@return number x

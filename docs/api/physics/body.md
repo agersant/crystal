@@ -17,7 +17,6 @@ entity:add_component(crystal.Body, my_world, "dynamic");
 
 | Name                       | Description |
 | :------------------------- | :---------- |
-| angle4                     |             |
 | apply_linear_impulse       |             |
 | attach_to                  |             |
 | damping                    |             |
