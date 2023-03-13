@@ -237,6 +237,7 @@ crystal.test.add("Colliders block movement", function()
 	end
 	local x, y = entity:position();
 	assert(colliding);
+	assert(next(entity:collisions()));
 	assert(math.abs(x - 40) < 1);
 	assert(y == 0);
 
@@ -256,6 +257,7 @@ crystal.test.add("Colliders activate sensors", function()
 
 	local activated = false;
 	local deactivated = false;
+	local found_activation = false;
 
 	local ecs = crystal.ECS:new();
 	local world = love.physics.newWorld(0, 0);
@@ -284,9 +286,13 @@ crystal.test.add("Colliders activate sensors", function()
 	ecs:update();
 	for i = 1, 100 do
 		ecs:notify_systems("simulate_physics", 0.01);
+		if next(trigger:activations()) then
+			found_activation = true;
+		end
 	end
 	local x, y = entity:position();
 	assert(math.abs(x - 100) < 1);
+	assert(found_activation);
 	assert(activated);
 	assert(deactivated);
 end);
