@@ -7,7 +7,12 @@ grand_parent: API Reference
 
 [Component](/crystal/api/ecs/component) allowing an entity to move of its own volition.
 
-Expected usage of this component is to call [set_heading](movement_set_heading) every frame in response to play inputs or AI logic. A `nil` heading indicates that the entity is standing still. Its velocity will be zero'ed out by the [PhysicsSystem](physics_system).
+Expected usage of this component is to call [set_heading](movement_set_heading) every frame in response to player inputs or AI logic. Every frame, the [PhysicsSystem]:
+
+- Sets the entity's linear velocity to match the [heading](movement_set_heading) and [speed](movement_set_speed) of its movement component.
+- Sets the rotation of the entity's [Body](body) to match the [heading](movement_set_heading) of its movement component.
+
+A `nil` heading indicates that the entity is standing still. Its velocity will be zero'ed out by the [PhysicsSystem](physics_system).
 
 Disabling a movement component makes it relinquish control of the entity's velocity.
 
@@ -16,24 +21,24 @@ Entities using this component should have a [Body](body) with the `dynamic` or `
 
 ## Constructor
 
-Like all other components, `Movement` components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component). This constructor takes one optional `number` parameter initializing movement speed. Its default value is 10 units / s.
+Like all other components, `Movement` components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component). This constructor takes one optional `number` parameter initializing movement speed. Its default value is 10 pixels / s.
 
 ```lua
-local movement_speed = 20; -- units / s
+local movement_speed = 20; -- pixels / s
 entity:add_component(crystal.Movement, movement_speed);
 ```
 
 ## Methods
 
-| Name                | Description                                                   |
-| :------------------ | :------------------------------------------------------------ |
-| disable_movement    | Prevents this component from affecting entity physics.        |
-| enable_movement     | Allows this component to affect entity physics.               |
-| heading             | Returns the direction this entity is moving towards.          |
-| is_movement_enabled | Returns whether this movement component is currently enabled. |
-| set_heading         | Sets the direction this entity is moving towards.             |
-| set_speed           | Sets how fast this entity can move.                           |
-| speed               | Returns how fast this entity can move.                        |
+| Name                                                | Description                                                      |
+| :-------------------------------------------------- | :--------------------------------------------------------------- |
+| [disable_movement](movement_disable_movement)       | Prevents this component from affecting entity physics.           |
+| [enable_movement](movement_enable_movement)         | Allows this component to affect entity physics.                  |
+| [heading](movement_heading)                         | Returns the direction this entity is attempting to move towards. |
+| [is_movement_enabled](movement_is_movement_enabled) | Returns whether this movement component is currently enabled.    |
+| [set_heading](movement_set_heading)                 | Sets the direction this entity is attempting to move towards.    |
+| [set_speed](movement_set_speed)                     | Sets how fast this entity can move.                              |
+| [speed](movement_speed)                             | Returns how fast this entity can move.                           |
 
 ## Examples
 
