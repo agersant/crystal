@@ -42,14 +42,14 @@ entity:add_component(crystal.Body, "dynamic");
 local ecs = crystal.ECS:new();
 
 local monster_positions = {
-	{100, 200},
-	{40, 87},
-	{-100, 130},
+  {100, 200},
+  {40, 87},
+  {-100, 130},
 };
 
 for _, position in ipairs(monster_positions) do
-	local monster = ecs:spawn(crystal.Entity);
-	monster:add_component(crystal.Body, "dynamic");
-	monster:set_position(position[1], position[2]);
+  local monster = ecs:spawn(crystal.Entity);
+  monster:add_component(crystal.Body, "dynamic");
+  monster:set_position(position[1], position[2]);
 end
 ```

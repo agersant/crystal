@@ -27,6 +27,6 @@ The `configuration` table supports the following values:
 
 ```lua
 crystal.configure({
-	physics_categories = { "character", "monster", "powerup", "hitbox", "trigger" },
+  physics_categories = { "character", "monster", "powerup", "hitbox", "trigger" },
 });
 ```
