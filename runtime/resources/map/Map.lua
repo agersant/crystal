@@ -83,8 +83,8 @@ Map.getName = function(self)
 	return self._mapName;
 end
 
-Map.spawnCollisionMeshBody = function(self, scene)
-	return self._collisionMesh:spawnBody(scene);
+Map.spawnCollisionMeshBody = function(self, ecs)
+	return self._collisionMesh:spawnBody(ecs);
 end
 
 Map.spawnEntities = function(self, scene)

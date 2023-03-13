@@ -3,25 +3,29 @@ local Colors = require("resources/Colors");
 local MathUtils = require("utils/MathUtils");
 
 ---@class PhysicsSystem : System
----@field private world love.World
+---@field private _world love.World
 ---@field private with_body Query
 ---@field private with_movement Query
 ---@field private with_fixture Query
 ---@field private contact_callbacks { func: fun(), args: table }[]
 local PhysicsSystem = Class("PhysicsSystem", crystal.System);
 
-PhysicsSystem.init = function(self, world)
-	assert(world);
-	self.world = world;
+PhysicsSystem.init = function(self)
+	self._world = love.physics.newWorld();
 	self.with_body = self:add_query({ "Body" });
 	self.with_movement = self:add_query({ "Body", "Movement" });
 	self.with_fixture = self:add_query({ "Body", "Fixture" });
 
 	self.contact_callbacks = {};
-	self.world:setCallbacks(
+	self._world:setCallbacks(
 		function(...) self:begin_contact(...) end,
 		function(...) self:end_contact(...) end
 	);
+end
+
+---@return love.World
+PhysicsSystem.world = function(self)
+	return self._world;
 end
 
 ---@param dt number # in seconds
@@ -59,7 +63,7 @@ PhysicsSystem.simulate_physics = function(self, dt)
 		end
 	end
 
-	self.world:update(dt);
+	self._world:update(dt);
 	for _, callback in ipairs(self.contact_callbacks) do
 		callback.func(unpack(callback.args));
 	end
@@ -186,11 +190,10 @@ end
 
 crystal.test.add("Movement component moves things", function()
 	local ecs = crystal.ECS:new();
-	local world = love.physics.newWorld(0, 0);
-	ecs:add_system(crystal.PhysicsSystem, world);
+	ecs:add_system(crystal.PhysicsSystem);
 
 	local entity = ecs:spawn(crystal.Entity);
-	entity:add_component(crystal.Body, world, "dynamic");
+	entity:add_component(crystal.Body, "dynamic");
 	entity:add_component(crystal.Movement);
 
 	entity:set_heading(0);
@@ -215,11 +218,10 @@ crystal.test.add("Colliders block movement", function()
 	local colliding = false;
 
 	local ecs = crystal.ECS:new();
-	local world = love.physics.newWorld(0, 0);
-	ecs:add_system(crystal.PhysicsSystem, world);
+	ecs:add_system(crystal.PhysicsSystem);
 
 	local entity = ecs:spawn(crystal.Entity);
-	entity:add_component(crystal.Body, world, "dynamic");
+	entity:add_component(crystal.Body, "dynamic");
 	entity:add_component(crystal.Movement);
 	local collider = entity:add_component(crystal.Collider, love.physics.newRectangleShape(10, 10));
 	collider.all_categories = all_categories;
@@ -231,7 +233,7 @@ crystal.test.add("Colliders block movement", function()
 	entity:enable_collision_with("solid");
 
 	local obstacle = ecs:spawn(crystal.Entity);
-	obstacle:add_component(crystal.Body, world, "static");
+	obstacle:add_component(crystal.Body, "static");
 	obstacle:set_position(50, 0);
 	local collider = obstacle:add_component(crystal.Collider, love.physics.newRectangleShape(10, 10));
 	collider.all_categories = all_categories;
@@ -267,11 +269,10 @@ crystal.test.add("Colliders activate sensors", function()
 	local found_activation = false;
 
 	local ecs = crystal.ECS:new();
-	local world = love.physics.newWorld(0, 0);
-	ecs:add_system(crystal.PhysicsSystem, world);
+	ecs:add_system(crystal.PhysicsSystem);
 
 	local entity = ecs:spawn(crystal.Entity);
-	entity:add_component(crystal.Body, world, "dynamic");
+	entity:add_component(crystal.Body, "dynamic");
 	entity:add_component(crystal.Movement);
 	local collider = entity:add_component(crystal.Collider, love.physics.newRectangleShape(10, 10));
 	collider.all_categories = all_categories;
@@ -281,7 +282,7 @@ crystal.test.add("Colliders activate sensors", function()
 	entity:enable_collision_with("solid", "trigger");
 
 	local trigger = ecs:spawn(crystal.Entity);
-	trigger:add_component(crystal.Body, world, "static");
+	trigger:add_component(crystal.Body, "static");
 	trigger:set_position(50, 0);
 	local sensor = trigger:add_component(crystal.Sensor, love.physics.newRectangleShape(10, 10));
 	sensor.all_categories = all_categories;

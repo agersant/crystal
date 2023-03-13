@@ -9,7 +9,12 @@ local MathUtils = require("utils/MathUtils");
 ---@field private child_joints { [love.Joint]: boolean }
 local Body = Class("Body", crystal.Component);
 
-Body.init = function(self, world, body_type)
+Body.init = function(self, body_type)
+	local ecs = self:entity():ecs();
+	local physics_system = ecs:system(crystal.PhysicsSystem);
+	assert(physics_system);
+	local world = physics_system:world();
+	assert(world);
 	self._inner = love.physics.newBody(world, 0, 0, body_type);
 	self._inner:setFixedRotation(true);
 	self._inner:setUserData(self);
@@ -178,7 +183,7 @@ crystal.test.add("look_at turns to correct direction", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(crystal.Entity);
-	entity:add_component(Body, scene:physics_world(), "dynamic");
+	entity:add_component(Body, "dynamic");
 
 	entity:look_at(10, 0);
 	assert(entity:rotation() == 0);
@@ -197,10 +202,10 @@ crystal.test.add("Can measure distances", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(crystal.Entity);
-	entity:add_component(Body, scene:physics_world(), "dynamic");
+	entity:add_component(Body, "dynamic");
 
 	local target = scene:spawn(crystal.Entity);
-	target:add_component(Body, scene:physics_world(), "dynamic");
+	target:add_component(Body, "dynamic");
 	target:set_position(10, 0);
 
 	assert(entity:distance_to_entity(target) == 10);
@@ -213,7 +218,7 @@ crystal.test.add("Can read/write velocity", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(crystal.Entity);
-	entity:add_component(Body, scene:physics_world(), "dynamic");
+	entity:add_component(Body, "dynamic");
 
 	local vx, vy = entity:velocity();
 	assert(vx == 0);
@@ -229,7 +234,7 @@ crystal.test.add("Can read/write rotation", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(crystal.Entity);
-	entity:add_component(Body, scene:physics_world(), "dynamic");
+	entity:add_component(Body, "dynamic");
 	assert(entity:rotation() == 0);
 	entity:set_rotation(50);
 	assert(entity:rotation() == 50);
@@ -239,7 +244,7 @@ crystal.test.add("Can read/write damping", function()
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty_map.lua");
 	local entity = scene:spawn(crystal.Entity);
-	entity:add_component(Body, scene:physics_world(), "dynamic");
+	entity:add_component(Body, "dynamic");
 	assert(entity:damping() == 0);
 	entity:set_damping(50);
 	assert(entity:damping() == 50);

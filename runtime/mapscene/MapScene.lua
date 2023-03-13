@@ -22,10 +22,9 @@ MapScene.init = function(self, mapName)
 	Alias:add(ecs, self);
 
 	self._renderer = Renderer:new(VIEWPORT);
-	self._physics_world = love.physics.newWorld(0, 0, false);
 
 	-- During Physics
-	ecs:add_system(crystal.PhysicsSystem, self._physics_world);
+	ecs:add_system(crystal.PhysicsSystem);
 
 	-- After physics
 
@@ -213,14 +212,14 @@ crystal.test.add("Spawn command puts entity near player", function()
 	local TestSpawnCommandProximity = Class("TestSpawnCommandProximity", crystal.Entity);
 	TestSpawnCommandProximity.init = function(self, scene)
 		TestSpawnCommandProximity.super.init(self, scene);
-		self:add_component(crystal.Body, scene:physics_world());
+		self:add_component(crystal.Body);
 	end
 
 	local scene = MapScene:new("test-data/empty_map.lua");
 
 	local player = scene:spawn(crystal.Entity);
 	player:add_component("InputListener", 1);
-	player:add_component(crystal.Body, scene:physics_world());
+	player:add_component(crystal.Body);
 	player:set_position(200, 200);
 	scene:update(0);
 

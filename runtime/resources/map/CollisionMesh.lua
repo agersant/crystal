@@ -32,8 +32,8 @@ CollisionMesh.isOuterEdge = function(self, chain)
 	return chain == self._outerChain;
 end
 
-CollisionMesh.spawnBody = function(self, scene)
-	local world = scene:physics_world();
+CollisionMesh.spawnBody = function(self, ecs)
+	local world = ecs:system(crystal.PhysicsSystem):world();
 	local body = love.physics.newBody(world, 0, 0);
 	body:setUserData(self);
 	for _, chain in ipairs(self._chains) do

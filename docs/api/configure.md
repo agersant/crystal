@@ -21,7 +21,7 @@ crystal.configure(configuration)
 
 The `configuration` table supports the following values:
 
-- `physics_categories`: list of categories (as strings) that can be used in [physics components](/crystal/api/physics).
+- `physics_categories`: list of categories (as strings) that can be used in [physics components](/crystal/api/physics). LOVE supports up to 16 categories. Crystal reserves one of them (named `level`), which leaves up to 15 for you to define.
 
 ## Examples
 
