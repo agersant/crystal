@@ -10,7 +10,7 @@ Prevents this component from affecting entity physics.
 
 The return value of this function can be used to call [enable_movement](movement_enable_movement) with no arguments. This is especially useful when combined with [Thread:defer](/crystal/api/script/thread_defer) to never accidentally leave movement disabled. For example, inside a [Behavior](/crystal/api/script/behavior) script:
 
-````lua
+```lua
 self:thread(function(self)
   -- Disables movement for 2 seconds
   self:defer(self:disable_movement());
@@ -22,7 +22,7 @@ end);
 
 ```lua
 movement:disable_movement()
-````
+```
 
 ## Returns
 

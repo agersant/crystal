@@ -6,7 +6,7 @@ nav_exclude: true
 
 # Movement:set_speed
 
-Sets how fast this entity can move. This can also specified as a [Movement](movement) constructor argument.
+Sets how fast this entity can move. This can also specified as a [constructor argument](movement).
 
 ## Usage
 
