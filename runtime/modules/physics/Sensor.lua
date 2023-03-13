@@ -8,8 +8,8 @@ local Sensor = Class("Sensor", Fixture);
 local noop = function()
 end
 
-Sensor.init = function(self, body, shape)
-	Sensor.super.init(self, body, shape);
+Sensor.init = function(self, shape)
+	Sensor.super.init(self, shape);
 	assert(self.fixture);
 	self.fixture:setSensor(true);
 	self.on_activate = noop;

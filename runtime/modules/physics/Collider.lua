@@ -8,8 +8,8 @@ local Collider = Class("Collider", Fixture);
 local noop = function()
 end
 
-Collider.init = function(self, body, shape)
-	Collider.super.init(self, body, shape);
+Collider.init = function(self, shape)
+	Collider.super.init(self, shape);
 	assert(self.fixture);
 	self:set_friction(0);
 	self:set_restitution(0);

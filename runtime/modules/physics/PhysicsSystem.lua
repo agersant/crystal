@@ -175,6 +175,122 @@ PhysicsSystem.draw_shape = function(self, x, y, shape, color)
 	love.graphics.pop();
 end
 
--- TODO re-write tests
+--#region Tests
+
+crystal.test.add("Movement component moves things", function()
+	local ecs = crystal.ECS:new();
+	local world = love.physics.newWorld(0, 0);
+	ecs:add_system(crystal.PhysicsSystem, world);
+
+	local entity = ecs:spawn(crystal.Entity);
+	entity:add_component(crystal.Body, world, "dynamic");
+	entity:add_component(crystal.Movement);
+
+	entity:set_heading(0);
+	entity:set_speed(100);
+	x, y = entity:position();
+	assert(x == 0 and y == 0);
+
+	ecs:update();
+	for i = 1, 100 do
+		ecs:notify_systems("simulate_physics", 0.01);
+	end
+	local x, y = entity:position();
+	assert(math.abs(x - 100) < 0.01);
+	assert(math.abs(y) < 0.01);
+end);
+
+crystal.test.add("Colliders block movement", function()
+	local all_categories = {
+		solid = 1,
+	};
+
+	local colliding = false;
+
+	local ecs = crystal.ECS:new();
+	local world = love.physics.newWorld(0, 0);
+	ecs:add_system(crystal.PhysicsSystem, world);
+
+	local entity = ecs:spawn(crystal.Entity);
+	entity:add_component(crystal.Body, world, "dynamic");
+	entity:add_component(crystal.Movement);
+	local collider = entity:add_component(crystal.Collider, love.physics.newRectangleShape(10, 10));
+	collider.all_categories = all_categories;
+	collider.on_collide = function() colliding = true; end;
+	collider.on_uncollide = function() colliding = false; end;
+	entity:set_heading(0);
+	entity:set_speed(100);
+	entity:set_categories("solid");
+	entity:enable_collision_with("solid");
+
+	local obstacle = ecs:spawn(crystal.Entity);
+	obstacle:add_component(crystal.Body, world, "static");
+	obstacle:set_position(50, 0);
+	local collider = obstacle:add_component(crystal.Collider, love.physics.newRectangleShape(10, 10));
+	collider.all_categories = all_categories;
+	collider:set_categories("solid");
+	collider:enable_collision_with("solid");
+
+	ecs:update();
+	for i = 1, 100 do
+		ecs:notify_systems("simulate_physics", 0.01);
+	end
+	local x, y = entity:position();
+	assert(colliding);
+	assert(math.abs(x - 40) < 1);
+	assert(y == 0);
+
+	entity:set_heading(math.pi);
+	for i = 1, 100 do
+		ecs:notify_systems("simulate_physics", 0.01);
+	end
+	local x, y = entity:position();
+	assert(not colliding);
+end);
+
+crystal.test.add("Colliders activate sensors", function()
+	local all_categories = {
+		solid = 1,
+		trigger = 1,
+	};
+
+	local activated = false;
+	local deactivated = false;
+
+	local ecs = crystal.ECS:new();
+	local world = love.physics.newWorld(0, 0);
+	ecs:add_system(crystal.PhysicsSystem, world);
+
+	local entity = ecs:spawn(crystal.Entity);
+	entity:add_component(crystal.Body, world, "dynamic");
+	entity:add_component(crystal.Movement);
+	local collider = entity:add_component(crystal.Collider, love.physics.newRectangleShape(10, 10));
+	collider.all_categories = all_categories;
+	entity:set_heading(0);
+	entity:set_speed(100);
+	entity:set_categories("solid");
+	entity:enable_collision_with("solid", "trigger");
+
+	local trigger = ecs:spawn(crystal.Entity);
+	trigger:add_component(crystal.Body, world, "static");
+	trigger:set_position(50, 0);
+	local sensor = trigger:add_component(crystal.Sensor, love.physics.newRectangleShape(10, 10));
+	sensor.all_categories = all_categories;
+	sensor:set_categories("trigger");
+	sensor:enable_activation_by("solid");
+	sensor.on_activate = function() activated = true; end;
+	sensor.on_deactivate = function() deactivated = true; end
+
+	ecs:update();
+	for i = 1, 100 do
+		ecs:notify_systems("simulate_physics", 0.01);
+	end
+	local x, y = entity:position();
+	assert(math.abs(x - 100) < 1);
+	assert(activated);
+	assert(deactivated);
+end);
+
+--#endregion
 
 return PhysicsSystem;

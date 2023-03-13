@@ -14,7 +14,8 @@ local Fixture = Class("Fixture", crystal.Component);
 
 Fixture.all_categories = {};
 
-Fixture.init = function(self, body, shape)
+Fixture.init = function(self, shape)
+	local body = self:entity():component(crystal.Body);
 	assert(body:inherits_from("Body"));
 	assert(shape:typeOf("Shape"));
 	self.enabled = true;
@@ -39,8 +40,8 @@ end
 ---@returns number
 Fixture.category = function(self, name)
 	assert(type(name) == "string");
-	assert(Fixture.all_categories[name]);
-	return Fixture.all_categories[name];
+	assert(self.all_categories[name]);
+	return self.all_categories[name];
 end
 
 ---@param ... string
