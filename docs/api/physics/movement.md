@@ -5,7 +5,11 @@ grand_parent: API Reference
 
 # crystal.Movement
 
-[Component](/crystal/api/ecs/component) allowing an entity to move of its own volition. Expected usage of this component is to call [set_heading](movement_set_heading) every frame in response to play inputs or AI logic. A `nil` heading indicates that the entity is standing still.
+[Component](/crystal/api/ecs/component) allowing an entity to move of its own volition.
+
+Expected usage of this component is to call [set_heading](movement_set_heading) every frame in response to play inputs or AI logic. A `nil` heading indicates that the entity is standing still. Its velocity will be zero'ed out by the [PhysicsSystem](physics_system).
+
+Disabling a movement component makes it relinquish control of the entity's velocity.
 
 {: .note}
 Entities using this component should have a [Body](body) with the `dynamic` or `kinematic` body type.
