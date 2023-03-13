@@ -16,9 +16,9 @@ When it receives the `simulate_physics` [notification](/crystal/api/ecs/ecs_noti
 
 ## Methods
 
-| Name  | Description                                                                     |
-| :---- | :------------------------------------------------------------------------------ |
-| world | Returns the [love.World](https://love2d.org/wiki/World) managed by this system. |
+| Name                          | Description                                                                     |
+| :---------------------------- | :------------------------------------------------------------------------------ |
+| [world](physics_system_world) | Returns the [love.World](https://love2d.org/wiki/World) managed by this system. |
 
 ## Examples
 
