@@ -24,6 +24,7 @@ PhysicsSystem.init = function(self, world)
 	);
 end
 
+---@param dt number # in seconds
 PhysicsSystem.simulate_physics = function(self, dt)
 	for body in pairs(self.with_body:added_components("Body")) do
 		body:on_added();
@@ -65,6 +66,9 @@ PhysicsSystem.simulate_physics = function(self, dt)
 	self.contact_callbacks = {};
 end
 
+---@param fixture_a Fixture
+---@param fixture_b Fixture
+---@param fixture_b love.Contact
 PhysicsSystem.begin_contact = function(self, fixture_a, fixture_b, contact)
 	local owner_a = fixture_a:getUserData();
 	local owner_b = fixture_b:getUserData();
@@ -77,6 +81,9 @@ PhysicsSystem.begin_contact = function(self, fixture_a, fixture_b, contact)
 	end
 end
 
+---@param fixture_a Fixture
+---@param fixture_b Fixture
+---@param fixture_b love.Contact
 PhysicsSystem.end_contact = function(self, fixture_a, fixture_b, contact)
 	local owner_a = fixture_a:getUserData();
 	local owner_b = fixture_b:getUserData();
@@ -90,6 +97,8 @@ PhysicsSystem.end_contact = function(self, fixture_a, fixture_b, contact)
 end
 
 local draw_physics_debug = false;
+crystal.cmd.add("showPhysicsOverlay", function() draw_physics_debug = true; end);
+crystal.cmd.add("hidePhysicsOverlay", function() draw_physics_debug = false; end);
 
 PhysicsSystem.draw_debug = function(self)
 	if draw_physics_debug then
@@ -105,14 +114,6 @@ PhysicsSystem.draw_debug = function(self)
 		end
 	end
 end
-
-crystal.cmd.add("showPhysicsOverlay", function()
-	draw_physics_debug = true;
-end);
-
-crystal.cmd.add("hidePhysicsOverlay", function()
-	draw_physics_debug = false;
-end);
 
 local palette = {
 	Colors.sunflower,
@@ -137,6 +138,8 @@ local palette = {
 };
 
 ---@private
+---@param fixture love.Fixture
+---@return { [1]: number, [2]: number, [3]: number }
 PhysicsSystem.fixture_color = function(self, fixture)
 	assert(fixture);
 	local categories, _, _ = fixture:getFilterData();
@@ -149,6 +152,10 @@ PhysicsSystem.fixture_color = function(self, fixture)
 end
 
 ---@private
+---@param x number
+---@param y number
+---@param shape love.Shape
+---@param color { [1]: number, [2]: number, [3]: number }
 PhysicsSystem.draw_shape = function(self, x, y, shape, color)
 	love.graphics.push("all");
 	love.graphics.translate(x, y);
