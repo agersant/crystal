@@ -5,9 +5,19 @@ grand_parent: API Reference
 
 # crystal.Movement
 
+[Component](/crystal/api/ecs/component) allowing an entity to move of its own volition. Expected usage of this component is to call [set_heading](movement_set_heading) every frame in response to play inputs or AI logic. A `nil` heading indicates that the entity is standing still.
+
+{: .note}
+Entities using this component should have a [Body](body) with the `dynamic` or `kinematic` body type.
+
 ## Constructor
 
-Like all other components, `Movement` components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
+Like all other components, `Movement` components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component). This constructor takes one optional `number` parameter initializing movement speed. Its default value is 10 units / s.
+
+```lua
+local movement_speed = 20; -- units / s
+entity:add_component(crystal.Movement, movement_speed);
+```
 
 ## Methods
 
@@ -22,3 +32,19 @@ Like all other components, `Movement` components are created by calling [Entity:
 | speed               | Returns how fast this entity can move.                        |
 
 ## Examples
+
+```lua
+local ecs = crystal.ECS:new();
+ecs:add_system(crystal.PhysicsSystem);
+
+local entity = ecs:spawn(crystal.Entity);
+entity:add_component(crystal.Body, "dynamic");
+entity:add_component(crystal.Movement);
+entity:set_heading(0); -- in radians
+
+for i = 1, 100 do
+  ecs:update();
+  ecs:notify_systems("simulate_physics");
+  print(entity:position()); -- Prints entity position as it's moving to the right
+end
+```
