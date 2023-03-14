@@ -1,4 +1,4 @@
-local Fixture = require("modules/physics/Fixture");
+local Fixture = require("modules/physics/fixture");
 local Colors = require("resources/Colors");
 local MathUtils = require("utils/MathUtils");
 

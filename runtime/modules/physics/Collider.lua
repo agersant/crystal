@@ -1,4 +1,4 @@
-local Fixture = require("modules/physics/Fixture");
+local Fixture = require("modules/physics/fixture");
 
 ---@class Collider : Fixture
 ---@field on_collide fun(Sensor, Fixture, Entity, Contact)
