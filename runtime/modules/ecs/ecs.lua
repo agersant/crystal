@@ -1,9 +1,9 @@
 local TableUtils = require("utils/TableUtils");
-local Component = require("modules/ecs/Component");
-local Entity = require("modules/ecs/Entity");
-local Event = require("modules/ecs/Event");
-local System = require("modules/ecs/System");
-local Query = require("modules/ecs/Query");
+local Component = require("modules/ecs/component");
+local Entity = require("modules/ecs/entity");
+local Event = require("modules/ecs/event");
+local System = require("modules/ecs/system");
+local Query = require("modules/ecs/query");
 
 ---@class ECS
 ---@field private _entities { [Entity]: boolean }

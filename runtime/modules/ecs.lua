@@ -1,8 +1,8 @@
-local Component = require("modules/ecs/Component");
-local ECS = require("modules/ecs/ECS");
-local Entity = require("modules/ecs/Entity");
-local Event = require("modules/ecs/Event");
-local System = require("modules/ecs/System");
+local Component = require("modules/ecs/component");
+local ECS = require("modules/ecs/ecs");
+local Entity = require("modules/ecs/entity");
+local Event = require("modules/ecs/event");
+local System = require("modules/ecs/system");
 
 return {
 	global_api = {
