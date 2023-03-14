@@ -26,9 +26,10 @@ collider:enable_collision_with(...)
 local ecs = crystal.ECS:new();
 ecs:add_system(crystal.PhysicsSystem);
 
-local hero = ecs:spawn(crystal.Entity);
-hero:add_component(crystal.Body);
-hero:add_component(crystal.Collider, love.physics.newCircleShape(4));
-hero:set_categories("characters");
-hero:enable_collision_with("powerups", "traps");
+local monster = ecs:spawn(crystal.Entity);
+monster:add_component(crystal.Body);
+monster:add_component(crystal.Collider, love.physics.newCircleShape(4));
+monster:set_categories("characters");
+monster:enable_collision_with("level", "characters");
+monster:disable_collision_with("powerups", "traps");
 ```

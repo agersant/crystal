@@ -30,5 +30,6 @@ local monster = ecs:spawn(crystal.Entity);
 monster:add_component(crystal.Body);
 monster:add_component(crystal.Collider, love.physics.newCircleShape(4));
 monster:set_categories("characters");
+monster:enable_collision_with("level", "characters");
 monster:disable_collision_with("powerups", "traps");
 ```
