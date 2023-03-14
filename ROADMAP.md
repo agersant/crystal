@@ -19,7 +19,7 @@
   - [x] input
   - [x] log
   - [ ] persistence
-  - [ ] physics
+  - [x] physics
   - [ ] scene
   - [x] script
   - [x] test
