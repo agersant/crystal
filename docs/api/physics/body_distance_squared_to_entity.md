@@ -9,7 +9,7 @@ nav_exclude: true
 Returns the distance squared between this entity and another one. The other entity must have a [Body](body) component.
 
 {: .note}
-Distances squared are faster to compute than actual distances. This is useful when you need to compare distances but do not need their actual values.
+Distances squared are faster to compute than actual distances. This is useful when you want to compare distances but do not need their actual values.
 
 ## Usage
 
