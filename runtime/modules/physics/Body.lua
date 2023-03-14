@@ -15,7 +15,7 @@ Body.init = function(self, body_type)
 	assert(physics_system);
 	local world = physics_system:world();
 	assert(world);
-	self._inner = love.physics.newBody(world, 0, 0, body_type);
+	self._inner = love.physics.newBody(world, 0, 0, body_type or "dynamic");
 	self._inner:setFixedRotation(true);
 	self._inner:setUserData(self);
 	self._inner:setActive(false);

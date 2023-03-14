@@ -30,6 +30,6 @@ local ecs = crystal.ECS:new();
 ecs:add_system(crystal.PhysicsSystem);
 
 local entity = ecs:spawn(crystal.Entity);
-entity:add_component(crystal.Body, "dynamic");
+entity:add_component(crystal.Body);
 entity:apply_impulse(100, -50);
 ```

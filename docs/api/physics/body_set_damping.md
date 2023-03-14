@@ -27,7 +27,7 @@ local ecs = crystal.ECS:new();
 ecs:add_system(crystal.PhysicsSystem);
 
 local entity = ecs:spawn(crystal.Entity);
-entity:add_component(crystal.Body, "dynamic");
+entity:add_component(crystal.Body);
 entity:set_damping(0.1);
 print(entity:damping()); -- Prints "0.1"
 ```

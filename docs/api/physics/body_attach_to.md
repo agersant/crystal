@@ -32,9 +32,9 @@ local ecs = crystal.ECS:new();
 ecs:add_system(crystal.PhysicsSystem);
 
 local hero = ecs:spawn(crystal.Entity);
-hero:add_component(crystal.Body, "dynamic");
+hero:add_component(crystal.Body);
 
 local backpack = ecs:spawn(crystal.Entity);
-backpack:add_component(crystal.Body, "dynamic");
+backpack:add_component(crystal.Body);
 backpack:attach_to(hero);
 ```

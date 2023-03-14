@@ -14,7 +14,7 @@ In a typical platforming game, collectable coins and power-ups would use sensor 
 Like all other components, `Sensor` components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component). The constructor expects one argument: a [love.Shape](https://love2d.org/wiki/Shape). The entity must have a [Body](body) component added prior to adding any sensors.
 
 ```lua
-entity:add_component(crystal.Body, "dynamic");
+entity:add_component(crystal.Body);
 entity:add_component(crystal.Sensor, love.physics.newCircleShape(4));
 ```
 

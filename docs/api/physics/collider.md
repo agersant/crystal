@@ -14,7 +14,7 @@ In a typical platforming game, characters, enemies and platforms would use Colli
 Like all other components, `Collider` components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component). The constructor expects one argument: a [love.Shape](https://love2d.org/wiki/Shape). The entity must have a [Body](body) component added prior to adding any colliders.
 
 ```lua
-entity:add_component(crystal.Body, "dynamic");
+entity:add_component(crystal.Body);
 entity:add_component(crystal.Collider, love.physics.newCircleShape(4));
 ```
 

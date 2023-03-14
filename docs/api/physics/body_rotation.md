@@ -27,7 +27,7 @@ local ecs = crystal.ECS:new();
 ecs:add_system(crystal.PhysicsSystem);
 
 local hero = ecs:spawn(crystal.Entity);
-hero:add_component(crystal.Body, "dynamic");
+hero:add_component(crystal.Body);
 hero:set_rotation(math.pi);
 print(hero:rotation()); -- Prints "3.1415..."
 ```

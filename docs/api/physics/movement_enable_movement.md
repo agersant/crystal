@@ -24,7 +24,7 @@ ecs:add_system(crystal.PhysicsSystem);
 ecs:add_system(crystal.ScriptSystem);
 
 local entity = ecs:spawn(crystal.Entity);
-entity:add_component(crystal.Body, "dynamic");
+entity:add_component(crystal.Body);
 entity:add_component(crystal.Movement);
 entity:add_component(crystal.ScriptRunner);
 entity:disable_movement();

@@ -27,7 +27,7 @@ local ecs = crystal.ECS:new();
 ecs:add_system(crystal.PhysicsSystem);
 
 local entity = ecs:spawn(crystal.Entity);
-entity:add_component(crystal.Body, "dynamic");
+entity:add_component(crystal.Body);
 entity:add_component(crystal.Movement);
 entity:set_speed(100);
 print(entity:speed()); -- Prints "100"

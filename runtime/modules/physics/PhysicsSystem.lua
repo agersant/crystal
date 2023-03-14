@@ -193,7 +193,7 @@ crystal.test.add("Movement component moves things", function()
 	ecs:add_system(crystal.PhysicsSystem);
 
 	local entity = ecs:spawn(crystal.Entity);
-	entity:add_component(crystal.Body, "dynamic");
+	entity:add_component(crystal.Body);
 	entity:add_component(crystal.Movement);
 
 	entity:set_heading(0);
@@ -221,7 +221,7 @@ crystal.test.add("Colliders block movement", function()
 	ecs:add_system(crystal.PhysicsSystem);
 
 	local entity = ecs:spawn(crystal.Entity);
-	entity:add_component(crystal.Body, "dynamic");
+	entity:add_component(crystal.Body);
 	entity:add_component(crystal.Movement);
 	local collider = entity:add_component(crystal.Collider, love.physics.newRectangleShape(10, 10));
 	collider.all_categories = all_categories;
@@ -272,7 +272,7 @@ crystal.test.add("Colliders activate sensors", function()
 	ecs:add_system(crystal.PhysicsSystem);
 
 	local entity = ecs:spawn(crystal.Entity);
-	entity:add_component(crystal.Body, "dynamic");
+	entity:add_component(crystal.Body);
 	entity:add_component(crystal.Movement);
 	local collider = entity:add_component(crystal.Collider, love.physics.newRectangleShape(10, 10));
 	collider.all_categories = all_categories;

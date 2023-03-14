@@ -124,7 +124,7 @@ crystal.test.add("Walk to point", function()
 	local acceptanceRadius = 6;
 
 	local subject = scene:spawn(crystal.Entity);
-	subject:add_component(crystal.Body, scene:physics_world(), "dynamic");
+	subject:add_component(crystal.Body);
 	subject:add_component(crystal.Movement, 50);
 	subject:set_position(startX, startY);
 	subject:add_component(Navigation);
@@ -146,14 +146,14 @@ crystal.test.add("Walk to entity", function()
 	local acceptanceRadius = 6;
 
 	local subject = scene:spawn(crystal.Entity);
-	subject:add_component(crystal.Body, scene:physics_world(), "dynamic");
+	subject:add_component(crystal.Body);
 	subject:add_component(crystal.Movement, 50);
 	subject:set_position(startX, startY);
 	subject:add_component(Navigation);
 	subject:add_component(crystal.ScriptRunner);
 
 	local target = scene:spawn(crystal.Entity);
-	target:add_component(crystal.Body, scene:physics_world(), "dynamic");
+	target:add_component(crystal.Body);
 	target:set_position(endX, endY);
 
 	subject:navigateToEntity(target, acceptanceRadius);
@@ -174,7 +174,7 @@ crystal.test.add("Can use blocking script function", function()
 	local sentinel = false;
 
 	local subject = scene:spawn(crystal.Entity);
-	subject:add_component(crystal.Body, scene:physics_world(), "dynamic");
+	subject:add_component(crystal.Body);
 	subject:add_component(crystal.Movement, 50);
 	subject:set_position(startX, startY);
 	subject:add_component(Navigation);

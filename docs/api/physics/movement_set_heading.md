@@ -29,7 +29,7 @@ local ecs = crystal.ECS:new();
 ecs:add_system(crystal.PhysicsSystem);
 
 local entity = ecs:spawn(crystal.Entity);
-entity:add_component(crystal.Body, "dynamic");
+entity:add_component(crystal.Body);
 entity:add_component(crystal.Movement);
 entity:set_heading(math.pi);
 print(entity:heading()); -- Prints "3.1415..."

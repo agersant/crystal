@@ -36,11 +36,11 @@ local ecs = crystal.ECS:new();
 ecs:add_system(crystal.PhysicsSystem);
 
 local hero = ecs:spawn(crystal.Entity);
-hero:add_component(crystal.Body, "dynamic");
+hero:add_component(crystal.Body);
 hero:set_position(0, 0);
 
 local coin = ecs:spawn(crystal.Entity);
-coin:add_component(crystal.Body, "dynamic");
+coin:add_component(crystal.Body);
 coin:set_position(10, 0);
 
 print(hero:distance_squared_to_entity(coin)); -- Prints "100"

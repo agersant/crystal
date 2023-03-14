@@ -28,7 +28,7 @@ local ecs = crystal.ECS:new();
 ecs:add_system(crystal.PhysicsSystem);
 
 local hero = ecs:spawn(crystal.Entity);
-hero:add_component(crystal.Body, "dynamic");
+hero:add_component(crystal.Body);
 hero:set_position(0, 0);
 hero:look_at(-100, 0);
 print(hero:rotation()); -- Prints the approximate value of pi

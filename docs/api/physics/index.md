@@ -21,7 +21,7 @@ This example defines an entity with a position in the world, the ability to move
 ```lua
 local Hero = Class("Hero", crystal.Entity);
 Hero.init = function(self)
-  self:add_component(crystal.Body, "dynamic");
+  self:add_component(crystal.Body);
   self:add_component(crystal.Movement);
   self:add_component(crystal.Collider, love.physics.newCircleShape(10));
 end
