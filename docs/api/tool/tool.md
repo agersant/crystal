@@ -9,14 +9,17 @@ Base class for tools to inherit from.
 
 ## Methods
 
-Most methods on this class have blank implementations. Your own classes deriving from `crystal.Tool` may override any number of them.
+| Name         | Description                                    |
+| :----------- | :--------------------------------------------- |
+| `is_visible` | Returns whether the tool is currently visible. |
+
+## Callbacks
 
 | Name          | Description                                                                                                                                                  |
 | :------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `draw`        | Called every frame while the tool is visible. Default implementation does nothing.                                                                           |
 | `hide`        | Called when the tool stops being visible. Default implementation does nothing.                                                                               |
 | `key_pressed` | Called when the tool receives a key press. Arguments after `self` are the same as those of [love.keypressed](https://love2d.org/wiki/love.keypressed).       |
-| `is_visible`  | Returns whether the tool is currently visible.                                                                                                               |
 | `text_input`  | Called when the tool receives text input. Arguments after `self` are the same as those of [love.textinput](https://love2d.org/wiki/love.textinput).          |
 | `show`        | Called when the tool becomes visible. Default implementation does nothing.                                                                                   |
 | `update`      | Called every frame. Default implementation does nothing. Arguments after `self` are the same as those of [love.update](https://love2d.org/wiki/love.update). |

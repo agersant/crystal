@@ -20,15 +20,15 @@ entity:add_component(crystal.Sensor, love.physics.newCircleShape(4));
 
 ## Methods
 
-| Name                  | Description                                               |
-| :-------------------- | :-------------------------------------------------------- |
-| activations           | Returns all components currently overlapping this sensor. |
-| disable_activation_by | Prevents a physics category from activating this sensor.  |
-| disable_sensor        | Prevents this sensor from being activated.                |
-| enable_activation_by  | Allows a physics category to activate this sensor.        |
-| enable_sensor         | Allows this sensor to be activated.                       |
-| set_categories        | Sets which physics categories describe this sensor.       |
-| shape                 | Returns the shape of this sensor.                         |
+| Name                  | Description                                                                               |
+| :-------------------- | :---------------------------------------------------------------------------------------- |
+| activations           | Returns all components currently overlapping this sensor.                                 |
+| disable_activation_by | Prevents this sensor from being activated by colliders or sensors of specific categories. |
+| disable_sensor        | Prevents this sensor from being activated.                                                |
+| enable_activation_by  | Allows this sensor to be activated by colliders or sensors of specific categories.        |
+| enable_sensor         | Allows this sensor to be activated.                                                       |
+| set_categories        | Sets which physics categories describe this sensor.                                       |
+| shape                 | Returns the shape of this sensor.                                                         |
 
 ## Callbacks
 
