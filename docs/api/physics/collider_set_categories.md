@@ -8,7 +8,7 @@ nav_exclude: true
 
 Sets which physics categories describe this collider.
 
-Categories are used to determine which [colliders](collider) and [sensors](sensor) are allowed to interact with each other. The list of valid categories in your project must be defined using [crystal.configure](/crystal/configure).
+Categories are used to determine which [colliders](collider) and [sensors](sensor) are allowed to interact with each other. The list of valid categories in your project must be defined using [crystal.configure](/crystal/api/configure).
 
 ## Usage
 
