@@ -1,0 +1,44 @@
+---
+parent: crystal.physics
+grand_parent: API Reference
+nav_exclude: true
+---
+
+# Body:distance_to_entity
+
+Returns the distance between this entity and another one. The other entity must have a [Body](body) component.
+
+## Usage
+
+```lua
+body:distance_to_entity(other_entity)
+```
+
+### Arguments
+
+| Name           | Type                              | Description                                  |
+| :------------- | :-------------------------------- | :------------------------------------------- |
+| `other_entity` | [Entity](/crystal/api/ecs/entity) | Entity whose distance to should be measured. |
+
+### Returns
+
+| Name       | Type     | Description                   |
+| :--------- | :------- | :---------------------------- |
+| `distance` | `number` | Distance to the other entity. |
+
+## Examples
+
+```lua
+local ecs = crystal.ECS:new();
+ecs:add_system(crystal.PhysicsSystem);
+
+local hero = ecs:spawn(crystal.Entity);
+hero:add_component(crystal.Body, "dynamic");
+hero:set_position(0, 0);
+
+local coin = ecs:spawn(crystal.Entity);
+coin:add_component(crystal.Body, "dynamic");
+coin:set_position(10, 0);
+
+print(hero:distance_to_entity(coin)); -- Prints "10"
+```

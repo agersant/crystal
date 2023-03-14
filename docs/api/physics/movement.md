@@ -5,7 +5,7 @@ grand_parent: API Reference
 
 # crystal.Movement
 
-[Component](/crystal/api/ecs/component) allowing an entity to move of its own volition.
+[Component](/crystal/api/ecs/component) allowing an entity to move of its own volition. Entities should have at most one Movement component.
 
 Expected usage of this component is to call [set_heading](movement_set_heading) every frame in response to player inputs or AI logic. Every frame, the [PhysicsSystem]:
 
