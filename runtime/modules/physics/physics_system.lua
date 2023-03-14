@@ -210,6 +210,55 @@ crystal.test.add("Movement component moves things", function()
 	assert(math.abs(y) < 0.01);
 end);
 
+crystal.test.add("Can attach entity to another", function()
+	local ecs = crystal.ECS:new();
+	ecs:add_system(crystal.PhysicsSystem);
+
+	local parent = ecs:spawn(crystal.Entity);
+	parent:add_component(crystal.Body);
+	parent:set_position(9, 2);
+
+	local child = ecs:spawn(crystal.Entity);
+	child:add_component(crystal.Body);
+	child:attach_to(parent);
+	local x, y = child:position();
+	assert(x == 9);
+	assert(y == 2);
+
+	parent:set_position(100, 50);
+	local x, y = child:position();
+	assert(x == 100);
+	assert(y == 50);
+
+	parent:apply_impulse(20, 20);
+	ecs:update();
+	ecs:notify_systems("simulate_physics", 0.01);
+
+	assert(child:distance_to_entity(parent) == 0);
+end);
+
+crystal.test.add("Can detach entities", function()
+	local ecs = crystal.ECS:new();
+	ecs:add_system(crystal.PhysicsSystem);
+
+	local parent = ecs:spawn(crystal.Entity);
+	parent:add_component(crystal.Body);
+	parent:set_position(9, 2);
+
+	local child = ecs:spawn(crystal.Entity);
+	child:add_component(crystal.Body);
+	child:attach_to(parent);
+	local x, y = child:position();
+	assert(x == 9);
+	assert(y == 2);
+
+	child:detach_from_parent();
+	parent:set_position(100, 50);
+	local x, y = child:position();
+	assert(x == 9);
+	assert(y == 2);
+end);
+
 crystal.test.add("Colliders block movement", function()
 	local all_categories = {
 		solid = 1,

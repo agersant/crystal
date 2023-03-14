@@ -86,11 +86,18 @@ Body.set_position = function(self, x, y)
 	if self.parent_joint then
 		return;
 	end
+	self:set_position_internal(x, y);
+end
+
+---@private
+---@param x number
+---@param y number
+Body.set_position_internal = function(self, x, y)
 	self._inner:setPosition(x, y);
 	for joint in pairs(self.child_joints) do
 		local _, child = joint:getBodies();
 		local child = child:getUserData();
-		child:set_position(x, y);
+		child:set_position_internal(x, y);
 	end
 end
 
