@@ -41,6 +41,7 @@ end
 
 ---@param parent_entity Entity
 Body.attach_to = function(self, parent_entity)
+	assert(parent_entity ~= self);
 	self:detach_from_parent();
 
 	local parent = parent_entity:component(Body);
@@ -130,7 +131,7 @@ end
 
 ---@param x number
 ---@param y number
-Body.apply_linear_impulse = function(self, x, y)
+Body.apply_impulse = function(self, x, y)
 	if self.parent_joint then
 		return;
 	end

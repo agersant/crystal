@@ -17,24 +17,24 @@ entity:add_component(crystal.Body, "dynamic");
 
 ## Methods
 
-| Name                       | Description |
-| :------------------------- | :---------- |
-| apply_linear_impulse       |             |
-| attach_to                  |             |
-| damping                    |             |
-| detach_from_parent         |             |
-| distance_to                |             |
-| distance_to_entity         |             |
-| distance_squared_to        |             |
-| distance_squared_to_entity |             |
-| look_at                    |             |
-| position                   |             |
-| rotation                   |             |
-| set_rotation               |             |
-| set_damping                |             |
-| set_position               |             |
-| set_velocity               |             |
-| velocity                   |             |
+| Name                       | Description                                                                                                                              |
+| :------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- | --- |
+| apply_impulse              | Applies a [linear impulse](https://love2d.org/wiki/Body:applyLinearImpulse) to the underlying [love.Body](https://love2d.org/wiki/Body). |
+| attach_to                  | Links the entity to another one, relinquishing control of its position.                                                                  |
+| damping                    | Returns the [linear damping](https://love2d.org/wiki/Body:getLinearDamping) of the underlying [love.Body](https://love2d.org/wiki/Body). |
+| detach_from_parent         | Unlinks this entity from whichever entity it was attached to.                                                                            |
+| distance_to                | Returns the distance between this entity and a specific point.                                                                           |
+| distance_to_entity         | Returns the distance between this entity and another one.                                                                                |
+| distance_squared_to        | Returns the square of the distance between this entity and a specific point.                                                             |
+| distance_squared_to_entity | Returns the squared of the distance between this entity and another one.                                                                 |
+| look_at                    | Sets this entity's rotation so that it faces a specific point.                                                                           |
+| position                   | Returns this entity's position.                                                                                                          |
+| rotation                   | Returns this entity's rotation.                                                                                                          |
+| set_rotation               | Sets this entity's rotation.                                                                                                             |
+| set_damping                | Sets the [linear damping](https://love2d.org/wiki/Body:getLinearDamping) of the underlying [love.Body](https://love2d.org/wiki/Body).    |
+| set_position               | Sets this entity's position.                                                                                                             |     |
+| set_velocity               | Sets this entity's velocity.                                                                                                             |
+| velocity                   | Returns this entity's velocity.                                                                                                          |
 
 ## Examples
 
