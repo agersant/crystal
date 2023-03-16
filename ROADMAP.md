@@ -18,7 +18,7 @@
   - [ ] gfx
   - [x] input
   - [x] log
-  - [ ] persistence
+  - [x] persistence
   - [x] physics
   - [ ] scene
   - [x] script

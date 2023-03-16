@@ -59,9 +59,8 @@ local TableUtils = require("utils/TableUtils");
 crystal.conf = {
 	assetsDirectories = {},
 	physics_categories = {},
-	mapDirectory = "",           -- TODO remove when mapscene is no longer part of crystal
-	mapSceneClass = "MapScene",  -- TODO remove when mapscene is no longer part of crystal
-	saveDataClass = "BaseSaveData", -- TODO remove when reworking persistence
+	mapDirectory = "",       -- TODO remove when mapscene is no longer part of crystal
+	mapSceneClass = "MapScene", -- TODO remove when mapscene is no longer part of crystal
 };
 crystal.configure = function(c)
 	TableUtils.merge(crystal.conf, c);
@@ -128,8 +127,6 @@ love.load = function()
 	if not CRYSTAL_NO_GAME then
 		requireGameSource();
 	end
-
-	PERSISTENCE = require("persistence/Persistence"):new(Class:by_name(crystal.conf.saveDataClass));
 
 	if crystal.prelude then
 		crystal.prelude();
