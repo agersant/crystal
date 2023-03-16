@@ -6,7 +6,7 @@ has_toc: false
 
 # crystal.string
 
-This module contains utility functions for string manipulations. All functions are registered on the global `string` table and be accessed as `string.example(my_string)` or `my_string:example()`.
+This module contains utility functions for string manipulation. All functions are registered on the global `string` table and be accessed as `string.example(my_string)` or `my_string:example()`.
 
 For all functions operating on filesystem paths, `"\"` and `"/"` are treated as equivalent path separators. All filesystem paths may be absolute or relative.
 
