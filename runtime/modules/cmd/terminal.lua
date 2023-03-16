@@ -3,7 +3,6 @@ local Autocomplete = require("modules/cmd/autocomplete");
 local CommandStore = require("modules/cmd/command_store");
 local TypeStore = require("modules/cmd/type_store");
 local TextInput = require("ui/TextInput");
-local StringUtils = require("utils/StringUtils");
 
 ---@class ParsedInput
 ---@field full_text string
@@ -53,11 +52,11 @@ Terminal.parse = function(self, input)
 	local parse = {};
 	parse.full_text = input;
 	parse.command_untrimmed = parse.full_text:match("^(%s*[^%s]+)") or "";
-	parse.command = parse.command_untrimmed and StringUtils.trim(parse.command_untrimmed);
+	parse.command = parse.command_untrimmed and parse.command_untrimmed:trim();
 	parse.args = {};
 	local args = parse.full_text:sub(#parse.command + 1);
 	for arg in args:gmatch("%s+[^%s]*") do
-		table.insert(parse.args, StringUtils.trim(arg));
+		table.insert(parse.args, arg:trim());
 	end
 	return parse;
 end
@@ -97,7 +96,7 @@ end
 
 ---@private
 Terminal.submit_input = function(self)
-	local command = StringUtils.trim(self:raw_input());
+	local command = self:raw_input():trim();
 	if #command == 0 then
 		return;
 	end

@@ -1,5 +1,4 @@
 local features = require("features");
-local StringUtils = require("utils/StringUtils");
 
 ---@class Command
 ---@field private display_name string
@@ -20,7 +19,7 @@ Command.init = function(self, signature, impl)
 	self._impl = impl;
 
 	self.args = {};
-	local raw_args = StringUtils.trim(signature:sub(#self.display_name + 1));
+	local raw_args = signature:sub(#self.display_name + 1):trim();
 	for raw_arg in string.gmatch(raw_args, "%a+[%d%a]-:%a+") do
 		local arg = {};
 		arg.name, arg.type = raw_arg:match("(.+):(.+)");

@@ -1,11 +1,9 @@
-local StringUtils = require("utils/StringUtils");
-
 local Content = Class("Content");
 
 local browse;
 browse = function(path, files, pattern)
 	for _, item in ipairs(love.filesystem.getDirectoryItems(path)) do
-		local file = StringUtils.mergePaths(path, item);
+		local file = string.merge_paths(path, item);
 		local info = love.filesystem.getInfo(file);
 		if info.type == "file" then
 			if not pattern or file:match(pattern) then

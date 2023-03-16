@@ -1,6 +1,5 @@
 local features = require("features");
 local Command = require("modules/cmd/command");
-local StringUtils = require("utils/StringUtils");
 
 ---@class CommandStore
 ---@field private commands Command[]
@@ -28,7 +27,7 @@ end
 CommandStore.search = function(self, name)
 	local matches = {};
 	local has_strong_match = false;
-	local query = StringUtils.trim(name:lower());
+	local query = name:lower():trim();
 
 	for ref, command in pairs(self.commands) do
 		local match_start, match_end = ref:find(query);
@@ -54,7 +53,7 @@ end
 ---@return Command
 CommandStore.command = function(self, name)
 	assert(type(name) == "string");
-	local ref = StringUtils.trim(name:lower());
+	local ref = name:lower():trim();
 	local command = self.commands[ref];
 	assert(command == nil or command:ref() == ref);
 	return command;

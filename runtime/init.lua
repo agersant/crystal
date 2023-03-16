@@ -41,6 +41,7 @@ end
 
 add_module("oop", "modules/oop");
 add_module("test", "modules/test");
+add_module("string", "modules/string");
 
 add_module("cmd", "modules/cmd");
 add_module("const", "modules/const");
@@ -52,7 +53,6 @@ add_module("script", "modules/script");
 add_module("tool", "modules/tool");
 
 local Content = require("resources/Content");
-local StringUtils = require("utils/StringUtils");
 local Scene = require("Scene");
 
 local TableUtils = require("utils/TableUtils");
@@ -107,7 +107,7 @@ local requireGameSource = function()
 			isAsset = isAsset or path:match("^" .. directory);
 		end
 		if not isCrystal and not isAsset and not isMain then
-			require(StringUtils.stripFileExtension(path));
+			require(path:strip_file_extension());
 		end
 	end
 end

@@ -2,15 +2,14 @@ local Knob = require("knob");
 local features = require("features");
 local Colors = require("resources/Colors");
 local MathUtils = require("utils/MathUtils");
-local StringUtils = require("utils/StringUtils");
 
 local Knob = setmetatable({}, {
-		__index = function(_, k)
-			return function(self, ...)
-				return Knob[k](...);
-			end
-		end,
-	});
+	__index = function(_, k)
+		return function(self, ...)
+			return Knob[k](...);
+		end
+	end,
+});
 
 -- Table of knob index -> MIDI CC Index
 -- Default values setup for the factory settings of Arturia MINILAB mkII
@@ -102,7 +101,7 @@ KnobInfo.init = function(self)
 	self.donut = donut_container:addChild(KnobDonut:new());
 	self.knob_index_text = donut_container:addChild(Text:new());
 	self.knob_index_text:setAlignment("center", "bottom");
-	self.knob_index_text:setBottomPadding( -6);
+	self.knob_index_text:setBottomPadding(-6);
 	self.knob_index_text:setColor(colors.knob_index);
 	self.knob_index_text:setFont(FONTS:get("devBold", 12));
 
@@ -283,7 +282,7 @@ end
 ---@param knob_index integer
 LiveTune.assign_knob = function(self, name, knob_index)
 	assert(type(knob_index) == "number");
-	local name = StringUtils.removeWhitespace(name:lower());
+	local name = name:lower():remove_whitespace();
 	for old_name, index in pairs(self.knobs) do
 		if index == knob_index then
 			self.knobs[old_name] = nil;

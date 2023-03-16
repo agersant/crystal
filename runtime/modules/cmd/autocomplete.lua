@@ -1,5 +1,4 @@
 local Colors = require("resources/Colors");
-local StringUtils = require("utils/StringUtils");
 
 ---@alias SuggestionsState "command" | "badcommand" | "args"
 

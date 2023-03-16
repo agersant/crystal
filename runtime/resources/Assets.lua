@@ -1,7 +1,6 @@
 local Map = require("resources/map/Map");
 local Tileset = require("resources/map/Tileset");
 local Spritesheet = require("resources/spritesheet/Spritesheet");
-local StringUtils = require("utils/StringUtils");
 
 local Assets = Class("Assets");
 
@@ -16,14 +15,14 @@ local getPathAndExtension = function(path)
 	assert(type(path) == "string");
 	assert(#path > 0);
 
-	local extension = StringUtils.fileExtension(path);
+	local extension = path:file_extension();
 	if not extension or #extension == 0 then
 		error("Asset " .. path .. " has no file extension");
 	end
 
 	local pathWithoutExtension = path;
 	if extension == "lua" then
-		pathWithoutExtension = StringUtils.stripFileExtension(path);
+		pathWithoutExtension = path:strip_file_extension();
 	end
 	assert(pathWithoutExtension and #pathWithoutExtension > 0);
 
@@ -59,7 +58,7 @@ end
 
 local loadTileset = function(self, mapPath, tilesetData)
 	local tilesetPath = tilesetData.image;
-	tilesetPath = StringUtils.mergePaths(StringUtils.stripFileFromPath(mapPath), tilesetPath);
+	tilesetPath = string.merge_paths(mapPath:strip_file_from_path(), tilesetPath);
 	local image = loadAsset(self, tilesetPath, mapPath);
 	local tileset = Tileset:new(tilesetData, image);
 	return tileset;
@@ -67,7 +66,7 @@ end
 
 local unloadTileset = function(self, mapPath, tilesetData)
 	local tilesetPath = tilesetData.image;
-	tilesetPath = StringUtils.mergePaths(StringUtils.stripFileFromPath(mapPath), tilesetPath);
+	tilesetPath = string.merge_paths(mapPath:strip_file_from_path(), tilesetPath);
 	unloadAsset(self, tilesetPath, mapPath);
 end
 

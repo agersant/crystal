@@ -7,7 +7,6 @@ local DrawableSystem = require("mapscene/display/DrawableSystem");
 local WorldWidgetSystem = require("mapscene/display/WorldWidgetSystem");
 local Scene = require("Scene");
 local Alias = require("utils/Alias");
-local StringUtils = require("utils/StringUtils");
 
 local MapScene = Class("MapScene", Scene);
 
@@ -154,7 +153,7 @@ end
 
 crystal.cmd.add("loadMap mapName:string", function(mapName)
 	local sceneClass = Class:by_name(crystal.conf.mapSceneClass);
-	local sceneFile = StringUtils.mergePaths(crystal.conf.mapDirectory, mapName .. ".lua");
+	local sceneFile = string.merge_paths(crystal.conf.mapDirectory, mapName .. ".lua");
 	local newScene = sceneClass:new(sceneFile);
 	ENGINE:loadScene(newScene);
 end);

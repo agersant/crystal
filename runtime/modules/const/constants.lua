@@ -1,7 +1,6 @@
 local features = require("features");
 local Terminal = require("modules/cmd/terminal")
 local MathUtils = require("utils/MathUtils");
-local StringUtils = require("utils/StringUtils");
 
 ---@class Constants
 ---@field value any
@@ -54,7 +53,7 @@ end
 ---@private
 Constants.normalize = function(self, name)
 	assert(name);
-	local name = StringUtils.removeWhitespace(name:lower());
+	local name = name:lower():remove_whitespace();
 	assert(#name > 0);
 	return name;
 end
