@@ -282,7 +282,7 @@ end
 ---@param knob_index integer
 LiveTune.assign_knob = function(self, name, knob_index)
 	assert(type(knob_index) == "number");
-	local name = name:lower():remove_whitespace();
+	local name = name:lower():strip_whitespace();
 	for old_name, index in pairs(self.knobs) do
 		if index == knob_index then
 			self.knobs[old_name] = nil;

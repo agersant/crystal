@@ -53,7 +53,7 @@ end
 ---@private
 Constants.normalize = function(self, name)
 	assert(name);
-	local name = name:lower():remove_whitespace();
+	local name = name:lower():strip_whitespace();
 	assert(#name > 0);
 	return name;
 end

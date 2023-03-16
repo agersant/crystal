@@ -58,7 +58,7 @@ end
 
 local loadTileset = function(self, mapPath, tilesetData)
 	local tilesetPath = tilesetData.image;
-	tilesetPath = string.merge_paths(mapPath:strip_file_from_path(), tilesetPath);
+	tilesetPath = string.merge_paths(mapPath:parent_directory(), tilesetPath);
 	local image = loadAsset(self, tilesetPath, mapPath);
 	local tileset = Tileset:new(tilesetData, image);
 	return tileset;
@@ -66,7 +66,7 @@ end
 
 local unloadTileset = function(self, mapPath, tilesetData)
 	local tilesetPath = tilesetData.image;
-	tilesetPath = string.merge_paths(mapPath:strip_file_from_path(), tilesetPath);
+	tilesetPath = string.merge_paths(mapPath:parent_directory(), tilesetPath);
 	unloadAsset(self, tilesetPath, mapPath);
 end
 

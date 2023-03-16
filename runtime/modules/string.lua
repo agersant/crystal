@@ -2,13 +2,16 @@ string.trim = function(s)
 	return s:match("^%s*(.-)%s*$");
 end
 
-string.remove_whitespace = function(s)
+string.strip_whitespace = function(s)
 	return s:gsub("%s+", "");
 end
 
 string.split = function(str, sep)
+	assert(type(str) == "string");
+	assert(type(sep) == "string");
 	local out = {};
-	local pattern = string.format("([^%s]+)", sep);
+	local safe_separators = string.gsub(sep, "([^%w])", "%%%1");
+	local pattern = string.format("([^%s]+)", safe_separators);
 	str:gsub(pattern, function(c)
 		table.insert(out, c);
 	end);
@@ -16,14 +19,21 @@ string.split = function(str, sep)
 end
 
 string.file_extension = function(path)
-	return path:match("%.([%a%d]+)$");
+	local path_split = path:split("\\/");
+	if #path_split == 0 then
+		return nil;
+	end
+	return path_split[#path_split]:match("%.([%a%d]+)$");
 end
 
 string.strip_file_extension = function(path)
 	return path:match("^(.*)%.[%a%d]+$");
 end
 
-string.strip_file_from_path = function(path)
+string.parent_directory = function(path)
+	if path == "" then
+		return nil;
+	end
 	local path_split = path:split("\\/");
 	table.remove(path_split);
 	local out = "";
@@ -64,68 +74,52 @@ end
 
 --#region Tests
 
-crystal.test.add("Trim before", function()
+crystal.test.add("Can trim string", function()
 	assert("oink" == (" 	 	  	oink"):trim());
-end);
-
-crystal.test.add("Trim after", function()
 	assert("oink" == ("oink  	 	"):trim());
-end);
-
-crystal.test.add("Trim preserves spaces in the middle", function()
 	assert("oink 	gruik" == (" 	oink 	gruik	 "):trim());
 end);
 
-crystal.test.add("Remove whitespace removes spaces", function()
-	assert(("  oink  gruik  "):remove_whitespace() == "oinkgruik");
+crystal.test.add("Can strip whitespace", function()
+	assert(("  oink  gruik  "):strip_whitespace() == "oinkgruik");
+	assert(("	oink	gruik	"):strip_whitespace() == "oinkgruik");
 end);
 
-crystal.test.add("Remove whitespace removes tabs", function()
-	assert(("	oink	gruik	"):remove_whitespace() == "oinkgruik");
-end);
-
-crystal.test.add("Valid file extension", function()
+crystal.test.add("Can extract file extension", function()
 	assert("png" == ("gruik.png"):file_extension());
-end);
-
-crystal.test.add("Valid file extension relative path", function()
 	assert("png" == ("../gruik.png"):file_extension());
-end);
-
-crystal.test.add("Bad file extension", function()
+	assert(nil == ("a/b.c/gruik"):file_extension());
 	assert(nil == ("gruikpng"):file_extension());
 end);
 
-crystal.test.add("Strip file extension", function()
+crystal.test.add("Can strip file extension", function()
 	assert("gruik" == ("gruik.png"):strip_file_extension());
-end);
-
-crystal.test.add("Strip file extension relative path", function()
 	assert("../gruik" == ("../gruik.png"):strip_file_extension());
 end);
 
-crystal.test.add("Strip file from path", function()
-	assert("aa/b/c" == ("aa/b\\c/gruik.png"):strip_file_from_path());
+crystal.test.add("Can strip file from path", function()
+	assert(nil == (""):parent_directory());
+	assert("" == ("aa"):parent_directory());
+	assert("" == ("/"):parent_directory());
+	assert("" == ("/a"):parent_directory());
+	assert("aa/b/c" == ("aa/b\\c/gruik.png"):parent_directory());
+	assert("aa/b/c" == ("aa/b\\c/gruikpng"):parent_directory());
 end);
 
-crystal.test.add("Strip file from path without extension", function()
-	assert("aa/b/c" == ("aa/b\\c/gruikpng"):strip_file_from_path());
-end);
-
-crystal.test.add("Merge with empty", function()
+crystal.test.add("Can merge paths", function()
 	assert("a/b/c" == string.merge_paths("a/b/c", ""));
-end);
-
-crystal.test.add("Merge from empty", function()
 	assert("a/b/c" == string.merge_paths("", "a/b/c"));
-end);
-
-crystal.test.add("Merge simple", function()
 	assert("a/b/c" == string.merge_paths("a/b", "c"));
+	assert("a/c" == string.merge_paths("a/b", "../c"));
+	assert("a/b/c" == string.merge_paths("a/b/", "c/"));
 end);
 
-crystal.test.add("Merge with parent directory", function()
-	assert("a/c" == string.merge_paths("a/b", "../c"));
+crystal.test.add("Can split with multiple separators", function()
+	local split = string.split("ab.cde,fg  hij", " ,.");
+	assert(split[1] == "ab");
+	assert(split[2] == "cde");
+	assert(split[3] == "fg");
+	assert(split[4] == "hij");
 end);
 
 --#endregion

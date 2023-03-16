@@ -26,7 +26,7 @@
   - [x] tool
   - [ ] ui
   - [x] oop
-  - [ ] stringutils
+  - [x] stringutils
   - [ ] tableutils
   - [ ] window
 
