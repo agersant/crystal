@@ -60,7 +60,7 @@ table.equals = function(t, u)
 end
 
 table.merge = function(target, other)
-	for k, v in pairs(target) do
+	for k, v in pairs(other) do
 		target[k] = v;
 	end
 end
@@ -149,6 +149,13 @@ return {
 			assert(t.b == 4);
 			assert(m.a == 1);
 			assert(m.b == 16);
+		end);
+
+		crystal.test.add("Can merge tables", function()
+			local t = { a = 1 };
+			table.merge(t, { b = 2 });
+			assert(t.a == 1);
+			assert(t.b == 2);
 		end);
 
 		crystal.test.add("Can test if table contains value", function()
