@@ -22,6 +22,7 @@ has_toc: false
 | [crystal.scene](scene)     |                                                                                        |
 | [crystal.script](script)   | Coroutine-based scripting system to write logic that takes place over multiple frames. |
 | [crystal.string](string)   | Utility functions for string manipulation.                                             |
+| [crystal.table](table)     | Utility functions for table operations.                                                |
 | [crystal.test](test)       | Provides an interface to define unit or integration tests.                             |
 | [crystal.tool](tool)       | Allows you to define visual development tools.                                         |
 | [crystal.ui](ui)           |                                                                                        |

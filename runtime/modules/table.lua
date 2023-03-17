@@ -59,10 +59,15 @@ table.equals = function(t, u)
 	return true;
 end
 
-table.merge = function(target, other)
-	for k, v in pairs(other) do
-		target[k] = v;
+table.merge = function(table_a, table_b)
+	local out = {};
+	for k, v in pairs(table_a) do
+		out[k] = v;
 	end
+	for k, v in pairs(table_b) do
+		out[k] = v;
+	end
+	return out;
 end
 
 table.serialize = function(t)
@@ -92,6 +97,8 @@ table.serialize = function(t)
 			local out = "{\n";
 			for key, value in pairs(v) do
 				if type(key) == "number" then
+					out = out .. "[" .. key .. "]";
+				elseif type(key) == "boolean" then
 					out = out .. "[" .. key .. "]";
 				elseif type(key) == "string" then
 					out = out .. key;
@@ -152,10 +159,9 @@ return {
 		end);
 
 		crystal.test.add("Can merge tables", function()
-			local t = { a = 1 };
-			table.merge(t, { b = 2 });
-			assert(t.a == 1);
-			assert(t.b == 2);
+			local m = table.merge({ a = 1 }, { b = 2 });
+			assert(m.a == 1);
+			assert(m.b == 2);
 		end);
 
 		crystal.test.add("Can test if table contains value", function()

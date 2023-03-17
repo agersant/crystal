@@ -59,7 +59,7 @@ crystal.conf = {
 	mapSceneClass = "MapScene", -- TODO remove when mapscene is no longer part of crystal
 };
 crystal.configure = function(c)
-	table.merge(crystal.conf, c);
+	crystal.conf = table.merge(crystal.conf, c);
 end
 
 VIEWPORT = require("graphics/Viewport"):new();
