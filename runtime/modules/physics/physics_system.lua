@@ -80,8 +80,8 @@ PhysicsSystem.begin_contact = function(self, fixture_a, fixture_b, contact)
 		return;
 	end
 	if owner_a:inherits_from(Fixture) and owner_b:inherits_from(Fixture) then
-		table.insert(self.contact_callbacks, { func = owner_a.begin_contact, args = { owner_a, owner_b, contact } });
-		table.insert(self.contact_callbacks, { func = owner_b.begin_contact, args = { owner_b, owner_a, contact } });
+		table.push(self.contact_callbacks, { func = owner_a.begin_contact, args = { owner_a, owner_b, contact } });
+		table.push(self.contact_callbacks, { func = owner_b.begin_contact, args = { owner_b, owner_a, contact } });
 	end
 end
 
@@ -95,8 +95,8 @@ PhysicsSystem.end_contact = function(self, fixture_a, fixture_b, contact)
 		return;
 	end
 	if owner_a:inherits_from(Fixture) and owner_b:inherits_from(Fixture) then
-		table.insert(self.contact_callbacks, { func = owner_a.end_contact, args = { owner_a, owner_b, contact } });
-		table.insert(self.contact_callbacks, { func = owner_b.end_contact, args = { owner_b, owner_a, contact } });
+		table.push(self.contact_callbacks, { func = owner_a.end_contact, args = { owner_a, owner_b, contact } });
+		table.push(self.contact_callbacks, { func = owner_b.end_contact, args = { owner_b, owner_a, contact } });
 	end
 end
 

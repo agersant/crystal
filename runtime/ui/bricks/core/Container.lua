@@ -17,7 +17,7 @@ Container.addChild = function(self, child)
 	if child:getParent() then
 		child:removeFromParent();
 	end
-	table.insert(self._children, child);
+	table.push(self._children, child);
 	local joint = self._jointClass:new(self, child);
 	self._childJoints[child] = joint;
 	child:setJoint(joint);

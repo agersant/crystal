@@ -22,7 +22,7 @@ Sequence.init = function(self, texture, framesData, sequenceData, loop)
 		assert(frameData.h);
 		local frame = Frame:new(texture, frameData.x, frameData.y, frameData.w, frameData.h, ox, oy);
 		local animationFrame = AnimationFrame:new(frame, animationFrameData.duration, animationFrameData.tags);
-		table.insert(self._animationFrames, animationFrame);
+		table.push(self._animationFrames, animationFrame);
 		self._duration = self._duration + animationFrameData.duration;
 	end
 	assert(#self._animationFrames > 0);

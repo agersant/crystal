@@ -25,7 +25,7 @@ Command.init = function(self, signature, impl)
 		arg.name, arg.type = raw_arg:match("(.+):(.+)");
 		assert(type(arg.name) == "string");
 		assert(type(arg.type) == "string");
-		table.insert(self.args, arg);
+		table.push(self.args, arg);
 	end
 end
 

@@ -59,13 +59,13 @@ Autocomplete.suggest_commands = function(self, input)
 		local pre_match = match.match_start > 1 and match.command:name():sub(1, match.match_start - 1) or "";
 		local in_match = match.command:name():sub(match.match_start, match.match_end);
 		local post_match = match.command:name():sub(match.match_end + 1);
-		table.insert(chunks, Colors.greyC);
-		table.insert(chunks, pre_match);
-		table.insert(chunks, Colors.greyD);
-		table.insert(chunks, in_match);
-		table.insert(chunks, Colors.greyC);
-		table.insert(chunks, post_match);
-		table.insert(lines, { text = chunks, command = match.command });
+		table.push(chunks, Colors.greyC);
+		table.push(chunks, pre_match);
+		table.push(chunks, Colors.greyD);
+		table.push(chunks, in_match);
+		table.push(chunks, Colors.greyC);
+		table.push(chunks, post_match);
+		table.push(lines, { text = chunks, command = match.command });
 	end
 
 	return lines;
@@ -100,10 +100,10 @@ Autocomplete.suggest_arg_values = function(self, input)
 		else
 			argColor = Colors.greyC;
 		end
-		table.insert(args, argColor);
+		table.push(args, argColor);
 
 		local argString = (i > 1 and " " or "") .. arg.name;
-		table.insert(args, argString);
+		table.push(args, argString);
 	end
 
 	return { { text = args } };

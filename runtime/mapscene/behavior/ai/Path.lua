@@ -19,8 +19,8 @@ Path.init = function(self)
 end
 
 Path.addVertex = function(self, x, y)
-	table.insert(self._vertices, x);
-	table.insert(self._vertices, y);
+	table.push(self._vertices, x);
+	table.push(self._vertices, y);
 end
 
 Path.getVertex = function(self, index)

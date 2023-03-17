@@ -16,7 +16,7 @@ ScriptRunner.add_script = function(self, script)
 	end
 	assert(script:inherits_from(Script));
 	Alias:add(script, self:entity());
-	table.insert(self._scripts, script);
+	table.push(self._scripts, script);
 	return script;
 end
 

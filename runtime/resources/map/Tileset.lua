@@ -20,9 +20,9 @@ Tileset.init = function(self, tilesetData, image)
 					for vertIndex, vertData in ipairs(objectData.polygon) do
 						local x = MathUtils.round(objectData.x + vertData.x);
 						local y = MathUtils.round(objectData.y + vertData.y);
-						table.insert(polygon, { x = x, y = y });
+						table.push(polygon, { x = x, y = y });
 					end
-					table.insert(tile.collisionPolygons, polygon);
+					table.push(tile.collisionPolygons, polygon);
 				end
 				if objectData.shape == "rectangle" then
 					local polygon = {};
@@ -30,11 +30,11 @@ Tileset.init = function(self, tilesetData, image)
 					local y = MathUtils.round(objectData.y);
 					local w = MathUtils.round(objectData.width);
 					local h = MathUtils.round(objectData.height);
-					table.insert(polygon, { x = x, y = y });
-					table.insert(polygon, { x = x + w, y = y });
-					table.insert(polygon, { x = x + w, y = y + h });
-					table.insert(polygon, { x = x, y = y + h });
-					table.insert(tile.collisionPolygons, polygon);
+					table.push(polygon, { x = x, y = y });
+					table.push(polygon, { x = x + w, y = y });
+					table.push(polygon, { x = x + w, y = y + h });
+					table.push(polygon, { x = x, y = y + h });
+					table.push(tile.collisionPolygons, polygon);
 				end
 			end
 		end

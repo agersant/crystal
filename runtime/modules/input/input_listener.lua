@@ -23,7 +23,7 @@ end
 ---@return fun()
 InputListener.add_input_handler = function(self, handler)
 	assert(type(handler) == "function");
-	table.insert(self.handlers, handler);
+	table.push(self.handlers, handler);
 	return function()
 		self:remove_input_handler(handler);
 	end

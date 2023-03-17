@@ -15,7 +15,7 @@ DynamicLayer.init = function(self, map, layerData)
 			local x, y = MathUtils.indexToXY(tileNum - 1, map:getWidthInTiles());
 			x = x * map:getTileWidth();
 			y = y * map:getTileHeight();
-			table.insert(self._tiles, { quad = quad, x = x, y = y });
+			table.push(self._tiles, { quad = quad, x = x, y = y });
 		end
 	end
 end

@@ -7,7 +7,7 @@ browse = function(path, files, pattern)
 		local info = love.filesystem.getInfo(file);
 		if info.type == "file" then
 			if not pattern or file:match(pattern) then
-				table.insert(files, file);
+				table.push(files, file);
 			end
 		elseif info.type == "directory" then
 			browse(file, files, pattern);

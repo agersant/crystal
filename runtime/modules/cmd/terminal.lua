@@ -56,7 +56,7 @@ Terminal.parse = function(self, input)
 	parse.args = {};
 	local args = parse.full_text:sub(#parse.command + 1);
 	for arg in args:gmatch("%s+[^%s]*") do
-		table.insert(parse.args, arg:trim());
+		table.push(parse.args, arg:trim());
 	end
 	return parse;
 end
@@ -74,7 +74,7 @@ Terminal.push_to_history = function(self, command)
 	local history_size = 100;
 	self.history[1].submitted = command;
 	if #self.history > history_size then
-		table.remove(self.history);
+		table.pop(self.history);
 	end
 	for _, entry in ipairs(self.history) do
 		entry.input:setText(entry.submitted);
@@ -135,7 +135,7 @@ Terminal.run = function(self, command)
 			crystal.log.error(error_message);
 			return;
 		end
-		table.insert(args, typed_arg);
+		table.push(args, typed_arg);
 	end
 
 	if #args < command:num_args() then

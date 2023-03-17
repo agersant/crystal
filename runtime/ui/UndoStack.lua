@@ -13,9 +13,9 @@ UndoStack.push = function(self, text, caretPosition)
 		self._stack[self._cursor].caretPosition = caretPosition;
 	else
 		while #self._stack > self._cursor do
-			table.remove(self._stack, #self._stack);
+			table.pop(self._stack);
 		end
-		table.insert(self._stack, { text = text, caretPosition = caretPosition });
+		table.push(self._stack, { text = text, caretPosition = caretPosition });
 		self._cursor = #self._stack;
 		while #self._stack > self._maxUndo + 1 do
 			table.remove(self._stack, 1);
@@ -40,7 +40,7 @@ UndoStack.clear = function(self)
 end
 
 UndoStack.rebase = function(self)
-	self._stack = { table.remove(self._stack) };
+	self._stack = { table.pop(self._stack) };
 	self._cursor = 1;
 end
 

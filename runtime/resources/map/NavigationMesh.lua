@@ -10,7 +10,7 @@ NavigationMesh.init = function(self, mesh)
 	if features.debug_draw then
 		self._triangles = {};
 		for _, t in ipairs(mesh:listNavigationPolygons()) do
-			table.insert(self._triangles, {
+			table.push(self._triangles, {
 				vertices = { t[1][1], t[1][2], t[2][1], t[2][2], t[3][1], t[3][2] },
 				center = { x = (t[1][1] + t[2][1] + t[3][1]) / 3, y = (t[1][2] + t[2][2] + t[3][2]) / 3 },
 			});

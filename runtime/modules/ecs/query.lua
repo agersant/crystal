@@ -17,7 +17,7 @@ Query.init = function(self, classes)
 			class = Class:by_name(class);
 		end
 		assert(class);
-		table.insert(self._classes, class);
+		table.push(self._classes, class);
 	end
 	self._entities = {};
 	self._components = {};

@@ -1,22 +1,18 @@
-io.stdout:setvbuf("no");
-io.stderr:setvbuf("no");
-
 -- Add this directory to `package.path` so crystal source files can include each other
 local thisModulePath = ...;
 local pathChunks = {};
 thisModulePath:gsub("([^%./\\]+)", function(c) table.insert(pathChunks, c); end);
 local tail = pathChunks[#pathChunks];
 if tail == "init" or tail == "init.lua" then
-	table.remove(pathChunks, #pathChunks);
+	table.remove(pathChunks);
 end
 local crystalRuntime = table.concat(pathChunks, "/");
-table.remove(pathChunks, #pathChunks);
+table.remove(pathChunks);
 local crystalRoot = table.concat(pathChunks, "/");
 
 -- TODO may or may not work in fused build
 -- TODO Manually add CRYSTAL_RUNTIME to `require` calls and leave package.path alone?
 package.path = package.path .. ";" .. crystalRuntime .. "/?.lua";
-
 
 local features = require("features");
 
@@ -39,10 +35,10 @@ local add_module = function(name, path)
 	end
 end
 
-add_module("oop", "modules/oop");
-add_module("test", "modules/test");
 add_module("string", "modules/string");
 add_module("table", "modules/table");
+add_module("oop", "modules/oop");
+add_module("test", "modules/test");
 
 add_module("cmd", "modules/cmd");
 add_module("const", "modules/const");

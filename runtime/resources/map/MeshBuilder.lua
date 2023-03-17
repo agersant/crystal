@@ -41,7 +41,7 @@ MeshBuilder.addLayer = function(self, tileset, layerData)
 				for _, vert in ipairs(localPolygon) do
 					local vertX = MathUtils.round(vert.x);
 					local vertY = MathUtils.round(vert.y);
-					table.insert(polygon, { x + vertX, y + vertY });
+					table.push(polygon, { x + vertX, y + vertY });
 				end
 				self:addPolygon(tileX, tileY, polygon);
 			end
@@ -111,7 +111,7 @@ end);
 crystal.test.add("Find path from outside navmesh", function()
 	local builder = MeshBuilder:new(50, 50, 10, 10, 0);
 	local _, navigationMesh = builder:buildMesh();
-	local success, path = navigationMesh:findPath( -4, 2, 8, 9);
+	local success, path = navigationMesh:findPath(-4, 2, 8, 9);
 	assert(success);
 	assert(path:getNumVertices() == 3);
 	for i, x, y in path:vertices() do
@@ -137,7 +137,7 @@ end);
 crystal.test.add("Project point on navmesh", function()
 	local builder = MeshBuilder:new(10, 10, 16, 16, 0);
 	local _, navigationMesh = builder:buildMesh();
-	local px, py = navigationMesh:getNearestPointOnNavmesh( -5, -5);
+	local px, py = navigationMesh:getNearestPointOnNavmesh(-5, -5);
 	assert(px == 0);
 	assert(py == 0);
 	local px, py = navigationMesh:getNearestPointOnNavmesh(5, -5);

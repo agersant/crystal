@@ -152,7 +152,7 @@ end
 Thread.defer = function(self, deferred_function)
 	assert(not self:is_dead());
 	assert(type(deferred_function) == "function");
-	table.insert(self.deferred_functions, deferred_function);
+	table.push(self.deferred_functions, deferred_function);
 end
 
 ---@return Thread

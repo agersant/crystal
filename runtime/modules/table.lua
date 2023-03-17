@@ -10,6 +10,14 @@ table.count = function(t)
 	return count;
 end
 
+table.push = function(t, v)
+	table.insert(t, v);
+end
+
+table.pop = function(t)
+	return table.remove(t);
+end
+
 table.map = function(t, f)
 	local out = {};
 	for k, v in pairs(t) do
@@ -111,60 +119,84 @@ table.deserialize = function(source)
 	return outTable;
 end
 
---#region Tests
+return {
+	init = function()
+		--#region Tests
 
-crystal.test.add("Can count table keys", function()
-	assert(table.count(({})) == 0);
-	assert(table.count(({ a = 0, b = 2 })) == 2);
-	assert(table.count(({ 1, 2, 3 })) == 3);
-end);
+		crystal.test.add("Can check if table is empty", function()
+			assert(table.is_empty({}));
+			assert(not table.is_empty({ a = false }));
+		end);
 
-crystal.test.add("Can test if table contains value", function()
-	assert(table.contains({ 2 }, 2));
-	assert(table.contains({ a = 2 }, 2));
-	assert(not table.contains({ 2 }, 3));
-	assert(not table.contains({ [3] = 2 }, 3));
-end);
+		crystal.test.add("Can count table keys", function()
+			assert(table.count({}) == 0);
+			assert(table.count({ a = 0, b = 2 }) == 2);
+			assert(table.count({ 1, 2, 3 }) == 3);
+		end);
 
-crystal.test.add("Can copy table", function()
-	local original = { a = { 1, 2, 3 } };
-	local copy = table.copy(original);
-	assert(copy ~= original);
-	assert(copy.a == original.a);
-end);
+		crystal.test.add("Can push/pop table values", function()
+			local t = { 1 };
+			table.push(t, 2);
+			assert(t[2] == 2);
+			assert(table.pop(t) == 2);
+			assert(t[2] == nil);
+		end);
 
-crystal.test.add("Can serialize empty table", function()
-	local original = {};
-	local copy = table.deserialize(table.serialize(original));
-	assert(type(copy) == "table");
-	assert(copy ~= original);
-	assert(table.is_empty(copy));
-end);
+		crystal.test.add("Can map table values", function()
+			local t = { a = 1, b = 4 };
+			local m = table.map(t, function(n) return n * n; end);
+			assert(t.a == 1);
+			assert(t.b == 4);
+			assert(m.a == 1);
+			assert(m.b == 16);
+		end);
 
-crystal.test.add("Can serialize table", function()
-	local original = { a = 0, b = "oink", c = { 1, 2, 3 }, d = { b = "gruik" }, e = false, };
-	local copy = table.deserialize(table.serialize(original));
-	assert(type(copy) == "table");
-	assert(copy ~= original);
-	assert(copy.a == 0);
-	assert(copy.b == "oink");
-	assert(copy.c[1] == 1);
-	assert(copy.c[2] == 2);
-	assert(copy.c[3] == 3);
-	assert(copy.d.b == "gruik");
-	assert(copy.e == false);
-end);
+		crystal.test.add("Can test if table contains value", function()
+			assert(table.contains({ 2 }, 2));
+			assert(table.contains({ a = 2 }, 2));
+			assert(not table.contains({ 2 }, 3));
+			assert(not table.contains({ [3] = 2 }, 3));
+		end);
 
-crystal.test.add("Can test table equality", function()
-	assert(table.equals({}, {}));
-	assert(table.equals({ 1, 2, 3 }, { 1, 2, 3 }));
-	assert(not table.equals({ 1, 2 }, { 1, 2, 3 }));
-	assert(not table.equals({ 1, 3, 2 }, { 1, 2, 3 }));
-	assert(table.equals({ a = 0, b = 1 }, { a = 0, b = 1 }));
-	assert(not table.equals({ a = 0, b = 1 }, { a = 1, b = 0 }));
-	assert(not table.equals({ a = 0 }, { a = 1 }));
-end);
+		crystal.test.add("Can copy table", function()
+			local original = { a = { 1, 2, 3 } };
+			local copy = table.copy(original);
+			assert(copy ~= original);
+			assert(copy.a == original.a);
+		end);
 
---#endregion
+		crystal.test.add("Can serialize empty table", function()
+			local original = {};
+			local copy = table.deserialize(table.serialize(original));
+			assert(type(copy) == "table");
+			assert(copy ~= original);
+			assert(table.is_empty(copy));
+		end);
 
-return {};
+		crystal.test.add("Can serialize table", function()
+			local original = { a = 0, b = "oink", c = { 1, 2, 3 }, d = { b = "gruik" }, e = false, };
+			local copy = table.deserialize(table.serialize(original));
+			assert(type(copy) == "table");
+			assert(copy ~= original);
+			assert(copy.a == 0);
+			assert(copy.b == "oink");
+			assert(copy.c[1] == 1);
+			assert(copy.c[2] == 2);
+			assert(copy.c[3] == 3);
+			assert(copy.d.b == "gruik");
+			assert(copy.e == false);
+		end);
+
+		crystal.test.add("Can test table equality", function()
+			assert(table.equals({}, {}));
+			assert(table.equals({ 1, 2, 3 }, { 1, 2, 3 }));
+			assert(not table.equals({ 1, 2 }, { 1, 2, 3 }));
+			assert(not table.equals({ 1, 3, 2 }, { 1, 2, 3 }));
+			assert(table.equals({ a = 0, b = 1 }, { a = 0, b = 1 }));
+			assert(not table.equals({ a = 0, b = 1 }, { a = 1, b = 0 }));
+			assert(not table.equals({ a = 0 }, { a = 1 }));
+		end);
+
+		--#endregion
+	end,
+};

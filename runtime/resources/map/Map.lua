@@ -35,7 +35,7 @@ local parseEntity = function(self, objectData)
 	options.shape = love.physics.newRectangleShape(0, 0, objectData.width, objectData.height);
 	local class = objectData.type;
 	local mapEntity = MapEntity:new(class, options);
-	table.insert(self._mapEntities, mapEntity);
+	table.push(self._mapEntities, mapEntity);
 end
 
 local parseObjectGroup = function(self, layerData)

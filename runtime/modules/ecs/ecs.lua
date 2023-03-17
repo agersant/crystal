@@ -218,7 +218,7 @@ ECS.add_system = function(self, class, ...)
 	class:placement_new(system, ...);
 	assert(system:inherits_from(System));
 	assert(system:ecs() == self);
-	table.insert(self.systems, system);
+	table.push(self.systems, system);
 	return system;
 end
 
@@ -234,7 +234,7 @@ ECS.add_event = function(self, event)
 			events = {};
 			self._events[base_class] = events;
 		end
-		table.insert(events, event);
+		table.push(events, event);
 		base_class = base_class.super;
 	end
 end

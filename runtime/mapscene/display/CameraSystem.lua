@@ -21,7 +21,7 @@ end
 CameraSystem.after_run_scripts = function(self, dt)
 	local trackedEntities = {};
 	for entity in pairs(self._ecs:entities_with("InputListener")) do
-		table.insert(trackedEntities, entity);
+		table.push(trackedEntities, entity);
 	end
 	self._camera:update(trackedEntities);
 end

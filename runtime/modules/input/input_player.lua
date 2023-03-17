@@ -70,7 +70,7 @@ InputPlayer.bindings = function(self)
 	for input, actions in pairs(self.inputs) do
 		bindings[input] = {};
 		for _, action in ipairs(actions) do
-			table.insert(bindings[input], action);
+			table.push(bindings[input], action);
 		end
 	end
 	return bindings;
@@ -167,7 +167,7 @@ InputPlayer.action_down = function(self, action)
 	assert(self.actions[action]);
 	self.actions[action].num_inputs_down = self.actions[action].num_inputs_down + 1;
 	if self.actions[action].num_inputs_down == 1 then
-		table.insert(self._events, "+" .. action);
+		table.push(self._events, "+" .. action);
 		self.actions[action].held_for = 0;
 	end
 end
@@ -181,7 +181,7 @@ InputPlayer.action_up = function(self, action)
 	end
 	assert(self.actions[action].num_inputs_down >= 0);
 	if self.actions[action].num_inputs_down == 0 then
-		table.insert(self._events, "-" .. action);
+		table.push(self._events, "-" .. action);
 		self.actions[action].held_for = nil;
 	end
 end
@@ -190,7 +190,7 @@ end
 InputPlayer.release_all_inputs = function(self)
 	for action, state in pairs(self.actions) do
 		for i = 1, state.num_inputs_down do
-			table.insert(self._events, "-" .. action);
+			table.push(self._events, "-" .. action);
 		end
 		state.num_inputs_down = 0;
 		state.held_for = nil;
@@ -242,7 +242,7 @@ InputPlayer.trigger_autorepeat_events = function(self, dt, config)
 			local p = autorepeat.period;
 			if new_held_for >= d then
 				if held_for < d or math.floor((new_held_for - d) / p) > math.floor((held_for - d) / p) then
-					table.insert(self._events, "+" .. action);
+					table.push(self._events, "+" .. action);
 				end
 			end
 		end
@@ -257,10 +257,10 @@ InputPlayer.build_binding_tables = function(self, bindings)
 	for input, actions in pairs(bindings) do
 		for _, action in ipairs(actions) do
 			self.inputs[input] = self.inputs[input] or {};
-			table.insert(self.inputs[input], action);
+			table.push(self.inputs[input], action);
 
 			self.actions[action] = self.actions[action] or { inputs = {}, num_inputs_down = 0 };
-			table.insert(self.actions[action].inputs, input);
+			table.push(self.actions[action].inputs, input);
 		end
 	end
 end

@@ -245,7 +245,7 @@ LiveTune.update = function(self, dt)
 		local current_value = self.constants:get(name);
 		local new_value = self:read_hardware_value(knob_index, current_value, constant.min, constant.max);
 		self.constants:set(name, new_value);
-		table.insert(self.overlay.mapped_knobs, {
+		table.push(self.overlay.mapped_knobs, {
 			knob_index = knob_index,
 			name = name,
 			value = new_value,

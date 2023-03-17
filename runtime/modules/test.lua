@@ -77,7 +77,7 @@ TestRunner.add = function(self, name, options_or_body, body)
 	if not self.tests[source] then
 		self.tests[source] = {};
 	end
-	table.insert(self.tests[source], test);
+	table.push(self.tests[source], test);
 end
 
 ---@private
@@ -126,7 +126,7 @@ TestRunner.runAll = function(self)
 					test.body(self.context)
 				end,
 				function(err)
-					table.insert(failures, {
+					table.push(failures, {
 						source = source,
 						name = test.name,
 						err = err,

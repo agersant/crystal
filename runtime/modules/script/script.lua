@@ -30,14 +30,14 @@ pump_thread = function(thread, resume_args)
 	assert(status ~= "running");
 	local results;
 	if status == "suspended" and not self.blocked_threads[thread] then
-		table.insert(running_threads, thread);
+		table.push(running_threads, thread);
 		if resume_args ~= nil then
 			assert(type(resume_args) == "table");
 			results = { coroutine.resume(thread_coroutine, resume_args) };
 		else
 			results = { coroutine.resume(thread_coroutine, thread) };
 		end
-		table.remove(running_threads);
+		table.pop(running_threads);
 		local success = results[1];
 		if not success then
 			local error_text = results[2];

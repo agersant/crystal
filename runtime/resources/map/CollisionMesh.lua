@@ -4,7 +4,7 @@ local CollisionMesh = Class("CollisionMesh");
 
 local addChain = function(self, chain)
 	assert(chain);
-	table.insert(self._chains, chain);
+	table.push(self._chains, chain);
 	return chain;
 end
 
@@ -17,11 +17,11 @@ CollisionMesh.init = function(self, mapWidth, mapHeight, mesh)
 	for _, obstacle in ipairs(mesh:listCollisionPolygons()) do
 		local chain = {};
 		for _, vertex in ipairs(obstacle) do
-			table.insert(chain, vertex[1]);
-			table.insert(chain, vertex[2]);
+			table.push(chain, vertex[1]);
+			table.push(chain, vertex[2]);
 		end
-		table.remove(chain, #chain);
-		table.remove(chain, #chain);
+		table.pop(chain);
+		table.pop(chain);
 		addChain(self, chain);
 	end
 

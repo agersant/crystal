@@ -34,7 +34,7 @@ CommandStore.search = function(self, name)
 		if match_start then
 			has_strong_match = has_strong_match or match_start == 1;
 			local match = { command = command, match_start = match_start, match_end = match_end };
-			table.insert(matches, match);
+			table.push(matches, match);
 		end
 	end
 
