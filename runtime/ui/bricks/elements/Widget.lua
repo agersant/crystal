@@ -3,7 +3,6 @@ local Padding = require("ui/bricks/core/Padding");
 local Wrapper = require("ui/bricks/core/Wrapper");
 local BasicJoint = require("ui/bricks/core/BasicJoint");
 local Alias = require("utils/Alias");
-local TableUtils = require("utils/TableUtils");
 
 local WidgetJoint = Class("WidgetJoint", BasicJoint);
 local Widget = Class("Widget", Wrapper);

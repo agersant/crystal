@@ -117,7 +117,6 @@ end
 
 local Element = require("ui/bricks/core/Element");
 local Image = require("ui/bricks/elements/Image");
-local TableUtils = require("utils/TableUtils");
 
 local TestTransition = Class:test("TestTransition", SwitcherTransition);
 
@@ -180,7 +179,7 @@ crystal.test.add("Supports dynamic or bounding box sizing", function()
 		b:setImageSize(100, 50);
 		switcher[test.method](switcher);
 		switcher:updateTree(0);
-		assert(TableUtils.equals(test.expectedSize, { switcher:getLocalPosition() }));
+		assert(table.equals(test.expectedSize, { switcher:getLocalPosition() }));
 	end
 end);
 
@@ -211,8 +210,8 @@ crystal.test.add("Applies transition sizing and draw function during transition"
 	switcher:transitionToChild(b);
 
 	switcher:updateTree(5);
-	assert(TableUtils.equals({ 0, 50, 0, 100 }, { a:getLocalPosition() }));
-	assert(TableUtils.equals({ 0, 50, 0, 100 }, { b:getLocalPosition() }));
+	assert(table.equals({ a:getLocalPosition() }, { 0, 50, 0, 100 }));
+	assert(table.equals({ b:getLocalPosition() }, { 0, 50, 0, 100 }));
 
 	switcher:draw();
 	assert(transition.drawnAtProgress == 0.5);
@@ -226,8 +225,8 @@ crystal.test.add("Can interrupt a transition by setting active child", function(
 	switcher:transitionToChild(b);
 
 	switcher:updateTree(5);
-	assert(TableUtils.equals({ 0, 50, 0, 100 }, { a:getLocalPosition() }));
-	assert(TableUtils.equals({ 0, 50, 0, 100 }, { b:getLocalPosition() }));
+	assert(table.equals({ a:getLocalPosition() }, { 0, 50, 0, 100 }));
+	assert(table.equals({ b:getLocalPosition() }, { 0, 50, 0, 100 }));
 
 	switcher:jumpToChild(b);
 	assert(transition.drawnAtProgress == nil);
@@ -241,8 +240,8 @@ crystal.test.add("Can interrupt a transition by starting another one", function(
 	switcher:transitionToChild(b);
 
 	switcher:updateTree(5);
-	assert(TableUtils.equals({ 0, 50, 0, 100 }, { a:getLocalPosition() }));
-	assert(TableUtils.equals({ 0, 50, 0, 100 }, { b:getLocalPosition() }));
+	assert(table.equals({ a:getLocalPosition() }, { 0, 50, 0, 100 }));
+	assert(table.equals({ b:getLocalPosition() }, { 0, 50, 0, 100 }));
 
 	switcher:transitionToChild(a);
 	switcher:updateTree(2);
@@ -259,8 +258,8 @@ crystal.test.add("Ignores transition to current child", function()
 	switcher:transitionToChild(b);
 
 	switcher:updateTree(5);
-	assert(TableUtils.equals({ 0, 50, 0, 100 }, { a:getLocalPosition() }));
-	assert(TableUtils.equals({ 0, 50, 0, 100 }, { b:getLocalPosition() }));
+	assert(table.equals({ a:getLocalPosition() }, { 0, 50, 0, 100 }));
+	assert(table.equals({ b:getLocalPosition() }, { 0, 50, 0, 100 }));
 
 	switcher:transitionToChild(b);
 	switcher:updateTree(2);

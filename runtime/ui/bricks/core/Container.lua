@@ -1,5 +1,4 @@
 local Element = require("ui/bricks/core/Element");
-local TableUtils = require("utils/TableUtils");
 
 local Container = Class("Container", Element);
 
@@ -41,7 +40,7 @@ Container.getChild = function(self, index)
 end
 
 Container.getChildren = function(self)
-	return TableUtils.shallowCopy(self._children);
+	return table.copy(self._children);
 end
 
 Container.update = function(self, dt)

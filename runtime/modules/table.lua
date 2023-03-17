@@ -1,6 +1,8 @@
-local TableUtils = {};
+table.is_empty = function(t)
+	return next(t) == nil;
+end
 
-TableUtils.countKeys = function(t)
+table.count = function(t)
 	local count = 0;
 	for _, _ in pairs(t) do
 		count = count + 1;
@@ -8,7 +10,15 @@ TableUtils.countKeys = function(t)
 	return count;
 end
 
-TableUtils.shallowCopy = function(t)
+table.map = function(t, f)
+	local out = {};
+	for k, v in pairs(t) do
+		out[k] = f(v);
+	end
+	return out;
+end
+
+table.copy = function(t)
 	local out = {};
 	for k, v in pairs(t) do
 		out[k] = v;
@@ -16,7 +26,7 @@ TableUtils.shallowCopy = function(t)
 	return out;
 end
 
-TableUtils.serialize = function(t)
+table.serialize = function(t)
 	local refCounts = {};
 	local verifyRefs;
 	verifyRefs = function(t)
@@ -60,7 +70,7 @@ TableUtils.serialize = function(t)
 	return serialized;
 end
 
-TableUtils.unserialize = function(source)
+table.deserialize = function(source)
 	local luaChunk = loadstring(source);
 	assert(luaChunk);
 	local outTable = luaChunk();
@@ -68,7 +78,7 @@ TableUtils.unserialize = function(source)
 	return outTable;
 end
 
-TableUtils.contains = function(t, value)
+table.contains = function(t, value)
 	for k, v in pairs(t) do
 		if v == value then
 			return true;
@@ -77,7 +87,7 @@ TableUtils.contains = function(t, value)
 	return false;
 end
 
-TableUtils.equals = function(t, u)
+table.equals = function(t, u)
 	assert(type(t) == "table");
 	assert(type(u) == "table");
 	for k, v in pairs(t) do
@@ -93,7 +103,7 @@ TableUtils.equals = function(t, u)
 	return true;
 end
 
-TableUtils.merge = function(recipient, otherTable)
+table.merge = function(recipient, otherTable)
 	for k, v in pairs(otherTable) do
 		recipient[k] = v;
 	end
@@ -101,38 +111,37 @@ end
 
 --#region Tests
 
-
 crystal.test.add("Count keys", function()
-	assert(TableUtils.countKeys({}) == 0);
-	assert(TableUtils.countKeys({ a = 0, b = 2 }) == 2);
-	assert(TableUtils.countKeys({ 1, 2, 3 }) == 3);
+	assert(table.count(({})) == 0);
+	assert(table.count(({ a = 0, b = 2 })) == 2);
+	assert(table.count(({ 1, 2, 3 })) == 3);
 end);
 
 crystal.test.add("Contains", function()
-	assert(TableUtils.contains({ 2 }, 2));
-	assert(TableUtils.contains({ a = 2 }, 2));
-	assert(not TableUtils.contains({ 2 }, 3));
-	assert(not TableUtils.contains({ [3] = 2 }, 3));
+	assert(table.contains({ 2 }, 2));
+	assert(table.contains({ a = 2 }, 2));
+	assert(not table.contains({ 2 }, 3));
+	assert(not table.contains({ [3] = 2 }, 3));
 end);
 
 crystal.test.add("Shallow copy", function()
 	local original = { a = { 1, 2, 3 } };
-	local copy = TableUtils.shallowCopy(original);
+	local copy = table.copy(original);
 	assert(copy ~= original);
 	assert(copy.a == original.a);
 end);
 
 crystal.test.add("Serialize empty table", function()
 	local original = {};
-	local copy = TableUtils.unserialize(TableUtils.serialize(original));
+	local copy = table.deserialize(table.serialize(original));
 	assert(type(copy) == "table");
 	assert(copy ~= original);
-	assert(TableUtils.countKeys(copy) == 0);
+	assert(table.is_empty(copy));
 end);
 
 crystal.test.add("Serialize trivial table", function()
 	local original = { a = 0, b = "oink" };
-	local copy = TableUtils.unserialize(TableUtils.serialize(original));
+	local copy = table.deserialize(table.serialize(original));
 	assert(type(copy) == "table");
 	assert(copy ~= original);
 	assert(copy.a == 0);
@@ -141,7 +150,7 @@ end);
 
 crystal.test.add("Serialize simple table", function()
 	local original = { a = 0, b = "oink", c = { 1, 2, 3 }, d = { b = "gruik" } };
-	local copy = TableUtils.unserialize(TableUtils.serialize(original));
+	local copy = table.deserialize(table.serialize(original));
 	assert(type(copy) == "table");
 	assert(copy ~= original);
 	assert(copy.a == 0);
@@ -153,15 +162,15 @@ crystal.test.add("Serialize simple table", function()
 end);
 
 crystal.test.add("Equality", function()
-	assert(TableUtils.equals({}, {}));
-	assert(TableUtils.equals({ 1, 2, 3 }, { 1, 2, 3 }));
-	assert(not TableUtils.equals({ 1, 2 }, { 1, 2, 3 }));
-	assert(not TableUtils.equals({ 1, 3, 2 }, { 1, 2, 3 }));
-	assert(TableUtils.equals({ a = 0, b = 1 }, { a = 0, b = 1 }));
-	assert(not TableUtils.equals({ a = 0, b = 1 }, { a = 1, b = 0 }));
-	assert(not TableUtils.equals({ a = 0 }, { a = 1 }));
+	assert(table.equals({}, {}));
+	assert(table.equals({ 1, 2, 3 }, { 1, 2, 3 }));
+	assert(not table.equals({ 1, 2 }, { 1, 2, 3 }));
+	assert(not table.equals({ 1, 3, 2 }, { 1, 2, 3 }));
+	assert(table.equals({ a = 0, b = 1 }, { a = 0, b = 1 }));
+	assert(not table.equals({ a = 0, b = 1 }, { a = 1, b = 0 }));
+	assert(not table.equals({ a = 0 }, { a = 1 }));
 end);
 
 --#endregion
 
-return TableUtils;
+return {};

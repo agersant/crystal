@@ -3,7 +3,6 @@ local DynamicLayer = require("resources/map/DynamicLayer");
 local MeshBuilder = require("resources/map/MeshBuilder");
 local MapEntity = require("resources/map/MapEntity");
 local StaticLayer = require("resources/map/StaticLayer");
-local TableUtils = require("utils/TableUtils");
 
 local Map = Class("Map");
 
@@ -30,7 +29,7 @@ local parseEntity = function(self, objectData)
 		crystal.log.warning("Ignored map entity because no type was specified");
 		return;
 	end
-	local options = TableUtils.shallowCopy(objectData.properties);
+	local options = table.copy(objectData.properties);
 	options.x = objectData.x + objectData.width / 2;
 	options.y = objectData.y + objectData.height / 2;
 	options.shape = love.physics.newRectangleShape(0, 0, objectData.width, objectData.height);

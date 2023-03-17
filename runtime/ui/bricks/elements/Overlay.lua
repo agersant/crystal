@@ -44,7 +44,6 @@ end
 --#region Tests
 
 local Element = require("ui/bricks/core/Element");
-local TableUtils = require("utils/TableUtils");
 
 crystal.test.add("Respects alignment", function()
 	local testCases = {
@@ -79,7 +78,7 @@ crystal.test.add("Respects alignment", function()
 		element:setVerticalAlignment(testCase[2]);
 
 		overlay:updateTree(0, 100, 100);
-		assert(TableUtils.equals({ element:getLocalPosition() }, testCase[3]));
+		assert(table.equals(testCase[3], { element:getLocalPosition() }));
 	end
 end);
 
@@ -117,7 +116,7 @@ crystal.test.add("Respects padding", function()
 		element:setEachPadding(2, 4, 6, 8);
 
 		overlay:updateTree(0, 100, 100);
-		assert(TableUtils.equals({ element:getLocalPosition() }, testCase[3]));
+		assert(table.equals(testCase[3], { element:getLocalPosition() }));
 	end
 end);
 

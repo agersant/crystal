@@ -1,5 +1,4 @@
 local features = require("features");
-local TableUtils = require("utils/TableUtils");
 
 local Alias = {};
 
@@ -50,7 +49,7 @@ else
 				end
 			end
 
-			local numResults = TableUtils.countKeys(results);
+			local numResults = table.count(results);
 			if numResults > 1 then
 				local errorMessage = string.format("Ambiguous method call, %s.%s can resolve to any of the followings:",
 					from:class_name(), key);

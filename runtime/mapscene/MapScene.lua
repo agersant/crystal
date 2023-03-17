@@ -166,8 +166,6 @@ end);
 
 --#region Tests
 
-local TableUtils = require("utils/TableUtils");
-
 crystal.test.add("Draws all layers", function(context)
 	local scene = MapScene:new("test-data/TestMapScene/all_features.lua");
 	scene:draw();
@@ -177,7 +175,7 @@ end);
 crystal.test.add("Loads entities", function()
 	local scene = MapScene:new("test-data/TestMapScene/all_features.lua");
 	local entities = scene:ecs():entities();
-	assert(TableUtils.countKeys(entities) == 10); -- 8 dynamic tiles + 2 map entities
+	assert(table.count(entities) == 10); -- 8 dynamic tiles + 2 map entities
 end);
 
 crystal.test.add("Can spawn and despawn entities", function()

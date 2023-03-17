@@ -1,5 +1,3 @@
-local TableUtils = require("utils/TableUtils");
-
 ---@class Query
 ---@field _classes Class[]
 ---@field _entities { [Entity]: boolean }
@@ -38,7 +36,7 @@ end
 ---@return boolean
 Query.matches = function(self, entity)
 	for _, class in ipairs(self:classes()) do
-		if TableUtils.countKeys(entity:components(class)) == 0 then
+		if table.is_empty(entity:components(class)) then
 			return false;
 		end
 	end
@@ -84,12 +82,12 @@ end
 
 ---@return { [Entity]: boolean }
 Query.added_entities = function(self)
-	return TableUtils.shallowCopy(self._added_entities);
+	return table.copy(self._added_entities);
 end
 
 ---@return { [Entity]: boolean }
 Query.removed_entities = function(self)
-	return TableUtils.shallowCopy(self._removed_entities);
+	return table.copy(self._removed_entities);
 end
 
 ---@param entity Entity
@@ -161,7 +159,10 @@ Query.added_components = function(self, class)
 		class = Class:by_name(class);
 	end
 	assert(class);
-	return TableUtils.shallowCopy(self._added_components[class] or {});
+	if not self._added_components[class] then
+		return {};
+	end
+	return table.copy(self._added_components[class]);
 end
 
 ---@return { [Component]: Entity }
@@ -170,12 +171,15 @@ Query.removed_components = function(self, class)
 		class = Class:by_name(class);
 	end
 	assert(class);
-	return TableUtils.shallowCopy(self._removed_components[class] or {});
+	if not self._removed_components[class] then
+		return {};
+	end
+	return table.copy(self._removed_components[class]);
 end
 
 ---@return { [Entity]: boolean }
 Query.entities = function(self)
-	return TableUtils.shallowCopy(self._entities);
+	return table.copy(self._entities);
 end
 
 ---@param entity Entity
@@ -185,7 +189,7 @@ end
 
 ---@return { [Component]: boolean }
 Query.components = function(self)
-	return TableUtils.shallowCopy(self._components);
+	return table.copy(self._components);
 end
 
 Query.flush = function(self)

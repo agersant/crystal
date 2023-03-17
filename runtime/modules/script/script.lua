@@ -1,5 +1,4 @@
 local Thread = require("modules/script/thread");
-local TableUtils = require("utils/TableUtils");
 
 ---@class Script
 ---@field private _time number
@@ -99,7 +98,7 @@ end
 Script.update = function(self, dt)
 	self.dt = dt;
 	self._time = self._time + dt;
-	local threads = TableUtils.shallowCopy(self.threads);
+	local threads = table.copy(self.threads);
 	for thread in pairs(threads) do
 		if not thread:ended() then
 			pump_thread(thread);
@@ -114,7 +113,7 @@ Script.stop_thread = function(self, thread)
 end
 
 Script.stop_all_threads = function(self)
-	local threads = TableUtils.shallowCopy(self.threads);
+	local threads = table.copy(self.threads);
 	for thread in pairs(threads) do
 		thread:mark_as_ended();
 	end
@@ -160,10 +159,10 @@ Script.signal = function(self, signal, ...)
 		end
 	end
 	if self.blockers[signal] then
-		local blocked_threads = TableUtils.shallowCopy(self.blockers[signal]);
+		local blocked_threads = table.copy(self.blockers[signal]);
 		for thread in pairs(blocked_threads) do
 			local resume_args = { ... };
-			if TableUtils.countKeys(self.blocked_threads[thread]) > 1 then
+			if table.count(self.blocked_threads[thread]) > 1 then
 				table.insert(resume_args, 1, signal);
 			end
 			self:unblock_thread(thread, resume_args);
@@ -260,7 +259,7 @@ Script.end_thread = function(self, thread)
 	thread:run_deferred_functions();
 	local threads_to_unblock;
 	if self.blockers[thread] then
-		threads_to_unblock = TableUtils.shallowCopy(self.blockers[thread]);
+		threads_to_unblock = table.copy(self.blockers[thread]);
 	end
 	self:cleanup_thread(thread);
 	if threads_to_unblock then

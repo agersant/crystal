@@ -42,6 +42,7 @@ end
 add_module("oop", "modules/oop");
 add_module("test", "modules/test");
 add_module("string", "modules/string");
+add_module("table", "modules/table");
 
 add_module("cmd", "modules/cmd");
 add_module("const", "modules/const");
@@ -55,7 +56,6 @@ add_module("tool", "modules/tool");
 local Content = require("resources/Content");
 local Scene = require("Scene");
 
-local TableUtils = require("utils/TableUtils");
 crystal.conf = {
 	assetsDirectories = {},
 	physics_categories = {},
@@ -63,7 +63,7 @@ crystal.conf = {
 	mapSceneClass = "MapScene", -- TODO remove when mapscene is no longer part of crystal
 };
 crystal.configure = function(c)
-	TableUtils.merge(crystal.conf, c);
+	table.merge(crystal.conf, c);
 end
 
 VIEWPORT = require("graphics/Viewport"):new();
@@ -93,11 +93,9 @@ ENGINE.loadScene = function(self, scene)
 end
 
 local requireGameSource = function()
-	local assetsDirectories = TableUtils.shallowCopy(crystal.conf.assetsDirectories);
-	-- TODO TableUtils.map
-	for i, directory in ipairs(assetsDirectories) do
-		assetsDirectories[i] = directory:gsub("%-", "%%-");
-	end
+	local assetsDirectories = table.map(crystal.conf.assetsDirectories, function(d)
+		return d:gsub("%-", "%%-");
+	end);
 	-- TODO may or may not worked in fused build
 	for _, path in ipairs(Content:listAllFiles("", "%.lua$")) do
 		local isMain = path:match("main%.lua");

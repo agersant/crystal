@@ -1,5 +1,3 @@
-local TableUtils = require("utils/TableUtils");
-
 ---@alias InputMethod "keyboard_and_mouse" | "gamepad"
 ---@alias ActionState { inputs: string[], num_inputs_down: number, held_for: number }
 
@@ -269,7 +267,7 @@ end
 
 ---@return string[]
 InputPlayer.events = function(self)
-	return TableUtils.shallowCopy(self._events);
+	return table.copy(self._events);
 end
 
 InputPlayer.flush_events = function(self)

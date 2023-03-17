@@ -1,5 +1,3 @@
-local TableUtils = require("utils/TableUtils");
-
 ---@class InputListener : Component
 ---@field private player InputPlayer
 ---@field private handlers (fun(input: string): boolean)[]
@@ -43,7 +41,7 @@ end
 
 InputListener.handle_inputs = function(self)
 	for _, input in ipairs(self.player:events()) do
-		local handlers = TableUtils.shallowCopy(self.handlers);
+		local handlers = table.copy(self.handlers);
 		for i = #handlers, 1, -1 do
 			if handlers[i](input) then
 				break;

@@ -1,4 +1,3 @@
-local TableUtils = require("utils/TableUtils");
 local Component = require("modules/ecs/component");
 local Entity = require("modules/ecs/entity");
 local Event = require("modules/ecs/event");
@@ -195,7 +194,7 @@ end
 
 ---@param classes string[]
 ECS.add_query = function(self, classes)
-	assert(TableUtils.countKeys(self._entities) == 0);
+	assert(table.is_empty(self._entities));
 	local query = Query:new(classes);
 	self.queries[query] = true;
 	for _, class in ipairs(query:classes()) do
@@ -257,7 +256,7 @@ end
 
 ---@return { [Entity]: boolean }
 ECS.entities = function(self)
-	return TableUtils.shallowCopy(self._entities);
+	return table.copy(self._entities);
 end
 
 ---@class string
@@ -326,7 +325,7 @@ ECS.components_on_entity = function(self, entity, base_class)
 
 	if self.entity_to_components[entity] then
 		if self.entity_to_components[entity][base_class] then
-			output = TableUtils.shallowCopy(self.entity_to_components[entity][base_class]);
+			output = table.copy(self.entity_to_components[entity][base_class]);
 		end
 	end
 
@@ -340,7 +339,7 @@ ECS.components_on_entity = function(self, entity, base_class)
 		end
 	end
 
-	local output_copy = TableUtils.shallowCopy(output);
+	local output_copy = table.copy(output);
 	if self.component_graveyard[entity] then
 		for component in pairs(output_copy) do
 			if self.component_graveyard[entity][component:class()] then
@@ -408,7 +407,7 @@ ECS.events = function(self, class)
 	if not self._events[class] then
 		return {};
 	end
-	return TableUtils.shallowCopy(self._events[class]);
+	return table.copy(self._events[class]);
 end
 
 ---@private
@@ -470,13 +469,13 @@ ECS.unregister_component = function(self, entity, component)
 	while base_class ~= Component do
 		assert(self.entity_to_components[entity][base_class][component]);
 		self.entity_to_components[entity][base_class][component] = nil;
-		if TableUtils.countKeys(self.entity_to_components[entity][base_class]) == 0 then
+		if table.is_empty(self.entity_to_components[entity][base_class]) then
 			self.entity_to_components[entity][base_class] = nil;
 		end
 
 		assert(self.components_by_class[base_class][entity][component]);
 		self.components_by_class[base_class][entity][component] = nil;
-		if TableUtils.countKeys(self.components_by_class[base_class][entity]) == 0 then
+		if table.is_empty(self.components_by_class[base_class][entity]) then
 			self.components_by_class[base_class][entity] = nil;
 		end
 
@@ -495,7 +494,7 @@ end
 ---@param entity Entity
 ECS.unregister_entity = function(self, entity)
 	if self._components[entity] then
-		local components_to_unregister = TableUtils.shallowCopy(self._components[entity]);
+		local components_to_unregister = table.copy(self._components[entity]);
 		for component in pairs(components_to_unregister) do
 			self:unregister_component(entity, component);
 		end
@@ -651,22 +650,22 @@ crystal.test.add("Can get components by base class", function()
 	local Boop = Class:test("Boop", Snoot);
 
 	local boop1 = a:add_component(Boop);
-	assert(TableUtils.equals({ [boop1] = true }, a:components(Snoot)));
+	assert(table.equals(a:components(Snoot), { [boop1] = true }));
 
 	local boop2 = a:add_component(Boop);
-	assert(TableUtils.equals({ [boop1] = true,[boop2] = true }, a:components(Snoot)));
+	assert(table.equals(a:components(Snoot), { [boop1] = true,[boop2] = true }));
 
 	ecs:update();
-	assert(TableUtils.equals({ [boop1] = true,[boop2] = true }, a:components(Snoot)));
+	assert(table.equals(a:components(Snoot), { [boop1] = true,[boop2] = true }));
 
 	a:remove_component(boop1);
-	assert(TableUtils.equals({ [boop2] = true }, a:components(Snoot)));
+	assert(table.equals(a:components(Snoot), { [boop2] = true }));
 
 	a:remove_component(boop2);
-	assert(TableUtils.equals({}, a:components(Snoot)));
+	assert(table.is_empty(a:components(Snoot)));
 
 	ecs:update();
-	assert(TableUtils.equals({}, a:components(Snoot)));
+	assert(table.is_empty(a:components(Snoot)));
 end);
 
 crystal.test.add("Get all entities with component", function()
@@ -677,34 +676,34 @@ crystal.test.add("Get all entities with component", function()
 
 	-- After add component
 	local boop = a:add_component(Boop);
-	assert(TableUtils.equals({ [a] = true }, ecs:entities_with(Snoot)));
+	assert(table.equals(ecs:entities_with(Snoot), { [a] = true }));
 	ecs:update();
-	assert(TableUtils.equals({ [a] = true }, ecs:entities_with(Snoot)));
+	assert(table.equals(ecs:entities_with(Snoot), { [a] = true }));
 
 	-- After remove component
 	a:remove_component(boop);
-	assert(TableUtils.equals({}, ecs:entities_with(Snoot)));
+	assert(table.is_empty(ecs:entities_with(Snoot)));
 	ecs:update();
-	assert(TableUtils.equals({}, ecs:entities_with(Snoot)));
+	assert(table.is_empty(ecs:entities_with(Snoot)));
 
 	-- After add/remove component with no update
 	local boop = a:add_component(Boop);
 	a:remove_component(boop);
-	assert(TableUtils.equals({}, ecs:entities_with(Snoot)));
+	assert(table.is_empty(ecs:entities_with(Snoot)));
 
 	-- After despawn
 	a:add_component(Boop);
 	ecs:update();
-	assert(TableUtils.equals({ [a] = true }, ecs:entities_with(Snoot)));
+	assert(table.equals(ecs:entities_with(Snoot), { [a] = true }));
 	a:despawn();
-	assert(TableUtils.equals({}, ecs:entities_with(Snoot)));
+	assert(table.is_empty(ecs:entities_with(Snoot)));
 
 	-- After despawn with no update
 	local a = ecs:spawn(Entity);
 	a:add_component(Boop);
-	assert(TableUtils.equals({ [a] = true }, ecs:entities_with(Snoot)));
+	assert(table.equals(ecs:entities_with(Snoot), { [a] = true }));
 	a:despawn();
-	assert(TableUtils.equals({}, ecs:entities_with(Snoot)));
+	assert(table.is_empty(ecs:entities_with(Snoot)));
 end);
 
 crystal.test.add("Can get components by class", function()
@@ -717,25 +716,25 @@ crystal.test.add("Can get components by class", function()
 
 	local boop = a:add_component(Boop);
 	local snoot = a:add_component(Snoot);
-	assert(TableUtils.countKeys(ecs:components(Snoot)) == 2);
-	assert(TableUtils.countKeys(ecs:components(Boop)) == 1);
+	assert(table.count(ecs:components(Snoot)) == 2);
+	assert(table.count(ecs:components(Boop)) == 1);
 	ecs:update();
-	assert(TableUtils.countKeys(ecs:components(Snoot)) == 2);
-	assert(TableUtils.countKeys(ecs:components(Boop)) == 1);
+	assert(table.count(ecs:components(Snoot)) == 2);
+	assert(table.count(ecs:components(Boop)) == 1);
 
 	a:remove_component(boop);
-	assert(TableUtils.countKeys(ecs:components(Snoot)) == 1);
-	assert(TableUtils.countKeys(ecs:components(Boop)) == 0);
+	assert(table.count(ecs:components(Snoot)) == 1);
+	assert(table.is_empty(ecs:components(Boop)));
 	ecs:update();
-	assert(TableUtils.countKeys(ecs:components(Snoot)) == 1);
-	assert(TableUtils.countKeys(ecs:components(Boop)) == 0);
+	assert(table.count(ecs:components(Snoot)) == 1);
+	assert(table.is_empty(ecs:components(Boop)));
 
 	a:remove_component(snoot);
-	assert(TableUtils.countKeys(ecs:components(Snoot)) == 0);
-	assert(TableUtils.countKeys(ecs:components(Boop)) == 0);
+	assert(table.is_empty(ecs:components(Snoot)));
+	assert(table.is_empty(ecs:components(Boop)));
 	ecs:update();
-	assert(TableUtils.countKeys(ecs:components(Snoot)) == 0);
-	assert(TableUtils.countKeys(ecs:components(Boop)) == 0);
+	assert(table.is_empty(ecs:components(Snoot)));
+	assert(table.is_empty(ecs:components(Boop)));
 end);
 
 crystal.test.add("Despawned entities don't leave components behind", function()
@@ -745,14 +744,14 @@ crystal.test.add("Despawned entities don't leave components behind", function()
 
 	local Comp = Class:test("Comp", Component);
 	local comp = a:add_component(Comp);
-	assert(TableUtils.countKeys(ecs:components(Comp)) == 1);
+	assert(table.count(ecs:components(Comp)) == 1);
 	ecs:update();
-	assert(TableUtils.countKeys(ecs:components(Comp)) == 1);
+	assert(table.count(ecs:components(Comp)) == 1);
 
 	a:despawn();
-	assert(TableUtils.countKeys(ecs:components(Comp)) == 0);
+	assert(table.is_empty(ecs:components(Comp)));
 	ecs:update();
-	assert(TableUtils.countKeys(ecs:components(Comp)) == 0);
+	assert(table.is_empty(ecs:components(Comp)));
 end);
 
 crystal.test.add("Get system", function()
@@ -889,44 +888,44 @@ crystal.test.add("Query maintains list of components", function()
 
 	-- Add component
 	local snoot = a:add_component(Snoot);
-	assert(TableUtils.equals({}, query:components()));
+	assert(table.is_empty(query:components()));
 	ecs:update();
-	assert(TableUtils.equals({ [snoot] = true }, query:components()));
+	assert(table.equals(query:components(), { [snoot] = true }));
 
 	-- Bonus component
 	local bonus_snoot = a:add_component(Snoot);
-	assert(TableUtils.equals({ [snoot] = true }, query:components()));
+	assert(table.equals(query:components(), { [snoot] = true }));
 	ecs:update();
-	assert(TableUtils.equals({ [snoot] = true,[bonus_snoot] = true }, query:components()));
+	assert(table.equals(query:components(), { [snoot] = true,[bonus_snoot] = true }));
 	a:remove_component(bonus_snoot);
 	ecs:update();
-	assert(TableUtils.equals({ [snoot] = true }, query:components()));
+	assert(table.equals(query:components(), { [snoot] = true }));
 
 	-- Remove component
 	a:remove_component(snoot);
-	assert(TableUtils.equals({ [snoot] = true }, query:components()));
+	assert(table.equals(query:components(), { [snoot] = true }));
 	ecs:update();
-	assert(TableUtils.equals({}, query:components()));
+	assert(table.is_empty(query:components()));
 
 	-- Add/remove component without update
 	local snoot = a:add_component(Snoot);
 	a:remove_component(snoot);
 	ecs:update();
-	assert(TableUtils.equals({}, query:components()));
+	assert(table.is_empty(query:components()));
 
 	-- Despawn
 	a:add_component(Snoot);
 	ecs:update();
 	a:despawn();
 	ecs:update();
-	assert(TableUtils.equals({}, query:components()));
+	assert(table.is_empty(query:components()));
 
 	-- Despawn with no intermediate update
 	local a = ecs:spawn(Entity);
 	a:add_component(Snoot);
 	a:despawn();
 	ecs:update();
-	assert(TableUtils.equals({}, query:components()));
+	assert(table.is_empty(query:components()));
 end);
 
 crystal.test.add("Query maintains changelog of components", function()
@@ -941,18 +940,18 @@ crystal.test.add("Query maintains changelog of components", function()
 	local a = ecs:spawn(Entity);
 	local compA = a:add_component(CompA);
 	local compB = a:add_component(CompB);
-	assert(TableUtils.equals({}, query:added_components(BaseComp)));
+	assert(table.is_empty(query:added_components(BaseComp)));
 
 	ecs:update();
-	assert(TableUtils.equals({ [compA] = a,[compB] = a }, query:added_components(BaseComp)));
+	assert(table.equals(query:added_components(BaseComp), { [compA] = a,[compB] = a }));
 
 	local compC = a:add_component(CompC);
 	ecs:update();
-	assert(TableUtils.equals({ [compC] = a }, query:added_components(BaseComp)));
+	assert(table.equals(query:added_components(BaseComp), { [compC] = a }));
 
 	a:remove_component(compA);
 	ecs:update();
-	assert(TableUtils.equals({ [compA] = a }, query:removed_components(BaseComp)));
+	assert(table.equals(query:removed_components(BaseComp), { [compA] = a }));
 end);
 
 crystal.test.add("Query changelog of components is updated when entity despawns", function()
@@ -1041,19 +1040,19 @@ crystal.test.add("Can swap components", function()
 	ecs:update();
 	local a = entity:add_component(MyComp);
 	ecs:update();
-	assert(TableUtils.equals(query:added_components(MyComp), { [a] = entity }));
+	assert(table.equals(query:added_components(MyComp), { [a] = entity }));
 
 	entity:remove_component(a);
 	local b = entity:add_component(MyComp);
 	ecs:update();
-	assert(TableUtils.equals(query:removed_components(MyComp), { [a] = entity }));
-	assert(TableUtils.equals(query:added_components(MyComp), { [b] = entity }));
+	assert(table.equals(query:removed_components(MyComp), { [a] = entity }));
+	assert(table.equals(query:added_components(MyComp), { [b] = entity }));
 
 	local c = entity:add_component(MyComp);
 	entity:remove_component(b);
 	ecs:update();
-	assert(TableUtils.equals(query:removed_components(MyComp), { [b] = entity }));
-	assert(TableUtils.equals(query:added_components(MyComp), { [c] = entity }));
+	assert(table.equals(query:removed_components(MyComp), { [b] = entity }));
+	assert(table.equals(query:added_components(MyComp), { [c] = entity }));
 
 	ecs:update();
 end);

@@ -1,5 +1,4 @@
 local MathUtils = require("utils/MathUtils");
-local TableUtils = require("utils/TableUtils");
 local InputPlayer = require("modules/input/input_player");
 
 ---@alias AxisToButton { pressed_range: { [1]: number, [2]: number}, stickiness: number }
@@ -259,31 +258,31 @@ crystal.test.add("Can autorepeat events", function()
 		attack = { initial_delay = 0.5, period = 0.1 },
 	});
 	manager:key_pressed("z");
-	assert(TableUtils.equals(player:events(), { "+attack" }));
+	assert(table.equals(player:events(), { "+attack" }));
 
 	manager:flush_events();
 	manager:update(0.4);
-	assert(TableUtils.equals(player:events(), {}));
+	assert(table.equals(player:events(), {}));
 
 	manager:flush_events();
 	manager:update(0.15);
-	assert(TableUtils.equals(player:events(), { "+attack" }));
+	assert(table.equals(player:events(), { "+attack" }));
 
 	manager:flush_events();
 	manager:update(0.01);
-	assert(TableUtils.equals(player:events(), {}));
+	assert(table.equals(player:events(), {}));
 
 	manager:flush_events();
 	manager:update(0.1);
-	assert(TableUtils.equals(player:events(), { "+attack" }));
+	assert(table.equals(player:events(), { "+attack" }));
 
 	manager:flush_events();
 	manager:key_released("z");
-	assert(TableUtils.equals(player:events(), { "-attack" }));
+	assert(table.equals(player:events(), { "-attack" }));
 
 	manager:flush_events();
 	manager:update(0.2);
-	assert(TableUtils.equals(player:events(), {}));
+	assert(table.equals(player:events(), {}));
 end);
 
 --#endregion

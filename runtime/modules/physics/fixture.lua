@@ -1,5 +1,4 @@
 local bit = require("bit");
-local TableUtils = require("utils/TableUtils");
 
 ---@class Fixture : Component
 ---@field protected fixture love.Fixture
@@ -101,7 +100,7 @@ end
 
 ---@return { [Fixture]: Entity }
 Fixture.active_contacts = function(self)
-	return TableUtils.shallowCopy(self.contact_fixtures);
+	return table.copy(self.contact_fixtures);
 end
 
 Fixture.begin_contact = function(self, other_fixture, contact)

@@ -1,6 +1,5 @@
 local Alias = require("utils/Alias");
 local MathUtils = require("utils/MathUtils");
-local TableUtils = require("utils/TableUtils");
 
 ---@class Thread
 ---@field private _coroutine coroutine
