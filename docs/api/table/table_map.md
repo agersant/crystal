@@ -6,7 +6,7 @@ nav_order: 1
 
 # table.map
 
-Creates a new table by running all the values of a reference table through a transformation function.
+Creates a new table by applying a transformation to all values in a table.
 
 ## Usage
 

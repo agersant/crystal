@@ -26,8 +26,9 @@
   - [x] tool
   - [ ] ui
   - [x] oop
+  - [ ] mathutils
   - [x] stringutils
-  - [ ] tableutils
+  - [x] tableutils
   - [ ] window
 
 # Crystal 0.2.0
