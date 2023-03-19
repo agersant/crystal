@@ -42,7 +42,7 @@ local ScriptRunner = require("modules/script/script_runner");
 
 crystal.test.add("Despawning entity runs deferred script functions", function()
 	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 	local entity = scene:spawn(crystal.Entity);
 	entity:add_component(ScriptRunner);
 
@@ -64,7 +64,7 @@ end);
 
 crystal.test.add("Runs behavior script", function()
 	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 	local entity = scene:spawn(crystal.Entity);
 	entity:add_component(ScriptRunner);
 
@@ -86,7 +86,7 @@ end);
 
 crystal.test.add("Can run multiple behaviors", function()
 	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 	local entity = scene:spawn(crystal.Entity);
 	entity:add_component(ScriptRunner);
 
@@ -110,7 +110,7 @@ end);
 
 crystal.test.add("Stops running script when behavior is removed", function()
 	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 	local entity = scene:spawn(crystal.Entity);
 	entity:add_component(ScriptRunner);
 
@@ -132,7 +132,7 @@ end);
 
 crystal.test.add("Deferred functions in Behavior are called on behavior removal", function()
 	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 	local entity = scene:spawn(crystal.Entity);
 	entity:add_component(ScriptRunner);
 
@@ -153,7 +153,7 @@ end);
 
 crystal.test.add("Deferred functions in Behavior are called on despawn", function()
 	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 	local entity = scene:spawn(crystal.Entity);
 	entity:add_component(ScriptRunner);
 

@@ -1,39 +1,37 @@
 return {
-	type = "spritesheet",
-	content = {
-		texture = "{{ atlas_image.path }}",
-		frames = {
-			{{ #each frames as |frame| }}
-			frame_{{ frame.index }} = { x = {{ frame.x }}, y = {{ frame.y }}, w = {{ frame.width }}, h = {{ frame.height }}, },
-			{{ /each }}
-		},
-		animations = {
-			{{ #each animations as |animation| }}
-			["{{ animation.name }}"] = {
-				loop = {{ animation.is_looping }},
-				sequences = {
-					{{ #each sequences as |sequence| }}
-					{
-						direction = "{{ sequence.direction }}",
-						frames = {
-							{{ #each sequence.keyframes as |keyframe| }}
-							{
-								id = "frame_{{ keyframe.frame.index }}", duration = {{ divide keyframe.duration 1000 }}, ox = {{ multiply keyframe.x -1 }}, oy = {{ multiply keyframe.y -1 }},
-								{{ #if keyframe.hitboxes }}
-								tags = {
-									{{ #each keyframe.hitboxes as |hitbox| }}
-									["{{ hitbox.name }}"] = { rect = { x = {{ hitbox.x }}, y = {{ hitbox.y }}, w = {{ hitbox.width }}, h = {{ hitbox.height }} } },
-									{{ /each }}
-								},
-								{{ /if }}
+	crystal_spritesheet = true,
+	texture = "{{ atlas_image.path }}",
+	frames = {
+		{{ #each frames as |frame| }}
+		frame_{{ frame.index }} = { x = {{ frame.x }}, y = {{ frame.y }}, w = {{ frame.width }}, h = {{ frame.height }}, },
+		{{ /each }}
+	},
+	animations = {
+		{{ #each animations as |animation| }}
+		["{{ animation.name }}"] = {
+			loop = {{ animation.is_looping }},
+			sequences = {
+				{{ #each sequences as |sequence| }}
+				{
+					direction = "{{ sequence.direction }}",
+					frames = {
+						{{ #each sequence.keyframes as |keyframe| }}
+						{
+							id = "frame_{{ keyframe.frame.index }}", duration = {{ divide keyframe.duration 1000 }}, ox = {{ multiply keyframe.x -1 }}, oy = {{ multiply keyframe.y -1 }},
+							{{ #if keyframe.hitboxes }}
+							tags = {
+								{{ #each keyframe.hitboxes as |hitbox| }}
+								["{{ hitbox.name }}"] = { rect = { x = {{ hitbox.x }}, y = {{ hitbox.y }}, w = {{ hitbox.width }}, h = {{ hitbox.height }} } },
+								{{ /each }}
 							},
-							{{ /each }}
+							{{ /if }}
 						},
+						{{ /each }}
 					},
-					{{ /each }}
 				},
+				{{ /each }}
 			},
-			{{ /each }}
 		},
+		{{ /each }}
 	},
 };

@@ -24,7 +24,7 @@ WorldWidget.updateWidget = function(self, dt)
 end
 
 WorldWidget.draw = function(self)
-	WorldWidget.super.draw();
+	WorldWidget.super.draw(self);
 	if self._widget then
 		local width, height = self._widget:getSize();
 		local x = MathUtils.round(self._x - width / 2);
@@ -42,7 +42,7 @@ local Image = require("ui/bricks/elements/Image");
 
 crystal.test.add("Draws widget", function(context)
 	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 	local entity = scene:spawn(crystal.Entity);
 	local widget = Image:new();
 	widget:setImageSize(48, 32);

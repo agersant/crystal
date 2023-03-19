@@ -40,6 +40,7 @@ add_module("table", "modules/table");
 add_module("oop", "modules/oop");
 add_module("test", "modules/test");
 
+add_module("assets", "modules/assets");
 add_module("cmd", "modules/cmd");
 add_module("const", "modules/const");
 add_module("ecs", "modules/ecs");
@@ -64,7 +65,6 @@ end
 
 VIEWPORT = require("graphics/Viewport"):new();
 FONTS = require("resources/Fonts"):new({});
-ASSETS = require("resources/Assets"):new();
 ENGINE = {};
 
 crystal.const.define("Time Scale", 1.0, { min = 0.0, max = 100.0 });

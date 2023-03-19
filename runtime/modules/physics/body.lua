@@ -189,7 +189,7 @@ end
 
 crystal.test.add("look_at turns to correct direction", function()
 	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 	local entity = scene:spawn(crystal.Entity);
 	entity:add_component(Body, "dynamic");
 
@@ -208,7 +208,7 @@ end);
 
 crystal.test.add("Can measure distances", function()
 	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 	local entity = scene:spawn(crystal.Entity);
 	entity:add_component(Body, "dynamic");
 
@@ -224,7 +224,7 @@ end);
 
 crystal.test.add("Can read/write velocity", function()
 	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 	local entity = scene:spawn(crystal.Entity);
 	entity:add_component(Body, "dynamic");
 
@@ -240,7 +240,7 @@ end);
 
 crystal.test.add("Can read/write rotation", function()
 	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 	local entity = scene:spawn(crystal.Entity);
 	entity:add_component(Body, "dynamic");
 	assert(entity:rotation() == 0);
@@ -250,7 +250,7 @@ end);
 
 crystal.test.add("Can read/write damping", function()
 	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 	local entity = scene:spawn(crystal.Entity);
 	entity:add_component(Body, "dynamic");
 	assert(entity:damping() == 0);

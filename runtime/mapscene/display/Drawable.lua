@@ -1,11 +1,15 @@
 local Drawable = Class("Drawable", crystal.Component);
 
-Drawable.init = function(self)
+Drawable.init = function(self, drawable)
 	self._zOrder = 0;
+	self._drawable = drawable;
 end
 
 Drawable.draw = function(self)
 	love.graphics.setColor(1, 1, 1);
+	if self._drawable then
+		love.graphics.draw(self._drawable);
+	end
 end
 
 Drawable.setZOrder = function(self, zOrder)

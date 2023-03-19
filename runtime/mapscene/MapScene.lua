@@ -15,7 +15,7 @@ MapScene.init = function(self, mapName)
 	MapScene.super.init(self);
 
 	local ecs = crystal.ECS:new();
-	local map = ASSETS:getMap(mapName);
+	local map = crystal.assets.get(mapName);
 
 	self._ecs = ecs;
 	Alias:add(ecs, self);
@@ -49,7 +49,7 @@ MapScene.init = function(self, mapName)
 
 	self:add_systems();
 
-	ecs:notify_systems("sceneInit");
+	ecs:notify_systems("init_scene", dt);
 
 	self:update(0);
 end
@@ -59,7 +59,7 @@ MapScene.ecs = function(self)
 end
 
 MapScene.getMap = function(self)
-	return self._ecs:system(MapSystem):getMap();
+	return self._ecs:system(MapSystem):map();
 end
 
 MapScene.physics_world = function(self)
@@ -133,7 +133,7 @@ MapScene.spawnEntityNearPlayer = function(self, class)
 
 	local map = self:getMap();
 	assert(map);
-	local navigationMesh = map:getNavigationMesh();
+	local navigationMesh = map:navigation_mesh();
 	assert(navigationMesh);
 
 	assert(class);
@@ -179,7 +179,7 @@ crystal.test.add("Loads entities", function()
 end);
 
 crystal.test.add("Can spawn and despawn entities", function()
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 	local Piggy = Class:test("Piggy", crystal.Entity);
 	local piggy = scene:spawn(Piggy);
 	scene:update(0);
@@ -192,7 +192,7 @@ end);
 crystal.test.add("Can use the `spawn` command", function()
 	local TestSpawnCommand = Class("TestSpawnCommand", crystal.Entity);
 
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 
 	scene:spawnEntityNearPlayer(TestSpawnCommand);
 	scene:update(0);
@@ -212,7 +212,7 @@ crystal.test.add("Spawn command puts entity near player", function()
 		self:add_component(crystal.Body);
 	end
 
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 
 	local player = scene:spawn(crystal.Entity);
 	player:add_component("InputListener", 1);

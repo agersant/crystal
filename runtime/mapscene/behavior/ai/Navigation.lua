@@ -12,7 +12,7 @@ local navigate = function(self, navigationMesh, goal, body, movement)
 
 	local x, y = body:position();
 	local targetX, targetY = goal:position();
-	local _, path = navigationMesh:findPath(x, y, targetX, targetY);
+	local path = navigationMesh:planPath(x, y, targetX, targetY);
 	if not path then
 		return false;
 	end
@@ -23,10 +23,11 @@ local navigate = function(self, navigationMesh, goal, body, movement)
 			return true;
 		end
 
-		local waypointX, waypointY = path:getVertex(vertexIndex);
-		if not waypointX or not waypointY then
-			break
+		local waypoint = path[vertexIndex];
+		if not waypoint then
+			break;
 		end
+		local waypointX, waypointY = waypoint[1], waypoint[2];
 		local x, y = body:position();
 		local distToWaypoint2 = MathUtils.distance2(x, y, waypointX, waypointY);
 		local epsilon = movement:speed() * self:delta_time();
@@ -71,7 +72,7 @@ Navigation.navigateToGoal = function(self, goal, repathDelay)
 
 	local body = self:entity():component(crystal.Body);
 	local movement = self:entity():component(crystal.Movement);
-	local navigationMesh = self:entity():ecs():getMap():getNavigationMesh();
+	local navigationMesh = self:entity():ecs():getMap():mesh();
 	assert(body);
 	assert(movement);
 	assert(navigationMesh);
@@ -117,7 +118,7 @@ end
 local MapScene = require("mapscene/MapScene");
 
 crystal.test.add("Walk to point", function()
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 
 	local startX, startY = 20, 20;
 	local endX, endY = 300, 200;
@@ -139,7 +140,7 @@ crystal.test.add("Walk to point", function()
 end);
 
 crystal.test.add("Walk to entity", function()
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 
 	local startX, startY = 20, 20;
 	local endX, endY = 300, 200;
@@ -165,7 +166,7 @@ crystal.test.add("Walk to entity", function()
 end);
 
 crystal.test.add("Can use blocking script function", function()
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 
 	local startX, startY = 20, 20;
 	local endX, endY = 300, 200;

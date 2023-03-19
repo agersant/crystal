@@ -5,20 +5,28 @@ local SpriteAnimator = Class("SpriteAnimator", crystal.Behavior);
 local jumpToFrame = function(self, animationFrame)
 	assert(animationFrame);
 	self._animationFrame = animationFrame;
-	local frame = animationFrame:getFrame();
-	self._sprite:setFrame(frame);
+	self._sprite:setImage(self._sheet:image());
+	self._sprite:setQuad(animationFrame.quad);
+	self._sprite:setOrigin(animationFrame.x, animationFrame.y);
 end
 
-local playback = function(self, sequence)
+local playback = function(self, animation, sequence)
 	assert(sequence);
 	local animator = self;
 	return function(self)
 		local startTime = self:time();
 		while true do
-			local timeElasped = self:time() - startTime;
-			jumpToFrame(animator, sequence:getFrameAtTime(timeElasped));
-			if timeElasped >= sequence:getDuration() and not sequence:isLooping() then
-				break
+			local loop = animation:is_looping();
+			local duration = sequence:duration();
+			local t = self:time() - startTime;
+			if loop then
+				t = t % duration;
+			else
+				t = math.min(t, duration);
+			end
+			jumpToFrame(animator, sequence:keyframe(t));
+			if t >= duration and not loop then
+				break;
 			else
 				self:wait_frame();
 			end
@@ -27,16 +35,16 @@ local playback = function(self, sequence)
 end
 
 local playAnimationInternal = function(self, animationName, rotation, forceRestart)
-	local animation = self._sheet:getAnimation(animationName);
+	local animation = self._sheet:animation(animationName);
 	assert(animation);
-	local sequence = animation:getSequence(rotation or math.pi / 2);
+	local sequence = animation:sequence(rotation or math.pi / 2);
 	assert(sequence);
 	if sequence == self._sequence and not forceRestart then
 		return;
 	end
 	self._sequence = sequence;
 	self._script:stop_all_threads();
-	return self._script:run_thread(playback(self, sequence));
+	return self._script:run_thread(playback(self, animation, sequence));
 end
 
 SpriteAnimator.init = function(self, sprite, sheet)
@@ -61,14 +69,14 @@ end
 
 SpriteAnimator.getTagShape = function(self, tagName)
 	if self._animationFrame then
-		return self._animationFrame:getTagShape(tagName);
+		return self._animationFrame.hitboxes[tagName];
 	end
 end
 
 --#region Tests
 
 crystal.test.add("Set animation updates current frame", function()
-	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
+	local sheet = crystal.assets.get("test-data/blankey.lua");
 	local sprite = Sprite:new();
 	local animator = SpriteAnimator:new(sprite, sheet);
 	assert(not sprite:getFrame());
@@ -78,8 +86,8 @@ end);
 
 crystal.test.add("Cycles through animation frames", function()
 	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty_map.lua");
-	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
+	local scene = MapScene:new("test-data/empty.lua");
+	local sheet = crystal.assets.get("test-data/blankey.lua");
 
 	local entity = scene:spawn(crystal.Entity);
 	local sprite = entity:add_component(Sprite);
@@ -100,8 +108,8 @@ end);
 
 crystal.test.add("Animation blocks script", function()
 	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty_map.lua");
-	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
+	local scene = MapScene:new("test-data/empty.lua");
+	local sheet = crystal.assets.get("test-data/blankey.lua");
 
 	local entity = scene:spawn(crystal.Entity);
 	local sprite = entity:add_component(Sprite);
@@ -123,8 +131,8 @@ end);
 
 crystal.test.add("Looping animation thread never ends", function()
 	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty_map.lua");
-	local sheet = ASSETS:getSpritesheet("test-data/blankey.lua");
+	local scene = MapScene:new("test-data/empty.lua");
+	local sheet = crystal.assets.get("test-data/blankey.lua");
 
 	local entity = scene:spawn(crystal.Entity);
 	local sprite = entity:add_component(Sprite);

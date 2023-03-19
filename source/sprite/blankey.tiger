@@ -1,5 +1,5 @@
 {
-  "version": "Tiger4",
+  "version": "1.0.0",
   "sheet": {
     "frames": [
       {
@@ -100,10 +100,10 @@
     },
     "export_settings": {
       "Template": {
-        "template_file": "..\\crystal.template",
-        "texture_file": "..\\..\\runtime\\test-data\\blankey.png",
-        "metadata_file": "..\\..\\runtime\\test-data\\blankey.lua",
-        "metadata_paths_root": "..\\..\\runtime"
+        "template_file": "../crystal.template",
+        "atlas_image_file": "../../runtime/test-data/blankey.png",
+        "metadata_file": "../../runtime/test-data/blankey.lua",
+        "metadata_paths_root": "../../runtime"
       }
     }
   }

@@ -20,7 +20,7 @@ end
 local MapScene = require("mapscene/MapScene");
 
 crystal.test.add("Get position", function()
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 
 	local target = scene:spawn(crystal.Entity);
 	target:add_component(crystal.Body, scene:physics_world());
@@ -33,7 +33,7 @@ crystal.test.add("Get position", function()
 end);
 
 crystal.test.add("Accept", function()
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 
 	local target = scene:spawn(crystal.Entity);
 	target:add_component(crystal.Body, scene:physics_world());
@@ -45,7 +45,7 @@ crystal.test.add("Accept", function()
 end);
 
 crystal.test.add("Reject", function()
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 
 	local target = scene:spawn(crystal.Entity);
 	target:add_component(crystal.Body, scene:physics_world());

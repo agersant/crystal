@@ -16,12 +16,9 @@ DebugDrawSystem.draw_debug = function(self, viewport)
 	local map = self._ecs:getMap();
 	assert(map);
 
+	-- TODO move to MapSystem
 	if drawNavigation then
 		map:drawNavigationMesh(viewport);
-	end
-
-	if drawNavigation then -- TODO should be part of physics debug instead
-		map:drawCollisionMesh(viewport);
 	end
 end
 

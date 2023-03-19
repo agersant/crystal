@@ -21,7 +21,7 @@ impl LuaUserData for MeshBuilder {
             },
         );
 
-        methods.add_method("buildMesh", |_, builder, _: ()| Ok(builder.build()));
+        methods.add_method("build", |_, builder, _: ()| Ok(builder.build()));
     }
 }
 

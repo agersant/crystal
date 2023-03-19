@@ -1,6 +1,6 @@
 local Viewport = require("graphics/Viewport");
 local Camera = require("mapscene/display/Camera");
-local Map = require("resources/map/Map");
+local Map = require("modules/assets/map/map");
 
 local CameraSystem = Class("CameraSystem", crystal.System);
 
@@ -11,7 +11,7 @@ CameraSystem.init = function(self, map, viewport)
 	assert(map:inherits_from(Map));
 	assert(viewport);
 	assert(viewport:inherits_from(Viewport));
-	self._camera = Camera:new(viewport, map:getWidthInPixels(), map:getHeightInPixels());
+	self._camera = Camera:new(viewport, map:pixel_width(), map:pixel_height());
 end
 
 CameraSystem.getCamera = function(self)
@@ -54,7 +54,7 @@ end);
 
 crystal.test.add("Draws camera overlay", function(context)
 	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty_map.lua");
+	local scene = MapScene:new("test-data/empty.lua");
 
 	crystal.cmd.run("showCameraOverlay");
 	scene:update(0);

@@ -1,1 +1,4 @@
-return {type = "package", content = {"test-data/blankey.lua"}};
+return {
+	crystal_package = true,
+	files = { "test-data/blankey.lua" }
+};

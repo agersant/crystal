@@ -82,7 +82,7 @@ end
 
 ---@private
 TestRunner.reset_global_state = function(self, test)
-	ASSETS:unloadAll();
+	crystal.assets.unload_all();
 
 	test.resolution = test.resolution or { 200, 200 };
 	VIEWPORT:setRenderSize(test.resolution[1], test.resolution[2]);
