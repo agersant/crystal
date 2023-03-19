@@ -169,7 +169,7 @@ end
 ---@param path string
 ---@return Loader
 Registry.pick_loader = function(self, path)
-	local extension = path:file_extension();
+	local extension = path:file_extension() or "";
 	for _, loader in ipairs(self.loaders[extension] or {}) do
 		if loader.can_load == nil or loader.can_load(path) then
 			return loader;

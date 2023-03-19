@@ -34,6 +34,7 @@ return {
 		Sequence = Sequence,
 	},
 	init = function()
+		require("modules/assets/directory");
 		require("modules/assets/image");
 		require("modules/assets/map/tiled");
 		require("modules/assets/package");
