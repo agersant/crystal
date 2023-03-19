@@ -38,23 +38,5 @@ return {
 		require("modules/assets/package");
 		require("modules/assets/shader");
 		require("modules/assets/spritesheet/tiger");
-
-		--#region Tests
-
-		crystal.test.add("A single reference keeps assets loaded", function()
-			local assets = Assets:new();
-			local wrapperPackageName = "test-data/TestAssets/wrapper_package.lua";
-			local packageName = "test-data/TestAssets/package.lua";
-			local sheetName = "test-data/blankey.lua";
-			assert(not assets:isAssetLoaded(sheetName));
-			assets:load(wrapperPackageName);
-			assets:load(packageName);
-			assets:unload(wrapperPackageName);
-			assert(assets:isAssetLoaded(sheetName));
-			assets:unload(packageName);
-			assert(not assets:isAssetLoaded(sheetName));
-		end);
-
-		--#endregion
 	end,
 };

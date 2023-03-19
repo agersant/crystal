@@ -1,1 +1,4 @@
-return {type = "package", content = {"test-data/TestAssets/package.lua"}};
+return {
+	crystal_package = true,
+	files = { "test-data/TestAssets/package.lua" }
+};

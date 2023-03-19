@@ -34,6 +34,12 @@ Registry.add_loader = function(self, extension, loader)
 end
 
 ---@param path string
+---@return boolean
+Registry.is_loaded = function(self, path)
+	return self.assets[path] ~= nil;
+end
+
+---@param path string
 ---@return any
 Registry.get = function(self, path)
 	path = self:normalize(path);
