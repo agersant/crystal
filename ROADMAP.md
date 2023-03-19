@@ -9,6 +9,7 @@
 - [x] Gamepad support
 - [x] Input auto-repeats
 - [x] Docs website in readme
+- [ ] Document build-in commands
 - [ ] API revamp: `crystal.*` globals + docs + private functions as ---@package or ---@private
   - [ ] ai
   - [ ] assets

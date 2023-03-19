@@ -119,10 +119,6 @@ Camera.update = function(self, trackedEntities)
 end
 
 Camera.drawDebug = function(self)
-	if not features.debug_draw then
-		return;
-	end
-
 	local buffer = self._scrollingBuffer;
 	local screenW, screenH = self:getScreenSize();
 	love.graphics.setLineStyle("rough");

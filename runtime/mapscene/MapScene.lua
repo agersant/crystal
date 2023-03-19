@@ -1,7 +1,7 @@
+local features = require("features");
 local Renderer = require("graphics/Renderer");
 local MapSystem = require("mapscene/MapSystem");
 local CameraSystem = require("mapscene/display/CameraSystem");
-local DebugDrawSystem = require("mapscene/display/DebugDrawSystem");
 local SpriteSystem = require("mapscene/display/SpriteSystem");
 local DrawableSystem = require("mapscene/display/DrawableSystem");
 local WorldWidgetSystem = require("mapscene/display/WorldWidgetSystem");
@@ -40,7 +40,6 @@ MapScene.init = function(self, mapName)
 	-- Before draw
 	ecs:add_system(CameraSystem, map, self._renderer:getViewport()); -- (also has after_run_scripts logic)
 	ecs:add_system(MapSystem, map);
-	ecs:add_system(DebugDrawSystem);
 
 	-- During draw
 	ecs:add_system(DrawableSystem);
@@ -111,11 +110,13 @@ MapScene.draw = function(self)
 		sceneSizeY = sceneSizeY,
 	});
 
-	self._renderer:draw(function()
-		self._ecs:notify_systems("before_draw_debug", viewport);
-		self._ecs:notify_systems("draw_debug", viewport);
-		self._ecs:notify_systems("after_draw_debug", viewport);
-	end, { nativeResolution = true, sceneSizeX = sceneSizeX, sceneSizeY = sceneSizeY });
+	if features.debug_draw then
+		self._renderer:draw(function()
+			self._ecs:notify_systems("before_draw_debug", viewport);
+			self._ecs:notify_systems("draw_debug", viewport);
+			self._ecs:notify_systems("after_draw_debug", viewport);
+		end, { nativeResolution = true, sceneSizeX = sceneSizeX, sceneSizeY = sceneSizeY });
+	end
 
 	self._renderer:draw(function()
 		self._ecs:notify_systems("drawOverlay");
@@ -133,7 +134,7 @@ MapScene.spawnEntityNearPlayer = function(self, class)
 
 	local map = self:getMap();
 	assert(map);
-	local navigationMesh = map:navigation_mesh();
+	local navigationMesh = map:mesh();
 	assert(navigationMesh);
 
 	assert(class);
@@ -146,7 +147,7 @@ MapScene.spawnEntityNearPlayer = function(self, class)
 		local radius = 40;
 		x = x + radius * math.cos(rotation);
 		y = y + radius * math.sin(rotation);
-		x, y = navigationMesh:getNearestPointOnNavmesh(x, y);
+		x, y = unpack(navigationMesh:getNearestNavigablePoint(x, y));
 		body:set_position(x, y);
 	end
 end
