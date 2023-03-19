@@ -123,8 +123,7 @@ Map.spawn_entities = function(self, ecs)
 		collider:enable_collision_with_everything();
 	end
 
-	-- TODO repair draw order
-	for _, layer in ipairs(self.tile_layers) do
+	for layer_index, layer in ipairs(self.tile_layers) do
 		local batches = {};
 		local quads = {};
 		for _, tileset in ipairs(self.tilesets) do
@@ -152,7 +151,8 @@ Map.spawn_entities = function(self, ecs)
 		end
 		for _, batch in pairs(batches) do
 			if batch:getCount() > 0 then
-				map_entity:add_component("Drawable", batch);
+				local drawable = map_entity:add_component("Drawable", batch);
+				drawable:setZOrder(layer_index);
 			end
 		end
 	end
