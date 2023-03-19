@@ -62,25 +62,16 @@ crystal.assets.add_loader("lua", {
 	end,
 });
 
-crystal.test.add("Can load spritesheet", function()
-	local assets = Assets:new();
-	local sheetName = "test-data/blankey.lua";
-	assets:load(sheetName);
-
-	local sheet = assets:getSpritesheet(sheetName);
-	assert(sheet);
-
-	local animation = sheet:getAnimation("hurt");
-	local sequence = animation:getSequence(0);
-	assert(sequence:getDuration());
-
-	local animationFrame = sequence:getFrameAtTime(0);
-	assert(animationFrame:getFrame());
-	assert(animationFrame:getDuration());
-	assert(animationFrame:getTagShape("test"));
-	local ox, oy = animationFrame:getFrame():getOrigin();
-	assert(ox);
-	assert(oy);
-
-	assets:unload(sheetName);
+crystal.test.add("Can load a spritesheet", function()
+	local spritesheet = crystal.assets.get("test-data/blankey.lua");
+	assert(spritesheet);
+	assert(spritesheet:inherits_from(crystal.Spritesheet));
+	local animation = spritesheet:animation("hurt");
+	local sequence = animation:sequence(0);
+	local keyframe = sequence:keyframe(0);
+	assert(keyframe.x);
+	assert(keyframe.y);
+	assert(keyframe.quad);
+	assert(keyframe.duration);
+	assert(keyframe.hitboxes["test"]);
 end);

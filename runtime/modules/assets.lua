@@ -21,6 +21,7 @@ return {
 		add_loader = function(...) registry:add_loader(...) end,
 		get = function(...) return registry:get(...) end,
 		load = function(...) registry:load(...) end,
+		is_loaded = function(...) return registry:is_loaded(...) end,
 		unload = function(...) registry:unload(...) end,
 		unload_all = function(...) registry:unload_all(...) end,
 		unload_context = function(...) registry:unload_context(...) end,

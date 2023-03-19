@@ -6,11 +6,8 @@ crystal.assets.add_loader("glsl", {
 	end,
 });
 
-crystal.test.add("Load shader", function()
-	local assets = Assets:new();
-	local shaderPath = "test-data/TestAssets/shader.glsl";
-	assets:load(shaderPath);
-	local shader = assets:getShader(shaderPath);
-	assert(shader);
-	assets:unload(shaderPath);
+crystal.test.add("Can load a shader", function()
+	local shader = crystal.assets.get("test-data/TestAssets/shader.glsl");
+	assert(shader)
+	assert(shader:typeOf("Shader"));
 end);

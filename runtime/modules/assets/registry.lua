@@ -36,6 +36,7 @@ end
 ---@param path string
 ---@return boolean
 Registry.is_loaded = function(self, path)
+	path = self:normalize(path);
 	return self.assets[path] ~= nil;
 end
 
@@ -56,8 +57,8 @@ end
 ---@param path string
 ---@param context string
 Registry.load = function(self, path, context)
-	context = context or "default";
 	path = self:normalize(path);
+	context = context or "default";
 	self:load_internal(path, context);
 	if not self.contexts[context] then
 		self.contexts[context] = {};
@@ -106,6 +107,7 @@ end
 ---@param context string
 Registry.unload = function(self, path, context)
 	path = self:normalize(path);
+	context = context or "default";
 	self:unload_internal(path, context);
 	if self.contexts[context] then
 		self.contexts[context][path] = nil;

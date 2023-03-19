@@ -105,11 +105,8 @@ crystal.assets.add_loader("lua", {
 	end,
 });
 
-crystal.test.add("Load empty map", function()
-	local assets = Assets:new();
-	local mapName = "test-data/empty.lua";
-	assets:load(mapName);
-	local map = assets:getMap(mapName);
-	assert(map);
-	assets:unload(mapName);
+crystal.test.add("Can load an empty map", function()
+	local map = crystal.assets.get("test-data/empty.lua");
+	assert(map)
+	assert(map:inherits_from(crystal.Map));
 end);
