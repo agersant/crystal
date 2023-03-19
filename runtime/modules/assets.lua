@@ -1,4 +1,9 @@
 local Registry = require("modules/assets/registry");
+local Map = require("modules/assets/map/map");
+local Tileset = require("modules/assets/map/tileset");
+local Animation = require("modules/assets/spritesheet/animation");
+local Sequence = require("modules/assets/spritesheet/sequence");
+local Spritesheet = require("modules/assets/spritesheet/spritesheet");
 
 local registry = Registry:new();
 
@@ -19,6 +24,13 @@ return {
 		unload = function(...) registry:unload(...) end,
 		unload_all = function(...) registry:unload_all(...) end,
 		unload_context = function(...) registry:unload_context(...) end,
+	},
+	global_api = {
+		Map = Map,
+		Tileset = Tileset,
+		Spritesheet = Spritesheet,
+		Animation = Animation,
+		Sequence = Sequence,
 	},
 	init = function()
 		require("modules/assets/image");

@@ -1,6 +1,4 @@
 local MathUtils = require("utils/MathUtils");
-local Tileset = require("modules/assets/map/tileset");
-local Map = require("modules/assets/map/map");
 
 -- Tileset loader
 crystal.assets.add_loader("lua", {
@@ -17,7 +15,7 @@ crystal.assets.add_loader("lua", {
 		local raw = require(path:strip_file_extension());
 		local image_path = path:parent_directory():merge_paths(raw.image);
 		local image = crystal.assets.get(image_path);
-		local tileset = Tileset:new(image, raw.tilewidth, raw.tileheight, raw.tilecount);
+		local tileset = crystal.Tileset:new(image, raw.tilewidth, raw.tileheight, raw.tilecount);
 
 		for _, tile in ipairs(raw.tiles) do
 			if tile.objectGroup and tile.objectGroup.objects then
@@ -74,7 +72,7 @@ crystal.assets.add_loader("lua", {
 	end,
 	load = function(path)
 		local raw = require(path:strip_file_extension());
-		local map = Map:new(raw.width, raw.height, raw.tilewidth, raw.tileheight);
+		local map = crystal.Map:new(raw.width, raw.height, raw.tilewidth, raw.tileheight);
 
 		for _, tileset in ipairs(raw.tilesets) do
 			local tileset_path = path:parent_directory():merge_paths(tileset.exportfilename);

@@ -1,8 +1,3 @@
--- TODO crystal.Spritesheet, etc.
-local Spritesheet = require("modules/assets/spritesheet/spritesheet");
-local Animation = require("modules/assets/spritesheet/animation");
-local Sequence = require("modules/assets/spritesheet/sequence");
-
 local angles = {
 	East = math.rad(0),
 	NorthEast = math.rad(-45),
@@ -28,12 +23,13 @@ crystal.assets.add_loader("lua", {
 		local raw = require(path:strip_file_extension());
 		local image = crystal.assets.get(raw.texture);
 		local image_width, image_height = image:getDimensions();
-		local spritesheet = Spritesheet:new(image);
+		local spritesheet = crystal.Spritesheet:new(image);
+
 		for name, raw_animation in pairs(raw.animations) do
-			local animation = Animation:new(raw_animation.loop);
+			local animation = crystal.Animation:new(raw_animation.loop);
 			spritesheet:add_animation(name, animation);
 			for _, raw_sequence in ipairs(raw_animation.sequences) do
-				local sequence = Sequence:new();
+				local sequence = crystal.Sequence:new();
 				local rotation = angles[raw_sequence.direction];
 				assert(rotation);
 				animation:add_sequence(rotation, sequence);
@@ -61,11 +57,12 @@ crystal.assets.add_loader("lua", {
 				end
 			end
 		end
+
 		return spritesheet;
 	end,
 });
 
-crystal.test.add("Load spritesheet", function()
+crystal.test.add("Can load spritesheet", function()
 	local assets = Assets:new();
 	local sheetName = "test-data/blankey.lua";
 	assets:load(sheetName);
