@@ -69,7 +69,7 @@ Map.add_entity = function(self, class, x, y, options)
 	});
 end
 
-Map.build_meshes = function(self)
+Map.build_mesh = function(self)
 	local navmesh_padding = 4.0;
 	local builder = Diamond.newMeshBuilder(self.width, self.height, self.tile_width, self.tile_height, navmesh_padding);
 	for id_offset, layer in ipairs(self.tile_layers) do

@@ -101,7 +101,7 @@ crystal.assets.add_loader("lua", {
 			end
 		end
 
-		map:build_meshes();
+		map:build_mesh();
 
 		return map;
 	end,
