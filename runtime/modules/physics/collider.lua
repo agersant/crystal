@@ -36,6 +36,14 @@ Collider.disable_collision_with = function(self, ...)
 	self:remove_category_from_mask(...);
 end
 
+Collider.enable_collision_with_everything = function(self)
+	self:add_all_categories_to_mask();
+end
+
+Collider.disable_collision_with_everything = function(self)
+	self:remove_all_categories_from_mask();
+end
+
 ---@param friction number
 Collider.set_friction = function(self, friction)
 	self.fixture:setFriction(friction);

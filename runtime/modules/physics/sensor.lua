@@ -34,6 +34,14 @@ Sensor.disable_activation_by = function(self, ...)
 	self:remove_category_from_mask(...);
 end
 
+Sensor.enable_activation_by_everything = function(self)
+	self:add_all_categories_to_mask();
+end
+
+Sensor.disable_activation_by_everything = function(self)
+	self:remove_all_categories_from_mask();
+end
+
 ---@param other_fixture Fixture
 ---@param other_entity Entity
 ---@param contact love.Contact

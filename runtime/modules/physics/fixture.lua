@@ -71,6 +71,16 @@ Fixture.remove_category_from_mask = function(self, ...)
 	self:update_filter_data();
 end
 
+Fixture.add_all_categories_to_mask = function(self)
+	self.mask = 65535;
+	self:update_filter_data();
+end
+
+Fixture.remove_all_categories_from_mask = function(self)
+	self.mask = 0;
+	self:update_filter_data();
+end
+
 ---@return love.Shape
 Fixture.shape = function(self)
 	return self.fixture:getShape();

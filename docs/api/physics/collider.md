@@ -20,17 +20,19 @@ entity:add_component(crystal.Collider, love.physics.newCircleShape(4));
 
 ## Methods
 
-| Name                                                      | Description                                                                                          |
-| :-------------------------------------------------------- | :--------------------------------------------------------------------------------------------------- |
-| [collisions](collider_collisions)                         | Returns all components currently colliding with this collider.                                       |
-| [disable_collider](collider_disable_collider)             | Prevents this collider from colliding with others.                                                   |
-| [disable_collision_with](collider_disable_collision_with) | Prevents this collider from colliding with colliders or sensors of specific categories.              |
-| [enable_collider](collider_enable_collider)               | Allows this collider to collide with others.                                                         |
-| [enable_collision_with](collider_enable_collision_with)   | Allows this collider to collide with colliders or sensors of specific categories.                    |
-| [set_categories](collider_set_categories)                 | Sets which physics categories describe this collider.                                                |
-| [set_friction](collider_set_friction)                     | Sets the [friction coefficient](https://love2d.org/wiki/Fixture:setFriction) of this collider.       |
-| [set_restitution](collider_set_restitution)               | Sets the [restitution coefficient](https://love2d.org/wiki/Fixture:setRestitution) of this collider. |
-| [shape](collider_shape)                                   | Returns the shape of this collider.                                                                  |
+| Name                                                                            | Description                                                                                          |
+| :------------------------------------------------------------------------------ | :--------------------------------------------------------------------------------------------------- |
+| [collisions](collider_collisions)                                               | Returns all components currently colliding with this collider.                                       |
+| [disable_collider](collider_disable_collider)                                   | Prevents this collider from colliding with others.                                                   |
+| [disable_collision_with](collider_disable_collision_with)                       | Prevents this collider from colliding with colliders or sensors of specific categories.              |
+| [disable_collision_with_everything](collider_disable_collision_with_everything) | Prevents this collider from colliding with colliders or sensors of any category.                     |
+| [enable_collider](collider_enable_collider)                                     | Allows this collider to collide with others.                                                         |
+| [enable_collision_with](collider_enable_collision_with)                         | Allows this collider to collide with colliders or sensors of specific categories.                    |
+| [enable_collision_with_everything](collider_enable_collision_with_everything)   | Allows this collider to collide with colliders or sensors of any category.                           |
+| [set_categories](collider_set_categories)                                       | Sets which physics categories describe this collider.                                                |
+| [set_friction](collider_set_friction)                                           | Sets the [friction coefficient](https://love2d.org/wiki/Fixture:setFriction) of this collider.       |
+| [set_restitution](collider_set_restitution)                                     | Sets the [restitution coefficient](https://love2d.org/wiki/Fixture:setRestitution) of this collider. |
+| [shape](collider_shape)                                                         | Returns the shape of this collider.                                                                  |
 
 ## Callbacks
 
