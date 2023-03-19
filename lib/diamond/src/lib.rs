@@ -9,7 +9,7 @@ mod mesh;
 impl LuaUserData for MeshBuilder {
     fn add_methods<'lua, M: LuaUserDataMethods<'lua, Self>>(methods: &mut M) {
         methods.add_method_mut(
-            "addPolygon",
+            "add_polygon",
             |_, builder, (tile_x, tile_y, vertices): (i32, i32, Vec<[f32; 2]>)| {
                 let vertices = vertices
                     .into_iter()
@@ -27,14 +27,14 @@ impl LuaUserData for MeshBuilder {
 
 impl LuaUserData for Mesh {
     fn add_methods<'lua, M: LuaUserDataMethods<'lua, Self>>(methods: &mut M) {
-        methods.add_method("getNearestNavigablePoint", |_, mesh, (x, y)| {
+        methods.add_method("nerest_navigable_point", |_, mesh, (x, y)| {
             Ok(mesh
                 .navigation
                 .get_nearest_navigable_point(&Point::new(x, y))
                 .map(|p| [p.x(), p.y()]))
         });
 
-        methods.add_method("listCollisionPolygons", |_, mesh, _: ()| {
+        methods.add_method("collision_polygons", |_, mesh, _: ()| {
             let polygons: Vec<Vec<[f32; 2]>> = mesh
                 .collision
                 .get_contours()
@@ -44,7 +44,7 @@ impl LuaUserData for Mesh {
             Ok(polygons)
         });
 
-        methods.add_method("listNavigationPolygons", |_, mesh, _: ()| {
+        methods.add_method("navigation_polygons", |_, mesh, _: ()| {
             let polygons: Vec<Vec<[f32; 2]>> = mesh
                 .navigation
                 .get_triangles()
@@ -54,7 +54,7 @@ impl LuaUserData for Mesh {
             Ok(polygons)
         });
 
-        methods.add_method("planPath", |_, mesh, (start_x, start_y, end_x, end_y)| {
+        methods.add_method("find_path", |_, mesh, (start_x, start_y, end_x, end_y)| {
             let start = Point::new(start_x, start_y);
             let end = Point::new(end_x, end_y);
             let path: Option<Vec<[f32; 2]>> = mesh
@@ -71,7 +71,7 @@ fn diamond(lua: &Lua) -> LuaResult<LuaTable> {
     let exports = lua.create_table()?;
 
     exports.set(
-        "newMeshBuilder",
+        "new_mesh_builder",
         lua.create_function(
             |_, (num_tiles_x, num_tiles_y, tile_width, tile_height, navigation_padding)| {
                 let builder = MeshBuilder::new(

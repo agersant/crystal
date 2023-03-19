@@ -147,7 +147,7 @@ MapScene.spawnEntityNearPlayer = function(self, class)
 		local radius = 40;
 		x = x + radius * math.cos(rotation);
 		y = y + radius * math.sin(rotation);
-		x, y = unpack(navigationMesh:getNearestNavigablePoint(x, y));
+		x, y = unpack(navigationMesh:nerest_navigable_point(x, y));
 		body:set_position(x, y);
 	end
 end

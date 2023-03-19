@@ -71,7 +71,7 @@ end
 
 Map.build_mesh = function(self)
 	local navmesh_padding = 4.0;
-	local builder = Diamond.newMeshBuilder(self.width, self.height, self.tile_width, self.tile_height, navmesh_padding);
+	local builder = Diamond.new_mesh_builder(self.width, self.height, self.tile_width, self.tile_height, navmesh_padding);
 	for id_offset, layer in ipairs(self.tile_layers) do
 		for xy, gid in ipairs(layer) do
 			local polygons = self.gid_to_collision[gid];
@@ -87,7 +87,7 @@ Map.build_mesh = function(self)
 							y + MathUtils.round(vert.y),
 						});
 					end
-					builder:addPolygon(tile_x, tile_y, vertices);
+					builder:add_polygon(tile_x, tile_y, vertices);
 				end
 			end
 		end
@@ -100,7 +100,7 @@ Map.spawn_entities = function(self, ecs)
 	local map_entity = ecs:spawn(crystal.Entity);
 	map_entity:add_component(crystal.Body, "static");
 
-	local collision_polygons = self._mesh:listCollisionPolygons();
+	local collision_polygons = self._mesh:collision_polygons();
 	table.push(collision_polygons, {
 		{ 0,                  0 },
 		{ self:pixel_width(), 0 },

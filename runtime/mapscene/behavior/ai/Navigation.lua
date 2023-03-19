@@ -12,7 +12,7 @@ local navigate = function(self, navigationMesh, goal, body, movement)
 
 	local x, y = body:position();
 	local targetX, targetY = goal:position();
-	local path = navigationMesh:planPath(x, y, targetX, targetY);
+	local path = navigationMesh:find_path(x, y, targetX, targetY);
 	if not path then
 		return false;
 	end
