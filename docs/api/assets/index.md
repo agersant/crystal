@@ -157,4 +157,4 @@ assert(boss_room:inherits_from(crystal.Map));
 | [crystal.Map](map)                 | 2D tile-based map.                                  |
 | [crystal.Sequence](sequence)       | Sequence within an [Animation](animation).          |
 | [crystal.Spritesheet](spritesheet) | Collection of sprite-based [animations](animation). |
-| [crystal.Tileset](tileset)         | Collection of tiles to build [maps](Map) with.      |
+| [crystal.Tileset](tileset)         | Collection of tiles to build [maps](map) with.      |
