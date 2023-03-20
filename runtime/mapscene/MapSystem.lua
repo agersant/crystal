@@ -13,10 +13,6 @@ MapSystem.map = function(self)
 	return self._map;
 end
 
-MapSystem.init_scene = function(self)
-	self._map:spawn_entities(self:ecs());
-end
-
 local draw_navigation = false;
 crystal.cmd.add("showNavmeshOverlay", function() draw_navigation = true; end);
 crystal.cmd.add("hideNavmeshOverlay", function() draw_navigation = false; end);

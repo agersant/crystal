@@ -22,33 +22,18 @@ MapScene.init = function(self, mapName)
 
 	self._renderer = Renderer:new(VIEWPORT);
 
-	-- During Physics
 	ecs:add_system(crystal.PhysicsSystem);
-
-	-- After physics
-
-	-- Before scripts
-
-	-- During scripts
 	ecs:add_system(crystal.ScriptSystem);
 	ecs:add_system(crystal.InputSystem);
-
-	-- After scripts
 	ecs:add_system(SpriteSystem);
 	ecs:add_system(WorldWidgetSystem);
-
-	-- Before draw
 	ecs:add_system(CameraSystem, map, self._renderer:getViewport()); -- (also has after_run_scripts logic)
 	ecs:add_system(MapSystem, map);
-
-	-- During draw
 	ecs:add_system(DrawableSystem);
-
-	-- After Draw
 
 	self:add_systems();
 
-	ecs:notify_systems("init_scene", dt);
+	map:spawn_entities(ecs);
 
 	self:update(0);
 end

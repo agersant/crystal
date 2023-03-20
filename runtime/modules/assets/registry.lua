@@ -184,6 +184,9 @@ end
 Registry.normalize = function(self, path)
 	local normalized = path:lower();
 	normalized = normalized:gsub("\\", "/");
+	if normalized:sub(-1) == "/" then
+		normalized = normalized:sub(0, -2);
+	end
 	return normalized;
 end
 

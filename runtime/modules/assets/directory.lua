@@ -44,4 +44,25 @@ crystal.test.add("Can load a directory", function()
 	assert(not crystal.assets.is_loaded(sheet));
 end);
 
+crystal.test.add("Can load a directory with trailing slash", function()
+	local dir = "test-data/";
+	local package = "test-data/TestAssets/package.lua";
+	local shader = "test-data/TestAssets/shader.glsl";
+	local sheet = "test-data/blankey.lua";
+	assert(not crystal.assets.is_loaded(dir));
+	assert(not crystal.assets.is_loaded(package));
+	assert(not crystal.assets.is_loaded(shader));
+	assert(not crystal.assets.is_loaded(sheet));
+	crystal.assets.load(dir);
+	assert(crystal.assets.is_loaded(dir));
+	assert(crystal.assets.is_loaded(package));
+	assert(crystal.assets.is_loaded(shader));
+	assert(crystal.assets.is_loaded(sheet));
+	crystal.assets.unload(dir);
+	assert(not crystal.assets.is_loaded(dir));
+	assert(not crystal.assets.is_loaded(package));
+	assert(not crystal.assets.is_loaded(shader));
+	assert(not crystal.assets.is_loaded(sheet));
+end);
+
 --#endregion

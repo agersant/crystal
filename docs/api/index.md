@@ -10,7 +10,7 @@ has_toc: false
 | Name                       | Description                                                                            |
 | :------------------------- | :------------------------------------------------------------------------------------- |
 | [crystal.ai](ai)           |                                                                                        |
-| [crystal.assets](assets)   |                                                                                        |
+| [crystal.assets](assets)   | Loads and unloads game assets (images, spritesheets, maps, etc.).                      |
 | [crystal.cmd](cmd)         | Allows you to define and run console commands.                                         |
 | [crystal.const](const)     |                                                                                        |
 | [crystal.ecs](ecs)         | Implements the Entity Component System pattern.                                        |
