@@ -24,7 +24,7 @@ crystal.assets.add_loader(extension, loader)
 The `loader` table may define any number of the following functions:
 
 - `can_load(path: string)`: Must return a `boolean` indicating whether the file located under `path` is readable by this loader. You should implement this when multiple loaders apply to the same file extension. An example of this is `lua` assets, which can be [maps](map), [spritesheets](spritesheet) or packages.
-- `dependencies(path: string)`: Must return a list of file paths, corresponding to assets required by the asset under `path`.
+- `dependencies(path: string)`: Must return a list of asset paths which will be loaded before this one, and kept in memory as long as this asset is kept in memory.
 - `load(path: string)`: Must return the actual asset that will be kept referenced by Crystal, and made available through [crystal.assets.get](get).
 - `unload(path: string)`: Called when Crystal drops its last reference to the asset. The asset and its dependencies are still available via [crystal.assets.get](get) during this call.
 

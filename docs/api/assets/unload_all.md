@@ -6,7 +6,7 @@ nav_order: 1
 
 # crystal.assets.unload_all
 
-Unloads all game assets. This makes crystal drop its references to every asset it has loaded.
+Unloads all game assets. This makes Crystal drop its references to every asset it has loaded.
 
 ## Usage
 

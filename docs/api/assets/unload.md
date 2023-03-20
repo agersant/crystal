@@ -6,7 +6,7 @@ nav_order: 1
 
 # crystal.assets.unload
 
-Unloads a game asset and its dependencies. Assets that are also loaded under a different context (or are dependencies of such assets) will remain in memory.
+Unloads a game asset and its dependencies. Assets that are also loaded under a different context (or are dependencies of such assets) will remain loaded.
 
 ## Usage
 

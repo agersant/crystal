@@ -22,9 +22,9 @@ crystal.assets.is_loaded(path)
 
 ### Returns
 
-| Name     | Type      | Description                                                  |
-| :------- | :-------- | :----------------------------------------------------------- |
-| `loaded` | `boolean` | True is Crystal is currently keep a reference to this asset. |
+| Name     | Type      | Description                                                                      |
+| :------- | :-------- | :------------------------------------------------------------------------------- |
+| `loaded` | `boolean` | True is Crystal is currently keeping a reference to this asset, false otherwise. |
 
 ## Examples
 
