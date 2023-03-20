@@ -13,7 +13,7 @@ This modules fulfills two functions:
 1. Parsing complex game assets like maps and spritesheets into easy to use objects.
 2. Loading/unloading game assets on demand.
 
-The central piece of this module is [crystal.assets.get](get). This function returns an asset by path. Note that all paths are relative to `main.lua`.
+The central piece of this module is [crystal.assets.get](get). This function returns an asset by path. All paths are relative to `main.lua`.
 
 ```lua
 local rabbit = crystal.assets.get("assets/rabbit.png");
@@ -44,26 +44,12 @@ function on_forest_enter()
 end
 
 function on_forest_exit()
-  crystal.assets.unload("assets/rabbit.png", "forest");
-  crystal.assets.unload("assets/mushroom.png", "forest");
+  crystal.assets.unload_context("forest");
 end
 
 function on_summon_spell_equipped()
   crystal.assets.load("assets/rabbit.png", "summon_spell");
   crystal.assets.load("assets/skeleton.png", "summon_spell");
-end
-
-function on_summon_spell_unequipped()
-  crystal.assets.unload("assets/rabbit.png", "summon_spell");
-  crystal.assets.unload("assets/skeleton.png", "summon_spell");
-end
-```
-
-Conveniently, we can unload all assets related to a specific context in a single call. The unload functions above can be simplified to:
-
-```lua
-function on_forest_exit()
-  crystal.assets.unload_context("forest");
 end
 
 function on_summon_spell_unequipped()
