@@ -1,3 +1,4 @@
+local MapSystem = require("mapscene/MapSystem");
 local AlignGoal = require("mapscene/behavior/ai/AlignGoal");
 local EntityGoal = require("mapscene/behavior/ai/EntityGoal");
 local PositionGoal = require("mapscene/behavior/ai/PositionGoal");
@@ -72,7 +73,7 @@ Navigation.navigateToGoal = function(self, goal, repathDelay)
 
 	local body = self:entity():component(crystal.Body);
 	local movement = self:entity():component(crystal.Movement);
-	local navigationMesh = self:entity():ecs():getMap():mesh();
+	local navigationMesh = self:entity():ecs():system(MapSystem):map():mesh();
 	assert(body);
 	assert(movement);
 	assert(navigationMesh);

@@ -42,10 +42,6 @@ MapScene.ecs = function(self)
 	return self._ecs;
 end
 
-MapScene.getMap = function(self)
-	return self._ecs:system(MapSystem):map();
-end
-
 MapScene.physics_world = function(self)
 	return self._physics_world;
 end
@@ -117,7 +113,7 @@ MapScene.spawnEntityNearPlayer = function(self, class)
 		break;
 	end
 
-	local map = self:getMap();
+	local map = self:ecs():system(MapSystem):map();
 	assert(map);
 	local navigationMesh = map:mesh();
 	assert(navigationMesh);
