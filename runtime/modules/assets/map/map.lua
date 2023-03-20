@@ -1,3 +1,4 @@
+local Alias = require("utils/Alias");
 local MathUtils = require("utils/MathUtils");
 local Colors = require("resources/Colors");
 local Diamond = require("diamond");
@@ -92,7 +93,9 @@ Map.build_mesh = function(self)
 			end
 		end
 	end
+	assert(not self._mesh);
 	self._mesh = builder:build();
+	Alias:add(self, self._mesh);
 end
 
 ---@param ecs ECS
@@ -184,10 +187,6 @@ end
 
 Map.pixel_height = function(self)
 	return self.height * self.tile_height;
-end
-
-Map.mesh = function(self)
-	return self._mesh;
 end
 
 return Map;

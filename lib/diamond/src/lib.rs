@@ -27,7 +27,7 @@ impl LuaUserData for MeshBuilder {
 
 impl LuaUserData for Mesh {
     fn add_methods<'lua, M: LuaUserDataMethods<'lua, Self>>(methods: &mut M) {
-        methods.add_method("nerest_navigable_point", |_, mesh, (x, y)| {
+        methods.add_method("nearest_navigable_point", |_, mesh, (x, y)| {
             Ok(mesh
                 .navigation
                 .get_nearest_navigable_point(&Point::new(x, y))

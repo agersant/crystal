@@ -115,8 +115,6 @@ MapScene.spawnEntityNearPlayer = function(self, class)
 
 	local map = self:ecs():system(MapSystem):map();
 	assert(map);
-	local navigationMesh = map:mesh();
-	assert(navigationMesh);
 
 	assert(class);
 	local entity = self:spawn(class);
@@ -128,7 +126,7 @@ MapScene.spawnEntityNearPlayer = function(self, class)
 		local radius = 40;
 		x = x + radius * math.cos(rotation);
 		y = y + radius * math.sin(rotation);
-		x, y = unpack(navigationMesh:nerest_navigable_point(x, y));
+		x, y = unpack(map:nearest_navigable_point(x, y));
 		body:set_position(x, y);
 	end
 end

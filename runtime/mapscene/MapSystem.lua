@@ -24,9 +24,8 @@ MapSystem.draw_debug = function(self, viewport)
 		love.graphics.setLineJoin("bevel");
 		love.graphics.setPointSize(4 * viewport:getZoom());
 
-		local mesh = self._map:mesh();
 		local triangles = {};
-		for _, t in ipairs(mesh:navigation_polygons()) do
+		for _, t in ipairs(self._map:navigation_polygons()) do
 			local vertices = { t[1][1], t[1][2], t[2][1], t[2][2], t[3][1], t[3][2] };
 			love.graphics.setColor(Colors.lavender_rose:alpha(.25));
 			love.graphics.polygon("fill", vertices);

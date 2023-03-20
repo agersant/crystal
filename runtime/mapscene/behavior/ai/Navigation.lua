@@ -6,14 +6,14 @@ local MathUtils = require("utils/MathUtils");
 
 local Navigation = Class("Navigation", crystal.Behavior);
 
-local navigate = function(self, navigationMesh, goal, body, movement)
+local navigate = function(self, map, goal, body, movement)
 	if not goal:is_valid() then
 		return false;
 	end
 
 	local x, y = body:position();
 	local targetX, targetY = goal:position();
-	local path = navigationMesh:find_path(x, y, targetX, targetY);
+	local path = map:find_path(x, y, targetX, targetY);
 	if not path then
 		return false;
 	end
@@ -73,10 +73,9 @@ Navigation.navigateToGoal = function(self, goal, repathDelay)
 
 	local body = self:entity():component(crystal.Body);
 	local movement = self:entity():component(crystal.Movement);
-	local navigationMesh = self:entity():ecs():system(MapSystem):map():mesh();
+	local map = self:entity():ecs():system(MapSystem):map();
 	assert(body);
 	assert(movement);
-	assert(navigationMesh);
 
 	self:script():stop_all_threads();
 	return self:script():run_thread(function(self)
@@ -100,7 +99,7 @@ Navigation.navigateToGoal = function(self, goal, repathDelay)
 			while true do
 				self:thread(function(self)
 					self:stop_on("repath");
-					if navigate(self, navigationMesh, goal, body, movement) then
+					if navigate(self, map, goal, body, movement) then
 						self:signal("success");
 					else
 						self:signal("failure");
