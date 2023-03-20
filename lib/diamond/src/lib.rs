@@ -28,10 +28,12 @@ impl LuaUserData for MeshBuilder {
 impl LuaUserData for Mesh {
     fn add_methods<'lua, M: LuaUserDataMethods<'lua, Self>>(methods: &mut M) {
         methods.add_method("nearest_navigable_point", |_, mesh, (x, y)| {
-            Ok(mesh
-                .navigation
-                .get_nearest_navigable_point(&Point::new(x, y))
-                .map(|p| [p.x(), p.y()]))
+            let mut results = mlua::MultiValue::new();
+            if let Some(p) = mesh.navigation.nearest_navigable_point(&Point::new(x, y)) {
+                results.push_front(mlua::Value::Number(p.y().into()));
+                results.push_front(mlua::Value::Number(p.x().into()));
+            }
+            Ok(results)
         });
 
         methods.add_method("collision_polygons", |_, mesh, _: ()| {

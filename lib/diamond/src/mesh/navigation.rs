@@ -96,7 +96,7 @@ impl NavigationMesh {
         Some(projection)
     }
 
-    pub fn get_nearest_navigable_point(&self, point: &Point<f32>) -> Option<Point<f32>> {
+    pub fn nearest_navigable_point(&self, point: &Point<f32>) -> Option<Point<f32>> {
         self.project_point_to_playable_space(point)
             .map(|p| p.nearest_point)
     }

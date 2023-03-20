@@ -166,7 +166,6 @@ fn knob(lua: &Lua) -> LuaResult<LuaTable> {
     exports.set(
         "quit",
         lua.create_function({
-            let state = state.clone();
             move |_, _: ()| {
                 quit(state.clone());
                 Ok(())
