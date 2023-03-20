@@ -36,11 +36,11 @@ This example shows how the `image` loader that is included with Crystal is imple
 
 ```lua
 crystal.assets.add_loader("png", {
-	load = function(path)
-		local image = love.graphics.newImage(path);
-		image:setFilter("nearest");
-		return image;
-	end,
+  load = function(path)
+    local image = love.graphics.newImage(path);
+    image:setFilter("nearest");
+    return image;
+  end,
 });
 ```
 
@@ -48,14 +48,14 @@ This example shows how the `package` loader that is part of Crystal is implement
 
 ```lua
 crystal.assets.add_loader("lua", {
-	can_load = function(path)
-		local raw = require(path:strip_file_extension());
-		return raw.crystal_package == true;
-	end,
-	dependencies = function(path)
-		local raw = require(path:strip_file_extension());
-		assert(type(raw.files) == "table");
-		return raw.files;
-	end,
+  can_load = function(path)
+    local raw = require(path:strip_file_extension());
+    return raw.crystal_package == true;
+  end,
+  dependencies = function(path)
+    local raw = require(path:strip_file_extension());
+    assert(type(raw.files) == "table");
+    return raw.files;
+  end,
 });
 ```
