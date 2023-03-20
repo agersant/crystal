@@ -18,6 +18,9 @@ MapScene.init = function(self, mapName)
 	local map = crystal.assets.get(mapName);
 
 	self._ecs = ecs;
+	-- TODO remove this alias?
+	-- Currently only used by Field.getHUD
+	-- Could also help getting map without going through MapSystem
 	Alias:add(ecs, self);
 
 	self._renderer = Renderer:new(VIEWPORT);
@@ -34,8 +37,6 @@ MapScene.init = function(self, mapName)
 	self:add_systems();
 
 	map:spawn_entities(ecs);
-
-	self:update(0);
 end
 
 MapScene.ecs = function(self)
