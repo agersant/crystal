@@ -125,10 +125,10 @@ Registry.unload_internal = function(self, path, dependent)
 	end
 	asset.dependents[dependent] = nil;
 	if table.is_empty(asset.dependents) then
-		self.assets[path] = nil;
 		if asset.loader.unload then
 			asset.loader.unload(path);
 		end
+		self.assets[path] = nil;
 		for _, dependency in ipairs(asset.dependencies) do
 			self:unload_internal(dependency, path);
 		end

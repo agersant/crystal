@@ -144,10 +144,10 @@ assert(boss_room:inherits_from(crystal.Map));
 | [crystal.assets.add_loader](add_loader)         | Adds support for a new asset type.                          |
 | [crystal.assets.get](get)                       | Returns a reference to a game asset.                        |
 | [crystal.assets.is_loaded](is_loaded)           | Returns whether a game asset is currently loaded.           |
-| [crystal.assets.load](load)                     | Loads one or more game assets.                              |
+| [crystal.assets.load](load)                     | Loads a game asset and its dependencies.                    |
 | [crystal.assets.unload_all](unload_all)         | Unloads all game assets.                                    |
 | [crystal.assets.unload_context](unload_context) | Unloads all game assets associated with a specific context. |
-| [crystal.assets.unload](unload)                 | Unloads one or more game assets.                            |
+| [crystal.assets.unload](unload)                 | Unloads a game asset and its dependencies.                  |
 
 ## Classes
 
