@@ -42,10 +42,6 @@ MapScene.ecs = function(self)
 	return self._ecs;
 end
 
-MapScene.physics_world = function(self)
-	return self._physics_world;
-end
-
 MapScene.spawn = function(self, ...)
 	return self._ecs:spawn(...);
 end

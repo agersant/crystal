@@ -39,11 +39,11 @@ crystal.test.add("Get position", function()
 	local scene = MapScene:new("test-data/empty.lua");
 
 	local me = scene:spawn(crystal.Entity);
-	me:add_component(crystal.Body, scene:physics_world());
+	me:add_component(crystal.Body);
 	me:set_position(1, .5);
 
 	local target = scene:spawn(crystal.Entity);
-	target:add_component(crystal.Body, scene:physics_world());
+	target:add_component(crystal.Body);
 
 	local goal = AlignGoal:new(me, target, 1);
 	local x, y = goal:position();
@@ -55,11 +55,11 @@ crystal.test.add("Accept", function()
 	local scene = MapScene:new("test-data/empty.lua");
 
 	local me = scene:spawn(crystal.Entity);
-	me:add_component(crystal.Body, scene:physics_world());
+	me:add_component(crystal.Body);
 	me:set_position(1, .5);
 
 	local target = scene:spawn(crystal.Entity);
-	target:add_component(crystal.Body, scene:physics_world());
+	target:add_component(crystal.Body);
 
 	local goal = AlignGoal:new(me, target, 1);
 	assert(goal:isPositionAcceptable(0, 5));
@@ -73,11 +73,11 @@ crystal.test.add("Reject", function()
 	local scene = MapScene:new("test-data/empty.lua");
 
 	local me = scene:spawn(crystal.Entity);
-	me:add_component(crystal.Body, scene:physics_world());
+	me:add_component(crystal.Body);
 	me:set_position(1, .5);
 
 	local target = scene:spawn(crystal.Entity);
-	target:add_component(crystal.Body, scene:physics_world());
+	target:add_component(crystal.Body);
 
 	local goal = AlignGoal:new(me, target, 1);
 	assert(not goal:isPositionAcceptable(2, 2));

@@ -46,7 +46,7 @@ crystal.test.add("Draws widget", function(context)
 	local entity = scene:spawn(crystal.Entity);
 	local widget = Image:new();
 	widget:setImageSize(48, 32);
-	entity:add_component(crystal.Body, scene:physics_world(), "dynamic");
+	entity:add_component(crystal.Body, "dynamic");
 	entity:add_component(WorldWidget, widget);
 	entity:set_position(160, 120);
 

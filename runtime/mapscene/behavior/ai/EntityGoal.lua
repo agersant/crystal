@@ -23,7 +23,7 @@ crystal.test.add("Get position", function()
 	local scene = MapScene:new("test-data/empty.lua");
 
 	local target = scene:spawn(crystal.Entity);
-	target:add_component(crystal.Body, scene:physics_world());
+	target:add_component(crystal.Body);
 	target:set_position(8, 12);
 
 	local goal = EntityGoal:new(target, 1);
@@ -36,7 +36,7 @@ crystal.test.add("Accept", function()
 	local scene = MapScene:new("test-data/empty.lua");
 
 	local target = scene:spawn(crystal.Entity);
-	target:add_component(crystal.Body, scene:physics_world());
+	target:add_component(crystal.Body);
 	target:set_position(8, 12);
 
 	local goal = EntityGoal:new(target, 1);
@@ -48,7 +48,7 @@ crystal.test.add("Reject", function()
 	local scene = MapScene:new("test-data/empty.lua");
 
 	local target = scene:spawn(crystal.Entity);
-	target:add_component(crystal.Body, scene:physics_world());
+	target:add_component(crystal.Body);
 	target:set_position(8, 12);
 
 	local goal = EntityGoal:new(target, 1);
