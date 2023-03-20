@@ -85,7 +85,7 @@ script:signal("greet", "Tarkus"); -- Nothing happens
 
 This thread operates the same greeting logic as the previous example. When the `bye` signal is received, the thread is stopped completely.
 
-### Child threads
+### Child Threads
 
 Threads are hierarchical, which means they can have child threads, which can themselves have child threads (etc.). Child threads are created by calling [Thread:thread](thread_thread). Whenever a thread completes its execution or is stopped, all its child threads are stopped too.
 

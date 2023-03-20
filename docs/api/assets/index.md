@@ -79,9 +79,7 @@ crystal.assets.load("assets/", "loading_the_whole_game");
 
 ## Built-in Asset Types
 
-Crystal is able to load a variety of assets out of the box. It relies on file extensions to distinguish asset types.
-
-You can add support for more asset types using [crystal.assets.add_loader](add_loader).
+Crystal is able to load a variety of assets out of the box. It relies on file extensions to distinguish asset types. You can add support for more asset types using [crystal.assets.add_loader](add_loader).
 
 ### Directories
 
