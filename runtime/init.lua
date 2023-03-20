@@ -80,7 +80,6 @@ end);
 local scene = nil;
 SCENE = nil;
 local nextScene = nil;
-local console;
 
 ENGINE.loadScene = function(self, scene)
 	-- Change applies before next update, so that the current frame
