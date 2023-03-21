@@ -14,8 +14,7 @@ A few definitions:
 
 - A spritesheet contains a number of animations. There should be one spritesheet for each animated character or object in your game.
 - An animation is an action the character or object can perform, like `"walk` or `"jump"`. Each animation is composed of multiple sequences, showing the same action from different angles (eg. facing left vs facing right).
-- A sequence is a list of keyframes (images) to play in order to see the character perform the action in a specific direction.
-- Keyframes contain metadata like visual duration, offset and hitboxes.
+- A sequence is a list of keyframes (images) to play in order to see the character perform the action in a specific direction. Keyframes contain metadata like visual duration, offset and hitboxes.
 
 The recommended way to create spritesheets in a format Crystal can load is to use [Tiger](https://agersant.itch.io/tiger). To export a spritesheet that is compatible with Crystal, you must:
 
@@ -23,46 +22,7 @@ The recommended way to create spritesheets in a format Crystal can load is to us
 - Also in Tiger's `Export As` dialog, select the folder containing you game's `main.lua` as the `Metadata Path Root`.
 - Name the metadata file with a `.lua` extension.
 
-If you are looking to generate spritesheets manually or through other means, the expected format for the `lua` file is illustrated below. All numbers and ALL_CAPS words are placeholder to be replaced with your actual content.
-
-```lua
-return {
-  crystal_spritesheet = true,
-  texture = "PATH/TO/TEXTURE.png",
-  frames = {
-    FRAME_0 = { x = 0, y = 0, w = 32, h = 32, },
-    FRAME_1 = { x = 32, y = 0, w = 32, h = 32, },
-    -- etc. (more frames)
-  },
-  animations = {
-    IDLE = {
-      loop = true,
-      sequences = {
-        {
-          direction = "West", -- Supported values: East, NorthEast, North, NorthWest, West, SouthWest, South, SouthEast
-          keyframes = {
-            {
-              frame = "FRAME_0", duration = 0.1, x = 0.0, y = 0.0,
-              hitboxes = {
-                ["HITBOX"] = { rect = { x = -8, y = -8, w = 16, h = 16 } },
-                ["OTHER_HITBOX"] = { rect = { x = -12, y = -6, w = 11, h = 11 } },
-              },
-            },
-            {
-              frame = "FRAME_1", duration = 0.1, x = 0.0, y = -2.0,
-              hitboxes = {
-                ["HITBOX"] = { rect = { x = -8, y = -8, w = 16, h = 16 } },
-              },
-            },
-          },
-        },
-        -- etc. (more sequences for the IDLE animation)
-      },
-    },
-    -- etc. (more animations)
-  },
-}
-```
+If you are looking to generate spritesheets manually or through other means, you can infer the format from this [minimal example](example_spritesheet.lua).
 
 ## Constructor
 
