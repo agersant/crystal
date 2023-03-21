@@ -30,7 +30,7 @@ In addition, an additional collider will be added around the outline of the map.
 The content of object layers will be spawned as [entities](/crystal/api/ecs/entity). The entity class to spawn can be chosen by setting the `type` property in Tiled objects (eg. `"Chest"`). The constructor for these entities will receive one table containing:
 
 - The `x` and `y` position of the entity.
-- A [love.Shape](https://love2d.org/wiki/Shape) representing the entity's location. Only rectangles are supported so far.
+- A [love.Shape](https://love2d.org/wiki/Shape) representing the entity's location. Only rectangles are supported.
 - Any other property specified in Tiled.
 
 ## Constructor
