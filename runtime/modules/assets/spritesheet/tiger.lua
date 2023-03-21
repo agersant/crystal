@@ -33,18 +33,18 @@ crystal.assets.add_loader("lua", {
 				local rotation = angles[raw_sequence.direction];
 				assert(rotation);
 				animation:add_sequence(rotation, sequence);
-				for _, raw_keyframe in ipairs(raw_sequence.frames) do
-					local frame = raw.frames[raw_keyframe.id];
+				for _, raw_keyframe in ipairs(raw_sequence.keyframes) do
+					local frame = raw.frames[raw_keyframe.frame];
 					assert(frame);
 					local keyframe = {
 						quad = love.graphics.newQuad(frame.x, frame.y, frame.w, frame.h, image_width, image_height),
 						duration = raw_keyframe.duration,
-						x = raw_keyframe.ox,
-						y = raw_keyframe.oy,
+						x = raw_keyframe.x,
+						y = raw_keyframe.y,
 						hitboxes = {},
 					};
-					if raw_keyframe.tags then
-						for name, raw_hitbox in pairs(raw_keyframe.tags) do
+					if raw_keyframe.hitboxes then
+						for name, raw_hitbox in pairs(raw_keyframe.hitboxes) do
 							keyframe.hitboxes[name] = love.physics.newRectangleShape(
 								raw_hitbox.rect.x + raw_hitbox.rect.w / 2,
 								raw_hitbox.rect.y + raw_hitbox.rect.h / 2,

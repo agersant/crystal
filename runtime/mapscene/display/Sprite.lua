@@ -9,8 +9,8 @@ Sprite.init = function(self)
 	self._y = 0;
 	self._quad = nil;
 	self._image = nil;
-	self._originX = nil;
-	self._originY = nil;
+	self._offsetX = nil;
+	self._offsetY = nil;
 end
 
 Sprite.setSpritePosition = function(self, x, y)
@@ -26,9 +26,9 @@ Sprite.setQuad = function(self, quad)
 	self._quad = quad;
 end
 
-Sprite.setOrigin = function(self, ox, oy)
-	self._originX = ox;
-	self._originY = oy;
+Sprite.setOffset = function(self, ox, oy)
+	self._offsetX = ox;
+	self._offsetY = oy;
 end
 
 Sprite.draw = function(self)
@@ -38,7 +38,7 @@ Sprite.draw = function(self)
 	end
 	local x = MathUtils.round(self._x);
 	local y = MathUtils.round(self._y);
-	love.graphics.draw(self._image, self._quad, x, y, 0, 1, 1, self._originX, self._originY);
+	love.graphics.draw(self._image, self._quad, x + self._offsetX, y + self._offsetY);
 end
 
 --#region Tests

@@ -7,7 +7,7 @@ local jumpToFrame = function(self, animationFrame)
 	self._animationFrame = animationFrame;
 	self._sprite:setImage(self._sheet:image());
 	self._sprite:setQuad(animationFrame.quad);
-	self._sprite:setOrigin(animationFrame.x, animationFrame.y);
+	self._sprite:setOffset(animationFrame.x, animationFrame.y);
 end
 
 local playback = function(self, animation, sequence)

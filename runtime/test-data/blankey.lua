@@ -14,18 +14,18 @@ return {
 			sequences = {
 				{
 					direction = "North",
-					frames = {
+					keyframes = {
 						{
-							id = "frame_0", duration = 0.302, ox = 16.0, oy = 16.0,
+							frame = "frame_0", duration = 0.302, x = -16, y = -16,
 						},
 						{
-							id = "frame_1", duration = 0.299, ox = 16.0, oy = 16.0,
+							frame = "frame_1", duration = 0.299, x = -16, y = -16,
 						},
 						{
-							id = "frame_2", duration = 0.299, ox = 16.0, oy = 16.0,
+							frame = "frame_2", duration = 0.299, x = -16, y = -16,
 						},
 						{
-							id = "frame_3", duration = 0.302, ox = 16.0, oy = 16.0,
+							frame = "frame_3", duration = 0.302, x = -16, y = -16,
 						},
 					},
 				},
@@ -36,10 +36,10 @@ return {
 			sequences = {
 				{
 					direction = "North",
-					frames = {
+					keyframes = {
 						{
-							id = "frame_4", duration = 0.1, ox = 16.0, oy = 16.0,
-							tags = {
+							frame = "frame_4", duration = 0.1, x = -16, y = -16,
+							hitboxes = {
 								["test"] = { rect = { x = -5, y = -6, w = 11, h = 11 } },
 							},
 						},
