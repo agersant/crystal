@@ -1,5 +1,5 @@
 ---
-parent: crystal.map
+parent: crystal.assets
 grand_parent: API Reference
 nav_order: 2
 ---
