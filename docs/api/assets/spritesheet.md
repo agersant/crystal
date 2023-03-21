@@ -6,8 +6,6 @@ nav_order: 2
 
 # crystal.Spritesheet
 
-## Overview
-
 Spritesheets are the combination of a texture holding multiple frames of animation, and metadata on how to play said animations.
 
 A few definitions:
