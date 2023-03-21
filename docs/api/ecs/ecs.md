@@ -17,7 +17,9 @@ crystal.ECS:new()
 
 | Name                                 | Description                                                                                        |
 | :----------------------------------- | :------------------------------------------------------------------------------------------------- |
+| [add_context](ecs_add_context)       | Makes a value available to all entities created by this ECS.                                       |
 | [add_system](ecs_add_system)         | Instantiates a new [System](system).                                                               |
+| [context](ecs_context)               | Retrieves a value added via [add_context](ecs_add_context).                                        |
 | [components](ecs_components)         | Returns all components of a specific class or inheriting from it.                                  |
 | [despawn](ecs_despawn)               | Unregisters an [Entity](entity) from this ECS.                                                     |
 | [entities_with](ecs_entities_with)   | Returns all entities that have a [Component](component) of a specific class or inheriting from it. |

@@ -8,6 +8,9 @@ nav_exclude: true
 
 Instantiates a new [Query](query).
 
+{: .warning}
+This function can only be called before spawning any entity. It will error when called while any entity exists.
+
 ## Usage
 
 ```lua

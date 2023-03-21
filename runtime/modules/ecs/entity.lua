@@ -20,6 +20,12 @@ Entity.entity = function(self)
 	return self;
 end
 
+---@param name string
+---@return any
+Entity.context = function(self, name)
+	return self._ecs:context(name);
+end
+
 ---@generic T
 ---@param class `T`
 ---@return T

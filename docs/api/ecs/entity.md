@@ -15,6 +15,7 @@ In addition to the methods documented on this page, entities transparently expos
 | Name                                        | Description                                                                 |
 | :------------------------------------------ | :-------------------------------------------------------------------------- |
 | [add_component](entity_add_component)       | Instantiates and adds a new [Component](component) to this entity.          |
+| [context](entity_context)                   | Retrieves a value added via [ecs:add_context](ecs_add_context).             |
 | [component](entity_component)               | Returns a [Component](component) of a specific class or inheriting from it. |
 | [components](entity_components)             | Returns all components of a specific class or inheriting fom it.            |
 | [create_event](entity_create_event)         | Instantiates and creates a new [Event](event) associated with this entity.  |

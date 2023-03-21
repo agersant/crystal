@@ -12,6 +12,7 @@ local Query = require("modules/ecs/query");
 ---@field private queries { [Query]: boolean }
 ---@field private queries_by_class { [Class]: { [Query]: boolean } }
 ---@field private systems System[]
+---@field private contexts { [string]: fun(): any }
 ---@field private _events { [Class]: Event[] }
 ---@field private entity_nursery { [Entity]: boolean }
 ---@field private entity_graveyard { [Entity]: boolean }
@@ -29,6 +30,7 @@ ECS.init = function(self)
 	self.queries_by_class = {};
 
 	self.systems = {};
+	self.contexts = {};
 	self._events = {};
 
 	self.entity_nursery = {};
@@ -222,6 +224,38 @@ ECS.add_system = function(self, class, ...)
 	return system;
 end
 
+---@generic T
+---@param class T
+---@return T
+ECS.system = function(self, class)
+	if type(class) == "string" then
+		class = Class:by_name(class);
+	end
+	for _, system in ipairs(self.systems) do
+		if system:inherits_from(class) then
+			return system;
+		end
+	end
+	return nil;
+end
+
+---@param name string
+---@param value any
+ECS.add_context = function(self, name, value)
+	assert(type(name) == "string");
+	assert(table.is_empty(self._entities));
+	self.contexts[name] = function() return value; end;
+end
+
+---@param name string
+---@return any
+ECS.context = function(self, name)
+	if not self.contexts[name] then
+		return nil;
+	end
+	return self.contexts[name]();
+end
+
 ---@param event Event
 ECS.add_event = function(self, event)
 	assert(event);
@@ -237,21 +271,6 @@ ECS.add_event = function(self, event)
 		table.push(events, event);
 		base_class = base_class.super;
 	end
-end
-
----@generic T
----@param class T
----@return T
-ECS.system = function(self, class)
-	if type(class) == "string" then
-		class = Class:by_name(class);
-	end
-	for _, system in ipairs(self.systems) do
-		if system:inherits_from(class) then
-			return system;
-		end
-	end
-	return nil;
 end
 
 ---@return { [Entity]: boolean }
@@ -1055,6 +1074,19 @@ crystal.test.add("Can swap components", function()
 	assert(table.equals(query:added_components(MyComp), { [c] = entity }));
 
 	ecs:update();
+end);
+
+
+crystal.test.add("Can add and retrieve context value", function()
+	local value = {};
+	local ecs = ECS:new();
+	ecs:add_context("v", value);
+	assert(ecs:context("v") == value);
+	assert(ecs:context("x") == nil);
+
+	local entity = ecs:spawn(Entity);
+	assert(entity:context("v") == value);
+	assert(entity:context("x") == nil);
 end);
 
 --#endregion

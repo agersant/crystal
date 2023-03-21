@@ -71,6 +71,7 @@ Alias.add = function(self, from, to)
 		from.__aliases = {};
 	end
 	local metatable = getmetatable(from);
+	assert(metatable and metatable.__index);
 	if type(metatable.__index) == "table" then
 		metatable.__index = search(metatable.__index);
 	end

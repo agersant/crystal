@@ -1,6 +1,6 @@
 local features = require("features");
 local Renderer = require("graphics/Renderer");
-local MapSystem = require("mapscene/MapSystem");
+local NavigationSystem = require("mapscene/behavior/ai/NavigationSystem");
 local CameraSystem = require("mapscene/display/CameraSystem");
 local SpriteSystem = require("mapscene/display/SpriteSystem");
 local DrawableSystem = require("mapscene/display/DrawableSystem");
@@ -15,13 +15,10 @@ MapScene.init = function(self, mapName)
 	MapScene.super.init(self);
 
 	local ecs = crystal.ECS:new();
-	local map = crystal.assets.get(mapName);
+	self._map = crystal.assets.get(mapName);
 
 	self._ecs = ecs;
-	-- TODO remove this alias?
-	-- Currently only used by Field.getHUD
-	-- Could also help getting map without going through MapSystem
-	Alias:add(ecs, self);
+	ecs:add_context("map", self._map);
 
 	self._renderer = Renderer:new(VIEWPORT);
 
@@ -30,13 +27,13 @@ MapScene.init = function(self, mapName)
 	ecs:add_system(crystal.InputSystem);
 	ecs:add_system(SpriteSystem);
 	ecs:add_system(WorldWidgetSystem);
-	ecs:add_system(CameraSystem, map, self._renderer:getViewport()); -- (also has after_run_scripts logic)
-	ecs:add_system(MapSystem, map);
+	ecs:add_system(CameraSystem, self._map, self._renderer:getViewport()); -- (also has after_run_scripts logic)
+	ecs:add_system(NavigationSystem);
 	ecs:add_system(DrawableSystem);
 
 	self:add_systems();
 
-	map:spawn_entities(ecs);
+	self._map:spawn_entities(ecs);
 end
 
 MapScene.ecs = function(self)
@@ -110,7 +107,7 @@ MapScene.spawnEntityNearPlayer = function(self, class)
 		break;
 	end
 
-	local map = self:ecs():system(MapSystem):map();
+	local map = self:ecs():context("map");
 	assert(map);
 
 	assert(class);
