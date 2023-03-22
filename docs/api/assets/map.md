@@ -39,11 +39,13 @@ You cannot construct maps manually. Use [crystal.assets.get](get) to load them f
 
 ## Methods
 
-| Name                                 | Description                                                    |
-| :----------------------------------- | :------------------------------------------------------------- |
-| [pixel_width](map_pixel_width)       | Returns the map width in pixels.                               |
-| [pixel_height](map_pixel_height)     | Returns the map height in pixels.                              |
-| [spawn_entities](map_spawn_entities) | Spawns entities necessary to display and play within this map. |
+| Name                                                   | Description                                                    |
+| :----------------------------------------------------- | :------------------------------------------------------------- |
+| [find_path](map_find_path)                             | Computes an unobstructed path between two map locations.       |
+| [nearest_navigable_point](map_nearest_navigable_point) | Projects a point onto the navigable part of the map.           |
+| [pixel_width](map_pixel_width)                         | Returns the map width in pixels.                               |
+| [pixel_height](map_pixel_height)                       | Returns the map height in pixels.                              |
+| [spawn_entities](map_spawn_entities)                   | Spawns entities necessary to display and play within this map. |
 
 ## Examples
 
