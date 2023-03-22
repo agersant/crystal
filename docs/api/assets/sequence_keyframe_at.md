@@ -37,7 +37,7 @@ The keyframe table contains the following members:
 - `y`: vertical pixel offset to apply when displaying this frame.
 
 {: .warning}
-For performance reasons, this function does not return copies of the underlying data. Modification to `keyframe` tables will persist across calls (and are not recommended).
+For performance reasons, this function does not return copies of the underlying data. Modifications to `keyframe` tables will persist across calls (and are not recommended).
 
 ## Examples
 
