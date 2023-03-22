@@ -12,10 +12,10 @@ has_toc: false
 | [crystal.ai](ai)           |                                                                                        |
 | [crystal.assets](assets)   | Loads and unloads game assets (images, spritesheets, maps, etc.).                      |
 | [crystal.cmd](cmd)         | Allows you to define and run console commands.                                         |
-| [crystal.const](const)     |                                                                                        |
+| [crystal.const](const)     | Allows you to define tweakable variables for fast iteration.                           |
 | [crystal.ecs](ecs)         | Implements the Entity Component System pattern.                                        |
 | [crystal.gfx](gfx)         |                                                                                        |
-| [crystal.input](input)     |                                                                                        |
+| [crystal.input](input)     | Manages keybindings and routes input events.                                           |
 | [crystal.log](log)         | Provides an interface to write log messages to console and to disk.                    |
 | [crystal.oop](oop)         | Allows you to define classes for Object Oriented Programming.                          |
 | [crystal.physics](physics) | Components allowing entities to move and collide with each other.                      |
