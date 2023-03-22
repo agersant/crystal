@@ -14,10 +14,10 @@ You cannot construct sequences manually. Use [crystal.assets.get](get) to load a
 
 ## Methods
 
-| Name                          | Description                                        |
-| :---------------------------- | :------------------------------------------------- |
-| [duration](sequence_duration) | Returns the duration of this sequence in seconds.  |
-| [keyframe](sequence_keyframe) | Retrieves the keyframe to play at a specific time. |
+| Name                                | Description                                        |
+| :---------------------------------- | :------------------------------------------------- |
+| [duration](sequence_duration)       | Returns the duration of this sequence in seconds.  |
+| [keyframe_at](sequence_keyframe_at) | Retrieves the keyframe to play at a specific time. |
 
 ## Examples
 
