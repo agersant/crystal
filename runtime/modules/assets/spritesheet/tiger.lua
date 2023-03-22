@@ -68,7 +68,7 @@ crystal.test.add("Can load a spritesheet", function()
 	assert(spritesheet:inherits_from(crystal.Spritesheet));
 	local animation = spritesheet:animation("hurt");
 	local sequence = animation:sequence(0);
-	local keyframe = sequence:keyframe(0);
+	local keyframe = sequence:keyframe_at(0);
 	assert(keyframe.x);
 	assert(keyframe.y);
 	assert(keyframe.quad);

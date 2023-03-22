@@ -24,7 +24,7 @@ local playback = function(self, animation, sequence)
 			else
 				t = math.min(t, duration);
 			end
-			jumpToFrame(animator, sequence:keyframe(t));
+			jumpToFrame(animator, sequence:keyframe_at(t));
 			if t >= duration and not loop then
 				break;
 			else

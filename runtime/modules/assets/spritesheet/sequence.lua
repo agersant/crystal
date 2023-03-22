@@ -23,14 +23,13 @@ end
 
 ---@param time number # in seconds
 ---@return Keyframe
-Sequence.keyframe = function(self, time)
+Sequence.keyframe_at = function(self, time)
 	local keyframe;
 	if #self.keyframes == 1 then
 		return self.keyframes[1];
 	end
 
-	assert(time <= self._duration);
-
+	time = math.max(0, time);
 	local next_frame_start = 0;
 	for _, keyframe in ipairs(self.keyframes) do
 		next_frame_start = next_frame_start + keyframe.duration;
