@@ -8,7 +8,7 @@ local Diamond = require("diamond");
 ---@field private height number
 ---@field private tile_width number
 ---@field private tile_height number
----@field private tilesets Tileset[]
+---@field private _tilesets Tileset[]
 ---@field private tile_layers number[][]
 ---@field private gid_to_tileset { [number]: Tileset }
 ---@field private gid_to_tile_id { [number]: number }
@@ -24,7 +24,7 @@ Map.init = function(self, width, height, tile_width, tile_height)
 	self.height = height;
 	self.tile_width = tile_width;
 	self.tile_height = tile_height;
-	self.tilesets = {};
+	self._tilesets = {};
 	self.tile_layers = {};
 	self.gid_to_tileset = {};
 	self.gid_to_tile_id = {};
@@ -38,7 +38,7 @@ end
 Map.add_tileset = function(self, first_gid, tileset)
 	assert(type(first_gid) == "number");
 	assert(tileset:inherits_from("Tileset"));
-	table.push(self.tilesets, tileset);
+	table.push(self._tilesets, tileset);
 	for i = 0, tileset:num_tiles() - 1 do
 		self.gid_to_tileset[first_gid + i] = tileset;
 		self.gid_to_tile_id[first_gid + i] = i;
@@ -129,7 +129,7 @@ Map.spawn_entities = function(self, ecs)
 	for layer_index, layer in ipairs(self.tile_layers) do
 		local batches = {};
 		local quads = {};
-		for _, tileset in ipairs(self.tilesets) do
+		for _, tileset in ipairs(self._tilesets) do
 			batches[tileset] = love.graphics.newSpriteBatch(tileset:image(), self.width * self.height, "static");
 			quads[tileset] = love.graphics.newQuad(0, 0, 0, 0, tileset:image():getDimensions());
 		end
@@ -179,6 +179,10 @@ Map.spawn_entities = function(self, ecs)
 	end
 
 	return body;
+end
+
+Map._tilesets = function(self)
+	return table.copy(self._tilesets);
 end
 
 Map.pixel_width = function(self)

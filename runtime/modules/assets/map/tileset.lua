@@ -30,7 +30,7 @@ Tileset.add_collision = function(self, tile_id, polygon)
 	table.push(self._collision[tile_id], polygon);
 end
 
----@return { x: number, y: number }[]
+---@return { x: number, y: number }[][]
 Tileset.collision = function(self, tile_id)
 	return self._collision[tile_id];
 end

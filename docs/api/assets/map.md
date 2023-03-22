@@ -46,6 +46,7 @@ You cannot construct maps manually. Use [crystal.assets.get](get) to load them f
 | [pixel_width](map_pixel_width)                         | Returns the map width in pixels.                               |
 | [pixel_height](map_pixel_height)                       | Returns the map height in pixels.                              |
 | [spawn_entities](map_spawn_entities)                   | Spawns entities necessary to display and play within this map. |
+| [tilesets](map_tilesets)                               | Returns all [tilesets](tileset) used by this map.              |
 
 ## Examples
 
