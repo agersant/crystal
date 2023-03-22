@@ -15,8 +15,9 @@ NavigationSystem.draw_debug = function(self, viewport)
 		love.graphics.setLineJoin("bevel");
 		love.graphics.setPointSize(4 * viewport:getZoom());
 
+		local map = self:ecs():context("map");
 		local triangles = {};
-		for _, t in ipairs(self._map:navigation_polygons()) do
+		for _, t in ipairs(map:navigation_polygons()) do
 			local vertices = { t[1][1], t[1][2], t[2][1], t[2][2], t[3][1], t[3][2] };
 			love.graphics.setColor(Colors.lavender_rose:alpha(.25));
 			love.graphics.polygon("fill", vertices);
@@ -29,5 +30,13 @@ NavigationSystem.draw_debug = function(self, viewport)
 		love.graphics.pop();
 	end
 end
+
+crystal.test.add("Can draw navigation debug overlay", function()
+	local MapScene = require("mapscene/MapScene");
+	local scene = MapScene:new("test-data/empty.lua");
+	crystal.cmd.run("showNavmeshOverlay");
+	scene:update(0);
+	scene:draw();
+end);
 
 return NavigationSystem;
