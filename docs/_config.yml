@@ -1,6 +1,5 @@
 title: Crystal
 lang: en
-description: Lua+Rust game framework based on Love2D
 
 remote_theme: just-the-docs/just-the-docs
 color_scheme: crystal
