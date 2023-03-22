@@ -6,7 +6,7 @@ has_toc: false
 
 # crystal.table
 
-This module contains utility functions for table operations. All functions are registered on the global `table` table and be accessed as `table.example(my_table)`.
+This module contains utility functions for table operations. All functions are registered on the global `table` table and can be accessed as `table.example(my_table)`.
 
 ## Functions
 
