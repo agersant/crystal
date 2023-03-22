@@ -50,7 +50,6 @@ add_module("physics", "modules/physics");
 add_module("script", "modules/script");
 add_module("tool", "modules/tool");
 
-local Content = require("resources/Content");
 local Scene = require("Scene");
 
 crystal.conf = {
@@ -88,19 +87,30 @@ ENGINE.loadScene = function(self, scene)
 end
 
 local requireGameSource = function()
-	local assetsDirectories = table.map(crystal.conf.assetsDirectories, function(d)
+	-- TODO may or may not worked in fused build
+	local assets_directories = table.map(crystal.conf.assetsDirectories, function(d)
 		return d:gsub("%-", "%%-");
 	end);
-	-- TODO may or may not worked in fused build
-	for _, path in ipairs(Content:listAllFiles("", "%.lua$")) do
-		local isMain = path:match("main%.lua");
-		local isCrystal = path:match("^" .. CRYSTAL_ROOT);
-		local isAsset = false;
-		for _, directory in ipairs(assetsDirectories) do
-			isAsset = isAsset or path:match("^" .. directory);
-		end
-		if not isCrystal and not isAsset and not isMain then
-			require(path:strip_file_extension());
+	local directories = { "" };
+	while next(directories) do
+		local directory = table.pop(directories);
+		for _, item in ipairs(love.filesystem.getDirectoryItems(directory)) do
+			local path = (directory == "") and item or (directory .. "/" .. item);
+			local info = love.filesystem.getInfo(path);
+			if info.type == "directory" then
+				table.push(directories, path);
+			elseif info.type == "file" then
+				local is_lua = path:match("%.lua$");
+				local is_startup = path:match("main%.lua") or path:match("conf%.lua");
+				local is_crystal = path:match("^" .. CRYSTAL_ROOT);
+				local is_asset = false;
+				for _, asset_directory in ipairs(assets_directories) do
+					is_asset = is_asset or path:match("^" .. asset_directory);
+				end
+				if is_lua and not (is_crystal or is_asset or is_startup) then
+					require(path:strip_file_extension());
+				end
+			end
 		end
 	end
 end
