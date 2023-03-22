@@ -36,6 +36,7 @@ return {
 	},
 	global_api = {
 		InputListener = InputListener,
+		InputPlayer = InputPlayer,
 		InputSystem = InputSystem,
 	},
 	flush_events = function()

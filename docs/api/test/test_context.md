@@ -3,7 +3,7 @@ parent: crystal.test
 grand_parent: API Reference
 ---
 
-# TestContext
+# crystal.TestContext
 
 Context object exposing functionality available during tests.
 

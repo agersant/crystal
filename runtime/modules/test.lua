@@ -276,5 +276,8 @@ return {
 			return features.tests;
 		end,
 	},
+	global_api = {
+		TestContext = TestContext,
+	},
 	runner = test_runner,
 };
