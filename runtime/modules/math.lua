@@ -194,13 +194,13 @@ return {
 			assert(math.abs(math.rad(-180) - math.angle_delta(math.rad(-20), math.rad(160))) < epsilon);
 		end);
 
-		crystal.test.add("Index to XY", function()
+		crystal.test.add("Can convert index to XY", function()
 			local x, y = math.index_to_xy(8, 5);
 			assert(x == 3);
 			assert(y == 1);
 		end);
 
-		crystal.test.add("Angle to dir 8", function()
+		crystal.test.add("Can convert angle to cardinal direction", function()
 			assert(1, 0 == math.angle_to_cardinal(math.rad(0)));
 			assert(1, 0 == math.angle_to_cardinal(math.rad(20)));
 			assert(1, 1 == math.angle_to_cardinal(math.rad(30)));
@@ -208,7 +208,7 @@ return {
 			assert(1, 0 == math.angle_to_cardinal(math.rad(350)));
 		end);
 
-		crystal.test.add("Damping", function()
+		crystal.test.add("Can damp value", function()
 			assert(10 == math.damp(10, 20, 0, 0));
 			assert(20 == math.damp(10, 20, 0, 0.5));
 			assert(20 == math.damp(10, 20, 0, 1));
@@ -225,7 +225,7 @@ return {
 			assert(12.5 == math.damp(10, 20, 0.75, 1));
 		end);
 
-		crystal.test.add("Linear easing", function()
+		crystal.test.add("Can ease value (linear)", function()
 			assert(0, 0 == math.ease(0, "linear"));
 			assert(0.25, 0 == math.ease(0.25, "linear"));
 			assert(0.5, 0 == math.ease(0.5, "linear"));
@@ -233,7 +233,7 @@ return {
 			assert(1, 0 == math.ease(1, "linear"));
 		end);
 
-		crystal.test.add("Quadratic easing", function()
+		crystal.test.add("Can ease value (quadratic)", function()
 			assert(0 == math.ease(0, "inQuadratic"));
 			assert(0.0625 == math.ease(0.25, "inQuadratic"));
 			assert(0.25 == math.ease(0.5, "inQuadratic"));
@@ -246,7 +246,7 @@ return {
 			assert(1 == math.ease(1, "outQuadratic"));
 		end);
 
-		crystal.test.add("Cubic easing", function()
+		crystal.test.add("Can ease value (cubic)", function()
 			assert(0 == math.ease(0, "inCubic"));
 			assert(0.015625 == math.ease(0.25, "inCubic"));
 			assert(0.125 == math.ease(0.5, "inCubic"));
@@ -259,7 +259,7 @@ return {
 			assert(1 == math.ease(1, "outCubic"));
 		end);
 
-		crystal.test.add("Quartic easing", function()
+		crystal.test.add("Can ease value (quartic)", function()
 			assert(0 == math.ease(0, "inQuartic"));
 			assert(0.00390625 == math.ease(0.25, "inQuartic"));
 			assert(0.0625 == math.ease(0.5, "inQuartic"));
@@ -272,7 +272,7 @@ return {
 			assert(1 == math.ease(1, "outQuartic"));
 		end);
 
-		crystal.test.add("Quintic easing", function()
+		crystal.test.add("Can ease value (quintic)", function()
 			assert(0 == math.ease(0, "inQuintic"));
 			assert(0.0009765625 == math.ease(0.25, "inQuintic"));
 			assert(0.03125 == math.ease(0.5, "inQuintic"));
@@ -285,7 +285,7 @@ return {
 			assert(1 == math.ease(1, "outQuintic"));
 		end);
 
-		crystal.test.add("Bounce easing", function()
+		crystal.test.add("Can ease value (bounce)", function()
 			assert(0 == math.ease(0, "inBounce"));
 			for i = 0, 100 do
 				assert(0 <= math.ease(i / 100, "inBounce"));
