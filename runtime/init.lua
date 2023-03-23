@@ -35,6 +35,7 @@ local add_module = function(name, path)
 	end
 end
 
+add_module("math", "modules/math");
 add_module("string", "modules/string");
 add_module("table", "modules/table");
 add_module("oop", "modules/oop");

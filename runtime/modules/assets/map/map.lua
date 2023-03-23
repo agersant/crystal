@@ -1,5 +1,4 @@
 local Alias = require("utils/Alias");
-local MathUtils = require("utils/MathUtils");
 local Colors = require("resources/Colors");
 local Diamond = require("diamond");
 
@@ -77,15 +76,15 @@ Map.build_mesh = function(self)
 		for xy, gid in ipairs(layer) do
 			local polygons = self.gid_to_collision[gid];
 			if polygons then
-				local tile_x, tile_y = MathUtils.indexToXY(xy - 1, self.width);
+				local tile_x, tile_y = math.index_to_xy(xy - 1, self.width);
 				local x = tile_x * self.tile_width;
 				local y = tile_y * self.tile_height;
 				for _, polygon in ipairs(polygons) do
 					local vertices = {};
 					for _, vert in ipairs(polygon) do
 						table.push(vertices, {
-							x + MathUtils.round(vert.x),
-							y + MathUtils.round(vert.y),
+							x + math.round(vert.x),
+							y + math.round(vert.y),
 						});
 					end
 					builder:add_polygon(tile_x, tile_y, vertices);
@@ -139,14 +138,14 @@ Map.spawn_entities = function(self, ecs)
 			if tileset and tile_id then
 				local batch = batches[tileset];
 				local quad = quads[tileset];
-				local tx, ty = MathUtils.indexToXY(tile_id, tileset:tiles_per_row());
+				local tx, ty = math.index_to_xy(tile_id, tileset:tiles_per_row());
 				quad:setViewport(
 					tx * tileset:tile_width(),
 					ty * tileset:tile_height(),
 					tileset:tile_width(),
 					tileset:tile_height()
 				);
-				local x, y = MathUtils.indexToXY(xy - 1, self.width);
+				local x, y = math.index_to_xy(xy - 1, self.width);
 				x = x * self.tile_width;
 				y = y * self.tile_height;
 				batch:add(quad, x, y);

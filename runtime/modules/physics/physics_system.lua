@@ -1,6 +1,5 @@
 local Fixture = require("modules/physics/fixture");
 local Colors = require("resources/Colors");
-local MathUtils = require("utils/MathUtils");
 
 ---@class PhysicsSystem : System
 ---@field private _world love.World
@@ -109,8 +108,8 @@ PhysicsSystem.draw_debug = function(self, viewport)
 		for body in pairs(self.with_body:components(crystal.Body)) do
 			local body = body:inner();
 			local x, y = body:getX(), body:getY();
-			x = MathUtils.round(x);
-			y = MathUtils.round(y);
+			x = math.round(x);
+			y = math.round(y);
 			for _, fixture in ipairs(body:getFixtures()) do
 				local color = self:fixture_color(fixture);
 				self:draw_shape(viewport, x, y, fixture:getShape(), color);

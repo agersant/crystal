@@ -1,5 +1,3 @@
-local MathUtils = require("utils/MathUtils");
-
 local SwitcherTransition = Class("SwitcherTransition");
 
 SwitcherTransition.init = function(self, duration, easing)
@@ -83,7 +81,7 @@ SwitcherTransition.computeDesiredSize = function(self)
 	end
 
 	local t = self:getProgress();
-	return MathUtils.lerp(t, fromWidth, toWidth), MathUtils.lerp(t, fromHeight, toHeight);
+	return math.lerp(fromWidth, toWidth, t), math.lerp(fromHeight, toHeight, t);
 end
 
 SwitcherTransition.draw = function(self, width, height)

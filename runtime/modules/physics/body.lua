@@ -1,5 +1,3 @@
-local MathUtils = require("utils/MathUtils");
-
 ---@alias Layer { damping: number }
 
 ---@class Body
@@ -174,7 +172,7 @@ end
 ---@return number
 Body.distance_to = function(self, target_x, target_y)
 	local x, y = self:position();
-	return MathUtils.distance(x, y, target_x, target_y);
+	return math.distance(x, y, target_x, target_y);
 end
 
 ---@param target_x number
@@ -182,7 +180,7 @@ end
 ---@return number
 Body.distance_squared_to = function(self, target_x, target_y)
 	local x, y = self:position();
-	return MathUtils.distance2(x, y, target_x, target_y);
+	return math.distance_squared(x, y, target_x, target_y);
 end
 
 --#region Tests

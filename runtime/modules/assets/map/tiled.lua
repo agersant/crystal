@@ -1,5 +1,3 @@
-local MathUtils = require("utils/MathUtils");
-
 -- Tileset loader
 crystal.assets.add_loader("lua", {
 	can_load = function(path)
@@ -23,18 +21,18 @@ crystal.assets.add_loader("lua", {
 					if object.shape == "polygon" then
 						local polygon = {};
 						for _, vertex in ipairs(object.polygon) do
-							local x = MathUtils.round(object.x + vertex.x);
-							local y = MathUtils.round(object.y + vertex.y);
+							local x = math.round(object.x + vertex.x);
+							local y = math.round(object.y + vertex.y);
 							table.push(polygon, { x = x, y = y });
 						end
 						tileset:add_collision(tile.id, polygon);
 					end
 					if object.shape == "rectangle" then
 						local polygon = {};
-						local x = MathUtils.round(object.x);
-						local y = MathUtils.round(object.y);
-						local w = MathUtils.round(object.width);
-						local h = MathUtils.round(object.height);
+						local x = math.round(object.x);
+						local y = math.round(object.y);
+						local w = math.round(object.width);
+						local h = math.round(object.height);
 						table.push(polygon, { x = x, y = y });
 						table.push(polygon, { x = x + w, y = y });
 						table.push(polygon, { x = x + w, y = y + h });

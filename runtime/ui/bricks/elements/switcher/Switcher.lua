@@ -1,7 +1,6 @@
 local BasicJoint = require("ui/bricks/core/BasicJoint");
 local Container = require("ui/bricks/core/Container");
 local Padding = require("ui/bricks/core/Padding");
-local MathUtils = require("utils/MathUtils");
 local SwitcherTransition = require("ui/bricks/elements/switcher/SwitcherTransition");
 
 local SwitcherJoint = Class("SwitcherJoint", BasicJoint);

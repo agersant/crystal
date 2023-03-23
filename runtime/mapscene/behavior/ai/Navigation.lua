@@ -1,7 +1,6 @@
 local AlignGoal = require("mapscene/behavior/ai/AlignGoal");
 local EntityGoal = require("mapscene/behavior/ai/EntityGoal");
 local PositionGoal = require("mapscene/behavior/ai/PositionGoal");
-local MathUtils = require("utils/MathUtils");
 
 local Navigation = Class("Navigation", crystal.Behavior);
 
@@ -29,7 +28,7 @@ local navigate = function(self, map, goal, body, movement)
 		end
 		local waypointX, waypointY = waypoint[1], waypoint[2];
 		local x, y = body:position();
-		local distToWaypoint2 = MathUtils.distance2(x, y, waypointX, waypointY);
+		local distToWaypoint2 = math.distance_squared(x, y, waypointX, waypointY);
 		local epsilon = movement:speed() * self:delta_time();
 		if distToWaypoint2 >= epsilon * epsilon then
 			local deltaX, deltaY = waypointX - x, waypointY - y;

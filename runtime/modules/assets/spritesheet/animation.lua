@@ -1,5 +1,4 @@
 local Sequence = require("modules/assets/spritesheet/sequence");
-local MathUtils = require("utils/MathUtils");
 
 ---@class Animation
 ---@field private loop boolean
@@ -31,7 +30,7 @@ Animation.sequence = function(self, rotation)
 	local min_delta = math.huge;
 	local sequence;
 	for iter_rotation, iter_sequence in pairs(self.sequences) do
-		local delta = math.abs(MathUtils.angleDifference(rotation, iter_rotation));
+		local delta = math.abs(math.angle_delta(rotation, iter_rotation));
 		if delta < min_delta then
 			min_delta = delta;
 			sequence = iter_sequence;

@@ -1,7 +1,6 @@
 local Knob = require("knob");
 local features = require("features");
 local Colors = require("resources/Colors");
-local MathUtils = require("utils/MathUtils");
 
 local Knob = setmetatable({}, {
 	__index = function(_, k)
@@ -310,7 +309,7 @@ LiveTune.read_hardware_value = function(self, knob_index, initial_value, min, ma
 		self.knob:write(cc_index, (initial_value - min) / (max - min));
 		return initial_value;
 	else
-		return MathUtils.lerp(raw_value, min, max);
+		return math.lerp(min, max, raw_value);
 	end
 end
 

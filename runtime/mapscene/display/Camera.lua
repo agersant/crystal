@@ -1,6 +1,5 @@
 local features = require("features");
 local Colors = require("resources/Colors");
-local MathUtils = require("utils/MathUtils");
 
 local Camera = Class("Camera");
 
@@ -8,8 +7,8 @@ local computeAveragePosition = function(self, trackedEntities)
 	local tx, ty = 0, 0;
 	for _, entity in ipairs(trackedEntities) do
 		local x, y = entity:position();
-		tx = tx + MathUtils.round(x);
-		ty = ty + MathUtils.round(y);
+		tx = tx + math.round(x);
+		ty = ty + math.round(y);
 	end
 	tx = tx / #trackedEntities;
 	ty = ty / #trackedEntities;
@@ -20,12 +19,12 @@ local clampPosition = function(self, tx, ty, screenW, screenH)
 	if self._mapWidth <= screenW then
 		tx = self._mapWidth / 2;
 	else
-		tx = MathUtils.clamp(screenW / 2, tx, self._mapWidth - screenW / 2);
+		tx = math.clamp(tx, screenW / 2, self._mapWidth - screenW / 2);
 	end
 	if self._mapHeight <= screenH then
 		ty = self._mapHeight / 2;
 	else
-		ty = MathUtils.clamp(screenH / 2, ty, self._mapHeight - screenH / 2);
+		ty = math.clamp(ty, screenH / 2, self._mapHeight - screenH / 2);
 	end
 	return tx, ty;
 end
@@ -78,7 +77,7 @@ Camera.getExactRenderOffset = function(self)
 end
 
 Camera.getRoundedRenderOffset = function(self)
-	return MathUtils.round(self._renderOffsetX), MathUtils.round(self._renderOffsetY);
+	return math.round(self._renderOffsetX), math.round(self._renderOffsetY);
 end
 
 Camera.getSubpixelOffset = function(self)
@@ -108,10 +107,10 @@ Camera.update = function(self, trackedEntities)
 		self._previousZoom = z;
 	else
 		if math.abs(self._x - tx) > self._scrollingBuffer then
-			newX = MathUtils.clamp(tx - self._scrollingBuffer, self._x, tx + self._scrollingBuffer);
+			newX = math.clamp(self._x, tx - self._scrollingBuffer, tx + self._scrollingBuffer);
 		end
 		if math.abs(self._y - ty) > self._scrollingBuffer then
-			newY = MathUtils.clamp(ty - self._scrollingBuffer, self._y, ty + self._scrollingBuffer);
+			newY = math.clamp(self._y, ty - self._scrollingBuffer, ty + self._scrollingBuffer);
 		end
 	end
 

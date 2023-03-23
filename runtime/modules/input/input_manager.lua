@@ -1,4 +1,3 @@
-local MathUtils = require("utils/MathUtils");
 local InputPlayer = require("modules/input/input_player");
 
 ---@alias AxisToButton { pressed_range: { [1]: number, [2]: number}, stickiness: number }

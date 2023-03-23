@@ -1,5 +1,4 @@
 local Alias = require("utils/Alias");
-local MathUtils = require("utils/MathUtils");
 
 ---@class Thread
 ---@field private _coroutine coroutine
@@ -155,6 +154,7 @@ Thread.defer = function(self, deferred_function)
 	table.push(self.deferred_functions, deferred_function);
 end
 
+-- TODO replace with timelines / curves?
 ---@return Thread
 Thread.tween = function(self, from, to, duration, easing, callback, arg)
 	return self:thread(function(self)
@@ -162,6 +162,7 @@ Thread.tween = function(self, from, to, duration, easing, callback, arg)
 	end);
 end
 
+-- TODO replace with timelines / curves?
 Thread.wait_tween = function(self, from, to, duration, easing, callback, arg)
 	assert(duration >= 0);
 	if duration == 0 then
@@ -175,7 +176,7 @@ Thread.wait_tween = function(self, from, to, duration, easing, callback, arg)
 	local start_time = self._script:time();
 	while self._script:time() <= start_time + duration do
 		local t = (self._script:time() - start_time) / duration;
-		local t = MathUtils.ease(t, easing);
+		local t = math.ease(t, easing);
 		local current_value = from + t * (to - from);
 		if arg then
 			callback(arg, current_value);

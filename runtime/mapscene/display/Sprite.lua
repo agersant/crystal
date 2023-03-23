@@ -1,5 +1,4 @@
 local Drawable = require("mapscene/display/Drawable");
-local MathUtils = require("utils/MathUtils");
 
 local Sprite = Class("Sprite", Drawable);
 
@@ -36,8 +35,8 @@ Sprite.draw = function(self)
 	if not self._image then
 		return;
 	end
-	local x = MathUtils.round(self._x);
-	local y = MathUtils.round(self._y);
+	local x = math.round(self._x);
+	local y = math.round(self._y);
 	love.graphics.draw(self._image, self._quad, x + self._offsetX, y + self._offsetY);
 end
 

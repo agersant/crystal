@@ -1,5 +1,4 @@
 local Drawable = require("mapscene/display/Drawable");
-local MathUtils = require("utils/MathUtils");
 
 local WorldWidget = Class("WorldWidget", Drawable);
 
@@ -27,8 +26,8 @@ WorldWidget.draw = function(self)
 	WorldWidget.super.draw(self);
 	if self._widget then
 		local width, height = self._widget:getSize();
-		local x = MathUtils.round(self._x - width / 2);
-		local y = MathUtils.round(self._y - height / 2);
+		local x = math.round(self._x - width / 2);
+		local y = math.round(self._y - height / 2);
 		love.graphics.push("all");
 		love.graphics.translate(x, y);
 		self._widget:draw();

@@ -1,6 +1,5 @@
 local features = require("features");
 local Terminal = require("modules/cmd/terminal")
-local MathUtils = require("utils/MathUtils");
 
 ---@class Constants
 ---@field value any
@@ -77,7 +76,7 @@ Constants.set = function(self, name, value)
 	assert(type(constant.value) == type(value));
 	local value = value;
 	if type(value) == "number" then
-		value = MathUtils.clamp(constant.min, value, constant.max);
+		value = math.clamp(value, constant.min, constant.max);
 	end
 	constant.value = value;
 end
