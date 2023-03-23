@@ -1,6 +1,6 @@
 ---
 parent: crystal.table
-grand_parent: API Reference
+grand_parent: Lua Extensions
 nav_order: 1
 ---
 

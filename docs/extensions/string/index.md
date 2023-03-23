@@ -1,10 +1,10 @@
 ---
-parent: API Reference
+parent: Lua Extensions
 has_children: true
 has_toc: false
 ---
 
-# crystal.string
+# String Extensions
 
 This module contains utility functions for string manipulation. All functions are registered on the global `string` table and can be accessed as `string.example(my_string)` or as `my_string:example()`.
 

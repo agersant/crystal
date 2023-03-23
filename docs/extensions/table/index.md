@@ -1,10 +1,10 @@
 ---
-parent: API Reference
+parent: Lua Extensions
 has_children: true
 has_toc: false
 ---
 
-# crystal.table
+# Table Extensions
 
 This module contains utility functions for table operations. All functions are registered on the global `table` table and can be accessed as `table.example(my_table)`.
 

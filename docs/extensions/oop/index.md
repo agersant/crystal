@@ -1,10 +1,10 @@
 ---
-parent: API Reference
+parent: Lua Extensions
 has_children: false
 has_toc: false
 ---
 
-# crystal.oop
+# OOP (Object Oriented Programming)
 
 Most of Crystal features use classes, and expects your own game code to work the same way. The concept of classes in Crystal is implemented using Lua metatables.
 
