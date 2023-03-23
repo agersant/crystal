@@ -6,6 +6,8 @@ nav_order: 2
 
 # Lua Extensions
 
+## Modules
+
 | Name             | Description                                                   |
 | :--------------- | :------------------------------------------------------------ |
 | [oop](oop)       | Allows you to define classes for Object Oriented Programming. |

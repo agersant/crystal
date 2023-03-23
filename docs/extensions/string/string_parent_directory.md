@@ -1,5 +1,5 @@
 ---
-parent: crystal.string
+parent: String Extensions
 grand_parent: Lua Extensions
 nav_order: 1
 ---

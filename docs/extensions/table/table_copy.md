@@ -1,5 +1,5 @@
 ---
-parent: crystal.table
+parent: Table Extensions
 grand_parent: Lua Extensions
 nav_order: 1
 ---
