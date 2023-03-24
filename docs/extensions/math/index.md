@@ -22,6 +22,7 @@ This module contains mathematical utility functions. All functions are registere
 | math.angle_delta       | Returns the shortest rotation between two angles.                                  |
 | math.angle_to_cardinal | Converts an angle into the closest cardinal directions (including intercardinals). |
 | math.clamp             | Clamps a number between a minimum and maximum value.                               |
+| math.cross_product     | Computes the length of the cross product between two `(x, y, 0)` 3D vectors.       |
 | math.damp              | Exponential decay interpolation.                                                   |
 | math.distance          | Computes the distance between two 2D points.                                       |
 | math.distance_squared  | Computes the squared distance between two 2D points.                               |
