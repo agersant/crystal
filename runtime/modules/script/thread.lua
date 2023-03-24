@@ -176,7 +176,7 @@ Thread.wait_tween = function(self, from, to, duration, easing, callback, arg)
 	local start_time = self._script:time();
 	while self._script:time() <= start_time + duration do
 		local t = (self._script:time() - start_time) / duration;
-		local t = math.ease(t, easing);
+		local t = easing(t);
 		local current_value = from + t * (to - from);
 		if arg then
 			callback(arg, current_value);

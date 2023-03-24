@@ -2,7 +2,7 @@ local SwitcherTransition = Class("SwitcherTransition");
 
 SwitcherTransition.init = function(self, duration, easing)
 	self._duration = duration or 0;
-	self._easing = easing or "outQuadratic";
+	self._easing = easing or math.ease_out_quadratic;
 	self._script = crystal.Script:new();
 	self._progress = 0;
 	self._from = nil;
