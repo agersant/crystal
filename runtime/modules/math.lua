@@ -19,6 +19,10 @@ math.dot_product = function(x1, y1, x2, y2)
 	return x1 * x2 + y1 * y2;
 end
 
+math.cross_product = function(x1, y1, x2, y2)
+	return x1 * y2 - y1 * x2;
+end
+
 math.length_squared = function(x, y)
 	return x * x + y * y;
 end
@@ -47,12 +51,9 @@ math.distance = function(x1, y1, x2, y2)
 end
 
 math.angle_between = function(x1, y1, x2, y2)
-	local n1 = math.length(x1, y1);
-	local n2 = math.length(x2, y2);
-	assert(n1 > 0);
-	assert(n2 > 0);
+	local cp = math.cross_product(x1, y1, x2, y2);
 	local dp = math.dot_product(x1, y1, x2, y2);
-	return math.acos(dp / (n1 * n2));
+	return math.atan2(cp, dp);
 end
 
 math.angle_delta = function(angle1, angle2)
@@ -253,9 +254,10 @@ return {
 
 		crystal.test.add("Can compute angle between vectors", function()
 			assert(math.deg(math.angle_between(0, 1, 0, 2)) == 0);
-			assert(math.deg(math.angle_between(0, 1, 2, 0)) == 90);
+			assert(math.deg(math.angle_between(0, 1, 2, 0)) == -90);
 			assert(math.deg(math.angle_between(2, 0, 0, 1)) == 90);
-			assert(math.deg(math.angle_between(0, 1, 0, -3)) == 180);
+			assert(math.deg(math.angle_between(0, 2, -3, 0)) == 90);
+			assert(math.deg(math.angle_between(0, 1, 0, -3)) == -180);
 		end);
 
 		crystal.test.add("Can compute delta between angles", function()
