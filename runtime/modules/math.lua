@@ -1,3 +1,5 @@
+local pow = math.pow;
+
 math.tau = 2 * math.pi;
 
 math.index_to_xy = function(index, width)
@@ -90,8 +92,6 @@ math.damp = function(from, to, smoothing, dt)
 	assert(dt >= 0);
 	return math.lerp(from, to, 1 - math.pow(smoothing, dt));
 end
-
-local pow = math.pow;
 
 math.ease_linear = function(t)
 	assert(t >= 0 and t <= 1);
