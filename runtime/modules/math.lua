@@ -201,21 +201,21 @@ return {
 		end);
 
 		crystal.test.add("Can clamp numbers", function()
-			assert(2 == math.clamp(2, 0, 5));
-			assert(0 == math.clamp(-2, 0, 5));
-			assert(5 == math.clamp(12, 0, 5));
+			assert(math.clamp(2, 0, 5) == 2);
+			assert(math.clamp(-2, 0, 5) == 0);
+			assert(math.clamp(12, 0, 5) == 5);
 		end);
 
 		crystal.test.add("Can compute angle between vectors", function()
-			assert(0 == math.deg(math.angle_between(0, 1, 0, 2)));
-			assert(90 == math.deg(math.angle_between(0, 1, 2, 0)));
-			assert(90 == math.deg(math.angle_between(2, 0, 0, 1)));
-			assert(180 == math.deg(math.angle_between(0, 1, 0, -3)));
+			assert(math.deg(math.angle_between(0, 1, 0, 2)) == 0);
+			assert(math.deg(math.angle_between(0, 1, 2, 0)) == 90);
+			assert(math.deg(math.angle_between(2, 0, 0, 1)) == 90);
+			assert(math.deg(math.angle_between(0, 1, 0, -3)) == 180);
 		end);
 
 		crystal.test.add("Can compute delta between angles", function()
 			local epsilon = 0.0001;
-			assert(0 == math.angle_delta(0, math.rad(0)));
+			assert(math.angle_delta(0, math.rad(0)) == 0);
 			assert(math.abs(math.rad(-40) - math.angle_delta(math.rad(40), math.rad(0))) < epsilon);
 			assert(math.abs(math.rad(20) - math.angle_delta(math.rad(-40), math.rad(-20))) < epsilon);
 			assert(math.abs(math.rad(-180) - math.angle_delta(math.rad(0), math.rad(180))) < epsilon);
@@ -237,96 +237,96 @@ return {
 		end);
 
 		crystal.test.add("Can damp value", function()
-			assert(10 == math.damp(10, 20, 0, 0));
-			assert(20 == math.damp(10, 20, 0, 0.5));
-			assert(20 == math.damp(10, 20, 0, 1));
+			assert(math.damp(10, 20, 0, 0) == 10);
+			assert(math.damp(10, 20, 0, 0.5) == 20);
+			assert(math.damp(10, 20, 0, 1) == 20);
 
-			assert(10 == math.damp(10, 20, 1, 0));
-			assert(10 == math.damp(10, 20, 1, 0.5));
-			assert(10 == math.damp(10, 20, 1, 1));
+			assert(math.damp(10, 20, 1, 0) == 10);
+			assert(math.damp(10, 20, 1, 0.5) == 10);
+			assert(math.damp(10, 20, 1, 1) == 10);
 
-			assert(10 == math.damp(10, 20, 0.5, 0));
-			assert(15 == math.damp(10, 20, 0.5, 1));
-			assert(17.5 == math.damp(10, 20, 0.5, 2));
+			assert(math.damp(10, 20, 0.5, 0) == 10);
+			assert(math.damp(10, 20, 0.5, 1) == 15);
+			assert(math.damp(10, 20, 0.5, 2) == 17.5);
 
-			assert(10 == math.damp(10, 20, 0.75, 0));
-			assert(12.5 == math.damp(10, 20, 0.75, 1));
+			assert(math.damp(10, 20, 0.75, 0) == 10);
+			assert(math.damp(10, 20, 0.75, 1) == 12.5);
 		end);
 
 		crystal.test.add("Can ease value (linear)", function()
-			assert(0, 0 == math.ease_linear(0));
-			assert(0.25, 0 == math.ease_linear(0.25));
-			assert(0.5, 0 == math.ease_linear(0.5));
-			assert(0.75, 0 == math.ease_linear(0.75));
-			assert(1, 0 == math.ease_linear(1));
+			assert(math.ease_linear(0) == 0);
+			assert(math.ease_linear(0.25) == 0.25);
+			assert(math.ease_linear(0.5) == 0.5);
+			assert(math.ease_linear(0.75) == 0.75);
+			assert(math.ease_linear(1) == 1);
 		end);
 
 		crystal.test.add("Can ease value (quadratic)", function()
-			assert(0 == math.ease_in_quadratic(0));
-			assert(0.0625 == math.ease_in_quadratic(0.25));
-			assert(0.25 == math.ease_in_quadratic(0.5));
-			assert(0.5625 == math.ease_in_quadratic(0.75));
-			assert(1 == math.ease_in_quadratic(1));
-			assert(0 == math.ease_out_quadratic(0));
-			assert(0.4375 == math.ease_out_quadratic(0.25));
-			assert(0.75 == math.ease_out_quadratic(0.5));
-			assert(0.9375 == math.ease_out_quadratic(0.75));
-			assert(1 == math.ease_out_quadratic(1));
+			assert(math.ease_in_quadratic(0) == 0);
+			assert(math.ease_in_quadratic(0.25) == 0.0625);
+			assert(math.ease_in_quadratic(0.5) == 0.25);
+			assert(math.ease_in_quadratic(0.75) == 0.5625);
+			assert(math.ease_in_quadratic(1) == 1);
+			assert(math.ease_out_quadratic(0) == 0);
+			assert(math.ease_out_quadratic(0.25) == 0.4375);
+			assert(math.ease_out_quadratic(0.5) == 0.75);
+			assert(math.ease_out_quadratic(0.75) == 0.9375);
+			assert(math.ease_out_quadratic(1) == 1);
 		end);
 
 		crystal.test.add("Can ease value (cubic)", function()
-			assert(0 == math.ease_in_cubic(0));
-			assert(0.015625 == math.ease_in_cubic(0.25));
-			assert(0.125 == math.ease_in_cubic(0.5));
-			assert(0.421875 == math.ease_in_cubic(0.75));
-			assert(1 == math.ease_in_cubic(1));
-			assert(0 == math.ease_out_cubic(0));
-			assert(0.578125 == math.ease_out_cubic(0.25));
-			assert(0.875 == math.ease_out_cubic(0.5));
-			assert(0.984375 == math.ease_out_cubic(0.75));
-			assert(1 == math.ease_out_cubic(1));
+			assert(math.ease_in_cubic(0) == 0);
+			assert(math.ease_in_cubic(0.25) == 0.015625);
+			assert(math.ease_in_cubic(0.5) == 0.125);
+			assert(math.ease_in_cubic(0.75) == 0.421875);
+			assert(math.ease_in_cubic(1) == 1);
+			assert(math.ease_out_cubic(0) == 0);
+			assert(math.ease_out_cubic(0.25) == 0.578125);
+			assert(math.ease_out_cubic(0.5) == 0.875);
+			assert(math.ease_out_cubic(0.75) == 0.984375);
+			assert(math.ease_out_cubic(1) == 1);
 		end);
 
 		crystal.test.add("Can ease value (quartic)", function()
-			assert(0 == math.ease_in_quartic(0));
-			assert(0.00390625 == math.ease_in_quartic(0.25));
-			assert(0.0625 == math.ease_in_quartic(0.5));
-			assert(0.31640625 == math.ease_in_quartic(0.75));
-			assert(1 == math.ease_in_quartic(1));
-			assert(0 == math.ease_out_quartic(0));
-			assert(0.68359375 == math.ease_out_quartic(0.25));
-			assert(0.9375 == math.ease_out_quartic(0.5));
-			assert(0.99609375 == math.ease_out_quartic(0.75));
-			assert(1 == math.ease_out_quartic(1));
+			assert(math.ease_in_quartic(0) == 0);
+			assert(math.ease_in_quartic(0.25) == 0.00390625);
+			assert(math.ease_in_quartic(0.5) == 0.0625);
+			assert(math.ease_in_quartic(0.75) == 0.31640625);
+			assert(math.ease_in_quartic(1) == 1);
+			assert(math.ease_out_quartic(0) == 0);
+			assert(math.ease_out_quartic(0.25) == 0.68359375);
+			assert(math.ease_out_quartic(0.5) == 0.9375);
+			assert(math.ease_out_quartic(0.75) == 0.99609375);
+			assert(math.ease_out_quartic(1) == 1);
 		end);
 
 		crystal.test.add("Can ease value (quintic)", function()
-			assert(0 == math.ease_in_quintic(0));
-			assert(0.0009765625 == math.ease_in_quintic(0.25));
-			assert(0.03125 == math.ease_in_quintic(0.5));
-			assert(0.2373046875 == math.ease_in_quintic(0.75));
-			assert(1 == math.ease_in_quintic(1));
-			assert(0 == math.ease_out_quintic(0));
-			assert(0.7626953125 == math.ease_out_quintic(0.25));
-			assert(0.96875 == math.ease_out_quintic(0.5));
-			assert(0.9990234375 == math.ease_out_quintic(0.75));
-			assert(1 == math.ease_out_quintic(1));
+			assert(math.ease_in_quintic(0) == 0);
+			assert(math.ease_in_quintic(0.25) == 0.0009765625);
+			assert(math.ease_in_quintic(0.5) == 0.03125);
+			assert(math.ease_in_quintic(0.75) == 0.2373046875);
+			assert(math.ease_in_quintic(1) == 1);
+			assert(math.ease_out_quintic(0) == 0);
+			assert(math.ease_out_quintic(0.25) == 0.7626953125);
+			assert(math.ease_out_quintic(0.5) == 0.96875);
+			assert(math.ease_out_quintic(0.75) == 0.9990234375);
+			assert(math.ease_out_quintic(1) == 1);
 		end);
 
 		crystal.test.add("Can ease value (bounce)", function()
-			assert(0 == math.ease_in_bounce(0));
+			assert(math.ease_in_bounce(0) == 0);
 			for i = 0, 100 do
 				assert(math.ease_in_bounce(i / 100) >= 0);
 				assert(math.ease_in_bounce(i / 100) <= 1);
 			end
-			assert(1 == math.ease_in_bounce(1));
+			assert(math.ease_in_bounce(1) == 1);
 
-			assert(0 == math.ease_out_bounce(0));
+			assert(math.ease_out_bounce(0) == 0);
 			for i = 0, 100 do
 				assert(math.ease_out_bounce(i / 100) >= 0);
 				assert(math.ease_out_bounce(i / 100) <= 1);
 			end
-			assert(1 == math.ease_out_bounce(1));
+			assert(math.ease_out_bounce(1) == 1);
 		end);
 
 		--#endregion
