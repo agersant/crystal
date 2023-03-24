@@ -108,6 +108,15 @@ math.ease_out_quadratic = function(t)
 	return -t * (t - 2);
 end
 
+math.ease_in_out_quadratic = function(t)
+	assert(t >= 0 and t <= 1);
+	if t < 0.5 then
+		return 2 * t * t;
+	else
+		return 1 - pow(-2 * t + 2, 2) / 2;
+	end
+end
+
 math.ease_in_cubic = function(t)
 	assert(t >= 0 and t <= 1);
 	return pow(t, 3);
@@ -117,6 +126,15 @@ math.ease_out_cubic = function(t)
 	assert(t >= 0 and t <= 1);
 	t = t - 1;
 	return 1 + pow(t, 3);
+end
+
+math.ease_in_out_cubic = function(t)
+	assert(t >= 0 and t <= 1);
+	if t < 0.5 then
+		return 4 * t * t * t;
+	else
+		return 1 - pow(-2 * t + 2, 3) / 2;
+	end
 end
 
 math.ease_in_quartic = function(t)
@@ -130,6 +148,15 @@ math.ease_out_quartic = function(t)
 	return 1 - pow(t, 4);
 end
 
+math.ease_in_out_quartic = function(t)
+	assert(t >= 0 and t <= 1);
+	if t < 0.5 then
+		return 8 * t * t * t * t;
+	else
+		return 1 - pow(-2 * t + 2, 4) / 2;
+	end
+end
+
 math.ease_in_quintic = function(t)
 	assert(t >= 0 and t <= 1);
 	return pow(t, 5);
@@ -139,6 +166,15 @@ math.ease_out_quintic = function(t)
 	assert(t >= 0 and t <= 1);
 	t = t - 1;
 	return 1 + pow(t, 5);
+end
+
+math.ease_in_out_quintic = function(t)
+	assert(t >= 0 and t <= 1);
+	if t < 0.5 then
+		return 16 * t * t * t * t * t;
+	else
+		return 1 - pow(-2 * t + 2, 5) / 2;
+	end
 end
 
 math.ease_in_bounce = function(t)
@@ -184,6 +220,15 @@ math.ease_out_bounce = function(t)
 		return math.lerp(0.9934, 0.9846, (t - 0.92) / (0.96 - 0.92));
 	else
 		return math.lerp(0.9846, 1, (t - 0.96) / (1.0 - 0.96));
+	end
+end
+
+math.ease_in_out_bounce = function(t)
+	assert(t >= 0 and t <= 1);
+	if t < 0.5 then
+		return (1 - math.ease_out_bounce(1 - 2 * t)) / 2;
+	else
+		return (1 + math.ease_out_bounce(2 * t - 1)) / 2;
 	end
 end
 
@@ -261,72 +306,47 @@ return {
 			assert(math.ease_linear(1) == 1);
 		end);
 
-		crystal.test.add("Can ease value (quadratic)", function()
-			assert(math.ease_in_quadratic(0) == 0);
-			assert(math.ease_in_quadratic(0.25) == 0.0625);
-			assert(math.ease_in_quadratic(0.5) == 0.25);
-			assert(math.ease_in_quadratic(0.75) == 0.5625);
-			assert(math.ease_in_quadratic(1) == 1);
-			assert(math.ease_out_quadratic(0) == 0);
-			assert(math.ease_out_quadratic(0.25) == 0.4375);
-			assert(math.ease_out_quadratic(0.5) == 0.75);
-			assert(math.ease_out_quadratic(0.75) == 0.9375);
-			assert(math.ease_out_quadratic(1) == 1);
-		end);
-
-		crystal.test.add("Can ease value (cubic)", function()
-			assert(math.ease_in_cubic(0) == 0);
-			assert(math.ease_in_cubic(0.25) == 0.015625);
-			assert(math.ease_in_cubic(0.5) == 0.125);
-			assert(math.ease_in_cubic(0.75) == 0.421875);
-			assert(math.ease_in_cubic(1) == 1);
-			assert(math.ease_out_cubic(0) == 0);
-			assert(math.ease_out_cubic(0.25) == 0.578125);
-			assert(math.ease_out_cubic(0.5) == 0.875);
-			assert(math.ease_out_cubic(0.75) == 0.984375);
-			assert(math.ease_out_cubic(1) == 1);
-		end);
-
-		crystal.test.add("Can ease value (quartic)", function()
-			assert(math.ease_in_quartic(0) == 0);
-			assert(math.ease_in_quartic(0.25) == 0.00390625);
-			assert(math.ease_in_quartic(0.5) == 0.0625);
-			assert(math.ease_in_quartic(0.75) == 0.31640625);
-			assert(math.ease_in_quartic(1) == 1);
-			assert(math.ease_out_quartic(0) == 0);
-			assert(math.ease_out_quartic(0.25) == 0.68359375);
-			assert(math.ease_out_quartic(0.5) == 0.9375);
-			assert(math.ease_out_quartic(0.75) == 0.99609375);
-			assert(math.ease_out_quartic(1) == 1);
-		end);
-
-		crystal.test.add("Can ease value (quintic)", function()
-			assert(math.ease_in_quintic(0) == 0);
-			assert(math.ease_in_quintic(0.25) == 0.0009765625);
-			assert(math.ease_in_quintic(0.5) == 0.03125);
-			assert(math.ease_in_quintic(0.75) == 0.2373046875);
-			assert(math.ease_in_quintic(1) == 1);
-			assert(math.ease_out_quintic(0) == 0);
-			assert(math.ease_out_quintic(0.25) == 0.7626953125);
-			assert(math.ease_out_quintic(0.5) == 0.96875);
-			assert(math.ease_out_quintic(0.75) == 0.9990234375);
-			assert(math.ease_out_quintic(1) == 1);
+		crystal.test.add("Can ease value (power functions)", function()
+			local functions = {
+				math.ease_in_quadratic,
+				math.ease_out_quadratic,
+				math.ease_in_out_quadratic,
+				math.ease_in_cubic,
+				math.ease_out_cubic,
+				math.ease_in_out_cubic,
+				math.ease_in_quartic,
+				math.ease_out_quartic,
+				math.ease_in_out_quartic,
+				math.ease_in_quintic,
+				math.ease_out_quintic,
+				math.ease_in_out_quintic,
+			};
+			for _, f in pairs(functions) do
+				assert(f(0) == 0);
+				assert(f(1) == 1);
+				for i = 0, 100 do
+					assert(f(i / 100) >= 0);
+					if i > 0 then
+						assert(f(i / 100) > f((i - 1) / 100));
+					end
+				end
+			end
 		end);
 
 		crystal.test.add("Can ease value (bounce)", function()
-			assert(math.ease_in_bounce(0) == 0);
-			for i = 0, 100 do
-				assert(math.ease_in_bounce(i / 100) >= 0);
-				assert(math.ease_in_bounce(i / 100) <= 1);
+			local functions = {
+				math.ease_in_bounce,
+				math.ease_out_bounce,
+				math.ease_in_out_bounce,
+			};
+			for _, f in pairs(functions) do
+				assert(f(0) == 0);
+				for i = 0, 100 do
+					assert(f(i / 100) >= 0);
+					assert(f(i / 100) <= 1);
+				end
+				assert(f(1) == 1);
 			end
-			assert(math.ease_in_bounce(1) == 1);
-
-			assert(math.ease_out_bounce(0) == 0);
-			for i = 0, 100 do
-				assert(math.ease_out_bounce(i / 100) >= 0);
-				assert(math.ease_out_bounce(i / 100) <= 1);
-			end
-			assert(math.ease_out_bounce(1) == 1);
 		end);
 
 		--#endregion
