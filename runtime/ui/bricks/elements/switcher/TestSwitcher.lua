@@ -6,7 +6,7 @@ local SwitcherTransition = require("ui/bricks/elements/switcher/SwitcherTransiti
 local TestTransition = Class:test("TestTransition", SwitcherTransition);
 
 TestTransition.init = function(self)
-	TestTransition.super.init(self, 10, "linear");
+	TestTransition.super.init(self, 10, math.ease_linear);
 end
 
 TestTransition.computeDesiredSize = function(self)
