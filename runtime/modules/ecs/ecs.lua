@@ -243,17 +243,13 @@ end
 ---@param value any
 ECS.add_context = function(self, name, value)
 	assert(type(name) == "string");
-	assert(table.is_empty(self._entities));
-	self.contexts[name] = function() return value; end;
+	self.contexts[name] = value;
 end
 
 ---@param name string
 ---@return any
 ECS.context = function(self, name)
-	if not self.contexts[name] then
-		return nil;
-	end
-	return self.contexts[name]();
+	return self.contexts[name];
 end
 
 ---@param event Event

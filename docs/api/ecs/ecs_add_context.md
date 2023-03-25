@@ -13,9 +13,6 @@ There are two ways to retrieve these values at a later time:
 1. Calling the [entity:context](entity_context) method (eg. `my_entity:context("my_context")`)
 2. Calling the [ecs:context](ecs_context) method (eg. `my_ecs:context("my_context")`)
 
-{: .warning}
-This function can only be called before spawning any entity. It will error when called while any entity exists.
-
 ## Usage
 
 ```lua
