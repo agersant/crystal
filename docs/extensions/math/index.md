@@ -16,23 +16,23 @@ This module contains mathematical utility functions. All functions are registere
 
 ## Functions
 
-| Name                   | Description                                                                        |
-| :--------------------- | :--------------------------------------------------------------------------------- |
-| math.angle_between     | Returns the angle between two vectors.                                             |
-| math.angle_delta       | Returns the shortest rotation between two angles.                                  |
-| math.angle_to_cardinal | Converts an angle into the closest cardinal directions (including intercardinals). |
-| math.clamp             | Clamps a number between a minimum and maximum value.                               |
-| math.cross_product     | Computes the length of the cross product between two `(x, y, 0)` 3D vectors.       |
-| math.damp              | Exponential decay interpolation.                                                   |
-| math.distance          | Computes the distance between two 2D points.                                       |
-| math.distance_squared  | Computes the squared distance between two 2D points.                               |
-| math.dot_product       | Computes the dot product between 2D vectors.                                       |
-| math.index_to_xy       | Converts an integer into `(x, y)` coordinates into a 2D array.                     |
-| math.length            | Computes the length of a 2D vector.                                                |
-| math.length_squared    | Computes the squared length of a 2D vector.                                        |
-| math.lerp              | Linear interpolation.                                                              |
-| math.normalize         | Scales a 2D vector to length 1.                                                    |
-| math.round             | Rounds a number to the nearest integer.                                            |
+| Name                                             | Description                                                                        |
+| :----------------------------------------------- | :--------------------------------------------------------------------------------- |
+| [math.angle_between](math_angle_between)         | Returns the shortest rotation between two vectors.                                 |
+| [math.angle_delta](math_angle_delta)             | Returns the shortest rotation between two angles.                                  |
+| [math.angle_to_cardinal](math_angle_to_cardinal) | Converts an angle into the closest cardinal directions (including intercardinals). |
+| [math.clamp](math_clamp)                         | Clamps a number between a minimum and maximum value.                               |
+| [math.cross_product](math_cross_product)         | Computes the length of the cross product between two `(x, y, 0)` 3D vectors.       |
+| [math.damp](math_damp)                           | Exponential decay interpolation.                                                   |
+| [math.distance](math_distance)                   | Computes the distance between two 2D points.                                       |
+| [math.distance_squared](math_distance_squared)   | Computes the squared distance between two 2D points.                               |
+| [math.dot_product](math_dot_product)             | Computes the dot product between 2D vectors.                                       |
+| [math.index_to_xy](math_index_to_xy)             | Converts an integer into coordinates into a 2D array.                              |
+| [math.length](math_length)                       | Computes the length of a 2D vector.                                                |
+| [math.length_squared](math_length_squared)       | Computes the squared length of a 2D vector.                                        |
+| [math.lerp](math_lerp)                           | Linear interpolation between two numbers.                                          |
+| [math.normalize](math_normalize)                 | Scales a 2D vector to length 1.                                                    |
+| [math.round](math_round)                         | Rounds a number to the nearest integer.                                            |
 
 ### Easing Functions
 
