@@ -19,9 +19,9 @@ registry:add_hook("lua", {
 return {
 	module_api = {
 		add_loader = function(...) registry:add_loader(...) end,
-		get = function(...) return registry:get(...) end,
+		get = function(path) return registry:get(path) end,
 		load = function(...) registry:load(...) end,
-		is_loaded = function(...) return registry:is_loaded(...) end,
+		is_loaded = function(path) return registry:is_loaded(path) end,
 		unload = function(...) registry:unload(...) end,
 		unload_all = function(...) registry:unload_all(...) end,
 		unload_context = function(...) registry:unload_context(...) end,
