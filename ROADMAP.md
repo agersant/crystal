@@ -9,10 +9,10 @@
 - [x] Gamepad support
 - [x] Input auto-repeats
 - [x] Docs website in readme
-- [ ] Document build-in commands
+- [ ] Document built-in commands
 - [ ] API revamp: `crystal.*` globals + docs + private functions as ---@package or ---@private
   - [ ] ai
-  - [ ] assets
+  - [x] assets
   - [x] cmd
   - [x] const
   - [x] ecs
@@ -27,7 +27,7 @@
   - [x] tool
   - [ ] ui
   - [x] oop
-  - [ ] mathutils
+  - [x] mathutils
   - [x] stringutils
   - [x] tableutils
   - [ ] window
