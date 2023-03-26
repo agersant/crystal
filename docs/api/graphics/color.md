@@ -63,7 +63,7 @@ These colors are used by Crystal to draw debug information on top of the game, s
 ### Tools Palette
 
 Unstable
-{: .label-yellow}
+{: .label .label-yellow}
 
 These colors are used by crystal to draw interactive tools like the [console](/crystal/tools/console).
 
