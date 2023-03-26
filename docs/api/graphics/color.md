@@ -37,28 +37,28 @@ local turquoise_transparent  = crystal.Color:new(0x30D5C8, 0.5);
 
 These colors are used by Crystal to draw debug information on top of the game, such as collision shapes or navigation polygons.
 
-| Name                                  | RGB        | Preview                                                                                                        |
-| :------------------------------------ | :--------- | :------------------------------------------------------------------------------------------------------------- |
-| `crystal.Color.sunflower`             | `0xFFC312` | <div style="width: 24px; height:24px; background: #FFC312; border: 2px solid #444; border-radius: 4px;"></div> |
-| `crystal.Color.radiant_yellow`        | `0xF79F1F` | <div style="width: 24px; height:24px; background: #F79F1F; border: 2px solid #444; border-radius: 4px;"></div> |
-| `crystal.Color.puffins_bill`          | `0xEE5A24` | <div style="width: 24px; height:24px; background: #EE5A24; border: 2px solid #444; border-radius: 4px;"></div> |
-| `crystal.Color.red_pigment`           | `0xEA2027` | <div style="width: 24px; height:24px; background: #EA2027; border: 2px solid #444; border-radius: 4px;"></div> |
-| `crystal.Color.energos`               | `0xC4E538` | <div style="width: 24px; height:24px; background: #C4E538; border: 2px solid #444; border-radius: 4px;"></div> |
-| `crystal.Color.android_green`         | `0xA3CB38` | <div style="width: 24px; height:24px; background: #A3CB38; border: 2px solid #444; border-radius: 4px;"></div> |
-| `crystal.Color.pixelated_grass`       | `0x009432` | <div style="width: 24px; height:24px; background: #009432; border: 2px solid #444; border-radius: 4px;"></div> |
-| `crystal.Color.turkish_aqua`          | `0x006266` | <div style="width: 24px; height:24px; background: #006266; border: 2px solid #444; border-radius: 4px;"></div> |
-| `crystal.Color.blue_martina`          | `0x12CBC4` | <div style="width: 24px; height:24px; background: #12CBC4; border: 2px solid #444; border-radius: 4px;"></div> |
-| `crystal.Color.mediterranean_sea`     | `0x1289A7` | <div style="width: 24px; height:24px; background: #1289A7; border: 2px solid #444; border-radius: 4px;"></div> |
-| `crystal.Color.merchant_marine_blue`  | `0x0652DD` | <div style="width: 24px; height:24px; background: #0652DD; border: 2px solid #444; border-radius: 4px;"></div> |
-| `crystal.Color.leagues_under_the_sea` | `0x1B1464` | <div style="width: 24px; height:24px; background: #1B1464; border: 2px solid #444; border-radius: 4px;"></div> |
-| `crystal.Color.lavender_rose`         | `0xFDA7DF` | <div style="width: 24px; height:24px; background: #FDA7DF; border: 2px solid #444; border-radius: 4px;"></div> |
-| `crystal.Color.lavender_tea`          | `0xD980FA` | <div style="width: 24px; height:24px; background: #D980FA; border: 2px solid #444; border-radius: 4px;"></div> |
-| `crystal.Color.forgotten_purple`      | `0x9980FA` | <div style="width: 24px; height:24px; background: #9980FA; border: 2px solid #444; border-radius: 4px;"></div> |
-| `crystal.Color.circumorbital_ring`    | `0x5758BB` | <div style="width: 24px; height:24px; background: #5758BB; border: 2px solid #444; border-radius: 4px;"></div> |
-| `crystal.Color.bara_red`              | `0xED4C67` | <div style="width: 24px; height:24px; background: #ED4C67; border: 2px solid #444; border-radius: 4px;"></div> |
-| `crystal.Color.very_berry`            | `0xB53471` | <div style="width: 24px; height:24px; background: #B53471; border: 2px solid #444; border-radius: 4px;"></div> |
-| `crystal.Color.hollyhock`             | `0x833471` | <div style="width: 24px; height:24px; background: #833471; border: 2px solid #444; border-radius: 4px;"></div> |
-| `crystal.Color.magenta_purple`        | `0x6F1E51` | <div style="width: 24px; height:24px; background: #6F1E51; border: 2px solid #444; border-radius: 4px;"></div> |
+| Name                                  | Value                                                                                                                                           |
+| :------------------------------------ | :---------------------------------------------------------------------------------------------------------------------------------------------- |
+| `crystal.Color.sunflower`             | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #FFC312; border: 2px solid #444; border-radius: 4px;"></span>`0xFFC312` |
+| `crystal.Color.radiant_yellow`        | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #F79F1F; border: 2px solid #444; border-radius: 4px;"></span>`0xF79F1F` |
+| `crystal.Color.puffins_bill`          | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #EE5A24; border: 2px solid #444; border-radius: 4px;"></span>`0xEE5A24` |
+| `crystal.Color.red_pigment`           | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #EA2027; border: 2px solid #444; border-radius: 4px;"></span>`0xEA2027` |
+| `crystal.Color.energos`               | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #C4E538; border: 2px solid #444; border-radius: 4px;"></span>`0xC4E538` |
+| `crystal.Color.android_green`         | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #A3CB38; border: 2px solid #444; border-radius: 4px;"></span>`0xA3CB38` |
+| `crystal.Color.pixelated_grass`       | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #009432; border: 2px solid #444; border-radius: 4px;"></span>`0x009432` |
+| `crystal.Color.turkish_aqua`          | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #006266; border: 2px solid #444; border-radius: 4px;"></span>`0x006266` |
+| `crystal.Color.blue_martina`          | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #12CBC4; border: 2px solid #444; border-radius: 4px;"></span>`0x12CBC4` |
+| `crystal.Color.mediterranean_sea`     | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #1289A7; border: 2px solid #444; border-radius: 4px;"></span>`0x1289A7` |
+| `crystal.Color.merchant_marine_blue`  | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #0652DD; border: 2px solid #444; border-radius: 4px;"></span>`0x0652DD` |
+| `crystal.Color.leagues_under_the_sea` | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #1B1464; border: 2px solid #444; border-radius: 4px;"></span>`0x1B1464` |
+| `crystal.Color.lavender_rose`         | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #FDA7DF; border: 2px solid #444; border-radius: 4px;"></span>`0xFDA7DF` |
+| `crystal.Color.lavender_tea`          | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #D980FA; border: 2px solid #444; border-radius: 4px;"></span>`0xD980FA` |
+| `crystal.Color.forgotten_purple`      | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #9980FA; border: 2px solid #444; border-radius: 4px;"></span>`0x9980FA` |
+| `crystal.Color.circumorbital_ring`    | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #5758BB; border: 2px solid #444; border-radius: 4px;"></span>`0x5758BB` |
+| `crystal.Color.bara_red`              | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #ED4C67; border: 2px solid #444; border-radius: 4px;"></span>`0xED4C67` |
+| `crystal.Color.very_berry`            | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #B53471; border: 2px solid #444; border-radius: 4px;"></span>`0xB53471` |
+| `crystal.Color.hollyhock`             | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #833471; border: 2px solid #444; border-radius: 4px;"></span>`0x833471` |
+| `crystal.Color.magenta_purple`        | <span class="d-inline-block p-2 mr-1 v-align-middle" style="background: #6F1E51; border: 2px solid #444; border-radius: 4px;"></span>`0x6F1E51` |
 
 ### Tools Palette
 
