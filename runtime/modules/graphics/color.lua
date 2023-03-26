@@ -24,6 +24,7 @@ Color.init = function(self, rgb, alpha)
 	self[4] = alpha or 1;
 end
 
+---@private
 ---@return Color
 Color.copy = function(self)
 	local copy = Color:new();
@@ -31,6 +32,7 @@ Color.copy = function(self)
 	return copy;
 end
 
+---@private
 ---@return number red
 ---@return number green
 ---@return number blue
