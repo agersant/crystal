@@ -1,5 +1,10 @@
+---@class Color
 local Color = Class("Color");
 
+---@param hex number
+---@return number red
+---@return number green
+---@return number blue
 local hex_to_rgb = function(hex)
 	assert(type(hex) == "number");
 	local r = bit.rshift(bit.band(hex, 0xFF0000), 16) / 255;
@@ -12,6 +17,9 @@ Color.init = function(self)
 	self[1], self[2], self[3], self[4] = 0, 0, 0, 1;
 end
 
+---@param hex number
+---@param alpha? number
+---@return Color
 Color.hex = function(self, hex, alpha)
 	local self = Color:new();
 	assert(type(hex) == "number");
@@ -21,17 +29,25 @@ Color.hex = function(self, hex, alpha)
 	return self;
 end
 
+---@return Color
 Color.copy = function(self)
 	local copy = Color:new();
 	copy[1], copy[2], copy[3], copy[4] = self[1], self[2], self[3], self[4];
 	return copy;
 end
 
+---@return number red
+---@return number green
+---@return number blue
+---@return number alpha
 Color.components = function(self)
 	return self[1], self[2], self[3], self[4];
 end
 
+---@param alpha number
+---@return Color
 Color.alpha = function(self, alpha)
+	assert(type(alpha) == "number");
 	local copy = self:copy();
 	copy[4] = alpha;
 	return copy;
