@@ -87,3 +87,8 @@ local orange = crystal.Color:new(0xFFA500);
 love.graphics.setColor(orange);
 love.graphics.rectangle("fill", 20, 50, 60, 120);
 ```
+
+```lua
+love.graphics.setColor(crystal.Color.energos);
+love.graphics.rectangle("fill", 20, 50, 60, 120);
+```
