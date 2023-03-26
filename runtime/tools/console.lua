@@ -1,6 +1,5 @@
 local features = require("features");
 local Terminal = require("modules/cmd/terminal");
-local Colors = require("resources/Colors");
 
 ---@class Console: Tool
 ---@field private terminal Terminal
@@ -56,20 +55,20 @@ Console.draw = function(self)
 	local width = love.graphics.getWidth() - 2 * margin_x;
 	local height = font:getHeight() + 2 * padding_y;
 	local rounding = 4;
-	love.graphics.setColor(Colors.greyA);
+	love.graphics.setColor(crystal.Color.greyA);
 	love.graphics.rectangle("fill", input_box_x, input_box_y, width, height, rounding, rounding);
 
 	-- Draw chevron
 	local chevron_x = input_box_x + padding_x;
 	local chevron_y = input_box_y + padding_y;
 	local chevron = "> ";
-	love.graphics.setColor(Colors.white);
+	love.graphics.setColor(crystal.Color.white);
 	love.graphics.print(chevron, chevron_x, chevron_y);
 
 	-- Draw input text
 	local text_x = chevron_x + font:getWidth(chevron);
 	local text_y = chevron_y;
-	love.graphics.setColor(Colors.white);
+	love.graphics.setColor(crystal.Color.white);
 	love.graphics.print(self.terminal:raw_input(), text_x, text_y);
 
 	-- Draw caret
@@ -78,7 +77,7 @@ Console.draw = function(self)
 	local caret_y = text_y;
 	local caret_alpha = .5 * (1 + math.sin(love.timer.getTime() * 1000 / 100));
 	caret_alpha = caret_alpha * caret_alpha * caret_alpha;
-	love.graphics.setColor(Colors.white:alpha(caret_alpha));
+	love.graphics.setColor(crystal.Color.white:alpha(caret_alpha));
 	love.graphics.rectangle("fill", caret_x, caret_y, 1, font:getHeight());
 
 	-- Draw autocomplete
@@ -128,7 +127,7 @@ Console.draw_autocomplete = function(self, x, y)
 	local y = y + margin;
 	local width = suggestions_width + 2 * padding_x;
 	local height = #autocomplete.lines * font:getHeight() + 2 * padding_y;
-	love.graphics.setColor(Colors.greyA);
+	love.graphics.setColor(crystal.Color.greyA);
 	love.graphics.rectangle("fill", x, y, width, height, 2, 2);
 
 	-- Draw arrow
@@ -139,17 +138,17 @@ Console.draw_autocomplete = function(self, x, y)
 	);
 
 	-- Draw content
-	love.graphics.setColor(Colors.white);
+	love.graphics.setColor(crystal.Color.white);
 	local suggestion_y = y + padding_y;
 	for i, suggestion in ipairs(autocomplete.lines) do
 		local suggestion_y = suggestion_y + (i - 1) * font:getHeight();
 		if autocomplete.state == "command" and i == self.terminal:autocomplete_cursor() then
-			love.graphics.setColor(Colors.grey0);
+			love.graphics.setColor(crystal.Color.grey0);
 			love.graphics.rectangle("fill", x, suggestion_y, width, font:getHeight());
-			love.graphics.setColor(Colors.cyan);
+			love.graphics.setColor(crystal.Color.cyan);
 			love.graphics.rectangle("fill", x, suggestion_y, cursor_width, font:getHeight());
 		end
-		love.graphics.setColor(Colors.white);
+		love.graphics.setColor(crystal.Color.white);
 		love.graphics.print(suggestion.text, suggestion_x, suggestion_y);
 	end
 end

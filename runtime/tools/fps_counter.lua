@@ -1,5 +1,3 @@
-local Colors = require("resources/Colors");
-
 ---@class FPSCounter: Tool
 ---@field private font love.Font
 ---@field private frame_durations number[]
@@ -39,13 +37,13 @@ end
 FPSCounter.draw = function(self)
 	local width = num_frames_recorded;
 
-	love.graphics.setColor(Colors.greyB);
+	love.graphics.setColor(crystal.Color.greyB);
 	love.graphics.rectangle("fill", padding_x, padding_y, width, height);
 
 	local x = padding_x + width - 1;
 	local y = padding_y + height;
 
-	love.graphics.setColor(Colors.cyan);
+	love.graphics.setColor(crystal.Color.cyan);
 	for i = #self.frame_durations, 1, -1 do
 		local fps = math.min(1 / self.frame_durations[i], max_fps);
 		love.graphics.rectangle("fill", x, y, 1, -height * fps / max_fps);
@@ -55,7 +53,7 @@ FPSCounter.draw = function(self)
 	x = padding_x + text_padding_x;
 	y = padding_y + text_padding_y;
 	love.graphics.setFont(self.font);
-	love.graphics.setColor(Colors.greyD);
+	love.graphics.setColor(crystal.Color.greyD);
 	love.graphics.print(self.text, x, y);
 end
 

@@ -1,6 +1,5 @@
 local Knob = require("knob");
 local features = require("features");
-local Colors = require("resources/Colors");
 
 local Knob = setmetatable({}, {
 	__index = function(_, k)
@@ -27,16 +26,16 @@ local Text = require("ui/bricks/elements/Text");
 local Widget = require("ui/bricks/elements/Widget");
 
 local colors = {
-	title = Colors.greyD,
-	help = Colors.greyD,
-	header_background = Colors.greyA,
-	header_text = Colors.greyD,
-	background = Colors.greyB,
-	knob_inactive = Colors.greyC,
-	knob_active = Colors.cyan,
-	knob_index = Colors.greyD,
-	value_outline = Colors.greyC,
-	value_text = Colors.greyD,
+	title = crystal.Color.greyD,
+	help = crystal.Color.greyD,
+	header_background = crystal.Color.greyA,
+	header_text = crystal.Color.greyD,
+	background = crystal.Color.greyB,
+	knob_inactive = crystal.Color.greyC,
+	knob_active = crystal.Color.cyan,
+	knob_index = crystal.Color.greyD,
+	value_outline = crystal.Color.greyC,
+	value_text = crystal.Color.greyD,
 };
 
 local KnobDonut = Class("KnobDonut", Element);

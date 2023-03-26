@@ -1,5 +1,3 @@
-local Colors = require("resources/Colors");
-
 ---@alias SuggestionsState "command" | "badcommand" | "args"
 
 ---@class Suggestions
@@ -33,7 +31,7 @@ Autocomplete.set_input = function(self, input)
 	elseif not self.command_store:command(input.command) then
 		self.results = {
 			state = "badcommand",
-			lines = { { text = { Colors.red, input.command .. " is not a valid command" } } },
+			lines = { { text = { crystal.Color.red, input.command .. " is not a valid command" } } },
 		};
 	else
 		self.results = {
@@ -59,11 +57,11 @@ Autocomplete.suggest_commands = function(self, input)
 		local pre_match = match.match_start > 1 and match.command:name():sub(1, match.match_start - 1) or "";
 		local in_match = match.command:name():sub(match.match_start, match.match_end);
 		local post_match = match.command:name():sub(match.match_end + 1);
-		table.push(chunks, Colors.greyC);
+		table.push(chunks, crystal.Color.greyC);
 		table.push(chunks, pre_match);
-		table.push(chunks, Colors.greyD);
+		table.push(chunks, crystal.Color.greyD);
 		table.push(chunks, in_match);
-		table.push(chunks, Colors.greyC);
+		table.push(chunks, crystal.Color.greyC);
 		table.push(chunks, post_match);
 		table.push(lines, { text = chunks, command = match.command });
 	end
@@ -94,11 +92,11 @@ Autocomplete.suggest_arg_values = function(self, input)
 
 		local argColor;
 		if type_check_result == true then
-			argColor = Colors.green;
+			argColor = crystal.Color.green;
 		elseif type_check_result == false then
-			argColor = Colors.red;
+			argColor = crystal.Color.red;
 		else
-			argColor = Colors.greyC;
+			argColor = crystal.Color.greyC;
 		end
 		table.push(args, argColor);
 

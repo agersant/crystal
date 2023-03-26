@@ -1,5 +1,4 @@
 local Alias = require("utils/Alias");
-local Colors = require("resources/Colors");
 local Diamond = require("diamond");
 
 ---@class Map

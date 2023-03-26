@@ -6,7 +6,7 @@ nav_exclude: true
 
 # Body:set_rotation
 
-Sets this entity's rotation. A rotation of 0 indicates an entity facing right, positive rotations are interpreted as counter-clockwise.
+Sets this entity's rotation. A rotation of 0 indicates an entity facing right. Positive values indicate clockwise rotation.
 
 {: .note}
 Rotating Body components does not rotate the underlying [love.Body](https://love2d.org/wiki/Body). This allows [colliders](collider) and [sensors](sensor) to remain upright no matter what direction the entity is facing.

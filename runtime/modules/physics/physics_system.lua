@@ -1,5 +1,4 @@
 local Fixture = require("modules/physics/fixture");
-local Colors = require("resources/Colors");
 
 ---@class PhysicsSystem : System
 ---@field private _world love.World
@@ -118,33 +117,33 @@ PhysicsSystem.draw_debug = function(self, viewport)
 	end
 end
 
-local palette = {
-	Colors.sunflower,
-	Colors.energos,
-	Colors.blue_martina,
-	Colors.lavender_rose,
-	Colors.bara_red,
 
-	Colors.puffins_bill,
-	Colors.pixelated_grass,
-	Colors.merchant_marine_blue,
-	Colors.forgotten_purple,
-	Colors.hollyhock,
-
-	Colors.red_pigment,
-	Colors.turkish_aqua,
-	Colors.leagues_under_the_sea,
-	Colors.circumorbital_ring,
-	Colors.magenta_purple,
-
-	Colors.mediterranean_sea,
-};
-
+local palette;
 ---@private
 ---@param fixture love.Fixture
 ---@return { [1]: number, [2]: number, [3]: number }
 PhysicsSystem.fixture_color = function(self, fixture)
 	assert(fixture);
+	if not palette then
+		palette = {
+			crystal.Color.sunflower,
+			crystal.Color.energos,
+			crystal.Color.blue_martina,
+			crystal.Color.lavender_rose,
+			crystal.Color.bara_red,
+			crystal.Color.puffins_bill,
+			crystal.Color.pixelated_grass,
+			crystal.Color.merchant_marine_blue,
+			crystal.Color.forgotten_purple,
+			crystal.Color.hollyhock,
+			crystal.Color.red_pigment,
+			crystal.Color.turkish_aqua,
+			crystal.Color.leagues_under_the_sea,
+			crystal.Color.circumorbital_ring,
+			crystal.Color.magenta_purple,
+			crystal.Color.mediterranean_sea,
+		};
+	end
 	local categories, _, _ = fixture:getFilterData();
 	for i = 0, 15 do
 		if bit.band(categories, bit.lshift(1, i)) > 0 then

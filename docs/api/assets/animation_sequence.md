@@ -8,7 +8,7 @@ nav_exclude: true
 
 Each animation contains multiple sequence, corresponding to the same action being performed in various directions. This function retrieves the [sequence](sequence) closest to a specific rotation.
 
-A rotation of 0 radians corresponds to a character facing right. Positive values indicate counter-clockwise rotation.
+A rotation of 0 radians corresponds to a character facing right. Positive values indicate clockwise rotation.
 
 ## Usage
 

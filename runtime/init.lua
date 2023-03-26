@@ -45,6 +45,7 @@ add_module("assets", "modules/assets");
 add_module("cmd", "modules/cmd");
 add_module("const", "modules/const");
 add_module("ecs", "modules/ecs");
+add_module("graphics", "modules/graphics");
 add_module("input", "modules/input");
 add_module("log", "modules/log");
 add_module("physics", "modules/physics");

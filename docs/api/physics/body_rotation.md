@@ -6,7 +6,7 @@ nav_exclude: true
 
 # Body:rotation
 
-Returns this entity's rotation. A rotation of 0 indicates an entity facing right, positive rotations are interpreted as counter-clockwise.
+Returns this entity's rotation. A rotation of 0 indicates an entity facing right. Positive values indicate clockwise rotation.
 
 ## Usage
 

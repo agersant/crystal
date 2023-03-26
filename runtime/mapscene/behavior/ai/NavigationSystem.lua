@@ -1,5 +1,3 @@
-local Colors = require("resources/Colors");
-
 ---@class NavigationSystem : System
 ---@field private _map Map
 local NavigationSystem = Class("NavigationSystem", crystal.System);
@@ -9,6 +7,8 @@ crystal.cmd.add("showNavmeshOverlay", function() draw_navigation = true; end);
 crystal.cmd.add("hideNavmeshOverlay", function() draw_navigation = false; end);
 
 NavigationSystem.draw_debug = function(self, viewport)
+	local line_color = crystal.Color.lavender_rose;
+	local fill_color = line_color:alpha(.25);
 	if draw_navigation then
 		love.graphics.push("all");
 		love.graphics.setLineWidth(1);
@@ -19,10 +19,10 @@ NavigationSystem.draw_debug = function(self, viewport)
 		local triangles = {};
 		for _, t in ipairs(map:navigation_polygons()) do
 			local vertices = { t[1][1], t[1][2], t[2][1], t[2][2], t[3][1], t[3][2] };
-			love.graphics.setColor(Colors.lavender_rose:alpha(.25));
+			love.graphics.setColor(fill_color);
 			love.graphics.polygon("fill", vertices);
 
-			love.graphics.setColor(Colors.lavender_rose);
+			love.graphics.setColor(line_color);
 			love.graphics.polygon("line", vertices);
 			love.graphics.points(vertices);
 		end

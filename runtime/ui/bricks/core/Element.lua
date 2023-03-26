@@ -1,4 +1,3 @@
-local Colors = require("resources/Colors");
 local Transform = require("ui/bricks/core/Transform");
 local Alias = require("utils/Alias");
 
@@ -8,7 +7,7 @@ Element.init = function(self)
 	self._joint = nil;
 	self._parent = nil;
 	self._transform = Transform:new();
-	self._color = Colors.white;
+	self._color = crystal.Color.white;
 	self._alpha = 1;
 	self._desiredWidth = nil;
 	self._desiredHeight = nil;
@@ -47,8 +46,7 @@ Element.setAlpha = function(self, alpha)
 end
 
 Element.setColor = function(self, color)
-	assert(color);
-	assert(#color == 3);
+	assert(color:inherits_from(crystal.Color));
 	self._color = color;
 end
 

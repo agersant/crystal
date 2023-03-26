@@ -38,7 +38,7 @@ Terminal.init = function(self, command_store, type_store)
 	self._autocomplete_cursor = 0;
 	self.history = { { input = TextInput:new(undo_stack_size) } };
 	self.history_index = 1;
-	self:on_input_changed();
+	self._parsed_input = self:parse(self:raw_input());
 end
 
 Terminal.add_command = function(self, ...)
