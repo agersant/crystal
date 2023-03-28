@@ -2,11 +2,7 @@ local features = require("features");
 local Renderer = require("graphics/Renderer");
 local NavigationSystem = require("mapscene/behavior/ai/NavigationSystem");
 local CameraSystem = require("mapscene/display/CameraSystem");
-local SpriteSystem = require("mapscene/display/SpriteSystem");
-local DrawableSystem = require("mapscene/display/DrawableSystem");
-local WorldWidgetSystem = require("mapscene/display/WorldWidgetSystem");
 local Scene = require("Scene");
-local Alias = require("utils/Alias");
 
 local MapScene = Class("MapScene", Scene);
 
@@ -25,11 +21,9 @@ MapScene.init = function(self, mapName)
 	ecs:add_system(crystal.PhysicsSystem);
 	ecs:add_system(crystal.ScriptSystem);
 	ecs:add_system(crystal.InputSystem);
-	ecs:add_system(SpriteSystem);
-	ecs:add_system(WorldWidgetSystem);
 	ecs:add_system(CameraSystem, self._map, self._renderer:getViewport()); -- (also has after_run_scripts logic)
 	ecs:add_system(NavigationSystem);
-	ecs:add_system(DrawableSystem);
+	ecs:add_system(crystal.DrawSystem);
 
 	self:add_systems();
 
@@ -56,12 +50,14 @@ MapScene.update = function(self, dt)
 
 	self._ecs:update();
 
+	self._ecs:notify_systems("advance_animations", dt);
 	self._ecs:notify_systems("simulate_physics", dt);
 
 	self._ecs:notify_systems("before_run_scripts", dt);
 	self._ecs:notify_systems("run_scripts", dt);
 	self._ecs:notify_systems("handle_inputs", dt);
 	self._ecs:notify_systems("after_run_scripts", dt);
+	self._ecs:notify_systems("update_widgets", dt);
 end
 
 MapScene.draw = function(self)
@@ -75,9 +71,9 @@ MapScene.draw = function(self)
 	local sceneSizeX, sceneSizeY = camera:getScreenSize();
 
 	self._renderer:draw(function()
-		self._ecs:notify_systems("beforeEntitiesDraw");
-		self._ecs:notify_systems("duringEntitiesDraw");
-		self._ecs:notify_systems("afterEntitiesDraw");
+		self._ecs:notify_systems("before_draw_entities");
+		self._ecs:notify_systems("draw_entities");
+		self._ecs:notify_systems("after_draw_entities");
 	end, {
 		subpixelOffsetX = subpixelOffsetX,
 		subpixelOffsetY = subpixelOffsetY,

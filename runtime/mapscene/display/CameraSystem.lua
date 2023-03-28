@@ -26,7 +26,7 @@ CameraSystem.after_run_scripts = function(self, dt)
 	self._camera:update(trackedEntities);
 end
 
-CameraSystem.beforeEntitiesDraw = function(self)
+CameraSystem.before_draw_entities = function(self)
 	local ox, oy = self._camera:getRoundedRenderOffset();
 	love.graphics.translate(ox, oy);
 end

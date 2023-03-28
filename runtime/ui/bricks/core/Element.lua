@@ -75,6 +75,9 @@ Element.getDesiredSize = function(self)
 end
 
 Element.getSize = function(self)
+	if not self._right or not self._left or not self._top or not self._bottom then
+		error("UI Element has no size. Most likely, a call to Element:updateTree() is missing.");
+	end
 	return math.abs(self._right - self._left), math.abs(self._top - self._bottom);
 end
 

@@ -1,3 +1,4 @@
+---@class DrawEffect : Component
 local DrawEffect = Class("DrawEffect", crystal.Component);
 
 DrawEffect.pre = function(self)

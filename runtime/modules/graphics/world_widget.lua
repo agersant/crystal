@@ -1,38 +1,26 @@
-local Drawable = require("mapscene/display/Drawable");
+local Drawable = require("modules/graphics/drawable");
 
+---@class WorldWidget : Drawable
+---@field private widget Widget
 local WorldWidget = Class("WorldWidget", Drawable);
 
 WorldWidget.init = function(self, widget)
+	assert(widget:inherits_from("Widget"));
 	WorldWidget.super.init(self);
-	self._widget = widget;
-	self._x = 0;
-	self._y = 0;
+	self.widget = widget;
 end
 
-WorldWidget.setWidgetPosition = function(self, x, y)
-	assert(x);
-	assert(y);
-	self._x = x;
-	self._y = y;
-end
-
-WorldWidget.updateWidget = function(self, dt)
-	if self._widget then
-		self._widget:updateTree(dt);
-	end
+---@param dt number
+WorldWidget.update_widget = function(self, dt)
+	self.widget:updateTree(dt);
 end
 
 WorldWidget.draw = function(self)
-	WorldWidget.super.draw(self);
-	if self._widget then
-		local width, height = self._widget:getSize();
-		local x = math.round(self._x - width / 2);
-		local y = math.round(self._y - height / 2);
-		love.graphics.push("all");
-		love.graphics.translate(x, y);
-		self._widget:draw();
-		love.graphics.pop();
-	end
+	local width, height = self.widget:getSize();
+	local x = math.round(-width / 2);
+	local y = math.round(-height / 2);
+	love.graphics.translate(x, y);
+	self.widget:draw();
 end
 
 --#region Tests
@@ -45,7 +33,7 @@ crystal.test.add("Draws widget", function(context)
 	local entity = scene:spawn(crystal.Entity);
 	local widget = Image:new();
 	widget:setImageSize(48, 32);
-	entity:add_component(crystal.Body, "dynamic");
+	entity:add_component(crystal.Body);
 	entity:add_component(WorldWidget, widget);
 	entity:set_position(160, 120);
 
