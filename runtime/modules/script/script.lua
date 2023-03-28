@@ -23,7 +23,7 @@ end
 ---@param resume_args any[]
 local pump_thread;
 pump_thread = function(thread, resume_args)
-	assert(not thread:ended())
+	assert(not thread:ended());
 	local self = thread:script();
 	local thread_coroutine = thread:coroutine();
 	local status = coroutine.status(thread_coroutine);

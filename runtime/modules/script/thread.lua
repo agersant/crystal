@@ -69,10 +69,16 @@ Thread.run_deferred_functions = function(self)
 end
 
 Thread.wait_frame = function(self)
+	if coroutine.running() ~= self._coroutine then
+		error("Called `wait_frame` on a thread that is not currently running");
+	end
 	coroutine.yield("wait_frame");
 end
 
 Thread.wait = function(self, seconds)
+	if coroutine.running() ~= self._coroutine then
+		error("Called `wait` on a thread that is not currently running");
+	end
 	local end_time = self._script:time() + seconds;
 	while self._script:time() < end_time do
 		coroutine.yield("wait");
