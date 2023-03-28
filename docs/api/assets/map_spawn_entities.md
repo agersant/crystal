@@ -11,7 +11,7 @@ Spawns entities necessary to display and play within this map.
 This will spawn:
 
 - One entity with:
-  - One drawable component per tile layer per tileset.
+  - One drawable component per tile layer per tileset. The [draw order](/crystal/api/graphics/drawable_set_draw_order) set to `layer_index / 100`.
   - [Collider](/crystal/api/physics/collider) components representing the tile collision data.
 - One entity per Tiled object within object layers. See the [Map](map) overview for more details on how these entities are constructed.
 
