@@ -39,7 +39,7 @@ end);
 
 script:run_thread(function(self)
   local success, hello, world = self:join(my_thread);
-  print(completed);
+  print(success);
   print(hello);
   print(world);
 end);
