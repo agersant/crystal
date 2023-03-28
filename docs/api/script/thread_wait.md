@@ -22,8 +22,6 @@ thread:wait(duration)
 
 ## Examples
 
-````lua
-
 ```lua
 local script = crystal.Script:new();
 
@@ -35,4 +33,4 @@ end);
 script:update(0.8); -- 1.2s left to wait
 script:update(0.8); -- 0.4s left to wait
 script:update(0.8); -- Prints "Waited 2 seconds"
-````
+```
