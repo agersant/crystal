@@ -21,13 +21,10 @@ local compare_drawables = function(a, b)
 	return a:draw_order() < b:draw_order();
 end
 
-DrawSystem.advance_animations = function(self, dt)
+DrawSystem.update_drawables = function(self, dt)
 	for animated_sprite in pairs(self.animated_sprites:components()) do
 		animated_sprite:update_sprite_animation(dt);
 	end
-end
-
-DrawSystem.update_widgets = function(self, dt)
 	for world_widget in pairs(self.world_widgets:components()) do
 		world_widget:update_widget(dt);
 	end

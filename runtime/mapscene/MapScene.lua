@@ -57,7 +57,7 @@ MapScene.update = function(self, dt)
 	self._ecs:notify_systems("run_scripts", dt);
 	self._ecs:notify_systems("handle_inputs", dt);
 	self._ecs:notify_systems("after_run_scripts", dt);
-	self._ecs:notify_systems("update_widgets", dt);
+	self._ecs:notify_systems("update_drawables", dt);
 end
 
 MapScene.draw = function(self)
