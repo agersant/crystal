@@ -33,18 +33,16 @@ end
 --#region Tests
 
 crystal.test.add("Blank sprites don't error", function()
-	assert(false); -- TODO revisit tests
 	local sheet = crystal.assets.get("test-data/blankey.lua");
 	local sprite = Sprite:new(sheet);
 	sprite:draw();
 end);
 
 crystal.test.add("Can draw sprites", function(context)
-	assert(false); -- TODO revisit tests
 	local image = crystal.assets.get("test-data/blankey.png");
 	local sprite = Sprite:new();
-	sprite:setSpritePosition(10, 10);
-	sprite:setFrame(Frame:new(image));
+	sprite:set_draw_offset(10, 10);
+	sprite:set_texture(image);
 	sprite:draw();
 	context:expect_frame("test-data/TestSprite/sprites-can-draw.png");
 end);

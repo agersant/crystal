@@ -58,7 +58,7 @@ end
 AnimatedSprite.playback = function(self, animation, sequence)
 	assert(animation);
 	assert(sequence);
-	local animator = self;
+	local sprite = self;
 	return function(self)
 		local start_time = self:time();
 		local loop = animation:is_looping();
@@ -66,10 +66,10 @@ AnimatedSprite.playback = function(self, animation, sequence)
 		while true do
 			local t = self:time() - start_time;
 			t = loop and (t % duration) or math.min(t, duration);
-			animator.keyframe = sequence:keyframe_at(t);
-			animator:set_texture(animator.spritesheet:image());
-			animator:set_quad(animator.keyframe.quad);
-			animator:set_draw_offset(animator.keyframe.x, animator.keyframe.y);
+			sprite.keyframe = sequence:keyframe_at(t);
+			sprite:set_texture(sprite.spritesheet:image());
+			sprite:set_quad(sprite.keyframe.quad);
+			sprite:set_draw_offset(sprite.keyframe.x, sprite.keyframe.y);
 			if t >= duration and not loop then
 				break;
 			else
@@ -83,11 +83,10 @@ end
 
 crystal.test.add("Set animation updates current frame", function()
 	local sheet = crystal.assets.get("test-data/blankey.lua");
-	local sprite = Sprite:new();
-	local animator = AnimatedSprite:new(sprite, sheet);
-	assert(not sprite:getFrame());
-	animator:set_animation("hurt");
-	assert(sprite:getFrame());
+	local sprite = AnimatedSprite:new(sheet);
+	assert(not sprite.keyframe);
+	sprite:set_animation("hurt");
+	assert(sprite.keyframe);
 end);
 
 crystal.test.add("Cycles through animation frames", function()
@@ -96,18 +95,15 @@ crystal.test.add("Cycles through animation frames", function()
 	local sheet = crystal.assets.get("test-data/blankey.lua");
 
 	local entity = scene:spawn(crystal.Entity);
-	local sprite = entity:add_component(Sprite);
-	local animator = entity:add_component(AnimatedSprite, sprite, sheet);
-	entity:add_component(crystal.ScriptRunner);
+	local sprite = entity:add_component(AnimatedSprite, sheet);
 
-	animator:play_animation("floating");
-
-	local animation = sheet:getAnimation("floating");
-	local sequence = animation:getSequence(0);
-	assert(sequence:getFrameAtTime(0) ~= sequence:getFrameAtTime(0.5));
+	sprite:play_animation("floating");
+	local animation = sheet:animation("floating");
+	local sequence = animation:sequence(0);
+	assert(sequence:keyframe_at(0) ~= sequence:keyframe_at(0.5));
 
 	for t = 0, 500 do
-		assert(sprite:getFrame() == sequence:getFrameAtTime(t * 1 / 60):getFrame());
+		assert(sprite.keyframe == sequence:keyframe_at((t * 1 / 60) % sequence:duration()));
 		scene:update(1 / 60);
 	end
 end);
@@ -118,8 +114,7 @@ crystal.test.add("Animation blocks script", function()
 	local sheet = crystal.assets.get("test-data/blankey.lua");
 
 	local entity = scene:spawn(crystal.Entity);
-	local sprite = entity:add_component(Sprite);
-	entity:add_component(AnimatedSprite, sprite, sheet);
+	entity:add_component(AnimatedSprite, sheet);
 	entity:add_component(crystal.ScriptRunner);
 
 	local sentinel = false;
@@ -141,8 +136,7 @@ crystal.test.add("Looping animation thread never ends", function()
 	local sheet = crystal.assets.get("test-data/blankey.lua");
 
 	local entity = scene:spawn(crystal.Entity);
-	local sprite = entity:add_component(Sprite);
-	entity:add_component(AnimatedSprite, sprite, sheet);
+	entity:add_component(AnimatedSprite, sheet);
 	entity:add_component(crystal.ScriptRunner);
 
 	local sentinel = false;

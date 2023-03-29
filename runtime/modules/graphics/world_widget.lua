@@ -5,7 +5,7 @@ local Drawable = require("modules/graphics/drawable");
 local WorldWidget = Class("WorldWidget", Drawable);
 
 WorldWidget.init = function(self, widget)
-	assert(widget:inherits_from("Widget"));
+	assert(widget:inherits_from("Element"));
 	WorldWidget.super.init(self);
 	self.widget = widget;
 end
@@ -27,14 +27,14 @@ end
 
 local Image = require("ui/bricks/elements/Image");
 
-crystal.test.add("Draws widget", function(context)
+crystal.test.add("Can draw world widget", function(context)
 	local MapScene = require("mapscene/MapScene");
 	local scene = MapScene:new("test-data/empty.lua");
 	local entity = scene:spawn(crystal.Entity);
 	local widget = Image:new();
 	widget:setImageSize(48, 32);
 	entity:add_component(crystal.Body);
-	entity:add_component(WorldWidget, widget);
+	entity:add_component(crystal.WorldWidget, widget);
 	entity:set_position(160, 120);
 
 	scene:update(0);
