@@ -5,10 +5,10 @@ local Drawable = require("modules/graphics/drawable");
 ---@field private quad love.Quad
 local Sprite = Class("Sprite", Drawable);
 
-Sprite.init = function(self)
+Sprite.init = function(self, texture, quad)
 	Sprite.super.init(self);
-	self.texture = nil;
-	self.quad = nil;
+	self.texture = texture;
+	self.quad = quad;
 end
 
 ---@param texture love.Texture

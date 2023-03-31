@@ -52,13 +52,13 @@ DrawSystem.draw_entities = function(self)
 		love.graphics.translate(math.round(x), math.round(y));
 
 		for effect, _ in pairs(effects) do
-			effect:pre();
+			effect:pre_draw();
 		end
 
 		drawable:draw();
 
 		for effect, _ in pairs(effects) do
-			effect:post();
+			effect:post_draw();
 		end
 
 		love.graphics.pop();

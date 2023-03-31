@@ -153,7 +153,7 @@ Map.spawn_entities = function(self, ecs)
 		for _, batch in pairs(batches) do
 			if batch:getCount() > 0 then
 				local drawable = map_entity:add_component(crystal.SpriteBatch, batch);
-				drawable:set_draw_order("add", layer_index / 100);
+				drawable:set_draw_order_modifier("add", layer_index / 100);
 			end
 		end
 	end
