@@ -15,12 +15,15 @@ The constructor for SpriteBatch expects one optional argument, a [love.SpriteBat
 
 ## Methods
 
-| Name             | Description |
-| :--------------- | :---------- |
-| set_sprite_batch |             |
+| Name                                              | Description                                                               |
+| :------------------------------------------------ | :------------------------------------------------------------------------ |
+| [set_sprite_batch](sprite_batch_set_sprite_batch) | Sets the [love.SpriteBatch](https://love2d.org/wiki/SpriteBatch) to draw. |
 
 ## Examples
 
 ```lua
-
+local ecs = crystal.ECS:new();
+local entity = ecs:spawn(crystal.Entity);
+local sprite_batch = love.graphics.newSpriteBatch(crystal.assets.get("assets/tiles.png"), 200);
+entity:add_component(crystal.SpriteBatch, sprite_batch);
 ```
