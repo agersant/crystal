@@ -5,7 +5,7 @@ grand_parent: API Reference
 
 # crystal.DrawEffect
 
-A [Component](/crystal/api/ecs/component) that can affect how [drawables](/crystal/api/graphics/drawable) on this entity are drawn.
+A [Component](/crystal/api/ecs/component) that can affect how [drawables](drawable) on this entity are drawn.
 
 When a [DrawSystem](draw_system) is drawing, it surrounds each `Drawable:draw()` with calls to `pre_draw()` and `post_draw()` on the entities' DrawEffect components. The order in which the draw effects are applied is unspecified.
 
@@ -19,13 +19,23 @@ The constructor for DrawEffect expects no arguments.
 
 ## Methods
 
-| Name      | Description |
-| :-------- | :---------- |
-| post_draw |             |
-| pre_draw  |             |
+| Name        | Description                                                                                                |
+| :---------- | :--------------------------------------------------------------------------------------------------------- |
+| `post_draw` | Method called before drawing [Drawable](drawable) components on this entity. Base implementation is empty. |
+| `pre_draw`  | Method called after drawing [Drawable](drawable) components on this entity. Base implementation is empty.  |
 
 ## Examples
 
-```lua
+This example defines a component which offsets entities vertically to simulate altitude in a top-down 2D game.
 
+```lua
+local Altitude = Class("Altitude", crystal.DrawEffect);
+
+Altitude.init = function(self, altitude)
+	self.altitude = altitude;
+end
+
+Altitude.pre_draw = function(self)
+	love.graphics.translate(0, -self.altitude);
+end
 ```
