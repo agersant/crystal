@@ -17,12 +17,24 @@ The constructor for DrawOrder expects no arguments.
 
 ## Methods
 
-| Name       | Description |
-| :--------- | :---------- |
-| draw_order |             |
+| Name         | Description                                                                          |
+| :----------- | :----------------------------------------------------------------------------------- |
+| `draw_order` | Returns the unmodified draw order (`number`) for drawable components on this entity. |
 
 ## Examples
 
-```lua
+This example defines a component class inheriting from `DrawOrder` to sort entities according to their `Y` position on the screen. This would be useful in a game using top-down perspective.
 
+```lua
+local YDrawOrder = Class("YDrawOrder", crystal.DrawOrder);
+YDrawOrder.draw_order = function(self)
+	local x, y = self:entity():position();
+	return y;
+end
+
+local ecs = crystal.ECS:new();
+local entity = ecs:spawn(crystal.Entity);
+entity:add_component(crystal.Body);
+entity:add_component(crystal.Sprite);
+entity:add_component(YDrawOrder);
 ```
