@@ -5,7 +5,7 @@ grand_parent: API Reference
 
 # crystal.AnimatedSprite
 
-A [Drawable](/crystal/api/graphics/drawable) component that can draw animations from a [Spritesheet](crystal/api/assets/spritesheet).
+A [Drawable](drawable) component that can draw animations from a [Spritesheet](crystal/api/assets/spritesheet).
 
 ## Constructor
 

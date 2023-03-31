@@ -14,14 +14,14 @@ Not every [love.Drawable](https://love2d.org/wiki/Drawable) has a corresponding 
 
 ## Classes
 
-| Name                                      | Description                                                                                                                                   |
-| :---------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------- |
-| [crystal.AnimatedSprite](animated_sprite) | A [Drawable](/crystal/api/graphics/drawable) component that can draw animations from a [Spritesheet](crystal/api/assets/spritesheet).         |
-| [crystal.Color](color)                    | A color, with RGBA components.                                                                                                                |
-| [crystal.Drawable](drawable)              | A base [Component](/crystal/api/ecs/component) for anything that can draw on the screen.                                                      |
-| [crystal.DrawEffect](draw_effect)         | A [Component](/crystal/api/ecs/component) that can affect how [Drawable](/crystal/api/graphics/drawable) components on this entity are drawn. |
-| [crystal.DrawOrder](draw_order)           | A [Component](/crystal/api/ecs/component) that determines in what order entities are drawn.                                                   |
-| [crystal.DrawSystem](draw_system)         | A [System](/crystal/api/ecs/system) that updates and draws [Drawable](/crystal/api/graphics/drawable) components.                             |
-| [crystal.Sprite](sprite)                  | A [Drawable](/crystal/api/graphics/drawable) component that can draw a [love.Texture](https://love2d.org/wiki/Texture).                       |
-| [crystal.SpriteBatch](sprite_batch)       | A [Drawable](/crystal/api/graphics/drawable) component that can draw a [love.SpriteBatch](https://love2d.org/wiki/SpriteBatch).               |
-| [crystal.WorldWidget](world_widget)       | A [Drawable](/crystal/api/graphics/drawable) component that can draw a UI [Widget](/crystal/api/ui/widget).                                   |
+| Name                                      | Description                                                                                                             |
+| :---------------------------------------- | :---------------------------------------------------------------------------------------------------------------------- |
+| [crystal.AnimatedSprite](animated_sprite) | A [Drawable](drawable) component that can draw animations from a [Spritesheet](crystal/api/assets/spritesheet).         |
+| [crystal.Color](color)                    | A color, with RGBA components.                                                                                          |
+| [crystal.Drawable](drawable)              | A base [Component](/crystal/api/ecs/component) for anything that can draw on the screen.                                |
+| [crystal.DrawEffect](draw_effect)         | A [Component](/crystal/api/ecs/component) that can affect how [Drawable](drawable) components on this entity are drawn. |
+| [crystal.DrawOrder](draw_order)           | A [Component](/crystal/api/ecs/component) that determines in what order entities are drawn.                             |
+| [crystal.DrawSystem](draw_system)         | A [System](/crystal/api/ecs/system) that updates and draws [Drawable](drawable) components.                             |
+| [crystal.Sprite](sprite)                  | A [Drawable](drawable) component that can draw a [love.Texture](https://love2d.org/wiki/Texture).                       |
+| [crystal.SpriteBatch](sprite_batch)       | A [Drawable](drawable) component that can draw a [love.SpriteBatch](https://love2d.org/wiki/SpriteBatch).               |
+| [crystal.WorldWidget](world_widget)       | A [Drawable](drawable) component that can draw a UI [Widget](/crystal/api/ui/widget).                                   |
