@@ -15,15 +15,18 @@ The constructor for AnimatedSprite expects one argument, the [Spritesheet](/crys
 
 ## Methods
 
-| Name                    | Description |
-| :---------------------- | :---------- |
-| play_animation          |             |
-| set_animation           |             |
-| sprite_hitbox           |             |
-| update_sprite_animation |             |
+| Name                                                               | Description                                                  |
+| :----------------------------------------------------------------- | :----------------------------------------------------------- |
+| [play_animation](animated_sprite_play_animation)                   | Plays an animation from its beginning.                       |
+| [set_animation](animated_sprite_set_animation)                     | Plays an animation, not restarting if it's already playing.  |
+| [sprite_hitbox](animated_sprite_sprite_hitbox)                     | Returns a named hitbox from the current animation frame.     |
+| [update_sprite_animation](animated_sprite_update_sprite_animation) | Updates the current animation frame drawn by this component. |
 
 ## Examples
 
 ```lua
-
+local ecs = crystal.ECS:new();
+local entity = ecs:spawn(crystal.Entity);
+entity:add_component(crystal.AnimatedSprite, crystal.assets.get("assets/hero.lua"));
+entity:play_animation("idle");
 ```
