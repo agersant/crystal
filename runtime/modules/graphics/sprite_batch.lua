@@ -5,19 +5,21 @@ local Drawable = require("modules/graphics/drawable");
 local SpriteBatch = Class("SpriteBatch", Drawable);
 
 SpriteBatch.init = function(self, batch)
-	assert(batch:typeOf("SpriteBatch"));
+	assert(batch == nil or batch:typeOf("SpriteBatch"));
 	SpriteBatch.super.init(self);
 	self.batch = batch;
 end
 
 ---@param texture love.SpriteBatch
 SpriteBatch.set_sprite_batch = function(self, batch)
-	assert(batch:typeOf("SpriteBatch"));
+	assert(batch == nil or batch:typeOf("SpriteBatch"));
 	self.batch = batch;
 end
 
 SpriteBatch.draw = function(self)
-	love.graphics.draw(self.batch);
+	if self.batch then
+		love.graphics.draw(self.batch);
+	end
 end
 
 return SpriteBatch;

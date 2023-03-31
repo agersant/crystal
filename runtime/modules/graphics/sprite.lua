@@ -13,7 +13,7 @@ end
 
 ---@param texture love.Texture
 Sprite.set_texture = function(self, texture)
-	assert(texture:typeOf("Texture"));
+	assert(texture == nil or texture:typeOf("Texture"));
 	self.texture = texture;
 end
 

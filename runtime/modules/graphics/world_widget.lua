@@ -7,9 +7,9 @@ local Drawable = require("modules/graphics/drawable");
 local WorldWidget = Class("WorldWidget", Drawable);
 
 WorldWidget.init = function(self, widget)
-	assert(widget:inherits_from("Element"));
+	assert(widget == nil or widget:inherits_from("Element"));
 	WorldWidget.super.init(self);
-	self.widget   = widget;
+	self.widget = widget;
 	self.anchor_x = 0.5;
 	self.anchor_y = 0.5;
 end
@@ -23,12 +23,23 @@ WorldWidget.set_widget_anchor = function(self, x, y)
 	self.anchor_y = y;
 end
 
+---@param widget Element
+WorldWidget.set_widget = function(self, widget)
+	assert(widget == nil or widget:inherits_from("Element"));
+	self.widget = widget;
+end
+
 ---@param dt number
 WorldWidget.update_widget = function(self, dt)
-	self.widget:updateTree(dt);
+	if self.widget then
+		self.widget:updateTree(dt);
+	end
 end
 
 WorldWidget.draw = function(self)
+	if not self.widget then
+		return;
+	end
 	local width, height = self.widget:getSize();
 	local x = math.round(-width * self.anchor_x);
 	local y = math.round(-height * self.anchor_y);

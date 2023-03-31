@@ -24,3 +24,4 @@ Not every [love.Drawable](https://love2d.org/wiki/Drawable) has a corresponding 
 | [crystal.DrawSystem](draw_system)         | A [System](/crystal/api/ecs/system) that updates and draws [Drawable](/crystal/api/graphics/drawable) components.                             |
 | [crystal.Sprite](sprite)                  | A [Drawable](/crystal/api/graphics/drawable) component that can draw a [love.Texture](https://love2d.org/wiki/Texture).                       |
 | [crystal.SpriteBatch](sprite_batch)       | A [Drawable](/crystal/api/graphics/drawable) component that can draw a [love.SpriteBatch](https://love2d.org/wiki/SpriteBatch).               |
+| [crystal.WorldWidget](world_widget)       | A [Drawable](/crystal/api/graphics/drawable) component that can draw a UI [Widget](/crystal/api/ui/widget).                                   |
