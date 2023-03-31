@@ -15,13 +15,16 @@ The constructor for Sprite expects two optional arguments, a [love.Texture](http
 
 ## Methods
 
-| Name        | Description |
-| :---------- | :---------- |
-| set_texture |             |
-| set_quad    |             |
+| Name                              | Description                                                                                          |
+| :-------------------------------- | :--------------------------------------------------------------------------------------------------- |
+| [set_texture](sprite_set_texture) | Sets the [love.Texture](https://love2d.org/wiki/Texture) drawn by this component.                    |
+| [set_quad](sprite_set_quad)       | Sets the [love.Quad](https://love2d.org/wiki/Quad) used to crop the texture drawn by this component. |
 
 ## Examples
 
 ```lua
-
+local ecs = crystal.ECS:new();
+local entity = ecs:spawn(crystal.Entity);
+entity:add_component(crystal.Sprite);
+entity:set_texture(crystal.assets.get("assets/strawberry.png"));
 ```
