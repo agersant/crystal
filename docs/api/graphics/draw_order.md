@@ -28,8 +28,8 @@ This example defines a component class inheriting from `DrawOrder` to sort entit
 ```lua
 local YDrawOrder = Class("YDrawOrder", crystal.DrawOrder);
 YDrawOrder.draw_order = function(self)
-	local x, y = self:entity():position();
-	return y;
+  local x, y = self:entity():position();
+  return y;
 end
 
 local ecs = crystal.ECS:new();

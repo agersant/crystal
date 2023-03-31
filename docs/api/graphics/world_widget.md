@@ -26,7 +26,7 @@ The constructor for WorldWidget expects one optional argument, a [Widget](/cryst
 ```lua
 local MyWidget = Class("MyWidget", crystal.Widget);
 MyWidget.init = function(self)
-	MyWidget.super.init(self);
+  MyWidget.super.init(self);
 end
 
 local ecs = crystal.ECS:new();

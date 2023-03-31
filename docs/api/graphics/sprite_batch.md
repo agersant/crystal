@@ -5,7 +5,7 @@ grand_parent: API Reference
 
 # crystal.SpriteBatch
 
-A [Drawable](drawable) component that can draw a [love.Texture](https://love2d.org/wiki/Texture).
+A [Drawable](drawable) component that can draw a [love.SpriteBatch](https://love2d.org/wiki/SpriteBatch).
 
 ## Constructor
 

@@ -7,8 +7,9 @@ grand_parent: API Reference
 
 A [Component](/crystal/api/ecs/component) that can affect how [drawables](drawable) on this entity are drawn.
 
-When a [DrawSystem](draw_system) is drawing, it surrounds each `Drawable:draw()` with calls to `pre_draw()` and `post_draw()` on the entities' DrawEffect components. The order in which the draw effects are applied is unspecified.
+[DrawSystem](draw_system) surrounds each `Drawable:draw()` with calls to `pre_draw()` and `post_draw()` on entities' DrawEffect components. The order in which the draw effects are applied for each Drawable component is unspecified.
 
+{: .note}
 This class is only useful when overriding `pre_draw()` and/or `post_draw()`, as the default implementations are blank. An example usage of this component would be to use `pre_draw()` to call `love.graphics.setShader`(https://love2d.org/wiki/love.graphics.setShader), in order to apply a visual effect to an entity.
 
 ## Constructor
@@ -32,10 +33,10 @@ This example defines a component which offsets entities vertically to simulate a
 local Altitude = Class("Altitude", crystal.DrawEffect);
 
 Altitude.init = function(self, altitude)
-	self.altitude = altitude;
+  self.altitude = altitude;
 end
 
 Altitude.pre_draw = function(self)
-	love.graphics.translate(0, -self.altitude);
+  love.graphics.translate(0, -self.altitude);
 end
 ```
