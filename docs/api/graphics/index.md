@@ -6,11 +6,11 @@ has_toc: false
 
 # crystal.graphics
 
-This modules contains components and related to displaying graphics. It is recommended to use them in combination with a [DrawSystem](draw_system).
+This modules contains components related to displaying graphics. It is recommended to use them in combination with a [DrawSystem](draw_system).
 
 Entities can have any number of [Drawable](drawable) components on them. The order in which they are drawn is decided in part by the presence of a [DrawOrder](draw_order) component, and in part by the [draw order modifier](drawable_set_draw_order_modifier) settings on the drawable. The resulting order may intertwine drawables from multiple entities.
 
-Not every [love.Drawable](https://love2d.org/wiki/Drawable) has a corresponding [Component](/crystal/api/ecs/component). However, making your own [Drawable](drawable) component classes is very easy. You can also overwrite the [draw](drawable_draw) method on drawable instances without even making new classes.
+Not every [love.Drawable](https://love2d.org/wiki/Drawable) has a corresponding Drawable component. However, making your own Drawable component classes is very easy. You can also overwrite the [draw](drawable_draw) method on drawable instances without even making new classes.
 
 ## Classes
 

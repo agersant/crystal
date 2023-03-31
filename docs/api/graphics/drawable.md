@@ -7,6 +7,8 @@ grand_parent: API Reference
 
 A base [Component](/crystal/api/ecs/component) for anything that can draw on the screen.
 
+This base class is of little use without overriding the `draw()` method.
+
 ## Constructor
 
 Like all other components, `Drawable` components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
