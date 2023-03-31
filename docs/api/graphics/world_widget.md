@@ -9,7 +9,7 @@ A [Drawable](drawable) component that can draw a UI [Widget](/crystal/api/ui/wid
 
 ## Constructor
 
-Like all other components, `WorldWidget` components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
+Like all other components, WorldWidget components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
 
 The constructor for WorldWidget expects one optional argument, a [Widget](/crystal/api/ui/widget).
 

@@ -9,7 +9,7 @@ A [Drawable](drawable) component that can draw a [love.Texture](https://love2d.o
 
 ## Constructor
 
-Like all other components, `Sprite` components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
+Like all other components, Sprite components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
 
 The constructor for Sprite expects two optional arguments, a [love.Texture](https://love2d.org/wiki/Texture) and a [love.Quad](https://love2d.org/wiki/Quad).
 

@@ -9,7 +9,7 @@ A [Drawable](drawable) component that can draw animations from a [Spritesheet](c
 
 ## Constructor
 
-Like all other components, `AnimatedSprite` components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
+Like all other components, AnimatedSprite components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
 
 The constructor for AnimatedSprite expects one argument, the [Spritesheet](/crystal/api/assets/spritesheet) to play animations from.
 

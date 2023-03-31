@@ -11,7 +11,7 @@ This base class is of little use without overriding the `draw_order()` method.
 
 ## Constructor
 
-Like all other components, `DrawOrder` components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
+Like all other components, DrawOrder components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
 
 The constructor for DrawOrder expects no arguments.
 

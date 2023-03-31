@@ -13,7 +13,7 @@ This class is only useful when overriding `pre_draw()` and/or `post_draw()`, as 
 
 ## Constructor
 
-Like all other components, `DrawEffect` components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
+Like all other components, DrawEffect components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
 
 The constructor for DrawEffect expects no arguments.
 

@@ -9,7 +9,7 @@ A [Component](/crystal/api/ecs/component) representing an entity's position in s
 
 ## Constructor
 
-Like all other components, `Body` components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component). The constructor expects one arguments: a [love.BodyType](https://love2d.org/wiki/BodyType) for the underlying [love.Body](https://love2d.org/wiki/Body). If unspecified, the body type defaults to `"dynamic"`.
+Like all other components, Body components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component). The constructor expects one arguments: a [love.BodyType](https://love2d.org/wiki/BodyType) for the underlying [love.Body](https://love2d.org/wiki/Body). If unspecified, the body type defaults to `"dynamic"`.
 
 ```lua
 entity:add_component(crystal.Body);

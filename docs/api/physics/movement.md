@@ -21,7 +21,7 @@ Entities using this component should have a [Body](body) with the `dynamic` or `
 
 ## Constructor
 
-Like all other components, `Movement` components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component). This constructor takes one optional `number` parameter initializing movement speed. Its default value is 10 pixels / s.
+Like all other components, Movement components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component). This constructor takes one optional `number` parameter initializing movement speed. Its default value is 10 pixels / s.
 
 ```lua
 local movement_speed = 20; -- pixels / s

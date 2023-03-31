@@ -9,7 +9,7 @@ A [Drawable](drawable) component that can draw a [love.Texture](https://love2d.o
 
 ## Constructor
 
-Like all other components, `SpriteBatch` components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
+Like all other components, SpriteBatch components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
 
 The constructor for SpriteBatch expects one optional argument, a [love.SpriteBatch](https://love2d.org/wiki/SpriteBatch).
 
