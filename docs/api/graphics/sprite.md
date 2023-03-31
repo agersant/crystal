@@ -25,6 +25,5 @@ The constructor for Sprite expects two optional arguments, a [love.Texture](http
 ```lua
 local ecs = crystal.ECS:new();
 local entity = ecs:spawn(crystal.Entity);
-entity:add_component(crystal.Sprite);
-entity:set_texture(crystal.assets.get("assets/strawberry.png"));
+entity:add_component(crystal.Sprite, crystal.assets.get("assets/strawberry.png"));
 ```

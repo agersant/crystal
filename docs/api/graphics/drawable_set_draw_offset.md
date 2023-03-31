@@ -8,6 +8,8 @@ nav_exclude: true
 
 Returns the offset to use when drawing this drawable.
 
+For entities that have a [Body](/crystal/api/physics/body) component, this offset is relative to their position. For entities without a Body component, this offset is relative to `(0, 0)`.
+
 ## Usage
 
 ```lua

@@ -12,6 +12,12 @@ When the modifier is set to `"replace"`, the [DrawOrder](draw_order) component o
 
 When the modifier is set to `"add"`, the `value` parameter specified in this function call is added to the draw order specified by the [DrawOrder](draw_order) component on the entity. If the entity has no [DrawOrder](draw_order) component, the `value` parameter is used as-is.
 
+As a rule of thumb, you should use:
+
+- [DrawOrder](draw_order) components to order entities relative to each other.
+- `"add"` modifiers to order drawables within an entity.
+- (rarely) `"replace"` modifiers to decouple a drawable from its entity's draw order entirely.
+
 ## Usage
 
 ```lua
