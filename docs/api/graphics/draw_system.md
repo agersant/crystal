@@ -1,5 +1,5 @@
 ---
-parent: crystal.physics
+parent: crystal.graphics
 grand_parent: API Reference
 ---
 
