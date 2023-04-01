@@ -4,9 +4,9 @@ grand_parent: API Reference
 nav_exclude: true
 ---
 
-# WorldWidget:update_widget
+# AnimatedSprite:update_sprite_animation
 
-Updates and computes layout for the widget managed by this component. This must be called every frame that this WorldWidget will be drawn.
+Updates the current animation frame drawn by this component.
 
 {: .note}
 When using a [DrawSystem](draw_system), you never have to call this function yourself.
@@ -14,7 +14,7 @@ When using a [DrawSystem](draw_system), you never have to call this function you
 ## Usage
 
 ```lua
-world_widget:update_widget(delta_time)
+animated_sprite:update_sprite_animation(delta_time)
 ```
 
 ### Arguments

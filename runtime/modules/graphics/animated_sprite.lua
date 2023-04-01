@@ -29,12 +29,12 @@ AnimatedSprite.sprite_hitbox = function(self, name)
 	end
 end
 
-AnimatedSprite.set_animation = function(self, animationName, rotation)
-	self:play_animation_internal(animationName, rotation, false);
+AnimatedSprite.set_animation = function(self, animation_name, rotation)
+	self:play_animation_internal(animation_name, rotation, false);
 end
 
-AnimatedSprite.play_animation = function(self, animationName, rotation)
-	local thread = self:play_animation_internal(animationName, rotation, true);
+AnimatedSprite.play_animation = function(self, animation_name, rotation)
+	local thread = self:play_animation_internal(animation_name, rotation, true);
 	assert(thread);
 	return thread;
 end
@@ -42,7 +42,7 @@ end
 AnimatedSprite.play_animation_internal = function(self, animation_name, rotation, force_restart)
 	local animation = self.spritesheet:animation(animation_name);
 	assert(animation);
-	local sequence = animation:sequence(rotation or math.pi / 2);
+	local sequence = animation:sequence(rotation);
 	assert(sequence);
 	if sequence == self.sequence and not force_restart then
 		return;

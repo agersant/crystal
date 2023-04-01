@@ -11,7 +11,7 @@ SpriteBatch.init = function(self, batch)
 end
 
 ---@return love.SpriteBatch
-SpriteBatch.sprite_batch = function(self,)
+SpriteBatch.sprite_batch = function(self)
 	return self.batch;
 end
 
