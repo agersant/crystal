@@ -9,7 +9,7 @@ nav_exclude: true
 Plays an animation from its beginning.
 
 {: .note}
-Even though this function returns a [Thread](/crystal/api/script/thread), it can be called even if the entity does not have a [ScriptRunner](/crystal/api/script/script_runner) component. The AnimatedSprite component manages its own Script via [update_sprite_animation()](animated_sprite_update_sprite_animation).
+Even though this function returns a [Thread](/crystal/api/script/thread), you can call on entities that do not have a [ScriptRunner](/crystal/api/script/script_runner) component. The AnimatedSprite component manages its own Script, and updates it via [update_sprite_animation()](animated_sprite_update_sprite_animation).
 
 ## Usage
 

@@ -37,7 +37,7 @@ hero:add_script(function(self)
     else
       self:set_animation("idle", self:rotation());
     end
-	self:wait_frame();
+  self:wait_frame();
   end
 end);
 ```

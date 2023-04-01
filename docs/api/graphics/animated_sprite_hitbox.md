@@ -28,7 +28,7 @@ animated_sprite:hitbox(name)
 
 ## Examples
 
-This example defines an ECS [System](/crystal/api/ecs/system) which manages [Sensor](/crystal/api/physics/sensor) components matching hitbox data from the animated sprite.
+This example defines an ECS [System](/crystal/api/ecs/system) which adds [Sensor](/crystal/api/physics/sensor) components to entities according to the hitboxes in their animations.
 
 ```lua
 local AttackHitboxes = Class("AttackHitboxes", crystal.System);
