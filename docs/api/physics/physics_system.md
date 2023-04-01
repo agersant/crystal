@@ -14,6 +14,8 @@ When it receives the `simulate_physics` [notification](/crystal/api/ecs/ecs_noti
 3. [Updates](https://love2d.org/wiki/World:update) the Box2D simulation.
 4. Calls `on_collide` / `on_uncollide` / `on_activate` / `on_deactivate` on the relevant [Collider](collider) and [Sensor](sensor) components.
 
+When it receives the `draw_debug` [notification](/crystal/api/ecs/ecs_notify_systems), this system draws colored shapes representing all [Collider](collider) and [Sensor](sensor) components. The colors are determined by the categories of the corresponding component.
+
 ## Methods
 
 | Name                          | Description                                                                     |
