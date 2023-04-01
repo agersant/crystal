@@ -23,7 +23,7 @@ end
 
 ---@param name string
 ---@return love.Shape
-AnimatedSprite.sprite_hitbox = function(self, name)
+AnimatedSprite.hitbox = function(self, name)
 	if self.keyframe then
 		return self.keyframe.hitboxes[name];
 	end

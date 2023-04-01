@@ -4,14 +4,14 @@ grand_parent: API Reference
 nav_exclude: true
 ---
 
-# AnimatedSprite:sprite_hitbox
+# AnimatedSprite:hitbox
 
 Returns a named hitbox from the current [animation frame](/crystal/api/assets/sequence_keyframe_at).
 
 ## Usage
 
 ```lua
-animated_sprite:sprite_hitbox(name)
+animated_sprite:hitbox(name)
 ```
 
 ### Arguments
@@ -44,7 +44,7 @@ AttackHitboxes.update_hitboxes = function(self)
         entity:remove_component(hitbox);
       end
       local animated_sprite = entity:component(crystal.AnimatedSprite);
-      local shape = animated_sprite:sprite_hitbox("attack_hitbox");
+      local shape = animated_sprite:hitbox("attack_hitbox");
       if shape then
         local hitbox = entity:add_component(crystal.Sensor, shape);
         self:set_categories("hitbox");

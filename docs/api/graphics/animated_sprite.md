@@ -19,7 +19,7 @@ The constructor for AnimatedSprite expects one argument, the [Spritesheet](/crys
 | :----------------------------------------------------------------- | :----------------------------------------------------------- |
 | [play_animation](animated_sprite_play_animation)                   | Plays an animation from its beginning.                       |
 | [set_animation](animated_sprite_set_animation)                     | Plays an animation, not restarting if it's already playing.  |
-| [sprite_hitbox](animated_sprite_sprite_hitbox)                     | Returns a named hitbox from the current animation frame.     |
+| [hitbox](animated_sprite_hitbox)                                   | Returns a named hitbox from the current animation frame.     |
 | [update_sprite_animation](animated_sprite_update_sprite_animation) | Updates the current animation frame drawn by this component. |
 
 ## Examples
