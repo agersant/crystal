@@ -16,7 +16,7 @@
   - [x] cmd
   - [x] const
   - [x] ecs
-  - [ ] gfx
+  - [x] graphics
   - [x] input
   - [x] log
   - [x] persistence
