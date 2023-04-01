@@ -11,13 +11,23 @@ Sprite.init = function(self, texture, quad)
 	self.quad = quad;
 end
 
+---@return love.Texture
+Sprite.texture = function(self)
+	return self.texture;
+end
+
 ---@param texture love.Texture
 Sprite.set_texture = function(self, texture)
 	assert(texture == nil or texture:typeOf("Texture"));
 	self.texture = texture;
 end
 
----@param texture love.Quad
+---@return love.Quad
+Sprite.quad = function(self)
+	return self.quad;
+end
+
+---@param quad love.Quad
 Sprite.set_quad = function(self, quad)
 	assert(quad == nil or quad:type() == "Quad");
 	self.quad = quad;

@@ -15,10 +15,12 @@ The constructor for Sprite expects two optional arguments, a [love.Texture](http
 
 ## Methods
 
-| Name                              | Description                                                                                          |
-| :-------------------------------- | :--------------------------------------------------------------------------------------------------- |
-| [set_texture](sprite_set_texture) | Sets the [love.Texture](https://love2d.org/wiki/Texture) drawn by this component.                    |
-| [set_quad](sprite_set_quad)       | Sets the [love.Quad](https://love2d.org/wiki/Quad) used to crop the texture drawn by this component. |
+| Name                              | Description                                                                                             |
+| :-------------------------------- | :------------------------------------------------------------------------------------------------------ |
+| [quad](sprite_quad)               | Returns the [love.Quad](https://love2d.org/wiki/Quad) used to crop the texture drawn by this component. |
+| [set_texture](sprite_set_texture) | Sets the [love.Texture](https://love2d.org/wiki/Texture) drawn by this component.                       |
+| [set_quad](sprite_set_quad)       | Sets the [love.Quad](https://love2d.org/wiki/Quad) used to crop the texture drawn by this component.    |
+| [texture](sprite_texture)         | Returns the [love.Texture](https://love2d.org/wiki/Texture) drawn by this component.                    |
 
 ## Examples
 

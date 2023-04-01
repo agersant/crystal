@@ -20,6 +20,7 @@ The constructor for WorldWidget expects one optional argument, a [Widget](/cryst
 | [set_widget](world_widget_set_widget)               | Sets the widget managed by this component.                            |
 | [set_widget_anchor](world_widget_set_widget_anchor) | Sets how to align the widget when drawing it.                         |
 | [update_widget](world_widget_update_widget)         | Updates and computes layout for the widget managed by this component. |
+| [widget](world_widget_widget)                       | Returns the widget managed by this component.                         |
 
 ## Examples
 

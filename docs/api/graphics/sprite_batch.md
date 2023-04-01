@@ -15,9 +15,10 @@ The constructor for SpriteBatch expects one optional argument, a [love.SpriteBat
 
 ## Methods
 
-| Name                                              | Description                                                               |
-| :------------------------------------------------ | :------------------------------------------------------------------------ |
-| [set_sprite_batch](sprite_batch_set_sprite_batch) | Sets the [love.SpriteBatch](https://love2d.org/wiki/SpriteBatch) to draw. |
+| Name                                              | Description                                                                  |
+| :------------------------------------------------ | :--------------------------------------------------------------------------- |
+| [set_sprite_batch](sprite_batch_set_sprite_batch) | Sets the [love.SpriteBatch](https://love2d.org/wiki/SpriteBatch) to draw.    |
+| [sprite_batch](sprite_batch_sprite_batch)         | Returns the [love.SpriteBatch](https://love2d.org/wiki/SpriteBatch) to draw. |
 
 ## Examples
 

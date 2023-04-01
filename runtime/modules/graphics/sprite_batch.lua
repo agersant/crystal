@@ -10,7 +10,12 @@ SpriteBatch.init = function(self, batch)
 	self.batch = batch;
 end
 
----@param texture love.SpriteBatch
+---@return love.SpriteBatch
+SpriteBatch.sprite_batch = function(self,)
+	return self.batch;
+end
+
+---@param batch love.SpriteBatch
 SpriteBatch.set_sprite_batch = function(self, batch)
 	assert(batch == nil or batch:typeOf("SpriteBatch"));
 	self.batch = batch;

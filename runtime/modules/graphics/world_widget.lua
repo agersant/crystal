@@ -23,6 +23,11 @@ WorldWidget.set_widget_anchor = function(self, x, y)
 	self.anchor_y = y;
 end
 
+---@return widget
+WorldWidget.widget = function(self)
+	return self.widget;
+end
+
 ---@param widget Element
 WorldWidget.set_widget = function(self, widget)
 	assert(widget == nil or widget:inherits_from("Element"));
