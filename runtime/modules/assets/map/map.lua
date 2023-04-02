@@ -1,4 +1,3 @@
-local Alias = require("utils/Alias");
 local Diamond = require("diamond");
 
 ---@class Map
@@ -93,7 +92,7 @@ Map.build_mesh = function(self)
 	end
 	assert(not self._mesh);
 	self._mesh = builder:build();
-	Alias:add(self, self._mesh);
+	self:add_alias(self._mesh);
 end
 
 ---@param ecs ECS

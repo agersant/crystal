@@ -1,5 +1,4 @@
 local Script = require("modules/script/script");
-local Alias = require("utils/Alias");
 
 ---@class ScriptRunner : Component
 local ScriptRunner = Class("ScriptRunner", crystal.Component);
@@ -15,7 +14,7 @@ ScriptRunner.add_script = function(self, script)
 		script = Script:new(script);
 	end
 	assert(script:inherits_from(Script));
-	Alias:add(script, self:entity());
+	script:add_alias(self:entity());
 	table.push(self._scripts, script);
 	return script;
 end
@@ -44,7 +43,7 @@ ScriptRunner.remove_script = function(self, script_to_remove)
 		if script == script_to_remove then
 			table.remove(self._scripts, i);
 			script:stop_all_threads();
-			Alias:remove(script, self:entity());
+			script:remove_alias(self:entity());
 			return;
 		end
 	end
@@ -55,7 +54,7 @@ ScriptRunner.remove_all_scripts = function(self)
 	self._scripts = {};
 	for _, script in ipairs(scripts) do
 		script:stop_all_threads();
-		Alias:remove(script, self:entity());
+		script:remove_alias(self:entity());
 	end
 end
 

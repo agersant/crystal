@@ -1,5 +1,3 @@
-local Alias = require("utils/Alias");
-
 ---@class Entity
 ---@field private _ecs ECS
 ---@field private _is_valid boolean
@@ -39,7 +37,7 @@ Entity.add_component = function(self, class, ...)
 	assert(component:entity() == self);
 	assert(component:is_valid());
 	self._ecs:add_component(self, component);
-	Alias:add(self, component);
+	self:add_alias(component);
 	return component;
 end
 
@@ -47,7 +45,7 @@ end
 Entity.remove_component = function(self, component)
 	assert(component);
 	self._ecs:remove_component(self, component);
-	Alias:remove(self, component);
+	self:remove_alias(component);
 end
 
 ---@return Component

@@ -1,7 +1,6 @@
 local Joint = require("ui/bricks/core/Joint");
 local Padding = require("ui/bricks/core/Padding");
 local BricksUtils = require("ui/bricks/core/BricksUtils");
-local Alias = require("utils/Alias");
 
 local BasicJoint = Class("BasicJoint", Joint);
 
@@ -10,7 +9,7 @@ BasicJoint.init = function(self, parent, child)
 	self._padding = Padding:new();
 	self._horizontalAlignment = "stretch";
 	self._verticalAlignment = "stretch";
-	Alias:add(self, self._padding);
+	self:add_alias(self._padding);
 end
 
 BasicJoint.getAlignment = function(self)
@@ -48,7 +47,6 @@ BasicJoint.computeDesiredSize = function(self, desiredWidth, desiredHeight)
 end
 
 BasicJoint.computeLocalPosition = function(self, desiredWidth, desiredHeight, parentWidth, parentHeight)
-
 	local paddingLeft, paddingRight, paddingTop, paddingBottom = self:getEachPadding();
 	local horizontalAlignment = self:getHorizontalAlignment();
 	local verticalAlignment = self:getVerticalAlignment();

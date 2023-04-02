@@ -2,7 +2,6 @@ local BricksUtils = require("ui/bricks/core/BricksUtils");
 local Container = require("ui/bricks/core/Container");
 local Joint = require("ui/bricks/core/Joint");
 local Padding = require("ui/bricks/core/Padding");
-local Alias = require("utils/Alias");
 
 local ListJoint = Class("ListJoint", Joint);
 local HorizontalListJoint = Class("HorizontalListJoint", ListJoint);
@@ -17,7 +16,7 @@ ListJoint.init = function(self, parent, child)
 	self._padding = Padding:new();
 	self._grow = 0;
 	self._shrink = 0;
-	Alias:add(self, self._padding);
+	self:add_alias(self._padding);
 end
 
 ListJoint.getAlignment = function(self)

@@ -1,5 +1,4 @@
 local Transform = require("ui/bricks/core/Transform");
-local Alias = require("utils/Alias");
 
 local Element = Class("Element");
 
@@ -28,11 +27,11 @@ end
 
 Element.setJoint = function(self, joint)
 	if joint then
-		Alias:add(self, joint);
+		self:add_alias(joint);
 		self._joint = joint;
 		self._parent = joint:getParent();
 	else
-		Alias:remove(self, self._joint);
+		self:remove_alias(self._joint);
 		self._joint = nil;
 		self._parent = nil;
 	end

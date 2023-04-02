@@ -1,5 +1,3 @@
-local Alias = require("utils/Alias");
-
 ---@class Thread
 ---@field private _coroutine coroutine
 ---@field private _script Script
@@ -16,7 +14,7 @@ Thread.init = function(self, script, parent, function_to_thread)
 	if parent then
 		parent._children[self] = true;
 	end
-	Alias:add(self, script);
+	self:add_alias(script);
 end
 
 ---@return Script

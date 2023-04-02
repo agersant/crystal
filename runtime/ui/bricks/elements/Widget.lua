@@ -2,7 +2,6 @@ local Joint = require("ui/bricks/core/Joint");
 local Padding = require("ui/bricks/core/Padding");
 local Wrapper = require("ui/bricks/core/Wrapper");
 local BasicJoint = require("ui/bricks/core/BasicJoint");
-local Alias = require("utils/Alias");
 
 local WidgetJoint = Class("WidgetJoint", BasicJoint);
 local Widget = Class("Widget", Wrapper);
@@ -16,7 +15,7 @@ end
 Widget.init = function(self)
 	Widget.super.init(self, WidgetJoint);
 	self._script = crystal.Script:new();
-	Alias:add(self._script, self);
+	self._script:add_alias(self);
 end
 
 Widget.script = function(self)
