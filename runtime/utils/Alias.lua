@@ -5,9 +5,9 @@ local Alias = {};
 local search;
 
 if not features.slow_assertions then
-	search = function(originalIndex)
+	search = function(index)
 		return function(from, key)
-			local value = originalIndex[key];
+			local value = index[key];
 			if value then
 				return value;
 			end
@@ -24,9 +24,9 @@ if not features.slow_assertions then
 		end
 	end
 else
-	search = function(originalIndex)
+	search = function(index)
 		return function(from, key)
-			local value = originalIndex[key];
+			local value = index[key];
 			if value then
 				return value;
 			end
@@ -41,7 +41,7 @@ else
 				if value and type(value) == "function" then
 					local result = {
 						alias = alias,
-						wrappedMethod = function(from, ...)
+						method = function(from, ...)
 							return value(alias, ...);
 						end,
 					};
@@ -49,17 +49,17 @@ else
 				end
 			end
 
-			local numResults = table.count(results);
-			if numResults > 1 then
-				local errorMessage = string.format("Ambiguous method call, %s.%s can resolve to any of the followings:",
+			local num_results = table.count(results);
+			if num_results > 1 then
+				local message = string.format("Ambiguous method call, %s.%s can resolve to any of the followings:",
 					from:class_name(), key);
 				for _, result in pairs(results) do
-					errorMessage = errorMessage .. string.format("\n\t- %s.%s", result.alias:class_name(), key);
+					message = message .. string.format("\n\t- %s.%s", result.alias:class_name(), key);
 				end
-				error(errorMessage);
-			elseif numResults == 1 then
+				error(message);
+			elseif num_results == 1 then
 				for _, result in pairs(results) do
-					return result.wrappedMethod;
+					return result.method;
 				end
 			end
 		end
@@ -129,7 +129,6 @@ crystal.test.add("Works for inherited methods", function()
 	assert(from.method());
 end);
 
--- TODO consider supporting this (doesnt break existing tests outside of this one) and also writing to existing aliased variables
 crystal.test.add("Does not alias variables", function()
 	local From = Class:test("From");
 	local To = Class:test("To");
@@ -166,11 +165,11 @@ crystal.test.add("Errors on ambiguous call", function()
 	Alias:add(from, toA);
 	Alias:add(from, toB);
 
-	local success, errorMessage = pcall(function()
+	local success, message = pcall(function()
 		from:example();
 	end);
 	assert(not success);
-	assert(#errorMessage > 1);
+	assert(#message > 1);
 end);
 
 crystal.test.add("Errors on ambiguous call to same method", function()
@@ -184,11 +183,11 @@ crystal.test.add("Errors on ambiguous call to same method", function()
 	Alias:add(from, toA);
 	Alias:add(from, toB);
 
-	local success, errorMessage = pcall(function()
+	local success, message = pcall(function()
 		from:example();
 	end);
 	assert(not success);
-	assert(#errorMessage > 1);
+	assert(#message > 1);
 end);
 
 --#endregion
