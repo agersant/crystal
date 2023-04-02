@@ -2,29 +2,29 @@ local features = require("features");
 
 local Alias = {};
 
-local search;
+local find_method;
 
-if not features.slow_assertions then
-	search = function(index)
-		return function(from, key)
-			local value = index[key];
-			if value then
-				return value;
-			end
-			if rawget(from, "__aliases") then
-				for alias in pairs(from.__aliases) do
-					local value = alias[key];
-					if value and type(value) == "function" then
-						return function(from, ...)
-							return value(alias, ...);
-						end
+find_method = function(index)
+	return function(from, key)
+		local value = index[key];
+		if value then
+			return value;
+		end
+		if rawget(from, "__aliases") then
+			for alias in pairs(from.__aliases) do
+				local value = alias[key];
+				if value and type(value) == "function" then
+					return function(from, ...)
+						return value(alias, ...);
 					end
 				end
 			end
 		end
 	end
-else
-	search = function(index)
+end
+
+if features.slow_assertions then
+	find_method = function(index)
 		return function(from, key)
 			local value = index[key];
 			if value then
@@ -73,7 +73,7 @@ Alias.add = function(self, from, to)
 	local metatable = getmetatable(from);
 	assert(metatable and metatable.__index);
 	if type(metatable.__index) == "table" then
-		metatable.__index = search(metatable.__index);
+		metatable.__index = find_method(metatable.__index);
 	end
 	assert(not from.__aliases[to]);
 	from.__aliases[to] = true;
