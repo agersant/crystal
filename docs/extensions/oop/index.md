@@ -115,3 +115,83 @@ You an also retrieve a class by name:
 local Monster = Class("Monster");
 print(Class:by_name("Monster") == Monster); -- Prints "true"
 ```
+
+## Placement New
+
+When you call `MyClass:new()` to create an object, a new table is created and becomes the object. In some rare situations, it is preferable to turn an already existing table into the instantiated object.
+
+An example use case for this is the implementation of [ECS:spawn](/crystal/api/ecs/ecs_spawn). Entities about to be spawned need to be added to various bookkeeping structures before their constructor runs.
+
+The syntax for placement new is:
+
+```lua
+local Monster = Class("Monster");
+Monster.init = function(self, name)
+  print("I am " .. name);
+  print("Food is " .. self.food);
+end
+
+local monster = { food = "carrots" }; -- Can be filled various fields
+Monster:placement_new(monster, "Rufus"); -- Prints "I am Rufus" and "Food is carrots"
+```
+
+## Aliasing
+
+{: .warning}
+Use this feature with restraint or not at all. Inappropriate usage can make your code slow and difficult to read.
+
+It is possible to create transparent links from method of one object to another. This is the mechanism which allows you to call any [Component](/crystal/api/ecs/component) method directly on the [Entity](/crystal/api/ecs/entity) that owns said component.
+
+In the example below, we define a `Bear` class where each instances owns a `Honeypot` object. We alias the bears to their respective honeypots, so that honeypot methods can be called from the bear objects.
+
+```lua
+local Honeypot = Class("Honeypot");
+Honeypot.init = function(self)
+  self.amount = 0;
+end
+Honeypot.fill = function(self)
+  self.amount = 1;
+end
+
+local Bear = Class("Bear");
+Bear.init = function(self)
+  self.honeypot = Honeypot:new();
+  self:add_alias(self.honeypot);
+end
+
+local bear = Bear:new();
+bear.honeypot:fill(); -- Regular method call
+bear:fill(); -- Aliased method call
+```
+
+Alias relationships can be removed using `remove_alias`:
+
+```lua
+bear:remove_alias(bear.honeypot);
+bear:fill(); -- Error
+```
+
+Note that aliasing is transitive:
+
+```lua
+local A = Class("A");
+local B = Class("B");
+local C = Class("C");
+C.hello = function()
+  print("Hello");
+end
+
+local a = A:new();
+local b = B:new();
+local c = C:new();
+
+a:add_alias(b);
+b:add_alias(c);
+a:hello(); -- Prints "Hello"
+```
+
+{: .warning}
+When a single object has aliases towards multiple objects that share method names, method calls can be ambiguous. Ambiguous calls will cause runtime errors in [non-fused](https://love2d.org/wiki/love.filesystem.isFused) builds. The best way to avoid such situations is to avoid short generic method names on objects that are used as aliasing targets.
+
+{: .warning}
+Calling aliased methods is slightly slower than calling regular methods. In performance critical code sections, it may be preferable to call methods on the objects they belong to.
