@@ -140,7 +140,7 @@ Monster:placement_new(monster, "Rufus"); -- Prints "I am Rufus" and "Food is car
 {: .warning}
 Use this feature with restraint or not at all. Inappropriate usage can make your code slow and difficult to read.
 
-It is possible to create transparent links from method of one object to another. This is the mechanism which allows you to call any [Component](/crystal/api/ecs/component) method directly on the [Entity](/crystal/api/ecs/entity) that owns said component.
+It is possible to transparently forward method calls from one object to another. This is the mechanism which allows you to call any [Component](/crystal/api/ecs/component) method directly on the [Entity](/crystal/api/ecs/entity) that owns said component.
 
 In the example below, we define a `Bear` class where each instances owns a `Honeypot` object. We alias the bears to their respective honeypots, so that honeypot methods can be called from the bear objects.
 
@@ -191,7 +191,7 @@ a:hello(); -- Prints "Hello"
 ```
 
 {: .warning}
-When a single object has aliases towards multiple objects that share method names, method calls can be ambiguous. Ambiguous calls will cause runtime errors in [non-fused](https://love2d.org/wiki/love.filesystem.isFused) builds. The best way to avoid such situations is to avoid short generic method names on objects that are used as aliasing targets.
+When a single object has aliases towards multiple objects that share method names, method calls can be ambiguous. Ambiguous calls will cause runtime errors in [non-fused](https://love2d.org/wiki/love.filesystem.isFused) builds. The best way to avoid such situations is to use descriptive multi-word method names on objects that are used as aliasing targets.
 
 {: .warning}
 Calling aliased methods is slightly slower than calling regular methods. In performance critical code sections, it may be preferable to call methods on the objects they belong to.
