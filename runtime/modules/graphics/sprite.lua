@@ -1,50 +1,51 @@
 local Drawable = require("modules/graphics/drawable");
 
 ---@class Sprite : Drawable
----@field private texture love.Texture
----@field private quad love.Quad
+---@field private _texture love.Texture
+---@field private _quad love.Quad
 local Sprite = Class("Sprite", Drawable);
 
 Sprite.init = function(self, texture, quad)
+	assert(texture == nil or texture:typeOf("Texture"));
+	assert(quad == nil or quad:type() == "Quad");
 	Sprite.super.init(self);
-	self.texture = texture;
-	self.quad = quad;
+	self._texture = texture;
+	self._quad = quad;
 end
 
 ---@return love.Texture
 Sprite.texture = function(self)
-	return self.texture;
+	return self._texture;
 end
 
 ---@param texture love.Texture
 Sprite.set_texture = function(self, texture)
 	assert(texture == nil or texture:typeOf("Texture"));
-	self.texture = texture;
+	self._texture = texture;
 end
 
 ---@return love.Quad
 Sprite.quad = function(self)
-	return self.quad;
+	return self._quad;
 end
 
 ---@param quad love.Quad
 Sprite.set_quad = function(self, quad)
 	assert(quad == nil or quad:type() == "Quad");
-	self.quad = quad;
+	self._quad = quad;
 end
 
 Sprite.draw = function(self)
-	if not self.texture then
+	if not self._texture then
 		return;
 	end
-	love.graphics.draw(self.texture, self.quad);
+	love.graphics.draw(self._texture, self._quad);
 end
 
 --#region Tests
 
 crystal.test.add("Blank sprites don't error", function()
-	local sheet = crystal.assets.get("test-data/blankey.lua");
-	local sprite = Sprite:new(sheet);
+	local sprite = Sprite:new();
 	sprite:draw();
 end);
 

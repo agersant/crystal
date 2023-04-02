@@ -42,7 +42,7 @@ end
 AnimatedSprite.play_animation_internal = function(self, animation_name, rotation, force_restart)
 	local animation = self.spritesheet:animation(animation_name);
 	assert(animation);
-	local sequence = animation:sequence(rotation);
+	local sequence = animation:sequence(rotation or 0);
 	assert(sequence);
 	if sequence == self.sequence and not force_restart then
 		return;
