@@ -40,11 +40,12 @@ add_module("string", "modules/string");
 add_module("table", "modules/table");
 add_module("oop", "modules/oop");
 add_module("test", "modules/test");
-
-add_module("assets", "modules/assets");
 add_module("cmd", "modules/cmd");
-add_module("const", "modules/const");
 add_module("ecs", "modules/ecs");
+
+add_module("ai", "modules/ai");
+add_module("assets", "modules/assets");
+add_module("const", "modules/const");
 add_module("graphics", "modules/graphics");
 add_module("input", "modules/input");
 add_module("log", "modules/log");

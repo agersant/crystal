@@ -1,6 +1,5 @@
 local features = require("features");
 local Renderer = require("graphics/Renderer");
-local NavigationSystem = require("mapscene/behavior/ai/NavigationSystem");
 local CameraSystem = require("mapscene/display/CameraSystem");
 local Scene = require("Scene");
 
@@ -22,7 +21,7 @@ MapScene.init = function(self, mapName)
 	ecs:add_system(crystal.ScriptSystem);
 	ecs:add_system(crystal.InputSystem);
 	ecs:add_system(CameraSystem, self._map, self._renderer:getViewport()); -- (also has after_run_scripts logic)
-	ecs:add_system(NavigationSystem);
+	ecs:add_system(crystal.NavigationSystem);
 	ecs:add_system(crystal.DrawSystem);
 
 	self:add_systems();
@@ -56,6 +55,7 @@ MapScene.update = function(self, dt)
 	self._ecs:notify_systems("before_run_scripts", dt);
 	self._ecs:notify_systems("run_scripts", dt);
 	self._ecs:notify_systems("handle_inputs", dt);
+	self._ecs:notify_systems("update_navigation", dt);
 	self._ecs:notify_systems("after_run_scripts", dt);
 	self._ecs:notify_systems("update_drawables", dt);
 end
