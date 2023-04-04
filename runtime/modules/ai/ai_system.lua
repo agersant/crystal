@@ -1,23 +1,23 @@
----@class NavigationSystem : System
+---@class AISystem : System
 ---@field private query Query
-local NavigationSystem = Class("NavigationSystem", crystal.System);
+local AISystem = Class("AISystem", crystal.System);
 
-NavigationSystem.init = function(self)
+AISystem.init = function(self)
 	self.query = self:add_query({ "Navigation" });
 end
 
 ---@param dt number
-NavigationSystem.update_navigation = function(self, dt)
+AISystem.update_ai = function(self, dt)
 	for navigation in pairs(self.query:components()) do
 		navigation:update(dt);
 	end
 end
 
 local draw_navigation = false;
-crystal.cmd.add("showNavmeshOverlay", function() draw_navigation = true; end);
-crystal.cmd.add("hideNavmeshOverlay", function() draw_navigation = false; end);
+crystal.cmd.add("showNavigationOverlay", function() draw_navigation = true; end);
+crystal.cmd.add("hideNavigationOverlay", function() draw_navigation = false; end);
 
-NavigationSystem.draw_debug = function(self, viewport)
+AISystem.draw_debug = function(self, viewport)
 	local line_color = crystal.Color.lavender_rose;
 	local fill_color = line_color:alpha(.25);
 	if draw_navigation then
@@ -55,4 +55,4 @@ end);
 
 --#endregion
 
-return NavigationSystem;
+return AISystem;
