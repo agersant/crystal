@@ -11,7 +11,7 @@
 - [x] Docs website in readme
 - [ ] Document built-in commands
 - [ ] API revamp: `crystal.*` globals + docs + private functions as ---@package or ---@private
-  - [ ] ai
+  - [x] ai
   - [x] assets
   - [x] cmd
   - [x] const

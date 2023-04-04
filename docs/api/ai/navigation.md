@@ -14,7 +14,7 @@ This component only works with the following setup:
 - The ECS this entity belongs to has a [context](/crystal/api/ecs/ecs_set_context) named `"map"`, which points to a [Map](/crystal/api/assets/map).
 
 {: .note}
-Even though methods on this component return [threads](/crystal/api/script/thread), the entity does not need a [ScriptRunner](/crystal/api/script/script_runner) component. The Navigation component manages its own Script, and updates it via [update()](navigation_update).
+Even though methods on this component return [threads](/crystal/api/script/thread), the entity does not need a [ScriptRunner](/crystal/api/script/script_runner) component. The Navigation component manages its own Script, and updates it via [update_navigation](navigation_update_navigation).
 
 ## Constructor
 
