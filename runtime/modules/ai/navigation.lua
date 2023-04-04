@@ -17,7 +17,7 @@ Navigation.init = function(self)
 end
 
 ---@dt number
-Navigation.update = function(self, dt)
+Navigation.update_navigation = function(self, dt)
 	self.script:update(dt);
 end
 
@@ -34,7 +34,8 @@ end
 Navigation.navigate_to = function(self, x, y, acceptance_radius)
 	assert(x);
 	assert(y);
-	assert(acceptance_radius and acceptance_radius >= 0);
+	acceptance_radius = acceptance_radius or 4;
+	assert(acceptance_radius >= 0);
 	local repath_delay = 2;
 	local position_goal = PositionGoal:new(x, y, acceptance_radius);
 	return self:navigate_to_goal(position_goal, repath_delay);
@@ -45,6 +46,7 @@ end
 ---@return Thread
 Navigation.navigate_to_entity = function(self, target_entity, acceptance_radius)
 	assert(target_entity);
+	acceptance_radius = acceptance_radius or 4;
 	assert(acceptance_radius >= 0);
 	local repath_delay = 0.5;
 	local entity_goal = EntityGoal:new(target_entity, acceptance_radius);
@@ -56,6 +58,7 @@ end
 ---@return Thread
 Navigation.align_with_entity = function(self, target_entity, acceptance_radius)
 	assert(target_entity);
+	acceptance_radius = acceptance_radius or 4;
 	assert(acceptance_radius >= 0);
 	local repath_delay = 0.5;
 	local entity_goal = EntityGoal:new(self:entity(), acceptance_radius);

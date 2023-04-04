@@ -10,7 +10,7 @@ nav_order: 1
 
 | Name                         | Description                                                                            |
 | :--------------------------- | :------------------------------------------------------------------------------------- |
-| [crystal.ai](ai)             |                                                                                        |
+| [crystal.ai](ai)             | Components facilitating creation of autonomous entities.                               |
 | [crystal.assets](assets)     | Loads and unloads game assets (images, spritesheets, maps, etc.).                      |
 | [crystal.cmd](cmd)           | Allows you to define and run console commands.                                         |
 | [crystal.const](const)       | Allows you to define tweakable variables for fast iteration.                           |

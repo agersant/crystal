@@ -9,7 +9,7 @@ end
 ---@param dt number
 AISystem.update_ai = function(self, dt)
 	for navigation in pairs(self.query:components()) do
-		navigation:update(dt);
+		navigation:update_navigation(dt);
 	end
 end
 
