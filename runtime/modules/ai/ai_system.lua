@@ -60,11 +60,9 @@ AISystem.draw_paths = function(self, viewport)
 	for navigation in pairs(self.query:components()) do
 		local path, index = navigation:navigation_state();
 		if path then
-			-- Current segment
 			local x, y = navigation:entity():position();
 			love.graphics.line(x, y, path[index][1], path[index][2]);
 
-			-- Future segments
 			local points = {};
 			for i = index, #path do
 				table.push(points, path[i][1]);
@@ -74,6 +72,8 @@ AISystem.draw_paths = function(self, viewport)
 				love.graphics.line(points);
 			end
 			if #points >= 2 then
+				table.push(points, x);
+				table.push(points, y);
 				love.graphics.points(points);
 			end
 		end
