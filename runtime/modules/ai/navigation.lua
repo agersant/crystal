@@ -6,6 +6,8 @@ local PositionGoal = require("modules/ai/position_goal");
 ---@field private script Script
 ---@field private path {[1]: number, [2]: number}[]
 ---@field private path_index number
+---@field private repath_delay number
+---@field private acceptance_radius number
 local Navigation = Class("Navigation", crystal.Component);
 
 local navigate;
@@ -14,11 +16,25 @@ Navigation.init = function(self)
 	self.script = crystal.Script:new();
 	self.path = nil;
 	self.path_index = nil;
+	self.repath_delay = 1;
+	self.acceptance_radius = 4;
 end
 
----@dt number
+---@param dt number
 Navigation.update_navigation = function(self, dt)
 	self.script:update(dt);
+end
+
+---@param acceptance_radius number
+Navigation.set_acceptance_radius = function(self, acceptance_radius)
+	assert(acceptance_radius >= 0);
+	self.acceptance_radius = acceptance_radius;
+end
+
+---@param repath_delay number # in seconds
+Navigation.set_repath_delay = function(self, repath_delay)
+	assert(repath_delay >= 0);
+	self.repath_delay = repath_delay;
 end
 
 ---@return {[1]: number, [2]: number}[] path
@@ -30,13 +46,14 @@ end
 ---@param x number
 ---@param y number
 ---@param acceptance_radius number
+---@param repath_delay number
 ---@return Thread
-Navigation.navigate_to = function(self, x, y, acceptance_radius)
+Navigation.navigate_to = function(self, x, y, acceptance_radius, repath_delay)
 	assert(x);
 	assert(y);
-	acceptance_radius = acceptance_radius or 4;
+	acceptance_radius = acceptance_radius or self.acceptance_radius;
+	repath_delay = repath_delay or self.repath_delay;
 	assert(acceptance_radius >= 0);
-	local repath_delay = 2;
 	local position_goal = PositionGoal:new(x, y, acceptance_radius);
 	return self:navigate_to_goal(position_goal, repath_delay);
 end
@@ -44,11 +61,11 @@ end
 ---@param target_entity Entity
 ---@param acceptance_radius number
 ---@return Thread
-Navigation.navigate_to_entity = function(self, target_entity, acceptance_radius)
+Navigation.navigate_to_entity = function(self, target_entity, acceptance_radius, repath_delay)
 	assert(target_entity);
-	acceptance_radius = acceptance_radius or 4;
+	acceptance_radius = acceptance_radius or self.acceptance_radius;
+	repath_delay = repath_delay or self.repath_delay;
 	assert(acceptance_radius >= 0);
-	local repath_delay = 0.5;
 	local entity_goal = EntityGoal:new(target_entity, acceptance_radius);
 	return self:navigate_to_goal(entity_goal, repath_delay);
 end
@@ -56,11 +73,11 @@ end
 ---@param target_entity Entity
 ---@param acceptance_radius number
 ---@return Thread
-Navigation.align_with_entity = function(self, target_entity, acceptance_radius)
+Navigation.align_with_entity = function(self, target_entity, acceptance_radius, repath_delay)
 	assert(target_entity);
-	acceptance_radius = acceptance_radius or 4;
+	acceptance_radius = acceptance_radius or self.acceptance_radius;
+	repath_delay = repath_delay or self.repath_delay;
 	assert(acceptance_radius >= 0);
-	local repath_delay = 0.5;
 	local entity_goal = EntityGoal:new(self:entity(), acceptance_radius);
 	local align_goal = AlignGoal:new(self:entity(), entity_goal, acceptance_radius);
 	return self:navigate_to_goal(align_goal, repath_delay);
@@ -71,6 +88,7 @@ end
 ---@param repath_delay number
 Navigation.navigate_to_goal = function(self, goal, repath_delay)
 	assert(goal);
+	assert(repath_delay >= 0);
 
 	local navigation = self;
 	local body = self:entity():component(crystal.Body);

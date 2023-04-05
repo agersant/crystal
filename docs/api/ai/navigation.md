@@ -24,12 +24,14 @@ The constructor for Navigation expects no arguments.
 
 ## Methods
 
-| Name                                                | Description                                                                   |
-| :-------------------------------------------------- | :---------------------------------------------------------------------------- |
-| [align_with_entity](navigation_align_with_entity)   | Begins moving to align itself vertically or horizontally with another entity. |
-| [navigate_to_entity](navigation_navigate_to_entity) | Begins moving towards another entity.                                         |
-| [navigate_to](navigation_navigate_to)               | Begins moving towards a specific location.                                    |
-| [update_navigation](navigation_update_navigation)   | Sets heading to follow current path.                                          |
+| Name                                                      | Description                                                                   |
+| :-------------------------------------------------------- | :---------------------------------------------------------------------------- |
+| [align_with_entity](navigation_align_with_entity)         | Begins moving to align itself vertically or horizontally with another entity. |
+| [navigate_to_entity](navigation_navigate_to_entity)       | Begins moving towards another entity.                                         |
+| [navigate_to](navigation_navigate_to)                     | Begins moving towards a specific location.                                    |
+| [set_acceptance_radius](navigation_set_acceptance_radius) | Sets the default acceptance radius for navigation requests on this component. |
+| [set_repath_delay](navigation_set_repath_delay)           | Sets the default repath delay for navigation requests on this component.      |
+| [update_navigation](navigation_update_navigation)         | Sets heading to follow current path.                                          |
 
 ## Examples
 
@@ -41,6 +43,7 @@ ecs:add_context("map", crystal.assets.get("assets/castle_courtyard.lua"));
 local entity = ecs:spawn(crystal.Entity);
 entity:add_component(crystal.Body);
 entity:add_component(crystal.Movement);
+entity:add_component(crystal.Navigation);
 entity:navigate_to(60, 120);
 
 -- During update:
