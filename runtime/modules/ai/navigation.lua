@@ -248,8 +248,8 @@ crystal.test.add("Can block on navigation thread", function()
 	subject:set_position(start_x, start_y);
 	subject:add_component(Navigation);
 
-	local scriptRunner = subject:add_component(crystal.ScriptRunner);
-	scriptRunner:add_script(function(self)
+	subject:add_component(crystal.ScriptRunner);
+	subject:add_script(function(self)
 		local success = self:join(self:navigate_to(end_x, end_y, acceptance_radius));
 		sentinel = success;
 	end);

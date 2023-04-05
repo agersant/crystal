@@ -119,11 +119,11 @@ table.serialize = function(t)
 end
 
 table.deserialize = function(source)
-	local luaChunk = loadstring(source);
-	assert(luaChunk);
-	local outTable = luaChunk();
-	assert(outTable);
-	return outTable;
+	local lua_chunk = loadstring(source);
+	assert(lua_chunk);
+	local deserialized = lua_chunk();
+	assert(deserialized);
+	return deserialized;
 end
 
 return {

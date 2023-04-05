@@ -248,7 +248,7 @@ return {
 			assert(fruit:class() == Fruit);
 		end);
 
-		crystal.test.add("Basic usage", function()
+		crystal.test.add("Can alias methods", function()
 			local From = Class:test("From");
 			local To = Class:test("To");
 			To.method = function()
@@ -261,7 +261,7 @@ return {
 			assert(from.method());
 		end);
 
-		crystal.test.add("Transitive", function()
+		crystal.test.add("Alias are transitive", function()
 			local From = Class:test("From");
 			local Middle = Class:test("Middle");
 			local To = Class:test("To");
@@ -276,7 +276,7 @@ return {
 			assert(from.method());
 		end);
 
-		crystal.test.add("Works for inherited methods", function()
+		crystal.test.add("Alias work for inherited methods", function()
 			local From = Class:test("From");
 			local Base = Class:test("Base");
 			local To = Class:test("To", Base);
@@ -290,7 +290,7 @@ return {
 			assert(from.method());
 		end);
 
-		crystal.test.add("Does not alias variables", function()
+		crystal.test.add("Alias do not apply to variables", function()
 			local From = Class:test("From");
 			local To = Class:test("To");
 			local from = From:new();
@@ -300,19 +300,19 @@ return {
 			assert(not from.member);
 		end);
 
-		crystal.test.add("Overrides self parameter", function()
+		crystal.test.add("Alias calls override self parameter", function()
 			local From = Class:test("From");
 			local To = Class:test("To");
-			To.getMyClass = function(self)
+			To.get_my_class = function(self)
 				return self:class();
 			end
 			local from = From:new();
 			local to = To:new();
 			from:add_alias(to);
-			assert(from:getMyClass() == To);
+			assert(from:get_my_class() == To);
 		end);
 
-		crystal.test.add("Errors on ambiguous call", function()
+		crystal.test.add("Alias error on ambiguous call", function()
 			local From = Class:test("From");
 			local ToA = Class:test("ToA");
 			local ToB = Class:test("ToB");

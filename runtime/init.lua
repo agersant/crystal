@@ -216,7 +216,7 @@ if features.tests then
 			end
 
 			crystal.log.set_verbosity("error");
-			local success = modules.test.runner:runAll();
+			local success = modules.test.runner:run_all();
 
 			if luacov then
 				luacov.shutdown();

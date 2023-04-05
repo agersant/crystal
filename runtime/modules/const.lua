@@ -11,11 +11,11 @@ end);
 crystal.test.add("Enforces unique registration", function(context)
 	local constants = Constants:new();
 	constants:define(context.test_name, "oink");
-	local success, errorMessage = pcall(function()
-			constants:define(context.test_name, "meow");
-		end);
+	local success, error_message = pcall(function()
+		constants:define(context.test_name, "meow");
+	end);
 	assert(not success);
-	assert(#errorMessage > 1);
+	assert(#error_message > 1);
 end);
 
 crystal.test.add("Can read/write values", function(context)
@@ -49,11 +49,11 @@ end);
 crystal.test.add("Enforces consistent types", function(context)
 	local constants = Constants:new();
 	constants:define(context.test_name, "oink");
-	local success, errorMessage = pcall(function()
-			constants:set(context.test_name, 0);
-		end);
+	local success, error_message = pcall(function()
+		constants:set(context.test_name, 0);
+	end);
 	assert(not success);
-	assert(#errorMessage > 1);
+	assert(#error_message > 1);
 end);
 
 crystal.test.add("Can set value via CLI", function(context)

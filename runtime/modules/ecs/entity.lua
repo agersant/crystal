@@ -54,8 +54,8 @@ Entity.component = function(self, class)
 end
 
 ---@return { [Component]: boolean }
-Entity.components = function(self, baseClass)
-	return self._ecs:components_on_entity(self, baseClass);
+Entity.components = function(self, class)
+	return self._ecs:components_on_entity(self, class);
 end
 
 ---@generic T

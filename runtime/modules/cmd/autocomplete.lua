@@ -90,18 +90,18 @@ Autocomplete.suggest_arg_values = function(self, input)
 			type_check_result = cast_result ~= nil;
 		end
 
-		local argColor;
+		local color;
 		if type_check_result == true then
-			argColor = crystal.Color.green;
+			color = crystal.Color.green;
 		elseif type_check_result == false then
-			argColor = crystal.Color.red;
+			color = crystal.Color.red;
 		else
-			argColor = crystal.Color.greyC;
+			color = crystal.Color.greyC;
 		end
-		table.push(args, argColor);
+		table.push(args, color);
 
-		local argString = (i > 1 and " " or "") .. arg.name;
-		table.push(args, argString);
+		local arg_string = (i > 1 and " " or "") .. arg.name;
+		table.push(args, arg_string);
 	end
 
 	return { { text = args } };

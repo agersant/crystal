@@ -96,7 +96,7 @@ TestRunner.reset_global_state = function(self, test)
 end
 
 ---@return boolean success
-TestRunner.runAll = function(self)
+TestRunner.run_all = function(self)
 	self.busy = true;
 	self:create_output_directories();
 
