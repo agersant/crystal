@@ -33,8 +33,9 @@ jobs:
         run: (Get-Content -raw luacov.report.out) -replace "`r`n","`n" | Set-Content -nonewline luacov.report.out
         working-directory: runtime
       - name: Install Rust toolchain with coverage tooling
-        uses: dtolnay/rust-toolchain@nightly-2023-03-30 # TODO Remove specific nightly date after https://github.com/plotters-rs/plotters/issues/461 is fixed
+        uses: dtolnay/rust-toolchain@master
         with:
+          toolchain: nightly-2023-03-30 # TODO Remove specific nightly date after https://github.com/plotters-rs/plotters/issues/461 is fixed
           components: llvm-tools-preview
       - name: Install grcov
         run: cargo install grcov
