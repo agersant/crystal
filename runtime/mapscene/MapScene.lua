@@ -42,6 +42,7 @@ MapScene.update = function(self, dt)
 
 	self._ecs:update();
 
+	-- TODO consider explicit method calls instead of notifies
 	self._ecs:notify_systems("advance_animations", dt);
 	self._ecs:notify_systems("simulate_physics", dt);
 
