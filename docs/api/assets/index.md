@@ -109,8 +109,6 @@ Loads an image as a [love.Image](https://love2d.org/wiki/Image):
 local rabbit = crystal.assets.get("assets/rabbit.png");
 ```
 
-All images use the `nearest` [filter mode](https://love2d.org/wiki/FilterMode) by default.
-
 ### Shaders
 
 Loads a GLSL shader as a [love.Shader](https://love2d.org/wiki/Shader):

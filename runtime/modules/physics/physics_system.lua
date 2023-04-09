@@ -102,7 +102,7 @@ local draw_physics_debug = false;
 crystal.cmd.add("showPhysicsOverlay", function() draw_physics_debug = true; end);
 crystal.cmd.add("hidePhysicsOverlay", function() draw_physics_debug = false; end);
 
-PhysicsSystem.draw_debug = function(self, viewport)
+PhysicsSystem.draw_debug = function(self)
 	if draw_physics_debug then
 		for body in pairs(self.with_body:components(crystal.Body)) do
 			local body = body:inner();
@@ -111,7 +111,7 @@ PhysicsSystem.draw_debug = function(self, viewport)
 			y = math.round(y);
 			for _, fixture in ipairs(body:getFixtures()) do
 				local color = self:fixture_color(fixture);
-				self:draw_shape(viewport, x, y, fixture:getShape(), color);
+				self:draw_shape(x, y, fixture:getShape(), color);
 			end
 		end
 	end
@@ -158,7 +158,7 @@ end
 ---@param y number
 ---@param shape love.Shape
 ---@param color { [1]: number, [2]: number, [3]: number }
-PhysicsSystem.draw_shape = function(self, viewport, x, y, shape, color)
+PhysicsSystem.draw_shape = function(self, x, y, shape, color)
 	love.graphics.push("all");
 	love.graphics.translate(x, y);
 	love.graphics.setLineJoin("bevel");
@@ -182,7 +182,7 @@ PhysicsSystem.draw_shape = function(self, viewport, x, y, shape, color)
 		love.graphics.circle("line", x, y, shape:getRadius(), 16);
 	elseif shape:getType() == "chain" then
 		love.graphics.setLineWidth(2);
-		love.graphics.setPointSize(6 * viewport:getZoom());
+		love.graphics.setPointSize(6 * crystal.window.viewport_scale());
 		if shape:getVertexCount() >= 3 then
 			local points = { shape:getPoints() };
 			table.pop(points);

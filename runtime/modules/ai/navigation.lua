@@ -93,7 +93,7 @@ Navigation.navigate_to_goal = function(self, goal, repath_delay)
 	local navigation = self;
 	local body = self:entity():component(crystal.Body);
 	local movement = self:entity():component(crystal.Movement);
-	local map = self:entity():context("map");
+	local map = self:entity():context("map"); -- TODO consider requiring map in constructor instead
 	assert(body);
 	assert(movement);
 	assert(map);

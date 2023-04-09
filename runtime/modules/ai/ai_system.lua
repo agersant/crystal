@@ -17,24 +17,24 @@ local draw_navigation = false;
 crystal.cmd.add("showNavigationOverlay", function() draw_navigation = true; end);
 crystal.cmd.add("hideNavigationOverlay", function() draw_navigation = false; end);
 
-AISystem.draw_debug = function(self, viewport)
+AISystem.draw_debug = function(self)
 	if draw_navigation then
-		self:draw_navigation_mesh(viewport);
-		self:draw_paths(viewport);
+		self:draw_navigation_mesh();
+		self:draw_paths();
 	end
 end
 
 ---@private
-AISystem.draw_navigation_mesh = function(self, viewport)
+AISystem.draw_navigation_mesh = function(self)
 	local line_color = crystal.Color.lavender_rose;
 	local fill_color = line_color:alpha(.25);
 
 	love.graphics.push("all");
 	love.graphics.setLineWidth(1);
 	love.graphics.setLineJoin("bevel");
-	love.graphics.setPointSize(4 * viewport:getZoom());
+	love.graphics.setPointSize(4 * crystal.window.viewport_scale());
 
-	local map = self:ecs():context("map");
+	local map = self:ecs():context("map"); -- TODO consider requiring map in constructor
 	assert(map);
 	local triangles = {};
 	for _, t in ipairs(map:navigation_polygons()) do
@@ -51,11 +51,11 @@ AISystem.draw_navigation_mesh = function(self, viewport)
 end
 
 ---@private
-AISystem.draw_paths = function(self, viewport)
+AISystem.draw_paths = function(self)
 	love.graphics.push("all");
 	love.graphics.setLineWidth(2);
 	love.graphics.setLineJoin("bevel");
-	love.graphics.setPointSize(6 * viewport:getZoom());
+	love.graphics.setPointSize(6 * crystal.window.viewport_scale());
 	love.graphics.setColor(crystal.Color.bara_red);
 	for navigation in pairs(self.query:components()) do
 		local path, index = navigation:navigation_state();

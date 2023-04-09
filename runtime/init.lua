@@ -52,6 +52,7 @@ add_module("log", "modules/log");
 add_module("physics", "modules/physics");
 add_module("script", "modules/script");
 add_module("tool", "modules/tool");
+add_module("window", "modules/window");
 
 local Scene = require("Scene");
 
@@ -65,7 +66,6 @@ crystal.configure = function(c)
 	crystal.conf = table.merge(crystal.conf, c);
 end
 
-VIEWPORT = require("graphics/Viewport"):new();
 FONTS = require("resources/Fonts"):new({});
 ENGINE = {};
 
@@ -150,6 +150,7 @@ love.load = function()
 end
 
 love.update = function(dt)
+	modules.window.update();
 	modules.input.update(dt);
 	modules.tool.toolkit:update(dt);
 	if nextScene then
@@ -193,10 +194,6 @@ end
 
 love.textinput = function(text)
 	modules.tool.toolkit:text_input(text);
-end
-
-love.resize = function(self, width, height)
-	VIEWPORT:setWindowSize(width, height);
 end
 
 love.quit = function()

@@ -37,9 +37,7 @@ This example shows how the `image` loader that is included with Crystal is imple
 ```lua
 crystal.assets.add_loader("png", {
   load = function(path)
-    local image = love.graphics.newImage(path);
-    image:setFilter("nearest");
-    return image;
+    return love.graphics.newImage(path);
   end,
 });
 ```

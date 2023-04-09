@@ -1,32 +1,25 @@
 local features = require("features");
-local Renderer = require("graphics/Renderer");
-local CameraSystem = require("mapscene/display/CameraSystem");
 local Scene = require("Scene");
 
 local MapScene = Class("MapScene", Scene);
 
-MapScene.init = function(self, mapName)
-	crystal.log.info("Instancing scene for map: " .. tostring(mapName));
+MapScene.init = function(self, map_name)
+	crystal.log.info("Instancing scene for map: " .. tostring(map_name));
 	MapScene.super.init(self);
 
-	local ecs = crystal.ECS:new();
-	self._map = crystal.assets.get(mapName);
+	self._ecs = crystal.ECS:new();
+	self._map = crystal.assets.get(map_name);
+	self._ecs:add_context("map", self._map);
 
-	self._ecs = ecs;
-	ecs:add_context("map", self._map);
-
-	self._renderer = Renderer:new(VIEWPORT);
-
-	ecs:add_system(crystal.PhysicsSystem);
-	ecs:add_system(crystal.ScriptSystem);
-	ecs:add_system(crystal.InputSystem);
-	ecs:add_system(CameraSystem, self._map, self._renderer:getViewport()); -- (also has after_run_scripts logic)
-	ecs:add_system(crystal.AISystem);
-	ecs:add_system(crystal.DrawSystem);
+	self._ecs:add_system(crystal.PhysicsSystem);
+	self._ecs:add_system(crystal.ScriptSystem);
+	self._ecs:add_system(crystal.InputSystem);
+	self._ecs:add_system(crystal.AISystem);
+	self._ecs:add_system(crystal.DrawSystem);
 
 	self:add_systems();
 
-	self._map:spawn_entities(ecs);
+	self._map:spawn_entities(self._ecs);
 end
 
 MapScene.ecs = function(self)
@@ -63,34 +56,30 @@ end
 MapScene.draw = function(self)
 	MapScene.super.draw(self);
 
-	local viewport = self._renderer:getViewport();
-
-	local camera = self._ecs:system(CameraSystem):getCamera();
-	assert(camera);
-	local subpixelOffsetX, subpixelOffsetY = camera:getSubpixelOffset();
-	local sceneSizeX, sceneSizeY = camera:getScreenSize();
-
-	self._renderer:draw(function()
-		self._ecs:notify_systems("before_draw_entities");
-		self._ecs:notify_systems("draw_entities");
-		self._ecs:notify_systems("after_draw_entities");
-	end, {
-		subpixelOffsetX = subpixelOffsetX,
-		subpixelOffsetY = subpixelOffsetY,
-		sceneSizeX = sceneSizeX,
-		sceneSizeY = sceneSizeY,
-	});
-
-	if features.debug_draw then
-		self._renderer:draw(function()
-			self._ecs:notify_systems("before_draw_debug", viewport);
-			self._ecs:notify_systems("draw_debug", viewport);
-			self._ecs:notify_systems("after_draw_debug", viewport);
-		end, { nativeResolution = true, sceneSizeX = sceneSizeX, sceneSizeY = sceneSizeY });
+	local viewport_width, viewport_height = crystal.window.viewport_size();
+	local camera_x = math.round(viewport_width / 2);
+	local camera_y = math.round(viewport_height / 2);
+	-- TODO Replacement for camera system (follow entity, lock to map, etc.)
+	for c in pairs(self._ecs:components(crystal.InputListener)) do
+		camera_x, camera_y = c:entity():position();
 	end
 
-	self._renderer:draw(function()
-		self._ecs:notify_systems("drawOverlay");
+	crystal.window.draw_upscaled(function()
+		love.graphics.translate(math.round(viewport_width / 2), math.round(viewport_height / 2));
+		love.graphics.translate(-math.round(camera_x), -math.round(camera_y));
+		self._ecs:notify_systems("draw_entities");
+	end);
+
+	if features.debug_draw then
+		crystal.window.draw_native(function()
+			love.graphics.translate(math.round(viewport_width / 2), math.round(viewport_height / 2));
+			love.graphics.translate(-math.round(camera_x), -math.round(camera_y));
+			self._ecs:notify_systems("draw_debug");
+		end);
+	end
+
+	crystal.window.draw_upscaled(function()
+		self._ecs:notify_systems("draw_ui");
 	end);
 end
 
