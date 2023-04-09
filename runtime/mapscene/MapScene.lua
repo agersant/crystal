@@ -9,6 +9,8 @@ MapScene.init = function(self, map_name)
 
 	self._ecs = crystal.ECS:new();
 	self._map = crystal.assets.get(map_name);
+	self._camera_controller = crystal.CameraController:new();
+
 	self._ecs:add_context("map", self._map);
 
 	self._ecs:add_system(crystal.PhysicsSystem);
@@ -24,6 +26,14 @@ end
 
 MapScene.ecs = function(self)
 	return self._ecs;
+end
+
+MapScene.map = function(self)
+	return self._map;
+end
+
+MapScene.camera_controller = function(self)
+	return self._camera_controller;
 end
 
 MapScene.spawn = function(self, ...)
@@ -56,24 +66,14 @@ end
 MapScene.draw = function(self)
 	MapScene.super.draw(self);
 
-	local viewport_width, viewport_height = crystal.window.viewport_size();
-	local camera_x = math.round(viewport_width / 2);
-	local camera_y = math.round(viewport_height / 2);
-	-- TODO Replacement for camera system (follow entity, lock to map, etc.)
-	for c in pairs(self._ecs:components(crystal.InputListener)) do
-		camera_x, camera_y = c:entity():position();
-	end
-
 	crystal.window.draw_upscaled(function()
-		love.graphics.translate(math.round(viewport_width / 2), math.round(viewport_height / 2));
-		love.graphics.translate(-math.round(camera_x), -math.round(camera_y));
+		love.graphics.translate(self._camera_controller:draw_offset());
 		self._ecs:notify_systems("draw_entities");
 	end);
 
 	if features.debug_draw then
 		crystal.window.draw_native(function()
-			love.graphics.translate(math.round(viewport_width / 2), math.round(viewport_height / 2));
-			love.graphics.translate(-math.round(camera_x), -math.round(camera_y));
+			love.graphics.translate(self._camera_controller:draw_offset());
 			self._ecs:notify_systems("draw_debug");
 		end);
 	end

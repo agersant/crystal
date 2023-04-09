@@ -50,6 +50,7 @@ add_module("graphics", "modules/graphics");
 add_module("input", "modules/input");
 add_module("log", "modules/log");
 add_module("physics", "modules/physics");
+add_module("scene", "modules/scene");
 add_module("script", "modules/script");
 add_module("tool", "modules/tool");
 add_module("window", "modules/window");
