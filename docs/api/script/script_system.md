@@ -26,6 +26,5 @@ end);
 
 -- In your scene's update function:
 ecs:update();
-ecs:notify_systems("before_run_scripts");
 ecs:notify_systems("run_scripts"); -- prints Oink
 ```

@@ -4,7 +4,7 @@ InputSystem.init = function(self)
 	self.query = self:add_query({ "InputListener" });
 end
 
-InputSystem.handle_inputs = function(self, dt)
+InputSystem.handle_inputs = function(self)
 	for input_listener in pairs(self.query:components()) do
 		input_listener:handle_inputs();
 	end
