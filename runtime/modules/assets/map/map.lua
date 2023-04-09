@@ -178,8 +178,12 @@ Map.spawn_entities = function(self, ecs)
 	return body;
 end
 
-Map._tilesets = function(self)
+Map.tilesets = function(self)
 	return table.copy(self._tilesets);
+end
+
+Map.pixel_size = function(self)
+	return self:pixel_width(), self:pixel_height();
 end
 
 Map.pixel_width = function(self)

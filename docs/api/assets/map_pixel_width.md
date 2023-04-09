@@ -16,9 +16,9 @@ map:pixel_width()
 
 ### Returns
 
-| Name    | Type     | Description      |
-| :------ | :------- | :--------------- |
-| `width` | `number` | Width in pixels. |
+| Name    | Type     | Description          |
+| :------ | :------- | :------------------- |
+| `width` | `number` | Map width in pixels. |
 
 ## Examples
 
