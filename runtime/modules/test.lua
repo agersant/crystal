@@ -82,15 +82,14 @@ end
 
 ---@private
 TestRunner.reset_global_state = function(self, test)
-	crystal.assets.unload_all();
-
 	test.resolution = test.resolution or { 200, 200 };
-
 	if test.resolution[1] ~= self.resolution[1] or test.resolution[2] ~= self.resolution[2] then
 		self.resolution = test.resolution;
 		love.window.setMode(self.resolution[1], self.resolution[2], { fullscreen = false });
 	end
 
+	-- TODO avoid coupling with misc modules. Possibly share some logic with clean slate between hot reloads?
+	crystal.assets.unload_all();
 	crystal.window.set_scaling_mode("pixel_perfect");
 	crystal.window.set_native_height(test.resolution[2]);
 	crystal.window.set_aspect_ratio_limits(
