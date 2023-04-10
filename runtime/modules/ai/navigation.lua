@@ -183,14 +183,13 @@ end
 --#region Tests
 
 crystal.test.add("Can walk to point", function()
-	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty.lua");
+	local world = crystal.World:new("test-data/empty.lua");
 
 	local start_x, start_y = 20, 20;
 	local end_x, end_y = 300, 200;
 	local acceptance_radius = 6;
 
-	local subject = scene:spawn(crystal.Entity);
+	local subject = world:spawn(crystal.Entity);
 	subject:add_component(crystal.Body);
 	subject:add_component(crystal.Movement, 50);
 	subject:set_position(start_x, start_y);
@@ -200,41 +199,39 @@ crystal.test.add("Can walk to point", function()
 	subject:navigate_to(end_x, end_y, acceptance_radius);
 
 	for i = 1, 1000 do
-		scene:update(16 / 1000);
+		world:update(16 / 1000);
 	end
 	assert(subject:distance_to(end_x, end_y) < acceptance_radius);
 end);
 
 crystal.test.add("Can walk to entity", function()
-	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty.lua");
+	local world = crystal.World:new("test-data/empty.lua");
 
 	local start_x, start_y = 20, 20;
 	local end_x, end_y = 300, 200;
 	local acceptance_radius = 6;
 
-	local subject = scene:spawn(crystal.Entity);
+	local subject = world:spawn(crystal.Entity);
 	subject:add_component(crystal.Body);
 	subject:add_component(crystal.Movement, 50);
 	subject:set_position(start_x, start_y);
 	subject:add_component(Navigation);
 	subject:add_component(crystal.ScriptRunner);
 
-	local target = scene:spawn(crystal.Entity);
+	local target = world:spawn(crystal.Entity);
 	target:add_component(crystal.Body);
 	target:set_position(end_x, end_y);
 
 	subject:navigate_to_entity(target, acceptance_radius);
 
 	for i = 1, 1000 do
-		scene:update(16 / 1000);
+		world:update(16 / 1000);
 	end
 	assert(subject:distance_to_entity(target) < acceptance_radius);
 end);
 
 crystal.test.add("Can block on navigation thread", function()
-	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty.lua");
+	local world = crystal.World:new("test-data/empty.lua");
 
 	local start_x, start_y = 20, 20;
 	local end_x, end_y = 300, 200;
@@ -242,7 +239,7 @@ crystal.test.add("Can block on navigation thread", function()
 
 	local sentinel = false;
 
-	local subject = scene:spawn(crystal.Entity);
+	local subject = world:spawn(crystal.Entity);
 	subject:add_component(crystal.Body);
 	subject:add_component(crystal.Movement, 50);
 	subject:set_position(start_x, start_y);
@@ -255,11 +252,11 @@ crystal.test.add("Can block on navigation thread", function()
 	end);
 
 	for i = 1, 10 do
-		scene:update(16 / 1000);
+		world:update(16 / 1000);
 	end
 	assert(not sentinel);
 	for i = 1, 1000 do
-		scene:update(16 / 1000);
+		world:update(16 / 1000);
 	end
 	assert(subject:distance_to(end_x, end_y) < acceptance_radius);
 	assert(sentinel);

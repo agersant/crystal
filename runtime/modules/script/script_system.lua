@@ -41,9 +41,8 @@ local Behavior = require("modules/script/behavior");
 local ScriptRunner = require("modules/script/script_runner");
 
 crystal.test.add("Despawning entity runs deferred script functions", function()
-	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty.lua");
-	local entity = scene:spawn(crystal.Entity);
+	local world = crystal.World:new("test-data/empty.lua");
+	local entity = world:spawn(crystal.Entity);
 	entity:add_component(ScriptRunner);
 
 	local sentinel = 0;
@@ -55,17 +54,16 @@ crystal.test.add("Despawning entity runs deferred script functions", function()
 	end);
 
 	assert(sentinel == 0);
-	scene:update(0);
+	world:update(0);
 	assert(sentinel == 0);
 	entity:despawn();
-	scene:update(0);
+	world:update(0);
 	assert(sentinel == 1);
 end);
 
 crystal.test.add("Runs behavior script", function()
-	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty.lua");
-	local entity = scene:spawn(crystal.Entity);
+	local world = crystal.World:new("test-data/empty.lua");
+	local entity = world:spawn(crystal.Entity);
 	entity:add_component(ScriptRunner);
 
 	local sentinel = 0;
@@ -77,17 +75,16 @@ crystal.test.add("Runs behavior script", function()
 
 	assert(sentinel == 0);
 
-	scene:update(0);
+	world:update(0);
 	assert(sentinel == 1);
 
-	scene:update(0);
+	world:update(0);
 	assert(sentinel == 11);
 end);
 
 crystal.test.add("Can run multiple behaviors", function()
-	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty.lua");
-	local entity = scene:spawn(crystal.Entity);
+	local world = crystal.World:new("test-data/empty.lua");
+	local entity = world:spawn(crystal.Entity);
 	entity:add_component(ScriptRunner);
 
 	local sentinel1 = 0;
@@ -103,15 +100,14 @@ crystal.test.add("Can run multiple behaviors", function()
 	assert(sentinel1 == 0);
 	assert(sentinel2 == 0);
 
-	scene:update(0);
+	world:update(0);
 	assert(sentinel1 == 1);
 	assert(sentinel2 == 1);
 end);
 
 crystal.test.add("Stops running script when behavior is removed", function()
-	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty.lua");
-	local entity = scene:spawn(crystal.Entity);
+	local world = crystal.World:new("test-data/empty.lua");
+	local entity = world:spawn(crystal.Entity);
 	entity:add_component(ScriptRunner);
 
 	local sentinel = 0;
@@ -123,17 +119,16 @@ crystal.test.add("Stops running script when behavior is removed", function()
 	end);
 
 	assert(sentinel == 0);
-	scene:update(0);
+	world:update(0);
 	assert(sentinel == 1);
 	entity:remove_component(behavior);
-	scene:update(0);
+	world:update(0);
 	assert(sentinel == 1);
 end);
 
 crystal.test.add("Deferred functions in Behavior are called on behavior removal", function()
-	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty.lua");
-	local entity = scene:spawn(crystal.Entity);
+	local world = crystal.World:new("test-data/empty.lua");
+	local entity = world:spawn(crystal.Entity);
 	entity:add_component(ScriptRunner);
 
 	local sentinel = false;
@@ -144,17 +139,16 @@ crystal.test.add("Deferred functions in Behavior are called on behavior removal"
 		self:hang();
 	end);
 
-	scene:update(0);
+	world:update(0);
 	entity:remove_component(behavior);
 	assert(not sentinel);
-	scene:update(0);
+	world:update(0);
 	assert(sentinel);
 end);
 
 crystal.test.add("Deferred functions in Behavior are called on despawn", function()
-	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty.lua");
-	local entity = scene:spawn(crystal.Entity);
+	local world = crystal.World:new("test-data/empty.lua");
+	local entity = world:spawn(crystal.Entity);
 	entity:add_component(ScriptRunner);
 
 	local sentinel = false;
@@ -165,10 +159,10 @@ crystal.test.add("Deferred functions in Behavior are called on despawn", functio
 		self:hang();
 	end);
 
-	scene:update(0);
+	world:update(0);
 	entity:despawn();
 	assert(not sentinel);
-	scene:update(0);
+	world:update(0);
 	assert(sentinel);
 end);
 

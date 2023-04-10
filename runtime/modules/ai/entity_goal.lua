@@ -23,10 +23,9 @@ end
 --#region Tests
 
 crystal.test.add("EntityGoal can accept/reject positions", function()
-	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty.lua");
+	local world = crystal.World:new("test-data/empty.lua");
 
-	local target = scene:spawn(crystal.Entity);
+	local target = world:spawn(crystal.Entity);
 	target:add_component(crystal.Body);
 	target:set_position(8, 12);
 

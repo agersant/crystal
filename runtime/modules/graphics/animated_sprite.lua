@@ -90,11 +90,10 @@ crystal.test.add("Set animation updates current frame", function()
 end);
 
 crystal.test.add("Cycles through animation frames", function()
-	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty.lua");
+	local world = crystal.World:new("test-data/empty.lua");
 	local sheet = crystal.assets.get("test-data/blankey.lua");
 
-	local entity = scene:spawn(crystal.Entity);
+	local entity = world:spawn(crystal.Entity);
 	local sprite = entity:add_component(AnimatedSprite, sheet);
 
 	sprite:play_animation("floating");
@@ -104,16 +103,15 @@ crystal.test.add("Cycles through animation frames", function()
 
 	for t = 0, 500 do
 		assert(sprite.keyframe == sequence:keyframe_at((t * 1 / 60) % sequence:duration()));
-		scene:update(1 / 60);
+		world:update(1 / 60);
 	end
 end);
 
 crystal.test.add("Animation blocks script", function()
-	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty.lua");
+	local world = crystal.World:new("test-data/empty.lua");
 	local sheet = crystal.assets.get("test-data/blankey.lua");
 
-	local entity = scene:spawn(crystal.Entity);
+	local entity = world:spawn(crystal.Entity);
 	entity:add_component(AnimatedSprite, sheet);
 	entity:add_component(crystal.ScriptRunner);
 
@@ -124,18 +122,17 @@ crystal.test.add("Animation blocks script", function()
 	end);
 
 	assert(not sentinel);
-	scene:update(0.05);
+	world:update(0.05);
 	assert(not sentinel);
-	scene:update(1);
+	world:update(1);
 	assert(sentinel);
 end);
 
 crystal.test.add("Looping animation thread never ends", function()
-	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty.lua");
+	local world = crystal.World:new("test-data/empty.lua");
 	local sheet = crystal.assets.get("test-data/blankey.lua");
 
-	local entity = scene:spawn(crystal.Entity);
+	local entity = world:spawn(crystal.Entity);
 	entity:add_component(AnimatedSprite, sheet);
 	entity:add_component(crystal.ScriptRunner);
 
@@ -146,9 +143,9 @@ crystal.test.add("Looping animation thread never ends", function()
 	end);
 
 	assert(not sentinel);
-	scene:update(0.05);
+	world:update(0.05);
 	assert(not sentinel);
-	scene:update(1000);
+	world:update(1000);
 	assert(not sentinel);
 end);
 

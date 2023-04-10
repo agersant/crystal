@@ -84,11 +84,10 @@ end
 --#region Tests
 
 crystal.test.add("Can draw navigation debug overlay", function()
-	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty.lua");
+	local world = crystal.World:new("test-data/empty.lua");
 	crystal.cmd.run("showNavmeshOverlay");
-	scene:update(0);
-	scene:draw();
+	world:update(0);
+	world:draw();
 	crystal.cmd.run("hideNavmeshOverlay");
 end);
 

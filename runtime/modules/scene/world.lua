@@ -1,10 +1,11 @@
 local features = require("features");
+local Scene = require("modules/scene/scene");
 
-local MapScene = Class("MapScene", crystal.Scene);
+local World = Class("World", Scene);
 
-MapScene.init = function(self, map_name)
+World.init = function(self, map_name)
 	crystal.log.info("Instancing scene for map: " .. tostring(map_name));
-	MapScene.super.init(self);
+	World.super.init(self);
 
 	self._ecs = crystal.ECS:new();
 	self._map = crystal.assets.get(map_name);
@@ -23,31 +24,31 @@ MapScene.init = function(self, map_name)
 	self._map:spawn_entities(self._ecs);
 end
 
-MapScene.ecs = function(self)
+World.ecs = function(self)
 	return self._ecs;
 end
 
-MapScene.map = function(self)
+World.map = function(self)
 	return self._map;
 end
 
-MapScene.camera_controller = function(self)
+World.camera_controller = function(self)
 	return self._camera_controller;
 end
 
-MapScene.spawn = function(self, ...)
+World.spawn = function(self, ...)
 	return self._ecs:spawn(...);
 end
 
-MapScene.despawn = function(self, ...)
+World.despawn = function(self, ...)
 	return self._ecs:despawn(...);
 end
 
-MapScene.add_systems = function(self)
+World.add_systems = function(self)
 end
 
-MapScene.update = function(self, dt)
-	MapScene.super.update(self, dt);
+World.update = function(self, dt)
+	World.super.update(self, dt);
 
 	self._ecs:update();
 
@@ -62,8 +63,8 @@ MapScene.update = function(self, dt)
 	self._ecs:notify_systems("update_drawables", dt);
 end
 
-MapScene.draw = function(self)
-	MapScene.super.draw(self);
+World.draw = function(self)
+	World.super.draw(self);
 
 	crystal.window.draw_upscaled(function()
 		love.graphics.translate(self._camera_controller:draw_offset());
@@ -83,7 +84,7 @@ MapScene.draw = function(self)
 end
 
 ---@param class string
-MapScene.spawnEntityNearPlayer = function(self, class)
+World.spawnEntityNearPlayer = function(self, class)
 	local playerBody;
 	local players = self:ecs():entities_with("InputListener");
 	for entity in pairs(players) do
@@ -127,19 +128,19 @@ end);
 --#region Tests
 
 crystal.test.add("Draws all layers", function(context)
-	local scene = MapScene:new("test-data/TestMapScene/all_features.lua");
+	local scene = World:new("test-data/TestMapScene/all_features.lua");
 	scene:draw();
 	context:expect_frame("test-data/TestMapScene/draws-all-layers.png");
 end);
 
 crystal.test.add("Loads entities", function()
-	local scene = MapScene:new("test-data/TestMapScene/all_features.lua");
+	local scene = World:new("test-data/TestMapScene/all_features.lua");
 	local entities = scene:ecs():entities();
 	assert(table.count(entities) == 10); -- 8 dynamic tiles + 2 map entities
 end);
 
 crystal.test.add("Can spawn and despawn entities", function()
-	local scene = MapScene:new("test-data/empty.lua");
+	local scene = World:new("test-data/empty.lua");
 	local Piggy = Class:test("Piggy", crystal.Entity);
 	local piggy = scene:spawn(Piggy);
 	scene:update(0);
@@ -152,7 +153,7 @@ end);
 crystal.test.add("Can use the `spawn` command", function()
 	local TestSpawnCommand = Class("TestSpawnCommand", crystal.Entity);
 
-	local scene = MapScene:new("test-data/empty.lua");
+	local scene = World:new("test-data/empty.lua");
 
 	scene:spawnEntityNearPlayer(TestSpawnCommand);
 	scene:update(0);
@@ -172,7 +173,7 @@ crystal.test.add("Spawn command puts entity near player", function()
 		self:add_component(crystal.Body);
 	end
 
-	local scene = MapScene:new("test-data/empty.lua");
+	local scene = World:new("test-data/empty.lua");
 
 	local player = scene:spawn(crystal.Entity);
 	player:add_component("InputListener", 1);
@@ -194,5 +195,4 @@ end);
 
 --#endregion
 
-
-return MapScene;
+return World;

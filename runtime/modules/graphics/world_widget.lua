@@ -57,24 +57,22 @@ end
 local Image = require("ui/bricks/elements/Image");
 
 crystal.test.add("Can draw world widget", function(context)
-	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty.lua");
-	local entity = scene:spawn(crystal.Entity);
+	local world = crystal.World:new("test-data/empty.lua");
+	local entity = world:spawn(crystal.Entity);
 	local widget = Image:new();
 	widget:setImageSize(48, 32);
 	entity:add_component(crystal.Body);
 	entity:add_component(crystal.WorldWidget, widget);
 	entity:set_position(160, 120);
 
-	scene:update(0);
-	scene:draw();
+	world:update(0);
+	world:draw();
 	context:expect_frame("test-data/TestWorldWidget/draws-widget.png");
 end);
 
 crystal.test.add("Can adjust widget anchors", function(context)
-	local MapScene = require("mapscene/MapScene");
-	local scene = MapScene:new("test-data/empty.lua");
-	local entity = scene:spawn(crystal.Entity);
+	local world = crystal.World:new("test-data/empty.lua");
+	local entity = world:spawn(crystal.Entity);
 	local widget = Image:new();
 	widget:setImageSize(48, 32);
 	entity:add_component(crystal.Body);
@@ -82,8 +80,8 @@ crystal.test.add("Can adjust widget anchors", function(context)
 	entity:set_widget_anchor(0, 0);
 	entity:set_position(160, 120);
 
-	scene:update(0);
-	scene:draw();
+	world:update(0);
+	world:draw();
 	context:expect_frame("test-data/TestWorldWidget/can-adjust-widget-anchors.png");
 end);
 
