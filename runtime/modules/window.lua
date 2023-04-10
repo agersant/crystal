@@ -32,12 +32,15 @@ Window.init = function(self)
 	self.canvas = nil;
 end
 
+---@param height number
 Window.set_native_height = function(self, height)
 	assert(height > 0);
 	self.native_height = height;
 	self:update();
 end
 
+---@param min number
+---@param max number
 Window.set_aspect_ratio_limits = function(self, min, max)
 	assert(max >= min);
 	self.min_aspect_ratio = min;
@@ -45,6 +48,7 @@ Window.set_aspect_ratio_limits = function(self, min, max)
 	self:update();
 end
 
+---@param scaling_mode ScalingMode
 Window.set_scaling_mode = function(self, scaling_mode)
 	assert(scaling_mode == "none"
 		or scaling_mode == "pixel_perfect"
@@ -54,6 +58,7 @@ Window.set_scaling_mode = function(self, scaling_mode)
 	self:update();
 end
 
+---@param fraction number
 Window.set_safe_area = function(self, fraction)
 	assert(fraction >= 0)
 	assert(fraction <= 1)
