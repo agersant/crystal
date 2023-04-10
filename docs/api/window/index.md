@@ -25,6 +25,12 @@ Let's walk through an example of setting up a 2D platformer or metroidvania game
    Most computer monitors are `16/9` or wider so we will make sure to support that by making it our maximum aspect ratio. This means our game viewport will be anywhere from `256x240` to `427x240`, depending on the window aspect ratio.
 4. We don't want to compromise on our pixel art at all (no cropping, only integer scaling) so we set the scaling mode to `pixel_perfect`.
 
+```lua
+crystal.window.set_native_height(240);
+crystal.window.set_aspect_ratio_limits(256/240, 16/9);
+crystal.window.set_scaling_mode("pixel_perfect");
+```
+
 ## Understanding scaling modes
 
 Scaling modes come into play when the window size is not an integer multiple of the viewport size:
