@@ -55,7 +55,6 @@ add_module("script", "modules/script");
 add_module("tool", "modules/tool");
 add_module("window", "modules/window");
 
-local Scene = require("Scene");
 
 crystal.conf = {
 	assetsDirectories = {},
@@ -75,7 +74,7 @@ crystal.const.define("Time Scale", 1.0, { min = 0.0, max = 100.0 });
 crystal.cmd.add("loadScene sceneName:string", function(sceneName)
 	local class = Class:by_name(sceneName);
 	assert(class);
-	assert(class:inherits_from(Scene));
+	assert(class:inherits_from("Scene"));
 	local newScene = class:new();
 	ENGINE:loadScene(newScene);
 end);

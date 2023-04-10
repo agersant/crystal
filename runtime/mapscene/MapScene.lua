@@ -1,7 +1,6 @@
 local features = require("features");
-local Scene = require("Scene");
 
-local MapScene = Class("MapScene", Scene);
+local MapScene = Class("MapScene", crystal.Scene);
 
 MapScene.init = function(self, map_name)
 	crystal.log.info("Instancing scene for map: " .. tostring(map_name));

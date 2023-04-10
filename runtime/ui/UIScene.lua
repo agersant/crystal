@@ -1,7 +1,6 @@
 local Widget = require("ui/bricks/elements/Widget");
-local Scene = require("Scene");
 
-local UIScene = Class("UIScene", Scene);
+local UIScene = Class("UIScene", crystal.Scene);
 
 UIScene.init = function(self, widget)
 	UIScene.super.init(self);
