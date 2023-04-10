@@ -24,7 +24,7 @@ nav_order: 1
 | [crystal.test](test)         | Provides an interface to define unit or integration tests.                             |
 | [crystal.tool](tool)         | Allows you to define visual development tools.                                         |
 | [crystal.ui](ui)             |                                                                                        |
-| [crystal.window](window)     |                                                                                        |
+| [crystal.window](window)     | Handles scaling and letterboxing to support arbitrary window sizes.                    |
 
 ## Callbacks
 

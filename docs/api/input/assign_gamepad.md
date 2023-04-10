@@ -26,7 +26,7 @@ crystal.input.assign_gamepad(player_index, gamepad_id)
 | Name           | Type     | Description                                                                                               |
 | :------------- | :------- | :-------------------------------------------------------------------------------------------------------- |
 | `player_index` | `number` | Number identifying a player.                                                                              |
-| `gamepad_id`   | `number` | Number identifying a gamepad. These are [Joystick IDs](https://love2d.org/wiki/Joystick:getID) from Love. |
+| `gamepad_id`   | `number` | Number identifying a gamepad. These are [Joystick IDs](https://love2d.org/wiki/Joystick:getID) from LOVE. |
 
 ## Examples
 
