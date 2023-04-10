@@ -22,7 +22,7 @@ Let's walk through an example of setting up a 2D platformer or metroidvania game
 1. Our artwork is originally designed for a resolution of `256x240` so our native height is `240`.
 2. `256x240` is already a very narrow aspect ratio (almost square!) so we can settle for that (`256/240`) as our minimum aspect ratio. In general, you can decide on a minimum aspect ratio by picturing a dialog between two characters in your game. How narrow can you let the screen get before the characters are no longer both on screen and the scene makes no sense?
 3. For the maximum aspect ratio, consider a fixed scene in an open field. How wide can you let the scene get before you run out of visuals to display? This is your maximum aspect ratio.  
-   Most computer monitors are `16/9` or wider so we will make sure to support that by making it our maximum aspect ratio. This means our game viewport will be anywhere from `256x240` to `427x240`.
+   Most computer monitors are `16/9` or wider so we will make sure to support that by making it our maximum aspect ratio. This means our game viewport will be anywhere from `256x240` to `427x240`, depending on the window aspect ratio.
 4. We don't want to compromise on our pixel art at all (no cropping, only integer scaling) so we set the scaling mode to `pixel_perfect`.
 
 ## Understanding scaling modes
@@ -31,7 +31,8 @@ Scaling modes come into play when the window size is not an integer multiple of 
 
 - The `none` scaling mode does not upscale the game at all. The viewport is centered in the game window.
 - The `pixel_perfect` scaling mode scales the game by the largest possible integer (2x, 3x, etc.) without cropping it. The upscaled result is centered in the game window.
-- The `crop_or_squish` scaling mode upscales the game by the an integer factor sufficient to cover the window, and then either crops it or squishes it. Cropping is selected if the cropped content is outside of the [safe area](set_safe_area). For example, a safe area of `0.95` will allow 5% of the screen to get cropped to preserve pixel-perfect rendering.
+- The `crop_or_squish` scaling mode upscales the game by the an integer factor sufficient to cover the window, and then either crops it or squishes it. Cropping is selected if the cropped content is outside of the [safe area](set_safe_area).  
+  For example, a safe area of `0.95` will allow 5% of the screen to get cropped and preserve pixel-perfect rendering. If the window size is such that more than 5% of the game would get cropped, the upscaled viewport is squished instead (with a non-integer factor!).
 
 ## Understanding draw_upscaled VS draw_native
 
