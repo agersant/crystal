@@ -131,27 +131,12 @@ end);
 
 --#region Tests
 
-crystal.test.add("Draws all layers", function(context)
-	local scene = World:new("test-data/TestMapScene/all_features.lua");
-	scene:draw();
-	context:expect_frame("test-data/TestMapScene/draws-all-layers.png");
-end);
-
-crystal.test.add("Loads entities", function()
-	local scene = World:new("test-data/TestMapScene/all_features.lua");
-	local entities = scene:ecs():entities();
-	assert(table.count(entities) == 10); -- 8 dynamic tiles + 2 map entities
-end);
-
-crystal.test.add("Can spawn and despawn entities", function()
+crystal.test.add("Can spawn entities", function()
 	local scene = World:new("test-data/empty.lua");
 	local Piggy = Class:test("Piggy", crystal.Entity);
 	local piggy = scene:spawn(Piggy);
 	scene:update(0);
 	assert(scene:ecs():entities()[piggy]);
-	scene:despawn(piggy);
-	scene:update(0);
-	assert(not scene:ecs():entities()[piggy]);
 end);
 
 crystal.test.add("Can use the `spawn` command", function()

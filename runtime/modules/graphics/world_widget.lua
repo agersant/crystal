@@ -56,21 +56,21 @@ end
 
 local Image = require("ui/bricks/elements/Image");
 
-crystal.test.add("Can draw world widget", function(context)
+crystal.test.add("Can draw world widget", { resolution = { 200, 200 } }, function(context)
 	local world = crystal.World:new("test-data/empty.lua");
 	local entity = world:spawn(crystal.Entity);
 	local widget = Image:new();
 	widget:setImageSize(48, 32);
 	entity:add_component(crystal.Body);
 	entity:add_component(crystal.WorldWidget, widget);
-	entity:set_position(160, 120);
+	entity:set_position(100, 100);
 
 	world:update(0);
 	world:draw();
 	context:expect_frame("test-data/TestWorldWidget/draws-widget.png");
 end);
 
-crystal.test.add("Can adjust widget anchors", function(context)
+crystal.test.add("Can adjust widget anchors", { resolution = { 200, 200 } }, function(context)
 	local world = crystal.World:new("test-data/empty.lua");
 	local entity = world:spawn(crystal.Entity);
 	local widget = Image:new();
@@ -78,7 +78,7 @@ crystal.test.add("Can adjust widget anchors", function(context)
 	entity:add_component(crystal.Body);
 	entity:add_component(crystal.WorldWidget, widget);
 	entity:set_widget_anchor(0, 0);
-	entity:set_position(160, 120);
+	entity:set_position(100, 100);
 
 	world:update(0);
 	world:draw();

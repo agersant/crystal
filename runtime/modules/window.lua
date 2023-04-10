@@ -32,6 +32,36 @@ Window.init = function(self)
 	self.canvas = nil;
 end
 
+Window.set_native_height = function(self, height)
+	assert(height > 0);
+	self.native_height = height;
+	self:update();
+end
+
+Window.set_aspect_ratio_limits = function(self, min, max)
+	assert(max >= min);
+	self.min_aspect_ratio = min;
+	self.max_aspect_ratio = max;
+	self:update();
+end
+
+Window.set_scaling_mode = function(self, scaling_mode)
+	assert(scaling_mode == "none"
+		or scaling_mode == "pixel_perfect"
+		or scaling_mode == "crop_or_squish"
+	);
+	self.scaling_mode = scaling_mode;
+	self:update();
+end
+
+Window.set_safe_area = function(self, fraction)
+	assert(fraction >= 0)
+	assert(fraction <= 1)
+	self.safe_area = fraction;
+	self:update();
+end
+
+---@package
 Window.update = function(self)
 	local window_width, window_height, _ = love.window.getMode();
 	self.window_width = window_width;
@@ -141,23 +171,16 @@ return {
 			window:draw_upscaled(draw);
 		end,
 		set_native_height = function(height)
-			assert(height > 0);
-			window.native_height = height;
+			window:set_native_height(height);
 		end,
 		set_aspect_ratio_limits = function(min, max)
-			assert(max >= min);
-			window.min_aspect_ratio = min;
-			window.max_aspect_ratio = max;
+			window:set_aspect_ratio_limits(min, max);
 		end,
 		set_scaling_mode = function(scaling_mode)
-			assert(scaling_mode == "none"
-				or scaling_mode == "pixel_perfect"
-				or scaling_mode == "crop_or_squish"
-			);
-			window.scaling_mode = scaling_mode;
+			window:set_scaling_mode(scaling_mode);
 		end,
 		set_safe_area = function(fraction)
-			window.safe_area = fraction;
+			window:set_safe_area(fraction);
 		end,
 	},
 	update = function()

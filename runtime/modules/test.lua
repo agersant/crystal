@@ -85,12 +85,19 @@ TestRunner.reset_global_state = function(self, test)
 	crystal.assets.unload_all();
 
 	test.resolution = test.resolution or { 200, 200 };
-	VIEWPORT:setRenderSize(test.resolution[1], test.resolution[2]);
 
 	if test.resolution[1] ~= self.resolution[1] or test.resolution[2] ~= self.resolution[2] then
-		VIEWPORT:setWindowSize(test.resolution[1], test.resolution[2]);
 		self.resolution = test.resolution;
+		love.window.setMode(self.resolution[1], self.resolution[2], { fullscreen = false });
 	end
+
+	crystal.window.set_scaling_mode("pixel_perfect");
+	crystal.window.set_native_height(test.resolution[2]);
+	crystal.window.set_aspect_ratio_limits(
+		test.resolution[1] / test.resolution[2],
+		test.resolution[1] / test.resolution[2]
+	);
+
 	love.graphics.reset();
 	love.graphics.clear(love.graphics.getBackgroundColor());
 end
