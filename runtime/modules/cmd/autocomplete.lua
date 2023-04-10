@@ -4,7 +4,7 @@
 ---@field state SuggestionsState
 ---@field lines { text: string[], command: Command }[]
 
----@class
+---@class Autocomplete
 ---@field private command_store CommandStore
 ---@field private type_store TypeStore
 ---@field private results Suggestions

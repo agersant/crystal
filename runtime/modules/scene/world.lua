@@ -1,6 +1,10 @@
 local features = require("features");
 local Scene = require("modules/scene/scene");
 
+---@class World : Scene
+---@field private _ecs ECS
+---@field private _map Map
+---@field private _camera_controller CameraController
 local World = Class("World", Scene);
 
 World.init = function(self, map_name)
@@ -24,29 +28,32 @@ World.init = function(self, map_name)
 	self._map:spawn_entities(self._ecs);
 end
 
+---@return ECS
 World.ecs = function(self)
 	return self._ecs;
 end
 
+---@return Map
 World.map = function(self)
 	return self._map;
 end
 
+---@return CameraController
 World.camera_controller = function(self)
 	return self._camera_controller;
 end
 
-World.spawn = function(self, ...)
-	return self._ecs:spawn(...);
-end
-
-World.despawn = function(self, ...)
-	return self._ecs:despawn(...);
+---@param class Class
+---@param ... any
+---@return Entity
+World.spawn = function(self, class, ...)
+	return self._ecs:spawn(class, ...);
 end
 
 World.add_systems = function(self)
 end
 
+---@param dt number
 World.update = function(self, dt)
 	World.super.update(self, dt);
 
@@ -84,44 +91,41 @@ World.draw = function(self)
 end
 
 ---@param class string
-World.spawnEntityNearPlayer = function(self, class)
-	local playerBody;
-	local players = self:ecs():entities_with("InputListener");
+World.spawn_near_player = function(self, class)
+	local player_body;
+	local players = self:ecs():entities_with(crystal.InputListener);
 	for entity in pairs(players) do
-		playerBody = entity:component(crystal.Body);
+		player_body = entity:component(crystal.Body);
 		break;
 	end
-
-	local map = self:ecs():context("map");
-	assert(map);
 
 	assert(class);
 	local entity = self:spawn(class);
 
 	local body = entity:component(crystal.Body);
-	if body and playerBody then
-		local x, y = playerBody:position();
+	if body and player_body then
+		local x, y = player_body:position();
 		local rotation = 2 * math.pi * math.random();
 		local radius = 40;
 		x = x + radius * math.cos(rotation);
 		y = y + radius * math.sin(rotation);
-		x, y = map:nearest_navigable_point(x, y);
+		x, y = self._map:nearest_navigable_point(x, y);
 		if x and y then
 			body:set_position(x, y);
 		end
 	end
 end
 
-crystal.cmd.add("loadMap mapName:string", function(mapName)
-	local sceneClass = Class:by_name(crystal.conf.mapSceneClass);
-	local sceneFile = string.merge_paths(crystal.conf.mapDirectory, mapName .. ".lua");
-	local newScene = sceneClass:new(sceneFile);
+crystal.cmd.add("loadMap mapName:string", function(map_name)
+	local scene_class = Class:by_name(crystal.conf.mapSceneClass);
+	local map_path = string.merge_paths(crystal.conf.mapDirectory, map_name .. ".lua");
+	local newScene = scene_class:new(map_path);
 	ENGINE:loadScene(newScene);
 end);
 
 crystal.cmd.add("spawn className:string", function(class_name)
 	if SCENE then
-		SCENE:spawnEntityNearPlayer(class_name);
+		SCENE:spawn_near_player(class_name);
 	end
 end);
 
@@ -155,7 +159,7 @@ crystal.test.add("Can use the `spawn` command", function()
 
 	local scene = World:new("test-data/empty.lua");
 
-	scene:spawnEntityNearPlayer(TestSpawnCommand);
+	scene:spawn_near_player(TestSpawnCommand);
 	scene:update(0);
 
 	for entity in pairs(scene:ecs():entities()) do
@@ -181,7 +185,7 @@ crystal.test.add("Spawn command puts entity near player", function()
 	player:set_position(200, 200);
 	scene:update(0);
 
-	scene:spawnEntityNearPlayer(TestSpawnCommandProximity);
+	scene:spawn_near_player(TestSpawnCommandProximity);
 	scene:update(0);
 
 	for entity in pairs(scene:ecs():entities()) do
