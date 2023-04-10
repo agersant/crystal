@@ -1,23 +1,26 @@
+local Scene = require("modules/scene/scene");
 local Widget = require("ui/bricks/elements/Widget");
 
-local UIScene = Class("UIScene", crystal.Scene);
+---@class UIScene : Scene
+local UIScene = Class("UIScene", Scene);
 
 UIScene.init = function(self, widget)
 	UIScene.super.init(self);
 	assert(widget);
 	assert(widget:inherits_from(Widget));
-	self._widget = widget;
+	self.widget = widget;
 	self:update(0);
 end
 
+---@param dt number
 UIScene.update = function(self, dt)
 	local width, height = crystal.window.viewport_size();
-	self._widget:updateTree(dt, width, height);
+	self.widget:updateTree(dt, width, height);
 end
 
 UIScene.draw = function(self)
 	crystal.window.draw_upscaled(function()
-		self._widget:draw();
+		self.widget:draw();
 	end);
 end
 
