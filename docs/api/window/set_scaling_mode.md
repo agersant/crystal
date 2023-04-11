@@ -5,7 +5,9 @@ grand_parent: API Reference
 
 # crystal.window.set_scaling_mode
 
-Sets how the game should draw at resolutions larger than its native size.
+Sets how the game draws at resolutions larger than its native size.
+
+The default scaling mode is `"crop_or_squish"`.
 
 ## Usage
 

@@ -60,6 +60,6 @@ If your game does not use pixel-art, you may draw everything via [draw_native](d
 | [crystal.window.set_aspect_ratio_limits](set_aspect_ratio_limits) | Sets the narrowest and widest aspect ratios the game supports.                       |
 | [crystal.window.set_native_height](set_native_height)             | Sets the game's native-height (in pixels) from which it can be upscaled.             |
 | [crystal.window.set_safe_area](set_safe_area)                     | Sets how much of the game can be cropped to preserve pixel-perfect scaling.          |
-| [crystal.window.set_scaling_mode](set_scaling_mode)               | Sets how the game should draw at resolutions larger than its native size.            |
+| [crystal.window.set_scaling_mode](set_scaling_mode)               | Sets how the game draws at resolutions larger than its native size.                  |
 | [crystal.window.viewport_scale](viewport_scale)                   | Returns the integer scaling factor applied to the game when upscaling it.            |
 | [crystal.window.viewport_size](viewport_size)                     | Returns the width and height at which the game is being rendered (before upscaling). |
