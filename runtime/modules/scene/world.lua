@@ -5,6 +5,11 @@ local Scene = require("modules/scene/scene");
 ---@field private _ecs ECS
 ---@field private _map Map
 ---@field private _camera_controller CameraController
+---@field private ai_system AISystem
+---@field private draw_system DrawSystem
+---@field private input_system InputSystem
+---@field private physics_system PhysicsSystem
+---@field private script_system ScriptSystem
 local World = Class("World", Scene);
 
 World.init = function(self, map_name)
@@ -17,11 +22,11 @@ World.init = function(self, map_name)
 
 	self._ecs:add_context("map", self._map);
 
-	self._ecs:add_system(crystal.PhysicsSystem);
-	self._ecs:add_system(crystal.ScriptSystem);
-	self._ecs:add_system(crystal.InputSystem);
-	self._ecs:add_system(crystal.AISystem);
-	self._ecs:add_system(crystal.DrawSystem);
+	self.ai_system = self._ecs:add_system(crystal.AISystem);
+	self.draw_system = self._ecs:add_system(crystal.DrawSystem);
+	self.input_system = self._ecs:add_system(crystal.InputSystem);
+	self.physics_system = self._ecs:add_system(crystal.PhysicsSystem);
+	self.script_system = self._ecs:add_system(crystal.ScriptSystem);
 
 	self:add_systems();
 
@@ -59,15 +64,14 @@ World.update = function(self, dt)
 
 	self._ecs:update();
 
-	-- TODO consider explicit method calls instead of notifies
-	self._ecs:notify_systems("simulate_physics", dt);
+	self.physics_system:simulate_physics(dt);
 
 	self._ecs:notify_systems("before_run_scripts", dt);
-	self._ecs:notify_systems("run_scripts", dt);
-	self._ecs:notify_systems("handle_inputs");
-	self._ecs:notify_systems("update_ai", dt);
+	self.script_system:run_scripts(dt);
+	self.input_system:handle_inputs();
+	self.ai_system:update_ai(dt);
 	self._ecs:notify_systems("after_run_scripts", dt);
-	self._ecs:notify_systems("update_drawables", dt);
+	self.draw_system:update_drawables(dt);
 end
 
 World.draw = function(self)
@@ -75,7 +79,7 @@ World.draw = function(self)
 
 	crystal.window.draw_upscaled(function()
 		love.graphics.translate(self._camera_controller:draw_offset());
-		self._ecs:notify_systems("draw_entities");
+		self.draw_system:draw_entities();
 	end);
 
 	if features.debug_draw then

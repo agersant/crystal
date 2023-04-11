@@ -8,7 +8,11 @@ nav_order: 2
 
 This ECS [System](system) powers [InputListener](input_listener) components.
 
-When it receives the `handle_inputs` [notification](/crystal/api/ecs/ecs_notify_systems), every [InputListener](input_listener) dispatches events to its [handlers](input_listener_add_input_handler).
+## Methods
+
+| Name            | Description                                                  |
+| :-------------- | :----------------------------------------------------------- |
+| `handle_inputs` | Runs all [input handlers](input_listener_add_input_handler). |
 
 ## Examples
 
@@ -18,7 +22,7 @@ crystal.input.player(1):set_bindings({
 });
 
 local ecs = crystal.ECS:new();
-ecs:add_system(crystal.InputSystem);
+local input_system = ecs:add_system(crystal.InputSystem);
 
 local entity = ecs:spawn(crystal.Entity);
 entity:add_component(crystal.InputListener, 1);
@@ -29,5 +33,5 @@ end);
 
 ecs:update();
 love.keypressed("space", "space", false);
-ecs:notify_systems("handle_inputs"); -- Prints "+jump"
+input_system:handle_inputs(); -- Prints "+jump"
 ```

@@ -52,7 +52,7 @@ crystal.input.player(1):set_bindings({
 });
 
 local ecs = crystal.ECS:new();
-ecs:add_system(crystal.InputSystem);
+local input_system = ecs:add_system(crystal.InputSystem);
 
 local entity = ecs:spawn(crystal.Entity);
 entity:add_component(crystal.InputListener, 1);
@@ -63,5 +63,5 @@ end);
 
 ecs:update();
 love.keypressed("space", "space", false);
-ecs:notify_systems("handle_inputs"); -- Prints "+jump"
+input_system:handle_inputs(); -- Prints "+jump"
 ```

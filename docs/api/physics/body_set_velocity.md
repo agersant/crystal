@@ -25,7 +25,7 @@ body:set_velocity(vx, vy)
 
 ```lua
 local ecs = crystal.ECS:new();
-ecs:add_system(crystal.PhysicsSystem);
+local physics_system = ecs:add_system(crystal.PhysicsSystem);
 
 local hero = ecs:spawn(crystal.Entity);
 hero:add_component(crystal.Body);
@@ -33,7 +33,7 @@ hero:set_velocity(50, 0);
 
 ecs:update();
 for i = 1, 100 do
-  ecs:notify_systems("simulate_physics");
+  physics_system:simulate_physics(0.01);
 end
 local x, y = hero:position();
 print(x); -- Prints a value very close to 50

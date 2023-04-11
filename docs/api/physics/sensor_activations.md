@@ -24,7 +24,7 @@ sensor:activations()
 
 ```lua
 local ecs = crystal.ECS:new();
-ecs:add_system(crystal.PhysicsSystem);
+local physics_system = ecs:add_system(crystal.PhysicsSystem);
 
 local hero = ecs:spawn(crystal.Entity);
 hero:add_component(crystal.Body);
@@ -39,7 +39,7 @@ pressure_plate:set_categories("triggers");
 pressure_plate:enable_activation_by("characters");
 
 ecs:update();
-ecs:notify_systems("simulate_physics");
+physics_system:simulate_physics(0.01);
 
 local component, entity = next(hero:activations());
 assert(entity == hero);

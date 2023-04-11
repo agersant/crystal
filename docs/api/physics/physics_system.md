@@ -7,20 +7,14 @@ grand_parent: API Reference
 
 This ECS [System](system) manages a [love.World](https://love2d.org/wiki/World). It also powers [Body](body), [Movement](movement), [Collider](collider) and [Sensor](sensor) components.
 
-When it receives the `simulate_physics` [notification](/crystal/api/ecs/ecs_notify_systems), this system:
-
-1. Activates or destroys [love.Body](https://love2d.org/wiki/Body) and [love.Fixture](https://love2d.org/wiki/Fixture) objects.
-2. Gives each [Body](body) a linear velocity matching its desired [Movement](movement).
-3. [Updates](https://love2d.org/wiki/World:update) the Box2D simulation.
-4. Calls `on_collide` / `on_uncollide` / `on_activate` / `on_deactivate` on the relevant [Collider](collider) and [Sensor](sensor) components.
-
 When it receives the `draw_debug` [notification](/crystal/api/ecs/ecs_notify_systems), this system draws colored shapes representing all [Collider](collider) and [Sensor](sensor) components. The colors are determined by the categories of the corresponding component.
 
 ## Methods
 
-| Name                          | Description                                                                     |
-| :---------------------------- | :------------------------------------------------------------------------------ |
-| [world](physics_system_world) | Returns the [love.World](https://love2d.org/wiki/World) managed by this system. |
+| Name                                                | Description                                                                     |
+| :-------------------------------------------------- | :------------------------------------------------------------------------------ |
+| [simulate_physics](physics_system_simulate_physics) | Ticks the physics simulation.                                                   |
+| [world](physics_system_world)                       | Returns the [love.World](https://love2d.org/wiki/World) managed by this system. |
 
 ## Examples
 

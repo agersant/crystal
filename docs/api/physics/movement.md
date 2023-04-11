@@ -44,7 +44,7 @@ entity:add_component(crystal.Movement, movement_speed);
 
 ```lua
 local ecs = crystal.ECS:new();
-ecs:add_system(crystal.PhysicsSystem);
+local physics_system = ecs:add_system(crystal.PhysicsSystem);
 
 local entity = ecs:spawn(crystal.Entity);
 entity:add_component(crystal.Body);
@@ -53,7 +53,7 @@ entity:set_heading(0); -- in radians
 
 for i = 1, 100 do
   ecs:update();
-  ecs:notify_systems("simulate_physics");
+  physics_system:simulate_physics(0.01);
   print(entity:position()); -- Prints entity position as it's moving to the right
 end
 ```

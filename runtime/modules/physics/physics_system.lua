@@ -199,7 +199,7 @@ end
 
 crystal.test.add("Movement component moves things", function()
 	local ecs = crystal.ECS:new();
-	ecs:add_system(crystal.PhysicsSystem);
+	local physics_system = ecs:add_system(crystal.PhysicsSystem);
 
 	local entity = ecs:spawn(crystal.Entity);
 	entity:add_component(crystal.Body);
@@ -212,7 +212,7 @@ crystal.test.add("Movement component moves things", function()
 
 	ecs:update();
 	for i = 1, 100 do
-		ecs:notify_systems("simulate_physics", 0.01);
+		physics_system:simulate_physics(0.01);
 	end
 	local x, y = entity:position();
 	assert(math.abs(x - 100) < 0.01);
@@ -221,7 +221,7 @@ end);
 
 crystal.test.add("Can attach entity to another", function()
 	local ecs = crystal.ECS:new();
-	ecs:add_system(crystal.PhysicsSystem);
+	local physics_system = ecs:add_system(crystal.PhysicsSystem);
 
 	local parent = ecs:spawn(crystal.Entity);
 	parent:add_component(crystal.Body);
@@ -241,7 +241,7 @@ crystal.test.add("Can attach entity to another", function()
 
 	parent:apply_impulse(20, 20);
 	ecs:update();
-	ecs:notify_systems("simulate_physics", 0.01);
+	physics_system:simulate_physics(0.01);
 
 	assert(child:distance_to_entity(parent) == 0);
 end);
@@ -276,7 +276,7 @@ crystal.test.add("Colliders block movement", function()
 	local colliding = false;
 
 	local ecs = crystal.ECS:new();
-	ecs:add_system(crystal.PhysicsSystem);
+	local physics_system = ecs:add_system(crystal.PhysicsSystem);
 
 	local entity = ecs:spawn(crystal.Entity);
 	entity:add_component(crystal.Body);
@@ -300,7 +300,7 @@ crystal.test.add("Colliders block movement", function()
 
 	ecs:update();
 	for i = 1, 100 do
-		ecs:notify_systems("simulate_physics", 0.01);
+		physics_system:simulate_physics(0.01);
 	end
 	local x, y = entity:position();
 	assert(colliding);
@@ -310,7 +310,7 @@ crystal.test.add("Colliders block movement", function()
 
 	entity:set_heading(math.pi);
 	for i = 1, 100 do
-		ecs:notify_systems("simulate_physics", 0.01);
+		physics_system:simulate_physics(0.01);
 	end
 	local x, y = entity:position();
 	assert(not colliding);
@@ -327,7 +327,7 @@ crystal.test.add("Colliders activate sensors", function()
 	local found_activation = false;
 
 	local ecs = crystal.ECS:new();
-	ecs:add_system(crystal.PhysicsSystem);
+	local physics_system = ecs:add_system(crystal.PhysicsSystem);
 
 	local entity = ecs:spawn(crystal.Entity);
 	entity:add_component(crystal.Body);
@@ -351,7 +351,7 @@ crystal.test.add("Colliders activate sensors", function()
 
 	ecs:update();
 	for i = 1, 100 do
-		ecs:notify_systems("simulate_physics", 0.01);
+		physics_system:simulate_physics(0.01);
 		if next(trigger:activations()) then
 			found_activation = true;
 		end

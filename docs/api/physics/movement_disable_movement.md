@@ -34,7 +34,7 @@ movement:disable_movement()
 
 ```lua
 local ecs = crystal.ECS:new();
-ecs:add_system(crystal.PhysicsSystem);
+local physics_system = ecs:add_system(crystal.PhysicsSystem);
 
 local entity = ecs:spawn(crystal.Entity);
 entity:add_component(crystal.Body);
@@ -45,6 +45,6 @@ entity:set_heading(0.5 * math.pi);
 entity:disable_movement(); -- Entity will no longer move, no matter its speed and heading
 
 ecs:update();
-ecs:notify_systems("simulate_physics");
+physics_system:simulate_physics(0.01);
 print(entity:position()); -- Prints "0 0'
 ```

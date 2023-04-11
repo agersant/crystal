@@ -24,7 +24,7 @@ collider:collisions()
 
 ```lua
 local ecs = crystal.ECS:new();
-ecs:add_system(crystal.PhysicsSystem);
+local physics_system = ecs:add_system(crystal.PhysicsSystem);
 
 local hero = ecs:spawn(crystal.Entity);
 hero:add_component(crystal.Body);
@@ -39,7 +39,7 @@ monster:set_categories("characters");
 monster:enable_collision_with("level", "characters");
 
 ecs:update();
-ecs:notify_systems("simulate_physics");
+physics_system:simulate_physics(0.01);
 
 local component, entity = next(hero:collisions());
 assert(entity == monster);

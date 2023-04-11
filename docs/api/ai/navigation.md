@@ -37,7 +37,8 @@ The constructor for Navigation expects no arguments.
 
 ```lua
 local ecs = crystal.ECS:new();
-ecs:add_system(crystal.AISystem);
+local physics_system = ecs:add_system(crystal.PhysicsSystem);
+local ai_system = ecs:add_system(crystal.AISystem);
 ecs:add_context("map", crystal.assets.get("assets/castle_courtyard.lua"));
 
 local entity = ecs:spawn(crystal.Entity);
@@ -47,6 +48,6 @@ entity:add_component(crystal.Navigation);
 entity:navigate_to(60, 120);
 
 -- During update:
-ecs:notify_systems("simulate_physics", dt);
-ecs:notify_systems("update_ai", dt);
+physics_system:simulate_physics(dt);
+ai_system:update_ai(dt);
 ```
