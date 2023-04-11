@@ -60,12 +60,9 @@ end
 
 ---@param dt number
 World.update = function(self, dt)
-	World.super.update(self, dt);
-
 	self._ecs:update();
 
 	self.physics_system:simulate_physics(dt);
-
 	self._ecs:notify_systems("before_run_scripts", dt);
 	self.script_system:run_scripts(dt);
 	self.input_system:handle_inputs();
@@ -75,8 +72,6 @@ World.update = function(self, dt)
 end
 
 World.draw = function(self)
-	World.super.draw(self);
-
 	crystal.window.draw_upscaled(function()
 		love.graphics.translate(self._camera_controller:draw_offset());
 		self.draw_system:draw_entities();
