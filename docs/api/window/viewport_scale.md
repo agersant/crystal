@@ -1,6 +1,7 @@
 ---
 parent: crystal.window
 grand_parent: API Reference
+nav_order: 1
 ---
 
 # crystal.window.viewport_scale
