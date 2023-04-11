@@ -10,9 +10,9 @@ This ECS [System](system) powers [InputListener](input_listener) components.
 
 ## Methods
 
-| Name            | Description                                                  |
-| :-------------- | :----------------------------------------------------------- |
-| `handle_inputs` | Runs all [input handlers](input_listener_add_input_handler). |
+| Name                                        | Description                                                  |
+| :------------------------------------------ | :----------------------------------------------------------- |
+| [handle_inputs](input_system_handle_inputs) | Runs all [input handlers](input_listener_add_input_handler). |
 
 ## Examples
 
