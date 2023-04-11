@@ -1,7 +1,6 @@
 ---
 parent: crystal.window
 grand_parent: API Reference
-nav_order: 2
 ---
 
 # ScalingMode
