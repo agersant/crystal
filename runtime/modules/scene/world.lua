@@ -22,7 +22,7 @@ World.init = function(self, map_name)
 
 	self._ecs:add_context("map", self._map);
 
-	self.ai_system = self._ecs:add_system(crystal.AISystem);
+	self.ai_system = self._ecs:add_system(crystal.AISystem, self._map);
 	self.draw_system = self._ecs:add_system(crystal.DrawSystem);
 	self.input_system = self._ecs:add_system(crystal.InputSystem);
 	self.physics_system = self._ecs:add_system(crystal.PhysicsSystem);

@@ -32,8 +32,9 @@ ai_system:update_ai(delta_time)
 local MyScene = Class("MyScene", crystal.Scene);
 
 MyScene.init = function(self)
+  local map = crystal.assets.get("assets/map/dungeon.lua");
   self.ecs = crystal.ECS:new();
-  self.ai_system = self.ecs:add_system(crystal.AISystem);
+  self.ai_system = self.ecs:add_system(crystal.AISystem, map);
 end
 
 MyScene.update = function(self, delta_time)

@@ -1,8 +1,10 @@
 ---@class AISystem : System
+---@field private map Map
 ---@field private query Query
 local AISystem = Class("AISystem", crystal.System);
 
-AISystem.init = function(self)
+AISystem.init = function(self, map)
+	assert(map:inherits_from(crystal.Map));
 	self.query = self:add_query({ "Navigation" });
 end
 
@@ -34,10 +36,8 @@ AISystem.draw_navigation_mesh = function(self)
 	love.graphics.setLineJoin("bevel");
 	love.graphics.setPointSize(4 * crystal.window.viewport_scale());
 
-	local map = self:ecs():context("map"); -- TODO consider requiring map in constructor
-	assert(map);
 	local triangles = {};
-	for _, t in ipairs(map:navigation_polygons()) do
+	for _, t in ipairs(self.map:navigation_polygons()) do
 		local vertices = { t[1][1], t[1][2], t[2][1], t[2][2], t[3][1], t[3][2] };
 		love.graphics.setColor(fill_color);
 		love.graphics.polygon("fill", vertices);

@@ -11,7 +11,6 @@ This component only works with the following setup:
 
 - The entity also has a [Body](/crystal/api/physics/body) component.
 - The entity also has a [Movement](/crystal/api/physics/movement) component.
-- The ECS this entity belongs to has a [context](/crystal/api/ecs/ecs_set_context) named `"map"`, which points to a [Map](/crystal/api/assets/map).
 
 {: .note}
 Even though methods on this component return [threads](/crystal/api/script/thread), the entity does not need a [ScriptRunner](/crystal/api/script/script_runner) component. The Navigation component manages its own Script, and updates it via [update_navigation](navigation_update_navigation).
@@ -20,7 +19,7 @@ Even though methods on this component return [threads](/crystal/api/script/threa
 
 Like all other components, Navigation components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
 
-The constructor for Navigation expects no arguments.
+The constructor for Navigation expects an argument of type [Map](/crystal/api/assets/map).
 
 ## Methods
 
@@ -36,10 +35,10 @@ The constructor for Navigation expects no arguments.
 ## Examples
 
 ```lua
+local map = crystal.assets.get("assets/map/castle_courtyard.lua");
 local ecs = crystal.ECS:new();
 local physics_system = ecs:add_system(crystal.PhysicsSystem);
-local ai_system = ecs:add_system(crystal.AISystem);
-ecs:add_context("map", crystal.assets.get("assets/castle_courtyard.lua"));
+local ai_system = ecs:add_system(crystal.AISystem, map);
 
 local entity = ecs:spawn(crystal.Entity);
 entity:add_component(crystal.Body);

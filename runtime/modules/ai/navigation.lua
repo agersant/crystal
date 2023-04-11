@@ -3,6 +3,7 @@ local EntityGoal = require("modules/ai/entity_goal");
 local PositionGoal = require("modules/ai/position_goal");
 
 ---@class Navigation : Component
+---@field private map Map
 ---@field private script Script
 ---@field private path {[1]: number, [2]: number}[]
 ---@field private path_index number
@@ -12,7 +13,9 @@ local Navigation = Class("Navigation", crystal.Component);
 
 local navigate;
 
-Navigation.init = function(self)
+Navigation.init = function(self, map)
+	assert(map:inherits_from(crystal.Map));
+	self.map = map;
 	self.script = crystal.Script:new();
 	self.path = nil;
 	self.path_index = nil;
@@ -93,10 +96,8 @@ Navigation.navigate_to_goal = function(self, goal, repath_delay)
 	local navigation = self;
 	local body = self:entity():component(crystal.Body);
 	local movement = self:entity():component(crystal.Movement);
-	local map = self:entity():context("map"); -- TODO consider requiring map in constructor instead
 	assert(body);
 	assert(movement);
-	assert(map);
 
 	self.script:stop_all_threads();
 	return self.script:run_thread(function(self)
@@ -120,7 +121,7 @@ Navigation.navigate_to_goal = function(self, goal, repath_delay)
 			while true do
 				self:thread(function(self)
 					self:stop_on("repath");
-					if navigation:navigate(self, map, goal, body, movement) then
+					if navigation:navigate(self, goal, body, movement) then
 						self:signal("success");
 					else
 						self:signal("failure");
@@ -140,14 +141,14 @@ end
 ---@param body Body
 ---@param movement Movement
 ---@return boolean
-Navigation.navigate = function(self, thread, map, goal, body, movement)
+Navigation.navigate = function(self, thread, goal, body, movement)
 	if not goal:is_valid() then
 		return false;
 	end
 
 	local x, y = body:position();
 	local target_x, target_y = goal:position();
-	self.path = map:find_path(x, y, target_x, target_y);
+	self.path = self.map:find_path(x, y, target_x, target_y);
 	if not self.path then
 		return false;
 	end
@@ -193,7 +194,7 @@ crystal.test.add("Can walk to point", function()
 	subject:add_component(crystal.Body);
 	subject:add_component(crystal.Movement, 50);
 	subject:set_position(start_x, start_y);
-	subject:add_component(Navigation);
+	subject:add_component(Navigation, world:map());
 	subject:add_component(crystal.ScriptRunner);
 
 	subject:navigate_to(end_x, end_y, acceptance_radius);
@@ -215,7 +216,7 @@ crystal.test.add("Can walk to entity", function()
 	subject:add_component(crystal.Body);
 	subject:add_component(crystal.Movement, 50);
 	subject:set_position(start_x, start_y);
-	subject:add_component(Navigation);
+	subject:add_component(Navigation, world:map());
 	subject:add_component(crystal.ScriptRunner);
 
 	local target = world:spawn(crystal.Entity);
@@ -243,7 +244,7 @@ crystal.test.add("Can block on navigation thread", function()
 	subject:add_component(crystal.Body);
 	subject:add_component(crystal.Movement, 50);
 	subject:set_position(start_x, start_y);
-	subject:add_component(Navigation);
+	subject:add_component(Navigation, world:map());
 
 	subject:add_component(crystal.ScriptRunner);
 	subject:add_script(function(self)
