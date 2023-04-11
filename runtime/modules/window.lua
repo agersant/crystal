@@ -18,10 +18,10 @@ local Window = Class("Window");
 
 Window.init = function(self)
 	self.native_height = 240;
-	self.min_aspect_ratio = 0;
-	self.max_aspect_ratio = math.huge;
+	self.min_aspect_ratio = 4 / 3;
+	self.max_aspect_ratio = 21 / 9;
 	self.scaling_mode = "crop_or_squish";
-	self.safe_area = 0.95;
+	self.safe_area = 0.90;
 	self.window_width = nil;
 	self.window_height = nil;
 	self.letterbox_width = nil;
