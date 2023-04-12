@@ -118,13 +118,14 @@ end
 crystal.cmd.add("loadMap mapName:string", function(map_name)
 	local scene_class = Class:by_name(crystal.conf.mapSceneClass);
 	local map_path = string.merge_paths(crystal.conf.mapDirectory, map_name .. ".lua");
-	local newScene = scene_class:new(map_path);
-	ENGINE:loadScene(newScene);
+	local new_scene = scene_class:new(map_path);
+	crystal.scene.replace(new_scene);
 end);
 
 crystal.cmd.add("spawn className:string", function(class_name)
-	if SCENE then
-		SCENE:spawn_near_player(class_name);
+	local scene = crystal.scene.current();
+	if scene then
+		scene:spawn_near_player(class_name);
 	end
 end);
 

@@ -21,5 +21,22 @@ return {
 	global_api = {
 		Tool = Tool,
 	},
-	toolkit = toolkit,
+	update = function(dt)
+		toolkit:update(dt);
+	end,
+	draw = function()
+		toolkit:draw();
+	end,
+	key_pressed = function(key, scan_code, is_repeat)
+		toolkit:key_pressed(key, scan_code, is_repeat);
+	end,
+	text_input = function(text)
+		toolkit:text_input(text);
+	end,
+	quit = function()
+		toolkit:quit();
+	end,
+	consumes_inputs = function()
+		return toolkit:consumes_inputs();
+	end,
 };

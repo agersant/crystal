@@ -67,27 +67,14 @@ crystal.configure = function(c)
 end
 
 FONTS = require("resources/Fonts"):new({});
-ENGINE = {};
-
-crystal.const.define("Time Scale", 1.0, { min = 0.0, max = 100.0 });
 
 crystal.cmd.add("loadScene sceneName:string", function(sceneName)
 	local class = Class:by_name(sceneName);
 	assert(class);
 	assert(class:inherits_from("Scene"));
-	local newScene = class:new();
-	ENGINE:loadScene(newScene);
+	local new_scene = class:new();
+	crystal.scene.replace(new_scene);
 end);
-
-local scene = nil;
-SCENE = nil;
-local nextScene = nil;
-
-ENGINE.loadScene = function(self, scene)
-	-- Change applies before next update, so that the current frame
-	-- can continue with a consistent SCENE global
-	nextScene = scene;
-end
 
 local requireGameSource = function()
 	-- TODO may or may not work in fused build
@@ -152,30 +139,21 @@ end
 love.update = function(dt)
 	modules.window.update();
 	modules.input.update(dt);
-	modules.tool.toolkit:update(dt);
-	if nextScene then
-		scene = nextScene;
-		SCENE = nextScene;
-		nextScene = nil;
-	end
-	if scene then
-		scene:update(dt * crystal.const.get("timescale"));
-	end
+	modules.scene.update(dt);
+	modules.tool.update(dt);
 	modules.input.flush_events();
 end
 
 love.draw = function()
 	love.graphics.reset();
-	if scene then
-		scene:draw();
-	end
+	modules.scene.draw();
 	love.graphics.reset();
-	modules.tool.toolkit:draw();
+	modules.tool.draw();
 end
 
 love.keypressed = function(key, scan_code, is_repeat)
-	modules.tool.toolkit:key_pressed(key, scan_code, is_repeat);
-	if not modules.tool.toolkit:consumes_inputs() then
+	modules.tool.key_pressed(key, scan_code, is_repeat);
+	if not modules.tool.consumes_inputs() then
 		modules.input.key_pressed(key, scan_code, is_repeat);
 	end
 end
@@ -193,11 +171,11 @@ love.gamepadreleased = function(joystick, button)
 end
 
 love.textinput = function(text)
-	modules.tool.toolkit:text_input(text);
+	modules.tool.text_input(text);
 end
 
 love.quit = function()
-	modules.tool.toolkit:quit();
+	modules.tool.quit();
 end
 
 if features.tests then
