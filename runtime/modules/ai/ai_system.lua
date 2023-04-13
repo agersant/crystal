@@ -5,6 +5,7 @@ local AISystem = Class("AISystem", crystal.System);
 
 AISystem.init = function(self, map)
 	assert(map:inherits_from(crystal.Map));
+	self.map = map;
 	self.query = self:add_query({ "Navigation" });
 end
 
