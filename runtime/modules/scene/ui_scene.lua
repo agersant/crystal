@@ -5,11 +5,9 @@ local Widget = require("ui/bricks/elements/Widget");
 local UIScene = Class("UIScene", Scene);
 
 UIScene.init = function(self, widget)
-	UIScene.super.init(self);
 	assert(widget);
 	assert(widget:inherits_from(Widget));
 	self.widget = widget;
-	self:update(0);
 end
 
 ---@param dt number
@@ -19,9 +17,7 @@ UIScene.update = function(self, dt)
 end
 
 UIScene.draw = function(self)
-	crystal.window.draw_upscaled(function()
-		self.widget:draw();
-	end);
+	self.widget:draw();
 end
 
 return UIScene;
