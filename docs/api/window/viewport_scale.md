@@ -6,7 +6,7 @@ nav_order: 1
 
 # crystal.window.viewport_scale
 
-Returns the integer scaling factor applied to the game when upscaling it.
+Returns the scaling factor applied to the game viewport within [draw](crystal.window.draw).
 
 ## Usage
 
@@ -23,7 +23,7 @@ crystal.window.viewport_scale()
 ## Examples
 
 ```lua
-crystal.window.draw_native(function()
+crystal.window.draw(function()
   local scale = crystal.window.viewport_scale();
   love.graphics.setPointSize(scale * 4);
   love.graphics.points(100, 100);

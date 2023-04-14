@@ -6,7 +6,7 @@ nav_order: 1
 
 # crystal.window.set_aspect_ratio_limits
 
-Sets the narrowest and widest aspect ratios the game supports. These limits are used to determine the viewport width when drawing via [draw_native](draw_native) and [draw_upscaled](draw_upscaled).
+Sets the narrowest and widest aspect ratios the game supports. These limits are used to determine the viewport width.
 
 The default limits are 4:3 and 21:9.
 

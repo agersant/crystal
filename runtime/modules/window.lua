@@ -13,7 +13,6 @@
 ---@field package viewport_width number
 ---@field package viewport_height number
 ---@field package viewport_scale number
----@field package canvas love.Canvas
 local Window = Class("Window");
 
 Window.init = function(self)
@@ -29,7 +28,6 @@ Window.init = function(self)
 	self.viewport_width = nil;
 	self.viewport_height = nil;
 	self.viewport_scale = nil;
-	self.canvas = nil;
 end
 
 ---@param height number
@@ -89,74 +87,52 @@ Window.update = function(self)
 	elseif self.scaling_mode == "pixel_perfect" then
 		self.viewport_scale = math.floor(self.letterbox_height / self.viewport_height);
 	elseif self.scaling_mode == "crop_or_squish" then
-		self.viewport_scale = math.ceil(self.letterbox_height / self.viewport_height);
-	end
-
-	local canvas_w, canvas_h = 0, 0;
-	if self.canvas then
-		canvas_w, canvas_h = self.canvas:getDimensions();
-	end
-	if canvas_w ~= self.viewport_width or canvas_h ~= self.viewport_height then
-		self.canvas = love.graphics.newCanvas(self.viewport_width, self.viewport_height);
-		self.canvas:setFilter("nearest", "nearest");
+		local scale_x = (self.letterbox_width + 1) / self.viewport_width;
+		local scale_y = (self.letterbox_height + 1) / self.viewport_height;
+		local scale = math.max(scale_x, scale_y);
+		local w = self.viewport_width * math.ceil(scale);
+		local h = self.viewport_height * math.ceil(scale);
+		if self.letterbox_width / w >= self.safe_area and self.letterbox_height / h >= self.safe_area then
+			self.viewport_scale = math.ceil(scale);
+		else
+			self.viewport_scale = scale;
+		end
 	end
 end
 
----@package
-Window.scale = function(self, draw)
-	love.graphics.push("all");
+
+---@param draw fun()
+Window.draw = function(self, draw)
+	assert(type(draw) == "function");
+	love.graphics.push();
 	if self.scaling_mode == "none" then
-		local x = math.floor((self.window_width - self.viewport_width) / 2);
-		local y = math.floor((self.window_height - self.viewport_height) / 2);
+		local x = math.round((self.window_width - self.viewport_width) / 2);
+		local y = math.round((self.window_height - self.viewport_height) / 2);
 		love.graphics.setScissor(x, y, self.viewport_width, self.viewport_height);
 		love.graphics.translate(x, y);
 	elseif self.scaling_mode == "pixel_perfect" then
 		local w = self.viewport_width * self.viewport_scale;
 		local h = self.viewport_height * self.viewport_scale;
-		local x = math.floor((self.window_width - w) / 2);
-		local y = math.floor((self.window_height - h) / 2);
+		local x = math.round((self.window_width - w) / 2);
+		local y = math.round((self.window_height - h) / 2);
 		love.graphics.setScissor(x, y, w, h);
 		love.graphics.translate(x, y);
-		love.graphics.scale(self.viewport_scale, self.viewport_scale);
 	elseif self.scaling_mode == "crop_or_squish" then
-		local w = self.viewport_width * self.viewport_scale;
-		local h = self.viewport_height * self.viewport_scale;
 		local x = math.floor((self.window_width - self.letterbox_width) / 2);
 		local y = math.floor((self.window_height - self.letterbox_height) / 2);
 		love.graphics.setScissor(x, y, self.letterbox_width, self.letterbox_height);
-		if self.letterbox_height / h >= self.safe_area then
-			love.graphics.translate(math.floor((self.window_width - w) / 2), math.floor((self.window_height - h) / 2));
-			love.graphics.scale(self.viewport_scale, self.viewport_scale);
+		local crop = self.viewport_scale == math.floor(self.viewport_scale);
+		if crop then
+			local w = self.viewport_width * self.viewport_scale;
+			local h = self.viewport_height * self.viewport_scale;
+			love.graphics.translate(math.round((self.window_width - w) / 2), math.round((self.window_height - h) / 2));
 		else
 			love.graphics.translate(x, y);
-			love.graphics.scale(self.letterbox_width / self.viewport_width, self.letterbox_height / self.viewport_height);
 		end
 	end
+	love.graphics.scale(self.viewport_scale, self.viewport_scale);
 	draw();
 	love.graphics.pop();
-end
-
----@param draw fun()
-Window.draw_native = function(self, draw)
-	assert(type(draw) == "function");
-	self:scale(function()
-		draw();
-	end);
-end
-
----@param draw fun()
-Window.draw_upscaled = function(self, draw)
-	assert(type(draw) == "function");
-
-	love.graphics.push("all");
-	love.graphics.setCanvas(self.canvas);
-	love.graphics.clear();
-	draw();
-	love.graphics.pop();
-
-	self:scale(function()
-		love.graphics.draw(self.canvas);
-	end);
 end
 
 local window = Window:new();
@@ -169,11 +145,8 @@ return {
 		viewport_scale = function()
 			return window.viewport_scale;
 		end,
-		draw_native = function(draw)
-			window:draw_native(draw);
-		end,
-		draw_upscaled = function(draw)
-			window:draw_upscaled(draw);
+		draw = function(draw)
+			window:draw(draw);
 		end,
 		set_native_height = function(height)
 			window:set_native_height(height);

@@ -35,8 +35,6 @@ MyScene.update = function(self, delta_time)
 end
 
 MyScene.draw = function(self)
-  crystal.window.draw_upscaled(function()
-    self.draw_system:draw_entities();
-  end);
+  self.draw_system:draw_entities();
 end
 ```
