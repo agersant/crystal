@@ -81,6 +81,20 @@ end
 
 --#region Tests
 
+local TestWorld = Class:test("TestWorld");
+
+TestWorld.init = function(self)
+	self.ecs = crystal.ECS:new();
+	self.draw_system = self.ecs:add_system(crystal.DrawSystem);
+	self.script_system = self.ecs:add_system(crystal.ScriptSystem);
+end
+
+TestWorld.update = function(self, dt)
+	self.ecs:update(dt);
+	self.script_system:run_scripts(dt);
+	self.draw_system:update_drawables(dt);
+end
+
 crystal.test.add("Set animation updates current frame", function()
 	local sheet = crystal.assets.get("test-data/blankey.lua");
 	local sprite = AnimatedSprite:new(sheet);
@@ -90,10 +104,10 @@ crystal.test.add("Set animation updates current frame", function()
 end);
 
 crystal.test.add("Cycles through animation frames", function()
-	local world = crystal.World:new("test-data/empty.lua");
+	local world = TestWorld:new();
 	local sheet = crystal.assets.get("test-data/blankey.lua");
 
-	local entity = world:spawn(crystal.Entity);
+	local entity = world.ecs:spawn(crystal.Entity);
 	local sprite = entity:add_component(AnimatedSprite, sheet);
 
 	sprite:play_animation("floating");
@@ -108,10 +122,10 @@ crystal.test.add("Cycles through animation frames", function()
 end);
 
 crystal.test.add("Animation blocks script", function()
-	local world = crystal.World:new("test-data/empty.lua");
+	local world = TestWorld:new();
 	local sheet = crystal.assets.get("test-data/blankey.lua");
 
-	local entity = world:spawn(crystal.Entity);
+	local entity = world.ecs:spawn(crystal.Entity);
 	entity:add_component(AnimatedSprite, sheet);
 	entity:add_component(crystal.ScriptRunner);
 
@@ -129,10 +143,10 @@ crystal.test.add("Animation blocks script", function()
 end);
 
 crystal.test.add("Looping animation thread never ends", function()
-	local world = crystal.World:new("test-data/empty.lua");
+	local world = TestWorld:new();
 	local sheet = crystal.assets.get("test-data/blankey.lua");
 
-	local entity = world:spawn(crystal.Entity);
+	local entity = world.ecs:spawn(crystal.Entity);
 	entity:add_component(AnimatedSprite, sheet);
 	entity:add_component(crystal.ScriptRunner);
 

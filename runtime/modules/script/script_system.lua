@@ -37,13 +37,22 @@ end
 
 --#region Tests
 
-local Behavior = require("modules/script/behavior");
-local ScriptRunner = require("modules/script/script_runner");
+local TestWorld = Class:test("TestWorld");
+
+TestWorld.init = function(self)
+	self.ecs = crystal.ECS:new();
+	self.script_system = self.ecs:add_system(crystal.ScriptSystem);
+end
+
+TestWorld.update = function(self, dt)
+	self.ecs:update(dt);
+	self.script_system:run_scripts(dt);
+end
 
 crystal.test.add("Despawning entity runs deferred script functions", function()
-	local world = crystal.World:new("test-data/empty.lua");
-	local entity = world:spawn(crystal.Entity);
-	entity:add_component(ScriptRunner);
+	local world = TestWorld:new();
+	local entity = world.ecs:spawn(crystal.Entity);
+	entity:add_component(crystal.ScriptRunner);
 
 	local sentinel = 0;
 	entity:add_script(function(self)
@@ -62,12 +71,12 @@ crystal.test.add("Despawning entity runs deferred script functions", function()
 end);
 
 crystal.test.add("Runs behavior script", function()
-	local world = crystal.World:new("test-data/empty.lua");
-	local entity = world:spawn(crystal.Entity);
-	entity:add_component(ScriptRunner);
+	local world = TestWorld:new();
+	local entity = world.ecs:spawn(crystal.Entity);
+	entity:add_component(crystal.ScriptRunner);
 
 	local sentinel = 0;
-	entity:add_component(Behavior, function(self)
+	entity:add_component(crystal.Behavior, function(self)
 		sentinel = sentinel + 1;
 		self:wait_frame();
 		sentinel = sentinel + 10;
@@ -83,17 +92,17 @@ crystal.test.add("Runs behavior script", function()
 end);
 
 crystal.test.add("Can run multiple behaviors", function()
-	local world = crystal.World:new("test-data/empty.lua");
-	local entity = world:spawn(crystal.Entity);
-	entity:add_component(ScriptRunner);
+	local world = TestWorld:new();
+	local entity = world.ecs:spawn(crystal.Entity);
+	entity:add_component(crystal.ScriptRunner);
 
 	local sentinel1 = 0;
-	entity:add_component(Behavior, function(self)
+	entity:add_component(crystal.Behavior, function(self)
 		sentinel1 = sentinel1 + 1;
 	end);
 
 	local sentinel2 = 0;
-	entity:add_component(Behavior, function(self)
+	entity:add_component(crystal.Behavior, function(self)
 		sentinel2 = sentinel2 + 1;
 	end);
 
@@ -106,12 +115,12 @@ crystal.test.add("Can run multiple behaviors", function()
 end);
 
 crystal.test.add("Stops running script when behavior is removed", function()
-	local world = crystal.World:new("test-data/empty.lua");
-	local entity = world:spawn(crystal.Entity);
-	entity:add_component(ScriptRunner);
+	local world = TestWorld:new();
+	local entity = world.ecs:spawn(crystal.Entity);
+	entity:add_component(crystal.ScriptRunner);
 
 	local sentinel = 0;
-	local behavior = entity:add_component(Behavior, function(self)
+	local behavior = entity:add_component(crystal.Behavior, function(self)
 		while true do
 			sentinel = sentinel + 1;
 			self:wait_frame();
@@ -127,12 +136,12 @@ crystal.test.add("Stops running script when behavior is removed", function()
 end);
 
 crystal.test.add("Deferred functions in Behavior are called on behavior removal", function()
-	local world = crystal.World:new("test-data/empty.lua");
-	local entity = world:spawn(crystal.Entity);
-	entity:add_component(ScriptRunner);
+	local world = TestWorld:new();
+	local entity = world.ecs:spawn(crystal.Entity);
+	entity:add_component(crystal.ScriptRunner);
 
 	local sentinel = false;
-	local behavior = entity:add_component(Behavior, function(self)
+	local behavior = entity:add_component(crystal.Behavior, function(self)
 		self:defer(function()
 			sentinel = true;
 		end);
@@ -147,12 +156,12 @@ crystal.test.add("Deferred functions in Behavior are called on behavior removal"
 end);
 
 crystal.test.add("Deferred functions in Behavior are called on despawn", function()
-	local world = crystal.World:new("test-data/empty.lua");
-	local entity = world:spawn(crystal.Entity);
-	entity:add_component(ScriptRunner);
+	local world = TestWorld:new();
+	local entity = world.ecs:spawn(crystal.Entity);
+	entity:add_component(crystal.ScriptRunner);
 
 	local sentinel = false;
-	entity:add_component(Behavior, function(self)
+	entity:add_component(crystal.Behavior, function(self)
 		self:defer(function()
 			sentinel = true;
 		end);

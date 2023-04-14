@@ -56,9 +56,27 @@ end
 
 local Image = require("ui/bricks/elements/Image");
 
+local TestWorld = Class:test("TestWorld");
+
+TestWorld.init = function(self)
+	self.ecs = crystal.ECS:new();
+	self.draw_system = self.ecs:add_system(crystal.DrawSystem);
+	self.physics_system = self.ecs:add_system(crystal.PhysicsSystem);
+end
+
+TestWorld.update = function(self, dt)
+	self.ecs:update(dt);
+	self.physics_system:simulate_physics(dt);
+	self.draw_system:update_drawables(dt);
+end
+
+TestWorld.draw = function(self)
+	self.draw_system:draw_entities();
+end
+
 crystal.test.add("Can draw world widget", { resolution = { 200, 200 } }, function(context)
-	local world = crystal.World:new("test-data/empty.lua");
-	local entity = world:spawn(crystal.Entity);
+	local world = TestWorld:new();
+	local entity = world.ecs:spawn(crystal.Entity);
 	local widget = Image:new();
 	widget:setImageSize(48, 32);
 	entity:add_component(crystal.Body);
@@ -71,8 +89,8 @@ crystal.test.add("Can draw world widget", { resolution = { 200, 200 } }, functio
 end);
 
 crystal.test.add("Can adjust widget anchors", { resolution = { 200, 200 } }, function(context)
-	local world = crystal.World:new("test-data/empty.lua");
-	local entity = world:spawn(crystal.Entity);
+	local world = TestWorld:new();
+	local entity = world.ecs:spawn(crystal.Entity);
 	local widget = Image:new();
 	widget:setImageSize(48, 32);
 	entity:add_component(crystal.Body);

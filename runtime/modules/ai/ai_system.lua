@@ -84,12 +84,114 @@ end
 
 --#region Tests
 
+local TestWorld = Class:test("TestWorld");
+
+TestWorld.init = function(self)
+	self.ecs = crystal.ECS:new();
+	self.map = crystal.assets.get("test-data/empty.lua");
+	self.ai_system = self.ecs:add_system(crystal.AISystem, self.map);
+	self.physics_system = self.ecs:add_system(crystal.PhysicsSystem);
+	self.script_system = self.ecs:add_system(crystal.ScriptSystem);
+	self.map:spawn_entities(self.ecs);
+end
+
+TestWorld.update = function(self, dt)
+	self.ecs:update(dt);
+	self.ai_system:update_ai(dt);
+	self.physics_system:simulate_physics(dt);
+	self.script_system:run_scripts(dt);
+end
+
+TestWorld.draw = function(self)
+	self.ecs:notify_systems("draw_debug");
+end
+
 crystal.test.add("Can draw navigation debug overlay", function()
-	local world = crystal.World:new("test-data/empty.lua");
+	local world = TestWorld:new();
 	crystal.cmd.run("showNavmeshOverlay");
 	world:update(0);
 	world:draw();
 	crystal.cmd.run("hideNavmeshOverlay");
+end);
+
+crystal.test.add("Can walk to point", function()
+	local world = TestWorld:new();
+
+	local start_x, start_y = 20, 20;
+	local end_x, end_y = 300, 200;
+	local acceptance_radius = 6;
+
+	local subject = world.ecs:spawn(crystal.Entity);
+	subject:add_component(crystal.Body);
+	subject:add_component(crystal.Movement, 50);
+	subject:set_position(start_x, start_y);
+	subject:add_component(crystal.Navigation, world.map);
+	subject:add_component(crystal.ScriptRunner);
+
+	subject:navigate_to(end_x, end_y, acceptance_radius);
+
+	for i = 1, 1000 do
+		world:update(16 / 1000);
+	end
+	assert(subject:distance_to(end_x, end_y) < acceptance_radius);
+end);
+
+crystal.test.add("Can walk to entity", function()
+	local world = TestWorld:new();
+
+	local start_x, start_y = 20, 20;
+	local end_x, end_y = 300, 200;
+	local acceptance_radius = 6;
+
+	local subject = world.ecs:spawn(crystal.Entity);
+	subject:add_component(crystal.Body);
+	subject:add_component(crystal.Movement, 50);
+	subject:set_position(start_x, start_y);
+	subject:add_component(crystal.Navigation, world.map);
+	subject:add_component(crystal.ScriptRunner);
+
+	local target = world.ecs:spawn(crystal.Entity);
+	target:add_component(crystal.Body);
+	target:set_position(end_x, end_y);
+
+	subject:navigate_to_entity(target, acceptance_radius);
+
+	for i = 1, 1000 do
+		world:update(16 / 1000);
+	end
+	assert(subject:distance_to_entity(target) < acceptance_radius);
+end);
+
+crystal.test.add("Can block on navigation thread", function()
+	local world = TestWorld:new();
+
+	local start_x, start_y = 20, 20;
+	local end_x, end_y = 300, 200;
+	local acceptance_radius = 6;
+
+	local sentinel = false;
+
+	local subject = world.ecs:spawn(crystal.Entity);
+	subject:add_component(crystal.Body);
+	subject:add_component(crystal.Movement, 50);
+	subject:set_position(start_x, start_y);
+	subject:add_component(crystal.Navigation, world.map);
+
+	subject:add_component(crystal.ScriptRunner);
+	subject:add_script(function(self)
+		local success = self:join(self:navigate_to(end_x, end_y, acceptance_radius));
+		sentinel = success;
+	end);
+
+	for i = 1, 10 do
+		world:update(16 / 1000);
+	end
+	assert(not sentinel);
+	for i = 1, 1000 do
+		world:update(16 / 1000);
+	end
+	assert(subject:distance_to(end_x, end_y) < acceptance_radius);
+	assert(sentinel);
 end);
 
 --#endregion
