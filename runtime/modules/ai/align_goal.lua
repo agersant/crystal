@@ -43,13 +43,14 @@ end
 --#region Tests
 
 crystal.test.add("AlignGoal can accept/reject position", function()
-	local world = crystal.World:new("test-data/empty.lua");
+	local ecs = crystal.ECS:new();
+	ecs:add_system(crystal.PhysicsSystem);
 
-	local me = world:spawn(crystal.Entity);
+	local me = ecs:spawn(crystal.Entity);
 	me:add_component(crystal.Body);
 	me:set_position(1, .5);
 
-	local target = world:spawn(crystal.Entity);
+	local target = ecs:spawn(crystal.Entity);
 	target:add_component(crystal.Body);
 
 	local goal = AlignGoal:new(me, target, 1);

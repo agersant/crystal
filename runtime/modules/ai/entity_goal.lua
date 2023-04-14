@@ -23,9 +23,10 @@ end
 --#region Tests
 
 crystal.test.add("EntityGoal can accept/reject positions", function()
-	local world = crystal.World:new("test-data/empty.lua");
+	local ecs = crystal.ECS:new();
+	ecs:add_system(crystal.PhysicsSystem);
 
-	local target = world:spawn(crystal.Entity);
+	local target = ecs:spawn(crystal.Entity);
 	target:add_component(crystal.Body);
 	target:set_position(8, 12);
 
