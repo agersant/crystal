@@ -19,7 +19,7 @@ nav_order: 1
 | [crystal.input](input)       | Manages keybindings and routes input events.                                           |
 | [crystal.log](log)           | Provides an interface to write log messages to console and to disk.                    |
 | [crystal.physics](physics)   | Components allowing entities to move and collide with each other.                      |
-| [crystal.scene](scene)       |                                                                                        |
+| [crystal.scene](scene)       | Manages game scenes and transitions between them.                                      |
 | [crystal.script](script)     | Coroutine-based scripting system to write logic that takes place over multiple frames. |
 | [crystal.test](test)         | Provides an interface to define unit or integration tests.                             |
 | [crystal.tool](tool)         | Allows you to define visual development tools.                                         |
