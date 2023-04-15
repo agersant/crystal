@@ -10,13 +10,10 @@ local Scene = require("modules/scene/scene");
 ---@field private input_system InputSystem
 ---@field private physics_system PhysicsSystem
 ---@field private script_system ScriptSystem
----@field private canvas love.Canvas
 local World = Class("World", Scene);
 
 World.init = function(self, map_name)
 	crystal.log.info("Instancing scene for map: " .. tostring(map_name));
-
-	self:resize_canvas();
 
 	self._ecs = crystal.ECS:new();
 	self._map = crystal.assets.get(map_name);
@@ -60,21 +57,8 @@ end
 World.add_systems = function(self)
 end
 
-World.resize_canvas = function(self)
-	local viewport_width, viewport_height = crystal.window.viewport_size();
-	local canvas_width, canvas_height = 0, 0;
-	if self.canvas then
-		canvas_width, canvas_height = self.canvas:getDimensions();
-	end
-	if canvas_width ~= viewport_width or canvas_height ~= viewport_height then
-		self.canvas = love.graphics.newCanvas(crystal.window.viewport_size());
-		self.canvas:setFilter("nearest", "nearest");
-	end
-end
-
 ---@param dt number
 World.update = function(self, dt)
-	self:resize_canvas();
 	self._ecs:update();
 	self.physics_system:simulate_physics(dt);
 	self._ecs:notify_systems("before_run_scripts", dt);
@@ -86,7 +70,7 @@ World.update = function(self, dt)
 end
 
 World.draw = function(self)
-	self:draw_pixelated(function()
+	crystal.window.draw_native(function()
 		love.graphics.translate(self._camera_controller:draw_offset());
 		self.draw_system:draw_entities();
 	end);
@@ -98,21 +82,9 @@ World.draw = function(self)
 		love.graphics.pop();
 	end
 
-	self:draw_pixelated(function()
+	crystal.window.draw_native(function()
 		self._ecs:notify_systems("draw_ui");
 	end);
-end
-
----@param draw fun()
-World.draw_pixelated = function(self, draw)
-	assert(type(draw) == "function");
-	love.graphics.push("all");
-	love.graphics.reset();
-	love.graphics.setCanvas(self.canvas);
-	love.graphics.clear();
-	draw();
-	love.graphics.pop();
-	love.graphics.draw(self.canvas);
 end
 
 ---@param class string

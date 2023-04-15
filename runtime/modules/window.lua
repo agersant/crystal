@@ -1,18 +1,19 @@
 ---@alias ScalingMode "none" | "pixel_perfect" | "crop_or_squish"
 
 ---@class Window
----@field package native_height number
----@field package min_aspect_ratio number
----@field package max_aspect_ratio number
----@field package scaling_mode ScalingMode
----@field package safe_area number
----@field package window_width number
----@field package window_height number
----@field package letterbox_width number
----@field package letterbox_height number
+---@field private native_height number
+---@field private min_aspect_ratio number
+---@field private max_aspect_ratio number
+---@field private scaling_mode ScalingMode
+---@field private safe_area number
+---@field private window_width number
+---@field private window_height number
+---@field private letterbox_width number
+---@field private letterbox_height number
 ---@field package viewport_width number
 ---@field package viewport_height number
 ---@field package viewport_scale number
+---@field private viewport_canvas love.Canvas[]
 local Window = Class("Window");
 
 Window.init = function(self)
@@ -28,8 +29,10 @@ Window.init = function(self)
 	self.viewport_width = nil;
 	self.viewport_height = nil;
 	self.viewport_scale = nil;
+	self.viewport_canvas = {};
 end
 
+---@package
 ---@param height number
 Window.set_native_height = function(self, height)
 	assert(height > 0);
@@ -37,6 +40,7 @@ Window.set_native_height = function(self, height)
 	self:update();
 end
 
+---@package
 ---@param min number
 ---@param max number
 Window.set_aspect_ratio_limits = function(self, min, max)
@@ -46,6 +50,7 @@ Window.set_aspect_ratio_limits = function(self, min, max)
 	self:update();
 end
 
+---@package
 ---@param scaling_mode ScalingMode
 Window.set_scaling_mode = function(self, scaling_mode)
 	assert(scaling_mode == "none"
@@ -56,6 +61,7 @@ Window.set_scaling_mode = function(self, scaling_mode)
 	self:update();
 end
 
+---@package
 ---@param fraction number
 Window.set_safe_area = function(self, fraction)
 	assert(fraction >= 0)
@@ -98,9 +104,16 @@ Window.update = function(self)
 			self.viewport_scale = scale;
 		end
 	end
+
+	for index, canvas in ipairs(self.viewport_canvas) do
+		local canvas_width, canvas_height = canvas:getDimensions();
+		if canvas_width ~= self.viewport_width or canvas_height ~= self.viewport_height then
+			self.viewport_canvas[index] = self:allocate_viewport_canvas();
+		end
+	end
 end
 
-
+---@package
 ---@param draw fun()
 Window.draw = function(self, draw)
 	assert(type(draw) == "function");
@@ -135,6 +148,30 @@ Window.draw = function(self, draw)
 	love.graphics.pop();
 end
 
+---@private
+Window.allocate_viewport_canvas = function(self)
+	local canvas = love.graphics.newCanvas(self.viewport_width, self.viewport_height);
+	canvas:setFilter("nearest", "nearest");
+	return canvas;
+end
+
+---@package
+---@param draw fun()
+Window.draw_native = function(self, draw)
+	if table.is_empty(self.viewport_canvas) then
+		table.push(self.viewport_canvas, self:allocate_viewport_canvas());
+	end
+	local canvas = table.remove(self.viewport_canvas);
+	love.graphics.push("all");
+	love.graphics.reset();
+	love.graphics.setCanvas(canvas);
+	love.graphics.clear();
+	draw();
+	love.graphics.pop();
+	love.graphics.draw(canvas);
+	table.push(self.viewport_canvas, canvas);
+end
+
 local window = Window:new();
 
 return {
@@ -147,6 +184,9 @@ return {
 		end,
 		draw = function(draw)
 			window:draw(draw);
+		end,
+		draw_native = function(draw)
+			window:draw_native(draw);
 		end,
 		set_native_height = function(height)
 			window:set_native_height(height);

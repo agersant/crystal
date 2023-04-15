@@ -45,6 +45,7 @@ Scaling modes come into play when the window size is not an integer multiple of 
 | Name                                                              | Description                                                                          |
 | :---------------------------------------------------------------- | :----------------------------------------------------------------------------------- |
 | [crystal.window.draw](draw)                                       | Draws on the screen with scaling and letterboxing transforms applied.                |
+| [crystal.window.draw_native](draw_native)                         | Draws on a viewport-sized canvas, and then draws the canvas on the screen.           |
 | [crystal.window.set_aspect_ratio_limits](set_aspect_ratio_limits) | Sets the narrowest and widest aspect ratios the game supports.                       |
 | [crystal.window.set_native_height](set_native_height)             | Sets the game's native-height (in pixels) from which it can be upscaled.             |
 | [crystal.window.set_safe_area](set_safe_area)                     | Sets how much of the game can be cropped to preserve pixel-perfect scaling.          |

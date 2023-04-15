@@ -4,31 +4,32 @@ grand_parent: API Reference
 nav_order: 1
 ---
 
-# crystal.window.draw
+# crystal.window.draw_native
 
-Draws on the screen with scaling and letterboxing transforms applied. This function relies on [love.graphics.scale](https://love2d.org/wiki/love.graphics.scale) to upscale visuals from the viewport size to the window size.
+Draws on a viewport-sized canvas, and then draws the canvas on the screen. Canvas used by this function have their filtering mode set to `"nearest"`, which makes them suitable to draw pixel-art games at native size.
 
-Since LOVE point size is unaffected by scale transforms, you can multiply values by the [viewport scale](viewport_scale) when [setting point sizes](https://love2d.org/wiki/love.graphics.setPointSize).
-
-{: .note}
-When a [Scene](/crystal/api/scene/scene) is drawing on the screen, its draw method is already wrapped by `crystal.window.draw`. This means you rarely (if ever) need to call this function yourself.
+{: .warning}
+Nested calls to this function use distinct canvas. As a result, this function may allocate a canvas. Previously used canvas are re-used when possible so allocations should be very rare.
 
 ## Usage
 
 ```lua
-crystal.window.draw(draw_function);
+crystal.window.draw_native(draw_function);
 ```
 
 ### Arguments
 
-| Name   | Type       | Description                            |
-| :----- | :--------- | :------------------------------------- |
-| `draw` | `function` | Function containing the drawing logic. |
+| Name          | Type       | Description                            |
+| :------------ | :--------- | :------------------------------------- |
+| `draw_native` | `function` | Function containing the drawing logic. |
 
 ## Examples
 
 ```lua
-crystal.window.draw(function()
-  love.graphics.circle("fill", 50, 50, 40);
-end);
+MyScene.draw = function(self)
+  crystal.window.draw_native(function()
+    self.draw_system:draw_entities();
+  end);
+  self.ecs:notify_systems("draw_debug");
+end
 ```
