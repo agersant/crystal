@@ -77,7 +77,9 @@ end
 SceneManager.draw = function(self)
 	crystal.window.draw(function()
 		if not self.transition then
-			self.scene:draw();
+			if self.scene then
+				self.scene:draw();
+			end
 		else
 			local width, height = crystal.window.viewport_size();
 			local progress = self.transition:easing()(self.transition_progress);

@@ -3,7 +3,6 @@ local CameraController = require("modules/scene/camera_controller");
 local Scene = require("modules/scene/scene");
 local SceneManager = require("modules/scene/scene_manager");
 local Transition = require("modules/scene/transition");
-local World = require("modules/scene/world");
 
 local scene_manager = SceneManager:new();
 
@@ -21,7 +20,6 @@ return {
 		CameraController = CameraController,
 		Scene = Scene,
 		Transition = Transition,
-		World = World,
 	},
 	update = function(dt)
 		scene_manager:update(dt);
