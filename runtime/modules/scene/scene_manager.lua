@@ -38,7 +38,12 @@ SceneManager.replace = function(self, next_scene, ...)
 	self.next_scene = next_scene;
 
 	self.script:stop_all_threads();
-	return self.script:add_thread(function(self)
+	return self.script:run_thread(function(self)
+		self:defer(function(self)
+			manager.transition = nil;
+			manager.transition_progress = 0;
+			manager.previous_scene = nil;
+		end);
 		while not table.is_empty(transitions) do
 			manager.transition = table.remove(transitions, 1);
 			assert(manager.transition:inherits_from(crystal.Transition));
@@ -51,9 +56,6 @@ SceneManager.replace = function(self, next_scene, ...)
 				end
 			end
 		end
-		manager.transition = nil;
-		manager.transition_progress = 0;
-		manager.previous_scene = nil;
 	end);
 end
 
@@ -61,7 +63,7 @@ end
 SceneManager.update = function(self, dt)
 	dt = dt * crystal.const.get("timescale");
 	if self.next_scene then
-		self.previous_scene = self.scene;
+		self.previous_scene = self.transition and self.scene or nil;
 		self.scene = self.next_scene;
 		self.next_scene = nil;
 	end
@@ -76,14 +78,12 @@ end
 
 SceneManager.draw = function(self)
 	crystal.window.draw(function()
-		if not self.transition then
-			if self.scene then
-				self.scene:draw();
-			end
-		else
+		if self.previous_scene then
 			local width, height = crystal.window.viewport_size();
 			local progress = self.transition:easing()(self.transition_progress);
 			self.transition:draw(progress, width, height, self.draw_previous_scene, self.draw_scene);
+		else
+			self:draw_scene();
 		end
 	end);
 end
