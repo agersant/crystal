@@ -43,8 +43,8 @@ MyScene.play_cutscene = function(self)
   new_camera.position = function() return 100, 200; end;
   self.camera_controller:cut_to(
     new_camera,
-	crystal.Transition.FadeToBlack:new(),
-	crystal.Transition.FadeFromBlack:new()
+    crystal.Transition.FadeToBlack:new(),
+    crystal.Transition.FadeFromBlack:new()
   );
   -- More cutscene logic goes here
 end
