@@ -25,9 +25,9 @@ crystal.scene.replace(new_scene, ...);
 
 ### Returns
 
-| Name     | Type                     | Description                                                |
-| :------- | :----------------------- | :--------------------------------------------------------- |
-| `thread` | [crystal.Thread](thread) | A thread that completes when all transitions are finished. |
+| Name     | Type                                         | Description                                                |
+| :------- | :------------------------------------------- | :--------------------------------------------------------- |
+| `thread` | [crystal.Thread](/crystal/api/script/thread) | A thread that completes when all transitions are finished. |
 
 ## Examples
 
