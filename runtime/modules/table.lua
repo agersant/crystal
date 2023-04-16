@@ -2,6 +2,14 @@ table.is_empty = function(t)
 	return next(t) == nil;
 end
 
+table.clear = function(t)
+	local key = next(t);
+	while key ~= nil do
+		t[key] = nil;
+		key = next(t);
+	end
+end
+
 table.count = function(t)
 	local count = 0;
 	for _, _ in pairs(t) do
@@ -133,6 +141,13 @@ return {
 		crystal.test.add("Can check if table is empty", function()
 			assert(table.is_empty({}));
 			assert(not table.is_empty({ a = false }));
+		end);
+
+		crystal.test.add("Can clear a table", function()
+			local t = { 1, 2, "oink" };
+			assert(not table.is_empty(t));
+			table.clear(t);
+			assert(table.is_empty(t));
 		end);
 
 		crystal.test.add("Can count table keys", function()

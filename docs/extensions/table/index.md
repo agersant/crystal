@@ -12,6 +12,7 @@ This module contains utility functions for table operations. All functions are r
 
 | Name                                   | Description                                                                |
 | :------------------------------------- | :------------------------------------------------------------------------- |
+| [table.clear](table_clear)             | Removes all values in a table.                                             |
 | [table.contains](table_contains)       | Returns whether a table contains a specific value.                         |
 | [table.copy](table_copy)               | Returns a shallow copy of a table.                                         |
 | [table.count](table_count)             | Returns the number of `(key, value)` pairs in a table.                     |
