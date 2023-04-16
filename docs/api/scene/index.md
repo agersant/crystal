@@ -75,10 +75,10 @@ end
 
 ## Functions
 
-| Name                             | Description                 |
-| :------------------------------- | :-------------------------- |
-| [crystal.scene.current](current) | Returns the current scene.  |
-| [crystal.scene.replace](replace) | Replaces the current scene. |
+| Name                             | Description                                      |
+| :------------------------------- | :----------------------------------------------- |
+| [crystal.scene.current](current) | Returns the current scene.                       |
+| [crystal.scene.replace](replace) | Plays transitions and changes the current scene. |
 
 ## Classes
 

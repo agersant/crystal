@@ -26,7 +26,7 @@ end
 
 ---@return Scene
 SceneManager.current_scene = function(self)
-	return self.scene;
+	return self.next_scene or self.scene;
 end
 
 ---@param next_scene Scene
