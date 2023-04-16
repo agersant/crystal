@@ -11,6 +11,10 @@ Base class for cameras to inherit from. When using a [CameraController](camera_c
 {: .note}
 This class is of little use on its own. You should implement subclasses fitting your game and override the `position` method accordingly.
 
+## Constructor
+
+The `Camera` constructor expects no arguments.
+
 ## Methods
 
 | Name       | Description                                                                                             |
@@ -25,12 +29,12 @@ This examples defines a class for cameras that never move:
 local FixedCamera = Class("FixedCamera", crystal.Camera);
 
 FixedCamera.init = function(self, x, y)
-	self.x = x;
-	self.y = y;
+  self.x = x;
+  self.y = y;
 end
 
 FixedCamera.position = function(self)
-	return self.x, self.y;
+  return self.x, self.y;
 end
 
 return FixedCamera;
@@ -42,11 +46,11 @@ This class defines a class for a camera following a player character
 local PlayerCamera = Class("PlayerCamera", crystal.Camera);
 
 PlayerCamera.init = function(self, player)
-	self.player = player;
+  self.player = player;
 end
 
 PlayerCamera.position = function(self)
-	return self.player:position();
+  return self.player:position();
 end
 
 return PlayerCamera;

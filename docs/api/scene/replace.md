@@ -6,7 +6,7 @@ nav_order: 1
 
 # crystal.scene.replace
 
-Plays transitions and changes the current scene. This function can be used with zero or more transitions. Transitions play in a sequence before the scene change is complete.
+Plays transitions and changes the current scene. This function can be used with zero or more [transitions](transition). Transitions play in a sequence before the scene change is complete.
 
 During transitions, the old and the new scenes both receive `Scene:update` callbacks. Only the new scene receives input callbacks.
 

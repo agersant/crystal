@@ -27,9 +27,9 @@ end
 
 TitleScreen.key_pressed = function(self)
   crystal.scene.replace(
-	MyGameScene:new(),
+  MyGameScene:new(),
     crystal.Transition.FadeToBlack:new(),
-    crystal.Transition.FadeFromBlack:new(),
+    crystal.Transition.FadeFromBlack:new()
   );
 end
 ```

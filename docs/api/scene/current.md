@@ -6,7 +6,7 @@ nav_order: 1
 
 # crystal.scene.current
 
-Returns the current scene. If a scene transition is currently in progress, this returns the scene being transitioned to.
+Returns the current scene. If a scene [transition](transition) is currently in progress, this returns the scene being transitioned to.
 
 ## Usage
 
