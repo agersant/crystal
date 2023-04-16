@@ -27,14 +27,6 @@ return {
 		PhysicsSystem = PhysicsSystem,
 		Sensor = Sensor,
 	},
-	module_api = {
-		-- TOOD remove this function, currently only used by CollisionMesh!
-		category = function(name)
-			assert(type(name) == "string");
-			assert(Fixture.all_categories[name]);
-			return Fixture.all_categories[name];
-		end,
-	},
 	init = function()
 		local categories = { level = true };
 		for _, category in ipairs(crystal.conf.physics_categories) do
