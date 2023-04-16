@@ -27,9 +27,9 @@ end
 
 TitleScreen.key_pressed = function(self)
   crystal.scene.replace(
-    MyGameScene:new(),
-	crystal.Transition.FadeToBlack:new(),
-	crystal.Transition.FadeFromBlack:new(),
+	MyGameScene:new(),
+    crystal.Transition.FadeToBlack:new(),
+    crystal.Transition.FadeFromBlack:new(),
   );
 end
 ```
@@ -40,36 +40,36 @@ The example below shows a more comprehensive assemblage of Crystal features. Thi
 local Field = Class("Field", crystal.Scene);
 
 Field.init = function(self, map_name)
-	self.ecs = crystal.ECS:new();
+  self.ecs = crystal.ECS:new();
 
-	self.camera_controller = crystal.CameraController:new();
-	self.ecs:add_context("camera_controller", self.camera_controller);
+  self.camera_controller = crystal.CameraController:new();
+  self.ecs:add_context("camera_controller", self.camera_controller);
 
-	self.map = crystal.assets.get(map_name);
-	self.ecs:add_context("map", self.map);
+  self.map = crystal.assets.get(map_name);
+  self.ecs:add_context("map", self.map);
 
-	self.draw_system = self.ecs:add_system(crystal.DrawSystem);
-	self.input_system = self.ecs:add_system(crystal.InputSystem);
-	self.physics_system = self.ecs:add_system(crystal.PhysicsSystem);
-	self.script_system = self.ecs:add_system(crystal.ScriptSystem);
+  self.draw_system = self.ecs:add_system(crystal.DrawSystem);
+  self.input_system = self.ecs:add_system(crystal.InputSystem);
+  self.physics_system = self.ecs:add_system(crystal.PhysicsSystem);
+  self.script_system = self.ecs:add_system(crystal.ScriptSystem);
 
-	self.map:spawn_entities(self.ecs);
+  self.map:spawn_entities(self.ecs);
 end
 
 Field.update = function(self, dt)
-	self.ecs:update();
-	self.physics_system:simulate_physics(dt);
-	self.camera_controller:update(dt);
-	self.script_system:run_scripts(dt);
-	self.input_system:handle_inputs();
-	self.draw_system:update_drawables(dt);
+  self.ecs:update();
+  self.physics_system:simulate_physics(dt);
+  self.camera_controller:update(dt);
+  self.script_system:run_scripts(dt);
+  self.input_system:handle_inputs();
+  self.draw_system:update_drawables(dt);
 end
 
 Field.draw = function(self)
-	self.camera_controller:draw(function()
-		self.draw_system:draw_entities();
-		self.ecs:notify_systems("draw_debug");
-	end);
+  self.camera_controller:draw(function()
+    self.draw_system:draw_entities();
+    self.ecs:notify_systems("draw_debug");
+  end);
 end
 ```
 
