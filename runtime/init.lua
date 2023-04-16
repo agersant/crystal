@@ -60,7 +60,6 @@ add_module("window", "modules/window");
 crystal.conf = {
 	assetsDirectories = {},
 	physics_categories = {},
-	mapDirectory = "", -- TODO remove when mapscene is no longer part of crystal
 	fonts = {},
 };
 crystal.configure = function(c)
