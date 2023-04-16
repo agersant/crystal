@@ -22,7 +22,7 @@ The example below illustrates a very simple title screen scene, which draws a te
 local TitleScreen = Class("TitleScreen", crystal.Scene);
 
 TitleScreen.draw = function(self)
-  love.graphics.print("Legend of Sword", "100", "100");
+  love.graphics.print("Legend of Sword", 100, 100);
 end
 
 TitleScreen.key_pressed = function(self)
