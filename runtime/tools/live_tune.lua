@@ -80,7 +80,7 @@ KnobInfo.init = function(self)
 	header_background:setColor(colors.header_background);
 	header_background:setAlignment("stretch", "stretch");
 	self.header_text = header:addChild(Text:new());
-	self.header_text:setFont(FONTS:get("devCondensed", 14));
+	self.header_text:setFont(crystal.ui.font("crystal_header_sm"));
 	self.header_text:setColor(colors.header_text);
 	self.header_text:setHorizontalPadding(8);
 	self.header_text:setVerticalPadding(2);
@@ -101,7 +101,7 @@ KnobInfo.init = function(self)
 	self.knob_index_text:setAlignment("center", "bottom");
 	self.knob_index_text:setBottomPadding(-6);
 	self.knob_index_text:setColor(colors.knob_index);
-	self.knob_index_text:setFont(FONTS:get("devBold", 12));
+	self.knob_index_text:setFont(crystal.ui.font("crystal_body_xs"));
 
 	local value_container = data:addChild(Overlay:new());
 	local border = value_container:addChild(Border:new());
@@ -113,7 +113,7 @@ KnobInfo.init = function(self)
 	self.knob_value_text:setVerticalPadding(4);
 	self.knob_value_text:setHorizontalPadding(10);
 	self.knob_value_text:setColor(colors.value_text);
-	self.knob_value_text:setFont(FONTS:get("devBold", 14));
+	self.knob_value_text:setFont(crystal.ui.font("crystal_body_sm"));
 end
 
 KnobInfo.set_title = function(self, title)
@@ -146,7 +146,7 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 	local title_bar_suffix = title_bar:addChild(Image:new());
 
 	self.title_text:setHorizontalPadding(6);
-	self.title_text:setFont(FONTS:get("devCondensed", 16));
+	self.title_text:setFont(crystal.ui.font("crystal_header_md"));
 	self.title_text:setColor(colors.title);
 
 	title_bar_prefix:setVerticalAlignment("center");

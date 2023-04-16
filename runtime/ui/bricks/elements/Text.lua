@@ -6,7 +6,7 @@ Text.init = function(self, initialContent)
 	Text.super.init(self);
 	self._textAlignment = "left";
 	self._content = initialContent or "";
-	self._font = FONTS:get("dev", 16);
+	self._font = crystal.ui.font("crystal_body_md");
 end
 
 Text.setTextAlignment = function(self, textAlignment)

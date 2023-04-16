@@ -7,7 +7,6 @@ local FPSCounter = Class("FPSCounter", crystal.Tool);
 local num_frames_recorded = 255;
 local max_fps = 200;
 
-local font_size = 14;
 local height = math.ceil(num_frames_recorded * 9 / 16);
 local padding_x = 20;
 local padding_y = 20;
@@ -16,7 +15,7 @@ local text_padding_y = 5;
 
 FPSCounter.init = function(self)
 	FPSCounter.super.init(self);
-	self.font = FONTS:get("devBold", font_size);
+	self.font = crystal.ui.font("crystal_body_sm");
 	self.frame_durations = {};
 	self.text = "";
 end

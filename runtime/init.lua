@@ -53,20 +53,19 @@ add_module("physics", "modules/physics");
 add_module("scene", "modules/scene");
 add_module("script", "modules/script");
 add_module("tool", "modules/tool");
+add_module("ui", "modules/ui");
 add_module("window", "modules/window");
 
 
 crystal.conf = {
 	assetsDirectories = {},
 	physics_categories = {},
-	mapDirectory = "",       -- TODO remove when mapscene is no longer part of crystal
-	mapSceneClass = "MapScene", -- TODO remove when mapscene is no longer part of crystal
+	mapDirectory = "", -- TODO remove when mapscene is no longer part of crystal
+	fonts = {},
 };
 crystal.configure = function(c)
 	crystal.conf = table.merge(crystal.conf, c);
 end
-
-FONTS = require("resources/Fonts"):new({});
 
 crystal.cmd.add("loadScene sceneName:string", function(sceneName)
 	local class = Class:by_name(sceneName);
@@ -110,16 +109,16 @@ local requireGameSource = function()
 end
 
 love.load = function()
-	love.keyboard.setTextInput(false);
-	require("tools/console")(modules.cmd.terminal);
-	require("tools/fps_counter");
-	require("tools/live_tune")(modules.const.constants);
-
 	for _, module in pairs(modules) do
 		if module.init then
 			module.init();
 		end
 	end
+
+	love.keyboard.setTextInput(false);
+	require("tools/console")(modules.cmd.terminal);
+	require("tools/fps_counter");
+	require("tools/live_tune")(modules.const.constants);
 
 	if not CRYSTAL_NO_GAME then
 		requireGameSource();

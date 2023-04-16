@@ -15,7 +15,7 @@ Console.init = function(self, terminal)
 	assert(terminal);
 	assert(terminal:inherits_from(Terminal));
 	self.terminal = terminal;
-	self.font = FONTS:get("dev", 20);
+	self.font = crystal.ui.font("crystal_console_xl");
 	self.consumes_inputs = true; -- TODO remove this when there is a real UI system with text focus
 end
 
