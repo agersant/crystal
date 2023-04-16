@@ -16,7 +16,7 @@ Utility class to handle multiple cameras in a scene.
 | [cut_to](camera_controller_cut_to)   | Cuts to another camera, playing [transitions](transition) in-between.          |
 | [draw](camera_controller_draw)       | Executes a drawing function wrapped with active camera offset and transitions. |
 | [move_to](camera_controller_move_to) | Interpolates to another camera.                                                |
-| [offset](camera_controller_offset)   | Returns the offset applied when drawing throught the active camera.            |
+| [offset](camera_controller_offset)   | Returns the offset applied when drawing through the active camera.             |
 | [update](camera_controller_update)   | Updates active camera movement or transitions.                                 |
 
 ## Examples

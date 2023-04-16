@@ -6,7 +6,7 @@ nav_order: 2
 
 # crystal.Camera
 
-Base class for cameras to inherit from. When using a [CameraController](camera_controller), it expects cameras to derive from this class.
+Base class for cameras to inherit from. [Camera controllers](camera_controller) expect cameras to derive from this class.
 
 {: .note}
 This class is of little use on its own. You should implement subclasses fitting your game and override the `position` method accordingly.
@@ -23,7 +23,7 @@ The `Camera` constructor expects no arguments.
 
 ## Examples
 
-This examples defines a class for cameras that never move:
+This example defines a class for cameras that never move:
 
 ```lua
 local FixedCamera = Class("FixedCamera", crystal.Camera);
@@ -40,7 +40,7 @@ end
 return FixedCamera;
 ```
 
-This class defines a class for a camera following a player character
+This example defines a class for a camera following a player character
 
 ```lua
 local PlayerCamera = Class("PlayerCamera", crystal.Camera);
