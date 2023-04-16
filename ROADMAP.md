@@ -24,7 +24,7 @@
   - [x] log
   - [x] persistence
   - [x] physics
-  - [ ] scene
+  - [x] scene
   - [x] script
   - [x] test
   - [x] tool
