@@ -155,19 +155,23 @@ love.keypressed = function(key, scan_code, is_repeat)
 	modules.tool.key_pressed(key, scan_code, is_repeat);
 	if not modules.tool.consumes_inputs() then
 		modules.input.key_pressed(key, scan_code, is_repeat);
+		modules.scene.key_pressed(key, scan_code, is_repeat);
 	end
 end
 
 love.keyreleased = function(key, scan_code)
 	modules.input.key_released(key, scan_code);
+	modules.scene.key_released(key, scan_code);
 end
 
 love.gamepadpressed = function(joystick, button)
 	modules.input.gamepad_pressed(joystick, button);
+	modules.scene.gamepad_pressed(joystick, button);
 end
 
 love.gamepadreleased = function(joystick, button)
 	modules.input.gamepad_released(joystick, button);
+	modules.scene.gamepad_released(joystick, button);
 end
 
 love.textinput = function(text)

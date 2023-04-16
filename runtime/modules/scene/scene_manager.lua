@@ -88,4 +88,37 @@ SceneManager.draw = function(self)
 	end);
 end
 
+---@param key love.KeyConstant
+---@param scan_code love.Scancode
+---@param is_repeat boolean
+SceneManager.key_pressed = function(self, key, scan_code, is_repeat)
+	if self.scene then
+		self.scene:key_pressed(key, scan_code, is_repeat);
+	end
+end
+
+---@param key love.KeyConstant
+---@param scan_code love.Scancode
+SceneManager.key_released = function(self, key, scan_code)
+	if self.scene then
+		self.scene:key_released(key, scan_code);
+	end
+end
+
+---@param joystick love.Joystick
+---@param button love.GamepadButton
+SceneManager.gamepad_pressed = function(self, joystick, button)
+	if self.scene then
+		self.scene:gamepad_pressed(joystick, button);
+	end
+end
+
+---@param joystick love.Joystick
+---@param button love.GamepadButton
+SceneManager.gamepad_released = function(self, joystick, button)
+	if self.scene then
+		self.scene:gamepad_released(joystick, button);
+	end
+end
+
 return SceneManager;

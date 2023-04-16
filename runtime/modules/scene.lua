@@ -27,4 +27,16 @@ return {
 	draw = function()
 		scene_manager:draw();
 	end,
+	key_pressed = function(key, scan_code, is_repeat)
+		scene_manager:key_pressed(key, scan_code, is_repeat);
+	end,
+	key_released = function(key, scan_code)
+		scene_manager:key_released(key, scan_code);
+	end,
+	gamepad_pressed = function(joystick, button)
+		scene_manager:gamepad_pressed(joystick, button);
+	end,
+	gamepad_released = function(joystick, button)
+		scene_manager:gamepad_released(joystick, button);
+	end,
 };
