@@ -8,6 +8,12 @@ nav_order: 2
 
 Utility class to handle multiple cameras in a scene.
 
+## Constructor
+
+```lua
+crystal.CameraController:new()
+```
+
 ## Methods
 
 | Name                                 | Description                                                                    |

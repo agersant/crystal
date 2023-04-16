@@ -13,7 +13,9 @@ This class is of little use on its own. You should implement subclasses fitting 
 
 ## Constructor
 
-The `Scene` constructor expects no arguments.
+```lua
+crystal.Scene:new()
+```
 
 ## Callbacks
 
