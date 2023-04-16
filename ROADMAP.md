@@ -30,7 +30,7 @@
   - [x] mathutils
   - [x] stringutils
   - [x] tableutils
-  - [ ] window
+  - [x] window
 
 # Crystal 0.2.0
 
