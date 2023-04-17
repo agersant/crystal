@@ -57,14 +57,15 @@ add_module("window", "modules/window");
 
 add_module("scene", "modules/scene");
 
-
-crystal.conf = {
+local default_configuration = {
 	assetsDirectories = {},
 	physics_categories = {},
 	fonts = {},
 };
+
+crystal.conf = default_configuration;
 crystal.configure = function(c)
-	crystal.conf = table.merge(crystal.conf, c);
+	crystal.conf = table.merge(default_configuration, c);
 end
 
 crystal.cmd.add("loadScene sceneName:string", function(sceneName)
