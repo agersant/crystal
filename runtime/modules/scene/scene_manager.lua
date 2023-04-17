@@ -1,5 +1,3 @@
-local Script = require("modules/script/script");
-
 ---@class SceneManager
 local SceneManager = Class("SceneManager");
 
@@ -11,7 +9,7 @@ SceneManager.init = function(self)
 	self.next_scene = nil;
 	self.transition = nil;
 	self.transition_progress = 0;
-	self.script = Script:new();
+	self.script = crystal.Script:new();
 	self.draw_scene = function()
 		if self.scene then
 			self.scene:draw();

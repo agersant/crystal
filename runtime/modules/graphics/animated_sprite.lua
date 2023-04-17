@@ -1,5 +1,4 @@
 local Sprite = require("modules/graphics/sprite");
-local Script = require("modules/script/script");
 
 ---@class AnimatedSprite : Sprite
 ---@field private script Script
@@ -11,7 +10,7 @@ local AnimatedSprite = Class("AnimatedSprite", Sprite);
 AnimatedSprite.init = function(self, spritesheet)
 	AnimatedSprite.super.init(self);
 	assert(spritesheet:inherits_from("Spritesheet"));
-	self.script = Script:new();
+	self.script = crystal.Script:new();
 	self.spritesheet = spritesheet;
 	self.sequence = nil;
 	self.keyframe = nil;

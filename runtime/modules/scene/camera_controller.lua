@@ -1,5 +1,3 @@
-local Script = require("modules/script/script");
-
 ---@class CameraController
 ---@field private _camera Camera
 ---@field private next_camera Camera
@@ -15,7 +13,7 @@ CameraController.init = function(self)
 	self._camera = nil;
 	self.next_camera = nil;
 	self.latest_camera = nil;
-	self.script = Script:new();
+	self.script = crystal.Script:new();
 	self.transition = nil;
 	self.transition_camera = nil;
 	self.transition_progress = nil;
