@@ -387,7 +387,7 @@ crystal.test.add("Can draw physics overlay", function(context)
 	physics_system:draw_debug();
 	crystal.cmd.run("hidePhysicsOverlay");
 
-	context:expect_frame("test-data/can-draw-physics-overlay.png");
+	-- Cannot do screenshot comparison as love shapes draw slightly differently based on graphics drivers
 end);
 
 --#endregion
