@@ -119,4 +119,115 @@ SceneManager.gamepad_released = function(self, joystick, button)
 	end
 end
 
+--#region Tests
+
+crystal.test.add("Can replace scene without transition", function()
+	local manager = SceneManager:new();
+	local old_scene = crystal.Scene:new();
+	local new_scene = crystal.Scene:new();
+	assert(manager:current_scene() == nil);
+
+	manager:replace(old_scene);
+	assert(manager:current_scene() == old_scene);
+	manager:update(0);
+	assert(manager:current_scene() == old_scene);
+
+	manager:replace(new_scene);
+	assert(manager:current_scene() == new_scene);
+	manager:update(0);
+	assert(manager:current_scene() == new_scene);
+end);
+
+crystal.test.add("Forwards callbacks to current scene", function()
+	local scene = crystal.Scene:new();
+	local callbacks = {};
+	scene.update = function() callbacks.update = true; end;
+	scene.draw = function() callbacks.draw = true; end;
+	scene.key_pressed = function() callbacks.key_pressed = true; end;
+	scene.key_released = function() callbacks.key_released = true; end;
+	scene.gamepad_pressed = function() callbacks.gamepad_pressed = true; end;
+	scene.gamepad_released = function() callbacks.gamepad_released = true; end;
+
+	local manager = SceneManager:new();
+	manager:replace(scene);
+
+	manager:update(0);
+	assert(callbacks.update);
+	manager:draw();
+	assert(callbacks.draw);
+	manager:key_pressed("z");
+	assert(callbacks.key_pressed);
+	manager:key_released("z");
+	assert(callbacks.key_released);
+	manager:gamepad_pressed("a");
+	assert(callbacks.gamepad_pressed);
+	manager:gamepad_released("a");
+	assert(callbacks.gamepad_released);
+end);
+
+crystal.test.add("Can draw scene transition", function(context)
+	local manager = SceneManager:new();
+
+	local old_scene = crystal.Scene:new();
+	old_scene.draw = function()
+		love.graphics.setColor(1, 0, 0);
+		love.graphics.rectangle("fill", 0, 0, 100, 100);
+	end
+
+	local new_scene = crystal.Scene:new();
+	new_scene.draw = function()
+		love.graphics.setColor(1, 1, 0);
+		love.graphics.rectangle("fill", 0, 0, 50, 50);
+	end
+
+	local transition = crystal.Transition:new();
+	transition.draw = function(self, progress, width, height, before, after)
+		before();
+		after();
+	end
+
+	manager:replace(old_scene);
+	manager:update(0);
+	manager:replace(new_scene, transition);
+	manager:update(0);
+	manager:draw();
+	context:expect_frame("test-data/can-draw-scene-transition.png");
+end);
+
+crystal.test.add("Updates both scenes during transition", function()
+	local manager = SceneManager:new();
+
+	local old_scene = crystal.Scene:new();
+	local old_updates = 0;
+	old_scene.update = function()
+		old_updates = old_updates + 1;
+	end
+
+	local new_scene = crystal.Scene:new();
+	local new_updates = 0;
+	new_scene.update = function()
+		new_updates = new_updates + 1;
+	end
+
+	manager:replace(old_scene);
+	manager:update(0);
+	assert(old_updates == 1);
+	assert(new_updates == 0);
+
+	manager:replace(new_scene, crystal.Transition:new(1));
+	manager:update(0.8);
+	assert(old_updates == 2);
+	assert(new_updates == 1);
+
+	manager:update(0.8);
+	assert(old_updates == 2);
+	assert(new_updates == 2);
+
+	manager:update(0.8);
+	assert(old_updates == 2);
+	assert(new_updates == 3);
+end);
+
+--#endregion
+
 return SceneManager;
