@@ -88,6 +88,7 @@ CameraController.cut_to = function(self, camera, ...)
 			controller.transition_camera = nil;
 			controller.transition_progress = 0;
 			controller.next_camera = nil;
+			controller._camera = camera;
 		end);
 
 		while not table.is_empty(transitions) do
@@ -102,8 +103,6 @@ CameraController.cut_to = function(self, camera, ...)
 				end
 			end
 		end
-
-		controller._camera = camera;
 	end);
 end
 
@@ -123,6 +122,7 @@ CameraController.move_to = function(self, camera, duration, easing)
 			controller.move_x = nil;
 			controller.move_y = nil;
 			controller.next_camera = nil;
+			controller._camera = camera;
 		end);
 
 		local start_time = self:time();
@@ -134,8 +134,6 @@ CameraController.move_to = function(self, camera, duration, easing)
 			controller.move_y = math.lerp(from_y, to_y, progress);
 			self:wait_frame();
 		end
-
-		controller._camera = camera;
 	end);
 end
 
@@ -163,5 +161,86 @@ CameraController.offset_for_camera = function(self, camera)
 	local draw_y = math.round(h / 2) - math.round(cy);
 	return draw_x, draw_y;
 end
+
+--#region Tests
+
+crystal.test.add("Can interpolate between cameras", function()
+	local w, h = crystal.window.viewport_size();
+	local controller = CameraController:new();
+
+	local a = crystal.Camera:new();
+	a.position = function() return 100, 100; end;
+	local b = crystal.Camera:new();
+	b.position = function() return 200, 200; end;
+
+	controller:cut_to(a);
+	assert(controller:camera() == a);
+
+	controller:move_to(b, 1);
+	controller:update(0.5);
+	assert(controller:camera() == b);
+	local ox, oy = controller:offset();
+	assert(ox == w / 2 - 150);
+	assert(oy == h / 2 - 150);
+end);
+
+crystal.test.add("Can draw transition between cameras", function()
+	local w, h = crystal.window.viewport_size();
+	local controller = CameraController:new();
+
+	local a = crystal.Camera:new();
+	local b = crystal.Camera:new();
+
+	local drew_transition = false;
+	local draw_count = 0;
+	local transition = crystal.Transition:new();
+	transition.draw = function(self, progress, width, height, before, after)
+		drew_transition = true;
+		before();
+		after();
+	end
+
+	controller:cut_to(a);
+	controller:cut_to(b, transition);
+	assert(not drew_transition);
+	assert(draw_count == 0);
+	controller:draw(function()
+		draw_count = draw_count + 1;
+	end);
+	assert(drew_transition);
+	assert(draw_count == 2);
+end);
+
+crystal.test.add("Camera cut fast-forwards in-progress cut", function()
+	local w, h = crystal.window.viewport_size();
+	local controller = CameraController:new();
+
+	local a = crystal.Camera:new();
+	a.position = function() return 100, 100; end;
+	local b = crystal.Camera:new();
+	b.position = function() return 200, 200; end;
+	local c = crystal.Camera:new();
+	c.position = function() return 300, 300; end;
+
+	controller:cut_to(a);
+
+	controller:cut_to(b, crystal.Transition:new());
+	controller:draw(function()
+	end);
+	local ox, oy = controller:offset();
+	assert(ox == w / 2 - 100);
+	assert(oy == h / 2 - 100);
+
+	controller:cut_to(c, crystal.Transition:new());
+
+	controller:draw(function()
+	end);
+	local ox, oy = controller:offset();
+	assert(ox == w / 2 - 200);
+	assert(oy == h / 2 - 200);
+end);
+
+
+--#endregion
 
 return CameraController;
