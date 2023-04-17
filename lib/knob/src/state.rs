@@ -51,13 +51,14 @@ impl<H: Hal> State<H> {
         std::thread::Builder::new()
             .name("LiveTune tick".to_owned())
             .spawn(move || loop {
-                if let Err(TryRecvError::Disconnected) = receiver.try_recv() {
+                if let Err(RecvTimeoutError::Disconnected) =
+                    receiver.recv_timeout(Duration::from_millis(1))
+                {
                     return;
                 }
                 if let Some(mut state) = poll_state.try_lock() {
                     state.tick();
                 }
-                std::thread::sleep(Duration::from_millis(1));
             })
             .unwrap();
 
