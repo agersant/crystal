@@ -363,6 +363,33 @@ crystal.test.add("Colliders activate sensors", function()
 	assert(deactivated);
 end);
 
+crystal.test.add("Can draw physics overlay", function(context)
+	local ecs = crystal.ECS:new();
+	local physics_system = ecs:add_system(crystal.PhysicsSystem);
+
+	local a = ecs:spawn(crystal.Entity);
+	a:add_component(crystal.Body);
+	a:add_component(crystal.Collider, love.physics.newRectangleShape(20, 20));
+	a:set_position(100, 100);
+
+	local b = ecs:spawn(crystal.Entity);
+	b:add_component(crystal.Body);
+	b:add_component(crystal.Collider, love.physics.newChainShape(true, 0, 0, 20, 0, 25, 10));
+	b:set_position(150, 100);
+
+	local b = ecs:spawn(crystal.Entity);
+	b:add_component(crystal.Body);
+	b:add_component(crystal.Collider, love.physics.newCircleShape(12));
+	b:set_position(50, 100);
+
+	ecs:update(0);
+	crystal.cmd.run("showPhysicsOverlay");
+	physics_system:draw_debug();
+	crystal.cmd.run("hidePhysicsOverlay");
+
+	context:expect_frame("test-data/can-draw-physics-overlay.png");
+end);
+
 --#endregion
 
 return PhysicsSystem;
