@@ -18,6 +18,7 @@ Autocomplete.init = function(self, command_store, type_store)
 	self.type_store = type_store;
 end
 
+---@return Suggestions
 Autocomplete.suggestions = function(self)
 	return self.results;
 end
