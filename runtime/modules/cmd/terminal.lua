@@ -2,7 +2,7 @@ local features = require("features");
 local Autocomplete = require("modules/cmd/autocomplete");
 local CommandStore = require("modules/cmd/command_store");
 local TypeStore = require("modules/cmd/type_store");
-local TextInput = require("ui/TextInput");
+local TextInputBuffer = require("modules/ui/TextInputBuffer"); -- TODO Split terminal so it doesn't rely on ui module (console tool can)
 
 ---@class ParsedInput
 ---@field full_text string
@@ -11,7 +11,7 @@ local TextInput = require("ui/TextInput");
 ---@field args string[]
 
 ---@class HistoryEntry
----@field input TextInput
+---@field input TextInputBuffer
 ---@field submitted string
 
 ---@class Terminal
@@ -36,7 +36,7 @@ Terminal.init = function(self, command_store, type_store)
 	self.type_store = type_store or TypeStore:new();
 	self.autocomplete = Autocomplete:new(self.command_store, self.type_store);
 	self._autocomplete_cursor = 0;
-	self.history = { { input = TextInput:new(undo_stack_size) } };
+	self.history = { { input = TextInputBuffer:new(undo_stack_size) } };
 	self.history_index = 1;
 	self._parsed_input = self:parse(self:raw_input());
 end
@@ -77,8 +77,8 @@ Terminal.push_to_history = function(self, command)
 		table.pop(self.history);
 	end
 	for _, entry in ipairs(self.history) do
-		entry.input:setText(entry.submitted);
-		entry.input:rebaseUndoStack();
+		entry.input:set_text(entry.submitted);
+		entry.input:delete_history();
 	end
 end
 
@@ -102,7 +102,7 @@ Terminal.submit_input = function(self)
 	end
 	self:run(command);
 	self:push_to_history(command);
-	table.insert(self.history, 1, { input = TextInput:new(undo_stack_size) });
+	table.insert(self.history, 1, { input = TextInputBuffer:new(undo_stack_size) });
 	self.history_index = 1;
 	self:on_input_changed();
 end
@@ -157,14 +157,14 @@ end
 
 ---@param text string
 Terminal.text_input = function(self, text)
-	self:input():textInput(text);
+	self:input():text_input(text);
 	self.unguided_input = self:raw_input();
 	self:on_input_changed();
 end
 
 ---@param key love.KeyConstant
 ---@param scan_code love.Scancode
----@param ctrl boolean
+---@param is_repeat boolean
 Terminal.key_pressed = function(self, key, scan_code, is_repeat)
 	if key == "return" or key == "kpenter" then
 		self:submit_input();
@@ -189,16 +189,16 @@ Terminal.key_pressed = function(self, key, scan_code, is_repeat)
 				self._autocomplete_cursor = (self._autocomplete_cursor + 1) % (num_suggestions + 1);
 			end
 			if self._autocomplete_cursor == 0 then
-				self:input():setText(self.unguided_input);
+				self:input():set_text(self.unguided_input);
 			else
-				self:input():setText(suggestions.lines[self._autocomplete_cursor].command:name());
+				self:input():set_text(suggestions.lines[self._autocomplete_cursor].command:name());
 			end
 		end
 		return;
 	end
 
 	local ctrl = love.keyboard.isDown("lctrl") or love.keyboard.isDown("rctrl");
-	local text_changed, _ = self:input():keyPressed(key, scan_code, is_repeat, ctrl);
+	local text_changed, _ = self:input():key_pressed(key, scan_code, is_repeat, ctrl);
 	self.unguided_input = self:raw_input();
 	if text_changed then
 		self:on_input_changed();
@@ -218,7 +218,7 @@ Terminal.input = function(self)
 end
 
 Terminal.raw_input = function(self)
-	return self:input():getText();
+	return self:input():text();
 end
 
 Terminal.parsed_input = function(self)

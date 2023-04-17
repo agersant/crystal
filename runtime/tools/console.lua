@@ -72,7 +72,7 @@ Console.draw = function(self)
 	love.graphics.print(self.terminal:raw_input(), text_x, text_y);
 
 	-- Draw caret
-	local pre = self.terminal:input():getTextLeftOfCursor();
+	local pre = self.terminal:input():text_left_of_caret();
 	local caret_x = text_x + font:getWidth(pre);
 	local caret_y = text_y;
 	local caret_alpha = .5 * (1 + math.sin(love.timer.getTime() * 1000 / 100));
