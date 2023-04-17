@@ -55,7 +55,7 @@ crystal.test.add("Can draw sprites", function(context)
 	sprite:set_draw_offset(10, 10);
 	sprite:set_texture(image);
 	sprite:draw();
-	context:expect_frame("test-data/TestSprite/sprites-can-draw.png");
+	context:expect_frame("test-data/can-draw-sprites.png");
 end);
 
 --#endregion

@@ -13,7 +13,7 @@ crystal.assets.add_loader("lua", {
 --#region Tests
 
 crystal.test.add("Can load a package", function()
-	local package = "test-data/TestAssets/package.lua";
+	local package = "test-data/package.lua";
 	local sheet = "test-data/blankey.lua";
 	assert(not crystal.assets.is_loaded(package));
 	assert(not crystal.assets.is_loaded(sheet));
@@ -26,8 +26,8 @@ crystal.test.add("Can load a package", function()
 end);
 
 crystal.test.add("Can load nested packages", function()
-	local wrapper = "test-data/TestAssets/wrapper_package.lua";
-	local package = "test-data/TestAssets/package.lua";
+	local wrapper = "test-data/wrapper_package.lua";
+	local package = "test-data/package.lua";
 	local sheet = "test-data/blankey.lua";
 	assert(not crystal.assets.is_loaded(wrapper));
 	assert(not crystal.assets.is_loaded(package));
@@ -43,8 +43,8 @@ crystal.test.add("Can load nested packages", function()
 end);
 
 crystal.test.add("A single asset reference keeps assets loaded", function()
-	local wrapper = "test-data/TestAssets/wrapper_package.lua";
-	local package = "test-data/TestAssets/package.lua";
+	local wrapper = "test-data/wrapper_package.lua";
+	local package = "test-data/package.lua";
 	local sheet = "test-data/blankey.lua";
 	assert(not crystal.assets.is_loaded(wrapper));
 	assert(not crystal.assets.is_loaded(package));

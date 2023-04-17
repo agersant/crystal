@@ -85,7 +85,7 @@ crystal.test.add("Can draw world widget", { resolution = { 200, 200 } }, functio
 
 	world:update(0);
 	world:draw();
-	context:expect_frame("test-data/TestWorldWidget/draws-widget.png");
+	context:expect_frame("test-data/draws-widget.png");
 end);
 
 crystal.test.add("Can adjust widget anchors", { resolution = { 200, 200 } }, function(context)
@@ -100,7 +100,7 @@ crystal.test.add("Can adjust widget anchors", { resolution = { 200, 200 } }, fun
 
 	world:update(0);
 	world:draw();
-	context:expect_frame("test-data/TestWorldWidget/can-adjust-widget-anchors.png");
+	context:expect_frame("test-data/can-adjust-widget-anchors.png");
 end);
 
 --#endregion

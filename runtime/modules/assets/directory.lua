@@ -25,8 +25,8 @@ crystal.assets.add_loader("", {
 
 crystal.test.add("Can load a directory", function()
 	local dir = "test-data";
-	local package = "test-data/TestAssets/package.lua";
-	local shader = "test-data/TestAssets/shader.glsl";
+	local package = "test-data/package.lua";
+	local shader = "test-data/shader.glsl";
 	local sheet = "test-data/blankey.lua";
 	assert(not crystal.assets.is_loaded(dir));
 	assert(not crystal.assets.is_loaded(package));
@@ -46,8 +46,8 @@ end);
 
 crystal.test.add("Can load a directory with trailing slash", function()
 	local dir = "test-data/";
-	local package = "test-data/TestAssets/package.lua";
-	local shader = "test-data/TestAssets/shader.glsl";
+	local package = "test-data/package.lua";
+	local shader = "test-data/shader.glsl";
 	local sheet = "test-data/blankey.lua";
 	assert(not crystal.assets.is_loaded(dir));
 	assert(not crystal.assets.is_loaded(package));
