@@ -52,6 +52,7 @@ Wrapper.remove_child = function(self)
 	return child;
 end
 
+---@protected
 Wrapper.compute_desired_size = function(self)
 	if self._child then
 		return self._child:compute_desired_size();
@@ -59,21 +60,24 @@ Wrapper.compute_desired_size = function(self)
 	return 0, 0;
 end
 
+---@protected
 Wrapper.layout = function(self)
 	Wrapper.super.layout(self);
 	if self._child then
-		self:arrangeChild();
+		self:arrange_child();
 		self._child:layout();
 	end
 end
 
-Wrapper.arrangeChild = function(self)
+---@protected
+Wrapper.arrange_child = function(self)
 	if self._child then
 		local width, height = self:size();
 		self._child:set_relative_position(0, width, 0, height);
 	end
 end
 
+---@protected
 Wrapper.update = function(self, dt)
 	Wrapper.super.update(self, dt);
 	if self._child then
@@ -81,6 +85,7 @@ Wrapper.update = function(self, dt)
 	end
 end
 
+---@protected
 Wrapper.update_desired_size = function(self)
 	if self._child then
 		self._child:update_desired_size();
@@ -88,6 +93,7 @@ Wrapper.update_desired_size = function(self)
 	Wrapper.super.update_desired_size(self);
 end
 
+---@protected
 Wrapper.draw_self = function(self)
 	if self._child then
 		self._child:draw();
@@ -129,7 +135,7 @@ crystal.test.add("Layouts and draws child", function()
 		sentinel = sentinel + 10;
 	end
 	local wrapper = Wrapper:new(crystal.Joint);
-	wrapper.arrangeChild = function(self)
+	wrapper.arrange_child = function(self)
 		if self._child then
 			self._child:set_relative_position(0, 0, 0, 0);
 		end

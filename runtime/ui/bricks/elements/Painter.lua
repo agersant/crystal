@@ -45,7 +45,7 @@ Painter.compute_desired_size = function(self)
 	return 0, 0;
 end
 
-Painter.arrangeChild = function(self)
+Painter.arrange_child = function(self)
 	if self._child then
 		local width, height = self:size();
 		local childWidth, childHeight = self._child:desired_size();

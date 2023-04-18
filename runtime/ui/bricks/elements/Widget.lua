@@ -36,7 +36,7 @@ Widget.update = function(self, dt)
 	Widget.super.update(self, dt);
 end
 
-Widget.arrangeChild = function(self)
+Widget.arrange_child = function(self)
 	if self._child then
 		local width, height = self:size();
 		local childWidth, childHeight = self._child:desired_size();
