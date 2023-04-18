@@ -1,3 +1,6 @@
+---@class Joint
+---@field private _parent UIElement
+---@field private _child UIElement
 local Joint = Class("Joint");
 
 Joint.init = function(self, parent, child)
@@ -8,11 +11,13 @@ Joint.init = function(self, parent, child)
 	self._child = child;
 end
 
+---@return UIElement
 Joint.parent = function(self)
 	return self._parent;
 end
 
-Joint.getChild = function(self)
+---@return UIElement
+Joint.child = function(self)
 	return self._child;
 end
 

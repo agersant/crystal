@@ -1,3 +1,4 @@
+local Joint = require("modules/ui/joint");
 local UIElement = require("modules/ui/ui_element");
 
 local fonts = {};
@@ -10,6 +11,7 @@ return {
 		end,
 	},
 	global_api = {
+		Joint = Joint,
 		UIElement = UIElement,
 	},
 	init = function()

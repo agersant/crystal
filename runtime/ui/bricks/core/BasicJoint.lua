@@ -1,4 +1,4 @@
-local Joint = require("ui/bricks/core/Joint");
+local Joint = require("modules/ui/joint");
 local Padding = require("ui/bricks/core/Padding");
 local BricksUtils = require("ui/bricks/core/BricksUtils");
 

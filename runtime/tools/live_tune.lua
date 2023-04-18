@@ -208,7 +208,7 @@ LiveTuneOverlay.update = function(self, dt)
 	end
 
 	for i, mapped_knob in ipairs(self.mapped_knobs) do
-		local widget = self.knob_infos:getChild(i);
+		local widget = self.knob_infos:child(i);
 		assert(widget);
 		widget:set_title(mapped_knob.name);
 		widget:set_value(mapped_knob.value, mapped_knob.min, mapped_knob.max);

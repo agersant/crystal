@@ -35,7 +35,7 @@ Container.remove_child = function(self, child)
 	end
 end
 
-Container.getChild = function(self, index)
+Container.child = function(self, index)
 	return self._children[index];
 end
 
@@ -77,12 +77,10 @@ end
 
 --#region Tests
 
-local Joint = require("ui/bricks/core/Joint");
-
 crystal.test.add("Can add and remove children", function()
 	local a = UIElement:new();
 	local b = UIElement:new();
-	local container = Container:new(Joint);
+	local container = Container:new(crystal.Joint);
 
 	container:addChild(a);
 	assert(a:parent() == container);
@@ -94,21 +92,21 @@ crystal.test.add("Can add and remove children", function()
 	assert(a:parent() == nil);
 	assert(b:parent() == container);
 
-	local otherContainer = Container:new(Joint);
+	local otherContainer = Container:new(crystal.Joint);
 	otherContainer:addChild(b);
 	assert(b:parent() == otherContainer);
 end);
 
 crystal.test.add("Add child returns newly added child", function()
 	local a = UIElement:new();
-	local container = Container:new(Joint);
+	local container = Container:new(crystal.Joint);
 	assert(container:addChild(a) == a);
 end);
 
 crystal.test.add("Can nest containers", function()
-	local a = Container:new(Joint);
-	local b = Container:new(Joint);
-	local c = UIElement:new(Joint);
+	local a = Container:new(crystal.Joint);
+	local b = Container:new(crystal.Joint);
+	local c = UIElement:new(crystal.Joint);
 	a:addChild(b);
 	b:addChild(c);
 	assert(a:parent() == nil);
@@ -117,8 +115,8 @@ crystal.test.add("Can nest containers", function()
 end);
 
 crystal.test.add("Calls update on children", function()
-	local a = UIElement:new(Joint);
-	local b = UIElement:new(Joint);
+	local a = UIElement:new(crystal.Joint);
+	local b = UIElement:new(crystal.Joint);
 	local sentinel = 0;
 	a.update = function()
 		sentinel = sentinel + 1;
@@ -126,7 +124,7 @@ crystal.test.add("Calls update on children", function()
 	b.update = function()
 		sentinel = sentinel + 10;
 	end
-	local container = Container:new(Joint);
+	local container = Container:new(crystal.Joint);
 	container.arrangeChildren = function()
 	end
 	container:addChild(a);
@@ -136,8 +134,8 @@ crystal.test.add("Calls update on children", function()
 end);
 
 crystal.test.add("Layouts and draws children", function()
-	local a = UIElement:new(Joint);
-	local b = UIElement:new(Joint);
+	local a = UIElement:new(crystal.Joint);
+	local b = UIElement:new(crystal.Joint);
 	local sentinel = 0;
 	a.draw = function()
 		sentinel = sentinel + 1;
@@ -145,7 +143,7 @@ crystal.test.add("Layouts and draws children", function()
 	b.draw = function()
 		sentinel = sentinel + 10;
 	end
-	local container = Container:new(Joint);
+	local container = Container:new(crystal.Joint);
 	container.arrangeChildren = function(self)
 		sentinel = 1;
 	end;

@@ -82,11 +82,9 @@ end
 
 --#region Tests
 
-local Joint = require("ui/bricks/core/Joint");
-
 crystal.test.add("Can set and unset child", function()
 	local a = UIElement:new();
-	local wrapper = Wrapper:new(Joint);
+	local wrapper = Wrapper:new(crystal.Joint);
 	wrapper:setChild(a);
 	assert(a:parent() == wrapper);
 	wrapper:setChild(nil);
@@ -95,14 +93,14 @@ end);
 
 crystal.test.add("Set child returns child", function()
 	local a = UIElement:new();
-	local wrapper = Wrapper:new(Joint);
+	local wrapper = Wrapper:new(crystal.Joint);
 	assert(wrapper:setChild(a) == a);
 end);
 
 crystal.test.add("Can nest wrappers", function()
-	local a = Wrapper:new(Joint);
-	local b = Wrapper:new(Joint);
-	local c = UIElement:new(Joint);
+	local a = Wrapper:new(crystal.Joint);
+	local b = Wrapper:new(crystal.Joint);
+	local c = UIElement:new(crystal.Joint);
 	a:setChild(b);
 	b:setChild(c);
 	assert(a:parent() == nil);
@@ -111,12 +109,12 @@ crystal.test.add("Can nest wrappers", function()
 end);
 
 crystal.test.add("Layouts and draws child", function()
-	local a = UIElement:new(Joint);
+	local a = UIElement:new(crystal.Joint);
 	local sentinel = 0;
 	a.draw = function()
 		sentinel = sentinel + 10;
 	end
-	local wrapper = Wrapper:new(Joint);
+	local wrapper = Wrapper:new(crystal.Joint);
 	wrapper.arrangeChild = function(self)
 		if self._child then
 			self._child:set_relative_position(0, 0, 0, 0);
