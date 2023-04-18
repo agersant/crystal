@@ -63,21 +63,21 @@ SwitcherTransition.handleChildRemoved = function(self, child)
 	end
 end
 
-SwitcherTransition.computeDesiredSize = function(self)
+SwitcherTransition.compute_desired_size = function(self)
 	local fromWidth = 0;
 	local fromHeight = 0;
 	if self._from then
-		local joint = self._from:getJoint();
-		local childWidth, childHeight = self._from:getDesiredSize();
-		fromWidth, fromHeight = joint:computeDesiredSize(childWidth, childHeight);
+		local joint = self._from:joint();
+		local childWidth, childHeight = self._from:desired_size();
+		fromWidth, fromHeight = joint:compute_desired_size(childWidth, childHeight);
 	end
 
 	local toWidth = 0;
 	local toHeight = 0;
 	if self._to then
-		local joint = self._to:getJoint();
-		local childWidth, childHeight = self._to:getDesiredSize();
-		toWidth, toHeight = joint:computeDesiredSize(childWidth, childHeight);
+		local joint = self._to:joint();
+		local childWidth, childHeight = self._to:desired_size();
+		toWidth, toHeight = joint:compute_desired_size(childWidth, childHeight);
 	end
 
 	local t = self:getProgress();

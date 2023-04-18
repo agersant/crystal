@@ -15,10 +15,10 @@ Overlay.init = function(self)
 	Overlay.super.init(self, OverlayJoint);
 end
 
-Overlay.computeDesiredSize = function(self)
+Overlay.compute_desired_size = function(self)
 	local width, height = 0, 0;
 	for child, joint in pairs(self._childJoints) do
-		local childWidth, childHeight = child:getDesiredSize();
+		local childWidth, childHeight = child:desired_size();
 		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:getEachPadding();
 		local horizontalAlignment, verticalAlignment = joint:getAlignment();
 		if horizontalAlignment ~= "stretch" then
@@ -32,18 +32,18 @@ Overlay.computeDesiredSize = function(self)
 end
 
 Overlay.arrangeChildren = function(self)
-	local width, height = self:getSize();
+	local width, height = self:size();
 	for _, child in ipairs(self._children) do
 		local joint = self._childJoints[child];
-		local childWidth, childHeight = child:getDesiredSize();
+		local childWidth, childHeight = child:desired_size();
 		local left, right, top, bottom = joint:computeLocalPosition(childWidth, childHeight, width, height);
-		child:setLocalPosition(left, right, top, bottom);
+		child:set_relative_position(left, right, top, bottom);
 	end
 end
 
 --#region Tests
 
-local Element = require("ui/bricks/core/Element");
+local UIElement = require("modules/ui/ui_element");
 
 crystal.test.add("Respects alignment", function()
 	local testCases = {
@@ -68,8 +68,8 @@ crystal.test.add("Respects alignment", function()
 	for _, testCase in ipairs(testCases) do
 		local overlay = Overlay:new();
 
-		local element = Element:new();
-		element.computeDesiredSize = function()
+		local element = UIElement:new();
+		element.compute_desired_size = function()
 			return 60, 40;
 		end
 
@@ -77,8 +77,8 @@ crystal.test.add("Respects alignment", function()
 		element:setHorizontalAlignment(testCase[1]);
 		element:setVerticalAlignment(testCase[2]);
 
-		overlay:updateTree(0, 100, 100);
-		assert(table.equals(testCase[3], { element:getLocalPosition() }));
+		overlay:update_tree(0, 100, 100);
+		assert(table.equals(testCase[3], { element:relative_position() }));
 	end
 end);
 
@@ -105,8 +105,8 @@ crystal.test.add("Respects padding", function()
 	for _, testCase in ipairs(testCases) do
 		local overlay = Overlay:new();
 
-		local element = Element:new();
-		element.computeDesiredSize = function()
+		local element = UIElement:new();
+		element.compute_desired_size = function()
 			return 60, 40;
 		end
 
@@ -115,8 +115,8 @@ crystal.test.add("Respects padding", function()
 		element:setVerticalAlignment(testCase[2]);
 		element:setEachPadding(2, 4, 6, 8);
 
-		overlay:updateTree(0, 100, 100);
-		assert(table.equals(testCase[3], { element:getLocalPosition() }));
+		overlay:update_tree(0, 100, 100);
+		assert(table.equals(testCase[3], { element:relative_position() }));
 	end
 end);
 

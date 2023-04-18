@@ -8,7 +8,7 @@ Joint.init = function(self, parent, child)
 	self._child = child;
 end
 
-Joint.getParent = function(self)
+Joint.parent = function(self)
 	return self._parent;
 end
 

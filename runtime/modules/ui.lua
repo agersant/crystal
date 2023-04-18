@@ -1,3 +1,5 @@
+local UIElement = require("modules/ui/ui_element");
+
 local fonts = {};
 
 return {
@@ -8,7 +10,7 @@ return {
 		end,
 	},
 	global_api = {
-
+		UIElement = UIElement,
 	},
 	init = function()
 		for name, font in pairs(crystal.conf.fonts) do

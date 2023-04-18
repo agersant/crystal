@@ -1,6 +1,6 @@
-local Element = require("ui/bricks/core/Element");
+local UIElement = require("modules/ui/ui_element");
 
-local Image = Class("Image", Element);
+local Image = Class("Image", UIElement);
 
 Image.init = function(self, texture)
 	Image.super.init(self);
@@ -35,12 +35,12 @@ Image.setTexture = function(self, texture, adoptSize)
 	end
 end
 
-Image.computeDesiredSize = function(self)
+Image.compute_desired_size = function(self)
 	return self._imageWidth, self._imageHeight;
 end
 
-Image.drawSelf = function(self)
-	local w, h = self:getSize();
+Image.draw_self = function(self)
+	local w, h = self:size();
 	if self._texture then
 		love.graphics.draw(self._texture, 0, 0, w, h);
 	else

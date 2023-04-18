@@ -7,7 +7,7 @@ local Drawable = require("modules/graphics/drawable");
 local WorldWidget = Class("WorldWidget", Drawable);
 
 WorldWidget.init = function(self, widget)
-	assert(widget == nil or widget:inherits_from("Element"));
+	assert(widget == nil or widget:inherits_from("UIElement"));
 	WorldWidget.super.init(self);
 	self.widget = widget;
 	self.anchor_x = 0.5;
@@ -28,16 +28,16 @@ WorldWidget.widget = function(self)
 	return self.widget;
 end
 
----@param widget Element
+---@param widget UIElement
 WorldWidget.set_widget = function(self, widget)
-	assert(widget == nil or widget:inherits_from("Element"));
+	assert(widget == nil or widget:inherits_from("UIElement"));
 	self.widget = widget;
 end
 
 ---@param dt number
 WorldWidget.update_widget = function(self, dt)
 	if self.widget then
-		self.widget:updateTree(dt);
+		self.widget:update_tree(dt);
 	end
 end
 
@@ -45,7 +45,7 @@ WorldWidget.draw = function(self)
 	if not self.widget then
 		return;
 	end
-	local width, height = self.widget:getSize();
+	local width, height = self.widget:size();
 	local x = math.round(-width * self.anchor_x);
 	local y = math.round(-height * self.anchor_y);
 	love.graphics.translate(x, y);

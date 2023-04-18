@@ -1,6 +1,6 @@
-local Element = require("ui/bricks/core/Element");
+local UIElement = require("modules/ui/ui_element");
 
-local Container = Class("Container", Element);
+local Container = Class("Container", UIElement);
 
 Container.init = function(self, jointClass)
 	assert(jointClass);
@@ -14,19 +14,19 @@ Container.addChild = function(self, child)
 	if self._childJoints[child] then
 		return;
 	end
-	if child:getParent() then
-		child:removeFromParent();
+	if child:parent() then
+		child:remove_from_parent();
 	end
 	table.push(self._children, child);
 	local joint = self._jointClass:new(self, child);
 	self._childJoints[child] = joint;
-	child:setJoint(joint);
+	child:set_joint(joint);
 	return child;
 end
 
-Container.removeChild = function(self, child)
+Container.remove_child = function(self, child)
 	assert(self._childJoints[child]);
-	child:setJoint(nil);
+	child:set_joint(nil);
 	self._childJoints[child] = nil;
 	for i, c in ipairs(self._children) do
 		if c == child then
@@ -50,11 +50,11 @@ Container.update = function(self, dt)
 	end
 end
 
-Container.updateDesiredSize = function(self)
+Container.update_desired_size = function(self)
 	for _, child in ipairs(self._children) do
-		child:updateDesiredSize();
+		child:update_desired_size();
 	end
-	Container.super.updateDesiredSize(self);
+	Container.super.update_desired_size(self);
 end
 
 Container.layout = function(self)
@@ -69,7 +69,7 @@ Container.arrangeChildren = function(self)
 	error("Not implemented");
 end
 
-Container.drawSelf = function(self)
+Container.draw_self = function(self)
 	for _, child in ipairs(self._children) do
 		child:draw();
 	end
@@ -80,27 +80,27 @@ end
 local Joint = require("ui/bricks/core/Joint");
 
 crystal.test.add("Can add and remove children", function()
-	local a = Element:new();
-	local b = Element:new();
+	local a = UIElement:new();
+	local b = UIElement:new();
 	local container = Container:new(Joint);
 
 	container:addChild(a);
-	assert(a:getParent() == container);
-	assert(b:getParent() == nil);
+	assert(a:parent() == container);
+	assert(b:parent() == nil);
 	container:addChild(b);
-	assert(a:getParent() == container);
-	assert(b:getParent() == container);
-	container:removeChild(a);
-	assert(a:getParent() == nil);
-	assert(b:getParent() == container);
+	assert(a:parent() == container);
+	assert(b:parent() == container);
+	container:remove_child(a);
+	assert(a:parent() == nil);
+	assert(b:parent() == container);
 
 	local otherContainer = Container:new(Joint);
 	otherContainer:addChild(b);
-	assert(b:getParent() == otherContainer);
+	assert(b:parent() == otherContainer);
 end);
 
 crystal.test.add("Add child returns newly added child", function()
-	local a = Element:new();
+	local a = UIElement:new();
 	local container = Container:new(Joint);
 	assert(container:addChild(a) == a);
 end);
@@ -108,17 +108,17 @@ end);
 crystal.test.add("Can nest containers", function()
 	local a = Container:new(Joint);
 	local b = Container:new(Joint);
-	local c = Element:new(Joint);
+	local c = UIElement:new(Joint);
 	a:addChild(b);
 	b:addChild(c);
-	assert(a:getParent() == nil);
-	assert(b:getParent() == a);
-	assert(c:getParent() == b);
+	assert(a:parent() == nil);
+	assert(b:parent() == a);
+	assert(c:parent() == b);
 end);
 
 crystal.test.add("Calls update on children", function()
-	local a = Element:new(Joint);
-	local b = Element:new(Joint);
+	local a = UIElement:new(Joint);
+	local b = UIElement:new(Joint);
 	local sentinel = 0;
 	a.update = function()
 		sentinel = sentinel + 1;
@@ -131,13 +131,13 @@ crystal.test.add("Calls update on children", function()
 	end
 	container:addChild(a);
 	container:addChild(b);
-	container:updateTree(0);
+	container:update_tree(0);
 	assert(sentinel == 11)
 end);
 
 crystal.test.add("Layouts and draws children", function()
-	local a = Element:new(Joint);
-	local b = Element:new(Joint);
+	local a = UIElement:new(Joint);
+	local b = UIElement:new(Joint);
 	local sentinel = 0;
 	a.draw = function()
 		sentinel = sentinel + 1;
@@ -151,7 +151,7 @@ crystal.test.add("Layouts and draws children", function()
 	end;
 	container:addChild(a);
 	container:addChild(b);
-	container:updateTree(0);
+	container:update_tree(0);
 	assert(sentinel == 1)
 	container:draw();
 	assert(sentinel == 12)

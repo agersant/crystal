@@ -1,6 +1,6 @@
-local Element = require("ui/bricks/core/Element");
+local UIElement = require("modules/ui/ui_element");
 
-local Text = Class("Text", Element);
+local Text = Class("Text", UIElement);
 
 Text.init = function(self, initialContent)
 	Text.super.init(self);
@@ -24,14 +24,14 @@ Text.setFont = function(self, font)
 	self._font = font;
 end
 
-Text.computeDesiredSize = function(self)
+Text.compute_desired_size = function(self)
 	local width = self._font:getWidth(self._content);
 	local height = self._font:getHeight();
 	return width, height;
 end
 
-Text.drawSelf = function(self)
-	local width, _ = self:getSize();
+Text.draw_self = function(self)
+	local width, _ = self:size();
 	love.graphics.setFont(self._font);
 	love.graphics.printf(self._content, 0, 0, width, self._textAlignment);
 end

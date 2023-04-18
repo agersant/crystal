@@ -15,7 +15,6 @@ local cc_indices = { 112, 74, 71, 76, 77, 93, 73, 75, 114, 18, 19, 16, 17, 91, 7
 
 --#region UI
 
-local Element = require("ui/bricks/core/Element");
 local Border = require("ui/bricks/elements/Border");
 local Image = require("ui/bricks/elements/Image");
 local List = require("ui/bricks/elements/List");
@@ -38,7 +37,7 @@ local colors = {
 	value_text = crystal.Color.greyD,
 };
 
-local KnobDonut = Class("KnobDonut", Element);
+local KnobDonut = Class("KnobDonut", crystal.UIElement);
 
 KnobDonut.init = function(self)
 	KnobDonut.super.init(self);
@@ -50,13 +49,13 @@ KnobDonut.init = function(self)
 	self.value = 0.5;
 end
 
-KnobDonut.computeDesiredSize = function(self)
+KnobDonut.compute_desired_size = function(self)
 	local size = 2 * self.radius + self.thickness;
 	return size, size;
 end
 
 KnobDonut.draw = function(self)
-	local width, height = self:getSize();
+	local width, height = self:size();
 	love.graphics.setLineWidth(self.thickness);
 	love.graphics.setColor(colors.knob_inactive);
 	love.graphics.arc("line", "open", width / 2, height / 2, self.radius, self.arc_start, self.arc_end,
@@ -77,11 +76,11 @@ KnobInfo.init = function(self)
 	local header = top_level_list:addChild(Overlay:new());
 	header:setHorizontalAlignment("stretch");
 	local header_background = header:addChild(Image:new());
-	header_background:setColor(colors.header_background);
+	header_background:set_color(colors.header_background);
 	header_background:setAlignment("stretch", "stretch");
 	self.header_text = header:addChild(Text:new());
 	self.header_text:setFont(crystal.ui.font("crystal_header_sm"));
-	self.header_text:setColor(colors.header_text);
+	self.header_text:set_color(colors.header_text);
 	self.header_text:setHorizontalPadding(8);
 	self.header_text:setVerticalPadding(2);
 	self.header_text:setVerticalAlignment("center");
@@ -89,7 +88,7 @@ KnobInfo.init = function(self)
 	local content = top_level_list:addChild(Overlay:new());
 	content:setHorizontalAlignment("stretch");
 	local content_background = content:addChild(Image:new());
-	content_background:setColor(colors.background);
+	content_background:set_color(colors.background);
 	content_background:setAlignment("stretch", "stretch");
 	local data = content:addChild(List.Horizontal:new());
 	data:setAllPadding(10);
@@ -100,19 +99,19 @@ KnobInfo.init = function(self)
 	self.knob_index_text = donut_container:addChild(Text:new());
 	self.knob_index_text:setAlignment("center", "bottom");
 	self.knob_index_text:setBottomPadding(-6);
-	self.knob_index_text:setColor(colors.knob_index);
+	self.knob_index_text:set_color(colors.knob_index);
 	self.knob_index_text:setFont(crystal.ui.font("crystal_body_xs"));
 
 	local value_container = data:addChild(Overlay:new());
 	local border = value_container:addChild(Border:new());
 	border:setAlignment("stretch", "stretch");
 	border:setRounding(2);
-	border:setColor(colors.value_outline);
+	border:set_color(colors.value_outline);
 
 	self.knob_value_text = value_container:addChild(Text:new());
 	self.knob_value_text:setVerticalPadding(4);
 	self.knob_value_text:setHorizontalPadding(10);
-	self.knob_value_text:setColor(colors.value_text);
+	self.knob_value_text:set_color(colors.value_text);
 	self.knob_value_text:setFont(crystal.ui.font("crystal_body_sm"));
 end
 
@@ -147,25 +146,25 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 
 	self.title_text:setHorizontalPadding(6);
 	self.title_text:setFont(crystal.ui.font("crystal_header_md"));
-	self.title_text:setColor(colors.title);
+	self.title_text:set_color(colors.title);
 
 	title_bar_prefix:setVerticalAlignment("center");
 	title_bar_prefix:setWidth(16);
 	title_bar_prefix:setHeight(1);
-	title_bar_prefix:setColor(colors.title);
+	title_bar_prefix:set_color(colors.title);
 	title_bar_prefix:setTopPadding(1.5); -- TODO let image widget handle pixel snapping?
 
 	title_bar_suffix:setVerticalAlignment("center");
 	title_bar_suffix:setGrow(1);
 	title_bar_suffix:setHeight(1);
-	title_bar_suffix:setColor(colors.title);
+	title_bar_suffix:set_color(colors.title);
 	title_bar_suffix:setTopPadding(1.5); -- TODO let image widget handle pixel snapping?
 
 	self.content = top_level_list:addChild(Switcher:new());
 	self.content:setHorizontalAlignment("stretch");
 	self.help_text = self.content:addChild(Text:new());
 	self.help_text:setHorizontalAlignment("stretch");
-	self.help_text:setColor(colors.help);
+	self.help_text:set_color(colors.help);
 	self.knob_infos = self.content:addChild(List.Horizontal:new());
 end
 
@@ -201,7 +200,7 @@ LiveTuneOverlay.update = function(self, dt)
 
 	local children = self.knob_infos:getChildren();
 	for i = 1 + #self.mapped_knobs, #children do
-		self.knob_infos:removeChild(children[i]);
+		self.knob_infos:remove_child(children[i]);
 	end
 	for i = 1 + #children, #self.mapped_knobs do
 		local knob_info = self.knob_infos:addChild(KnobInfo:new());
@@ -253,7 +252,7 @@ LiveTune.update = function(self, dt)
 	end
 	self.overlay.device_name = self.knob:current_device();
 	self.overlay.device_list = self.knob:list_devices();
-	self.overlay:updateTree(dt, love.graphics.getDimensions());
+	self.overlay:update_tree(dt, love.graphics.getDimensions());
 end
 
 LiveTune.draw = function(self)
@@ -420,7 +419,7 @@ crystal.test.add("Overlay lifecycle", function()
 				max = 10,
 			};
 		end
-		overlay:updateTree(0);
+		overlay:update_tree(0);
 		overlay:draw();
 	end
 end);

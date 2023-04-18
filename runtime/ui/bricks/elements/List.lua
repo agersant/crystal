@@ -83,10 +83,10 @@ List.init = function(self, axis)
 	List.super.init(self, axis == "horizontal" and HorizontalListJoint or VerticalListJoint);
 end
 
-List.computeDesiredSize = function(self)
+List.compute_desired_size = function(self)
 	local width, height = 0, 0;
 	for child, joint in pairs(self._childJoints) do
-		local childWidth, childHeight = child:getDesiredSize();
+		local childWidth, childHeight = child:desired_size();
 		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:getEachPadding();
 		if self._axis == "horizontal" then
 			width = width + childWidth + paddingLeft + paddingRight;
@@ -100,8 +100,8 @@ List.computeDesiredSize = function(self)
 end
 
 List.arrangeChildren = function(self)
-	local width, height = self:getSize();
-	local desiredWidth, desiredHeight = self:getDesiredSize();
+	local width, height = self:size();
+	local desiredWidth, desiredHeight = self:desired_size();
 
 	local totalGrow = 0;
 	local totalShrink = 0;
@@ -115,7 +115,7 @@ List.arrangeChildren = function(self)
 	local y = 0;
 	for _, child in ipairs(self._children) do
 		local joint = self._childJoints[child];
-		local childDesiredWidth, childDesiredHeight = child:getDesiredSize();
+		local childDesiredWidth, childDesiredHeight = child:desired_size();
 		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:getEachPadding();
 		local grow = joint:getGrow();
 		local shrink = joint:getShrink();
@@ -172,7 +172,7 @@ List.arrangeChildren = function(self)
 			end
 		end
 
-		child:setLocalPosition(x, x + childWidth, y, y + childHeight);
+		child:set_relative_position(x, x + childWidth, y, y + childHeight);
 
 		if self._axis == "horizontal" then
 			x = x + childWidth + paddingRight;
@@ -184,184 +184,184 @@ end
 
 --#region Tests
 
-local Element = require("ui/bricks/core/Element");
+local UIElement = require("modules/ui/ui_element");
 
 crystal.test.add("Horizontal list aligns children", function()
 	local box = List.Horizontal:new();
-	local a = box:addChild(Element:new());
+	local a = box:addChild(UIElement:new());
 	a:setGrow(1);
-	local b = box:addChild(Element:new());
+	local b = box:addChild(UIElement:new());
 	b:setGrow(1);
-	local c = box:addChild(Element:new());
+	local c = box:addChild(UIElement:new());
 	c:setGrow(1);
-	box:updateTree(0, 90, 40);
-	assert(table.equals({ a:getLocalPosition() }, { 0, 30, 0, 0 }));
-	assert(table.equals({ b:getLocalPosition() }, { 30, 60, 0, 0 }));
-	assert(table.equals({ c:getLocalPosition() }, { 60, 90, 0, 0 }));
+	box:update_tree(0, 90, 40);
+	assert(table.equals({ a:relative_position() }, { 0, 30, 0, 0 }));
+	assert(table.equals({ b:relative_position() }, { 30, 60, 0, 0 }));
+	assert(table.equals({ c:relative_position() }, { 60, 90, 0, 0 }));
 end);
 
 crystal.test.add("Vertical list aligns children", function()
 	local box = List.Vertical:new();
-	local a = box:addChild(Element:new());
+	local a = box:addChild(UIElement:new());
 	a:setGrow(1);
-	local b = box:addChild(Element:new());
+	local b = box:addChild(UIElement:new());
 	b:setGrow(1);
-	local c = box:addChild(Element:new());
+	local c = box:addChild(UIElement:new());
 	c:setGrow(1);
-	box:updateTree(0, 40, 90);
-	assert(table.equals({ a:getLocalPosition() }, { 0, 0, 0, 30 }));
-	assert(table.equals({ b:getLocalPosition() }, { 0, 0, 30, 60 }));
-	assert(table.equals({ c:getLocalPosition() }, { 0, 0, 60, 90 }));
+	box:update_tree(0, 40, 90);
+	assert(table.equals({ a:relative_position() }, { 0, 0, 0, 30 }));
+	assert(table.equals({ b:relative_position() }, { 0, 0, 30, 60 }));
+	assert(table.equals({ c:relative_position() }, { 0, 0, 60, 90 }));
 end);
 
 crystal.test.add("Horizontal list respects vertical alignment", function()
 	local box = List.Horizontal:new();
 
-	local a = box:addChild(Element:new());
+	local a = box:addChild(UIElement:new());
 	a:setVerticalAlignment("top");
 
-	local b = box:addChild(Element:new());
+	local b = box:addChild(UIElement:new());
 	b:setVerticalAlignment("center");
 
-	local c = box:addChild(Element:new());
+	local c = box:addChild(UIElement:new());
 	c:setVerticalAlignment("bottom");
 
-	local d = box:addChild(Element:new());
+	local d = box:addChild(UIElement:new());
 	d:setVerticalAlignment("stretch");
 
-	a.computeDesiredSize = function()
+	a.compute_desired_size = function()
 		return 25, 10;
 	end
-	b.computeDesiredSize = function()
+	b.compute_desired_size = function()
 		return 25, 10;
 	end
-	c.computeDesiredSize = function()
+	c.compute_desired_size = function()
 		return 25, 10;
 	end
-	d.computeDesiredSize = function()
+	d.compute_desired_size = function()
 		return 25, 10;
 	end
 
-	box:updateTree(0, nil, 40);
-	assert(table.equals({ a:getLocalPosition() }, { 0, 25, 0, 10 }));
-	assert(table.equals({ b:getLocalPosition() }, { 25, 50, 15, 25 }));
-	assert(table.equals({ c:getLocalPosition() }, { 50, 75, 30, 40 }));
-	assert(table.equals({ d:getLocalPosition() }, { 75, 100, 0, 40 }));
+	box:update_tree(0, nil, 40);
+	assert(table.equals({ a:relative_position() }, { 0, 25, 0, 10 }));
+	assert(table.equals({ b:relative_position() }, { 25, 50, 15, 25 }));
+	assert(table.equals({ c:relative_position() }, { 50, 75, 30, 40 }));
+	assert(table.equals({ d:relative_position() }, { 75, 100, 0, 40 }));
 end);
 
 crystal.test.add("Vertical list respects horizontal alignment", function()
 	local box = List.Vertical:new();
 
-	local a = box:addChild(Element:new());
+	local a = box:addChild(UIElement:new());
 	a:setHorizontalAlignment("left");
 
-	local b = box:addChild(Element:new());
+	local b = box:addChild(UIElement:new());
 	b:setHorizontalAlignment("center");
 
-	local c = box:addChild(Element:new());
+	local c = box:addChild(UIElement:new());
 	c:setHorizontalAlignment("right");
 
-	local d = box:addChild(Element:new());
+	local d = box:addChild(UIElement:new());
 	d:setHorizontalAlignment("stretch");
 
-	a.computeDesiredSize = function()
+	a.compute_desired_size = function()
 		return 10, 25;
 	end
-	b.computeDesiredSize = function()
+	b.compute_desired_size = function()
 		return 10, 25;
 	end
-	c.computeDesiredSize = function()
+	c.compute_desired_size = function()
 		return 10, 25;
 	end
-	d.computeDesiredSize = function()
+	d.compute_desired_size = function()
 		return 10, 25;
 	end
 
-	box:updateTree(0, 40);
-	assert(table.equals({ a:getLocalPosition() }, { 0, 10, 0, 25 }));
-	assert(table.equals({ b:getLocalPosition() }, { 15, 25, 25, 50 }));
-	assert(table.equals({ c:getLocalPosition() }, { 30, 40, 50, 75 }));
-	assert(table.equals({ d:getLocalPosition() }, { 0, 40, 75, 100 }));
+	box:update_tree(0, 40);
+	assert(table.equals({ a:relative_position() }, { 0, 10, 0, 25 }));
+	assert(table.equals({ b:relative_position() }, { 15, 25, 25, 50 }));
+	assert(table.equals({ c:relative_position() }, { 30, 40, 50, 75 }));
+	assert(table.equals({ d:relative_position() }, { 0, 40, 75, 100 }));
 end);
 
 crystal.test.add("Horizontal list respects padding", function()
 	local box = List.Horizontal:new();
 
-	local a = box:addChild(Element:new());
+	local a = box:addChild(UIElement:new());
 	a:setVerticalAlignment("top");
 	a:setLeftPadding(5);
 
-	local b = box:addChild(Element:new());
+	local b = box:addChild(UIElement:new());
 	b:setVerticalAlignment("center");
 	b:setTopPadding(5);
 	b:setBottomPadding(4);
 
-	local c = box:addChild(Element:new());
+	local c = box:addChild(UIElement:new());
 	c:setVerticalAlignment("bottom");
 	c:setRightPadding(10);
 
-	local d = box:addChild(Element:new());
+	local d = box:addChild(UIElement:new());
 	d:setVerticalAlignment("stretch");
 	d:setAllPadding(10);
 
-	a.computeDesiredSize = function()
+	a.compute_desired_size = function()
 		return 25, 10;
 	end
-	b.computeDesiredSize = function()
+	b.compute_desired_size = function()
 		return 25, 10;
 	end
-	c.computeDesiredSize = function()
+	c.compute_desired_size = function()
 		return 25, 10;
 	end
-	d.computeDesiredSize = function()
+	d.compute_desired_size = function()
 		return 25, 20;
 	end
 
-	box:updateTree(0);
-	assert(table.equals({ a:getLocalPosition() }, { 5, 30, 0, 10 }));
-	assert(table.equals({ b:getLocalPosition() }, { 30, 55, 16, 26 }));
-	assert(table.equals({ c:getLocalPosition() }, { 55, 80, 30, 40 }));
-	assert(table.equals({ d:getLocalPosition() }, { 100, 125, 10, 30 }));
+	box:update_tree(0);
+	assert(table.equals({ a:relative_position() }, { 5, 30, 0, 10 }));
+	assert(table.equals({ b:relative_position() }, { 30, 55, 16, 26 }));
+	assert(table.equals({ c:relative_position() }, { 55, 80, 30, 40 }));
+	assert(table.equals({ d:relative_position() }, { 100, 125, 10, 30 }));
 end);
 
 crystal.test.add("Vertical list respects padding", function()
 	local box = List.Vertical:new();
 
-	local a = box:addChild(Element:new());
+	local a = box:addChild(UIElement:new());
 	a:setHorizontalAlignment("left");
 	a:setTopPadding(5);
 
-	local b = box:addChild(Element:new());
+	local b = box:addChild(UIElement:new());
 	b:setHorizontalAlignment("center");
 	b:setLeftPadding(5);
 	b:setRightPadding(4);
 
-	local c = box:addChild(Element:new());
+	local c = box:addChild(UIElement:new());
 	c:setHorizontalAlignment("right");
 	c:setBottomPadding(10);
 
-	local d = box:addChild(Element:new());
+	local d = box:addChild(UIElement:new());
 	d:setHorizontalAlignment("stretch");
 	d:setAllPadding(10);
 
-	a.computeDesiredSize = function()
+	a.compute_desired_size = function()
 		return 10, 25;
 	end
-	b.computeDesiredSize = function()
+	b.compute_desired_size = function()
 		return 10, 25;
 	end
-	c.computeDesiredSize = function()
+	c.compute_desired_size = function()
 		return 10, 25;
 	end
-	d.computeDesiredSize = function()
+	d.compute_desired_size = function()
 		return 20, 25;
 	end
 
-	box:updateTree(0);
-	assert(table.equals({ a:getLocalPosition() }, { 0, 10, 5, 30 }));
-	assert(table.equals({ b:getLocalPosition() }, { 16, 26, 30, 55 }));
-	assert(table.equals({ c:getLocalPosition() }, { 30, 40, 55, 80 }));
-	assert(table.equals({ d:getLocalPosition() }, { 10, 30, 100, 125 }));
+	box:update_tree(0);
+	assert(table.equals({ a:relative_position() }, { 0, 10, 5, 30 }));
+	assert(table.equals({ b:relative_position() }, { 16, 26, 30, 55 }));
+	assert(table.equals({ c:relative_position() }, { 30, 40, 55, 80 }));
+	assert(table.equals({ d:relative_position() }, { 10, 30, 100, 125 }));
 end);
 
 --#endregion

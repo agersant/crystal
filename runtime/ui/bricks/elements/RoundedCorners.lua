@@ -48,7 +48,7 @@ end
 RoundedCorners.configureShader = function(self)
 	local radii = { self._topLeftRadius, self._topRightRadius, self._bottomRightRadius, self._bottomLeftRadius };
 	self._shaderResource:send("radii", radii);
-	self._shaderResource:send("drawSize", { self:getSize() });
+	self._shaderResource:send("drawSize", { self:size() });
 	self._shaderResource:send("textureSize", { self._quad:getTextureDimensions() });
 end
 

@@ -9,7 +9,7 @@ local isCanvasLargeEnough = function(self)
 	if not self._canvas then
 		return false;
 	end
-	local width, height = self:getSize();
+	local width, height = self:size();
 	local canvasWidth, canvasHeight = self._canvas:getDimensions();
 	return width <= canvasWidth and height <= canvasHeight;
 end
@@ -38,20 +38,20 @@ end
 Painter.configureShader = function(self)
 end
 
-Painter.computeDesiredSize = function(self)
+Painter.compute_desired_size = function(self)
 	if self._child then
-		local childWidth, childHeight = self._child:getDesiredSize();
-		return self._childJoint:computeDesiredSize(childWidth, childHeight);
+		local childWidth, childHeight = self._child:desired_size();
+		return self._childJoint:compute_desired_size(childWidth, childHeight);
 	end
 	return 0, 0;
 end
 
 Painter.arrangeChild = function(self)
 	if self._child then
-		local width, height = self:getSize();
-		local childWidth, childHeight = self._child:getDesiredSize();
+		local width, height = self:size();
+		local childWidth, childHeight = self._child:desired_size();
 		local left, right, top, bottom = self._childJoint:computeLocalPosition(childWidth, childHeight, width, height);
-		self._child:setLocalPosition(left, right, top, bottom);
+		self._child:set_relative_position(left, right, top, bottom);
 	end
 end
 
@@ -62,7 +62,7 @@ Painter.layout = function(self)
 end
 
 Painter.allocateCanvas = function(self)
-	local width, height = self:getSize();
+	local width, height = self:size();
 	if not isCanvasLargeEnough(self) then
 		local canvasWidth = math.pow(2, math.ceil(math.log(width) / math.log(2)));
 		local canvasHeight = math.pow(2, math.ceil(math.log(height) / math.log(2)));
@@ -72,11 +72,11 @@ Painter.allocateCanvas = function(self)
 end
 
 Painter.updateQuad = function(self)
-	local width, height = self:getSize();
+	local width, height = self:size();
 	self._quad:setViewport(0, 0, width, height);
 end
 
-Painter.drawSelf = function(self)
+Painter.draw_self = function(self)
 	if self._child then
 		assert(self._canvas);
 		assert(self._quad);

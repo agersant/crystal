@@ -1,6 +1,6 @@
-local Element = require("ui/bricks/core/Element");
+local UIElement = require("modules/ui/ui_element");
 
-local Border = Class("Border", Element);
+local Border = Class("Border", UIElement);
 
 Border.init = function(self)
 	Border.super.init(self);
@@ -16,12 +16,12 @@ Border.setThickness = function(self, thickness)
 	self._thickness = thickness;
 end
 
-Border.computeDesiredSize = function(self)
+Border.compute_desired_size = function(self)
 	return 0, 0;
 end
 
-Border.drawSelf = function(self)
-	local w, h = self:getSize();
+Border.draw_self = function(self)
+	local w, h = self:size();
 	w = math.max(0, w - self._thickness);
 	h = math.max(0, h - self._thickness);
 	love.graphics.setLineWidth(self._thickness);
