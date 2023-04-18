@@ -1,16 +1,28 @@
 local UIElement = require("modules/ui/ui_element");
 
+---@class Wrapper : UIElement
+---@field private _child UIElement
+---@field private child_joint Joint
+---@field private joint_class Class
 local Wrapper = Class("Wrapper", UIElement);
 
-Wrapper.init = function(self, jointClass)
-	assert(jointClass);
+---@param joint_class Class
+Wrapper.init = function(self, joint_class)
+	assert(joint_class);
 	Wrapper.super.init(self);
 	self._child = nil;
-	self._childJoint = nil;
-	self._jointClass = jointClass;
+	self.child_joint = nil;
+	self.joint_class = joint_class;
 end
 
-Wrapper.setChild = function(self, child)
+---@return UIElement
+Wrapper.child = function(self)
+	return self._child;
+end
+
+---@param child UIElement
+---@return UIElement
+Wrapper.set_child = function(self, child)
 	if self._child == child then
 		return child;
 	end
@@ -26,16 +38,18 @@ Wrapper.setChild = function(self, child)
 		child:remove_from_parent();
 	end
 	self._child = child;
-	self._childJoint = self._jointClass:new(self, child);
-	child:set_joint(self._childJoint);
+	self.child_joint = self.joint_class:new(self, child);
+	child:set_joint(self.child_joint);
 	return child;
 end
 
-Wrapper.remove_child = function(self, child)
-	assert(self._child == child);
+Wrapper.remove_child = function(self)
+	assert(self._child);
+	local child = self._child;
 	self._child:set_joint(nil);
 	self._child = nil;
-	self._childJoint = nil;
+	self.child_joint = nil;
+	return child;
 end
 
 Wrapper.compute_desired_size = function(self)
@@ -85,24 +99,24 @@ end
 crystal.test.add("Can set and unset child", function()
 	local a = UIElement:new();
 	local wrapper = Wrapper:new(crystal.Joint);
-	wrapper:setChild(a);
+	wrapper:set_child(a);
 	assert(a:parent() == wrapper);
-	wrapper:setChild(nil);
+	wrapper:set_child(nil);
 	assert(a:parent() == nil);
 end);
 
 crystal.test.add("Set child returns child", function()
 	local a = UIElement:new();
 	local wrapper = Wrapper:new(crystal.Joint);
-	assert(wrapper:setChild(a) == a);
+	assert(wrapper:set_child(a) == a);
 end);
 
 crystal.test.add("Can nest wrappers", function()
 	local a = Wrapper:new(crystal.Joint);
 	local b = Wrapper:new(crystal.Joint);
 	local c = UIElement:new(crystal.Joint);
-	a:setChild(b);
-	b:setChild(c);
+	a:set_child(b);
+	b:set_child(c);
 	assert(a:parent() == nil);
 	assert(b:parent() == a);
 	assert(c:parent() == b);
@@ -121,7 +135,7 @@ crystal.test.add("Layouts and draws child", function()
 		end
 		sentinel = 1;
 	end;
-	wrapper:setChild(a);
+	wrapper:set_child(a);
 	wrapper:update_tree(0);
 	assert(sentinel == 1)
 	wrapper:draw();

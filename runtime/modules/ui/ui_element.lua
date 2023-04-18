@@ -1,6 +1,5 @@
 ---@class UIElement
 ---@field private _joint Joint
----@field private _parent UIElement
 ---@field private _color Color
 ---@field private _opacity number
 ---@field private desired_width number
@@ -19,7 +18,6 @@ local UIElement = Class("UIElement");
 
 UIElement.init = function(self)
 	self._joint = nil;
-	self._parent = nil;
 	self._color = crystal.Color.white;
 	self._opacity = 1;
 	self.desired_width = nil;
@@ -38,12 +36,13 @@ end
 
 ---@return UIElement
 UIElement.parent = function(self)
-	return self._parent;
+	return self._joint and self._joint:parent() or nil;
 end
 
 UIElement.remove_from_parent = function(self)
-	assert(self._parent);
-	self._parent:remove_child(self);
+	local parent = self:parent();
+	assert(parent);
+	parent:remove_child(self);
 end
 
 ---@return Joint
@@ -56,11 +55,9 @@ UIElement.set_joint = function(self, joint)
 	if joint then
 		self:add_alias(joint);
 		self._joint = joint;
-		self._parent = joint:parent();
 	else
 		self:remove_alias(self._joint);
 		self._joint = nil;
-		self._parent = nil;
 	end
 end
 

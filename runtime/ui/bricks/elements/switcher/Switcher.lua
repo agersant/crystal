@@ -1,5 +1,5 @@
 local BasicJoint = require("ui/bricks/core/BasicJoint");
-local Container = require("ui/bricks/core/Container");
+local Container = require("modules/ui/container");
 local Padding = require("ui/bricks/core/Padding");
 local SwitcherTransition = require("ui/bricks/elements/switcher/SwitcherTransition");
 
@@ -51,9 +51,9 @@ Switcher.transitionToChild = function(self, child)
 	return self._transition:play(previousChild, child);
 end
 
-Switcher.addChild = function(self, child)
+Switcher.add_child = function(self, child)
 	local wasEmpty = #self._children == 0;
-	local child = Switcher.super.addChild(self, child);
+	local child = Switcher.super.add_child(self, child);
 	assert(child:parent() == self);
 	if wasEmpty then
 		self:jumpToChild(child);
@@ -71,7 +71,7 @@ Switcher.compute_desired_size = function(self)
 	if self._useDynamicSize then
 		if self._transition:isOver() then
 			-- Size to active child
-			local joint = self._childJoints[self._activeChild];
+			local joint = self.child_joints[self._activeChild];
 			local childWidth, childHeight = self._activeChild:desired_size();
 			width, height = joint:compute_desired_size(childWidth, childHeight);
 		else
@@ -81,7 +81,7 @@ Switcher.compute_desired_size = function(self)
 	else
 		-- Size to bounding box of all children
 		width, height = 0, 0;
-		for child, joint in pairs(self._childJoints) do
+		for child, joint in pairs(self.child_joints) do
 			local childWidth, childHeight = child:desired_size();
 			childWidth, childHeight = joint:compute_desired_size(childWidth, childHeight);
 			width = math.max(width, childWidth);
@@ -91,10 +91,10 @@ Switcher.compute_desired_size = function(self)
 	return math.max(width, 0), math.max(height, 0);
 end
 
-Switcher.arrangeChildren = function(self)
+Switcher.arrange_children = function(self)
 	local width, height = self:size();
 	for _, child in ipairs(self._children) do
-		local joint = self._childJoints[child];
+		local joint = self.child_joints[child];
 		local childWidth, childHeight = child:desired_size();
 		local left, right, top, bottom = joint:computeLocalPosition(childWidth, childHeight, width, height);
 		child:set_relative_position(left, right, top, bottom);
@@ -138,9 +138,9 @@ crystal.test.add("Shows first child by default", function()
 	end
 
 	local switcher = Switcher:new();
-	local a = switcher:addChild(UIElement:new());
+	local a = switcher:add_child(UIElement:new());
 	a.draw_self = draw;
-	local b = switcher:addChild(UIElement:new());
+	local b = switcher:add_child(UIElement:new());
 	b.draw_self = draw;
 	switcher:update_tree(0);
 	switcher:draw();
@@ -155,9 +155,9 @@ crystal.test.add("Can snap to different child", function()
 	end
 
 	local switcher = Switcher:new();
-	local a = switcher:addChild(UIElement:new());
+	local a = switcher:add_child(UIElement:new());
 	a.draw_self = draw;
-	local b = switcher:addChild(UIElement:new());
+	local b = switcher:add_child(UIElement:new());
 	b.draw_self = draw;
 	switcher:jumpToChild(b);
 	switcher:update_tree(0);
@@ -172,9 +172,9 @@ crystal.test.add("Supports dynamic or bounding box sizing", function()
 		{ method = "sizeToFitAnyChild", expectedSize = { 0, 100, 0, 100 } },
 	}) do
 		local switcher = Switcher:new();
-		local a = switcher:addChild(Image:new());
+		local a = switcher:add_child(Image:new());
 		a:setImageSize(50, 100);
-		local b = switcher:addChild(Image:new());
+		local b = switcher:add_child(Image:new());
 		b:setImageSize(100, 50);
 		switcher[test.method](switcher);
 		switcher:update_tree(0);
@@ -189,9 +189,9 @@ crystal.test.add("Can transition to a different child", function()
 	end
 
 	local switcher = Switcher:new();
-	local a = switcher:addChild(UIElement:new());
+	local a = switcher:add_child(UIElement:new());
 	a.draw_self = draw;
-	local b = switcher:addChild(UIElement:new());
+	local b = switcher:add_child(UIElement:new());
 	b.draw_self = draw;
 
 	switcher:transitionToChild(b);
@@ -204,8 +204,8 @@ end);
 crystal.test.add("Applies transition sizing and draw function during transition", function()
 	local transition = TestTransition:new();
 	local switcher = Switcher:new(transition);
-	local a = switcher:addChild(Image:new());
-	local b = switcher:addChild(Image:new());
+	local a = switcher:add_child(Image:new());
+	local b = switcher:add_child(Image:new());
 	switcher:transitionToChild(b);
 
 	switcher:update_tree(5);
@@ -219,8 +219,8 @@ end);
 crystal.test.add("Can interrupt a transition by setting active child", function()
 	local transition = TestTransition:new();
 	local switcher = Switcher:new(transition);
-	local a = switcher:addChild(Image:new());
-	local b = switcher:addChild(Image:new());
+	local a = switcher:add_child(Image:new());
+	local b = switcher:add_child(Image:new());
 	switcher:transitionToChild(b);
 
 	switcher:update_tree(5);
@@ -234,8 +234,8 @@ end);
 crystal.test.add("Can interrupt a transition by starting another one", function()
 	local transition = TestTransition:new();
 	local switcher = Switcher:new(transition);
-	local a = switcher:addChild(Image:new());
-	local b = switcher:addChild(Image:new());
+	local a = switcher:add_child(Image:new());
+	local b = switcher:add_child(Image:new());
 	switcher:transitionToChild(b);
 
 	switcher:update_tree(5);
@@ -252,8 +252,8 @@ end);
 crystal.test.add("Ignores transition to current child", function()
 	local transition = TestTransition:new();
 	local switcher = Switcher:new(transition);
-	local a = switcher:addChild(Image:new());
-	local b = switcher:addChild(Image:new());
+	local a = switcher:add_child(Image:new());
+	local b = switcher:add_child(Image:new());
 	switcher:transitionToChild(b);
 
 	switcher:update_tree(5);

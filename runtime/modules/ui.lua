@@ -1,5 +1,7 @@
+local Container = require("modules/ui/container");
 local Joint = require("modules/ui/joint");
 local UIElement = require("modules/ui/ui_element");
+local Wrapper = require("modules/ui/wrapper");
 
 local fonts = {};
 
@@ -11,8 +13,10 @@ return {
 		end,
 	},
 	global_api = {
+		Container = Container,
 		Joint = Joint,
 		UIElement = UIElement,
+		Wrapper = Wrapper,
 	},
 	init = function()
 		for name, font in pairs(crystal.conf.fonts) do

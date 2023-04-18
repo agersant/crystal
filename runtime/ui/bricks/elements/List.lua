@@ -1,5 +1,5 @@
 local BricksUtils = require("ui/bricks/core/BricksUtils");
-local Container = require("ui/bricks/core/Container");
+local Container = require("modules/ui/container");
 local Joint = require("modules/ui/joint");
 local Padding = require("ui/bricks/core/Padding");
 
@@ -85,7 +85,7 @@ end
 
 List.compute_desired_size = function(self)
 	local width, height = 0, 0;
-	for child, joint in pairs(self._childJoints) do
+	for child, joint in pairs(self.child_joints) do
 		local childWidth, childHeight = child:desired_size();
 		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:getEachPadding();
 		if self._axis == "horizontal" then
@@ -99,14 +99,14 @@ List.compute_desired_size = function(self)
 	return math.max(width, 0), math.max(height, 0);
 end
 
-List.arrangeChildren = function(self)
+List.arrange_children = function(self)
 	local width, height = self:size();
 	local desiredWidth, desiredHeight = self:desired_size();
 
 	local totalGrow = 0;
 	local totalShrink = 0;
 	for _, child in ipairs(self._children) do
-		local joint = self._childJoints[child];
+		local joint = self.child_joints[child];
 		totalGrow = totalGrow + joint:getGrow();
 		totalShrink = totalShrink + joint:getShrink();
 	end
@@ -114,7 +114,7 @@ List.arrangeChildren = function(self)
 	local x = 0;
 	local y = 0;
 	for _, child in ipairs(self._children) do
-		local joint = self._childJoints[child];
+		local joint = self.child_joints[child];
 		local childDesiredWidth, childDesiredHeight = child:desired_size();
 		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:getEachPadding();
 		local grow = joint:getGrow();
@@ -188,11 +188,11 @@ local UIElement = require("modules/ui/ui_element");
 
 crystal.test.add("Horizontal list aligns children", function()
 	local box = List.Horizontal:new();
-	local a = box:addChild(UIElement:new());
+	local a = box:add_child(UIElement:new());
 	a:setGrow(1);
-	local b = box:addChild(UIElement:new());
+	local b = box:add_child(UIElement:new());
 	b:setGrow(1);
-	local c = box:addChild(UIElement:new());
+	local c = box:add_child(UIElement:new());
 	c:setGrow(1);
 	box:update_tree(0, 90, 40);
 	assert(table.equals({ a:relative_position() }, { 0, 30, 0, 0 }));
@@ -202,11 +202,11 @@ end);
 
 crystal.test.add("Vertical list aligns children", function()
 	local box = List.Vertical:new();
-	local a = box:addChild(UIElement:new());
+	local a = box:add_child(UIElement:new());
 	a:setGrow(1);
-	local b = box:addChild(UIElement:new());
+	local b = box:add_child(UIElement:new());
 	b:setGrow(1);
-	local c = box:addChild(UIElement:new());
+	local c = box:add_child(UIElement:new());
 	c:setGrow(1);
 	box:update_tree(0, 40, 90);
 	assert(table.equals({ a:relative_position() }, { 0, 0, 0, 30 }));
@@ -217,16 +217,16 @@ end);
 crystal.test.add("Horizontal list respects vertical alignment", function()
 	local box = List.Horizontal:new();
 
-	local a = box:addChild(UIElement:new());
+	local a = box:add_child(UIElement:new());
 	a:setVerticalAlignment("top");
 
-	local b = box:addChild(UIElement:new());
+	local b = box:add_child(UIElement:new());
 	b:setVerticalAlignment("center");
 
-	local c = box:addChild(UIElement:new());
+	local c = box:add_child(UIElement:new());
 	c:setVerticalAlignment("bottom");
 
-	local d = box:addChild(UIElement:new());
+	local d = box:add_child(UIElement:new());
 	d:setVerticalAlignment("stretch");
 
 	a.compute_desired_size = function()
@@ -252,16 +252,16 @@ end);
 crystal.test.add("Vertical list respects horizontal alignment", function()
 	local box = List.Vertical:new();
 
-	local a = box:addChild(UIElement:new());
+	local a = box:add_child(UIElement:new());
 	a:setHorizontalAlignment("left");
 
-	local b = box:addChild(UIElement:new());
+	local b = box:add_child(UIElement:new());
 	b:setHorizontalAlignment("center");
 
-	local c = box:addChild(UIElement:new());
+	local c = box:add_child(UIElement:new());
 	c:setHorizontalAlignment("right");
 
-	local d = box:addChild(UIElement:new());
+	local d = box:add_child(UIElement:new());
 	d:setHorizontalAlignment("stretch");
 
 	a.compute_desired_size = function()
@@ -287,20 +287,20 @@ end);
 crystal.test.add("Horizontal list respects padding", function()
 	local box = List.Horizontal:new();
 
-	local a = box:addChild(UIElement:new());
+	local a = box:add_child(UIElement:new());
 	a:setVerticalAlignment("top");
 	a:setLeftPadding(5);
 
-	local b = box:addChild(UIElement:new());
+	local b = box:add_child(UIElement:new());
 	b:setVerticalAlignment("center");
 	b:setTopPadding(5);
 	b:setBottomPadding(4);
 
-	local c = box:addChild(UIElement:new());
+	local c = box:add_child(UIElement:new());
 	c:setVerticalAlignment("bottom");
 	c:setRightPadding(10);
 
-	local d = box:addChild(UIElement:new());
+	local d = box:add_child(UIElement:new());
 	d:setVerticalAlignment("stretch");
 	d:setAllPadding(10);
 
@@ -327,20 +327,20 @@ end);
 crystal.test.add("Vertical list respects padding", function()
 	local box = List.Vertical:new();
 
-	local a = box:addChild(UIElement:new());
+	local a = box:add_child(UIElement:new());
 	a:setHorizontalAlignment("left");
 	a:setTopPadding(5);
 
-	local b = box:addChild(UIElement:new());
+	local b = box:add_child(UIElement:new());
 	b:setHorizontalAlignment("center");
 	b:setLeftPadding(5);
 	b:setRightPadding(4);
 
-	local c = box:addChild(UIElement:new());
+	local c = box:add_child(UIElement:new());
 	c:setHorizontalAlignment("right");
 	c:setBottomPadding(10);
 
-	local d = box:addChild(UIElement:new());
+	local d = box:add_child(UIElement:new());
 	d:setHorizontalAlignment("stretch");
 	d:setAllPadding(10);
 

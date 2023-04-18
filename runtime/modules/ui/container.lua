@@ -1,33 +1,39 @@
 local UIElement = require("modules/ui/ui_element");
 
+---@class Container : UIElement
+---@field private _children UIElement[]
+---@field private child_joints { [UIElement]: Joint }
+---@field private joint_class Class
 local Container = Class("Container", UIElement);
 
-Container.init = function(self, jointClass)
-	assert(jointClass);
+Container.init = function(self, joint_class)
+	assert(joint_class);
 	Container.super.init(self);
 	self._children = {};
-	self._childJoints = {};
-	self._jointClass = jointClass;
+	self.child_joints = {};
+	self.joint_class = joint_class;
 end
 
-Container.addChild = function(self, child)
-	if self._childJoints[child] then
+---@param child UIElement
+Container.add_child = function(self, child)
+	if self.child_joints[child] then
 		return;
 	end
 	if child:parent() then
 		child:remove_from_parent();
 	end
 	table.push(self._children, child);
-	local joint = self._jointClass:new(self, child);
-	self._childJoints[child] = joint;
+	local joint = self.joint_class:new(self, child);
+	self.child_joints[child] = joint;
 	child:set_joint(joint);
 	return child;
 end
 
+---@param child UIElement
 Container.remove_child = function(self, child)
-	assert(self._childJoints[child]);
+	assert(self.child_joints[child]);
 	child:set_joint(nil);
-	self._childJoints[child] = nil;
+	self.child_joints[child] = nil;
 	for i, c in ipairs(self._children) do
 		if c == child then
 			table.remove(self._children, i);
@@ -35,21 +41,28 @@ Container.remove_child = function(self, child)
 	end
 end
 
+---@param index integer
+---@return UIElement
 Container.child = function(self, index)
 	return self._children[index];
 end
 
-Container.getChildren = function(self)
+---@return UIElement[]
+Container.children = function(self)
 	return table.copy(self._children);
 end
 
+---@protected
+---@param dt number
 Container.update = function(self, dt)
 	Container.super.update(self, dt);
-	for _, child in ipairs(self._children) do
+	local children = self:children();
+	for _, child in ipairs(children) do
 		child:update(dt);
 	end
 end
 
+---@protected
 Container.update_desired_size = function(self)
 	for _, child in ipairs(self._children) do
 		child:update_desired_size();
@@ -57,18 +70,21 @@ Container.update_desired_size = function(self)
 	Container.super.update_desired_size(self);
 end
 
+---@protected
 Container.layout = function(self)
 	Container.super.layout(self);
-	self:arrangeChildren();
+	self:arrange_children();
 	for _, child in ipairs(self._children) do
 		child:layout();
 	end
 end
 
-Container.arrangeChildren = function(self)
+---@protected
+Container.arrange_children = function(self)
 	error("Not implemented");
 end
 
+---@protected
 Container.draw_self = function(self)
 	for _, child in ipairs(self._children) do
 		child:draw();
@@ -82,10 +98,10 @@ crystal.test.add("Can add and remove children", function()
 	local b = UIElement:new();
 	local container = Container:new(crystal.Joint);
 
-	container:addChild(a);
+	container:add_child(a);
 	assert(a:parent() == container);
 	assert(b:parent() == nil);
-	container:addChild(b);
+	container:add_child(b);
 	assert(a:parent() == container);
 	assert(b:parent() == container);
 	container:remove_child(a);
@@ -93,22 +109,22 @@ crystal.test.add("Can add and remove children", function()
 	assert(b:parent() == container);
 
 	local otherContainer = Container:new(crystal.Joint);
-	otherContainer:addChild(b);
+	otherContainer:add_child(b);
 	assert(b:parent() == otherContainer);
 end);
 
 crystal.test.add("Add child returns newly added child", function()
 	local a = UIElement:new();
 	local container = Container:new(crystal.Joint);
-	assert(container:addChild(a) == a);
+	assert(container:add_child(a) == a);
 end);
 
 crystal.test.add("Can nest containers", function()
 	local a = Container:new(crystal.Joint);
 	local b = Container:new(crystal.Joint);
 	local c = UIElement:new(crystal.Joint);
-	a:addChild(b);
-	b:addChild(c);
+	a:add_child(b);
+	b:add_child(c);
 	assert(a:parent() == nil);
 	assert(b:parent() == a);
 	assert(c:parent() == b);
@@ -125,10 +141,10 @@ crystal.test.add("Calls update on children", function()
 		sentinel = sentinel + 10;
 	end
 	local container = Container:new(crystal.Joint);
-	container.arrangeChildren = function()
+	container.arrange_children = function()
 	end
-	container:addChild(a);
-	container:addChild(b);
+	container:add_child(a);
+	container:add_child(b);
 	container:update_tree(0);
 	assert(sentinel == 11)
 end);
@@ -144,11 +160,11 @@ crystal.test.add("Layouts and draws children", function()
 		sentinel = sentinel + 10;
 	end
 	local container = Container:new(crystal.Joint);
-	container.arrangeChildren = function(self)
+	container.arrange_children = function(self)
 		sentinel = 1;
 	end;
-	container:addChild(a);
-	container:addChild(b);
+	container:add_child(a);
+	container:add_child(b);
 	container:update_tree(0);
 	assert(sentinel == 1)
 	container:draw();

@@ -71,44 +71,44 @@ KnobInfo.init = function(self)
 	KnobInfo.super.init(self);
 
 	local rounded_corners = self:setRoot(RoundedCorners:new());
-	local top_level_list = rounded_corners:setChild(List.Vertical:new());
+	local top_level_list = rounded_corners:set_child(List.Vertical:new());
 
-	local header = top_level_list:addChild(Overlay:new());
+	local header = top_level_list:add_child(Overlay:new());
 	header:setHorizontalAlignment("stretch");
-	local header_background = header:addChild(Image:new());
+	local header_background = header:add_child(Image:new());
 	header_background:set_color(colors.header_background);
 	header_background:setAlignment("stretch", "stretch");
-	self.header_text = header:addChild(Text:new());
+	self.header_text = header:add_child(Text:new());
 	self.header_text:setFont(crystal.ui.font("crystal_header_sm"));
 	self.header_text:set_color(colors.header_text);
 	self.header_text:setHorizontalPadding(8);
 	self.header_text:setVerticalPadding(2);
 	self.header_text:setVerticalAlignment("center");
 
-	local content = top_level_list:addChild(Overlay:new());
+	local content = top_level_list:add_child(Overlay:new());
 	content:setHorizontalAlignment("stretch");
-	local content_background = content:addChild(Image:new());
+	local content_background = content:add_child(Image:new());
 	content_background:set_color(colors.background);
 	content_background:setAlignment("stretch", "stretch");
-	local data = content:addChild(List.Horizontal:new());
+	local data = content:add_child(List.Horizontal:new());
 	data:setAllPadding(10);
 
-	local donut_container = data:addChild(Overlay:new());
+	local donut_container = data:add_child(Overlay:new());
 	donut_container:setRightPadding(10);
-	self.donut = donut_container:addChild(KnobDonut:new());
-	self.knob_index_text = donut_container:addChild(Text:new());
+	self.donut = donut_container:add_child(KnobDonut:new());
+	self.knob_index_text = donut_container:add_child(Text:new());
 	self.knob_index_text:setAlignment("center", "bottom");
 	self.knob_index_text:setBottomPadding(-6);
 	self.knob_index_text:set_color(colors.knob_index);
 	self.knob_index_text:setFont(crystal.ui.font("crystal_body_xs"));
 
-	local value_container = data:addChild(Overlay:new());
-	local border = value_container:addChild(Border:new());
+	local value_container = data:add_child(Overlay:new());
+	local border = value_container:add_child(Border:new());
 	border:setAlignment("stretch", "stretch");
 	border:setRounding(2);
 	border:set_color(colors.value_outline);
 
-	self.knob_value_text = value_container:addChild(Text:new());
+	self.knob_value_text = value_container:add_child(Text:new());
 	self.knob_value_text:setVerticalPadding(4);
 	self.knob_value_text:setHorizontalPadding(10);
 	self.knob_value_text:set_color(colors.value_text);
@@ -136,13 +136,13 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 	local top_level_list = self:setRoot(List.Vertical:new());
 	top_level_list:setAllPadding(20);
 
-	local title_bar = top_level_list:addChild(List.Horizontal:new());
+	local title_bar = top_level_list:add_child(List.Horizontal:new());
 	title_bar:setHorizontalAlignment("stretch");
 	title_bar:setBottomPadding(12);
 
-	local title_bar_prefix = title_bar:addChild(Image:new());
-	self.title_text = title_bar:addChild(Text:new());
-	local title_bar_suffix = title_bar:addChild(Image:new());
+	local title_bar_prefix = title_bar:add_child(Image:new());
+	self.title_text = title_bar:add_child(Text:new());
+	local title_bar_suffix = title_bar:add_child(Image:new());
 
 	self.title_text:setHorizontalPadding(6);
 	self.title_text:setFont(crystal.ui.font("crystal_header_md"));
@@ -160,12 +160,12 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 	title_bar_suffix:set_color(colors.title);
 	title_bar_suffix:setTopPadding(1.5); -- TODO let image widget handle pixel snapping?
 
-	self.content = top_level_list:addChild(Switcher:new());
+	self.content = top_level_list:add_child(Switcher:new());
 	self.content:setHorizontalAlignment("stretch");
-	self.help_text = self.content:addChild(Text:new());
+	self.help_text = self.content:add_child(Text:new());
 	self.help_text:setHorizontalAlignment("stretch");
 	self.help_text:set_color(colors.help);
-	self.knob_infos = self.content:addChild(List.Horizontal:new());
+	self.knob_infos = self.content:add_child(List.Horizontal:new());
 end
 
 LiveTuneOverlay.update = function(self, dt)
@@ -198,12 +198,12 @@ LiveTuneOverlay.update = function(self, dt)
 		self.content:jumpToChild(self.knob_infos);
 	end
 
-	local children = self.knob_infos:getChildren();
+	local children = self.knob_infos:children();
 	for i = 1 + #self.mapped_knobs, #children do
 		self.knob_infos:remove_child(children[i]);
 	end
 	for i = 1 + #children, #self.mapped_knobs do
-		local knob_info = self.knob_infos:addChild(KnobInfo:new());
+		local knob_info = self.knob_infos:add_child(KnobInfo:new());
 		knob_info:setRightPadding(10);
 	end
 
