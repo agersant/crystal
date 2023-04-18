@@ -54,8 +54,6 @@ end
 
 --#region Tests
 
-local Image = require("ui/bricks/elements/Image");
-
 local TestWorld = Class:test("TestWorld");
 
 TestWorld.init = function(self)
@@ -77,8 +75,8 @@ end
 crystal.test.add("Can draw world widget", { resolution = { 200, 200 } }, function(context)
 	local world = TestWorld:new();
 	local entity = world.ecs:spawn(crystal.Entity);
-	local widget = Image:new();
-	widget:setImageSize(48, 32);
+	local widget = crystal.Image:new();
+	widget:set_image_size(48, 32);
 	entity:add_component(crystal.Body);
 	entity:add_component(crystal.WorldWidget, widget);
 	entity:set_position(100, 100);
@@ -91,8 +89,8 @@ end);
 crystal.test.add("Can adjust widget anchors", { resolution = { 200, 200 } }, function(context)
 	local world = TestWorld:new();
 	local entity = world.ecs:spawn(crystal.Entity);
-	local widget = Image:new();
-	widget:setImageSize(48, 32);
+	local widget = crystal.Image:new();
+	widget:set_image_size(48, 32);
 	entity:add_component(crystal.Body);
 	entity:add_component(crystal.WorldWidget, widget);
 	entity:set_widget_anchor(0, 0);

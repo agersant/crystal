@@ -1,4 +1,5 @@
 local Container = require("modules/ui/container");
+local Image = require("modules/ui/image");
 local Joint = require("modules/ui/joint");
 local UIElement = require("modules/ui/ui_element");
 local Wrapper = require("modules/ui/wrapper");
@@ -14,6 +15,7 @@ return {
 	},
 	global_api = {
 		Container = Container,
+		Image = Image,
 		Joint = Joint,
 		UIElement = UIElement,
 		Wrapper = Wrapper,

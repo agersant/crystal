@@ -16,7 +16,6 @@ local cc_indices = { 112, 74, 71, 76, 77, 93, 73, 75, 114, 18, 19, 16, 17, 91, 7
 --#region UI
 
 local Border = require("ui/bricks/elements/Border");
-local Image = require("ui/bricks/elements/Image");
 local List = require("ui/bricks/elements/List");
 local Overlay = require("ui/bricks/elements/Overlay");
 local RoundedCorners = require("ui/bricks/elements/RoundedCorners");
@@ -75,7 +74,7 @@ KnobInfo.init = function(self)
 
 	local header = top_level_list:add_child(Overlay:new());
 	header:setHorizontalAlignment("stretch");
-	local header_background = header:add_child(Image:new());
+	local header_background = header:add_child(crystal.Image:new());
 	header_background:set_color(colors.header_background);
 	header_background:setAlignment("stretch", "stretch");
 	self.header_text = header:add_child(Text:new());
@@ -87,7 +86,7 @@ KnobInfo.init = function(self)
 
 	local content = top_level_list:add_child(Overlay:new());
 	content:setHorizontalAlignment("stretch");
-	local content_background = content:add_child(Image:new());
+	local content_background = content:add_child(crystal.Image:new());
 	content_background:set_color(colors.background);
 	content_background:setAlignment("stretch", "stretch");
 	local data = content:add_child(List.Horizontal:new());
@@ -140,23 +139,21 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 	title_bar:setHorizontalAlignment("stretch");
 	title_bar:setBottomPadding(12);
 
-	local title_bar_prefix = title_bar:add_child(Image:new());
+	local title_bar_prefix = title_bar:add_child(crystal.Image:new());
 	self.title_text = title_bar:add_child(Text:new());
-	local title_bar_suffix = title_bar:add_child(Image:new());
+	local title_bar_suffix = title_bar:add_child(crystal.Image:new());
 
 	self.title_text:setHorizontalPadding(6);
 	self.title_text:setFont(crystal.ui.font("crystal_header_md"));
 	self.title_text:set_color(colors.title);
 
 	title_bar_prefix:setVerticalAlignment("center");
-	title_bar_prefix:setWidth(16);
-	title_bar_prefix:setHeight(1);
+	title_bar_prefix:set_image_size(16, 1);
 	title_bar_prefix:set_color(colors.title);
 	title_bar_prefix:setTopPadding(1.5); -- TODO let image widget handle pixel snapping?
 
 	title_bar_suffix:setVerticalAlignment("center");
 	title_bar_suffix:setGrow(1);
-	title_bar_suffix:setHeight(1);
 	title_bar_suffix:set_color(colors.title);
 	title_bar_suffix:setTopPadding(1.5); -- TODO let image widget handle pixel snapping?
 
