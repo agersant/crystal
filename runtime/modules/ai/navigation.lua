@@ -131,7 +131,7 @@ Navigation.navigate_to_goal = function(self, goal, repath_delay)
 			end
 		end);
 
-		return self:join(completion);
+		return completion:block();
 	end);
 end
 

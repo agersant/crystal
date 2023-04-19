@@ -116,9 +116,22 @@ Thread.stop_on = function(self, signal)
 end
 
 ---@return any
+Thread.block = function(self)
+	local current_coroutine = coroutine.running();
+	if not current_coroutine then
+		error("Called `block` while no thread is running.");
+	end
+	if current_coroutine == self._coroutine then
+		error("Called `block` on the thread that is currently running");
+	end
+	local returns = coroutine.yield("join", { self });
+	return unpack(returns);
+end
+
+---@return any
 Thread.join = function(self, thread)
-	assert(not self:is_dead());
 	assert(thread);
+	assert(thread ~= self);
 	return self:join_any({ thread });
 end
 

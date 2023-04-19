@@ -14,6 +14,7 @@ Threads transparently have access to all methods of the script that owns them.
 
 | Name                                | Description                                                                              |
 | :---------------------------------- | :--------------------------------------------------------------------------------------- |
+| [block](thread_block)               | Blocks the currently running thread until this thread runs to completion or stops.       |
 | [defer](thread_defer)               | Registers a function that will be executed when this thread runs to completion or stops. |
 | [hang](thread_hang)                 | Blocks this thread forever.                                                              |
 | [is_dead](thread_is_dead)           | Returns whether this thread has ran to completion or stopped.                            |

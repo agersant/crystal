@@ -679,6 +679,43 @@ crystal.test.add("Cross script join keeps execution context", function()
 	assert(sentinel);
 end);
 
+crystal.test.add("Can block on a thread", function()
+	local script = Script:new();
+	local sentinel = 0;
+	local t0 = script:run_thread(function(self)
+		self:wait_for("s0");
+	end);
+	script:run_thread(function(self)
+		t0:block();
+		sentinel = 1;
+	end);
+	assert(sentinel == 0);
+	script:signal("s0");
+	assert(sentinel == 1);
+end);
+
+crystal.test.add("Cannot block on current thread", function()
+	local script = Script:new();
+	local success = true;
+	script:run_thread(function(self)
+		success = pcall(function()
+			self:block();
+		end);
+	end);
+	assert(not success);
+end);
+
+crystal.test.add("Cannot block outside of a script", function()
+	local script = Script:new();
+	local thread = script:run_thread(function(self)
+		self:hang();
+	end);
+	local success = pcall(function()
+		thread:block();
+	end);
+	assert(success == false);
+end);
+
 crystal.test.add("End child threads after thread ends", function()
 	local a = 0;
 	local script = Script:new(function(self)
@@ -1060,7 +1097,6 @@ crystal.test.add("Cannot block a thread that isn't running", function()
 	end);
 	assert(not can_hang);
 end);
-
 
 crystal.test.add("Double thread stop does not re-run deferred functions", function()
 	local script = Script:new();

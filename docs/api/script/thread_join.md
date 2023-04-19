@@ -6,7 +6,10 @@ nav_exclude: true
 
 # Thread:join
 
-Blocks this thread until a specific thread runs to completion or stops. If the thread to wait on is already dead, this function is not blocking.
+Blocks this thread until a specific thread runs to completion or stops. If the thread to wait on is already dead, this function returns immediately.
+
+{: .note}
+Calling `current_thread:join(b)` is equivalent to calling `b:block()`.
 
 ## Usage
 

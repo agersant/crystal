@@ -130,7 +130,7 @@ crystal.test.add("Animation blocks script", function()
 
 	local sentinel = false;
 	entity:add_script(function(self)
-		self:join(self:play_animation("hurt"));
+		self:play_animation("hurt"):block();
 		sentinel = true;
 	end);
 
@@ -151,7 +151,7 @@ crystal.test.add("Looping animation thread never ends", function()
 
 	local sentinel = false;
 	entity:add_script(function(self)
-		self:join(self:play_animation("floating"));
+		self:play_animation("floating"):block();
 		sentinel = true;
 	end);
 

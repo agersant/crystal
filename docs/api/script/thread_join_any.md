@@ -6,7 +6,7 @@ nav_exclude: true
 
 # Thread:join_any
 
-Blocks this thread until any of several other threads runs to completion or stops. If any of the threads to wait on is already dead, this function is not blocking.
+Blocks this thread until any of several other threads runs to completion or stops. If any of the threads to wait on is already dead, this function returns immediately.
 
 ## Usage
 
