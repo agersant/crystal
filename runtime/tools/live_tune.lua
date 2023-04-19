@@ -80,8 +80,8 @@ KnobInfo.init = function(self)
 	self.header_text = header:add_child(Text:new());
 	self.header_text:setFont(crystal.ui.font("crystal_header_sm"));
 	self.header_text:set_color(colors.header_text);
-	self.header_text:setHorizontalPadding(8);
-	self.header_text:setVerticalPadding(2);
+	self.header_text:set_padding_x(8);
+	self.header_text:set_padding_y(2);
 	self.header_text:setVerticalAlignment("center");
 
 	local content = top_level_list:add_child(Overlay:new());
@@ -90,14 +90,14 @@ KnobInfo.init = function(self)
 	content_background:set_color(colors.background);
 	content_background:setAlignment("stretch", "stretch");
 	local data = content:add_child(List.Horizontal:new());
-	data:setAllPadding(10);
+	data:set_padding(10);
 
 	local donut_container = data:add_child(Overlay:new());
-	donut_container:setRightPadding(10);
+	donut_container:set_padding_right(10);
 	self.donut = donut_container:add_child(KnobDonut:new());
 	self.knob_index_text = donut_container:add_child(Text:new());
 	self.knob_index_text:setAlignment("center", "bottom");
-	self.knob_index_text:setBottomPadding(-6);
+	self.knob_index_text:set_padding_bottom(-6);
 	self.knob_index_text:set_color(colors.knob_index);
 	self.knob_index_text:setFont(crystal.ui.font("crystal_body_xs"));
 
@@ -108,8 +108,8 @@ KnobInfo.init = function(self)
 	border:set_color(colors.value_outline);
 
 	self.knob_value_text = value_container:add_child(Text:new());
-	self.knob_value_text:setVerticalPadding(4);
-	self.knob_value_text:setHorizontalPadding(10);
+	self.knob_value_text:set_padding_y(4);
+	self.knob_value_text:set_padding_x(10);
 	self.knob_value_text:set_color(colors.value_text);
 	self.knob_value_text:setFont(crystal.ui.font("crystal_body_sm"));
 end
@@ -133,29 +133,29 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 	LiveTuneOverlay.super.init(self);
 
 	local top_level_list = self:setRoot(List.Vertical:new());
-	top_level_list:setAllPadding(20);
+	top_level_list:set_padding(20);
 
 	local title_bar = top_level_list:add_child(List.Horizontal:new());
 	title_bar:setHorizontalAlignment("stretch");
-	title_bar:setBottomPadding(12);
+	title_bar:set_padding_bottom(12);
 
 	local title_bar_prefix = title_bar:add_child(crystal.Image:new());
 	self.title_text = title_bar:add_child(Text:new());
 	local title_bar_suffix = title_bar:add_child(crystal.Image:new());
 
-	self.title_text:setHorizontalPadding(6);
+	self.title_text:set_padding_x(6);
 	self.title_text:setFont(crystal.ui.font("crystal_header_md"));
 	self.title_text:set_color(colors.title);
 
 	title_bar_prefix:setVerticalAlignment("center");
 	title_bar_prefix:set_image_size(16, 1);
 	title_bar_prefix:set_color(colors.title);
-	title_bar_prefix:setTopPadding(1.5); -- TODO let image widget handle pixel snapping?
+	title_bar_prefix:set_padding_top(1.5); -- TODO let image widget handle pixel snapping?
 
 	title_bar_suffix:setVerticalAlignment("center");
 	title_bar_suffix:setGrow(1);
 	title_bar_suffix:set_color(colors.title);
-	title_bar_suffix:setTopPadding(1.5); -- TODO let image widget handle pixel snapping?
+	title_bar_suffix:set_padding_top(1.5); -- TODO let image widget handle pixel snapping?
 
 	self.content = top_level_list:add_child(Switcher:new());
 	self.content:setHorizontalAlignment("stretch");
@@ -201,7 +201,7 @@ LiveTuneOverlay.update = function(self, dt)
 	end
 	for i = 1 + #children, #self.mapped_knobs do
 		local knob_info = self.knob_infos:add_child(KnobInfo:new());
-		knob_info:setRightPadding(10);
+		knob_info:set_padding_right(10);
 	end
 
 	for i, mapped_knob in ipairs(self.mapped_knobs) do

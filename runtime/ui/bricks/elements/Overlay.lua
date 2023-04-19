@@ -1,15 +1,17 @@
 local Container = require("modules/ui/container");
-local Padding = require("ui/bricks/core/Padding");
 local BasicJoint = require("ui/bricks/core/BasicJoint");
 
+---@class OverlayJoint : BasicJoint
 local OverlayJoint = Class("OverlayJoint", BasicJoint);
-local Overlay = Class("Overlay", Container);
 
 OverlayJoint.init = function(self, parent, child)
 	OverlayJoint.super.init(self, parent, child);
 	self._horizontalAlignment = "left";
 	self._verticalAlignment = "top";
 end
+
+---@class Overlay : Container
+local Overlay = Class("Overlay", Container);
 
 Overlay.init = function(self)
 	Overlay.super.init(self, OverlayJoint);
@@ -19,7 +21,7 @@ Overlay.compute_desired_size = function(self)
 	local width, height = 0, 0;
 	for child, joint in pairs(self.child_joints) do
 		local childWidth, childHeight = child:desired_size();
-		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:getEachPadding();
+		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:padding();
 		local horizontalAlignment, verticalAlignment = joint:getAlignment();
 		if horizontalAlignment ~= "stretch" then
 			width = math.max(width, childWidth + paddingLeft + paddingRight);
@@ -113,7 +115,7 @@ crystal.test.add("Respects padding", function()
 		overlay:add_child(element);
 		element:setHorizontalAlignment(testCase[1]);
 		element:setVerticalAlignment(testCase[2]);
-		element:setEachPadding(2, 4, 6, 8);
+		element:set_padding(2, 4, 6, 8);
 
 		overlay:update_tree(0, 100, 100);
 		assert(table.equals(testCase[3], { element:relative_position() }));

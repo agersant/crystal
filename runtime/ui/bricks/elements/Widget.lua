@@ -1,4 +1,3 @@
-local Padding = require("ui/bricks/core/Padding");
 local BasicJoint = require("ui/bricks/core/BasicJoint");
 local Wrapper = require("modules/ui/wrapper");
 

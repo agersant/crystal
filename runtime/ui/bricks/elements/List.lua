@@ -1,7 +1,7 @@
 local BricksUtils = require("ui/bricks/core/BricksUtils");
 local Container = require("modules/ui/container");
 local Joint = require("modules/ui/joint");
-local Padding = require("ui/bricks/core/Padding");
+local Padding = require("modules/ui/padding");
 
 local ListJoint = Class("ListJoint", Joint);
 local HorizontalListJoint = Class("HorizontalListJoint", ListJoint);
@@ -87,7 +87,7 @@ List.compute_desired_size = function(self)
 	local width, height = 0, 0;
 	for child, joint in pairs(self.child_joints) do
 		local childWidth, childHeight = child:desired_size();
-		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:getEachPadding();
+		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:padding();
 		if self._axis == "horizontal" then
 			width = width + childWidth + paddingLeft + paddingRight;
 			height = math.max(height, childHeight + paddingTop + paddingBottom);
@@ -116,7 +116,7 @@ List.arrange_children = function(self)
 	for _, child in ipairs(self._children) do
 		local joint = self.child_joints[child];
 		local childDesiredWidth, childDesiredHeight = child:desired_size();
-		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:getEachPadding();
+		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:padding();
 		local grow = joint:getGrow();
 		local shrink = joint:getShrink();
 
@@ -289,20 +289,20 @@ crystal.test.add("Horizontal list respects padding", function()
 
 	local a = box:add_child(UIElement:new());
 	a:setVerticalAlignment("top");
-	a:setLeftPadding(5);
+	a:set_padding_left(5);
 
 	local b = box:add_child(UIElement:new());
 	b:setVerticalAlignment("center");
-	b:setTopPadding(5);
-	b:setBottomPadding(4);
+	b:set_padding_top(5);
+	b:set_padding_bottom(4);
 
 	local c = box:add_child(UIElement:new());
 	c:setVerticalAlignment("bottom");
-	c:setRightPadding(10);
+	c:set_padding_right(10);
 
 	local d = box:add_child(UIElement:new());
 	d:setVerticalAlignment("stretch");
-	d:setAllPadding(10);
+	d:set_padding(10);
 
 	a.compute_desired_size = function()
 		return 25, 10;
@@ -329,20 +329,20 @@ crystal.test.add("Vertical list respects padding", function()
 
 	local a = box:add_child(UIElement:new());
 	a:setHorizontalAlignment("left");
-	a:setTopPadding(5);
+	a:set_padding_top(5);
 
 	local b = box:add_child(UIElement:new());
 	b:setHorizontalAlignment("center");
-	b:setLeftPadding(5);
-	b:setRightPadding(4);
+	b:set_padding_left(5);
+	b:set_padding_right(4);
 
 	local c = box:add_child(UIElement:new());
 	c:setHorizontalAlignment("right");
-	c:setBottomPadding(10);
+	c:set_padding_bottom(10);
 
 	local d = box:add_child(UIElement:new());
 	d:setHorizontalAlignment("stretch");
-	d:setAllPadding(10);
+	d:set_padding(10);
 
 	a.compute_desired_size = function()
 		return 10, 25;
