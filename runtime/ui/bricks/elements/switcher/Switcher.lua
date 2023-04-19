@@ -1,4 +1,4 @@
-local BasicJoint = require("ui/bricks/core/BasicJoint");
+local BasicJoint = require("modules/ui/basic_joint");
 local Container = require("modules/ui/container");
 local SwitcherTransition = require("ui/bricks/elements/switcher/SwitcherTransition");
 
@@ -7,8 +7,6 @@ local Switcher = Class("Switcher", Container);
 
 SwitcherJoint.init = function(self, parent, child)
 	SwitcherJoint.super.init(self, parent, child);
-	self._horizontalAlignment = "stretch";
-	self._verticalAlignment = "stretch";
 end
 
 Switcher.init = function(self, transition)
@@ -95,7 +93,7 @@ Switcher.arrange_children = function(self)
 	for _, child in ipairs(self._children) do
 		local joint = self.child_joints[child];
 		local childWidth, childHeight = child:desired_size();
-		local left, right, top, bottom = joint:computeLocalPosition(childWidth, childHeight, width, height);
+		local left, right, top, bottom = joint:compute_relative_position(childWidth, childHeight, width, height);
 		child:set_relative_position(left, right, top, bottom);
 	end
 end

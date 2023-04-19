@@ -73,22 +73,22 @@ KnobInfo.init = function(self)
 	local top_level_list = rounded_corners:set_child(List.Vertical:new());
 
 	local header = top_level_list:add_child(Overlay:new());
-	header:setHorizontalAlignment("stretch");
+	header:set_horizontal_alignment("stretch");
 	local header_background = header:add_child(crystal.Image:new());
 	header_background:set_color(colors.header_background);
-	header_background:setAlignment("stretch", "stretch");
+	header_background:set_alignment("stretch", "stretch");
 	self.header_text = header:add_child(Text:new());
 	self.header_text:setFont(crystal.ui.font("crystal_header_sm"));
 	self.header_text:set_color(colors.header_text);
 	self.header_text:set_padding_x(8);
 	self.header_text:set_padding_y(2);
-	self.header_text:setVerticalAlignment("center");
+	self.header_text:set_vertical_alignment("center");
 
 	local content = top_level_list:add_child(Overlay:new());
-	content:setHorizontalAlignment("stretch");
+	content:set_horizontal_alignment("stretch");
 	local content_background = content:add_child(crystal.Image:new());
 	content_background:set_color(colors.background);
-	content_background:setAlignment("stretch", "stretch");
+	content_background:set_alignment("stretch", "stretch");
 	local data = content:add_child(List.Horizontal:new());
 	data:set_padding(10);
 
@@ -96,14 +96,14 @@ KnobInfo.init = function(self)
 	donut_container:set_padding_right(10);
 	self.donut = donut_container:add_child(KnobDonut:new());
 	self.knob_index_text = donut_container:add_child(Text:new());
-	self.knob_index_text:setAlignment("center", "bottom");
+	self.knob_index_text:set_alignment("center", "bottom");
 	self.knob_index_text:set_padding_bottom(-6);
 	self.knob_index_text:set_color(colors.knob_index);
 	self.knob_index_text:setFont(crystal.ui.font("crystal_body_xs"));
 
 	local value_container = data:add_child(Overlay:new());
 	local border = value_container:add_child(Border:new());
-	border:setAlignment("stretch", "stretch");
+	border:set_alignment("stretch", "stretch");
 	border:setRounding(2);
 	border:set_color(colors.value_outline);
 
@@ -136,7 +136,7 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 	top_level_list:set_padding(20);
 
 	local title_bar = top_level_list:add_child(List.Horizontal:new());
-	title_bar:setHorizontalAlignment("stretch");
+	title_bar:set_horizontal_alignment("stretch");
 	title_bar:set_padding_bottom(12);
 
 	local title_bar_prefix = title_bar:add_child(crystal.Image:new());
@@ -147,20 +147,20 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 	self.title_text:setFont(crystal.ui.font("crystal_header_md"));
 	self.title_text:set_color(colors.title);
 
-	title_bar_prefix:setVerticalAlignment("center");
+	title_bar_prefix:set_vertical_alignment("center");
 	title_bar_prefix:set_image_size(16, 1);
 	title_bar_prefix:set_color(colors.title);
 	title_bar_prefix:set_padding_top(1.5); -- TODO let image widget handle pixel snapping?
 
-	title_bar_suffix:setVerticalAlignment("center");
+	title_bar_suffix:set_vertical_alignment("center");
 	title_bar_suffix:setGrow(1);
 	title_bar_suffix:set_color(colors.title);
 	title_bar_suffix:set_padding_top(1.5); -- TODO let image widget handle pixel snapping?
 
 	self.content = top_level_list:add_child(Switcher:new());
-	self.content:setHorizontalAlignment("stretch");
+	self.content:set_horizontal_alignment("stretch");
 	self.help_text = self.content:add_child(Text:new());
-	self.help_text:setHorizontalAlignment("stretch");
+	self.help_text:set_horizontal_alignment("stretch");
 	self.help_text:set_color(colors.help);
 	self.knob_infos = self.content:add_child(List.Horizontal:new());
 end

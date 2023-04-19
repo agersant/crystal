@@ -1,4 +1,4 @@
-local BasicJoint = require("ui/bricks/core/BasicJoint");
+local BasicJoint = require("modules/ui/basic_joint");
 local Wrapper = require("modules/ui/wrapper");
 
 local PainterJoint = Class("PainterJoint", BasicJoint);
@@ -15,8 +15,6 @@ end
 
 PainterJoint.init = function(self, parent, child)
 	PainterJoint.super.init(self, parent, child);
-	self._horizontalAlignment = "stretch";
-	self._verticalAlignment = "stretch";
 end
 
 Painter.init = function(self, shaderResource)
@@ -49,7 +47,8 @@ Painter.arrange_child = function(self)
 	if self._child then
 		local width, height = self:size();
 		local childWidth, childHeight = self._child:desired_size();
-		local left, right, top, bottom = self.child_joint:computeLocalPosition(childWidth, childHeight, width, height);
+		local left, right, top, bottom = self.child_joint:compute_relative_position(childWidth, childHeight, width,
+			height);
 		self._child:set_relative_position(left, right, top, bottom);
 	end
 end

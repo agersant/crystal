@@ -1,13 +1,12 @@
 local Container = require("modules/ui/container");
-local BasicJoint = require("ui/bricks/core/BasicJoint");
+local BasicJoint = require("modules/ui/basic_joint");
 
 ---@class OverlayJoint : BasicJoint
 local OverlayJoint = Class("OverlayJoint", BasicJoint);
 
 OverlayJoint.init = function(self, parent, child)
 	OverlayJoint.super.init(self, parent, child);
-	self._horizontalAlignment = "left";
-	self._verticalAlignment = "top";
+	self:set_alignment("left", "top");
 end
 
 ---@class Overlay : Container
@@ -22,7 +21,7 @@ Overlay.compute_desired_size = function(self)
 	for child, joint in pairs(self.child_joints) do
 		local childWidth, childHeight = child:desired_size();
 		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:padding();
-		local horizontalAlignment, verticalAlignment = joint:getAlignment();
+		local horizontalAlignment, verticalAlignment = joint:alignment();
 		if horizontalAlignment ~= "stretch" then
 			width = math.max(width, childWidth + paddingLeft + paddingRight);
 		end
@@ -38,7 +37,7 @@ Overlay.arrange_children = function(self)
 	for _, child in ipairs(self._children) do
 		local joint = self.child_joints[child];
 		local childWidth, childHeight = child:desired_size();
-		local left, right, top, bottom = joint:computeLocalPosition(childWidth, childHeight, width, height);
+		local left, right, top, bottom = joint:compute_relative_position(childWidth, childHeight, width, height);
 		child:set_relative_position(left, right, top, bottom);
 	end
 end
@@ -76,8 +75,8 @@ crystal.test.add("Respects alignment", function()
 		end
 
 		overlay:add_child(element);
-		element:setHorizontalAlignment(testCase[1]);
-		element:setVerticalAlignment(testCase[2]);
+		element:set_horizontal_alignment(testCase[1]);
+		element:set_vertical_alignment(testCase[2]);
 
 		overlay:update_tree(0, 100, 100);
 		assert(table.equals(testCase[3], { element:relative_position() }));
@@ -113,8 +112,8 @@ crystal.test.add("Respects padding", function()
 		end
 
 		overlay:add_child(element);
-		element:setHorizontalAlignment(testCase[1]);
-		element:setVerticalAlignment(testCase[2]);
+		element:set_horizontal_alignment(testCase[1]);
+		element:set_vertical_alignment(testCase[2]);
 		element:set_padding(2, 4, 6, 8);
 
 		overlay:update_tree(0, 100, 100);
