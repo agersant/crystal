@@ -17,7 +17,6 @@ local cc_indices = { 112, 74, 71, 76, 77, 93, 73, 75, 114, 18, 19, 16, 17, 91, 7
 
 local Border = require("ui/bricks/elements/Border");
 local List = require("ui/bricks/elements/List");
-local Overlay = require("ui/bricks/elements/Overlay");
 local RoundedCorners = require("ui/bricks/elements/RoundedCorners");
 local Switcher = require("ui/bricks/elements/switcher/Switcher");
 local Text = require("ui/bricks/elements/Text");
@@ -72,7 +71,7 @@ KnobInfo.init = function(self)
 	local rounded_corners = self:setRoot(RoundedCorners:new());
 	local top_level_list = rounded_corners:set_child(List.Vertical:new());
 
-	local header = top_level_list:add_child(Overlay:new());
+	local header = top_level_list:add_child(crystal.Overlay:new());
 	header:set_horizontal_alignment("stretch");
 	local header_background = header:add_child(crystal.Image:new());
 	header_background:set_color(colors.header_background);
@@ -84,7 +83,7 @@ KnobInfo.init = function(self)
 	self.header_text:set_padding_y(2);
 	self.header_text:set_vertical_alignment("center");
 
-	local content = top_level_list:add_child(Overlay:new());
+	local content = top_level_list:add_child(crystal.Overlay:new());
 	content:set_horizontal_alignment("stretch");
 	local content_background = content:add_child(crystal.Image:new());
 	content_background:set_color(colors.background);
@@ -92,7 +91,7 @@ KnobInfo.init = function(self)
 	local data = content:add_child(List.Horizontal:new());
 	data:set_padding(10);
 
-	local donut_container = data:add_child(Overlay:new());
+	local donut_container = data:add_child(crystal.Overlay:new());
 	donut_container:set_padding_right(10);
 	self.donut = donut_container:add_child(KnobDonut:new());
 	self.knob_index_text = donut_container:add_child(Text:new());
@@ -101,7 +100,7 @@ KnobInfo.init = function(self)
 	self.knob_index_text:set_color(colors.knob_index);
 	self.knob_index_text:setFont(crystal.ui.font("crystal_body_xs"));
 
-	local value_container = data:add_child(Overlay:new());
+	local value_container = data:add_child(crystal.Overlay:new());
 	local border = value_container:add_child(Border:new());
 	border:set_alignment("stretch", "stretch");
 	border:setRounding(2);

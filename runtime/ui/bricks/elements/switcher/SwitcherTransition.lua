@@ -68,16 +68,16 @@ SwitcherTransition.compute_desired_size = function(self)
 	local fromHeight = 0;
 	if self._from then
 		local joint = self._from:joint();
-		local childWidth, childHeight = self._from:desired_size();
-		fromWidth, fromHeight = joint:compute_desired_size(childWidth, childHeight);
+		local child_width, child_height = self._from:desired_size();
+		fromWidth, fromHeight = joint:compute_desired_size(child_width, child_height);
 	end
 
 	local toWidth = 0;
 	local toHeight = 0;
 	if self._to then
 		local joint = self._to:joint();
-		local childWidth, childHeight = self._to:desired_size();
-		toWidth, toHeight = joint:compute_desired_size(childWidth, childHeight);
+		local child_width, child_height = self._to:desired_size();
+		toWidth, toHeight = joint:compute_desired_size(child_width, child_height);
 	end
 
 	local t = self:getProgress();

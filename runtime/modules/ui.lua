@@ -2,7 +2,8 @@ local BasicJoint = require("modules/ui/basic_joint");
 local Container = require("modules/ui/container");
 local Image = require("modules/ui/image");
 local Joint = require("modules/ui/joint");
-local padding = require("modules/ui/padding");
+local Overlay = require("modules/ui/overlay");
+local Padding = require("modules/ui/padding");
 local UIElement = require("modules/ui/ui_element");
 local Wrapper = require("modules/ui/wrapper");
 
@@ -23,6 +24,7 @@ return {
 		Container = Container,
 		Image = Image,
 		Joint = Joint,
+		Overlay = Overlay,
 		Padding = Padding,
 		UIElement = UIElement,
 		Wrapper = Wrapper,

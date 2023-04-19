@@ -81,14 +81,14 @@ end
 List.compute_desired_size = function(self)
 	local width, height = 0, 0;
 	for child, joint in pairs(self.child_joints) do
-		local childWidth, childHeight = child:desired_size();
-		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:padding();
+		local child_width, child_height = child:desired_size();
+		local padding_left, padding_right, padding_top, padding_bottom = joint:padding();
 		if self._axis == "horizontal" then
-			width = width + childWidth + paddingLeft + paddingRight;
-			height = math.max(height, childHeight + paddingTop + paddingBottom);
+			width = width + child_width + padding_left + padding_right;
+			height = math.max(height, child_height + padding_top + padding_bottom);
 		else
-			height = height + childHeight + paddingTop + paddingBottom;
-			width = math.max(width, childWidth + paddingLeft + paddingRight);
+			height = height + child_height + padding_top + padding_bottom;
+			width = math.max(width, child_width + padding_left + padding_right);
 		end
 	end
 	return math.max(width, 0), math.max(height, 0);
@@ -111,66 +111,66 @@ List.arrange_children = function(self)
 	for _, child in ipairs(self._children) do
 		local joint = self.child_joints[child];
 		local childDesiredWidth, childDesiredHeight = child:desired_size();
-		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:padding();
+		local padding_left, padding_right, padding_top, padding_bottom = joint:padding();
 		local grow = joint:getGrow();
 		local shrink = joint:getShrink();
 
-		local childWidth, childHeight;
+		local child_width, child_height;
 
 		if self._axis == "horizontal" then
-			x = x + paddingLeft;
-			childWidth = childDesiredWidth;
+			x = x + padding_left;
+			child_width = childDesiredWidth;
 			if width > desiredWidth and grow > 0 then
-				childWidth = childDesiredWidth + (grow / totalGrow) * (width - desiredWidth);
+				child_width = childDesiredWidth + (grow / totalGrow) * (width - desiredWidth);
 			elseif width < desiredWidth and shrink > 0 then
-				childWidth = childDesiredWidth - (shrink / totalShrink) * (desiredWidth - width);
+				child_width = childDesiredWidth - (shrink / totalShrink) * (desiredWidth - width);
 			end
 
 			local verticalAlignment = joint:vertical_alignment();
 			if verticalAlignment == "stretch" then
-				childHeight = height - paddingTop - paddingBottom;
-				y = paddingTop;
+				child_height = height - padding_top - padding_bottom;
+				y = padding_top;
 			elseif verticalAlignment == "top" then
-				childHeight = childDesiredHeight;
-				y = paddingTop;
+				child_height = childDesiredHeight;
+				y = padding_top;
 			elseif verticalAlignment == "center" then
-				childHeight = childDesiredHeight;
-				y = (height - childHeight) / 2 + paddingTop - paddingBottom;
+				child_height = childDesiredHeight;
+				y = (height - child_height) / 2 + padding_top - padding_bottom;
 			elseif verticalAlignment == "bottom" then
-				childHeight = childDesiredHeight;
-				y = height - childHeight - paddingBottom;
+				child_height = childDesiredHeight;
+				y = height - child_height - padding_bottom;
 			end
 		else
-			y = y + paddingTop;
-			childHeight = childDesiredHeight;
+			y = y + padding_top;
+			child_height = childDesiredHeight;
 			if height > desiredHeight and grow > 0 then
-				childHeight = childDesiredHeight + (grow / totalGrow) * (height - desiredHeight);
+				child_height = childDesiredHeight + (grow / totalGrow) * (height - desiredHeight);
 			elseif height < desiredHeight and shrink > 0 then
-				childHeight = childDesiredHeight - (shrink / totalShrink) * (desiredHeight - height);
+				child_height = childDesiredHeight - (shrink / totalShrink) * (desiredHeight - height);
 			end
 
 			local horizontalAlignment = joint:horizontal_alignment();
 			if horizontalAlignment == "stretch" then
-				childWidth = width - paddingLeft - paddingRight;
-				x = paddingLeft;
+				child_width = width - padding_left - padding_right;
+				x = padding_left;
 			elseif horizontalAlignment == "left" then
-				childWidth = childDesiredWidth;
-				x = paddingLeft;
+				child_width = childDesiredWidth;
+				x = padding_left;
 			elseif horizontalAlignment == "center" then
-				childWidth = childDesiredWidth;
-				x = (width - childWidth) / 2 + paddingLeft - paddingRight;
+				child_width = childDesiredWidth;
+				x = (width - child_width) / 2 + padding_left - padding_right;
 			elseif horizontalAlignment == "right" then
-				childWidth = childDesiredWidth;
-				x = width - childWidth - paddingRight;
+				child_width = childDesiredWidth;
+				x = width - child_width - padding_right;
 			end
 		end
 
-		child:set_relative_position(x, x + childWidth, y, y + childHeight);
+		child:set_relative_position(x, x + child_width, y, y + child_height);
 
 		if self._axis == "horizontal" then
-			x = x + childWidth + paddingRight;
+			x = x + child_width + padding_right;
 		else
-			y = y + childHeight + paddingBottom;
+			y = y + child_height + padding_bottom;
 		end
 	end
 end

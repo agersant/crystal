@@ -16,28 +16,32 @@ Overlay.init = function(self)
 	Overlay.super.init(self, OverlayJoint);
 end
 
+---@protected
+---@return number
+---@return number
 Overlay.compute_desired_size = function(self)
 	local width, height = 0, 0;
 	for child, joint in pairs(self.child_joints) do
-		local childWidth, childHeight = child:desired_size();
-		local paddingLeft, paddingRight, paddingTop, paddingBottom = joint:padding();
-		local horizontalAlignment, verticalAlignment = joint:alignment();
-		if horizontalAlignment ~= "stretch" then
-			width = math.max(width, childWidth + paddingLeft + paddingRight);
+		local child_width, child_height = child:desired_size();
+		local padding_left, padding_right, padding_top, padding_bottom = joint:padding();
+		local h_align, v_align = joint:alignment();
+		if h_align ~= "stretch" then
+			width = math.max(width, child_width + padding_left + padding_right);
 		end
-		if verticalAlignment ~= "stretch" then
-			height = math.max(height, childHeight + paddingTop + paddingBottom);
+		if v_align ~= "stretch" then
+			height = math.max(height, child_height + padding_top + padding_bottom);
 		end
 	end
 	return math.max(width, 0), math.max(height, 0);
 end
 
+---@protected
 Overlay.arrange_children = function(self)
 	local width, height = self:size();
 	for _, child in ipairs(self._children) do
 		local joint = self.child_joints[child];
-		local childWidth, childHeight = child:desired_size();
-		local left, right, top, bottom = joint:compute_relative_position(childWidth, childHeight, width, height);
+		local child_width, child_height = child:desired_size();
+		local left, right, top, bottom = joint:compute_relative_position(child_width, child_height, width, height);
 		child:set_relative_position(left, right, top, bottom);
 	end
 end
@@ -47,7 +51,7 @@ end
 local UIElement = require("modules/ui/ui_element");
 
 crystal.test.add("Respects alignment", function()
-	local testCases = {
+	local test_cases = {
 		{ "left",    "top",     { 0, 60, 0, 40 } },
 		{ "left",    "center",  { 0, 60, 30, 70 } },
 		{ "left",    "bottom",  { 0, 60, 60, 100 } },
@@ -66,7 +70,7 @@ crystal.test.add("Respects alignment", function()
 		{ "stretch", "stretch", { 0, 100, 0, 100 } },
 	};
 
-	for _, testCase in ipairs(testCases) do
+	for _, test_case in ipairs(test_cases) do
 		local overlay = Overlay:new();
 
 		local element = UIElement:new();
@@ -75,16 +79,16 @@ crystal.test.add("Respects alignment", function()
 		end
 
 		overlay:add_child(element);
-		element:set_horizontal_alignment(testCase[1]);
-		element:set_vertical_alignment(testCase[2]);
+		element:set_horizontal_alignment(test_case[1]);
+		element:set_vertical_alignment(test_case[2]);
 
 		overlay:update_tree(0, 100, 100);
-		assert(table.equals(testCase[3], { element:relative_position() }));
+		assert(table.equals(test_case[3], { element:relative_position() }));
 	end
 end);
 
 crystal.test.add("Respects padding", function()
-	local testCases = {
+	local test_cases = {
 		{ "left",    "top",     { 2, 62, 6, 46 } },
 		{ "left",    "center",  { 2, 62, 28, 68 } },
 		{ "left",    "bottom",  { 2, 62, 52, 92 } },
@@ -103,7 +107,7 @@ crystal.test.add("Respects padding", function()
 		{ "stretch", "stretch", { 2, 96, 6, 92 } },
 	};
 
-	for _, testCase in ipairs(testCases) do
+	for _, test_case in ipairs(test_cases) do
 		local overlay = Overlay:new();
 
 		local element = UIElement:new();
@@ -112,12 +116,12 @@ crystal.test.add("Respects padding", function()
 		end
 
 		overlay:add_child(element);
-		element:set_horizontal_alignment(testCase[1]);
-		element:set_vertical_alignment(testCase[2]);
+		element:set_horizontal_alignment(test_case[1]);
+		element:set_vertical_alignment(test_case[2]);
 		element:set_padding(2, 4, 6, 8);
 
 		overlay:update_tree(0, 100, 100);
-		assert(table.equals(testCase[3], { element:relative_position() }));
+		assert(table.equals(test_case[3], { element:relative_position() }));
 	end
 end);
 

@@ -22,8 +22,8 @@ Widget.setRoot = Widget.super.set_child;
 
 Widget.compute_desired_size = function(self)
 	if self._child then
-		local childWidth, childHeight = self._child:desired_size();
-		return self.child_joint:compute_desired_size(childWidth, childHeight);
+		local child_width, child_height = self._child:desired_size();
+		return self.child_joint:compute_desired_size(child_width, child_height);
 	end
 	return 0, 0;
 end
@@ -36,8 +36,8 @@ end
 Widget.arrange_child = function(self)
 	if self._child then
 		local width, height = self:size();
-		local childWidth, childHeight = self._child:desired_size();
-		local left, right, top, bottom = self.child_joint:compute_relative_position(childWidth, childHeight, width,
+		local child_width, child_height = self._child:desired_size();
+		local left, right, top, bottom = self.child_joint:compute_relative_position(child_width, child_height, width,
 			height);
 		self._child:set_relative_position(left, right, top, bottom);
 	end

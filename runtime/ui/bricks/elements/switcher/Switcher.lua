@@ -69,8 +69,8 @@ Switcher.compute_desired_size = function(self)
 		if self._transition:isOver() then
 			-- Size to active child
 			local joint = self.child_joints[self._activeChild];
-			local childWidth, childHeight = self._activeChild:desired_size();
-			width, height = joint:compute_desired_size(childWidth, childHeight);
+			local child_width, child_height = self._activeChild:desired_size();
+			width, height = joint:compute_desired_size(child_width, child_height);
 		else
 			-- Active transition decides size
 			width, height = self._transition:compute_desired_size();
@@ -79,10 +79,10 @@ Switcher.compute_desired_size = function(self)
 		-- Size to bounding box of all children
 		width, height = 0, 0;
 		for child, joint in pairs(self.child_joints) do
-			local childWidth, childHeight = child:desired_size();
-			childWidth, childHeight = joint:compute_desired_size(childWidth, childHeight);
-			width = math.max(width, childWidth);
-			height = math.max(height, childHeight);
+			local child_width, child_height = child:desired_size();
+			child_width, child_height = joint:compute_desired_size(child_width, child_height);
+			width = math.max(width, child_width);
+			height = math.max(height, child_height);
 		end
 	end
 	return math.max(width, 0), math.max(height, 0);
@@ -92,8 +92,8 @@ Switcher.arrange_children = function(self)
 	local width, height = self:size();
 	for _, child in ipairs(self._children) do
 		local joint = self.child_joints[child];
-		local childWidth, childHeight = child:desired_size();
-		local left, right, top, bottom = joint:compute_relative_position(childWidth, childHeight, width, height);
+		local child_width, child_height = child:desired_size();
+		local left, right, top, bottom = joint:compute_relative_position(child_width, child_height, width, height);
 		child:set_relative_position(left, right, top, bottom);
 	end
 end
