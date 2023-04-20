@@ -6,6 +6,7 @@ local Joint = require("modules/ui/joint");
 local List = require("modules/ui/list");
 local Overlay = require("modules/ui/overlay");
 local Padding = require("modules/ui/padding");
+local Painter = require("modules/ui/painter");
 local Text = require("modules/ui/text");
 local UIElement = require("modules/ui/ui_element");
 local Wrapper = require("modules/ui/wrapper");
@@ -33,6 +34,7 @@ return {
 		ListJoint = List.Joint,
 		Overlay = Overlay,
 		Padding = Padding,
+		Painter = Painter,
 		Text = Text,
 		UIElement = UIElement,
 		VerticalList = List.Vertical,

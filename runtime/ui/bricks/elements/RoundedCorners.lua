@@ -1,4 +1,4 @@
-local Painter = require("ui/bricks/elements/Painter");
+local Painter = require("modules/ui/painter");
 
 local RoundedCorners = Class("RoundedCorners", Painter);
 
@@ -45,11 +45,11 @@ RoundedCorners.setAllRadius = function(self, radius)
 	self:setBottomLeftRadius(radius);
 end
 
-RoundedCorners.configureShader = function(self)
+RoundedCorners.configure_shader = function(self, shader)
 	local radii = { self._topLeftRadius, self._topRightRadius, self._bottomRightRadius, self._bottomLeftRadius };
-	self._shaderResource:send("radii", radii);
-	self._shaderResource:send("drawSize", { self:size() });
-	self._shaderResource:send("textureSize", { self._quad:getTextureDimensions() });
+	shader:send("radii", radii);
+	shader:send("drawSize", { self:size() });
+	shader:send("textureSize", { self._quad:getTextureDimensions() });
 end
 
 return RoundedCorners;
