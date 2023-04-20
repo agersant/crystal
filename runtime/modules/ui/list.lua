@@ -2,13 +2,11 @@ local Container = require("modules/ui/container");
 local Joint = require("modules/ui/joint");
 local Padding = require("modules/ui/padding");
 
+---@class ListJoint : Joint
+---@field private _padding Padding
+---@field private _grow number
+---@field private _shrink number
 local ListJoint = Class("ListJoint", Joint);
-local HorizontalListJoint = Class("HorizontalListJoint", ListJoint);
-local VerticalListJoint = Class("VerticalListJoint", ListJoint);
-
-local List = Class("List", Container);
-List.Horizontal = Class("HorizontalList", List);
-List.Vertical = Class("VerticalList", List);
 
 ListJoint.init = function(self, parent, child)
 	ListJoint.super.init(self, parent, child);
@@ -18,72 +16,99 @@ ListJoint.init = function(self, parent, child)
 	self:add_alias(self._padding);
 end
 
-ListJoint.getGrow = function(self)
+---@return number
+ListJoint.grow = function(self)
 	return self._grow;
 end
 
-ListJoint.setGrow = function(self, amount)
+---@return amount number
+ListJoint.set_grow = function(self, amount)
 	assert(amount);
 	self._grow = amount;
 end
 
-ListJoint.getShrink = function(self)
+---@return number
+ListJoint.shrink = function(self)
 	return self._shrink;
 end
 
-ListJoint.setShrink = function(self, amount)
+---@return amount number
+ListJoint.set_shrink = function(self, amount)
 	assert(amount);
 	self._shrink = amount;
 end
+
+---@class HorizontalListJoint : ListJoint
+---@field private _vertical_alignment VerticalAlignment
+local HorizontalListJoint = Class("HorizontalListJoint", ListJoint);
 
 HorizontalListJoint.init = function(self, parent, child)
 	HorizontalListJoint.super.init(self, parent, child);
 	self._vertical_alignment = "top";
 end
 
+---@return VerticalAlignment
 HorizontalListJoint.vertical_alignment = function(self)
 	return self._vertical_alignment;
 end
 
+---@param alignment VerticalAlignment
 HorizontalListJoint.set_vertical_alignment = function(self, alignment)
 	assert(alignment == "top" or alignment == "center" or alignment == "bottom" or alignment == "stretch");
 	self._vertical_alignment = alignment;
 end
 
+---@class VerticalListJoint : ListJoint
+local VerticalListJoint = Class("VerticalListJoint", ListJoint);
+
+---@field private _horizontal_alignment HorizontalAlignment
 VerticalListJoint.init = function(self, parent, child)
 	VerticalListJoint.super.init(self, parent, child);
 	self._horizontal_alignment = "left";
 end
 
+---@return HorizontalAlignment
 VerticalListJoint.horizontal_alignment = function(self)
 	return self._horizontal_alignment;
 end
 
+---@param alignment HorizontalAlignment
 VerticalListJoint.set_horizontal_alignment = function(self, alignment)
 	assert(alignment == "left" or alignment == "center" or alignment == "right" or alignment == "stretch");
 	self._horizontal_alignment = alignment;
 end
 
+---@class List : Container
+---@field private axis Axis
+local List = Class("List", Container);
+
+---@class HorizontalList : List
+List.Horizontal = Class("HorizontalList", List);
 List.Horizontal.init = function(self)
 	List.Horizontal.super.init(self, "horizontal");
 end
 
+---@class VerticalList : List
+List.Vertical = Class("VerticalList", List);
 List.Vertical.init = function(self)
 	List.Vertical.super.init(self, "vertical");
 end
 
 List.init = function(self, axis)
 	assert(axis == "horizontal" or axis == "vertical");
-	self._axis = axis;
+	self.axis = axis;
 	List.super.init(self, axis == "horizontal" and HorizontalListJoint or VerticalListJoint);
 end
 
+---@protected
+---@return number
+---@return number
 List.compute_desired_size = function(self)
 	local width, height = 0, 0;
 	for child, joint in pairs(self.child_joints) do
 		local child_width, child_height = child:desired_size();
 		local padding_left, padding_right, padding_top, padding_bottom = joint:padding();
-		if self._axis == "horizontal" then
+		if self.axis == "horizontal" then
 			width = width + child_width + padding_left + padding_right;
 			height = math.max(height, child_height + padding_top + padding_bottom);
 		else
@@ -94,80 +119,81 @@ List.compute_desired_size = function(self)
 	return math.max(width, 0), math.max(height, 0);
 end
 
+---@protected
 List.arrange_children = function(self)
 	local width, height = self:size();
-	local desiredWidth, desiredHeight = self:desired_size();
+	local desired_width, desired_height = self:desired_size();
 
-	local totalGrow = 0;
-	local totalShrink = 0;
+	local total_grow = 0;
+	local total_shrink = 0;
 	for _, child in ipairs(self._children) do
 		local joint = self.child_joints[child];
-		totalGrow = totalGrow + joint:getGrow();
-		totalShrink = totalShrink + joint:getShrink();
+		total_grow = total_grow + joint:grow();
+		total_shrink = total_shrink + joint:shrink();
 	end
 
 	local x = 0;
 	local y = 0;
 	for _, child in ipairs(self._children) do
 		local joint = self.child_joints[child];
-		local childDesiredWidth, childDesiredHeight = child:desired_size();
+		local child_desired_width, child_desired_height = child:desired_size();
 		local padding_left, padding_right, padding_top, padding_bottom = joint:padding();
-		local grow = joint:getGrow();
-		local shrink = joint:getShrink();
+		local grow = joint:grow();
+		local shrink = joint:shrink();
 
 		local child_width, child_height;
 
-		if self._axis == "horizontal" then
+		if self.axis == "horizontal" then
 			x = x + padding_left;
-			child_width = childDesiredWidth;
-			if width > desiredWidth and grow > 0 then
-				child_width = childDesiredWidth + (grow / totalGrow) * (width - desiredWidth);
-			elseif width < desiredWidth and shrink > 0 then
-				child_width = childDesiredWidth - (shrink / totalShrink) * (desiredWidth - width);
+			child_width = child_desired_width;
+			if width > desired_width and grow > 0 then
+				child_width = child_desired_width + (grow / total_grow) * (width - desired_width);
+			elseif width < desired_width and shrink > 0 then
+				child_width = child_desired_width - (shrink / total_shrink) * (desired_width - width);
 			end
 
-			local verticalAlignment = joint:vertical_alignment();
-			if verticalAlignment == "stretch" then
+			local v_align = joint:vertical_alignment();
+			if v_align == "stretch" then
 				child_height = height - padding_top - padding_bottom;
 				y = padding_top;
-			elseif verticalAlignment == "top" then
-				child_height = childDesiredHeight;
+			elseif v_align == "top" then
+				child_height = child_desired_height;
 				y = padding_top;
-			elseif verticalAlignment == "center" then
-				child_height = childDesiredHeight;
+			elseif v_align == "center" then
+				child_height = child_desired_height;
 				y = (height - child_height) / 2 + padding_top - padding_bottom;
-			elseif verticalAlignment == "bottom" then
-				child_height = childDesiredHeight;
+			elseif v_align == "bottom" then
+				child_height = child_desired_height;
 				y = height - child_height - padding_bottom;
 			end
 		else
 			y = y + padding_top;
-			child_height = childDesiredHeight;
-			if height > desiredHeight and grow > 0 then
-				child_height = childDesiredHeight + (grow / totalGrow) * (height - desiredHeight);
-			elseif height < desiredHeight and shrink > 0 then
-				child_height = childDesiredHeight - (shrink / totalShrink) * (desiredHeight - height);
+			child_height = child_desired_height;
+			if height > desired_height and grow > 0 then
+				child_height = child_desired_height + (grow / total_grow) * (height - desired_height);
+			elseif height < desired_height and shrink > 0 then
+				child_height = child_desired_height - (shrink / total_shrink) * (desired_height - height);
 			end
 
-			local horizontalAlignment = joint:horizontal_alignment();
-			if horizontalAlignment == "stretch" then
+			local h_align = joint:horizontal_alignment();
+			if h_align == "stretch" then
 				child_width = width - padding_left - padding_right;
 				x = padding_left;
-			elseif horizontalAlignment == "left" then
-				child_width = childDesiredWidth;
+			elseif h_align == "left" then
+				child_width = child_desired_width;
 				x = padding_left;
-			elseif horizontalAlignment == "center" then
-				child_width = childDesiredWidth;
+			elseif h_align == "center" then
+				child_width = child_desired_width;
 				x = (width - child_width) / 2 + padding_left - padding_right;
-			elseif horizontalAlignment == "right" then
-				child_width = childDesiredWidth;
+			elseif h_align == "right" then
+				child_width = child_desired_width;
 				x = width - child_width - padding_right;
 			end
 		end
 
 		child:set_relative_position(x, x + child_width, y, y + child_height);
 
-		if self._axis == "horizontal" then
+		if self.axis == "horizontal" then
 			x = x + child_width + padding_right;
 		else
 			y = y + child_height + padding_bottom;
@@ -182,11 +208,11 @@ local UIElement = require("modules/ui/ui_element");
 crystal.test.add("Horizontal list aligns children", function()
 	local box = List.Horizontal:new();
 	local a = box:add_child(UIElement:new());
-	a:setGrow(1);
+	a:set_grow(1);
 	local b = box:add_child(UIElement:new());
-	b:setGrow(1);
+	b:set_grow(1);
 	local c = box:add_child(UIElement:new());
-	c:setGrow(1);
+	c:set_grow(1);
 	box:update_tree(0, 90, 40);
 	assert(table.equals({ a:relative_position() }, { 0, 30, 0, 0 }));
 	assert(table.equals({ b:relative_position() }, { 30, 60, 0, 0 }));
@@ -196,11 +222,11 @@ end);
 crystal.test.add("Vertical list aligns children", function()
 	local box = List.Vertical:new();
 	local a = box:add_child(UIElement:new());
-	a:setGrow(1);
+	a:set_grow(1);
 	local b = box:add_child(UIElement:new());
-	b:setGrow(1);
+	b:set_grow(1);
 	local c = box:add_child(UIElement:new());
-	c:setGrow(1);
+	c:set_grow(1);
 	box:update_tree(0, 40, 90);
 	assert(table.equals({ a:relative_position() }, { 0, 0, 0, 30 }));
 	assert(table.equals({ b:relative_position() }, { 0, 0, 30, 60 }));

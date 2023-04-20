@@ -15,7 +15,6 @@ local cc_indices = { 112, 74, 71, 76, 77, 93, 73, 75, 114, 18, 19, 16, 17, 91, 7
 
 --#region UI
 
-local List = require("ui/bricks/elements/List");
 local RoundedCorners = require("ui/bricks/elements/RoundedCorners");
 local Switcher = require("ui/bricks/elements/switcher/Switcher");
 local Text = require("ui/bricks/elements/Text");
@@ -68,7 +67,7 @@ KnobInfo.init = function(self)
 	KnobInfo.super.init(self);
 
 	local rounded_corners = self:setRoot(RoundedCorners:new());
-	local top_level_list = rounded_corners:set_child(List.Vertical:new());
+	local top_level_list = rounded_corners:set_child(crystal.VerticalList:new());
 
 	local header = top_level_list:add_child(crystal.Overlay:new());
 	header:set_horizontal_alignment("stretch");
@@ -87,7 +86,7 @@ KnobInfo.init = function(self)
 	local content_background = content:add_child(crystal.Image:new());
 	content_background:set_color(colors.background);
 	content_background:set_alignment("stretch", "stretch");
-	local data = content:add_child(List.Horizontal:new());
+	local data = content:add_child(crystal.HorizontalList:new());
 	data:set_padding(10);
 
 	local donut_container = data:add_child(crystal.Overlay:new());
@@ -130,10 +129,10 @@ local LiveTuneOverlay = Class("LiveTuneOverlay", Widget);
 LiveTuneOverlay.init = function(self, constants, liveTune)
 	LiveTuneOverlay.super.init(self);
 
-	local top_level_list = self:setRoot(List.Vertical:new());
+	local top_level_list = self:setRoot(crystal.VerticalList:new());
 	top_level_list:set_padding(20);
 
-	local title_bar = top_level_list:add_child(List.Horizontal:new());
+	local title_bar = top_level_list:add_child(crystal.HorizontalList:new());
 	title_bar:set_horizontal_alignment("stretch");
 	title_bar:set_padding_bottom(12);
 
@@ -151,7 +150,7 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 	title_bar_prefix:set_padding_top(1.5); -- TODO let image widget handle pixel snapping?
 
 	title_bar_suffix:set_vertical_alignment("center");
-	title_bar_suffix:setGrow(1);
+	title_bar_suffix:set_grow(1);
 	title_bar_suffix:set_color(colors.title);
 	title_bar_suffix:set_padding_top(1.5); -- TODO let image widget handle pixel snapping?
 
@@ -160,7 +159,7 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 	self.help_text = self.content:add_child(Text:new());
 	self.help_text:set_horizontal_alignment("stretch");
 	self.help_text:set_color(colors.help);
-	self.knob_infos = self.content:add_child(List.Horizontal:new());
+	self.knob_infos = self.content:add_child(crystal.HorizontalList:new());
 end
 
 LiveTuneOverlay.update = function(self, dt)

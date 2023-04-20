@@ -32,6 +32,8 @@ Border.set_thickness = function(self, thickness)
 end
 
 ---@protected
+---@return number
+---@return number
 Border.compute_desired_size = function(self)
 	return 0, 0;
 end

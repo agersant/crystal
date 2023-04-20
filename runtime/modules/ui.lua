@@ -3,11 +3,13 @@ local Border = require("modules/ui/border");
 local Container = require("modules/ui/container");
 local Image = require("modules/ui/image");
 local Joint = require("modules/ui/joint");
+local List = require("modules/ui/list");
 local Overlay = require("modules/ui/overlay");
 local Padding = require("modules/ui/padding");
 local UIElement = require("modules/ui/ui_element");
 local Wrapper = require("modules/ui/wrapper");
 
+---@alias Axis "horizontal" | "vertical"
 ---@alias HorizontalAlignment "left" | "center" | "right" | "stretch"
 ---@alias VerticalAlignment "top" | "center" | "bottom" | "stretch"
 
@@ -24,11 +26,13 @@ return {
 		BasicJoint = BasicJoint,
 		Border = Border,
 		Container = Container,
+		HorizontalList = List.Horizontal,
 		Image = Image,
 		Joint = Joint,
 		Overlay = Overlay,
 		Padding = Padding,
 		UIElement = UIElement,
+		VerticalList = List.Vertical,
 		Wrapper = Wrapper,
 	},
 	init = function()
