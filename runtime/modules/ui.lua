@@ -1,4 +1,5 @@
 local BasicJoint = require("modules/ui/basic_joint");
+local Border = require("modules/ui/border");
 local Container = require("modules/ui/container");
 local Image = require("modules/ui/image");
 local Joint = require("modules/ui/joint");
@@ -21,6 +22,7 @@ return {
 	},
 	global_api = {
 		BasicJoint = BasicJoint,
+		Border = Border,
 		Container = Container,
 		Image = Image,
 		Joint = Joint,

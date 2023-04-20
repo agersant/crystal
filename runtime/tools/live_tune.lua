@@ -15,7 +15,6 @@ local cc_indices = { 112, 74, 71, 76, 77, 93, 73, 75, 114, 18, 19, 16, 17, 91, 7
 
 --#region UI
 
-local Border = require("ui/bricks/elements/Border");
 local List = require("ui/bricks/elements/List");
 local RoundedCorners = require("ui/bricks/elements/RoundedCorners");
 local Switcher = require("ui/bricks/elements/switcher/Switcher");
@@ -101,9 +100,9 @@ KnobInfo.init = function(self)
 	self.knob_index_text:setFont(crystal.ui.font("crystal_body_xs"));
 
 	local value_container = data:add_child(crystal.Overlay:new());
-	local border = value_container:add_child(Border:new());
+	local border = value_container:add_child(crystal.Border:new());
 	border:set_alignment("stretch", "stretch");
-	border:setRounding(2);
+	border:set_rounding(2);
 	border:set_color(colors.value_outline);
 
 	self.knob_value_text = value_container:add_child(Text:new());
