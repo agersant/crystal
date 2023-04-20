@@ -17,7 +17,6 @@ local cc_indices = { 112, 74, 71, 76, 77, 93, 73, 75, 114, 18, 19, 16, 17, 91, 7
 
 local RoundedCorners = require("ui/bricks/elements/RoundedCorners");
 local Switcher = require("ui/bricks/elements/switcher/Switcher");
-local Text = require("ui/bricks/elements/Text");
 local Widget = require("ui/bricks/elements/Widget");
 
 local colors = {
@@ -74,7 +73,7 @@ KnobInfo.init = function(self)
 	local header_background = header:add_child(crystal.Image:new());
 	header_background:set_color(colors.header_background);
 	header_background:set_alignment("stretch", "stretch");
-	self.header_text = header:add_child(Text:new());
+	self.header_text = header:add_child(crystal.Text:new());
 	self.header_text:setFont(crystal.ui.font("crystal_header_sm"));
 	self.header_text:set_color(colors.header_text);
 	self.header_text:set_padding_x(8);
@@ -92,7 +91,7 @@ KnobInfo.init = function(self)
 	local donut_container = data:add_child(crystal.Overlay:new());
 	donut_container:set_padding_right(10);
 	self.donut = donut_container:add_child(KnobDonut:new());
-	self.knob_index_text = donut_container:add_child(Text:new());
+	self.knob_index_text = donut_container:add_child(crystal.Text:new());
 	self.knob_index_text:set_alignment("center", "bottom");
 	self.knob_index_text:set_padding_bottom(-6);
 	self.knob_index_text:set_color(colors.knob_index);
@@ -104,7 +103,7 @@ KnobInfo.init = function(self)
 	border:set_rounding(2);
 	border:set_color(colors.value_outline);
 
-	self.knob_value_text = value_container:add_child(Text:new());
+	self.knob_value_text = value_container:add_child(crystal.Text:new());
 	self.knob_value_text:set_padding_y(4);
 	self.knob_value_text:set_padding_x(10);
 	self.knob_value_text:set_color(colors.value_text);
@@ -112,16 +111,16 @@ KnobInfo.init = function(self)
 end
 
 KnobInfo.set_title = function(self, title)
-	self.header_text:setContent(title);
+	self.header_text:set_text(title);
 end
 
 KnobInfo.set_knob_index = function(self, knob_index)
-	self.knob_index_text:setContent(knob_index);
+	self.knob_index_text:set_text(knob_index);
 end
 
 KnobInfo.set_value = function(self, current, min, max)
 	self.donut.value = (current - min) / (max - min);
-	self.knob_value_text:setContent(string.format("%.2f", current));
+	self.knob_value_text:set_text(string.format("%.2f", current));
 end
 
 local LiveTuneOverlay = Class("LiveTuneOverlay", Widget);
@@ -137,7 +136,7 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 	title_bar:set_padding_bottom(12);
 
 	local title_bar_prefix = title_bar:add_child(crystal.Image:new());
-	self.title_text = title_bar:add_child(Text:new());
+	self.title_text = title_bar:add_child(crystal.Text:new());
 	local title_bar_suffix = title_bar:add_child(crystal.Image:new());
 
 	self.title_text:set_padding_x(6);
@@ -156,7 +155,7 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 
 	self.content = top_level_list:add_child(Switcher:new());
 	self.content:set_horizontal_alignment("stretch");
-	self.help_text = self.content:add_child(Text:new());
+	self.help_text = self.content:add_child(crystal.Text:new());
 	self.help_text:set_horizontal_alignment("stretch");
 	self.help_text:set_color(colors.help);
 	self.knob_infos = self.content:add_child(crystal.HorizontalList:new());
@@ -169,23 +168,23 @@ LiveTuneOverlay.update = function(self, dt)
 	if self.device_name then
 		title = title .. " / " .. self.device_name;
 	end
-	self.title_text:setContent(title);
+	self.title_text:set_text(title);
 
 	if not self.device_name then
 		self.content:jumpToChild(self.help_text);
 		if #self.device_list == 0 then
-			self.help_text:setContent("No MIDI devices were detected, please plug in a MIDI device.");
+			self.help_text:set_text("No MIDI devices were detected, please plug in a MIDI device.");
 		else
 			local text = "Not connected to a MIDI device. Use the `connectToMIDIDevice` command to select a device.";
 			text = text .. "\n\nMIDI devices detected:";
 			for i, device_name in ipairs(self.device_list) do
 				text = text .. "\n\t#" .. i .. " " .. device_name;
 			end
-			self.help_text:setContent(text);
+			self.help_text:set_text(text);
 		end
 	elseif #self.mapped_knobs == 0 then
 		self.content:jumpToChild(self.help_text);
-		self.help_text:setContent(
+		self.help_text:set_text(
 			"Connected. Use the `liveTune` command to map a Constant to a knob on your " ..
 			self.device_name .. " device.");
 	else
