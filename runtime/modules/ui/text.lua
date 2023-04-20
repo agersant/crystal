@@ -41,7 +41,7 @@ Text.font = function(self)
 end
 
 ---@param font love.Font
-Text.setFont = function(self, font)
+Text.set_font = function(self, font)
 	assert(font);
 	self._font = font;
 end
