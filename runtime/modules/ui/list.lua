@@ -2,14 +2,18 @@ local Container = require("modules/ui/container");
 local Joint = require("modules/ui/joint");
 local Padding = require("modules/ui/padding");
 
+---@class List : Container
+---@field private axis Axis
+local List = Class("List", Container);
+
 ---@class ListJoint : Joint
 ---@field private _padding Padding
 ---@field private _grow number
 ---@field private _shrink number
-local ListJoint = Class("ListJoint", Joint);
+List.Joint = Class("ListJoint", Joint);
 
-ListJoint.init = function(self, parent, child)
-	ListJoint.super.init(self, parent, child);
+List.Joint.init = function(self, parent, child)
+	List.Joint.super.init(self, parent, child);
 	self._padding = Padding:new();
 	self._grow = 0;
 	self._shrink = 0;
@@ -17,30 +21,30 @@ ListJoint.init = function(self, parent, child)
 end
 
 ---@return number
-ListJoint.grow = function(self)
+List.Joint.grow = function(self)
 	return self._grow;
 end
 
 ---@return amount number
-ListJoint.set_grow = function(self, amount)
+List.Joint.set_grow = function(self, amount)
 	assert(amount);
 	self._grow = amount;
 end
 
 ---@return number
-ListJoint.shrink = function(self)
+List.Joint.shrink = function(self)
 	return self._shrink;
 end
 
 ---@return amount number
-ListJoint.set_shrink = function(self, amount)
+List.Joint.set_shrink = function(self, amount)
 	assert(amount);
 	self._shrink = amount;
 end
 
 ---@class HorizontalListJoint : ListJoint
 ---@field private _vertical_alignment VerticalAlignment
-local HorizontalListJoint = Class("HorizontalListJoint", ListJoint);
+local HorizontalListJoint = Class("HorizontalListJoint", List.Joint);
 
 HorizontalListJoint.init = function(self, parent, child)
 	HorizontalListJoint.super.init(self, parent, child);
@@ -59,7 +63,7 @@ HorizontalListJoint.set_vertical_alignment = function(self, alignment)
 end
 
 ---@class VerticalListJoint : ListJoint
-local VerticalListJoint = Class("VerticalListJoint", ListJoint);
+local VerticalListJoint = Class("VerticalListJoint", List.Joint);
 
 ---@field private _horizontal_alignment HorizontalAlignment
 VerticalListJoint.init = function(self, parent, child)
@@ -77,10 +81,6 @@ VerticalListJoint.set_horizontal_alignment = function(self, alignment)
 	assert(alignment == "left" or alignment == "center" or alignment == "right" or alignment == "stretch");
 	self._horizontal_alignment = alignment;
 end
-
----@class List : Container
----@field private axis Axis
-local List = Class("List", Container);
 
 ---@class HorizontalList : List
 List.Horizontal = Class("HorizontalList", List);

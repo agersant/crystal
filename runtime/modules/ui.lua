@@ -29,6 +29,7 @@ return {
 		HorizontalList = List.Horizontal,
 		Image = Image,
 		Joint = Joint,
+		ListJoint = List.Joint,
 		Overlay = Overlay,
 		Padding = Padding,
 		UIElement = UIElement,
