@@ -32,8 +32,8 @@ end
 ---@return number
 ---@return number
 Painter.compute_desired_size = function(self)
-	if self:child() then
-		local child_width, child_height = self:child():desired_size();
+	if self._child then
+		local child_width, child_height = self._child:desired_size();
 		return self.child_joint:compute_desired_size(child_width, child_height);
 	end
 	return 0, 0;
@@ -41,14 +41,14 @@ end
 
 ---@protected
 Painter.arrange_child = function(self)
-	if self:child() then
+	if self._child then
 		local width, height = self:size();
-		local child_width, child_height = self:child():desired_size();
+		local child_width, child_height = self._child:desired_size();
 		local left, right, top, bottom = self.child_joint:compute_relative_position(
 			child_width, child_height,
 			width, height
 		);
-		self:child():set_relative_position(left, right, top, bottom);
+		self._child:set_relative_position(left, right, top, bottom);
 	end
 end
 
@@ -89,16 +89,16 @@ end
 
 ---@protected
 Painter.draw_self = function(self)
-	if self:child() then
+	if self._child then
 		assert(self._canvas);
 		assert(self._quad);
 		if not self._shader then
-			self:child():draw();
+			self._child:draw();
 		else
 			love.graphics.push("all");
 			love.graphics.reset();
 			love.graphics.setCanvas(self._canvas);
-			self:child():draw();
+			self._child:draw();
 			love.graphics.pop();
 
 			love.graphics.push("all");

@@ -16,7 +16,6 @@ local cc_indices = { 112, 74, 71, 76, 77, 93, 73, 75, 114, 18, 19, 16, 17, 91, 7
 --#region UI
 
 local RoundedCorners = require("ui/bricks/elements/RoundedCorners");
-local Switcher = require("ui/bricks/elements/switcher/Switcher");
 
 local colors = {
 	title = crystal.Color.greyD,
@@ -152,7 +151,7 @@ LiveTuneOverlay.init = function(self, constants, liveTune)
 	title_bar_suffix:set_color(colors.title);
 	title_bar_suffix:set_padding_top(1.5); -- TODO let image widget handle pixel snapping?
 
-	self.content = top_level_list:add_child(Switcher:new());
+	self.content = top_level_list:add_child(crystal.Switcher:new());
 	self.content:set_horizontal_alignment("stretch");
 	self.help_text = self.content:add_child(crystal.Text:new());
 	self.help_text:set_horizontal_alignment("stretch");
@@ -170,7 +169,7 @@ LiveTuneOverlay.update = function(self, dt)
 	self.title_text:set_text(title);
 
 	if not self.device_name then
-		self.content:jumpToChild(self.help_text);
+		self.content:switch_to(self.help_text);
 		if #self.device_list == 0 then
 			self.help_text:set_text("No MIDI devices were detected, please plug in a MIDI device.");
 		else
@@ -182,12 +181,12 @@ LiveTuneOverlay.update = function(self, dt)
 			self.help_text:set_text(text);
 		end
 	elseif #self.mapped_knobs == 0 then
-		self.content:jumpToChild(self.help_text);
+		self.content:switch_to(self.help_text);
 		self.help_text:set_text(
 			"Connected. Use the `liveTune` command to map a Constant to a knob on your " ..
 			self.device_name .. " device.");
 	else
-		self.content:jumpToChild(self.knob_infos);
+		self.content:switch_to(self.knob_infos);
 	end
 
 	local children = self.knob_infos:children();

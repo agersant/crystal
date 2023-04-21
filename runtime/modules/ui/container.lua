@@ -1,8 +1,8 @@
 local UIElement = require("modules/ui/ui_element");
 
 ---@class Container : UIElement
----@field private _children UIElement[]
----@field private child_joints { [UIElement]: Joint }
+---@field protected _children UIElement[]
+---@field protected child_joints { [UIElement]: Joint }
 ---@field private joint_class Class
 local Container = Class("Container", UIElement);
 

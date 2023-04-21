@@ -1,8 +1,8 @@
 local UIElement = require("modules/ui/ui_element");
 
 ---@class Wrapper : UIElement
----@field private _child UIElement
----@field private child_joint Joint
+---@field protected _child UIElement
+---@field protected child_joint Joint
 ---@field private joint_class Class
 local Wrapper = Class("Wrapper", UIElement);
 

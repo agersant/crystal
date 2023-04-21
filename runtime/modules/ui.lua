@@ -7,6 +7,7 @@ local List = require("modules/ui/list");
 local Overlay = require("modules/ui/overlay");
 local Padding = require("modules/ui/padding");
 local Painter = require("modules/ui/painter");
+local Switcher = require("modules/ui/switcher");
 local Text = require("modules/ui/text");
 local UIElement = require("modules/ui/ui_element");
 local Widget = require("modules/ui/widget");
@@ -36,6 +37,7 @@ return {
 		Overlay = Overlay,
 		Padding = Padding,
 		Painter = Painter,
+		Switcher = Switcher,
 		Text = Text,
 		UIElement = UIElement,
 		VerticalList = List.Vertical,

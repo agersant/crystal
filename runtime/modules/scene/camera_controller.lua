@@ -77,11 +77,12 @@ end
 ---@param ... Transition
 CameraController.cut_to = function(self, camera, ...)
 	assert(camera:inherits_from(crystal.Camera));
-	local transitions = { ... };
-	local controller = self;
-	self.next_camera = camera;
 
 	self.script:stop_all_threads();
+	self.next_camera = camera;
+	local transitions = { ... };
+	local controller = self;
+
 	return self.script:run_thread(function(self)
 		self:defer(function(self)
 			controller.transition = nil;
@@ -96,9 +97,10 @@ CameraController.cut_to = function(self, camera, ...)
 			assert(controller.transition:inherits_from(crystal.Transition));
 			local start_time = self:time();
 			local duration = controller.transition:duration();
+			local easing = controller.transition:easing();
 			if duration > 0 then
 				while self:time() < start_time + duration do
-					controller.transition_progress = math.clamp((self:time() - start_time) / duration, 0, 1);
+					controller.transition_progress = easing((self:time() - start_time) / duration);
 					self:wait_frame();
 				end
 			end
@@ -113,10 +115,11 @@ CameraController.move_to = function(self, camera, duration, easing)
 	assert(camera:inherits_from(crystal.Camera));
 	assert(duration > 0);
 	easing = easing or math.ease_linear;
-	local controller = self;
-	self.next_camera = camera;
 
 	self.script:stop_all_threads();
+	self.next_camera = camera;
+	local controller = self;
+
 	return self.script:run_thread(function(self)
 		self:defer(function(self)
 			controller.move_x = nil;
@@ -127,7 +130,7 @@ CameraController.move_to = function(self, camera, duration, easing)
 
 		local start_time = self:time();
 		while self:time() < start_time + duration do
-			local progress = easing(math.clamp((self:time() - start_time) / duration, 0, 1));
+			local progress = easing((self:time() - start_time) / duration);
 			local from_x, from_y = controller:offset_for_camera(controller._camera);
 			local to_x, to_y = controller:offset_for_camera(controller.next_camera);
 			controller.move_x = math.lerp(from_x, to_x, progress);

@@ -1,4 +1,12 @@
 ---@class SceneManager
+---@field private previous_scene Scene
+---@field private scene Scene
+---@field private next_scene Scene
+---@field private transition Transition
+---@field private transition_progress number
+---@field private script Script
+---@field private draw_scene fun()
+---@field private draw_previous_scene fun()
 local SceneManager = Class("SceneManager");
 
 crystal.const.define("Time Scale", 1.0, { min = 0.0, max = 100.0 });
@@ -31,11 +39,11 @@ end
 ---@param ... Transition
 ---@return Thread
 SceneManager.replace = function(self, next_scene, ...)
+	self.script:stop_all_threads();
+	self.next_scene = next_scene;
 	local transitions = { ... };
 	local manager = self;
-	self.next_scene = next_scene;
 
-	self.script:stop_all_threads();
 	return self.script:run_thread(function(self)
 		self:defer(function(self)
 			manager.transition = nil;
@@ -47,9 +55,10 @@ SceneManager.replace = function(self, next_scene, ...)
 			assert(manager.transition:inherits_from(crystal.Transition));
 			local start_time = self:time();
 			local duration = manager.transition:duration();
+			local easing = manager.transition:easing();
 			if duration > 0 then
 				while self:time() < start_time + duration do
-					manager.transition_progress = math.clamp((self:time() - start_time) / duration, 0, 1);
+					manager.transition_progress = easing((self:time() - start_time) / duration);
 					self:wait_frame();
 				end
 			end
@@ -78,8 +87,7 @@ SceneManager.draw = function(self)
 	crystal.window.draw(function()
 		if self.previous_scene then
 			local width, height = crystal.window.viewport_size();
-			local progress = self.transition:easing()(self.transition_progress);
-			self.transition:draw(progress, width, height, self.draw_previous_scene, self.draw_scene);
+			self.transition:draw(self.transition_progress, width, height, self.draw_previous_scene, self.draw_scene);
 		else
 			self:draw_scene();
 		end
