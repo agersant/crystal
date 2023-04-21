@@ -17,7 +17,6 @@ local cc_indices = { 112, 74, 71, 76, 77, 93, 73, 75, 114, 18, 19, 16, 17, 91, 7
 
 local RoundedCorners = require("ui/bricks/elements/RoundedCorners");
 local Switcher = require("ui/bricks/elements/switcher/Switcher");
-local Widget = require("ui/bricks/elements/Widget");
 
 local colors = {
 	title = crystal.Color.greyD,
@@ -60,12 +59,12 @@ KnobDonut.draw = function(self)
 		self.arc_end + self.value * (self.arc_start - self.arc_end), self.arc_end, self.numSegments);
 end
 
-local KnobInfo = Class("KnobInfo", Widget);
+local KnobInfo = Class("KnobInfo", crystal.Widget);
 
 KnobInfo.init = function(self)
 	KnobInfo.super.init(self);
 
-	local rounded_corners = self:setRoot(RoundedCorners:new());
+	local rounded_corners = self:set_root(RoundedCorners:new());
 	local top_level_list = rounded_corners:set_child(crystal.VerticalList:new());
 
 	local header = top_level_list:add_child(crystal.Overlay:new());
@@ -123,12 +122,12 @@ KnobInfo.set_value = function(self, current, min, max)
 	self.knob_value_text:set_text(string.format("%.2f", current));
 end
 
-local LiveTuneOverlay = Class("LiveTuneOverlay", Widget);
+local LiveTuneOverlay = Class("LiveTuneOverlay", crystal.Widget);
 
 LiveTuneOverlay.init = function(self, constants, liveTune)
 	LiveTuneOverlay.super.init(self);
 
-	local top_level_list = self:setRoot(crystal.VerticalList:new());
+	local top_level_list = self:set_root(crystal.VerticalList:new());
 	top_level_list:set_padding(20);
 
 	local title_bar = top_level_list:add_child(crystal.HorizontalList:new());

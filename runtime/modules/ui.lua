@@ -9,6 +9,7 @@ local Padding = require("modules/ui/padding");
 local Painter = require("modules/ui/painter");
 local Text = require("modules/ui/text");
 local UIElement = require("modules/ui/ui_element");
+local Widget = require("modules/ui/widget");
 local Wrapper = require("modules/ui/wrapper");
 
 ---@alias Axis "horizontal" | "vertical"
@@ -38,6 +39,7 @@ return {
 		Text = Text,
 		UIElement = UIElement,
 		VerticalList = List.Vertical,
+		Widget = Widget,
 		Wrapper = Wrapper,
 	},
 	init = function()

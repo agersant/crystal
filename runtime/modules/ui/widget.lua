@@ -1,25 +1,26 @@
 local BasicJoint = require("modules/ui/basic_joint");
 local Wrapper = require("modules/ui/wrapper");
 
-local WidgetJoint = Class("WidgetJoint", BasicJoint);
+---@class Widget : Wrapper
+---@field private _script Script
 local Widget = Class("Widget", Wrapper);
 
-WidgetJoint.init = function(self, parent, child)
-	WidgetJoint.super.init(self, parent, child);
-end
-
 Widget.init = function(self)
-	Widget.super.init(self, WidgetJoint);
+	Widget.super.init(self, BasicJoint);
 	self._script = crystal.Script:new();
 	self._script:add_alias(self);
 end
 
+Widget.set_root = Widget.super.set_child;
+
+---@return Script
 Widget.script = function(self)
 	return self._script;
 end
 
-Widget.setRoot = Widget.super.set_child;
-
+---@protected
+---@return number
+---@return number
 Widget.compute_desired_size = function(self)
 	if self._child then
 		local child_width, child_height = self._child:desired_size();
@@ -28,11 +29,14 @@ Widget.compute_desired_size = function(self)
 	return 0, 0;
 end
 
+---@protected
+---@param dt number
 Widget.update = function(self, dt)
 	self._script:update(dt);
 	Widget.super.update(self, dt);
 end
 
+---@protected
 Widget.arrange_child = function(self)
 	if self._child then
 		local width, height = self:size();
