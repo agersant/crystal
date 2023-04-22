@@ -6,6 +6,7 @@ local Joint = require("modules/ui/joint");
 local List = require("modules/ui/list");
 local Overlay = require("modules/ui/overlay");
 local Padding = require("modules/ui/padding");
+local RoundedCorners = require("modules/ui/rounded_corners");
 local Painter = require("modules/ui/painter");
 local Switcher = require("modules/ui/switcher");
 local Text = require("modules/ui/text");
@@ -37,6 +38,7 @@ return {
 		Overlay = Overlay,
 		Padding = Padding,
 		Painter = Painter,
+		RoundedCorners = RoundedCorners,
 		Switcher = Switcher,
 		Text = Text,
 		UIElement = UIElement,

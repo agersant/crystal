@@ -15,8 +15,6 @@ local cc_indices = { 112, 74, 71, 76, 77, 93, 73, 75, 114, 18, 19, 16, 17, 91, 7
 
 --#region UI
 
-local RoundedCorners = require("ui/bricks/elements/RoundedCorners");
-
 local colors = {
 	title = crystal.Color.greyD,
 	help = crystal.Color.greyD,
@@ -63,7 +61,7 @@ local KnobInfo = Class("KnobInfo", crystal.Widget);
 KnobInfo.init = function(self)
 	KnobInfo.super.init(self);
 
-	local rounded_corners = self:set_root(RoundedCorners:new());
+	local rounded_corners = self:set_root(crystal.RoundedCorners:new());
 	local top_level_list = rounded_corners:set_child(crystal.VerticalList:new());
 
 	local header = top_level_list:add_child(crystal.Overlay:new());

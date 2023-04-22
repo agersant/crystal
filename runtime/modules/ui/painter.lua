@@ -25,7 +25,9 @@ Painter.set_shader = function(self, shader)
 end
 
 ---@protected
-Painter.configure_shader = function(self)
+---@param shader love.Shader
+---@param quad love.Quad
+Painter.configure_shader = function(self, shader, quad)
 end
 
 ---@protected
@@ -55,8 +57,14 @@ end
 ---@protected
 Painter.layout = function(self)
 	Painter.super.layout(self);
-	self:update_canvas();
-	self:update_quad();
+	local width, height = self:size();
+	if self:needs_new_canvas() then
+		local canvas_width = math.pow(2, math.ceil(math.log(width) / math.log(2)));
+		local canvas_height = math.pow(2, math.ceil(math.log(height) / math.log(2)));
+		self._canvas = love.graphics.newCanvas(canvas_width, canvas_height);
+		self._quad = love.graphics.newQuad(0, 0, width, height, self._canvas);
+	end
+	self._quad:setViewport(0, 0, width, height);
 end
 
 ---@private
@@ -68,23 +76,6 @@ Painter.needs_new_canvas = function(self)
 	local width, height = self:size();
 	local canvas_width, canvas_height = self._canvas:getDimensions();
 	return width > canvas_width or height > canvas_height;
-end
-
----@private
-Painter.update_canvas = function(self)
-	local width, height = self:size();
-	if self:needs_new_canvas() then
-		local canvas_width = math.pow(2, math.ceil(math.log(width) / math.log(2)));
-		local canvas_height = math.pow(2, math.ceil(math.log(height) / math.log(2)));
-		self._canvas = love.graphics.newCanvas(canvas_width, canvas_height);
-		self._quad = love.graphics.newQuad(0, 0, width, height, self._canvas);
-	end
-end
-
----@private
-Painter.update_quad = function(self)
-	local width, height = self:size();
-	self._quad:setViewport(0, 0, width, height);
 end
 
 ---@protected
@@ -103,7 +94,7 @@ Painter.draw_self = function(self)
 
 			love.graphics.push("all");
 			love.graphics.setShader(self._shader);
-			self:configure_shader(self._shader);
+			self:configure_shader(self._shader, self._quad);
 			love.graphics.draw(self._canvas, self._quad);
 			love.graphics.pop();
 		end
