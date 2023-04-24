@@ -18,6 +18,15 @@ table.count = function(t)
 	return count;
 end
 
+table.index_of = function(t, v)
+	for i, tv in ipairs(t) do
+		if tv == v then
+			return i;
+		end
+	end
+	return nil;
+end
+
 table.push = function(t, v)
 	table.insert(t, v);
 end
@@ -154,6 +163,13 @@ return {
 			assert(table.count({}) == 0);
 			assert(table.count({ a = 0, b = 2 }) == 2);
 			assert(table.count({ 1, 2, 3 }) == 3);
+		end);
+
+		crystal.test.add("Can find index of a value", function()
+			assert(table.index_of({ "a", "b", "c" }, "a") == 1);
+			assert(table.index_of({ "a", "b", "c" }, "b") == 2);
+			assert(table.index_of({ "a", "b", "c" }, "d") == nil);
+			assert(table.index_of({ a = "b" }, "b") == nil);
 		end);
 
 		crystal.test.add("Can push/pop table values", function()
