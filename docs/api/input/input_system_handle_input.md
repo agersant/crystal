@@ -34,7 +34,7 @@ end
 MyScene.update = function(self, delta_time)
   local player_index = 1;
   for _, input in ipairs(crystal.input.player(player_index):events()) do
-			self.input_system:handle_input(player_index, input);
-	end
+    self.input_system:handle_input(player_index, input);
+  end
 end
 ```

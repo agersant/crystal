@@ -62,8 +62,8 @@ Field.update = function(self, dt)
   self.camera_controller:update(dt);
   self.script_system:run_scripts(dt);
   for _, input in ipairs(crystal.input.player(1):events()) do
-			self.input_system:handle_input(1, input);
-	end
+    self.input_system:handle_input(1, input);
+  end
   self.draw_system:update_drawables(dt);
 end
 
