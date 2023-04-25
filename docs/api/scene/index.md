@@ -61,7 +61,9 @@ Field.update = function(self, dt)
   self.physics_system:simulate_physics(dt);
   self.camera_controller:update(dt);
   self.script_system:run_scripts(dt);
-  self.input_system:handle_inputs();
+  for _, input in ipairs(crystal.input.player(1):events()) do
+			self.input_system:handle_input(1, input);
+	end
   self.draw_system:update_drawables(dt);
 end
 

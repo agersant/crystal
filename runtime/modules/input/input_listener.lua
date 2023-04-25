@@ -1,22 +1,22 @@
 ---@class InputListener : Component
----@field private player InputPlayer
+---@field private _player_index number
 ---@field private handlers (fun(input: string): boolean)[]
 local InputListener = Class("InputListener", crystal.Component);
 
-InputListener.init = function(self, player_or_index)
-	if type(player_or_index) == "number" then
-		self.player = crystal.input.player(player_or_index);
-	else
-		assert(player_or_index:inherits_from("InputPlayer"));
-		self.player = player_or_index;
-	end
-	assert(self.player);
+InputListener.init = function(self, player_index)
+	assert(player_index > 0);
+	self._player_index = player_index;
 	self.handlers = {};
 end
 
 ---@return InputPlayer
 InputListener.input_player = function(self)
-	return self.player;
+	return crystal.input.player(self._player_index);
+end
+
+---@return number
+InputListener.player_index = function(self)
+	return self._player_index;
 end
 
 ---@param handler fun(input: string): boolean
@@ -39,13 +39,11 @@ InputListener.remove_input_handler = function(self, handler)
 	end
 end
 
-InputListener.handle_inputs = function(self)
-	for _, input in ipairs(self.player:events()) do
-		local handlers = table.copy(self.handlers);
-		for i = #handlers, 1, -1 do
-			if handlers[i](input) then
-				break;
-			end
+InputListener.handle_input = function(self, input)
+	local handlers = table.copy(self.handlers);
+	for i = #handlers, 1, -1 do
+		if handlers[i](input) then
+			break;
 		end
 	end
 end

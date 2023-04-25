@@ -4,9 +4,13 @@ InputSystem.init = function(self)
 	self.query = self:add_query({ "InputListener" });
 end
 
-InputSystem.handle_inputs = function(self)
+InputSystem.handle_input = function(self, player_index, input)
+	assert(player_index > 0);
+	assert(type(input) == "string");
 	for input_listener in pairs(self.query:components()) do
-		input_listener:handle_inputs();
+		if input_listener:player_index() == player_index then
+			input_listener:handle_input(input);
+		end
 	end
 end
 
@@ -18,32 +22,27 @@ local InputPlayer = require("modules/input/input_player");
 crystal.test.add("Input handlers receives inputs", function()
 	local ecs = crystal.ECS:new();
 	local input_system = ecs:add_system(InputSystem);
-	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
-	player:set_bindings({ z = { "attack" } });
 	local entity = ecs:spawn(crystal.Entity);
 	local handled;
 
-	entity:add_component("InputListener", player);
+	entity:add_component("InputListener", 1);
 	entity:add_input_handler(function(input)
 		handled = input;
 	end);
 
-	player:key_pressed("z");
-	assert(handled == nil);
 	ecs:update();
-	input_system:handle_inputs();
+	assert(handled == nil);
+	input_system:handle_input(1, "+attack");
 	assert(handled == "+attack");
 end);
 
 crystal.test.add("Input handlers can pass through to further handlers", function()
 	local ecs = crystal.ECS:new();
 	local input_system = ecs:add_system(InputSystem);
-	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
-	player:set_bindings({ z = { "attack" } });
 	local entity = ecs:spawn(crystal.Entity);
 	local handled = 0;
 
-	entity:add_component("InputListener", player);
+	entity:add_component("InputListener", 1);
 	entity:add_input_handler(function(input)
 		handled = handled + 1;
 	end);
@@ -51,22 +50,19 @@ crystal.test.add("Input handlers can pass through to further handlers", function
 		handled = handled + 10;
 	end);
 
-	player:key_pressed("z");
-	assert(handled == 0);
 	ecs:update();
-	input_system:handle_inputs();
+	assert(handled == 0);
+	input_system:handle_input(1, "+attack");
 	assert(handled == 11);
 end);
 
 crystal.test.add("Input handlers can prevent further handlers", function()
 	local ecs = crystal.ECS:new();
 	local input_system = ecs:add_system(InputSystem);
-	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
-	player:set_bindings({ z = { "attack" } });
 	local entity = ecs:spawn(crystal.Entity);
 	local handled;
 
-	entity:add_component("InputListener", player);
+	entity:add_component("InputListener", 1);
 	entity:add_input_handler(function(input)
 		assert(false);
 	end);
@@ -75,10 +71,9 @@ crystal.test.add("Input handlers can prevent further handlers", function()
 		return true;
 	end);
 
-	player:key_pressed("z");
-	assert(handled == nil);
 	ecs:update();
-	input_system:handle_inputs();
+	assert(handled == nil);
+	input_system:handle_input(1, "+attack");
 	assert(handled == 1);
 end);
 

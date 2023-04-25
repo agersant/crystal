@@ -13,9 +13,9 @@ When this component handles an input, handlers are called in reverse-order from 
 The return value of this function can be used to remove an input handler. This is especially useful when combined with [Thread:defer](/crystal/api/script/thread_defer) to guarantee you never forget to remove an input handler. For example, inside a [Behavior](/crystal/api/script/behavior) script:
 
 ```lua
-self:defer(self:add_input_handler(function(event)
-  if event == "+my_action" then
-    self:signal(event);
+self:defer(self:add_input_handler(function(input)
+  if input == "+my_action" then
+    self:signal(input);
     return true;
   end
 end));
@@ -47,21 +47,16 @@ input_listener:add_input_handler(handler)
 ## Examples
 
 ```lua
-crystal.input.player(1):set_bindings({
-  space = { "jump" }
-});
-
 local ecs = crystal.ECS:new();
 local input_system = ecs:add_system(crystal.InputSystem);
 
 local entity = ecs:spawn(crystal.Entity);
 entity:add_component(crystal.InputListener, 1);
-entity:add_input_handler(function(event)
-  print(event);
+entity:add_input_handler(function(input)
+  print(input);
   return false;
 end);
 
 ecs:update();
-love.keypressed("space", "space", false);
-input_system:handle_inputs(); -- Prints "+jump"
+input_system:handle_input(1, "+jump"); -- Prints "+jump"
 ```
