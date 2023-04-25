@@ -151,6 +151,11 @@ end
 ---@param signal string
 ---@param ... any
 Script.signal = function(self, signal, ...)
+	local blocked_threads;
+	if self.blockers[signal] then
+		blocked_threads = table.copy(self.blockers[signal]);
+	end
+
 	if self.ending_signals[signal] then
 		for thread in pairs(self.ending_signals[signal]) do
 			if not thread:ended() then
@@ -158,16 +163,19 @@ Script.signal = function(self, signal, ...)
 			end
 		end
 	end
-	if self.blockers[signal] then
-		local blocked_threads = table.copy(self.blockers[signal]);
+
+	if blocked_threads then
 		for thread in pairs(blocked_threads) do
 			local resume_args = { ... };
+			-- TODO thread can get unblocked by earlier iteration of this loop
+			-- which nulls self.blocked_threads[thread]?
 			if table.count(self.blocked_threads[thread]) > 1 then
 				table.insert(resume_args, 1, signal);
 			end
 			self:unblock_thread(thread, resume_args);
 		end
 	end
+
 	health_check();
 end
 
@@ -474,6 +482,24 @@ crystal.test.add("Signal doesn't wake dead threads", function()
 	script:update(0);
 	script:signal("s1");
 	script:signal("s0");
+	assert(sentinel);
+end);
+
+crystal.test.add("Signal does not wake thread that was not blocked before emission", function()
+	local sentinel = false;
+	local script = Script:new();
+	script:run_thread(function(self)
+		self:thread(function(self)
+			self:stop_on("s1");
+			self:hang();
+		end):block();
+		self:wait_for("s1");
+		sentinel = true;
+	end);
+	assert(not sentinel);
+	script:signal("s1");
+	assert(not sentinel);
+	script:signal("s1");
 	assert(sentinel);
 end);
 
