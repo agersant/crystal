@@ -100,6 +100,18 @@ Wrapper.draw_self = function(self)
 	end
 end
 
+---@param player_index number
+---@return UIElement
+Wrapper.first_focusable = function(self, player_index)
+	if self.focusable and self:can_receive_input(player_index) then
+		return self;
+	end
+	if self._child then
+		return self._child:first_focusable(player_index);
+	end
+	return nil;
+end
+
 --#region Tests
 
 crystal.test.add("Can set and unset child", function()

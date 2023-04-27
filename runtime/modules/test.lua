@@ -90,6 +90,7 @@ TestRunner.reset_global_state = function(self, test)
 
 	-- TODO avoid coupling with misc modules. Possibly share some logic with clean slate between hot reloads?
 	crystal.assets.unload_all();
+	crystal.UIElement.router:reset();
 	crystal.window.set_scaling_mode("pixel_perfect");
 	crystal.window.set_native_height(test.resolution[2]);
 	crystal.window.set_aspect_ratio_limits(

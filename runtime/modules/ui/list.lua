@@ -201,51 +201,76 @@ List.arrange_children = function(self)
 	end
 end
 
+---@param player_index number
+---@param direction Direction
+---@return UIElement
+List.next_focusable = function(self, from_element, player_index, direction)
+	local from_index = table.index_of(self._children, from_element);
+	assert(from_index);
+	local delta = 0;
+	if (direction == "down" and self.axis == "vertical") or (direction == "right" and self.axis == "horizontal") then
+		delta = 1;
+	elseif (direction == "up" and self.axis == "vertical") or (direction == "left" and self.axis == "horizontal") then
+		delta = -1;
+	end
+	if delta == 0 then
+		return List.super.next_focusable(self, from_element, player_index, direction);
+	end
+	local to_index = from_index + delta;
+	to_element = self._children[to_index];
+	while to_element do
+		local next_focusable = to_element:first_focusable(player_index);
+		if next_focusable then
+			return next_focusable;
+		end
+		to_index = to_index + delta;
+		to_element = self._children[to_index];
+	end
+end
+
 --#region Tests
 
-local UIElement = require("modules/ui/ui_element");
-
 crystal.test.add("Horizontal list aligns children", function()
-	local box = List.Horizontal:new();
-	local a = box:add_child(UIElement:new());
+	local list = List.Horizontal:new();
+	local a = list:add_child(crystal.UIElement:new());
 	a:set_grow(1);
-	local b = box:add_child(UIElement:new());
+	local b = list:add_child(crystal.UIElement:new());
 	b:set_grow(1);
-	local c = box:add_child(UIElement:new());
+	local c = list:add_child(crystal.UIElement:new());
 	c:set_grow(1);
-	box:update_tree(0, 90, 40);
+	list:update_tree(0, 90, 40);
 	assert(table.equals({ a:relative_position() }, { 0, 30, 0, 0 }));
 	assert(table.equals({ b:relative_position() }, { 30, 60, 0, 0 }));
 	assert(table.equals({ c:relative_position() }, { 60, 90, 0, 0 }));
 end);
 
 crystal.test.add("Vertical list aligns children", function()
-	local box = List.Vertical:new();
-	local a = box:add_child(UIElement:new());
+	local list = List.Vertical:new();
+	local a = list:add_child(crystal.UIElement:new());
 	a:set_grow(1);
-	local b = box:add_child(UIElement:new());
+	local b = list:add_child(crystal.UIElement:new());
 	b:set_grow(1);
-	local c = box:add_child(UIElement:new());
+	local c = list:add_child(crystal.UIElement:new());
 	c:set_grow(1);
-	box:update_tree(0, 40, 90);
+	list:update_tree(0, 40, 90);
 	assert(table.equals({ a:relative_position() }, { 0, 0, 0, 30 }));
 	assert(table.equals({ b:relative_position() }, { 0, 0, 30, 60 }));
 	assert(table.equals({ c:relative_position() }, { 0, 0, 60, 90 }));
 end);
 
 crystal.test.add("Horizontal list respects vertical alignment", function()
-	local box = List.Horizontal:new();
+	local list = List.Horizontal:new();
 
-	local a = box:add_child(UIElement:new());
+	local a = list:add_child(crystal.UIElement:new());
 	a:set_vertical_alignment("top");
 
-	local b = box:add_child(UIElement:new());
+	local b = list:add_child(crystal.UIElement:new());
 	b:set_vertical_alignment("center");
 
-	local c = box:add_child(UIElement:new());
+	local c = list:add_child(crystal.UIElement:new());
 	c:set_vertical_alignment("bottom");
 
-	local d = box:add_child(UIElement:new());
+	local d = list:add_child(crystal.UIElement:new());
 	d:set_vertical_alignment("stretch");
 
 	a.compute_desired_size = function()
@@ -261,7 +286,7 @@ crystal.test.add("Horizontal list respects vertical alignment", function()
 		return 25, 10;
 	end
 
-	box:update_tree(0, nil, 40);
+	list:update_tree(0, nil, 40);
 	assert(table.equals({ a:relative_position() }, { 0, 25, 0, 10 }));
 	assert(table.equals({ b:relative_position() }, { 25, 50, 15, 25 }));
 	assert(table.equals({ c:relative_position() }, { 50, 75, 30, 40 }));
@@ -269,18 +294,18 @@ crystal.test.add("Horizontal list respects vertical alignment", function()
 end);
 
 crystal.test.add("Vertical list respects horizontal alignment", function()
-	local box = List.Vertical:new();
+	local list = List.Vertical:new();
 
-	local a = box:add_child(UIElement:new());
+	local a = list:add_child(crystal.UIElement:new());
 	a:set_horizontal_alignment("left");
 
-	local b = box:add_child(UIElement:new());
+	local b = list:add_child(crystal.UIElement:new());
 	b:set_horizontal_alignment("center");
 
-	local c = box:add_child(UIElement:new());
+	local c = list:add_child(crystal.UIElement:new());
 	c:set_horizontal_alignment("right");
 
-	local d = box:add_child(UIElement:new());
+	local d = list:add_child(crystal.UIElement:new());
 	d:set_horizontal_alignment("stretch");
 
 	a.compute_desired_size = function()
@@ -296,7 +321,7 @@ crystal.test.add("Vertical list respects horizontal alignment", function()
 		return 10, 25;
 	end
 
-	box:update_tree(0, 40);
+	list:update_tree(0, 40);
 	assert(table.equals({ a:relative_position() }, { 0, 10, 0, 25 }));
 	assert(table.equals({ b:relative_position() }, { 15, 25, 25, 50 }));
 	assert(table.equals({ c:relative_position() }, { 30, 40, 50, 75 }));
@@ -304,22 +329,22 @@ crystal.test.add("Vertical list respects horizontal alignment", function()
 end);
 
 crystal.test.add("Horizontal list respects padding", function()
-	local box = List.Horizontal:new();
+	local list = List.Horizontal:new();
 
-	local a = box:add_child(UIElement:new());
+	local a = list:add_child(crystal.UIElement:new());
 	a:set_vertical_alignment("top");
 	a:set_padding_left(5);
 
-	local b = box:add_child(UIElement:new());
+	local b = list:add_child(crystal.UIElement:new());
 	b:set_vertical_alignment("center");
 	b:set_padding_top(5);
 	b:set_padding_bottom(4);
 
-	local c = box:add_child(UIElement:new());
+	local c = list:add_child(crystal.UIElement:new());
 	c:set_vertical_alignment("bottom");
 	c:set_padding_right(10);
 
-	local d = box:add_child(UIElement:new());
+	local d = list:add_child(crystal.UIElement:new());
 	d:set_vertical_alignment("stretch");
 	d:set_padding(10);
 
@@ -336,7 +361,7 @@ crystal.test.add("Horizontal list respects padding", function()
 		return 25, 20;
 	end
 
-	box:update_tree(0);
+	list:update_tree(0);
 	assert(table.equals({ a:relative_position() }, { 5, 30, 0, 10 }));
 	assert(table.equals({ b:relative_position() }, { 30, 55, 16, 26 }));
 	assert(table.equals({ c:relative_position() }, { 55, 80, 30, 40 }));
@@ -344,22 +369,22 @@ crystal.test.add("Horizontal list respects padding", function()
 end);
 
 crystal.test.add("Vertical list respects padding", function()
-	local box = List.Vertical:new();
+	local list = List.Vertical:new();
 
-	local a = box:add_child(UIElement:new());
+	local a = list:add_child(crystal.UIElement:new());
 	a:set_horizontal_alignment("left");
 	a:set_padding_top(5);
 
-	local b = box:add_child(UIElement:new());
+	local b = list:add_child(crystal.UIElement:new());
 	b:set_horizontal_alignment("center");
 	b:set_padding_left(5);
 	b:set_padding_right(4);
 
-	local c = box:add_child(UIElement:new());
+	local c = list:add_child(crystal.UIElement:new());
 	c:set_horizontal_alignment("right");
 	c:set_padding_bottom(10);
 
-	local d = box:add_child(UIElement:new());
+	local d = list:add_child(crystal.UIElement:new());
 	d:set_horizontal_alignment("stretch");
 	d:set_padding(10);
 
@@ -376,11 +401,75 @@ crystal.test.add("Vertical list respects padding", function()
 		return 20, 25;
 	end
 
-	box:update_tree(0);
+	list:update_tree(0);
 	assert(table.equals({ a:relative_position() }, { 0, 10, 5, 30 }));
 	assert(table.equals({ b:relative_position() }, { 16, 26, 30, 55 }));
 	assert(table.equals({ c:relative_position() }, { 30, 40, 55, 80 }));
 	assert(table.equals({ d:relative_position() }, { 10, 30, 100, 125 }));
+end);
+
+
+crystal.test.add("Can move focus in a list", function()
+	local list = List.Vertical:new();
+	local a = list:add_child(crystal.UIElement:new());
+	local b = list:add_child(crystal.UIElement:new());
+	local c = list:add_child(crystal.UIElement:new());
+	local d = list:add_child(crystal.UIElement:new());
+	a:set_focusable(true);
+	b:set_focusable(true);
+	d:set_focusable(true);
+
+	assert(not a:is_focused(1));
+	list:focus_tree(1);
+	assert(a:is_focused(1));
+
+	list:handle_input(1, "ui_down");
+	assert(not a:is_focused(1));
+	assert(b:is_focused(1));
+
+	list:handle_input(1, "ui_down");
+	assert(not b:is_focused(1));
+	assert(d:is_focused(1));
+
+	list:handle_input(1, "ui_left");
+	assert(d:is_focused(1));
+
+	list:handle_input(1, "ui_up");
+	assert(not d:is_focused(1));
+	assert(b:is_focused(1));
+end);
+
+crystal.test.add("Can move focus in nested lists", function()
+	local row = List.Horizontal:new();
+
+	local head = row:add_child(crystal.UIElement:new());
+	head:set_focusable(true);
+
+	local list = row:add_child(List.Vertical:new());
+	local a = list:add_child(crystal.UIElement:new());
+	local b = list:add_child(crystal.UIElement:new());
+	local c = list:add_child(crystal.UIElement:new());
+	local d = list:add_child(crystal.UIElement:new());
+	a:set_focusable(true);
+	b:set_focusable(true);
+	d:set_focusable(true);
+
+	local tail = row:add_child(crystal.UIElement:new());
+	tail:set_focusable(true);
+
+	row:focus_tree(1);
+	assert(head:is_focused(1));
+
+	row:handle_input(1, "ui_right");
+	assert(not head:is_focused(1));
+	assert(a:is_focused(1));
+
+	row:handle_input(1, "ui_down");
+	assert(b:is_focused(1));
+
+	row:handle_input(1, "ui_right");
+	assert(not b:is_focused(1));
+	assert(tail:is_focused(1));
 end);
 
 --#endregion

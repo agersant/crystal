@@ -91,6 +91,21 @@ Container.draw_self = function(self)
 	end
 end
 
+---@param player_index number
+---@return UIElement
+Container.first_focusable = function(self, player_index)
+	if self.focusable and self:can_receive_input(player_index) then
+		return self;
+	end
+	for _, child in ipairs(self._children) do
+		local first_focusable = child:first_focusable(player_index);
+		if first_focusable then
+			return first_focusable;
+		end
+	end
+	return nil;
+end
+
 --#region Tests
 
 crystal.test.add("Can add and remove children", function()

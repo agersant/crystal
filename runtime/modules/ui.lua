@@ -8,6 +8,7 @@ local Overlay = require("modules/ui/overlay");
 local Padding = require("modules/ui/padding");
 local RoundedCorners = require("modules/ui/rounded_corners");
 local Painter = require("modules/ui/painter");
+local Router = require("modules/ui/router");
 local Switcher = require("modules/ui/switcher");
 local Text = require("modules/ui/text");
 local UIElement = require("modules/ui/ui_element");
@@ -15,10 +16,14 @@ local Widget = require("modules/ui/widget");
 local Wrapper = require("modules/ui/wrapper");
 
 ---@alias Axis "horizontal" | "vertical"
+---@alias Direction "up" | "down" | "left" | "right"
 ---@alias HorizontalAlignment "left" | "center" | "right" | "stretch"
 ---@alias VerticalAlignment "top" | "center" | "bottom" | "stretch"
 
 local fonts = {};
+
+local router = Router:new();
+UIElement.router = router;
 
 return {
 	module_api = {
