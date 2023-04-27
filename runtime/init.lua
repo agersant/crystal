@@ -119,7 +119,6 @@ love.load = function()
 	love.keyboard.setTextInput(false);
 	require("tools/console")(modules.cmd.terminal);
 	require("tools/fps_counter");
-	require("tools/live_tune")(modules.const.constants);
 
 	if not CRYSTAL_NO_GAME then
 		requireGameSource();

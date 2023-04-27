@@ -53,6 +53,7 @@ end
 
 ---@protected
 Image.draw_self = function(self)
+	-- TODO pixel snapping?
 	local w, h = self:size();
 	if self._texture then
 		love.graphics.draw(self._texture, 0, 0, w, h);

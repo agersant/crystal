@@ -78,5 +78,4 @@ return {
 			constants:set(name, value);
 		end,
 	},
-	constants = constants,
 };

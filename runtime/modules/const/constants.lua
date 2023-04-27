@@ -1,13 +1,14 @@
 local features = require("features");
 local Terminal = require("modules/cmd/terminal")
 
----@class Constants
+---@class Constant
 ---@field value any
 ---@field name string
 ---@field min number
 ---@field max number
 
 ---@class Constants
+---@field private constants { [string]: Constant }
 local Constants = Class("Constants");
 
 ---@field private constants { [string]: Constant }
