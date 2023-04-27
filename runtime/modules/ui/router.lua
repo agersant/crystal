@@ -233,12 +233,6 @@ Router.is_element_focused = function(self, element, player_index)
 	return self.focused_elements[player_index] and self.focused_elements[player_index][element] ~= nil;
 end
 
----@param player_index number
-Router.unfocus_all_elements = function(self, player_index)
-	assert(type(player_index) == "number");
-	self.focused_elements[player_index] = nil;
-end
-
 ---@param context UIElement
 ---@param player_index number
 Router.unfocus_all_elements_in = function(self, context, player_index)
@@ -250,7 +244,7 @@ Router.unfocus_all_elements_in = function(self, context, player_index)
 	local all_focused = table.copy(self.focused_elements[player_index]);
 	for focused in pairs(all_focused) do
 		if focused:is_within(context) then
-			self:unfocus_element(player_index, focused);
+			self:unfocus_element(focused, player_index);
 		end
 	end
 end

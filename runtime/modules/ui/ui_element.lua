@@ -334,6 +334,12 @@ UIElement.focus_tree = function(self, player_index)
 end
 
 ---@param player_index number
+UIElement.unfocus_tree = function(self, player_index)
+	assert(type(player_index) == "number");
+	self.router:unfocus_all_elements_in(self, player_index);
+end
+
+---@param player_index number
 ---@return boolean
 UIElement.is_focused = function(self, player_index)
 	assert(type(player_index) == "number");
@@ -375,6 +381,13 @@ end
 UIElement.binding = function(self, input)
 	assert(type(input) == "string");
 	return self.bindings[input];
+end
+
+---@param player_index number
+---@return { [string]: { owner: UIElement, relevance: InputRelevance, binding: Binding }[] }
+UIElement.active_bindings = function(self, player_index)
+	assert(type(player_index) == "number");
+	return self.router:active_bindings_in(self, player_index);
 end
 
 --#endregion
@@ -455,6 +468,40 @@ crystal.test.add("Can restrict inputs by deactivating", function()
 	a:set_active(true);
 	a:handle_input(1, "ui_ok");
 	assert(sentinel);
+end);
+
+crystal.test.add("Can unfocus tree", function()
+	local sentinel = false;
+	local a = crystal.Overlay:new();
+	local b = a:add_child(crystal.UIElement:new());
+	b:set_focusable(true);
+	b:focus(1);
+	assert(b:is_focused(1));
+	a:unfocus_tree(1);
+	assert(not b:is_focused(1));
+end);
+
+crystal.test.add("Can list active_bindings", function()
+	local sentinel = false;
+	local a = crystal.UIElement:new();
+	a:bind_input("ui_ok", "always", "ok", function()
+	end);
+	a:bind_input("ui_menu", "when_focused", "menu", function()
+	end);
+
+	local bindings = a:active_bindings(1);
+	assert(bindings.ui_ok[1].binding.details == "ok");
+	assert(not bindings.ui_menu);
+
+	a:set_focusable(true);
+	a:focus(1);
+	local bindings = a:active_bindings(1);
+	assert(bindings.ui_ok[1].binding.details == "ok");
+	assert(bindings.ui_menu[1].binding.details == "menu");
+
+	a:set_active(false);
+	local bindings = a:active_bindings(1);
+	assert(table.is_empty(bindings));
 end);
 
 --#endregion
