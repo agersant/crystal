@@ -109,6 +109,7 @@ UIElement.set_joint = function(self, joint)
 	end
 end
 
+---@param other UIElement
 ---@return boolean
 UIElement.is_within = function(self, other)
 	if other == self then
