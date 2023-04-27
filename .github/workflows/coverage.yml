@@ -54,7 +54,7 @@ jobs:
           --llvm
           --branch
           --ignore-not-existing
-          --keep-only */src/**
+          --keep-only diamond/src/**
           --binary-path ./target/debug
           --excl-line "#\[derive\("
           --excl-br-line "#\[derive\("
