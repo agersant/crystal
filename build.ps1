@@ -33,4 +33,3 @@ cargo build --release
 # Copy Lua modules to game directory
 Set-Location $crystal
 Copy-Item lib\target\release\diamond.dll bin\diamond.dll
-Copy-Item lib\target\release\knob.dll bin\knob.dll
