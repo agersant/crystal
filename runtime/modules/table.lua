@@ -3,10 +3,8 @@ table.is_empty = function(t)
 end
 
 table.clear = function(t)
-	local key = next(t);
-	while key ~= nil do
-		t[key] = nil;
-		key = next(t);
+	for k in pairs(t) do
+		t[k] = nil;
 	end
 end
 
