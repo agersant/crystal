@@ -10,7 +10,7 @@ has_toc: false
 
 This modules fulfills two functions:
 
-1. Parsing complex game assets like maps and spritesheets into easy to use objects.
+1. Parsing complex game assets like maps and spritesheets.
 2. Loading/unloading game assets on demand.
 
 The central piece of this module is [crystal.assets.get](get). This function returns an asset by path. All paths are relative to `main.lua`.

@@ -16,7 +16,7 @@ This module also contains utility classes to work with multiple cameras within a
 
 Scenes are also meant to be the central point where other crystal features (ECS, loading maps, etc.) are brought together into one cohesive whole.
 
-The example below illustrates a very simple title screen scene, which draws a text and moves to a different scene when any key is pressed.
+The example below illustrates a title screen scene, which draws a text and moves to a different scene when any key is pressed.
 
 ```lua
 local TitleScreen = Class("TitleScreen", crystal.Scene);

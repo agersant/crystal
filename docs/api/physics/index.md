@@ -8,7 +8,7 @@ has_toc: false
 
 ## Overview
 
-This module contains [components](/crystal/api/ecs/components) to facilitate positioning and moving entities, as well as detecting collisions or overlaps between them. These components are based on LOVE's physics module which itself relies on Box2D. Box2D is designed to support games with realistic physics and complex interactions. This module hides a lot of said functionality and tries to simplify the execution of more traditional 2D game physics.
+This module contains [components](/crystal/api/ecs/components) to facilitate positioning and moving entities, as well as detecting collisions or overlaps between them. These components are based on LOVE's physics module which itself relies on Box2D. Box2D is designed to support games with realistic physics and complex interactions. This module hides a lot of said functionality and expose an API which gives more programmatic control.
 
 One important difference between LOVE physics and this module is that Crystal [bodies](body) never rotate. Their rotation field is useful to keep track of which direction a character is facing, but has no effect on the actual physics simulation (ie. [colliders](collider) and [sensors](sensor) components do not rotate).
 
