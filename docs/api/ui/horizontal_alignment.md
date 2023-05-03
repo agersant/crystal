@@ -1,6 +1,7 @@
 ---
 parent: crystal.ui
 grand_parent: API Reference
+nav_order: 2
 ---
 
 # HorizontalAlignment
