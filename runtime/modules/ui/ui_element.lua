@@ -215,14 +215,25 @@ UIElement.set_color = function(self, color)
 	self._color = color;
 end
 
----@param offset number
-UIElement.set_translation_x = function(self, offset)
-	self.translation_x = offset;
+---@param x number
+---@param y number
+UIElement.set_translation = function(self, x, y)
+	assert(type(x) == "number");
+	assert(type(y) == "number");
+	self.translation_x = x;
+	self.translation_y = y;
 end
 
----@param offset number
-UIElement.set_translation_y = function(self, offset)
-	self.translation_y = offset;
+---@param x number
+UIElement.set_translation_x = function(self, x)
+	assert(type(x) == "number");
+	self.translation_x = x;
+end
+
+---@param y number
+UIElement.set_translation_y = function(self, y)
+	assert(type(y) == "number");
+	self.translation_y = y;
 end
 
 ---@param scale number
@@ -442,7 +453,7 @@ UIElement.update_mouse = function(self)
 
 	local over_elements = self.router:mouse_over_elements();
 	for element in pairs(over_elements) do
-		if element:is_within(self) and not element == target then
+		if element:is_within(self) and element ~= target then
 			self.router:remove_mouse_over_element(element);
 			element:on_mouse_out();
 		end
@@ -638,6 +649,54 @@ crystal.test.add("Can list active_bindings", function()
 	a:set_active(false);
 	local bindings = a:active_bindings(1);
 	assert(table.is_empty(bindings));
+end);
+
+crystal.test.add("Can receive mouse events", function()
+	local overlay = crystal.Overlay:new();
+	local image = overlay:add_child(crystal.Image:new());
+	image:set_alignment("stretch", "stretch");
+
+	local called = function(name)
+		return function(self)
+			self["called_" .. name] = true;
+		end
+	end
+	image.on_mouse_enter = called("on_mouse_enter");
+	image.on_mouse_leave = called("on_mouse_leave");
+	image.on_mouse_over = called("on_mouse_over");
+	image.on_mouse_out = called("on_mouse_out");
+	overlay.on_mouse_enter = called("on_mouse_enter");
+	overlay.on_mouse_leave = called("on_mouse_leave");
+	overlay.on_mouse_over = called("on_mouse_over");
+	overlay.on_mouse_out = called("on_mouse_out");
+
+	overlay:set_translation(-10, -10);
+	overlay:update_tree(1 / 60, 100, 100);
+	overlay:draw();
+	crystal.update(1 / 60);
+	overlay:update_tree(1 / 60, 100, 100);
+	assert(overlay.called_on_mouse_enter);
+	assert(not overlay.called_on_mouse_leave);
+	assert(not overlay.called_on_mouse_over);
+	assert(not overlay.called_on_mouse_out);
+	assert(image.called_on_mouse_enter);
+	assert(not image.called_on_mouse_leave);
+	assert(image.called_on_mouse_over);
+	assert(not image.called_on_mouse_out);
+
+	overlay:set_translation(10, 10);
+	overlay:update_tree(1 / 60, 100, 100);
+	overlay:draw();
+	crystal.update(1 / 60);
+	overlay:update_tree(1 / 60, 100, 100);
+	assert(overlay.called_on_mouse_enter);
+	assert(overlay.called_on_mouse_leave);
+	assert(not overlay.called_on_mouse_over);
+	assert(not overlay.called_on_mouse_out);
+	assert(image.called_on_mouse_enter);
+	assert(image.called_on_mouse_leave);
+	assert(image.called_on_mouse_over);
+	assert(image.called_on_mouse_out);
 end);
 
 --#endregion
