@@ -4,7 +4,7 @@
 - [ ] Engine release process
 - [ ] Sample game release process
 - [ ] Game packaging
-- [ ] snake_case all variables and file names 🐍
+- [x] snake_case all variables and file names 🐍
 - [x] Gamepad support
 - [x] Input auto-repeats
 - [x] Docs website in readme
