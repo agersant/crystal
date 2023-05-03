@@ -30,7 +30,7 @@ has_toc: false
 | [crystal.Switcher](switcher)              | A [Container](container) which draws only one child at a time.                                                                           |
 | [crystal.Text](text)                      | A [UI element](ui_element) which draws text.                                                                                             |
 | [crystal.UIElement](ui_element)           | Base class for all UI building blocks.                                                                                                   |
-| [crystal.VerticalList](vertical_lsit)     | A [Container](container) which aligns children vertically.                                                                               |
+| [crystal.VerticalList](vertical_list)     | A [Container](container) which aligns children vertically.                                                                               |
 | [crystal.Widget](widget)                  | A [Wrapper](wrapper) which manages a [Script](/crystal/api/script/script).                                                               |
 | [crystal.Wrapper](wrapper)                | A [UI element](ui_element) which can contain one child element.                                                                          |
 

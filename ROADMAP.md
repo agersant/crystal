@@ -45,6 +45,7 @@
 - [ ] UI element visibility
 - [ ] UI Button
 - [ ] UI MenuStack
+- [ ] UI pixel snapping (to viewport pixel / to native-pixel)
 - [ ] UI 9-slice
 - [ ] UI method chaining
 - [ ] Document built-in tools
