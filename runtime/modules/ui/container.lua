@@ -12,6 +12,7 @@ Container.init = function(self, joint_class)
 	self._children = {};
 	self.child_joints = {};
 	self.joint_class = joint_class;
+	self:disable_mouse();
 end
 
 ---@param child UIElement

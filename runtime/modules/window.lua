@@ -1,5 +1,7 @@
 ---@alias ScalingMode "none" | "pixel_perfect" | "crop_or_squish"
 
+local lg; -- # Original love.graphics functions
+
 ---@class Window
 ---@field private native_height number
 ---@field private min_aspect_ratio number
@@ -162,17 +164,26 @@ Window.draw_native = function(self, draw)
 		table.push(self.viewport_canvas, self:allocate_viewport_canvas());
 	end
 	local canvas = table.remove(self.viewport_canvas);
+	self:draw_via_canvas(canvas, draw, function() love.graphics.draw(canvas) end);
+	table.push(self.viewport_canvas, canvas);
+end
+
+---@package
+---@param canvas love.Canvas
+---@param draw fun()
+---@param blit fun()
+Window.draw_via_canvas = function(self, canvas, draw, blit)
 	love.graphics.push("all");
-	love.graphics.reset();
+	lg.reset();
 	love.graphics.setCanvas(canvas);
 	love.graphics.clear();
 	draw();
 	love.graphics.pop();
-	love.graphics.draw(canvas);
-	table.push(self.viewport_canvas, canvas);
+	blit();
 end
 
 local window = Window:new();
+local transform_stack = {};
 
 return {
 	module_api = {
@@ -188,6 +199,9 @@ return {
 		draw_native = function(draw)
 			window:draw_native(draw);
 		end,
+		draw_via_canvas = function(canvas, draw, blit)
+			window:draw_via_canvas(canvas, draw, blit);
+		end,
 		set_native_height = function(height)
 			window:set_native_height(height);
 		end,
@@ -200,8 +214,65 @@ return {
 		set_safe_area = function(fraction)
 			window:set_safe_area(fraction);
 		end,
+		transform = function()
+			return transform_stack[#transform_stack]:clone();
+		end,
 	},
 	update = function()
 		window:update();
+	end,
+	init = function()
+		lg = table.copy(love.graphics);
+
+		love.graphics.reset = function()
+			lg.reset();
+			transform_stack[#transform_stack] = love.math.newTransform();
+		end
+
+		love.graphics.applyTransform = function(t)
+			lg.applyTransform(t);
+			table.push(transform_stack, transform_stack[#transform_stack]:clone():transform(t));
+		end
+
+		love.graphics.origin = function()
+			lg.origin();
+			table.clear(transform_stack);
+			transform_stack[1] = love.math.newTransform();
+		end
+
+		love.graphics.pop = function()
+			lg.pop();
+			table.pop(transform_stack);
+		end
+
+		love.graphics.push = function(s)
+			lg.push(s);
+			table.push(transform_stack, transform_stack[#transform_stack]:clone());
+		end
+
+		love.graphics.replaceTransform = function(t)
+			lg.replaceTransform(t);
+			transform_stack[#transform_stack] = t;
+		end
+
+		love.graphics.rotate = function(a)
+			lg.rotate(a);
+			transform_stack[#transform_stack]:rotate(a);
+		end
+
+		love.graphics.scale = function(sx, sy)
+			lg.scale(sx, sy);
+			transform_stack[#transform_stack]:scale(sx, sy);
+		end
+
+		love.graphics.shear = function(kx, ky)
+			lg.shear(kx, ky);
+			transform_stack[#transform_stack]:shear(kx, ky);
+		end
+
+		love.graphics.translate = function(dx, dy)
+			lg.translate(dx, dy);
+			transform_stack[#transform_stack]:translate(dx, dy);
+		end
 	end,
 };

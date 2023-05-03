@@ -13,6 +13,7 @@ Wrapper.init = function(self, joint_class)
 	self._child = nil;
 	self.child_joint = nil;
 	self.joint_class = joint_class;
+	self:disable_mouse();
 end
 
 ---@return UIElement

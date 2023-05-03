@@ -86,17 +86,17 @@ Painter.draw_self = function(self)
 		if not self._shader then
 			self._child:draw();
 		else
-			love.graphics.push("all");
-			love.graphics.reset();
-			love.graphics.setCanvas(self._canvas);
-			self._child:draw();
-			love.graphics.pop();
-
-			love.graphics.push("all");
-			love.graphics.setShader(self._shader);
-			self:configure_shader(self._shader, self._quad);
-			love.graphics.draw(self._canvas, self._quad);
-			love.graphics.pop();
+			crystal.window.draw_via_canvas(
+				self._canvas,
+				function() self._child:draw() end,
+				function()
+					love.graphics.push("all");
+					love.graphics.setShader(self._shader);
+					self:configure_shader(self._shader, self._quad);
+					love.graphics.draw(self._canvas, self._quad);
+					love.graphics.pop();
+				end
+			);
 		end
 	end
 end

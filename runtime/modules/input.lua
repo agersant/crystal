@@ -3,8 +3,10 @@ local InputListener = require("modules/input/input_listener");
 local InputManager = require("modules/input/input_manager");
 local InputPlayer = require("modules/input/input_player");
 local InputSystem = require("modules/input/input_system");
+local MouseRouter = require("modules/input/mouse_router");
 
 local input_manager = InputManager:new(GamepadAPI:new());
+local mouse_router = MouseRouter:new();
 
 local gamepad_button_map = {
 	a = "btna",
@@ -32,7 +34,13 @@ return {
 		end,
 		configure_autorepeat = function(config)
 			input_manager:configure_autorepeat(config);
-		end
+		end,
+		add_mouse_target = function(recipient, left, right, top, bottom)
+			mouse_router:add_target(recipient, left, right, top, bottom);
+		end,
+		current_mouse_target = function()
+			return mouse_router:recipient();
+		end,
 	},
 	global_api = {
 		InputListener = InputListener,
@@ -48,6 +56,7 @@ return {
 	key_released = function(key, scan_code)
 		input_manager:key_released(key, scan_code);
 	end,
+	-- TODO mouse pressed/released to support click bindings
 	gamepad_pressed = function(joystick, button)
 		local gamepad_id = joystick:getID();
 		local button = gamepad_button_map[button] or button;
@@ -60,5 +69,6 @@ return {
 	end,
 	update = function(dt)
 		input_manager:update(dt);
+		mouse_router:update();
 	end,
 };

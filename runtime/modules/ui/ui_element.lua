@@ -16,7 +16,9 @@
 ---@field private pivot_y number
 ---@field private scale_x number
 ---@field private scale_y number
+---@field private transform love.Transform # Complete transform stack applied to this element (all the way from native window)
 ---@field private active boolean # When false, this element and its descendants do not receive inputs
+---@field private mouse_enabled boolean # When true, this element is a mouse target
 ---@field private _player_index number # When set, this element and its descendants only receive inputs from this player
 ---@field private focusable boolean
 ---@field private bindings { [string]: Binding }
@@ -38,8 +40,10 @@ UIElement.init = function(self)
 	self.pivot_y = 0.5;
 	self.scale_x = 1;
 	self.scale_y = 1;
+	self.transform = nil;
 	self.active = true;
-	self.player_index = nil;
+	self.mouse_enabled = true;
+	self._player_index = nil;
 	self.focusable = false;
 	self.bindings = {};
 end
@@ -50,6 +54,7 @@ end
 UIElement.update_tree = function(self, dt, width, height)
 	assert(not self:parent());
 	assert(dt);
+	self:update_mouse();
 	self:update(dt);
 	self:update_desired_size();
 	self:set_relative_position(0, width or self.desired_width, 0, height or self.desired_height);
@@ -86,6 +91,15 @@ end
 ---@return boolean
 UIElement.is_root = function(self)
 	return self:parent() == nil;
+end
+
+---@return number
+UIElement.depth = function(self)
+	local parent = self:parent();
+	if parent then
+		return 1 + parent:depth();
+	end
+	return 1;
 end
 
 ---@return Joint
@@ -235,15 +249,38 @@ UIElement.draw = function(self)
 
 	love.graphics.setColor(r * self._color[1], g * self._color[2], b * self._color[3], a * self._opacity);
 	love.graphics.translate(self.left, self.top);
-
 	love.graphics.translate(self.translation_x, self.translation_y);
 	love.graphics.translate(self.pivot_x * width, self.pivot_y * height);
 	love.graphics.scale(self.scale_x, self.scale_y);
 	love.graphics.translate(-self.pivot_x * width / self.scale_x, -self.pivot_y * height / self.scale_y);
 
+	self.transform = crystal.window.transform();
+	if self.mouse_enabled then
+		crystal.input.add_mouse_target(self, self:bounding_box());
+	end
+
 	self:draw_self();
 
 	love.graphics.pop();
+end
+
+---@private
+---@return number # left
+---@return number # right
+---@return number # top
+---@return number @ bottom
+UIElement.bounding_box = function(self)
+	assert(self.transform);
+	local width, height = self:size();
+	local x1, y1 = self.transform:transformPoint(0, 0);
+	local x2, y2 = self.transform:transformPoint(width, 0);
+	local x3, y3 = self.transform:transformPoint(width, height);
+	local x4, y4 = self.transform:transformPoint(0, height);
+	local left = math.min(x1, x2, x3, x4);
+	local right = math.max(x1, x2, x3, x4);
+	local top = math.min(y1, y2, y3, y4);
+	local bottom = math.max(y1, y2, y3, y4);
+	return left, right, top, bottom;
 end
 
 ---@protected
@@ -388,6 +425,97 @@ end
 UIElement.active_bindings = function(self, player_index)
 	assert(type(player_index) == "number");
 	return self.router:active_bindings_in(self, player_index);
+end
+
+--#endregion
+
+--#region Mouse
+
+UIElement.update_mouse = function(self)
+	-- Not simple ancestor traversals because elements can be reparented
+	-- arbitrarily while mouse is inside them.
+
+	local over_elements = self.router:mouse_over_elements();
+	local target = crystal.input.current_mouse_target();
+	if type(target) ~= "table" or not target.inherits_from or not target:inherits_from(UIElement) then
+		target = nil;
+	end
+
+	for element in pairs(over_elements) do
+		if element:is_within(self) and not element == target then
+			self.router:remove_mouse_over_element(element);
+			element:on_mouse_out();
+		end
+	end
+
+	local inside_elements = self.router:mouse_inside_elements();
+	local sorted_inside_elements = {};
+	for element in pairs(inside_elements) do
+		table.push(sorted_inside_elements, element);
+	end
+	table.sort(sorted_inside_elements, function(a, b)
+		return a:depth() > b:depth();
+	end);
+	for _, element in ipairs(sorted_inside_elements) do
+		if element:is_within(self) and (not target or not target:is_within(element)) then
+			self.router:remove_mouse_inside_element(element);
+			element:on_mouse_leave();
+		end
+	end
+
+	if target and target:is_within(self) then
+		local path = {};
+		local element = target;
+		while element do
+			table.insert(path, 1, element);
+			element = element:parent();
+		end
+		for _, element in ipairs(path) do
+			if not inside_elements[element] then
+				self.router:add_mouse_inside_element(element);
+				element:on_mouse_enter();
+			end
+		end
+		if not over_elements[target] then
+			self.router:add_mouse_over_element(target);
+			target:on_mouse_over();
+		end
+	end
+end
+
+---@return boolean
+UIElement.is_mouse_inside = function(self)
+	return self.router:is_mouse_inside_element(self);
+end
+
+---@return boolean
+UIElement.is_mouse_over = function(self)
+	return self.router:is_mouse_over_element(self);
+end
+
+---@return boolean
+UIElement.is_mouse_enabled = function(self)
+	return self.mouse_enabled;
+end
+
+UIElement.disable_mouse = function(self)
+	self.mouse_enabled = false;
+end
+
+UIElement.enable_mouse = function(self)
+	self.mouse_enabled = true;
+end
+
+UIElement.on_mouse_enter = function(self)
+end
+
+UIElement.on_mouse_leave = function(self)
+end
+
+UIElement.on_mouse_over = function(self)
+end
+
+UIElement.on_mouse_out = function(self)
 end
 
 --#endregion

@@ -1,18 +1,24 @@
 ---@alias InputRelevance "always" | "when_focused"
 
 ---@class Router
----@field private focused_elements { [number]: { [UIElement]: boolean } }
 ---@field private handlers { [string]: { [UIElement]: InputRelevance } }
+---@field private focused_elements { [number]: { [UIElement]: boolean } }
+---@field private _mouse_inside_elements { [UIElement]: boolean }
+---@field private _mouse_over_elements { [UIElement]: boolean }
 local Router = Class("Router");
 
 Router.init = function(self)
-	self.focused_elements = {};
 	self.handlers = {};
+	self.focused_elements = {};
+	self._mouse_inside_elements = setmetatable({}, { __mode = "k" });
+	self._mouse_over_elements = setmetatable({}, { __mode = "k" });
 end
 
 Router.reset = function(self)
-	self.focused_elements = {};
 	self.handlers = {};
+	self.focused_elements = {};
+	table.clear(self._mouse_inside_elements);
+	table.clear(self._mouse_over_elements);
 end
 
 ---@param context UIElement
@@ -144,6 +150,52 @@ Router.active_bindings_in = function(self, context, player_index)
 		end
 	end
 	return active_bindings;
+end
+
+--#endregion
+
+--#region Mouse
+
+---@return { [UIElement]: boolean }
+Router.mouse_inside_elements = function(self)
+	return table.copy(self._mouse_inside_elements);
+end
+
+---@param element UIElement
+Router.add_mouse_inside_element = function(self, element)
+	self._mouse_inside_elements[element] = true;
+end
+
+---@param element UIElement
+Router.remove_mouse_inside_element = function(self, element)
+	self._mouse_inside_elements[element] = nil;
+end
+
+---@param element UIElement
+---@return boolean
+Router.is_mouse_inside_element = function(self, element)
+	return self._mouse_inside_elements[element] ~= nil;
+end
+
+---@return { [UIElement]: boolean }
+Router.mouse_over_elements = function(self)
+	return table.copy(self._mouse_over_elements);
+end
+
+---@param element UIElement
+Router.add_mouse_over_element = function(self, element)
+	self._mouse_over_elements[element] = true;
+end
+
+---@param element UIElement
+Router.remove_mouse_over_element = function(self, element)
+	self._mouse_over_elements[element] = nil;
+end
+
+---@param element UIElement
+---@return boolean
+Router.is_mouse_over_element = function(self, element)
+	return self._mouse_over_elements[element] ~= nil;
 end
 
 --#endregion
