@@ -109,7 +109,7 @@ local requireGameSource = function()
 	end
 end
 
-love.load = function()
+crystal.load = function()
 	for _, module in pairs(modules) do
 		if module.init then
 			module.init();
@@ -135,7 +135,7 @@ love.load = function()
 	end
 end
 
-love.update = function(dt)
+crystal.update = function(dt)
 	modules.window.update();
 	modules.input.update(dt);
 	modules.scene.update(dt);
@@ -143,14 +143,14 @@ love.update = function(dt)
 	modules.input.flush_events();
 end
 
-love.draw = function()
+crystal.draw = function()
 	love.graphics.reset();
 	modules.scene.draw();
 	love.graphics.reset();
 	modules.tool.draw();
 end
 
-love.keypressed = function(key, scan_code, is_repeat)
+crystal.keypressed = function(key, scan_code, is_repeat)
 	modules.tool.key_pressed(key, scan_code, is_repeat);
 	if not modules.tool.consumes_inputs() then
 		modules.input.key_pressed(key, scan_code, is_repeat);
@@ -158,31 +158,32 @@ love.keypressed = function(key, scan_code, is_repeat)
 	end
 end
 
-love.keyreleased = function(key, scan_code)
+crystal.keyreleased = function(key, scan_code)
 	modules.input.key_released(key, scan_code);
 	modules.scene.key_released(key, scan_code);
 end
 
-love.gamepadpressed = function(joystick, button)
+crystal.gamepadpressed = function(joystick, button)
 	modules.input.gamepad_pressed(joystick, button);
 	modules.scene.gamepad_pressed(joystick, button);
 end
 
-love.gamepadreleased = function(joystick, button)
+crystal.gamepadreleased = function(joystick, button)
 	modules.input.gamepad_released(joystick, button);
 	modules.scene.gamepad_released(joystick, button);
 end
 
-love.textinput = function(text)
+crystal.textinput = function(text)
 	modules.tool.text_input(text);
 end
 
-love.quit = function()
+crystal.quit = function()
 	modules.tool.quit();
 end
 
+crystal.run = love.run;
 if features.tests then
-	love.run = function()
+	crystal.run = function()
 		return function()
 			love.load();
 
@@ -206,3 +207,14 @@ if features.tests then
 		end
 	end
 end
+
+love.load = crystal.load;
+love.run = crystal.run;
+love.update = crystal.update;
+love.draw = crystal.draw;
+love.keypressed = crystal.keypressed;
+love.keyreleased = crystal.keyreleased;
+love.gamepadpressed = crystal.gamepadpressed;
+love.gamepadreleased = crystal.gamepadreleased;
+love.textinput = crystal.textinput;
+love.quit = crystal.quit;
