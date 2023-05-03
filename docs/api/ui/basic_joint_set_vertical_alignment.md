@@ -14,7 +14,7 @@ Sets vertical alignment.
 basic_joint:set_vertical_alignment(alignment)
 ```
 
-### Returns
+### Arguments
 
 | Name        | Type                                                    | Description         |
 | :---------- | :------------------------------------------------------ | :------------------ |

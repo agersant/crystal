@@ -10,10 +10,10 @@ local List = Class("List", Container);
 ---@field private _padding Padding
 ---@field private _grow number
 ---@field private _shrink number
-List.Joint = Class("ListJoint", Joint);
+local ListJoint = Class("ListJoint", Joint);
 
-List.Joint.init = function(self, parent, child)
-	List.Joint.super.init(self, parent, child);
+ListJoint.init = function(self, parent, child)
+	ListJoint.super.init(self, parent, child);
 	self._padding = Padding:new();
 	self._grow = 0;
 	self._shrink = 0;
@@ -21,63 +21,63 @@ List.Joint.init = function(self, parent, child)
 end
 
 ---@return number
-List.Joint.grow = function(self)
+ListJoint.grow = function(self)
 	return self._grow;
 end
 
 ---@return amount number
-List.Joint.set_grow = function(self, amount)
+ListJoint.set_grow = function(self, amount)
 	assert(amount);
 	self._grow = amount;
 end
 
 ---@return number
-List.Joint.shrink = function(self)
+ListJoint.shrink = function(self)
 	return self._shrink;
 end
 
 ---@return amount number
-List.Joint.set_shrink = function(self, amount)
+ListJoint.set_shrink = function(self, amount)
 	assert(amount);
 	self._shrink = amount;
 end
 
 ---@class HorizontalListJoint : ListJoint
 ---@field private _vertical_alignment VerticalAlignment
-local HorizontalListJoint = Class("HorizontalListJoint", List.Joint);
+List.HorizontalJoint = Class("HorizontalListJoint", ListJoint);
 
-HorizontalListJoint.init = function(self, parent, child)
-	HorizontalListJoint.super.init(self, parent, child);
+List.HorizontalJoint.init = function(self, parent, child)
+	List.HorizontalJoint.super.init(self, parent, child);
 	self._vertical_alignment = "top";
 end
 
 ---@return VerticalAlignment
-HorizontalListJoint.vertical_alignment = function(self)
+List.HorizontalJoint.vertical_alignment = function(self)
 	return self._vertical_alignment;
 end
 
 ---@param alignment VerticalAlignment
-HorizontalListJoint.set_vertical_alignment = function(self, alignment)
+List.HorizontalJoint.set_vertical_alignment = function(self, alignment)
 	assert(alignment == "top" or alignment == "center" or alignment == "bottom" or alignment == "stretch");
 	self._vertical_alignment = alignment;
 end
 
 ---@class VerticalListJoint : ListJoint
-local VerticalListJoint = Class("VerticalListJoint", List.Joint);
+List.VerticalJoint = Class("VerticalListJoint", ListJoint);
 
 ---@field private _horizontal_alignment HorizontalAlignment
-VerticalListJoint.init = function(self, parent, child)
-	VerticalListJoint.super.init(self, parent, child);
+List.VerticalJoint.init = function(self, parent, child)
+	List.VerticalJoint.super.init(self, parent, child);
 	self._horizontal_alignment = "left";
 end
 
 ---@return HorizontalAlignment
-VerticalListJoint.horizontal_alignment = function(self)
+List.VerticalJoint.horizontal_alignment = function(self)
 	return self._horizontal_alignment;
 end
 
 ---@param alignment HorizontalAlignment
-VerticalListJoint.set_horizontal_alignment = function(self, alignment)
+List.VerticalJoint.set_horizontal_alignment = function(self, alignment)
 	assert(alignment == "left" or alignment == "center" or alignment == "right" or alignment == "stretch");
 	self._horizontal_alignment = alignment;
 end
@@ -97,7 +97,7 @@ end
 List.init = function(self, axis)
 	assert(axis == "horizontal" or axis == "vertical");
 	self.axis = axis;
-	List.super.init(self, axis == "horizontal" and HorizontalListJoint or VerticalListJoint);
+	List.super.init(self, axis == "horizontal" and List.HorizontalJoint or List.VerticalJoint);
 end
 
 ---@protected

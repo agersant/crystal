@@ -14,7 +14,7 @@ Sets horizontal alignment.
 basic_joint:set_horizontal_alignment(alignment)
 ```
 
-### Returns
+### Arguments
 
 | Name        | Type                                                        | Description           |
 | :---------- | :---------------------------------------------------------- | :-------------------- |
