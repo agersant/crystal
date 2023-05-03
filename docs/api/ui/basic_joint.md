@@ -16,7 +16,7 @@ Like all other [Joint](joint) classes, `BasicJoint` are created by calling [add_
 
 ## Methods
 
-## Alignment
+### Alignment
 
 | Name                                                             | Description                                |
 | :--------------------------------------------------------------- | :----------------------------------------- |
@@ -27,11 +27,11 @@ Like all other [Joint](joint) classes, `BasicJoint` are created by calling [add_
 | [set_vertical_alignment](basic_joint_set_vertical_alignment)     | Sets vertical alignment.                   |
 | [vertical_alignment](basic_joint_vertical_alignment)             | Returns vertical alignment.                |
 
-## Padding
+### Padding
 
 `BasicJoint` objects transparently expose a [Padding](padding) object, using the [aliasing](/crystal/extensions/oop/#aliasing) mechanism. Refer to the [Padding](padding) documentation for a list of these methods.
 
-## Advanced Functionality
+### Advanced Functionality
 
 Methods below are useful when implementing your own [Wrapper](wrapper) or [Container](container) types.
 
