@@ -12,6 +12,7 @@
 - [x] Window/viewport/scene/camera system rework
 - [ ] Getting Started instructions in readme and docs
 - [ ] Continuous hot reload for game files
+- [x] Mouse support in UI
 - [x] Better color-scheme for code examples in docs (https://github.com/just-the-docs/just-the-docs/issues/679)
 - [ ] API revamp: `crystal.*` globals + docs + private functions as ---@package or ---@private
   - [x] ai
@@ -37,23 +38,22 @@
 
 # Crystal 0.2.0
 
+- [ ] Curves & timelines
+- [ ] Finite state machines
+- [ ] ECS component for mouse inputs
+- [ ] UI MenuStack
+- [ ] UI Button
+- [ ] Document built-in tools
+
+# Future Versions
+
 - [ ] Sumneko diagnostics enabled and cleaned up
 - [ ] VSCode tasks for engine and sample game
 - [ ] Immediate mode UI kit for dev tools
-- [ ] Mouse support (in tools)
-- [ ] Document built-in tools
 - [ ] Auto-complete for command args supports custom types
-- [ ] Curves / timelines to replace `Thread.tween`
-
-# Crystal 0.3.0
-
-- [ ] Bricks layout caching
+- [ ] UI layout caching
 - [ ] Mouse support (gameplay)
-- [ ] Mouse support (bricks)
-- [ ] Particles
-
-# Crystal 0.4.0
-
-- [ ] LDTk maps
+- [ ] Drawable to manage particle system
+- [ ] LDTk maps support
 - [ ] Inspector tool
 - [ ] create-crystal-app starter script
