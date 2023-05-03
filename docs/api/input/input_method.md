@@ -10,5 +10,5 @@ Device being used to play the game.
 
 Possible values are:
 
-- `"keyboard_and_mouse"`
+- `"keyboard"`
 - `"gamepad"`

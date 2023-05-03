@@ -35,6 +35,12 @@ return {
 		configure_autorepeat = function(config)
 			input_manager:configure_autorepeat(config);
 		end,
+		assign_mouse = function(player_index)
+			input_manager:assign_mouse(player_index);
+		end,
+		mouse_player = function()
+			return input_manager:mouse_player();
+		end,
 		add_mouse_target = function(recipient, left, right, top, bottom)
 			mouse_router:add_target(recipient, left, right, top, bottom);
 		end,
@@ -69,6 +75,6 @@ return {
 	end,
 	update = function(dt)
 		input_manager:update(dt);
-		mouse_router:update();
+		mouse_router:update(input_manager:mouse_player():index());
 	end,
 };

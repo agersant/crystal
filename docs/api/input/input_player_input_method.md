@@ -33,7 +33,7 @@ player:set_bindings({
 
 print(player:input_method()); -- Prints "nil"
 love.keypressed("space", "space", false);
-print(player:input_method()); -- Prints "keyboard_and_mouse"
+print(player:input_method()); -- Prints "keyboard"
 love.gamepadpressed(love.input.getJoysticks()[1], "a");
 print(player:input_method()); -- Prints "gamepad"
 ```

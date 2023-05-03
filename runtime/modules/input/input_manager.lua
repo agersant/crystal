@@ -6,6 +6,7 @@ local InputPlayer = require("modules/input/input_player");
 ---@class InputManager
 ---@field private gamepad_api GamepadAPI
 ---@field private players { [number]: InputPlayer }
+---@field private mouse_player InputPlayer
 ---@field private gamepad_to_player { [number]: InputPlayer }
 ---@field private axis_to_binary_actions { [string]: { [string]: AxisToButton } }
 ---@field private autorepeat { [string] : Autorepeat }
@@ -16,6 +17,7 @@ InputManager.init = function(self, gamepad_api)
 	assert(gamepad_api:inherits_from("GamepadAPI"));
 	self.gamepad_api = gamepad_api;
 	self.players = {};
+	self._mouse_player = self:player(1);
 	self.gamepad_to_player = {};
 	self.axis_to_binary_actions = {};
 	self.autorepeat = {};
@@ -31,6 +33,22 @@ InputManager.player = function(self, index)
 		self.players[index] = InputPlayer:new(index, self.gamepad_api);
 	end
 	return self.players[index];
+end
+
+---@return InputPlayer
+InputManager.mouse_player = function(self)
+	return self._mouse_player;
+end
+
+---@param player_index number
+InputManager.assign_mouse = function(self, player_index)
+	local old_player = self._mouse_player;
+	if old_player then
+		old_player:take_mouse();
+	end
+	local new_player = self:player(player_index);
+	new_player:give_mouse();
+	self._mouse_player = new_player;
 end
 
 ---@param player_index number
@@ -147,6 +165,17 @@ end
 
 local GamepadAPI = require("modules/input/gamepad_api");
 
+crystal.test.add("Mouse is auto-assigned to player 1", function()
+	local manager = InputManager:new(GamepadAPI.Mock:new());
+	assert(manager:mouse_player() == manager:player(1));
+end);
+
+crystal.test.add("Can re-assign mouse", function()
+	local manager = InputManager:new(GamepadAPI.Mock:new());
+	manager:assign_mouse(2);
+	assert(manager:mouse_player() == manager:player(2));
+end);
+
 crystal.test.add("Gamepad is auto-assigned to player 1", function()
 	local manager = InputManager:new(GamepadAPI.Mock:new());
 	local player = manager:player(1);
@@ -204,7 +233,7 @@ crystal.test.add("Assigning gamepad updates input method", function()
 	manager:assign_gamepad(1, 1);
 	assert(player:input_method() == "gamepad");
 	manager:key_pressed("z");
-	assert(player:input_method() == "keyboard_and_mouse");
+	assert(player:input_method() == "keyboard");
 	manager:assign_gamepad(1, 1);
 	assert(player:input_method() == "gamepad");
 end);

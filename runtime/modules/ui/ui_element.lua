@@ -435,12 +435,12 @@ UIElement.update_mouse = function(self)
 	-- Not simple ancestor traversals because elements can be reparented
 	-- arbitrarily while mouse is inside them.
 
-	local over_elements = self.router:mouse_over_elements();
 	local target = crystal.input.current_mouse_target();
-	if type(target) ~= "table" or not target.inherits_from or not target:inherits_from(UIElement) then
+	if target == nil or target.inherits_from == nil or not target:inherits_from(UIElement) then
 		target = nil;
 	end
 
+	local over_elements = self.router:mouse_over_elements();
 	for element in pairs(over_elements) do
 		if element:is_within(self) and not element == target then
 			self.router:remove_mouse_over_element(element);
@@ -481,6 +481,14 @@ UIElement.update_mouse = function(self)
 			target:on_mouse_over();
 		end
 	end
+end
+
+---@param player_index number
+---@param mouse_x number
+---@param mouse_y number
+---@return boolean
+UIElement.overlaps_mouse = function(self, player_index, mouse_x, mouse_y)
+	return self:can_receive_input(player_index);
 end
 
 ---@return boolean

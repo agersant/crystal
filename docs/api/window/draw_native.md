@@ -19,9 +19,9 @@ crystal.window.draw_native(draw_function);
 
 ### Arguments
 
-| Name          | Type       | Description                            |
-| :------------ | :--------- | :------------------------------------- |
-| `draw_native` | `function` | Function containing the drawing logic. |
+| Name            | Type       | Description                            |
+| :-------------- | :--------- | :------------------------------------- |
+| `draw_function` | `function` | Function containing the drawing logic. |
 
 ## Examples
 

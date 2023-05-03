@@ -1,13 +1,14 @@
----@alias InputMethod "keyboard_and_mouse" | "gamepad"
+---@alias InputMethod "keyboard" | "gamepad"
 ---@alias ActionState { inputs: string[], num_inputs_down: number, held_for: number }
 
 ---@class InputPlayer
----@field private index number
+---@field private _index number
 ---@field private gamepad_api GamepadAPI
 ---@field private inputs { [string]: string[] }
 ---@field private actions { [string]: ActionState }
 ---@field private actions_pressed_via_axis { [string]: { [string]: boolean} }
 ---@field private input_method InputMethod
+---@field private has_mouse boolean
 ---@field private _gamepad_id number
 ---@field private _events string[]
 local InputPlayer = Class("InputPlayer");
@@ -19,6 +20,7 @@ InputPlayer.init = function(self, index, gamepad_api)
 	self.gamepad_api = gamepad_api;
 	self._events = {};
 	self._input_method = nil;
+	self.has_mouse = false;
 	self._gamepad_id = nil;
 	self.actions_pressed_via_axis = {};
 	self:build_binding_tables({});
@@ -32,7 +34,7 @@ end
 ---@private
 ---@param input_method InputMethod
 InputPlayer.set_input_method = function(self, input_method)
-	assert(input_method == "keyboard_and_mouse" or input_method == "gamepad");
+	assert(input_method == "keyboard" or input_method == "gamepad");
 	if self._input_method == input_method then
 		return;
 	end
@@ -62,6 +64,16 @@ end
 ---@return number
 InputPlayer.gamepad_id = function(self)
 	return self._gamepad_id;
+end
+
+InputPlayer.give_mouse = function(self)
+	self.has_mouse = true;
+	self:release_all_inputs();
+end
+
+InputPlayer.take_mouse = function(self)
+	self.has_mouse = false;
+	self:release_all_inputs();
 end
 
 ---@return { action: string, inputs: string[] }[]
@@ -117,7 +129,7 @@ InputPlayer.key_pressed = function(self, key, scan_code, is_repeat)
 		return;
 	end
 	if self.inputs[key] then
-		self:set_input_method("keyboard_and_mouse");
+		self:set_input_method("keyboard");
 	end
 	self:input_down(key);
 end
@@ -345,7 +357,7 @@ crystal.test.add("Updates input method based on latest input", function()
 	player:gamepad_pressed("dpad_a");
 	assert(player:input_method() == "gamepad");
 	player:key_pressed("z");
-	assert(player:input_method() == "keyboard_and_mouse");
+	assert(player:input_method() == "keyboard");
 end);
 
 crystal.test.add("Changing input method releases all inputs", function()
