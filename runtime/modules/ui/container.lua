@@ -56,7 +56,6 @@ end
 ---@protected
 ---@param dt number
 Container.update = function(self, dt)
-	Container.super.update(self, dt);
 	local children = self:children();
 	for _, child in ipairs(children) do
 		child:update(dt);

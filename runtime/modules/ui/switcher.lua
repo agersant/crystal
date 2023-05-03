@@ -166,7 +166,6 @@ end
 ---@protected
 ---@param dt number
 Switcher.update = function(self, dt)
-	Switcher.super.update(self, dt);
 	self.script:update(dt);
 end
 

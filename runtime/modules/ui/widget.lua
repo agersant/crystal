@@ -33,7 +33,6 @@ end
 ---@param dt number
 Widget.update = function(self, dt)
 	self._script:update(dt);
-	Widget.super.update(self, dt);
 end
 
 ---@protected

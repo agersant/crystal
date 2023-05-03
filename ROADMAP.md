@@ -41,6 +41,7 @@
 - [ ] Curves & timelines
 - [ ] Finite state machines
 - [ ] ECS component for mouse inputs
+- [ ] UI method chaining
 - [ ] UI MenuStack
 - [ ] UI Button
 - [ ] Document built-in tools
