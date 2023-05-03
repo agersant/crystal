@@ -12,7 +12,7 @@ This type of joint is used by several built-in element types, like [Overlay](ove
 
 ## Constructor
 
-Like all other [Joint](joint) classes, `BasicJoint` are created by calling [add_child](container_add_child), [set_child](wrapper_set_child) or [set_root](widget_set_root).
+Like all other [Joint](joint) classes, `BasicJoint` are created by calling [add_child](container_add_child) or [set_child](wrapper_set_child). The type of joint being created depends on the type of the container/wrapper.
 
 ## Methods
 
