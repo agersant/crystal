@@ -33,3 +33,10 @@ has_toc: false
 | [crystal.VerticalList](vertical_lsit)     | A [Container](container) which aligns children vertically.                                                                               |
 | [crystal.Widget](widget)                  | A [Wrapper](wrapper) which manages a [Script](/crystal/api/script/script).                                                               |
 | [crystal.Wrapper](wrapper)                | A [UI element](ui_element) which can contain one child element.                                                                          |
+
+## Enums
+
+| Name                                        | Description                                  |
+| :------------------------------------------ | :------------------------------------------- |
+| [HorizontalAlignment](horizontal_alignment) | Distinct ways to align content horizontally. |
+| [VerticalAlignment](vertical_alignment)     | Distinct ways to align content vertically.   |
