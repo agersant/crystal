@@ -40,10 +40,12 @@
 
 - [ ] Curves & timelines
 - [ ] Finite state machines
-- [ ] ECS component for mouse inputs
-- [ ] UI method chaining
-- [ ] UI MenuStack
+- [ ] ECS component for mouse input
+- [ ] Can bind actions to mouse buttons
 - [ ] UI Button
+- [ ] UI MenuStack
+- [ ] UI 9-slice
+- [ ] UI method chaining
 - [ ] Document built-in tools
 
 # Future Versions
