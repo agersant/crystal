@@ -47,7 +47,7 @@ MouseRouter.update = function(self, player_index)
 		if inside_x and inside_y then
 			local overlap_test = target.recipient.overlaps_mouse;
 			if overlap_test == nil or overlap_test(target.recipient, player_index, mx, my) then
-				self._recipient = t.recipient;
+				self._recipient = target.recipient;
 				break;
 			end
 		end
