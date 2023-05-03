@@ -60,7 +60,6 @@ return {
 		local built_in_fonts = {
 			crystal_console = CRYSTAL_RUNTIME .. "/assets/source_code_pro_medium.otf",
 			crystal_body = CRYSTAL_RUNTIME .. "/assets/source_code_pro_bold.otf",
-			crystal_header = CRYSTAL_RUNTIME .. "/assets/open_sans_condensed_bold.ttf",
 		};
 		local built_in_sizes = {
 			xs = 12,
