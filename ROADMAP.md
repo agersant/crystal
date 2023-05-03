@@ -42,6 +42,7 @@
 - [ ] Finite state machines
 - [ ] ECS component for mouse input
 - [ ] Can bind actions to mouse buttons
+- [ ] UI element visibility
 - [ ] UI Button
 - [ ] UI MenuStack
 - [ ] UI 9-slice
