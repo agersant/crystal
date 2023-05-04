@@ -1,3 +1,7 @@
+string.starts_with = function(s, prefix)
+	return s:sub(1, #prefix) == prefix;
+end
+
 string.trim = function(s)
 	return s:match("^%s*(.-)%s*$");
 end
@@ -75,6 +79,12 @@ end
 return {
 	init = function()
 		--#region Tests
+
+		crystal.test.add("Can check string prefix", function()
+			assert(("oink"):starts_with("oi"));
+			assert(("oink"):starts_with(""));
+			assert(not ("oink"):starts_with("in"));
+		end);
 
 		crystal.test.add("Can trim string", function()
 			assert("oink" == (" 	 	  	oink"):trim());
