@@ -28,6 +28,11 @@ local add_module = function(name, path)
 	local module = require(path);
 	modules[name] = module;
 	crystal[name] = module.module_api;
+	if features.tests and module.test_api then
+		for k, v in pairs(module.test_api) do
+			crystal[name][k] = v;
+		end
+	end
 	if module.global_api then
 		for k, v in pairs(module.global_api) do
 			crystal[k] = v;

@@ -670,7 +670,7 @@ crystal.test.add("Can receive mouse events", function()
 	overlay.on_mouse_over = called("on_mouse_over");
 	overlay.on_mouse_out = called("on_mouse_out");
 
-	overlay:set_translation(-10, -10);
+	crystal.input.set_mouse_position(10, 10);
 	overlay:update_tree(1 / 60, 100, 100);
 	overlay:draw();
 	crystal.update(1 / 60);
@@ -684,7 +684,7 @@ crystal.test.add("Can receive mouse events", function()
 	assert(image.called_on_mouse_over);
 	assert(not image.called_on_mouse_out);
 
-	overlay:set_translation(10, 10);
+	crystal.input.set_mouse_position(-10, -10);
 	overlay:update_tree(1 / 60, 100, 100);
 	overlay:draw();
 	crystal.update(1 / 60);

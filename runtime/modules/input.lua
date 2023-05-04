@@ -1,12 +1,16 @@
+local features = require("features");
+
 local GamepadAPI = require("modules/input/gamepad_api");
 local InputListener = require("modules/input/input_listener");
 local InputManager = require("modules/input/input_manager");
 local InputPlayer = require("modules/input/input_player");
 local InputSystem = require("modules/input/input_system");
+local MouseAPI = require("modules/input/mouse_api");
 local MouseRouter = require("modules/input/mouse_router");
 
+local mouse_api = features.tests ~= true and MouseAPI:new() or MouseAPI.Mock:new();
+local mouse_router = MouseRouter:new(mouse_api);
 local input_manager = InputManager:new(GamepadAPI:new());
-local mouse_router = MouseRouter:new();
 
 local gamepad_button_map = {
 	a = "btna",
@@ -47,6 +51,11 @@ return {
 		current_mouse_target = function()
 			return mouse_router:recipient();
 		end,
+	},
+	test_api = {
+		set_mouse_position = function(x, y)
+			mouse_api:set_position(x, y);
+		end
 	},
 	global_api = {
 		InputListener = InputListener,

@@ -4,11 +4,14 @@
 ---@class MouseRouter
 ---@field private targets MouseTarget[]
 ---@field private _recipient MouseRecipient
+---@field private mouse_api MouseAPI
 local MouseRouter = Class("MouseRouter");
 
-MouseRouter.init = function(self)
+MouseRouter.init = function(self, mouse_api)
+	assert(mouse_api);
 	self.targets = {};
 	self._recipient = nil;
+	self.mouse_api = mouse_api;
 end
 
 ---@return MouseRecipient
@@ -38,7 +41,7 @@ end
 ---@param player_index number
 MouseRouter.update = function(self, player_index)
 	assert(type(player_index) == "number");
-	local mx, my = love.mouse.getPosition();
+	local mx, my = self.mouse_api:position();
 	self._recipient = nil;
 	for i = #self.targets, 1, -1 do
 		local target = self.targets[i];
