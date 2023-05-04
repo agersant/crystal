@@ -8,9 +8,10 @@ has_toc: false
 
 ## Functions
 
-| Name                    | Description                                                |
-| :---------------------- | :--------------------------------------------------------- |
-| [crystal.ui.font](font) | Returns a registered [font](https://love2d.org/wiki/Font). |
+| Name                                      | Description                                                |
+| :---------------------------------------- | :--------------------------------------------------------- |
+| [crystal.ui.font](font)                   | Returns a registered [font](https://love2d.org/wiki/Font). |
+| [crystal.ui.register_font](register_font) | Registers a [font](https://love2d.org/wiki/Font).          |
 
 ## Classes
 

@@ -10,7 +10,7 @@ Text.init = function(self, text)
 	Text.super.init(self);
 	self._text_alignment = "left";
 	self._text = tostring(text or "");
-	self._font = crystal.ui.font("crystal_body_md");
+	self._font = crystal.ui.font("crystal_bold_md");
 end
 
 ---@return string

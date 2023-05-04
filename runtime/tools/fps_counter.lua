@@ -15,7 +15,7 @@ local text_padding_y = 5;
 
 FPSCounter.init = function(self)
 	FPSCounter.super.init(self);
-	self.font = crystal.ui.font("crystal_body_sm");
+	self.font = crystal.ui.font("crystal_bold_sm");
 	self.frame_durations = {};
 	self.text = "";
 end

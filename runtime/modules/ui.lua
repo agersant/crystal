@@ -27,6 +27,12 @@ UIElement.router = router;
 
 return {
 	module_api = {
+		register_font = function(name, font)
+			assert(not name:starts_with("crystal"));
+			assert(type(name) == "string");
+			assert(font:typeOf("Font"));
+			fonts[name] = font;
+		end,
 		font = function(name)
 			assert(fonts[name]);
 			return fonts[name];
@@ -54,14 +60,9 @@ return {
 		Wrapper = Wrapper,
 	},
 	init = function()
-		for name, font in pairs(crystal.conf.fonts) do
-			assert(type(name) == "string");
-			assert(font:typeOf("Font"));
-			fonts[name] = font;
-		end
 		local built_in_fonts = {
-			crystal_console = CRYSTAL_RUNTIME .. "/assets/source_code_pro_medium.otf",
-			crystal_body = CRYSTAL_RUNTIME .. "/assets/source_code_pro_bold.otf",
+			crystal_regular = CRYSTAL_RUNTIME .. "/assets/source_code_pro_medium.otf",
+			crystal_bold = CRYSTAL_RUNTIME .. "/assets/source_code_pro_bold.otf",
 		};
 		local built_in_sizes = {
 			xs = 12,

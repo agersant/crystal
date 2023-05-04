@@ -26,7 +26,7 @@ Console.init = function(self, terminal)
 	assert(terminal);
 	Console.super.init(self);
 	self.consumes_inputs = true; -- TODO remove this when there is a real UI system with text focus
-	self.font = crystal.ui.font("crystal_console_xl");
+	self.font = crystal.ui.font("crystal_regular_xl");
 	self.terminal = terminal;
 	self.unguided_input = "";
 	self.parsed_input = nil;
