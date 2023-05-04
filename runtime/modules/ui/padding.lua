@@ -42,38 +42,38 @@ end
 
 ---@param value number
 Padding.set_padding_left = function(self, value)
-	assert(value);
+	assert(type(value) == "number");
 	self.left = value;
 end
 
 ---@param value number
 Padding.set_padding_right = function(self, value)
-	assert(value);
+	assert(type(value) == "number");
 	self.right = value;
 end
 
 ---@param value number
 Padding.set_padding_top = function(self, value)
-	assert(value);
+	assert(type(value) == "number");
 	self.top = value;
 end
 
 ---@param value number
 Padding.set_padding_bottom = function(self, value)
-	assert(value);
+	assert(type(value) == "number");
 	self.bottom = value;
 end
 
 ---@param value number
 Padding.set_padding_x = function(self, value)
-	assert(value);
+	assert(type(value) == "number");
 	self.left = value;
 	self.right = value;
 end
 
 ---@param value number
 Padding.set_padding_y = function(self, value)
-	assert(value);
+	assert(type(value) == "number");
 	self.top = value;
 	self.bottom = value;
 end
@@ -81,17 +81,18 @@ end
 ---@param left_or_all number
 ---@overload fun(self: Padding, left_or_all: number, right: number, top: number, bottom: number)
 Padding.set_padding = function(self, left_or_all, right, top, bottom)
-	assert(left_or_all);
-	if right then
-		assert(top);
-		assert(bottom);
+	assert(type(left_or_all) == "number");
+	if type(right) == "number" then
+		assert(type(top) == "number");
+		assert(type(bottom) == "number");
 		self.left = left_or_all;
 		self.right = right;
 		self.top = top;
 		self.bottom = bottom;
 	else
-		assert(not top);
-		assert(not bottom);
+		assert(right == nil);
+		assert(top == nil);
+		assert(bottom == nil);
 		self.left = left_or_all;
 		self.right = left_or_all;
 		self.top = left_or_all;

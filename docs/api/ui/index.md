@@ -44,7 +44,7 @@ has_toc: false
 | [crystal.BasicJoint](basic_joint)                    | A [Joint](joint) with common padding and alignment options.                                     |
 | [crystal.HorizontalListJoint](horizontal_list_joint) | A [Joint](joint) specifying how elements are positioned in a [HorizontalList](horizontal_list). |
 | [crystal.Joint](joint)                               | Defines how a [UI element](ui_element) should be laid out by its parent.                        |
-| [crystal.Padding](padding)                           | A class storing up/down/left/right padding amounts.                                             |
+| [crystal.Padding](padding)                           | Utility class storing up/down/left/right padding amounts.                                       |
 | [crystal.VerticalListJoint](vertical_list_joint)     | A [Joint](joint) specifying how elements are positioned in a [VerticalList](vertical_list).     |
 
 ## Enums
