@@ -260,10 +260,14 @@ end
 Router.focus_element = function(self, element, player_index)
 	assert(element);
 	assert(type(player_index) == "number");
+	assert(self:can_element_receive_input(element:root(), element, player_index));
 	if not self.focused_elements[player_index] then
 		self.focused_elements[player_index] = setmetatable({}, { __mode = "k" });
 	end
-	self.focused_elements[player_index][element] = true;
+	if not self.focused_elements[player_index][element] then
+		self.focused_elements[player_index][element] = true;
+		element:on_focused();
+	end
 end
 
 ---@private
@@ -273,7 +277,10 @@ Router.unfocus_element = function(self, element, player_index)
 	assert(element);
 	assert(type(player_index) == "number");
 	if self.focused_elements[player_index] then
-		self.focused_elements[player_index][element] = nil;
+		if self.focused_elements[player_index][element] then
+			self.focused_elements[player_index][element] = nil;
+			element:on_unfocused();
+		end
 	end
 end
 

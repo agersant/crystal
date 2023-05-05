@@ -74,6 +74,7 @@ crystal.UIElement:new()
 | [first_focusable]()   |             |
 | [focus_tree]()        |             |
 | [focus]()             |             |
+| [focused_element]()   |             |
 | [handle_input]()      |             |
 | [is_active]()         |             |
 | [is_focusable]()      |             |
@@ -101,9 +102,11 @@ crystal.UIElement:new()
 
 | Name               | Description |
 | :----------------- | :---------- |
+| [on_focused]()     |             |
 | [on_mouse_enter]() |             |
 | [on_mouse_leave]() |             |
 | [on_mouse_out]()   |             |
 | [on_mouse_over]()  |             |
+| [on_unfocused]()   |             |
 
 ## Examples

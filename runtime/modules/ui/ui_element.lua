@@ -403,6 +403,12 @@ UIElement.set_focusable = function(self, focusable)
 end
 
 ---@param player_index number
+UIElement.focused_element = function(self, player_index)
+	assert(type(player_index) == "number");
+	return self.router:input_recipient_in(self, player_index);
+end
+
+---@param player_index number
 UIElement.focus = function(self, player_index)
 	assert(type(player_index) == "number");
 	assert(self.focusable);
@@ -475,6 +481,12 @@ end
 UIElement.active_bindings = function(self, player_index)
 	assert(type(player_index) == "number");
 	return self.router:active_bindings_in(self, player_index);
+end
+
+UIElement.on_focused = function(self)
+end
+
+UIElement.on_unfocused = function(self)
 end
 
 --#endregion
@@ -665,6 +677,34 @@ crystal.test.add("Can unfocus tree", function()
 	assert(b:is_focused(1));
 	a:unfocus_tree(1);
 	assert(not b:is_focused(1));
+end);
+
+crystal.test.add("Receives focus callbacks", function()
+	local focused = false;
+	local a = crystal.Overlay:new();
+	local b = a:add_child(crystal.UIElement:new());
+	b:set_focusable(true);
+	b.on_focused = function() focused = true end;
+	b.on_unfocused = function() focused = false end;
+
+	a:focus_tree(1);
+	assert(focused);
+
+	a:unfocus_tree(1);
+	assert(not focused);
+end);
+
+crystal.test.add("Can query focused descendant", function()
+	local focused = false;
+	local a = crystal.Overlay:new();
+	local b = a:add_child(crystal.UIElement:new());
+	b:set_focusable(true);
+
+	assert(a:focused_element(1) == nil);
+	a:focus_tree(1);
+	assert(a:focused_element(1) == b);
+	a:unfocus_tree(1);
+	assert(a:focused_element(1) == nil);
 end);
 
 crystal.test.add("Can list active_bindings", function()
