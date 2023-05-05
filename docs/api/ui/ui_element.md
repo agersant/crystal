@@ -36,9 +36,9 @@ crystal.UIElement:new()
 
 ### Layout
 
-| Name                    | Description                                                                 |
-| :---------------------- | :-------------------------------------------------------------------------- |
-| [size](ui_element_size) | Returns this element's size, as computed during [update_tree](update_tree). |
+| Name                    | Description                                                                             |
+| :---------------------- | :-------------------------------------------------------------------------------------- |
+| [size](ui_element_size) | Returns this element's width and height, as computed during [update_tree](update_tree). |
 
 ### Rendering
 
