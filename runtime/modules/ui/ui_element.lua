@@ -145,12 +145,18 @@ end
 ---@return number
 ---@return number
 UIElement.relative_position = function(self)
+	if not self.right or not self.left or not self.top or not self.bottom then
+		error("UIElement has no relative position. Most likely, a call to UIElement:update_tree() is missing.");
+	end
 	return self.left, self.right, self.top, self.bottom;
 end
 
 ---@return number
 ---@return number
 UIElement.desired_size = function(self)
+	if not self.desired_width or not self.desired_height then
+		error("UIElement has no desired size. Most likely, a call to UIElement:update_tree() is missing.");
+	end
 	return self.desired_width, self.desired_height;
 end
 
