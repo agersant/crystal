@@ -105,6 +105,7 @@ end
 
 ---@return Joint
 UIElement.joint = function(self)
+	assert(self._joint);
 	return self._joint;
 end
 

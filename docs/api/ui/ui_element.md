@@ -23,7 +23,7 @@ crystal.UIElement:new()
 | [update_tree](ui_element_update_tree) | Computes layout and runs update logic for this element and all its descendants. |
 | [draw_tree](ui_element_draw_tree)     | Draws this element and all its descendants.                                     |
 
-### Element Hierarchy
+### Hierarchy
 
 | Name                                                | Description                                                                              |
 | :-------------------------------------------------- | :--------------------------------------------------------------------------------------- |
