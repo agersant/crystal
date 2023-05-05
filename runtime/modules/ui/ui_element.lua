@@ -207,6 +207,11 @@ end
 
 --#region Drawing
 
+---@return number
+UIElement.opacity = function(self)
+	return self._opacity;
+end
+
 ---@param opacity number
 UIElement.set_opacity = function(self, opacity)
 	assert(opacity);
@@ -215,10 +220,21 @@ UIElement.set_opacity = function(self, opacity)
 	self._opacity = opacity;
 end
 
+---@return Color
+UIElement.color = function(self)
+	return self._color:alpha(1);
+end
+
 ---@param color Color
 UIElement.set_color = function(self, color)
 	assert(color:inherits_from(crystal.Color));
 	self._color = color;
+end
+
+---@return number
+---@return number
+UIElement.translation = function(self)
+	return self.translation_x, self.translation_y;
 end
 
 ---@param x number
@@ -242,13 +258,30 @@ UIElement.set_translation_y = function(self, y)
 	self.translation_y = y;
 end
 
+---@return number
+---@return number
+UIElement.scale = function(self)
+	return self.scale_x, self.scale_y;
+end
+
+---@param x number
+---@param y number
+UIElement.set_scale = function(self, x, y)
+	assert(type(x) == "number");
+	assert(type(y) == "number");
+	self.scale_x = x;
+	self.scale_y = y;
+end
+
 ---@param scale number
 UIElement.set_scale_x = function(self, scale)
+	assert(type(scale) == "number");
 	self.scale_x = scale;
 end
 
 ---@param scale number
 UIElement.set_scale_y = function(self, scale)
+	assert(type(scale) == "number");
 	self.scale_y = scale;
 end
 
