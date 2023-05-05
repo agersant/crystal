@@ -21,9 +21,9 @@ ui_element:joint()
 
 ### Returns
 
-| Name    | Type                    | Description                                                                       |
-| :------ | :---------------------- | :-------------------------------------------------------------------------------- |
-| `joint` | [Joint](joint) \| `nil` | Joint linking this element to its parent, or `nil` if this element has no parent. |
+| Name    | Type           | Description                               |
+| :------ | :------------- | :---------------------------------------- |
+| `joint` | [Joint](joint) | Joint linking this element to its parent. |
 
 ## Examples
 
