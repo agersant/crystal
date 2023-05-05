@@ -115,5 +115,3 @@ Advanced
 | [on_mouse_out]()   | Called when this element is no longer the mouse target.                           |
 | [on_mouse_over]()  | Called when this element becomes the mouse target.                                |
 | [on_unfocus]()     | Called when this element loses focus.                                             |
-
-## Examples

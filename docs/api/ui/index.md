@@ -10,7 +10,7 @@ This module contains building blocks to create interactive menus and HUDs.
 
 ## Overview
 
-Retained, no root.
+Retained, no root. `update_tree`, `draw_tree`.
 
 ### Layout Concepts
 
