@@ -22,6 +22,12 @@ crystal.ui.font(name)
 | :----- | :------- | :---------- |
 | `name` | `string` | Font name.  |
 
+### Returns
+
+| Name   | Type                                      | Description  |
+| :----- | :---------------------------------------- | :----------- |
+| `font` | [love.Font](https://love2d.org/wiki/Font) | Font object. |
+
 ## Examples
 
 Registering and retrieving custom fonts:

@@ -6,7 +6,9 @@ nav_exclude: true
 
 # Text:font
 
-Returns the name of the font used to draw text. The actual font object can be retrieved via [crystal.ui.font()](font).
+Returns the name of the font used to draw text.
+
+The actual font object can be retrieved via [crystal.ui.font()](font) if needed.
 
 ## Usage
 
