@@ -22,7 +22,7 @@ end
 
 ---@param text string
 Text.set_text = function(self, text)
-	assert(text);
+	assert(type(text) == "string" or type(text) == "number");
 	self._text = tostring(text);
 end
 
