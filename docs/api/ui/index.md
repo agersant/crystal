@@ -6,6 +6,28 @@ has_toc: false
 
 # crystal.ui
 
+This module contains building blocks to create interactive menus and HUDs.
+
+## Overview
+
+Retained, no root.
+
+### Layout Concepts
+
+Two passes, joints.
+
+### Player Interactions
+
+Bindings, active, focus, player index.
+
+### Animation
+
+Use scripts.
+
+### Adding Custom Elements
+
+Good luck.
+
 ## Functions
 
 | Name                                      | Description                                                           |

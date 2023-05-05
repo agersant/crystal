@@ -23,7 +23,7 @@ nav_order: 1
 | [crystal.script](script)     | Coroutine-based scripting system to write logic that takes place over multiple frames. |
 | [crystal.test](test)         | Provides an interface to define unit or integration tests.                             |
 | [crystal.tool](tool)         | Allows you to define visual development tools.                                         |
-| [crystal.ui](ui)             |                                                                                        |
+| [crystal.ui](ui)             | Building blocks to create interactive menus and HUDs.                                  |
 | [crystal.window](window)     | Handles scaling and letterboxing to support arbitrary window sizes.                    |
 
 ## Callbacks
