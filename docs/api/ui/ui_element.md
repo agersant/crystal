@@ -109,11 +109,11 @@ Advanced
 
 | Name               | Description                                                                       |
 | :----------------- | :-------------------------------------------------------------------------------- |
-| [on_focused]()     | Called when this element gains focus.                                             |
+| [on_focus]()       | Called when this element gains focus.                                             |
 | [on_mouse_enter]() | Called when this element or one of its descendents becomes the mouse target.      |
 | [on_mouse_leave]() | Called when the mouse target is no longer this element or one of its descendents. |
 | [on_mouse_out]()   | Called when this element is no longer the mouse target.                           |
 | [on_mouse_over]()  | Called when this element becomes the mouse target.                                |
-| [on_unfocused]()   | Called when this element loses focus.                                             |
+| [on_unfocus]()     | Called when this element loses focus.                                             |
 
 ## Examples

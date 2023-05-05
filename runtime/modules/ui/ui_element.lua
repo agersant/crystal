@@ -489,10 +489,10 @@ UIElement.active_bindings = function(self, player_index)
 	return self.router:active_bindings_in(self, player_index);
 end
 
-UIElement.on_focused = function(self)
+UIElement.on_focus = function(self)
 end
 
-UIElement.on_unfocused = function(self)
+UIElement.on_unfocus = function(self)
 end
 
 --#endregion
@@ -690,8 +690,8 @@ crystal.test.add("Receives focus callbacks", function()
 	local a = crystal.Overlay:new();
 	local b = a:add_child(crystal.UIElement:new());
 	b:set_focusable(true);
-	b.on_focused = function() focused = true end;
-	b.on_unfocused = function() focused = false end;
+	b.on_focus = function() focused = true end;
+	b.on_unfocus = function() focused = false end;
 
 	a:focus_tree(1);
 	assert(focused);
