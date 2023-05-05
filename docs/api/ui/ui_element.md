@@ -88,7 +88,7 @@ crystal.UIElement:new()
 | [is_mouse_inside]()  | Returns whether the mouse target is currently inside this element. |
 | [is_mouse_over]()    | Returns whether this element is currently the mouse target.        |
 
-### Implementing New Element Types
+### Implementing Custom Elements
 
 Advanced
 {: .label .label-yellow}
