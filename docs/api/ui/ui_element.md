@@ -99,6 +99,7 @@ Advanced
 | [desired_size]()          | Returns this element's desired size.                                                           |
 | [draw_self]()             | Draws this element and its descendants.                                                        |
 | [first_focusable]()       | Returns the first focusable element inside this one.                                           |
+| [layout]()                | Sets relative position for this element and all its descendents.                               |
 | [next_focusable]()        | Returns the next focusable element from this one in the specified direction.                   |
 | [overlaps_mouse]()        | Returns whether can become the mouse target, given a specific player index and mouse position. |
 | [set_relative_position]() | Sets this element's left/right/top/bottom relative to its parent top-left corner.              |
