@@ -156,7 +156,7 @@ crystal.test.add("Layouts and draws child", function()
 	wrapper:set_child(a);
 	wrapper:update_tree(0);
 	assert(sentinel == 1)
-	wrapper:draw();
+	wrapper:draw_tree();
 	assert(sentinel == 11)
 end);
 

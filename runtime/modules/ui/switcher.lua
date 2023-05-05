@@ -204,7 +204,7 @@ crystal.test.add("Shows first child by default", function()
 	local b = switcher:add_child(crystal.UIElement:new());
 	b.draw_self = draw;
 	switcher:update_tree(0);
-	switcher:draw();
+	switcher:draw_tree();
 	assert(drawn[a]);
 	assert(not drawn[b]);
 end);
@@ -222,7 +222,7 @@ crystal.test.add("Can snap to different child", function()
 	b.draw_self = draw;
 	switcher:switch_to(b);
 	switcher:update_tree(0);
-	switcher:draw();
+	switcher:draw_tree();
 	assert(not drawn[a]);
 	assert(drawn[b]);
 end);
@@ -250,7 +250,7 @@ crystal.test.add("Applies transition draw function during transition", function(
 	local b = switcher:add_child(crystal.Image:new());
 	switcher:switch_to(b, transition);
 	switcher:update_tree(5);
-	switcher:draw();
+	switcher:draw_tree();
 	assert(transition.drawn_at_progress == 0.5);
 end);
 
@@ -262,12 +262,12 @@ crystal.test.add("Can interrupt a transition by starting another one", function(
 
 	switcher:switch_to(b, transition);
 	switcher:update_tree(5);
-	switcher:draw();
+	switcher:draw_tree();
 	assert(transition.drawn_at_progress == 0.5);
 
 	switcher:switch_to(a, transition);
 	switcher:update_tree(2);
-	switcher:draw();
+	switcher:draw_tree();
 	assert(transition.drawn_at_progress == 0.2);
 end);
 
@@ -280,7 +280,7 @@ crystal.test.add("Ignores transition to current child", function()
 	switcher:update_tree(5);
 	switcher:switch_to(b, transition);
 	switcher:update_tree(2);
-	switcher:draw();
+	switcher:draw_tree();
 	assert(transition.drawn_at_progress == 0.7);
 end);
 

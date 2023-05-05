@@ -93,6 +93,7 @@ UIElement.is_root = function(self)
 	return self:parent() == nil;
 end
 
+---@private
 ---@return number
 UIElement.depth = function(self)
 	local parent = self:parent();
@@ -283,6 +284,11 @@ end
 UIElement.set_scale_y = function(self, scale)
 	assert(type(scale) == "number");
 	self.scale_y = scale;
+end
+
+UIElement.draw_tree = function(self)
+	assert(self:is_root());
+	self:draw();
 end
 
 UIElement.draw = function(self)
@@ -751,7 +757,7 @@ crystal.test.add("Can receive mouse events", function()
 
 	crystal.input.set_mouse_position(10, 10);
 	overlay:update_tree(1 / 60, 100, 100);
-	overlay:draw();
+	overlay:draw_tree();
 	crystal.update(1 / 60);
 	overlay:update_tree(1 / 60, 100, 100);
 	assert(overlay.called_on_mouse_enter);
@@ -765,7 +771,7 @@ crystal.test.add("Can receive mouse events", function()
 
 	crystal.input.set_mouse_position(-10, -10);
 	overlay:update_tree(1 / 60, 100, 100);
-	overlay:draw();
+	overlay:draw_tree();
 	crystal.update(1 / 60);
 	overlay:update_tree(1 / 60, 100, 100);
 	assert(overlay.called_on_mouse_enter);

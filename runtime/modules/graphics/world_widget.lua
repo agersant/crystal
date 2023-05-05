@@ -49,7 +49,7 @@ WorldWidget.draw = function(self)
 	local x = math.round(-width * self.anchor_x);
 	local y = math.round(-height * self.anchor_y);
 	love.graphics.translate(x, y);
-	self.widget:draw();
+	self.widget:draw_tree();
 end
 
 --#region Tests
