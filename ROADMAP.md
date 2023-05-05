@@ -52,12 +52,12 @@
 
 # Future Versions
 
+- [ ] Prefix class names with `crystal.` (in annotations and in calls to `Class("Blah")`)
 - [ ] Sumneko diagnostics enabled and cleaned up
 - [ ] VSCode tasks for engine and sample game
 - [ ] Immediate mode UI kit for dev tools
 - [ ] Auto-complete for command args supports custom types
 - [ ] UI layout caching
-- [ ] Mouse support (gameplay)
 - [ ] Drawable to manage particle system
 - [ ] LDTk maps support
 - [ ] Inspector tool
