@@ -89,7 +89,7 @@ end
 
 ### Adding Custom Elements
 
-Most of the time, you will be building HUD widgets and menus by combining existing element types. However, it is also possible your game needs to draw or layout in a way that is not feasible with built-in element type. In these situations, you can implement you own element types by inheriting from [UIElement](ui_element), [Wrapper](wrapper), or [Container](container).
+Most of the time, you will be building HUD widgets and menus by combining existing element types. However, it is possible your game needs to draw or layout content in a way that is not achievable with built-in element types. In this situation, you can implement you own element types by inheriting from [UIElement](ui_element), [Wrapper](wrapper), or [Container](container).
 
 If you do, make sure to consult the [advanced UI Element methods](/crystal/api/ui/ui_element.html#implementing-custom-elements) you are likely to need in the process.
 
