@@ -86,13 +86,13 @@ crystal.UIElement:new()
 
 ### Mouse Interactions
 
-| Name                                            | Description                                                        |
-| :---------------------------------------------- | :----------------------------------------------------------------- |
-| [disable_mouse](ui_element_disable_mouse)       | Prevents this element from being a mouse target .                  |
-| [enable_mouse](ui_element_enable_mouse)         | Allow this element to be the mouse target when hovered.            |
-| [is_mouse_enabled](ui_element_is_mouse_enabled) | Returns whether this element can be the mouse target.              |
-| [is_mouse_inside](ui_element_is_mouse_inside)   | Returns whether the mouse target is currently inside this element. |
-| [is_mouse_over](ui_element_is_mouse_over)       | Returns whether this element is currently the mouse target.        |
+| Name                                            | Description                                                                 |
+| :---------------------------------------------- | :-------------------------------------------------------------------------- |
+| [disable_mouse](ui_element_disable_mouse)       | Prevents this element from being the mouse target.                          |
+| [enable_mouse](ui_element_enable_mouse)         | Allows this element to be the mouse target when hovered.                    |
+| [is_mouse_enabled](ui_element_is_mouse_enabled) | Returns whether this element can be the mouse target.                       |
+| [is_mouse_inside](ui_element_is_mouse_inside)   | Returns whether the mouse target is an element inside this one (or itself). |
+| [is_mouse_over](ui_element_is_mouse_over)       | Returns whether this element is the current mouse target.                   |
 
 ### Implementing Custom Elements
 
