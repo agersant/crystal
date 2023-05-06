@@ -101,7 +101,7 @@ Advanced
 
 | Name                                                      | Description                                                                                    |
 | :-------------------------------------------------------- | :--------------------------------------------------------------------------------------------- |
-| [compute_desired_size](ui_element_compute_desired_size)   | Computes the size requested by this elementfor layout purposes.                                |
+| [compute_desired_size](ui_element_compute_desired_size)   | Computes the size requested by this element for layout purposes.                               |
 | [desired_size](ui_element_desired_size)                   | Returns this element's desired size.                                                           |
 | [draw_self](ui_element_draw_self)                         | Draws this element and its descendants.                                                        |
 | [first_focusable](ui_element_first_focusable)             | Returns the first focusable element inside this one.                                           |
