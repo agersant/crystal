@@ -56,6 +56,7 @@ end
 
 ---@protected
 Painter.layout = function(self)
+	-- TODO should pool these canvas, they don't need to persist beyond draw_self()
 	Painter.super.layout(self);
 	local width, height = self:size();
 	if self:needs_new_canvas() then
