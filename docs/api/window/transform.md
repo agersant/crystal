@@ -6,6 +6,9 @@ nav_order: 1
 
 # crystal.window.transform
 
+Advanced
+{: .label .label-yellow}
+
 Returns the current transformation stack maintained by `love.graphics`, ignoring resets performed within [draw_via_canvas](draw_via_canvas).
 
 ## Usage

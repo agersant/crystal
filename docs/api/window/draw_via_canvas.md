@@ -6,6 +6,9 @@ nav_order: 1
 
 # crystal.window.draw_via_canvas
 
+Advanced
+{: .label .label-yellow}
+
 Draws on a canvas, and then draws the canvas onto the screen. The transformation stack is [reset](https://love2d.org/wiki/love.graphics.reset) while drawing on the canvas, but internally preserved for the purpose of tracking areas that can be interacted with the mouse.
 
 {: .note}
