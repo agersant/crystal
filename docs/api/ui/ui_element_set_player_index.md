@@ -9,7 +9,7 @@ nav_exclude: true
 Sets or clears which player is allowed to focus and emit inputs to this element and its descendents.
 
 {: .warning}
-This function does not retro-actively clear focus if a different player's focus is currently within this one.
+This method does not retroactively clear focus if this element or one of its descendents is already focused by a different player.
 
 ## Usage
 
