@@ -14,6 +14,7 @@
 ---@field private translation_y number
 ---@field private pivot_x number
 ---@field private pivot_y number
+---@field private _rotation number
 ---@field private scale_x number
 ---@field private scale_y number
 ---@field private transform love.Transform # Complete transform stack applied to this element (all the way from native window)
@@ -38,6 +39,7 @@ UIElement.init = function(self)
 	self.translation_y = 0;
 	self.pivot_x = 0.5;
 	self.pivot_y = 0.5;
+	self._rotation = 0;
 	self.scale_x = 1;
 	self.scale_y = 1;
 	self.transform = nil;
@@ -262,6 +264,44 @@ end
 
 ---@return number
 ---@return number
+UIElement.pivot = function(self)
+	return self.pivot_x, self.pivot_y;
+end
+
+---@param x number
+---@param y number
+UIElement.set_pivot = function(self, x, y)
+	assert(type(x) == "number");
+	assert(type(y) == "number");
+	self.pivot_x = x;
+	self.pivot_y = y;
+end
+
+---@param x number
+UIElement.set_pivot_x = function(self, x)
+	assert(type(x) == "number");
+	self.pivot_x = x;
+end
+
+---@param y number
+UIElement.set_pivot_y = function(self, y)
+	assert(type(y) == "number");
+	self.pivot_y = y;
+end
+
+---@return number
+UIElement.rotation = function(self)
+	return self._rotation;
+end
+
+---@param angle number # in radians
+UIElement.set_rotation = function(self, angle)
+	assert(type(angle) == "number");
+	self._rotation = angle;
+end
+
+---@return number
+---@return number
 UIElement.scale = function(self)
 	return self.scale_x, self.scale_y;
 end
@@ -309,6 +349,7 @@ UIElement.draw = function(self)
 	love.graphics.translate(self.translation_x, self.translation_y);
 	love.graphics.translate(self.pivot_x * width, self.pivot_y * height);
 	love.graphics.scale(self.scale_x, self.scale_y);
+	love.graphics.rotate(self._rotation);
 	love.graphics.translate(-self.pivot_x * width / self.scale_x, -self.pivot_y * height / self.scale_y);
 
 	self.transform = crystal.window.transform();
