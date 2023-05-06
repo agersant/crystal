@@ -1,7 +1,7 @@
----@alias InputRelevance "always" | "when_focused"
+---@alias BindingRelevance "always" | "when_focused"
 
 ---@class Router
----@field private handlers { [string]: { [UIElement]: InputRelevance } }
+---@field private handlers { [string]: { [UIElement]: BindingRelevance } }
 ---@field private focused_elements { [number]: { [UIElement]: boolean } }
 ---@field private _mouse_inside_elements { [UIElement]: boolean }
 ---@field private _mouse_over_elements { [UIElement]: boolean }
@@ -67,13 +67,13 @@ Router.route_input = function(self, context, player_index, input)
 		end
 	end
 
-	if input == "ui_down" then
+	if input == "+ui_down" then
 		return self:move_focus(context, player_index, "down");
-	elseif input == "ui_up" then
+	elseif input == "+ui_up" then
 		return self:move_focus(context, player_index, "up");
-	elseif input == "ui_right" then
+	elseif input == "+ui_right" then
 		return self:move_focus(context, player_index, "right");
-	elseif input == "ui_left" then
+	elseif input == "+ui_left" then
 		return self:move_focus(context, player_index, "left");
 	end
 
@@ -132,7 +132,7 @@ end
 
 ---@param context UIElement
 ---@param player_index number
----@return { [string]: { owner: UIElement, relevance: InputRelevance, details: any, callback: BindingCallback }[] }
+---@return { [string]: { owner: UIElement, relevance: BindingRelevance, details: any, callback: BindingCallback }[] }
 Router.active_bindings_in = function(self, context, player_index)
 	local active_bindings = {}
 	for input, handlers in pairs(self.handlers) do

@@ -65,24 +65,24 @@ crystal.UIElement:new()
 
 ### Input Handling
 
-| Name                                              | Description                                                              |
-| :------------------------------------------------ | :----------------------------------------------------------------------- |
-| [active_bindings](ui_element_active_bindings)     | Returns a table of active input bindings within this element.            |
-| [bind_input](ui_element_bind_input)               | Binds an input action to a callback function.                            |
-| [can_receive_input](ui_element_can_receive_input) | Returns whether this element can currently receive input actions.        |
-| [focus_tree](ui_element_focus_tree)               | Gives focus to the first focusable element within this one.              |
-| [focus](ui_element_focus)                         | Gives focus to this element.                                             |
-| [focused_element](ui_element_focused_element)     | Returns a focused element within this one.                               |
-| [handle_input](ui_element_handle_input)           | Executes bindings bound to an input action.                              |
-| [is_active](ui_element_is_active)                 | Returns whether this element is active.                                  |
-| [is_focusable](ui_element_is_focusable)           | Returns whether this element is focusable.                               |
-| [is_focused](ui_element_is_focused)               | Returns whether this element is currently focused.                       |
-| [player_index](ui_element_player_index)           | Returns which player is allowed to focus or emit inputs to this element. |
-| [set_active](ui_element_set_active)               | Sets whether this element is active.                                     |
-| [set_focusable](ui_element_set_focusable)         | Sets whether this element is focusable.                                  |
-| [set_player_index](ui_element_set_player_index)   | Sets or clears which is allowed to focus or emit inputs to this element. |
-| [unbind_input](ui_element_unbind_input)           | Removes a previously bound input callback.                               |
-| [unfocus_tree](ui_element_unfocus_tree)           | Unfocuses all elements within this one.                                  |
+| Name                                              | Description                                                                                          |
+| :------------------------------------------------ | :--------------------------------------------------------------------------------------------------- |
+| [active_bindings](ui_element_active_bindings)     | Returns a table of active input bindings within this element.                                        |
+| [bind_input](ui_element_bind_input)               | Binds an input action to a callback function.                                                        |
+| [can_receive_input](ui_element_can_receive_input) | Returns whether this element can currently receive input actions.                                    |
+| [focus_tree](ui_element_focus_tree)               | Gives focus to the first focusable element within this one (including itself).                       |
+| [focus](ui_element_focus)                         | Gives focus to this element.                                                                         |
+| [focused_element](ui_element_focused_element)     | Returns a focused element within this one.                                                           |
+| [handle_input](ui_element_handle_input)           | Execute callbacks [bound](ui_element_add_binding) to an input action.                                |
+| [is_active](ui_element_is_active)                 | Returns whether this element is active.                                                              |
+| [is_focusable](ui_element_is_focusable)           | Returns whether this element is focusable.                                                           |
+| [is_focused](ui_element_is_focused)               | Returns whether this element is currently focused by a specific player.                              |
+| [player_index](ui_element_player_index)           | Returns which player is allowed to focus and emit inputs to this element and its descendents.        |
+| [set_active](ui_element_set_active)               | Sets whether this element is active.                                                                 |
+| [set_focusable](ui_element_set_focusable)         | Sets whether this element is focusable.                                                              |
+| [set_player_index](ui_element_set_player_index)   | Sets or clears which player is allowed to focus and emit inputs to this element and its descendents. |
+| [unbind_input](ui_element_unbind_input)           | Removes a previously bound input callback.                                                           |
+| [unfocus_tree](ui_element_unfocus_tree)           | Unfocuses all elements within this one (including itself).                                           |
 
 ### Mouse Interactions
 

@@ -423,18 +423,18 @@ crystal.test.add("Can move focus in a list", function()
 	list:focus_tree(1);
 	assert(a:is_focused(1));
 
-	list:handle_input(1, "ui_down");
+	list:handle_input(1, "+ui_down");
 	assert(not a:is_focused(1));
 	assert(b:is_focused(1));
 
-	list:handle_input(1, "ui_down");
+	list:handle_input(1, "+ui_down");
 	assert(not b:is_focused(1));
 	assert(d:is_focused(1));
 
-	list:handle_input(1, "ui_left");
+	list:handle_input(1, "+ui_left");
 	assert(d:is_focused(1));
 
-	list:handle_input(1, "ui_up");
+	list:handle_input(1, "+ui_up");
 	assert(not d:is_focused(1));
 	assert(b:is_focused(1));
 end);
@@ -460,14 +460,14 @@ crystal.test.add("Can move focus in nested lists", function()
 	row:focus_tree(1);
 	assert(head:is_focused(1));
 
-	row:handle_input(1, "ui_right");
+	row:handle_input(1, "+ui_right");
 	assert(not head:is_focused(1));
 	assert(a:is_focused(1));
 
-	row:handle_input(1, "ui_down");
+	row:handle_input(1, "+ui_down");
 	assert(b:is_focused(1));
 
-	row:handle_input(1, "ui_right");
+	row:handle_input(1, "+ui_right");
 	assert(not b:is_focused(1));
 	assert(tail:is_focused(1));
 end);

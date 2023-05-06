@@ -401,7 +401,7 @@ UIElement.handle_input = function(self, player_index, input)
 end
 
 ---@param input string
----@param relevance InputRelevance
+---@param relevance BindingRelevance
 ---@param details any
 ---@param callback fun(player_index: number): boolean
 UIElement.bind_input = function(self, input, relevance, details, callback)
@@ -526,7 +526,7 @@ UIElement.binding = function(self, input)
 end
 
 ---@param player_index number
----@return { [string]: { owner: UIElement, relevance: InputRelevance, details: any, callback: BindingCallback }[] }
+---@return { [string]: { owner: UIElement, relevance: BindingRelevance, details: any, callback: BindingCallback }[] }
 UIElement.active_bindings = function(self, player_index)
 	assert(type(player_index) == "number");
 	return self.router:active_bindings_in(self, player_index);
