@@ -28,6 +28,10 @@ Use scripts.
 
 Good luck.
 
+- To implement a new leaf element (like [Border](border) or [Text](text)), you should reference the implementation of [Image](image).
+- To implement a new single-child element (like [Painter](painter) or [Widget](widget)), you should reference the implementations of [Widget](widget) and its [Wrapper](wrapper) parent class.
+- To implement a new multi-child element (like [Overlay](overlay) or [VerticalList](vertical_list)), you should reference the implementations of [Overlay](overlay) and its [Container](container) parent class.
+
 ## Functions
 
 | Name                                      | Description                                                           |

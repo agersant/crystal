@@ -18,7 +18,7 @@
 ---@field private _rotation number
 ---@field private scale_x number
 ---@field private scale_y number
----@field private transform love.Transform # Complete transform stack applied to this element (all the way from native window)
+---@field private _transform love.Transform # Complete transform stack applied to this element (all the way from native window)
 ---@field private active boolean # When false, this element and its descendants do not receive inputs
 ---@field private mouse_enabled boolean # When true, this element is a mouse target
 ---@field private _player_index number # When set, this element and its descendants only receive inputs from this player
@@ -43,7 +43,7 @@ UIElement.init = function(self)
 	self._rotation = 0;
 	self.scale_x = 1;
 	self.scale_y = 1;
-	self.transform = nil;
+	self._transform = nil;
 	self.active = true;
 	self.mouse_enabled = true;
 	self._player_index = nil;
@@ -201,7 +201,11 @@ end
 
 ---@protected
 UIElement.update_desired_size = function(self)
-	self.desired_width, self.desired_height = self:compute_desired_size();
+	local width, height = self:compute_desired_size();
+	assert(width >= 0);
+	assert(height >= 0);
+	self.desired_width = width;
+	self.desired_height = height;
 end
 
 ---@protected
@@ -353,7 +357,7 @@ UIElement.draw = function(self)
 	love.graphics.rotate(self._rotation);
 	love.graphics.translate(-self.pivot_x * width / self.scale_x, -self.pivot_y * height / self.scale_y);
 
-	self.transform = crystal.window.transform();
+	self._transform = crystal.window.transform();
 	if self.mouse_enabled then
 		crystal.input.add_mouse_target(self, self:bounding_box());
 	end
@@ -369,17 +373,23 @@ end
 ---@return number # top
 ---@return number @ bottom
 UIElement.bounding_box = function(self)
-	assert(self.transform);
+	assert(self._transform);
 	local width, height = self:size();
-	local x1, y1 = self.transform:transformPoint(0, 0);
-	local x2, y2 = self.transform:transformPoint(width, 0);
-	local x3, y3 = self.transform:transformPoint(width, height);
-	local x4, y4 = self.transform:transformPoint(0, height);
+	local x1, y1 = self._transform:transformPoint(0, 0);
+	local x2, y2 = self._transform:transformPoint(width, 0);
+	local x3, y3 = self._transform:transformPoint(width, height);
+	local x4, y4 = self._transform:transformPoint(0, height);
 	local left = math.min(x1, x2, x3, x4);
 	local right = math.max(x1, x2, x3, x4);
 	local top = math.min(y1, y2, y3, y4);
 	local bottom = math.max(y1, y2, y3, y4);
 	return left, right, top, bottom;
+end
+
+---@return love.Transform
+UIElement.transform = function(self)
+	assert(self._transform);
+	return self._transform:clone();
 end
 
 ---@protected

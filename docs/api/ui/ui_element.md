@@ -104,11 +104,12 @@ Advanced
 | [compute_desired_size](ui_element_compute_desired_size)   | Computes the size requested by this element for layout purposes.                                            |
 | [desired_size](ui_element_desired_size)                   | Returns this element's desired size.                                                                        |
 | [draw_self](ui_element_draw_self)                         | Draws this element and all its descendants.                                                                 |
-| [first_focusable](ui_element_first_focusable)             | Returns the first focusable element inside this one.                                                        |
+| [first_focusable](ui_element_first_focusable)             | Returns the first focusable element inside this one (or itself).                                            |
 | [layout](ui_element_layout)                               | Sets relative position for this element and all its descendents.                                            |
 | [next_focusable](ui_element_next_focusable)               | Returns the next focusable element from this one in the specified direction.                                |
 | [overlaps_mouse](ui_element_overlaps_mouse)               | Returns whether this element can become the mouse target, given a specific player index and mouse position. |
-| [set_relative_position](ui_element_set_relative_position) | Sets this element's left/right/top/bottom positions relative to its parent top-left corner.                 |
+| [set_relative_position](ui_element_set_relative_position) | Sets this element's position relative to its parent top-left corner.                                        |
+| [transform](ui_element_transform)                         | Returns the global [Transform](https://love2d.org/wiki/Transform) in use last time this element was drawn.  |
 | [update](ui_element_update)                               | Runs frame-based logic.                                                                                     |
 
 ## Callbacks
