@@ -1,4 +1,5 @@
----@alias Binding { details: any, callback: fun(self: UIElement, player_index: number): boolean }
+---@alias BindingCallback fun(self: UIElement, player_index: number): boolean
+---@alias Binding { details: any, callback: BindingCallback }
 
 ---@class UIElement
 ---@field private _joint Joint
@@ -525,7 +526,7 @@ UIElement.binding = function(self, input)
 end
 
 ---@param player_index number
----@return { [string]: { owner: UIElement, relevance: InputRelevance, binding: Binding }[] }
+---@return { [string]: { owner: UIElement, relevance: InputRelevance, details: any, callback: BindingCallback }[] }
 UIElement.active_bindings = function(self, player_index)
 	assert(type(player_index) == "number");
 	return self.router:active_bindings_in(self, player_index);
@@ -764,14 +765,14 @@ crystal.test.add("Can list active_bindings", function()
 	end);
 
 	local bindings = a:active_bindings(1);
-	assert(bindings.ui_ok[1].binding.details == "ok");
+	assert(bindings.ui_ok[1].details == "ok");
 	assert(not bindings.ui_menu);
 
 	a:set_focusable(true);
 	a:focus(1);
 	local bindings = a:active_bindings(1);
-	assert(bindings.ui_ok[1].binding.details == "ok");
-	assert(bindings.ui_menu[1].binding.details == "menu");
+	assert(bindings.ui_ok[1].details == "ok");
+	assert(bindings.ui_menu[1].details == "menu");
 
 	a:set_active(false);
 	local bindings = a:active_bindings(1);

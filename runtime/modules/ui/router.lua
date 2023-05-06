@@ -132,7 +132,7 @@ end
 
 ---@param context UIElement
 ---@param player_index number
----@return { [string]: { owner: UIElement, relevance: InputRelevance, binding: Binding }[] }
+---@return { [string]: { owner: UIElement, relevance: InputRelevance, details: any, callback: BindingCallback }[] }
 Router.active_bindings_in = function(self, context, player_index)
 	local active_bindings = {}
 	for input, handlers in pairs(self.handlers) do
@@ -140,10 +140,13 @@ Router.active_bindings_in = function(self, context, player_index)
 			if relevance == "always" or self:is_on_focus_path(recipient, player_index) then
 				if self:can_element_receive_input(context, recipient, player_index, input) then
 					active_bindings[input] = active_bindings[input] or {};
+					local binding = recipient:binding(input);
+					assert(binding);
 					table.push(active_bindings[input], {
 						owner = recipient,
 						relevance = relevance,
-						binding = recipient:binding(input),
+						details = binding.details,
+						callback = binding.callback,
 					});
 				end
 			end
