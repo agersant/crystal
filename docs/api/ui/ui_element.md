@@ -73,7 +73,7 @@ crystal.UIElement:new()
 | [focus_tree](ui_element_focus_tree)               | Gives focus to the first focusable element within this one (including itself).                       |
 | [focus](ui_element_focus)                         | Gives focus to this element.                                                                         |
 | [focused_element](ui_element_focused_element)     | Returns a focused element within this one.                                                           |
-| [handle_input](ui_element_handle_input)           | Execute callbacks [bound](ui_element_add_binding) to an input action.                                |
+| [handle_input](ui_element_handle_input)           | Executes callbacks [bound](ui_element_add_binding) to an input action.                               |
 | [is_active](ui_element_is_active)                 | Returns whether this element is active.                                                              |
 | [is_focusable](ui_element_is_focusable)           | Returns whether this element is focusable.                                                           |
 | [is_focused](ui_element_is_focused)               | Returns whether this element is currently focused by a specific player.                              |

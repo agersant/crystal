@@ -6,7 +6,7 @@ nav_exclude: true
 
 # UIElement:handle_input
 
-Execute callbacks [bound](ui_element_add_binding) to an input action, only considering callbacks owned by elements within this root which can [receive input](ui_element_can_receive_input).
+Executes callbacks [bound](ui_element_add_binding) to an input action, only considering callbacks owned by elements within this root which can [receive input](ui_element_can_receive_input).
 
 The only guarantee on callback execution order is that callback with the `"when_focused` relevance execute before those with the `"always"` relevance. If any callback returns `true`, this function exits early.
 
