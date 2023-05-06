@@ -49,25 +49,25 @@ This example defines a scene drawing a UI tree that covers the whole screen:
 local TitleScreenUI = Class("TitleScreenUI", crystal.Overlay);
 
 TitleScreenUI.init = function(self)
-	TitleScreenUI.super.init(self);
-	local text = self:add_child(crystal.Text:new());
-	text:set_text("Legend of Sword");
-	text:set_alignment("center", "center");
+  TitleScreenUI.super.init(self);
+  local text = self:add_child(crystal.Text:new());
+  text:set_text("Legend of Sword");
+  text:set_alignment("center", "center");
 end
 
 local TitleScreenScene = Class("TitleScreenScene", crystal.Scene);
 
 TitleScreenScene.init = function(self)
-	self.ui = TitleScreenUI:new();
+  self.ui = TitleScreenUI:new();
 end
 
 TitleScreenScene.update = function(self, dt)
-	local width, height = crystal.window.viewport_size();
-	self.ui:update_tree(dt, width, height);
+  local width, height = crystal.window.viewport_size();
+  self.ui:update_tree(dt, width, height);
 end
 
 TitleScreenScene.draw = function(self)
-	self.ui:draw_tree();
+  self.ui:draw_tree();
 end
 
 crystal.scene.replace(TitleScreenScene:new());

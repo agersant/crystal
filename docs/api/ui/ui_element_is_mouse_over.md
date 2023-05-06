@@ -31,17 +31,17 @@ This example defines a scene which constantly prints whether a specific image is
 local MyScene = Class("MyScene", crystal.Scene);
 
 MyScene.init = function(self)
-	self.list = crystal.VerticalList:new();
-	self.sword = self.list:add_child(crystal.Image:new(crystal.assets.get("assets/sword.png")));
-	self.shield = self.list:add_child(crystal.Image:new(crystal.assets.get("assets/shield.png")));
+  self.list = crystal.VerticalList:new();
+  self.sword = self.list:add_child(crystal.Image:new(crystal.assets.get("assets/sword.png")));
+  self.shield = self.list:add_child(crystal.Image:new(crystal.assets.get("assets/shield.png")));
 end
 
 MyScene.update = function(self, dt)
-	self.list:update_tree(dt);
-	print(self.sword:is_mouse_over());
+  self.list:update_tree(dt);
+  print(self.sword:is_mouse_over());
 end
 
 MyScene.draw = function(self)
-	self.list:draw_tree();
+  self.list:draw_tree();
 end
 ```

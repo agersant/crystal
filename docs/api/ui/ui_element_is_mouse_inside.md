@@ -31,17 +31,17 @@ This example defines a scene which constantly prints whether the mouse is inside
 local MyScene = Class("MyScene", crystal.Scene);
 
 MyScene.init = function(self)
-	self.list = crystal.VerticalList:new();
-	self.sword = self.list:add_child(crystal.Image:new(crystal.assets.get("assets/sword.png")));
-	self.shield = self.list:add_child(crystal.Image:new(crystal.assets.get("assets/shield.png")));
+  self.list = crystal.VerticalList:new();
+  self.sword = self.list:add_child(crystal.Image:new(crystal.assets.get("assets/sword.png")));
+  self.shield = self.list:add_child(crystal.Image:new(crystal.assets.get("assets/shield.png")));
 end
 
 MyScene.update = function(self, dt)
-	self.list:update_tree(dt);
-	print(self.list:is_mouse_inside());
+  self.list:update_tree(dt);
+  print(self.list:is_mouse_inside());
 end
 
 MyScene.draw = function(self)
-	self.list:draw_tree();
+  self.list:draw_tree();
 end
 ```
