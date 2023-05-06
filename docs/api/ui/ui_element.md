@@ -42,20 +42,26 @@ crystal.UIElement:new()
 
 ### Rendering
 
-| Name                                              | Description                                    |
-| :------------------------------------------------ | :--------------------------------------------- |
-| [color](ui_element_color)                         | Returns this element's color multiplier.       |
-| [opacity](ui_element_opacity)                     | Returns this element's opacity.                |
-| [scale](ui_element_scale)                         | Returns this element's scaling factors.        |
-| [set_color](ui_element_set_color)                 | Sets this element's color multiplier.          |
-| [set_opacity](ui_element_set_opacity)             | Sets this element's opacity.                   |
-| [set_scale_x](ui_element_set_scale_x)             | Sets this element's horizontal scaling factor. |
-| [set_scale_y](ui_element_set_scale_y)             | Sets this element's vertical scaling factor.   |
-| [set_scale](ui_element_set_scale)                 | Sets this element's scaling factors.           |
-| [set_translation_x](ui_element_set_translation_x) | Sets this element's horizontal translation.    |
-| [set_translation_y](ui_element_set_translation_y) | Sets this element's vertical translation.      |
-| [set_translation](ui_element_set_translation)     | Sets this element's translation.               |
-| [translation](ui_element_translation)             | Returns this element's translation.            |
+| Name                                              | Description                                                       |
+| :------------------------------------------------ | :---------------------------------------------------------------- |
+| [color](ui_element_color)                         | Returns this element's color multiplier.                          |
+| [opacity](ui_element_opacity)                     | Returns this element's opacity.                                   |
+| [pivot](ui_element_pivot)                         | Returns this element's pivot, around which it scales and rotates. |
+| [rotation](ui_element_rotation)                   | Returns this element's rotation angle.                            |
+| [scale](ui_element_scale)                         | Returns this element's scaling factors.                           |
+| [set_color](ui_element_set_color)                 | Sets this element's color multiplier.                             |
+| [set_opacity](ui_element_set_opacity)             | Sets this element's opacity.                                      |
+| [set_pivot_x](ui_element_set_pivot_x)             | Sets the horizontal position of this element's pivot.             |
+| [set_pivot_y](ui_element_set_pivot_y)             | Sets the vertical position of this element's pivot.               |
+| [set_pivot](ui_element_set_pivot)                 | Sets this element's pivot, around which it scales and rotates.    |
+| [set_rotation](ui_element_set_rotation)           | Sets this element's rotation angle.                               |
+| [set_scale_x](ui_element_set_scale_x)             | Sets this element's horizontal scaling factor.                    |
+| [set_scale_y](ui_element_set_scale_y)             | Sets this element's vertical scaling factor.                      |
+| [set_scale](ui_element_set_scale)                 | Sets this element's scaling factors.                              |
+| [set_translation_x](ui_element_set_translation_x) | Sets this element's horizontal translation.                       |
+| [set_translation_y](ui_element_set_translation_y) | Sets this element's vertical translation.                         |
+| [set_translation](ui_element_set_translation)     | Sets this element's translation.                                  |
+| [translation](ui_element_translation)             | Returns this element's translation.                               |
 
 ### Input Handling
 
