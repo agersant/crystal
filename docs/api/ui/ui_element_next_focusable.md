@@ -25,7 +25,7 @@ ui_element:next_focusable(from_element, player_index, direction)
 | :------------- | :---------------------- | :----------------------------------------------------------------------------------- |
 | `from_element` | [UIElement](ui_element) | Child element inside this one to navigate from.                                      |
 | `player_index` | `number`                | Number identifying the [player](/crystal/api/input/player) whose inputs to consider. |
-| `direction`    | [Direction]             | Navigation direction.                                                                |
+| `direction`    | [Direction](direction)  | Navigation direction.                                                                |
 
 ### Returns
 
