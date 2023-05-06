@@ -394,7 +394,6 @@ end
 
 ---@protected
 UIElement.draw_self = function(self)
-	error("Not implemented");
 end
 
 --#endregion
@@ -542,10 +541,12 @@ UIElement.active_bindings = function(self, player_index)
 	return self.router:active_bindings_in(self, player_index);
 end
 
-UIElement.on_focus = function(self)
+---@param player_index number
+UIElement.on_focus = function(self, player_index)
 end
 
-UIElement.on_unfocus = function(self)
+---@param player_index number
+UIElement.on_unfocus = function(self, player_index)
 end
 
 --#endregion
@@ -556,6 +557,9 @@ UIElement.update_mouse = function(self)
 	-- Not simple ancestor traversals because elements can be reparented
 	-- arbitrarily while mouse is inside them.
 
+	local player_index = crystal.input.mouse_player():index();
+	assert(player_index);
+
 	local target = crystal.input.current_mouse_target();
 	if target == nil or target.inherits_from == nil or not target:inherits_from(UIElement) then
 		target = nil;
@@ -565,7 +569,7 @@ UIElement.update_mouse = function(self)
 	for element in pairs(over_elements) do
 		if element:is_within(self) and element ~= target then
 			self.router:remove_mouse_over_element(element);
-			element:on_mouse_out();
+			element:on_mouse_out(player_index);
 		end
 	end
 
@@ -580,7 +584,7 @@ UIElement.update_mouse = function(self)
 	for _, element in ipairs(sorted_inside_elements) do
 		if element:is_within(self) and (not target or not target:is_within(element)) then
 			self.router:remove_mouse_inside_element(element);
-			element:on_mouse_leave();
+			element:on_mouse_leave(player_index);
 		end
 	end
 
@@ -594,12 +598,12 @@ UIElement.update_mouse = function(self)
 		for _, element in ipairs(path) do
 			if not inside_elements[element] then
 				self.router:add_mouse_inside_element(element);
-				element:on_mouse_enter();
+				element:on_mouse_enter(player_index);
 			end
 		end
 		if not over_elements[target] then
 			self.router:add_mouse_over_element(target);
-			target:on_mouse_over();
+			target:on_mouse_over(player_index);
 		end
 	end
 end
@@ -635,16 +639,20 @@ UIElement.enable_mouse = function(self)
 	self.mouse_enabled = true;
 end
 
-UIElement.on_mouse_enter = function(self)
+---@param player_index number
+UIElement.on_mouse_enter = function(self, player_index)
 end
 
-UIElement.on_mouse_leave = function(self)
+---@param player_index number
+UIElement.on_mouse_leave = function(self, player_index)
 end
 
-UIElement.on_mouse_over = function(self)
+---@param player_index number
+UIElement.on_mouse_over = function(self, player_index)
 end
 
-UIElement.on_mouse_out = function(self)
+---@param player_index number
+UIElement.on_mouse_out = function(self, player_index)
 end
 
 --#endregion

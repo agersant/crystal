@@ -269,7 +269,7 @@ Router.focus_element = function(self, element, player_index)
 	end
 	if not self.focused_elements[player_index][element] then
 		self.focused_elements[player_index][element] = true;
-		element:on_focus();
+		element:on_focus(player_index);
 	end
 end
 
@@ -282,7 +282,7 @@ Router.unfocus_element = function(self, element, player_index)
 	if self.focused_elements[player_index] then
 		if self.focused_elements[player_index][element] then
 			self.focused_elements[player_index][element] = nil;
-			element:on_unfocus();
+			element:on_unfocus(player_index);
 		end
 	end
 end
