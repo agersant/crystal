@@ -1,6 +1,6 @@
-local AlignGoal = require("modules/ai/align_goal");
-local EntityGoal = require("modules/ai/entity_goal");
-local PositionGoal = require("modules/ai/position_goal");
+local AlignGoal = require(CRYSTAL_RUNTIME .. "/modules/ai/align_goal");
+local EntityGoal = require(CRYSTAL_RUNTIME .. "/modules/ai/entity_goal");
+local PositionGoal = require(CRYSTAL_RUNTIME .. "/modules/ai/position_goal");
 
 ---@class Navigation : Component
 ---@field private map Map

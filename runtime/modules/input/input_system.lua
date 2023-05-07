@@ -16,8 +16,8 @@ end
 
 --#region Tests
 
-local GamepadAPI = require("modules/input/gamepad_api");
-local InputPlayer = require("modules/input/input_player");
+local GamepadAPI = require(CRYSTAL_RUNTIME .. "/modules/input/gamepad_api");
+local InputPlayer = require(CRYSTAL_RUNTIME .. "/modules/input/input_player");
 
 crystal.test.add("Input handlers receives inputs", function()
 	local ecs = crystal.ECS:new();

@@ -288,7 +288,7 @@ end
 
 --#region Tests
 
-local GamepadAPI = require("modules/input/gamepad_api");
+local GamepadAPI = require(CRYSTAL_RUNTIME .. "/modules/input/gamepad_api");
 
 crystal.test.add("Unbound action is not active", function()
 	local player = InputPlayer:new(1, GamepadAPI.Mock:new());

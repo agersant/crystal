@@ -1,6 +1,6 @@
-local Transition = require("modules/scene/transition");
-local BasicJoint = require("modules/ui/basic_joint");
-local Container = require("modules/ui/container");
+local Transition = require(CRYSTAL_RUNTIME .. "/modules/scene/transition");
+local BasicJoint = require(CRYSTAL_RUNTIME .. "/modules/ui/basic_joint");
+local Container = require(CRYSTAL_RUNTIME .. "/modules/ui/container");
 
 ---@alias SwitcherSizingMode "largest" | "active"
 

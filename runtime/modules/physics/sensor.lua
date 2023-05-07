@@ -1,4 +1,4 @@
-local Fixture = require("modules/physics/fixture");
+local Fixture = require(CRYSTAL_RUNTIME .. "/modules/physics/fixture");
 
 ---@class Sensor : Fixture
 ---@field on_activate fun(Sensor, Fixture, Entity, Contact)

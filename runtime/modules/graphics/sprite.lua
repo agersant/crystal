@@ -1,4 +1,4 @@
-local Drawable = require("modules/graphics/drawable");
+local Drawable = require(CRYSTAL_RUNTIME .. "/modules/graphics/drawable");
 
 ---@class Sprite : Drawable
 ---@field private _texture love.Texture

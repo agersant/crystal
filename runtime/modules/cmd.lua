@@ -1,4 +1,4 @@
-local Terminal = require("modules/cmd/terminal");
+local Terminal = require(CRYSTAL_RUNTIME .. "/modules/cmd/terminal");
 
 local terminal = Terminal:new();
 

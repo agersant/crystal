@@ -1,4 +1,4 @@
-local InputPlayer = require("modules/input/input_player");
+local InputPlayer = require(CRYSTAL_RUNTIME .. "/modules/input/input_player");
 
 ---@alias AxisToButton { pressed_range: { [1]: number, [2]: number}, stickiness: number }
 ---@alias Autorepeat { initial_delay: number, period: number }
@@ -163,7 +163,7 @@ end
 
 --#region Tests
 
-local GamepadAPI = require("modules/input/gamepad_api");
+local GamepadAPI = require(CRYSTAL_RUNTIME .. "/modules/input/gamepad_api");
 
 crystal.test.add("Mouse is auto-assigned to player 1", function()
 	local manager = InputManager:new(GamepadAPI.Mock:new());

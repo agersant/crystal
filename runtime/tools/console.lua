@@ -1,7 +1,7 @@
-local features = require("features");
-local Terminal = require("modules/cmd/terminal");
-local TextInputBuffer = require("modules/ui/text_input_buffer");
-local Autocomplete = require("tools/console/autocomplete");
+local features = require(CRYSTAL_RUNTIME .. "/features");
+local Terminal = require(CRYSTAL_RUNTIME .. "/modules/cmd/terminal");
+local TextInputBuffer = require(CRYSTAL_RUNTIME .. "/modules/ui/text_input_buffer");
+local Autocomplete = require(CRYSTAL_RUNTIME .. "/tools/console/autocomplete");
 
 ---@class HistoryEntry
 ---@field input TextInputBuffer

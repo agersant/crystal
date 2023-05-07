@@ -1,8 +1,8 @@
-local Camera = require("modules/scene/camera");
-local CameraController = require("modules/scene/camera_controller");
-local Scene = require("modules/scene/scene");
-local SceneManager = require("modules/scene/scene_manager");
-local Transition = require("modules/scene/transition");
+local Camera = require(CRYSTAL_RUNTIME .. "/modules/scene/camera");
+local CameraController = require(CRYSTAL_RUNTIME .. "/modules/scene/camera_controller");
+local Scene = require(CRYSTAL_RUNTIME .. "/modules/scene/scene");
+local SceneManager = require(CRYSTAL_RUNTIME .. "/modules/scene/scene_manager");
+local Transition = require(CRYSTAL_RUNTIME .. "/modules/scene/transition");
 
 local scene_manager = SceneManager:new();
 

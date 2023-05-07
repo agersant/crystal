@@ -1,12 +1,12 @@
-local features = require("features");
+local features = require(CRYSTAL_RUNTIME .. "/features");
 
-local GamepadAPI = require("modules/input/gamepad_api");
-local InputListener = require("modules/input/input_listener");
-local InputManager = require("modules/input/input_manager");
-local InputPlayer = require("modules/input/input_player");
-local InputSystem = require("modules/input/input_system");
-local MouseAPI = require("modules/input/mouse_api");
-local MouseRouter = require("modules/input/mouse_router");
+local GamepadAPI = require(CRYSTAL_RUNTIME .. "/modules/input/gamepad_api");
+local InputListener = require(CRYSTAL_RUNTIME .. "/modules/input/input_listener");
+local InputManager = require(CRYSTAL_RUNTIME .. "/modules/input/input_manager");
+local InputPlayer = require(CRYSTAL_RUNTIME .. "/modules/input/input_player");
+local InputSystem = require(CRYSTAL_RUNTIME .. "/modules/input/input_system");
+local MouseAPI = require(CRYSTAL_RUNTIME .. "/modules/input/mouse_api");
+local MouseRouter = require(CRYSTAL_RUNTIME .. "/modules/input/mouse_router");
 
 local mouse_api = features.tests ~= true and MouseAPI:new() or MouseAPI.Mock:new();
 local mouse_router = MouseRouter:new(mouse_api);

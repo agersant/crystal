@@ -1,4 +1,4 @@
-local Goal = require("modules/ai/goal");
+local Goal = require(CRYSTAL_RUNTIME .. "/modules/ai/goal");
 
 ---@class PositionGoal : Goal
 ---@field private x number

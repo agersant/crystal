@@ -1,4 +1,4 @@
-local features = require("features");
+local features = require(CRYSTAL_RUNTIME .. "/features");
 
 ---@class Command
 ---@field private display_name string

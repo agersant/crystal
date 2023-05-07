@@ -1,4 +1,4 @@
-local UIElement = require("modules/ui/ui_element");
+local UIElement = require(CRYSTAL_RUNTIME .. "/modules/ui/ui_element");
 
 ---@class Image : UIElement
 ---@field private _texture love.Texture

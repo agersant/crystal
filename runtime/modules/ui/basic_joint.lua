@@ -1,5 +1,5 @@
-local Joint = require("modules/ui/joint");
-local Padding = require("modules/ui/padding");
+local Joint = require(CRYSTAL_RUNTIME .. "/modules/ui/joint");
+local Padding = require(CRYSTAL_RUNTIME .. "/modules/ui/padding");
 
 ---@class BasicJoint : Joint
 ---@field _padding Padding

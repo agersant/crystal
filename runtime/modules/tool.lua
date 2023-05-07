@@ -1,5 +1,5 @@
-local Tool = require("modules/tool/tool");
-local Toolkit = require("modules/tool/toolkit");
+local Tool = require(CRYSTAL_RUNTIME .. "/modules/tool/tool");
+local Toolkit = require(CRYSTAL_RUNTIME .. "/modules/tool/toolkit");
 
 local toolkit = Toolkit:new();
 

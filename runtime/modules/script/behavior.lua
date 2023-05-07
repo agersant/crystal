@@ -1,4 +1,4 @@
-local Script = require("modules/script/script");
+local Script = require(CRYSTAL_RUNTIME .. "/modules/script/script");
 
 ---@class Behavior : Component
 local Behavior = Class("Behavior", crystal.Component);

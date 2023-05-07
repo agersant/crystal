@@ -1,4 +1,4 @@
-local Painter = require("modules/ui/painter");
+local Painter = require(CRYSTAL_RUNTIME .. "/modules/ui/painter");
 
 local shader_source = [[
 	uniform vec4 radii; // In pixels (top-left, top-right, bottom-right, bottom-left)

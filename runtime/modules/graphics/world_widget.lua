@@ -1,4 +1,4 @@
-local Drawable = require("modules/graphics/drawable");
+local Drawable = require(CRYSTAL_RUNTIME .. "/modules/graphics/drawable");
 
 ---@class WorldWidget : Drawable
 ---@field private widget Widget

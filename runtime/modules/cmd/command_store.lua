@@ -1,5 +1,5 @@
-local features = require("features");
-local Command = require("modules/cmd/command");
+local features = require(CRYSTAL_RUNTIME .. "/features");
+local Command = require(CRYSTAL_RUNTIME .. "/modules/cmd/command");
 
 ---@class CommandStore
 ---@field private commands Command[]

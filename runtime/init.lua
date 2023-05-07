@@ -12,10 +12,6 @@ table.remove(path_chunks);
 local crystal_root = table.concat(path_chunks, "/");
 CRYSTAL_NO_GAME = crystal_root == "";
 
--- TODO may or may not work in fused build
--- TODO Manually add CRYSTAL_RUNTIME to `require` calls and leave package.path alone?
-package.path = package.path .. ";" .. CRYSTAL_RUNTIME .. "/?.lua";
-
 local features = require(CRYSTAL_RUNTIME .. "/features");
 
 ---@diagnostic disable-next-line: lowercase-global

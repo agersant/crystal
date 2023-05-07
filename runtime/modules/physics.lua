@@ -1,11 +1,11 @@
 local bit = require("bit");
 
-local Collider = require("modules/physics/collider");
-local Fixture = require("modules/physics/fixture")
-local Movement = require("modules/physics/movement");
-local Body = require("modules/physics/body");
-local PhysicsSystem = require("modules/physics/physics_system");
-local Sensor = require("modules/physics/sensor");
+local Collider = require(CRYSTAL_RUNTIME .. "/modules/physics/collider");
+local Fixture = require(CRYSTAL_RUNTIME .. "/modules/physics/fixture")
+local Movement = require(CRYSTAL_RUNTIME .. "/modules/physics/movement");
+local Body = require(CRYSTAL_RUNTIME .. "/modules/physics/body");
+local PhysicsSystem = require(CRYSTAL_RUNTIME .. "/modules/physics/physics_system");
+local Sensor = require(CRYSTAL_RUNTIME .. "/modules/physics/sensor");
 
 return {
 	module_api = {

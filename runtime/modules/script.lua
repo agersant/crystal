@@ -1,8 +1,8 @@
-local Behavior = require("modules/script/behavior");
-local Script = require("modules/script/script");
-local ScriptRunner = require("modules/script/script_runner");
-local ScriptSystem = require("modules/script/script_system");
-local Thread = require("modules/script/thread");
+local Behavior = require(CRYSTAL_RUNTIME .. "/modules/script/behavior");
+local Script = require(CRYSTAL_RUNTIME .. "/modules/script/script");
+local ScriptRunner = require(CRYSTAL_RUNTIME .. "/modules/script/script_runner");
+local ScriptSystem = require(CRYSTAL_RUNTIME .. "/modules/script/script_system");
+local Thread = require(CRYSTAL_RUNTIME .. "/modules/script/thread");
 
 return {
 	global_api = {

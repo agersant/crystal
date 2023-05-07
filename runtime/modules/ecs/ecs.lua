@@ -1,8 +1,8 @@
-local Component = require("modules/ecs/component");
-local Entity = require("modules/ecs/entity");
-local Event = require("modules/ecs/event");
-local System = require("modules/ecs/system");
-local Query = require("modules/ecs/query");
+local Component = require(CRYSTAL_RUNTIME .. "/modules/ecs/component");
+local Entity = require(CRYSTAL_RUNTIME .. "/modules/ecs/entity");
+local Event = require(CRYSTAL_RUNTIME .. "/modules/ecs/event");
+local System = require(CRYSTAL_RUNTIME .. "/modules/ecs/system");
+local Query = require(CRYSTAL_RUNTIME .. "/modules/ecs/query");
 
 ---@class ECS
 ---@field private _entities { [Entity]: boolean }
@@ -288,8 +288,8 @@ ECS.entities_with = function(self, class)
 			if not self.entity_graveyard[entity] then
 				for component in pairs(components) do
 					if not (self.component_graveyard[entity]
-						and self.component_graveyard[entity][component:class()]
-						and self.component_graveyard[entity][component:class()][component])
+							and self.component_graveyard[entity][component:class()]
+							and self.component_graveyard[entity][component:class()][component])
 					then
 						output[entity] = true;
 						break;
@@ -668,10 +668,10 @@ crystal.test.add("Can get components by base class", function()
 	assert(table.equals(a:components(Snoot), { [boop1] = true }));
 
 	local boop2 = a:add_component(Boop);
-	assert(table.equals(a:components(Snoot), { [boop1] = true,[boop2] = true }));
+	assert(table.equals(a:components(Snoot), { [boop1] = true, [boop2] = true }));
 
 	ecs:update();
-	assert(table.equals(a:components(Snoot), { [boop1] = true,[boop2] = true }));
+	assert(table.equals(a:components(Snoot), { [boop1] = true, [boop2] = true }));
 
 	a:remove_component(boop1);
 	assert(table.equals(a:components(Snoot), { [boop2] = true }));
@@ -911,7 +911,7 @@ crystal.test.add("Query maintains list of components", function()
 	local bonus_snoot = a:add_component(Snoot);
 	assert(table.equals(query:components(), { [snoot] = true }));
 	ecs:update();
-	assert(table.equals(query:components(), { [snoot] = true,[bonus_snoot] = true }));
+	assert(table.equals(query:components(), { [snoot] = true, [bonus_snoot] = true }));
 	a:remove_component(bonus_snoot);
 	ecs:update();
 	assert(table.equals(query:components(), { [snoot] = true }));
@@ -958,7 +958,7 @@ crystal.test.add("Query maintains changelog of components", function()
 	assert(table.is_empty(query:added_components(BaseComp)));
 
 	ecs:update();
-	assert(table.equals(query:added_components(BaseComp), { [compA] = a,[compB] = a }));
+	assert(table.equals(query:added_components(BaseComp), { [compA] = a, [compB] = a }));
 
 	local compC = a:add_component(CompC);
 	ecs:update();

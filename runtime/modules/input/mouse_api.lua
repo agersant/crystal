@@ -1,4 +1,4 @@
-local features = require("features");
+local features = require(CRYSTAL_RUNTIME .. "/features");
 
 ---@class MouseAPI
 local MouseAPI = Class("MouseAPI");

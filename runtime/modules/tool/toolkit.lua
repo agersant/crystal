@@ -1,5 +1,5 @@
-local features = require("features");
-local Tool = require("modules/tool/tool");
+local features = require(CRYSTAL_RUNTIME .. "/features");
+local Tool = require(CRYSTAL_RUNTIME .. "/modules/tool/tool");
 
 ---@class Toolkit
 ---@field private tools { [string]: Tool }
