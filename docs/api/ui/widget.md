@@ -36,15 +36,15 @@ FlashingImage.init = function(self, texture)
 end
 
 FlashingImage.begin_pulse = function(self)
-	if not self.pulsating then
-	  local image = self.image;
-      self:script():run_thread(function(self)
-        while true do
-          image:set_opacity(math.cos(self:time()));
-          self:wait_frame();
-        end
-      end);
-	end
+  if not self.pulsating then
+    local image = self.image;
+    self:script():run_thread(function(self)
+      while true do
+        image:set_opacity(math.cos(self:time()));
+        self:wait_frame();
+      end
+    end);
+  end
 end
 
 FlashingImage.end_pulse = function(self)
