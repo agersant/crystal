@@ -8,7 +8,7 @@ nav_order: 2
 
 A [Wrapper](wrapper) which manages a [Script](/crystal/api/script/script). This is a good base class to inherit from when implementing UI components that need animation or other time-based logic.
 
-The child of a `Widget` has a [Basic Joint](basic_list_joint) to adjust positioning preferences (padding, alignment, etc.).
+The child of a `Widget` has a [Basic Joint](basic_joint) to adjust positioning preferences (padding, alignment, etc.).
 
 ## Constructor
 
