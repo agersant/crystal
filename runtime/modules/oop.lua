@@ -164,9 +164,9 @@ end
 
 Class = setmetatable({}, { __call = declare_class });
 Class.by_name = get_class_by_name;
-Class.test = function(self, name, base_class) -- TODO.hot_reload can probably remove this with proper engine restart between tests
+Class.test = function(self, name, base_class)
 	return declare_class(self, name, base_class, { allow_redefinition = true });
-end;
+end
 
 return {
 	start = function()

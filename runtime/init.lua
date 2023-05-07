@@ -230,23 +230,14 @@ if features.tests then
 	crystal.run = function()
 		return function()
 			love.load();
-
-			local luacov;
-			if features.test_coverage then
-				luacov = require("external/luacov/runner");
-				local luacovExcludes = { "assets/.*$", "^main$", "Test", "test" };
-				luacov.init({ runreport = true, exclude = luacovExcludes });
-			end
-
-			crystal.log.set_verbosity("error");
-			local success = modules.test.runner:run_all();
-
-			if luacov then
-				luacov.shutdown();
-			end
-
+			local success = modules.test.runner:run_all(function()
+				for _, module in pairs(modules) do
+					if module.test_harness then
+						module.test_harness();
+					end
+				end
+			end);
 			love.quit();
-
 			return success and 0 or 1;
 		end
 	end

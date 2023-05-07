@@ -49,4 +49,7 @@ return {
 		require(CRYSTAL_RUNTIME .. "/modules/assets/shader");
 		require(CRYSTAL_RUNTIME .. "/modules/assets/spritesheet/tiger");
 	end,
+	test_harness = function()
+		registry:unload_all();
+	end,
 };

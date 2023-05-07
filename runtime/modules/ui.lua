@@ -79,4 +79,7 @@ return {
 			end
 		end
 	end,
+	test_harness = function()
+		router:reset();
+	end,
 };

@@ -287,4 +287,13 @@ return {
 		love.graphics.shear = lg.shear;
 		love.graphics.translate = lg.translate;
 	end,
+	test_harness = function()
+		local width, height = love.window.getMode();
+		window:set_scaling_mode("pixel_perfect");
+		window:set_native_height(height);
+		window:set_aspect_ratio_limits(
+			width / height,
+			width / height
+		);
+	end,
 };

@@ -99,5 +99,8 @@ return {
 	end,
 	stop = function()
 		return { file_handle = logger.file_handle };
-	end
+	end,
+	test_harness = function()
+		logger:set_verbosity("error");
+	end,
 };

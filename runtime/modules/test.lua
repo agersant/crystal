@@ -24,7 +24,6 @@ end
 ---@field private busy boolean
 ---@field package context TestContext
 ---@field private tests Test[]
----@field private resolution { [1]: integer, [2]: integer }
 ---@field private screenshot_directory string
 local TestRunner = Class("TestRunner");
 
@@ -32,7 +31,6 @@ TestRunner.init = function(self)
 	self.busy = false;
 	self.context = TestContext:new(self);
 	self.tests = {};
-	self.resolution = {};
 	self.screenshot_directory = "test-output\\screenshots";
 end
 
@@ -81,29 +79,26 @@ TestRunner.add = function(self, name, options_or_body, body)
 end
 
 ---@private
-TestRunner.reset_global_state = function(self, test)
+TestRunner.configure_window = function(self, test)
 	test.resolution = test.resolution or { 200, 200 };
-	if test.resolution[1] ~= self.resolution[1] or test.resolution[2] ~= self.resolution[2] then
-		self.resolution = test.resolution;
-		love.window.setMode(self.resolution[1], self.resolution[2], { fullscreen = false });
+	local width, height, flags = love.window.getMode();
+	if width ~= test.resolution[1] or height ~= test.resolution[2] or flags.fullscreen then
+		love.window.setMode(test.resolution[1], test.resolution[2], { fullscreen = false });
 	end
-
-	-- TODO.hot_reload avoid coupling with misc modules. Possibly share some logic with clean slate between hot reloads?
-	crystal.assets.unload_all();
-	crystal.UIElement.router:reset();
-	crystal.window.set_scaling_mode("pixel_perfect");
-	crystal.window.set_native_height(test.resolution[2]);
-	crystal.window.set_aspect_ratio_limits(
-		test.resolution[1] / test.resolution[2],
-		test.resolution[1] / test.resolution[2]
-	);
 
 	love.graphics.reset();
 	love.graphics.clear(love.graphics.getBackgroundColor());
 end
 
+---@param setup_test_harness fun()
 ---@return boolean success
-TestRunner.run_all = function(self)
+TestRunner.run_all = function(self, setup_test_harness)
+	local luacov;
+	if features.test_coverage then
+		luacov = require("external/luacov/runner");
+		luacov.init({ runreport = true, exclude = { "assets/.*$", "^main$", "Test", "test" } });
+	end
+
 	self.busy = true;
 	self:create_output_directories();
 
@@ -124,7 +119,8 @@ TestRunner.run_all = function(self)
 			assert(type(test.name) == "string");
 			assert(type(test.body) == "function");
 
-			self:reset_global_state(test);
+			self:configure_window(test);
+			setup_test_harness();
 
 			self.context.test_name = test.name;
 			local traceback = nil;
@@ -176,7 +172,12 @@ TestRunner.run_all = function(self)
 	print(report);
 	print();
 
+	if luacov then
+		luacov.shutdown();
+	end
+
 	self.busy = false;
+
 	return #failures == 0;
 end
 
@@ -287,5 +288,4 @@ return {
 		TestContext = TestContext,
 	},
 	runner = test_runner,
-	-- TODO cant restart between tests!
 };
