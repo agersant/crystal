@@ -11,8 +11,6 @@ Widget.init = function(self)
 	self._script:add_alias(self);
 end
 
-Widget.set_root = Widget.super.set_child;
-
 ---@return Script
 Widget.script = function(self)
 	return self._script;
