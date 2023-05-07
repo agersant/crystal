@@ -120,12 +120,12 @@ If you do, make sure to consult the [advanced UI Element methods](/crystal/api/u
 | Name                                      | Description                                                                         |
 | :---------------------------------------- | :---------------------------------------------------------------------------------- |
 | [crystal.Container](container)            | Base class for [UI elements](ui_element) which can contain multiple child elements. |
-| [crystal.HorizontalList](horizontal_list) | A [Container](container) which aligns children horizontally.                        |
+| [crystal.HorizontalList](horizontal_list) | A [Container](container) which positions its children in a row.                     |
 | [crystal.Overlay](overlay)                | A [Container](container) which aligns children relatively to itself.                |
 | [crystal.Painter](painter)                | A [Wrapper](wrapper) which applies a shader to its child.                           |
 | [crystal.RoundedCorners](rounded_corners) | A [Painter](painter) which crops the corners of its child.                          |
 | [crystal.Switcher](switcher)              | A [Container](container) which draws only one child at a time.                      |
-| [crystal.VerticalList](vertical_list)     | A [Container](container) which aligns children vertically.                          |
+| [crystal.VerticalList](vertical_list)     | A [Container](container) which positions its children in a column.                  |
 | [crystal.Widget](widget)                  | A [Wrapper](wrapper) which manages a [Script](/crystal/api/script/script).          |
 | [crystal.Wrapper](wrapper)                | Base class for [UI elements](ui_element) which can contain one child element.       |
 
