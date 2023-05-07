@@ -5,6 +5,7 @@ local Animation = require("modules/assets/spritesheet/animation");
 local Sequence = require("modules/assets/spritesheet/sequence");
 local Spritesheet = require("modules/assets/spritesheet/spritesheet");
 
+local asset_directories = {};
 local registry = Registry:new();
 
 registry:add_hook("lua", {
@@ -18,12 +19,16 @@ registry:add_hook("lua", {
 
 return {
 	module_api = {
+		set_directories = function(d)
+			table.clear(asset_directories);
+			table.overlay(asset_directories, d);
+		end,
 		add_loader = function(...) registry:add_loader(...) end,
 		get = function(path) return registry:get(path) end,
 		load = function(...) registry:load(...) end,
 		is_loaded = function(path) return registry:is_loaded(path) end,
 		unload = function(...) registry:unload(...) end,
-		unload_all = function(...) registry:unload_all(...) end,
+		unload_all = function() registry:unload_all() end,
 		unload_context = function(...) registry:unload_context(...) end,
 	},
 	global_api = {
@@ -33,7 +38,10 @@ return {
 		Animation = Animation,
 		Sequence = Sequence,
 	},
-	init = function()
+	directories = function()
+		return table.copy(asset_directories);
+	end,
+	start = function()
 		require("modules/assets/directory");
 		require("modules/assets/image");
 		require("modules/assets/map/tiled");

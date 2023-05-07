@@ -137,15 +137,16 @@ assert(boss_room:inherits_from(crystal.Map));
 
 ## Functions
 
-| Name                                            | Description                                                 |
-| :---------------------------------------------- | :---------------------------------------------------------- |
-| [crystal.assets.add_loader](add_loader)         | Adds support for a new asset type.                          |
-| [crystal.assets.get](get)                       | Returns a reference to a game asset.                        |
-| [crystal.assets.is_loaded](is_loaded)           | Returns whether a game asset is currently loaded.           |
-| [crystal.assets.load](load)                     | Loads a game asset and its dependencies.                    |
-| [crystal.assets.unload_all](unload_all)         | Unloads all game assets.                                    |
-| [crystal.assets.unload_context](unload_context) | Unloads all game assets associated with a specific context. |
-| [crystal.assets.unload](unload)                 | Unloads a game asset and its dependencies.                  |
+| Name                                              | Description                                                 |
+| :------------------------------------------------ | :---------------------------------------------------------- |
+| [crystal.assets.add_loader](add_loader)           | Adds support for a new asset type.                          |
+| [crystal.assets.get](get)                         | Returns a reference to a game asset.                        |
+| [crystal.assets.is_loaded](is_loaded)             | Returns whether a game asset is currently loaded.           |
+| [crystal.assets.load](load)                       | Loads a game asset and its dependencies.                    |
+| [crystal.assets.set_directories](set_directories) | Sets the location of asset directories.                     |
+| [crystal.assets.unload_all](unload_all)           | Unloads all game assets.                                    |
+| [crystal.assets.unload_context](unload_context)   | Unloads all game assets associated with a specific context. |
+| [crystal.assets.unload](unload)                   | Unloads a game asset and its dependencies.                  |
 
 ## Classes
 
