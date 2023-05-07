@@ -2,7 +2,7 @@ local Transition = require("modules/scene/transition");
 local BasicJoint = require("modules/ui/basic_joint");
 local Container = require("modules/ui/container");
 
----@alias SwitcherSizingMode "largest" | "current"
+---@alias SwitcherSizingMode "largest" | "active"
 
 ---@class Switcher : Container
 ---@field private _active_child UIElement
@@ -18,7 +18,7 @@ local Switcher = Class("Switcher", Container);
 Switcher.init = function(self)
 	Switcher.super.init(self, BasicJoint);
 	self._active_child = nil;
-	self._sizing_mode = "current";
+	self._sizing_mode = "active";
 	self.script = crystal.Script:new();
 	self.transition = nil;
 	self.transition_progress = nil;
@@ -41,7 +41,7 @@ end
 
 ---@param mode SwitcherSizingMode
 Switcher.set_sizing_mode = function(self, mode)
-	assert(mode == "largest" or mode == "current");
+	assert(mode == "largest" or mode == "active");
 	self._sizing_mode = mode;
 end
 
@@ -114,7 +114,7 @@ end
 ---@return number
 ---@return number
 Switcher.compute_desired_size = function(self)
-	if self._sizing_mode == "current" then
+	if self._sizing_mode == "active" then
 		local previous_width, previous_height;
 		if self.previous_child then
 			local joint = self.child_joints[self.previous_child];
@@ -229,7 +229,7 @@ end);
 
 crystal.test.add("Supports dynamic or fixed desired size", function()
 	for _, test in pairs({
-		{ sizing = "current", expected_size = { 0, 50, 0, 100 } },
+		{ sizing = "active",  expected_size = { 0, 50, 0, 100 } },
 		{ sizing = "largest", expected_size = { 0, 100, 0, 100 } },
 	}) do
 		local switcher = Switcher:new();
@@ -271,7 +271,7 @@ crystal.test.add("Can interrupt a transition by starting another one", function(
 	assert(transition.drawn_at_progress == 0.2);
 end);
 
-crystal.test.add("Ignores transition to current child", function()
+crystal.test.add("Ignores transition to active child", function()
 	local transition = TestTransition:new();
 	local switcher = Switcher:new();
 	local a = switcher:add_child(crystal.Image:new());
