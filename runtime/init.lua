@@ -53,6 +53,7 @@ local add_module = function(name, path)
 	end
 end
 
+local hot_reload;
 local start_engine = function()
 	track_engine_packages(function()
 		add_module("math", "modules/math");
@@ -85,6 +86,8 @@ local start_engine = function()
 
 		require(CRYSTAL_RUNTIME .. "/tools/console")(modules.cmd.terminal);
 		require(CRYSTAL_RUNTIME .. "/tools/fps_counter");
+
+		crystal.cmd.add("hotReload", hot_reload);
 	end);
 end
 
@@ -140,23 +143,23 @@ local require_game_source = function()
 	end
 end
 
-local hot_reload;
-
 local start_game = function()
-	crystal.cmd.add("hotReload", hot_reload);
-
-	if not CRYSTAL_NO_GAME then
-		require_game_source();
+	if CRYSTAL_NO_GAME then
+		return;
 	end
+
+	require_game_source();
 
 	if crystal.prelude then
 		crystal.prelude();
 	end
 
-	if features.developer_start and crystal.developer_start then
-		crystal.developer_start();
-	elseif crystal.player_start then
-		crystal.player_start();
+	if not features.tests then
+		if features.developer_start and crystal.developer_start then
+			crystal.developer_start();
+		elseif crystal.player_start then
+			crystal.player_start();
+		end
 	end
 end
 
