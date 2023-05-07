@@ -56,7 +56,10 @@ Image.draw_self = function(self)
 	-- TODO pixel snapping?
 	local w, h = self:size();
 	if self._texture then
-		love.graphics.draw(self._texture, 0, 0, w, h);
+		local rotation = 0;
+		local scale_x = w / self._texture:getWidth();
+		local scale_y = h / self._texture:getHeight();
+		love.graphics.draw(self._texture, 0, 0, rotation, scale_x, scale_y);
 	else
 		love.graphics.rectangle("fill", 0, 0, w, h);
 	end
