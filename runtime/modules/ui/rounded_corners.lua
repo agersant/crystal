@@ -73,13 +73,18 @@ end
 ---@param top_left_or_all number
 ---@overload fun(self: RoundedCorners, left_or_all: number, top_right: number, bottom_right: number, bottom_left: number)
 RoundedCorners.set_radius = function(self, top_left_or_all, top_right, bottom_right, bottom_left)
-	assert(top_left_or_all);
-	if top_right then
+	assert(type(top_left_or_all) == "number");
+	if type(top_right) == "number" then
+		assert(type(bottom_right) == "number");
+		assert(type(bottom_left) == "number");
 		self:set_radius_top_left(top_left_or_all);
 		self:set_radius_top_right(top_right);
 		self:set_radius_bottom_right(bottom_right);
 		self:set_radius_bottom_left(bottom_left);
 	else
+		assert(top_right == nil);
+		assert(bottom_right == nil);
+		assert(bottom_left == nil);
 		self:set_radius_top_left(top_left_or_all);
 		self:set_radius_top_right(top_left_or_all);
 		self:set_radius_bottom_right(top_left_or_all);

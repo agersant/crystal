@@ -28,12 +28,12 @@ padding:set_padding(left, right, top, bottom)
 
 ### Arguments
 
-| Name     | Type     | Description          |
-| :------- | :------- | :------------------- |
-| `left`   | `number` | Left padding amount. |
-| `right`  | `number` | Left padding amount. |
-| `top`    | `number` | Left padding amount. |
-| `bottom` | `number` | Left padding amount. |
+| Name     | Type     | Description            |
+| :------- | :------- | :--------------------- |
+| `left`   | `number` | Left padding amount.   |
+| `right`  | `number` | Right padding amount.  |
+| `top`    | `number` | Top padding amount.    |
+| `bottom` | `number` | Bottom padding amount. |
 
 ## Examples
 
