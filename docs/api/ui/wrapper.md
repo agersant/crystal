@@ -29,14 +29,14 @@ The `joint_class` parameter must be a class inheriting from [Joint](joint).
 
 ## Examples
 
-Using an existing Wrapper class:
+Using an existing `Wrapper` class:
 
 ```lua
 local widget = crystal.Widget:new();
 widget:set_child(crystal.Image:new());
 ```
 
-Implementing your own wrapper class:
+Implementing your own `Wrapper` class:
 
 ```lua
 local MyWrapperJoint = Class("MyWrapperJoint", crystal.Joint);

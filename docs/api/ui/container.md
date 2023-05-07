@@ -30,7 +30,7 @@ The `joint_class` parameter must be a class inheriting from [Joint](joint).
 
 ## Examples
 
-Using an existing container class:
+Using an existing `Container` class:
 
 ```lua
 local title_screen = crystal.Overlay:new();
@@ -40,7 +40,7 @@ background:set_alignment("stretch", "stretch");
 logo:set_alignment("center", "center");
 ```
 
-Implementing your own container class:
+Implementing your own `Container` class:
 
 ```lua
 local MyContainerJoint = Class("MyContainerJoint", crystal.Joint);
