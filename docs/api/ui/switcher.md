@@ -8,7 +8,7 @@ nav_order: 2
 
 A [Container](container) which draws only one of its children at a time.
 
-Chilren of a `Switcher` have a [Basic Joint](basic_joint) to adjust positioning preferences (padding, alignment, etc.).
+Children of a `Switcher` have a [Basic Joint](basic_joint) to adjust positioning preferences (padding, alignment, etc.).
 
 ## Constructor
 

@@ -16,17 +16,17 @@ camera_controller:move_to(new_camera, duration, easing)
 
 ### Arguments
 
-| Name         | Type                     | Description                                                          |
-| :----------- | :----------------------- | :------------------------------------------------------------------- |
-| `new_camera` | [crystal.Camera](camera) | Camera to cut to.                                                    |
-| `duration`   | `number`                 | Duration of the move, in seconds.                                    |
-| `easing`     | `function`               | [Easing function](/crystal/extensions/math) to smooth movement with. |
+| Name         | Type             | Description                                                          |
+| :----------- | :--------------- | :------------------------------------------------------------------- |
+| `new_camera` | [Camera](camera) | Camera to cut to.                                                    |
+| `duration`   | `number`         | Duration of the move, in seconds.                                    |
+| `easing`     | `function`       | [Easing function](/crystal/extensions/math) to smooth movement with. |
 
 ### Returns
 
-| Name     | Type                                         | Description                                        |
-| :------- | :------------------------------------------- | :------------------------------------------------- |
-| `thread` | [crystal.Thread](/crystal/api/script/thread) | A thread that completes when movement is finished. |
+| Name     | Type                                 | Description                                        |
+| :------- | :----------------------------------- | :------------------------------------------------- |
+| `thread` | [Thread](/crystal/api/script/thread) | A thread that completes when movement is finished. |
 
 ## Examples
 

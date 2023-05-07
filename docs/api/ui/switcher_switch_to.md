@@ -20,10 +20,10 @@ switcher:switch_to(child, ...)
 
 ### Arguments
 
-| Name    | Type                                                | Description                                 |
-| :------ | :-------------------------------------------------- | :------------------------------------------ |
-| `child` | [crystal.UIElement](ui_element)                     | Child of this switcher to begin displaying. |
-| `...`   | [crystal.Transition](/crystal/api/scene/transition) | Transitions to play.                        |
+| Name    | Type                                        | Description                                 |
+| :------ | :------------------------------------------ | :------------------------------------------ |
+| `child` | [UIElement](ui_element)                     | Child of this switcher to begin displaying. |
+| `...`   | [Transition](/crystal/api/scene/transition) | Transitions to play.                        |
 
 ## Examples
 

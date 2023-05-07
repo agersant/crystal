@@ -16,9 +16,9 @@ crystal.tool.add(tool)
 
 ### Arguments
 
-| Name   | Type                 | Description                  |
-| :----- | :------------------- | :--------------------------- |
-| `tool` | [crystal.Tool](tool) | Instance of the tool to add. |
+| Name   | Type         | Description                  |
+| :----- | :----------- | :--------------------------- |
+| `tool` | [Tool](tool) | Instance of the tool to add. |
 
 ## Usage
 
@@ -28,10 +28,10 @@ crystal.tool.add(tool, options)
 
 ### Arguments
 
-| Name      | Type                 | Description                                         |
-| :-------- | :------------------- | :-------------------------------------------------- |
-| `tool`    | [crystal.Tool](tool) | Instance of the tool to add.                        |
-| `options` | `table`              | Additional options specifying behavior of the tool. |
+| Name      | Type         | Description                                         |
+| :-------- | :----------- | :-------------------------------------------------- |
+| `tool`    | [Tool](tool) | Instance of the tool to add.                        |
+| `options` | `table`      | Additional options specifying behavior of the tool. |
 
 The `options` table supports the following values:
 

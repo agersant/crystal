@@ -19,9 +19,9 @@ camera_controller:camera()
 
 ### Returns
 
-| Name             | Type                     | Description         |
-| :--------------- | :----------------------- | :------------------ |
-| `current_camera` | [crystal.Camera](camera) | The current camera. |
+| Name             | Type             | Description         |
+| :--------------- | :--------------- | :------------------ |
+| `current_camera` | [Camera](camera) | The current camera. |
 
 ## Examples
 

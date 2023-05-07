@@ -16,9 +16,9 @@ crystal.scene.current();
 
 ### Returns
 
-| Name            | Type                   | Description        |
-| :-------------- | :--------------------- | :----------------- |
-| `current_scene` | [crystal.Scene](scene) | The current scene. |
+| Name            | Type           | Description        |
+| :-------------- | :------------- | :----------------- |
+| `current_scene` | [Scene](scene) | The current scene. |
 
 ## Examples
 

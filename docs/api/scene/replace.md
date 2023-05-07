@@ -18,16 +18,16 @@ crystal.scene.replace(new_scene, ...);
 
 ### Arguments
 
-| Name        | Type                             | Description             |
-| :---------- | :------------------------------- | :---------------------- |
-| `new_scene` | [crystal.Scene](scene)           | Scene to transition to. |
-| `...`       | [crystal.Transition](transition) | Transitions to play.    |
+| Name        | Type                     | Description             |
+| :---------- | :----------------------- | :---------------------- |
+| `new_scene` | [Scene](scene)           | Scene to transition to. |
+| `...`       | [Transition](transition) | Transitions to play.    |
 
 ### Returns
 
-| Name     | Type                                         | Description                                                |
-| :------- | :------------------------------------------- | :--------------------------------------------------------- |
-| `thread` | [crystal.Thread](/crystal/api/script/thread) | A thread that completes when all transitions are finished. |
+| Name     | Type                                 | Description                                                |
+| :------- | :----------------------------------- | :--------------------------------------------------------- |
+| `thread` | [Thread](/crystal/api/script/thread) | A thread that completes when all transitions are finished. |
 
 ## Examples
 

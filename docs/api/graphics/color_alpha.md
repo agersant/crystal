@@ -22,9 +22,9 @@ color:alpha(opacity)
 
 ### Returns
 
-| Name    | Type                   | Description |
-| :------ | :--------------------- | :---------- |
-| `color` | [crystal.Color](color) | New color.  |
+| Name    | Type           | Description |
+| :------ | :------------- | :---------- |
+| `color` | [Color](color) | New color.  |
 
 ## Examples
 

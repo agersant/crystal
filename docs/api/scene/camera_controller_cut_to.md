@@ -16,16 +16,16 @@ camera_controller:cut_to(new_camera, ...)
 
 ### Arguments
 
-| Name         | Type                             | Description          |
-| :----------- | :------------------------------- | :------------------- |
-| `new_camera` | [crystal.Camera](camera)         | Camera to cut to.    |
-| `...`        | [crystal.Transition](transition) | Transitions to play. |
+| Name         | Type                     | Description          |
+| :----------- | :----------------------- | :------------------- |
+| `new_camera` | [Camera](camera)         | Camera to cut to.    |
+| `...`        | [Transition](transition) | Transitions to play. |
 
 ### Returns
 
-| Name     | Type                                         | Description                                                |
-| :------- | :------------------------------------------- | :--------------------------------------------------------- |
-| `thread` | [crystal.Thread](/crystal/api/script/thread) | A thread that completes when all transitions are finished. |
+| Name     | Type                                 | Description                                                |
+| :------- | :----------------------------------- | :--------------------------------------------------------- |
+| `thread` | [Thread](/crystal/api/script/thread) | A thread that completes when all transitions are finished. |
 
 ## Examples
 
