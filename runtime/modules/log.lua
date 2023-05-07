@@ -13,32 +13,10 @@ local priorities = {
 ---@field private file_handle love.File
 local Logger = Class("Logger");
 
-Logger.init = function(self)
+Logger.init = function(self, file_handle)
+	assert(file_handle);
 	self.verbosity = "debug";
-	self.file_handle = nil;
-end
-
-Logger.create_log_file = function(self)
-	local buffer_size = 1024; -- in bytes
-	local log_directory = "logs";
-
-	local error_message;
-	local success = love.filesystem.createDirectory(log_directory);
-	if not success then
-		error("Could not create logs directory");
-	end
-
-	local now = tostring(os.time());
-	local log_file = log_directory .. "/" .. now .. ".log";
-	self.file_handle, error_message = love.filesystem.newFile(log_file, "w");
-	if not self.file_handle then
-		error(error_message);
-	end
-
-	success, error_message = self.file_handle:setBuffer("full", buffer_size);
-	if not success then
-		error(error_message);
-	end
+	self.file_handle = file_handle;
 end
 
 ---@param verbosity LogLevel
@@ -67,7 +45,33 @@ Logger.append = function(self, level, text)
 	self.file_handle:write("\r\n");
 end
 
-local logger = Logger:new();
+---@return love.File
+local create_log_file = function()
+	local buffer_size = 1024; -- in bytes
+	local log_directory = "logs";
+
+	local error_message;
+	local success = love.filesystem.createDirectory(log_directory);
+	if not success then
+		error("Could not create logs directory");
+	end
+
+	local now = tostring(os.time());
+	local log_file = log_directory .. "/" .. now .. ".log";
+	local file_handle, error_message = love.filesystem.newFile(log_file, "w");
+	if not file_handle then
+		error(error_message);
+	end
+
+	success, error_message = file_handle:setBuffer("full", buffer_size);
+	if not success then
+		error(error_message);
+	end
+
+	return file_handle;
+end
+
+local logger;
 
 return {
 	module_api = {
@@ -90,8 +94,10 @@ return {
 			logger:append("warning", text);
 		end,
 	},
-	start = function()
-		logger:create_log_file();
+	start = function(restart_data)
+		logger = Logger:new(restart_data and restart_data.file_handle or create_log_file());
 	end,
-	-- TODO.hot_reload pick up same file after hot reload
+	stop = function()
+		return { file_handle = logger.file_handle };
+	end
 };

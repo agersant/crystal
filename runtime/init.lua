@@ -31,9 +31,9 @@ local track_engine_packages = function(f)
 end
 
 local modules = {};
-local add_module = function(name, path)
+local add_module = function(name)
 	assert(not modules[name]);
-	local module = require(CRYSTAL_RUNTIME .. "/" .. path);
+	local module = require(CRYSTAL_RUNTIME .. "/modules/" .. name);
 	modules[name] = module;
 	crystal[name] = module.module_api;
 	if features.tests and module.test_api then
@@ -49,33 +49,35 @@ local add_module = function(name, path)
 end
 
 local hot_reload;
-local start_engine = function()
+---@param restart_data? table
+local start_engine = function(restart_data)
+	restart_data = restart_data or {};
 	track_engine_packages(function()
-		add_module("math", "modules/math");
-		add_module("string", "modules/string");
-		add_module("table", "modules/table");
-		add_module("oop", "modules/oop");
-		add_module("test", "modules/test");
-		add_module("cmd", "modules/cmd");
-		add_module("ecs", "modules/ecs");
+		add_module("math");
+		add_module("string");
+		add_module("table");
+		add_module("oop");
+		add_module("test");
+		add_module("cmd");
+		add_module("ecs");
 
-		add_module("ai", "modules/ai");
-		add_module("assets", "modules/assets");
-		add_module("const", "modules/const");
-		add_module("graphics", "modules/graphics");
-		add_module("input", "modules/input");
-		add_module("log", "modules/log");
-		add_module("physics", "modules/physics");
-		add_module("script", "modules/script");
-		add_module("tool", "modules/tool");
-		add_module("ui", "modules/ui");
-		add_module("window", "modules/window");
+		add_module("ai");
+		add_module("assets");
+		add_module("const");
+		add_module("graphics");
+		add_module("input");
+		add_module("log");
+		add_module("physics");
+		add_module("script");
+		add_module("tool");
+		add_module("ui");
+		add_module("window");
 
-		add_module("scene", "modules/scene");
+		add_module("scene");
 
-		for _, module in pairs(modules) do
+		for module_name, module in pairs(modules) do
 			if module.start then
-				module.start();
+				module.start(restart_data[module_name]);
 			end
 		end
 
@@ -87,9 +89,10 @@ local start_engine = function()
 end
 
 local stop_engine = function()
-	for _, module in pairs(modules) do
+	local restart_data = {};
+	for module_name, module in pairs(modules) do
 		if module.stop then
-			module.stop();
+			restart_data[module_name] = module.stop();
 		end
 	end
 
@@ -100,6 +103,8 @@ local stop_engine = function()
 		package.loaded[package_name] = nil;
 	end
 	table.clear(engine_packages);
+
+	return restart_data;
 end
 
 local game_packages = {};
@@ -167,9 +172,8 @@ end
 
 hot_reload = function()
 	stop_game();
-	stop_engine();
-
-	start_engine();
+	local restart_data = stop_engine();
+	start_engine(restart_data);
 	start_game();
 end
 
@@ -260,4 +264,4 @@ love.textinput = crystal.textinput;
 love.quit = crystal.quit;
 
 love.keyboard.setTextInput(false); -- TODO.hot_reload Fix jank after hot reload
-start_engine();
+start_engine({});
