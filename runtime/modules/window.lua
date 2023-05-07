@@ -221,7 +221,6 @@ return {
 	update = function()
 		window:update();
 	end,
-	-- TODO.hot_reload should not redo this on hot reload!
 	start = function()
 		lg = table.copy(love.graphics);
 
