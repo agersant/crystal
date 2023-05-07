@@ -14,7 +14,7 @@
 - [ ] Continuous hot reload for game files
 - [x] Mouse support in UI
 - [x] Better color-scheme for code examples in docs (https://github.com/just-the-docs/just-the-docs/issues/679)
-- [ ] API revamp: `crystal.*` globals + docs + private functions as ---@package or ---@private
+- [x] API revamp: `crystal.*` globals + docs + private functions as ---@package or ---@private
   - [x] ai
   - [x] assets
   - [x] cmd
@@ -29,7 +29,7 @@
   - [x] script
   - [x] test
   - [x] tool
-  - [ ] ui
+  - [x] ui
   - [x] oop
   - [x] mathutils
   - [x] stringutils
