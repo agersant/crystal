@@ -73,14 +73,6 @@ crystal.configure = function(c)
 	crystal.conf = table.merge(default_configuration, c);
 end
 
-crystal.cmd.add("loadScene sceneName:string", function(sceneName)
-	local class = Class:by_name(sceneName);
-	assert(class);
-	assert(class:inherits_from("Scene"));
-	local new_scene = class:new();
-	crystal.scene.replace(new_scene);
-end);
-
 local require_game_source = function()
 	-- TODO may or may not work in fused build
 	local assets_directories = table.map(crystal.conf.assetsDirectories, function(d)

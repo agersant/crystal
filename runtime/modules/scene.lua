@@ -6,6 +6,14 @@ local Transition = require("modules/scene/transition");
 
 local scene_manager = SceneManager:new();
 
+crystal.cmd.add("loadScene sceneName:string", function(scene_name)
+	local class = Class:by_name(scene_name);
+	assert(class);
+	assert(class:inherits_from(Scene));
+	local new_scene = class:new();
+	crystal.scene.replace(new_scene);
+end);
+
 return {
 	module_api = {
 		replace = function(scene, ...)
