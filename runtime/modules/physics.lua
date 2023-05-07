@@ -11,7 +11,7 @@ return {
 	module_api = {
 		define_categories = function(user_categories)
 			local categories = table.copy(user_categories);
-			table.push(categories, "level");
+			table.insert(categories, 1, "level");
 			Fixture.all_categories = {};
 			for i, category in ipairs(categories) do
 				assert(type(category) == "string");
