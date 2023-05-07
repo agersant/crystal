@@ -81,7 +81,7 @@ crystal.cmd.add("loadScene sceneName:string", function(sceneName)
 	crystal.scene.replace(new_scene);
 end);
 
-local requireGameSource = function()
+local require_game_source = function()
 	-- TODO may or may not work in fused build
 	local assets_directories = table.map(crystal.conf.assetsDirectories, function(d)
 		return d:gsub("%-", "%%-");
@@ -126,7 +126,7 @@ crystal.load = function()
 	require("tools/fps_counter");
 
 	if not CRYSTAL_NO_GAME then
-		requireGameSource();
+		require_game_source();
 	end
 
 	if crystal.prelude then
