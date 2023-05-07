@@ -234,7 +234,7 @@ math.ease_in_out_bounce = function(t)
 end
 
 return {
-	init = function()
+	start = function()
 		--#region Tests
 
 		crystal.test.add("Can round numbers", function()

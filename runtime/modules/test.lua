@@ -88,7 +88,7 @@ TestRunner.reset_global_state = function(self, test)
 		love.window.setMode(self.resolution[1], self.resolution[2], { fullscreen = false });
 	end
 
-	-- TODO avoid coupling with misc modules. Possibly share some logic with clean slate between hot reloads?
+	-- TODO.hot_reload avoid coupling with misc modules. Possibly share some logic with clean slate between hot reloads?
 	crystal.assets.unload_all();
 	crystal.UIElement.router:reset();
 	crystal.window.set_scaling_mode("pixel_perfect");
@@ -287,4 +287,5 @@ return {
 		TestContext = TestContext,
 	},
 	runner = test_runner,
+	-- TODO cant restart between tests!
 };

@@ -398,6 +398,8 @@ end);
 
 --#endregion
 
+-- TODO.hot_reload Console history should be preserved
+
 return function(terminal)
 	assert(terminal);
 	local console = Console:new(terminal);

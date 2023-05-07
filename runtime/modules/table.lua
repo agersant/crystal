@@ -148,7 +148,7 @@ table.deserialize = function(source)
 end
 
 return {
-	init = function()
+	start = function()
 		--#region Tests
 
 		crystal.test.add("Can check if table is empty", function()

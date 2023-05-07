@@ -1,9 +1,9 @@
 local features = require("features");
 
-local classes = {};
+local all_classes = {};
 
 local get_class_by_name = function(_, name)
-	return classes[name];
+	return all_classes[name];
 end
 
 local object_in_place_constructor = function(class, obj, ...)
@@ -22,7 +22,7 @@ end
 local make_inherits_from = function(class)
 	return function(self, other_class)
 		if type(other_class) == "string" then
-			other_class = classes[other_class];
+			other_class = all_classes[other_class];
 		end
 		assert(other_class);
 		if class == other_class then
@@ -155,21 +155,21 @@ local declare_class = function(self, name, base_class, options)
 
 	local allow_redefinition = options and options.allow_redefinition;
 	if not allow_redefinition then
-		assert(not classes[name]);
+		assert(not all_classes[name]);
 	end
-	classes[name] = class;
+	all_classes[name] = class;
 
 	return class;
 end
 
 Class = setmetatable({}, { __call = declare_class });
 Class.by_name = get_class_by_name;
-Class.test = function(self, name, base_class)
+Class.test = function(self, name, base_class) -- TODO.hot_reload can probably remove this with proper engine restart between tests
 	return declare_class(self, name, base_class, { allow_redefinition = true });
 end;
 
 return {
-	init = function()
+	start = function()
 		--#region Tests
 
 		crystal.test.add("Classes implement tostring", function()
@@ -352,5 +352,8 @@ return {
 		end);
 
 		--#endregion
-	end
+	end,
+	stop = function()
+		Class = nil;
+	end,
 };

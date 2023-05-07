@@ -78,4 +78,5 @@ return {
 			constants:set(name, value);
 		end,
 	},
+	-- TODO.hot_reload restore constants after hot reload
 };

@@ -59,7 +59,7 @@ return {
 		Widget = Widget,
 		Wrapper = Wrapper,
 	},
-	init = function()
+	start = function()
 		local built_in_fonts = {
 			crystal_regular = CRYSTAL_RUNTIME .. "/assets/source_code_pro_medium.otf",
 			crystal_bold = CRYSTAL_RUNTIME .. "/assets/source_code_pro_bold.otf",

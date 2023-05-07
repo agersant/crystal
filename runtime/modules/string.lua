@@ -77,7 +77,7 @@ string.merge_paths = function(a, b)
 end
 
 return {
-	init = function()
+	start = function()
 		--#region Tests
 
 		crystal.test.add("Can check string prefix", function()

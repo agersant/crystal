@@ -90,7 +90,8 @@ return {
 			logger:append("warning", text);
 		end,
 	},
-	init = function()
+	start = function()
 		logger:create_log_file();
 	end,
+	-- TODO.hot_reload pick up same file after hot reload
 };

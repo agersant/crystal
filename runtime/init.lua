@@ -1,31 +1,44 @@
 -- Add this directory to `package.path` so crystal source files can include each other
-local thisModulePath = ...;
-local pathChunks = {};
-thisModulePath:gsub("([^%./\\]+)", function(c) table.insert(pathChunks, c); end);
-local tail = pathChunks[#pathChunks];
+local this_package_path = ...;
+local path_chunks = {};
+this_package_path:gsub("([^%./\\]+)", function(c) table.insert(path_chunks, c); end);
+local tail = path_chunks[#path_chunks];
 if tail == "init" or tail == "init.lua" then
-	table.remove(pathChunks);
+	table.remove(path_chunks);
 end
-local crystalRuntime = table.concat(pathChunks, "/");
-table.remove(pathChunks);
-local crystalRoot = table.concat(pathChunks, "/");
+
+CRYSTAL_RUNTIME = table.concat(path_chunks, "/");
+table.remove(path_chunks);
+local crystal_root = table.concat(path_chunks, "/");
+CRYSTAL_NO_GAME = crystal_root == "";
 
 -- TODO may or may not work in fused build
 -- TODO Manually add CRYSTAL_RUNTIME to `require` calls and leave package.path alone?
-package.path = package.path .. ";" .. crystalRuntime .. "/?.lua";
+package.path = package.path .. ";" .. CRYSTAL_RUNTIME .. "/?.lua";
 
-local features = require("features");
-
-CRYSTAL_ROOT = crystalRoot;
-CRYSTAL_RUNTIME = crystalRuntime;
-CRYSTAL_NO_GAME = crystalRoot == "";
+local features = require(CRYSTAL_RUNTIME .. "/features");
 
 ---@diagnostic disable-next-line: lowercase-global
 crystal = {};
 
+local engine_packages = {};
+local track_engine_packages = function(f)
+	local other_packages = {};
+	for k, _ in pairs(package.loaded) do
+		other_packages[k] = true;
+	end
+	f();
+	for k, _ in pairs(package.loaded) do
+		if not other_packages[k] then
+			engine_packages[k] = true;
+		end
+	end
+end
+
 local modules = {};
 local add_module = function(name, path)
-	local module = require(path);
+	assert(not modules[name]);
+	local module = require(CRYSTAL_RUNTIME .. "/" .. path);
 	modules[name] = module;
 	crystal[name] = module.module_api;
 	if features.tests and module.test_api then
@@ -40,42 +53,61 @@ local add_module = function(name, path)
 	end
 end
 
-add_module("math", "modules/math");
-add_module("string", "modules/string");
-add_module("table", "modules/table");
-add_module("oop", "modules/oop");
-add_module("test", "modules/test");
-add_module("cmd", "modules/cmd");
-add_module("ecs", "modules/ecs");
+local start_engine = function()
+	track_engine_packages(function()
+		add_module("math", "modules/math");
+		add_module("string", "modules/string");
+		add_module("table", "modules/table");
+		add_module("oop", "modules/oop");
+		add_module("test", "modules/test");
+		add_module("cmd", "modules/cmd");
+		add_module("ecs", "modules/ecs");
 
-add_module("ai", "modules/ai");
-add_module("assets", "modules/assets");
-add_module("const", "modules/const");
-add_module("graphics", "modules/graphics");
-add_module("input", "modules/input");
-add_module("log", "modules/log");
-add_module("physics", "modules/physics");
-add_module("script", "modules/script");
-add_module("tool", "modules/tool");
-add_module("ui", "modules/ui");
-add_module("window", "modules/window");
+		add_module("ai", "modules/ai");
+		add_module("assets", "modules/assets");
+		add_module("const", "modules/const");
+		add_module("graphics", "modules/graphics");
+		add_module("input", "modules/input");
+		add_module("log", "modules/log");
+		add_module("physics", "modules/physics");
+		add_module("script", "modules/script");
+		add_module("tool", "modules/tool");
+		add_module("ui", "modules/ui");
+		add_module("window", "modules/window");
 
-add_module("scene", "modules/scene");
+		add_module("scene", "modules/scene");
 
-local default_configuration = {
-	assetsDirectories = {},
-	physics_categories = {},
-	fonts = {},
-};
+		for _, module in pairs(modules) do
+			if module.start then
+				module.start();
+			end
+		end
 
-crystal.conf = default_configuration;
-crystal.configure = function(c)
-	crystal.conf = table.merge(default_configuration, c);
+		require(CRYSTAL_RUNTIME .. "/tools/console")(modules.cmd.terminal);
+		require(CRYSTAL_RUNTIME .. "/tools/fps_counter");
+	end);
 end
 
+local stop_engine = function()
+	for _, module in pairs(modules) do
+		if module.stop then
+			module.stop();
+		end
+	end
+
+	table.clear(crystal);
+	table.clear(modules);
+
+	for package_name in pairs(engine_packages) do
+		package.loaded[package_name] = nil;
+	end
+	table.clear(engine_packages);
+end
+
+local game_packages = {};
 local require_game_source = function()
 	-- TODO may or may not work in fused build
-	local assets_directories = table.map(crystal.conf.assetsDirectories, function(d)
+	local assets_directories = table.map(modules.assets.directories(), function(d)
 		return d:gsub("%-", "%%-");
 	end);
 	local directories = { "" };
@@ -83,7 +115,7 @@ local require_game_source = function()
 		local directory = table.pop(directories);
 		for _, item in ipairs(love.filesystem.getDirectoryItems(directory)) do
 			local path = (directory == "") and item or (directory .. "/" .. item);
-			local is_crystal = path:match("^" .. CRYSTAL_ROOT);
+			local is_crystal = path:match("^" .. crystal_root);
 			if not is_crystal then
 				local is_asset = false;
 				for _, asset_directory in ipairs(assets_directories) do
@@ -95,9 +127,11 @@ local require_game_source = function()
 						table.push(directories, path);
 					elseif info.type == "file" then
 						local is_lua = path:match("%.lua$");
-						local is_startup = path:match("main%.lua") or path:match("conf%.lua");
-						if is_lua and not is_startup then
-							require(path:strip_file_extension());
+						local is_conf = path:match("conf%.lua");
+						if is_lua and not is_conf then
+							local package_name = path:strip_file_extension();
+							game_packages[package_name] = true;
+							require(package_name);
 						end
 					end
 				end
@@ -106,16 +140,10 @@ local require_game_source = function()
 	end
 end
 
-crystal.load = function()
-	for _, module in pairs(modules) do
-		if module.init then
-			module.init();
-		end
-	end
+local hot_reload;
 
-	love.keyboard.setTextInput(false);
-	require("tools/console")(modules.cmd.terminal);
-	require("tools/fps_counter");
+local start_game = function()
+	crystal.cmd.add("hotReload", hot_reload);
 
 	if not CRYSTAL_NO_GAME then
 		require_game_source();
@@ -131,6 +159,23 @@ crystal.load = function()
 		crystal.player_start();
 	end
 end
+
+local stop_game = function()
+	for package_name in pairs(game_packages) do
+		package.loaded[package_name] = nil;
+	end
+	table.clear(game_packages);
+end
+
+hot_reload = function()
+	stop_game();
+	stop_engine();
+
+	start_engine();
+	start_game();
+end
+
+crystal.load = start_game;
 
 crystal.update = function(dt)
 	modules.window.update();
@@ -215,3 +260,6 @@ love.gamepadpressed = crystal.gamepadpressed;
 love.gamepadreleased = crystal.gamepadreleased;
 love.textinput = crystal.textinput;
 love.quit = crystal.quit;
+
+love.keyboard.setTextInput(false); -- TODO.hot_reload Fix jank after hot reload
+start_engine();
