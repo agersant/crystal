@@ -1,4 +1,3 @@
--- Add this directory to `package.path` so crystal source files can include each other
 local this_package_path = ...;
 local path_chunks = {};
 this_package_path:gsub("([^%./\\]+)", function(c) table.insert(path_chunks, c); end);
