@@ -276,4 +276,16 @@ return {
 			transform_stack[#transform_stack]:translate(dx, dy);
 		end
 	end,
+	stop = function()
+		love.graphics.reset = lg.reset;
+		love.graphics.applyTransform = lg.applyTransform;
+		love.graphics.origin = lg.origin;
+		love.graphics.pop = lg.pop;
+		love.graphics.push = lg.push;
+		love.graphics.replaceTransform = lg.replaceTransform;
+		love.graphics.rotate = lg.rotate;
+		love.graphics.scale = lg.scale;
+		love.graphics.shear = lg.shear;
+		love.graphics.translate = lg.translate;
+	end,
 };
