@@ -85,6 +85,12 @@ table.merge = function(table_a, table_b)
 	return out;
 end
 
+table.overlay = function(destination, source)
+	for k, v in pairs(source) do
+		destination[k] = v;
+	end
+end
+
 table.serialize = function(t)
 	local ref_counts = {};
 	local check_refs;
@@ -191,6 +197,14 @@ return {
 			local m = table.merge({ a = 1 }, { b = 2 });
 			assert(m.a == 1);
 			assert(m.b == 2);
+		end);
+
+		crystal.test.add("Can overlay tables", function()
+			local t = { a = 1, b = 2 };
+			table.overlay(t, { b = 10, c = 11 });
+			assert(t.a == 1);
+			assert(t.b == 10);
+			assert(t.c == 11);
 		end);
 
 		crystal.test.add("Can test if table contains value", function()

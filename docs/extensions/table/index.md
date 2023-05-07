@@ -22,6 +22,7 @@ This module contains utility functions for table operations. All functions are r
 | [table.is_empty](table_is_empty)       | Returns whether a table contains any key.                                  |
 | [table.map](table_map)                 | Creates a new table by applying a transformation to all values in a table. |
 | [table.merge](table_merge)             | Creates a new table containing all `(key, value)` pairs from two tables.   |
+| [table.overlay](table_overlay)         | Writes all the `(key, value)` pairs from a table into an existing table.   |
 | [table.pop](table_pop)                 | Removes the last element of a list.                                        |
 | [table.push](table_push)               | Adds an element at the end of a list.                                      |
 | [table.serialize](table_serialize)     | Returns a string representation of a table.                                |
