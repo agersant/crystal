@@ -11,14 +11,14 @@ local Terminal = require(CRYSTAL_RUNTIME .. "/modules/cmd/terminal")
 ---@field private constants { [string]: Constant }
 local Constants = Class("Constants");
 
----@field private constants { [string]: Constant }
-Constants.init = function(self, terminal)
+Constants.init = function(self)
 	self.constants = {};
 end
 
 ---@param name string
 ---@param initial_value any
 ---@param options { min: number, max: number }
+---@return any
 Constants.define = function(self, name, initial_value, options)
 	assert(name);
 	assert(initial_value);
@@ -27,18 +27,24 @@ Constants.define = function(self, name, initial_value, options)
 	local value_type = type(initial_value);
 
 	local name = self:normalize(name);
-	assert(not self.constants[name]);
+	if self.constants[name] then
+		return self.constants[name].value;
+	end
 
 	local options = options or {};
 	local constant = { value = initial_value, name = display_name };
 	if value_type == "number" then
-		assert(type(options.min) == "number");
-		assert(type(options.max) == "number");
-		assert(options.min <= options.max);
-		assert(initial_value >= options.min);
-		assert(initial_value <= options.max);
-		constant.min = options.min;
-		constant.max = options.max;
+		assert(not options.min or not options.max or options.min <= options.max);
+		if options.min then
+			assert(type(options.min) == "number");
+			constant.value = math.max(constant.value, options.min);
+			constant.min = options.min;
+		end
+		if options.max then
+			assert(type(options.max) == "number");
+			constant.value = math.min(constant.value, options.max);
+			constant.max = options.max;
+		end
 	end
 
 	if value_type == "number" or value_type == "string" or value_type == "boolean" then
@@ -48,9 +54,13 @@ Constants.define = function(self, name, initial_value, options)
 	end
 
 	self.constants[name] = constant;
+
+	return initial_value;
 end
 
 ---@private
+---@param name string
+---@return name
 Constants.normalize = function(self, name)
 	assert(name);
 	local name = name:lower():strip_whitespace();
@@ -58,17 +68,23 @@ Constants.normalize = function(self, name)
 	return name;
 end
 
+---@param name string
+---@return Constant
 Constants.find = function(self, name)
 	local constant = self.constants[self:normalize(name)];
 	assert(constant);
 	return constant;
 end
 
+---@param name string
+---@return any
 Constants.get = function(self, name)
 	local constant = self:find(name);
 	return constant.value;
 end
 
+---@param name string
+---@param value any
 Constants.set = function(self, name, value)
 	if not features.writable_constants then
 		return;
@@ -77,7 +93,12 @@ Constants.set = function(self, name, value)
 	assert(type(constant.value) == type(value));
 	local value = value;
 	if type(value) == "number" then
-		value = math.clamp(value, constant.min, constant.max);
+		if constant.min then
+			value = math.max(value, constant.min);
+		end
+		if constant.max then
+			value = math.min(value, constant.max);
+		end
 	end
 	constant.value = value;
 end

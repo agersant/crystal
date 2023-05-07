@@ -8,14 +8,11 @@ crystal.test.add("Can read initial value", function(context)
 	assert(constants:get(context.test_name) == "oink");
 end);
 
-crystal.test.add("Enforces unique registration", function(context)
+crystal.test.add("Redundant registration returns current value", function(context)
 	local constants = Constants:new();
 	constants:define(context.test_name, "oink");
-	local success, error_message = pcall(function()
-		constants:define(context.test_name, "meow");
-	end);
-	assert(not success);
-	assert(#error_message > 1);
+	constants:set(context.test_name, "oinque");
+	assert(constants:define(context.test_name, "meow") == "oinque");
 end);
 
 crystal.test.add("Can read/write values", function(context)
@@ -66,10 +63,11 @@ end);
 --#endregion
 
 local constants = Constants:new();
+
 return {
 	module_api = {
 		define = function(name, initial_value, options)
-			constants:define(name, initial_value, options);
+			return constants:define(name, initial_value, options);
 		end,
 		get = function(name)
 			return constants:get(name);
@@ -78,5 +76,4 @@ return {
 			constants:set(name, value);
 		end,
 	},
-	-- TODO.hot_reload restore constants after hot reload
 };
