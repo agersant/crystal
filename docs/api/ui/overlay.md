@@ -8,7 +8,7 @@ nav_order: 2
 
 A [Container](container) which aligns children relatively to itself. The desired size of an overlay is the size of its largest child. All children are positioned within this space according to their alignment preferences (in a corner, centered, stretched, etc.).
 
-Children of an overlay have [Overlay Joints](overlay_list_joint) associated with them to adjust positioning preferences (padding, alignment, etc.).
+Children of an overlay have [Overlay Joints](overlay_joint) associated with them to adjust positioning preferences (padding, alignment, etc.).
 
 ## Constructor
 
