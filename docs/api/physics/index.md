@@ -12,7 +12,7 @@ This module contains [components](/crystal/api/ecs/components) to facilitate pos
 
 One important difference between LOVE physics and this module is that Crystal [bodies](body) never rotate. Their rotation field is useful to keep track of which direction a character is facing, but has no effect on the actual physics simulation (ie. [colliders](collider) and [sensors](sensor) components do not rotate).
 
-Several functions in this module rely on [categories](https://love2d.org/wiki/Fixture:setCategory). Categories are used to describe what type of object a [Collider](collider) or [Sensor](sensor) represents. Some example categories could be characters, level obstacles, invisible triggers or destructible objects. The list of valid categories must be defined once during game startup via [crystal.configure](/crystal/api/configure).
+Many functions in this module rely on [categories](https://love2d.org/wiki/Fixture:setCategory). Categories are used to describe what type of object a [Collider](collider) or [Sensor](sensor) represents. Some example categories could be characters, level obstacles, invisible triggers or destructible objects. The list of valid categories must be defined once during game startup via [crystal.phyics.define_categories](define_categories).
 
 ## Examples
 
@@ -31,6 +31,12 @@ ecs:add_system(crystal.PhysicsSystem);
 
 local hero = ecs:spawn(Hero);
 ```
+
+## Functions
+
+| Name                                   | Description                                                                                |
+| :------------------------------------- | :----------------------------------------------------------------------------------------- |
+| [define_categories](define_categories) | Sets the list of categories that can describe [colliders](collider) and [sensors](sensor). |
 
 ## Classes
 

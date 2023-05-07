@@ -269,9 +269,7 @@ crystal.test.add("Can detach entities", function()
 end);
 
 crystal.test.add("Colliders block movement", function()
-	local all_categories = {
-		solid = 1,
-	};
+	crystal.physics.define_categories({ "solid" });
 
 	local colliding = false;
 
@@ -282,7 +280,6 @@ crystal.test.add("Colliders block movement", function()
 	entity:add_component(crystal.Body);
 	entity:add_component(crystal.Movement);
 	local collider = entity:add_component(crystal.Collider, love.physics.newRectangleShape(10, 10));
-	collider.all_categories = all_categories;
 	collider.on_collide = function() colliding = true; end;
 	collider.on_uncollide = function() colliding = false; end;
 	entity:set_heading(0);
@@ -294,7 +291,6 @@ crystal.test.add("Colliders block movement", function()
 	obstacle:add_component(crystal.Body, "static");
 	obstacle:set_position(50, 0);
 	local collider = obstacle:add_component(crystal.Collider, love.physics.newRectangleShape(10, 10));
-	collider.all_categories = all_categories;
 	collider:set_categories("solid");
 	collider:enable_collision_with("solid");
 
@@ -317,10 +313,7 @@ crystal.test.add("Colliders block movement", function()
 end);
 
 crystal.test.add("Colliders activate sensors", function()
-	local all_categories = {
-		solid = 1,
-		trigger = 1,
-	};
+	crystal.physics.define_categories({ "solid", "trigger" });
 
 	local activated = false;
 	local deactivated = false;
@@ -333,7 +326,6 @@ crystal.test.add("Colliders activate sensors", function()
 	entity:add_component(crystal.Body);
 	entity:add_component(crystal.Movement);
 	local collider = entity:add_component(crystal.Collider, love.physics.newRectangleShape(10, 10));
-	collider.all_categories = all_categories;
 	entity:set_heading(0);
 	entity:set_speed(100);
 	entity:set_categories("solid");
@@ -343,7 +335,6 @@ crystal.test.add("Colliders activate sensors", function()
 	trigger:add_component(crystal.Body, "static");
 	trigger:set_position(50, 0);
 	local sensor = trigger:add_component(crystal.Sensor, love.physics.newRectangleShape(10, 10));
-	sensor.all_categories = all_categories;
 	sensor:set_categories("trigger");
 	sensor:enable_activation_by("solid");
 	sensor.on_activate = function() activated = true; end;

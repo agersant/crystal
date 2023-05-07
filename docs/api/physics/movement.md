@@ -1,6 +1,7 @@
 ---
 parent: crystal.physics
 grand_parent: API Reference
+nav_order: 2
 ---
 
 # crystal.Movement

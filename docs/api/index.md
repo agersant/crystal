@@ -33,9 +33,3 @@ nav_order: 1
 | crystal.developer_start |             |
 | crystal.player_start    |             |
 | crystal.prelude         |             |
-
-## Functions
-
-| Name                           | Description                    |
-| :----------------------------- | :----------------------------- |
-| [crystal.configure](configure) | Configures crystal's behavior. |
