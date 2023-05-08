@@ -90,3 +90,9 @@ end
 | [crystal.CameraController](camera_controller) | Utility class to handle multiple cameras in a scene.       |
 | [crystal.Scene](scene)                        | Game state or level which can draw to the screen.          |
 | [crystal.Transition](transition)              | Visual effect to decorate scene changes or camera changes. |
+
+## Console Commands
+
+| Name                    | Description                 |
+| :---------------------- | :-------------------------- |
+| [LoadScene](load_scene) | Replaces the current scene. |

@@ -18,3 +18,10 @@ Hot reload is not available in [fused builds](https://love2d.org/wiki/love.files
 | [disable](disable) | Disables hot reloading.                            |
 | [enable](enable)   | Enables hot reloading.                             |
 | [persist](persist) | Makes a piece of data persist through hot reloads. |
+
+## Console Commands
+
+| Name               | Description               |
+| :----------------- | :------------------------ |
+| `DisableHotReload` | Calls [disable](disable). |
+| `EnableHotReload`  | Calls [enable](enable).   |

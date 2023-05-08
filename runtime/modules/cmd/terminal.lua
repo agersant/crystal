@@ -105,50 +105,60 @@ end
 crystal.test.add("Can run a command", function()
 	local terminal = Terminal:new();
 	local sentinel = 0;
-	terminal:add_command("testCommand", function()
+	terminal:add_command("TestCommand", function()
 		sentinel = 1;
 	end);
-	terminal:run("testCommand");
+	terminal:run("TestCommand");
+	assert(sentinel == 1);
+end);
+
+crystal.test.add("Commands are case insensitive", function()
+	local terminal = Terminal:new();
+	local sentinel = 0;
+	terminal:add_command("TestCommand", function()
+		sentinel = 1;
+	end);
+	terminal:run("tEstcOmmAnd");
 	assert(sentinel == 1);
 end);
 
 crystal.test.add("Validates command argument count", function()
 	local terminal = Terminal:new();
 	local sentinel = false;
-	terminal:add_command("testCommand value:number", function(value)
+	terminal:add_command("TestCommand value:number", function(value)
 		sentinel = true;
 	end);
-	terminal:run("testCommand");
+	terminal:run("TestCommand");
 	assert(not sentinel);
 end);
 
 crystal.test.add("Typechecks command arguments", function()
 	local terminal = Terminal:new();
 	local sentinel = false;
-	terminal:add_command("testCommand value:number", function()
+	terminal:add_command("TestCommand value:number", function()
 		sentinel = true;
 	end);
-	terminal:run("testCommand badArgument");
+	terminal:run("TestCommand badArgument");
 	assert(not sentinel);
 end);
 
 crystal.test.add("Commands can have number arguments", function()
 	local terminal = Terminal:new();
 	local sentinel = 0;
-	terminal:add_command("testCommand value:number", function(value)
+	terminal:add_command("TestCommand value:number", function(value)
 		sentinel = value;
 	end);
-	terminal:run("testCommand 2");
+	terminal:run("TestCommand 2");
 	assert(sentinel == 2);
 end);
 
 crystal.test.add("Commands can have string arguments", function()
 	local terminal = Terminal:new();
 	local sentinel = "";
-	terminal:add_command("testCommand value:string", function(value)
+	terminal:add_command("TestCommand value:string", function(value)
 		sentinel = value;
 	end);
-	terminal:run("testCommand oink");
+	terminal:run("TestCommand oink");
 	assert(sentinel == "oink");
 end);
 

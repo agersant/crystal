@@ -8,7 +8,7 @@
 - [x] Gamepad support
 - [x] Input auto-repeats
 - [x] Docs website in readme
-- [ ] Document built-in commands
+- [x] Document built-in commands
 - [x] Window/viewport/scene/camera system rework
 - [ ] Getting Started instructions in readme and docs
 - [x] Continuous hot reload for game files

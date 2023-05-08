@@ -17,6 +17,13 @@ When it receives the `draw_debug` [notification](/crystal/api/ecs/ecs_notify_sys
 | [simulate_physics](physics_system_simulate_physics) | Ticks the physics simulation.                                                   |
 | [world](physics_system_world)                       | Returns the [love.World](https://love2d.org/wiki/World) managed by this system. |
 
+## Console Commands
+
+| Name                 | Description                                            |
+| :------------------- | :----------------------------------------------------- |
+| `HidePhysicsOverlay` | Stops drawing the shape of all colliders and sensors.  |
+| `ShowPhysicsOverlay` | Starts drawing the shape of all colliders and sensors. |
+
 ## Examples
 
 ```lua

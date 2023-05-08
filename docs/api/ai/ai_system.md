@@ -13,6 +13,13 @@ A [System](/crystal/api/ecs/system) that updates [Navigation](navigation) compon
 | :------------------------------- | :---------------- |
 | [update_ai](ai_system_update_ai) | Updates AI logic. |
 
+## Console Commands
+
+| Name                    | Description                                          |
+| :---------------------- | :--------------------------------------------------- |
+| `HideNavigationOverlay` | Stops drawing the navigation mesh and active paths.  |
+| `ShowNavigationOverlay` | Starts drawing the navigation mesh and active paths. |
+
 ## Examples
 
 ```lua

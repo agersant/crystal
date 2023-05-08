@@ -20,7 +20,7 @@ Command.init = function(self, signature, impl)
 
 	self.args = {};
 	local raw_args = signature:sub(#self.display_name + 1):trim();
-	for raw_arg in string.gmatch(raw_args, "%a+[%d%a]-:%a+") do
+	for raw_arg in string.gmatch(raw_args, "%a+[^%s]-:%a+") do
 		local arg = {};
 		arg.name, arg.type = raw_arg:match("(.+):(.+)");
 		assert(type(arg.name) == "string");
