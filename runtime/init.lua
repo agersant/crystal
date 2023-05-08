@@ -49,9 +49,7 @@ local add_module = function(name)
 end
 
 local hot_reload;
----@param restart_data? table
-local start_engine = function(restart_data)
-	restart_data = restart_data or {};
+local start_engine = function()
 	track_engine_packages(function()
 		add_module("math");
 		add_module("string");
@@ -77,7 +75,7 @@ local start_engine = function(restart_data)
 
 		for module_name, module in pairs(modules) do
 			if module.start then
-				module.start(restart_data[module_name]);
+				module.start();
 			end
 		end
 
@@ -171,10 +169,21 @@ local stop_game = function()
 end
 
 hot_reload = function()
+	local savestate = {};
+	for module_name, module in pairs(modules) do
+		if module.before_hot_reload then
+			savestate[module_name] = module.before_hot_reload();
+		end
+	end
 	stop_game();
-	local restart_data = stop_engine();
-	start_engine(restart_data);
+	stop_engine();
+	start_engine();
 	start_game();
+	for module_name, module in pairs(modules) do
+		if module.after_hot_reload then
+			module.after_hot_reload(savestate[module_name]);
+		end
+	end
 end
 
 crystal.load = start_game;
@@ -255,4 +264,4 @@ love.textinput = crystal.textinput;
 love.quit = crystal.quit;
 
 love.keyboard.setTextInput(false); -- TODO.hot_reload Fix jank after hot reload
-start_engine({});
+start_engine();

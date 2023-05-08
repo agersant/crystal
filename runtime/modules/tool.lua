@@ -33,6 +33,12 @@ return {
 	text_input = function(text)
 		toolkit:text_input(text);
 	end,
+	before_hot_reload = function()
+		return toolkit:save();
+	end,
+	after_hot_reload = function(savestate)
+		toolkit:load(savestate);
+	end,
 	quit = function()
 		toolkit:quit();
 	end,

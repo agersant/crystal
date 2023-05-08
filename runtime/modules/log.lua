@@ -71,7 +71,7 @@ local create_log_file = function()
 	return file_handle;
 end
 
-local logger;
+local logger = Logger:new(create_log_file());
 
 return {
 	module_api = {
@@ -94,12 +94,6 @@ return {
 			logger:append("warning", text);
 		end,
 	},
-	start = function(restart_data)
-		logger = Logger:new(restart_data and restart_data.file_handle or create_log_file());
-	end,
-	stop = function()
-		return { file_handle = logger.file_handle };
-	end,
 	test_harness = function()
 		logger:set_verbosity("error");
 	end,

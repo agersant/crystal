@@ -138,11 +138,12 @@ Console.submit_input = function(self)
 	if #command == 0 then
 		return;
 	end
-	self.terminal:run(command);
 	self:push_to_history(command);
 	table.insert(self.history, 1, { input = TextInputBuffer:new(undo_stack_size) });
 	self.history_index = 1;
 	self:on_input_changed();
+	crystal.tool.hide("Console");
+	self.terminal:run(command);
 end
 
 ---@private
@@ -267,6 +268,15 @@ Console.draw_autocomplete = function(self, x, y)
 		love.graphics.setColor(crystal.Color.white);
 		love.graphics.print(suggestion.text, suggestion_x, suggestion_y);
 	end
+end
+
+Console.save = function(self)
+	return { history = self.history };
+end
+
+Console.load = function(self, savestate)
+	assert(savestate.history);
+	self.history = savestate.history;
 end
 
 --#region Tests

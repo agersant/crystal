@@ -22,6 +22,14 @@ Tool.is_visible = function(self)
 	return false;
 end
 
+---@return table | nil
+Tool.save = function(self)
+end
+
+---@param data table
+Tool.load = function(self, data)
+end
+
 Tool.quit = function(self)
 end
 
