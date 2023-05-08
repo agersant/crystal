@@ -38,6 +38,7 @@
 
 # Crystal 0.2.0
 
+- [ ] Error handling/recovery
 - [ ] Curves & timelines
 - [ ] Finite state machines
 - [ ] ECS component for mouse input

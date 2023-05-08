@@ -5,8 +5,14 @@ local channel = love.thread.getChannel(channel_name);
 
 local persistence = {};
 
+local enabled = true;
+crystal.cmd.add("enableHotReload", function() enabled = true end);
+crystal.cmd.add("disableHotReload", function() enabled = false end);
+
 return {
 	module_api = {
+		disable = function() enabled = false end,
+		enable = function() enabled = true end,
 		persist = function(key, save, load)
 			if not features.hot_reload then
 				return;
@@ -47,7 +53,7 @@ return {
 		end
 		if channel:getCount() > 0 then
 			channel:clear();
-			return true;
+			return enabled;
 		end
 		return false;
 	end
