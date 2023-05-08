@@ -263,5 +263,5 @@ love.gamepadreleased = crystal.gamepadreleased;
 love.textinput = crystal.textinput;
 love.quit = crystal.quit;
 
-love.keyboard.setTextInput(false); -- TODO.hot_reload Fix jank after hot reload
+love.keyboard.setTextInput(false);
 start_engine();
