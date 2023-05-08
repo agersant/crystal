@@ -63,6 +63,7 @@ local start_engine = function()
 		add_module("assets");
 		add_module("const");
 		add_module("graphics");
+		add_module("hot_reload");
 		add_module("input");
 		add_module("log");
 		add_module("physics");
@@ -81,8 +82,6 @@ local start_engine = function()
 
 		require(CRYSTAL_RUNTIME .. "/tools/console")(modules.cmd.terminal);
 		require(CRYSTAL_RUNTIME .. "/tools/fps_counter");
-
-		crystal.cmd.add("hotReload", hot_reload);
 	end);
 end
 
@@ -189,6 +188,9 @@ end
 crystal.load = start_game;
 
 crystal.update = function(dt)
+	if modules.hot_reload.consume_hot_reload() then
+		hot_reload();
+	end
 	modules.window.update();
 	modules.input.update(dt);
 	modules.scene.update(dt);
@@ -265,3 +267,7 @@ love.quit = crystal.quit;
 
 love.keyboard.setTextInput(false);
 start_engine();
+
+if features.hot_reload and not CRYSTAL_NO_GAME then
+	modules.hot_reload.begin_file_watch(crystal_root);
+end

@@ -11,7 +11,7 @@
 - [ ] Document built-in commands
 - [x] Window/viewport/scene/camera system rework
 - [ ] Getting Started instructions in readme and docs
-- [ ] Continuous hot reload for game files
+- [x] Continuous hot reload for game files
 - [x] Mouse support in UI
 - [x] Better color-scheme for code examples in docs (https://github.com/just-the-docs/just-the-docs/issues/679)
 - [x] API revamp: `crystal.*` globals + docs + private functions as ---@package or ---@private

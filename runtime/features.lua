@@ -10,13 +10,15 @@ end
 local features = {};
 
 local release = love.filesystem.isFused();
-features.developer_start = not release;
-features.tests = has_flag("/test");
-features.test_coverage = has_flag("/coverage");
+
 features.cli = not release;
-features.tools = not release;
 features.debug_draw = not release;
+features.developer_start = not release;
+features.hot_reload = not release and not has_flag("/test");
 features.slow_assertions = not release;
+features.test_coverage = has_flag("/coverage");
+features.tests = has_flag("/test");
+features.tools = not release;
 features.writable_constants = not release;
 
 local noop = function()
