@@ -19,6 +19,10 @@ end
 local draw_navigation = false;
 crystal.cmd.add("showNavigationOverlay", function() draw_navigation = true; end);
 crystal.cmd.add("hideNavigationOverlay", function() draw_navigation = false; end);
+crystal.hot_reload.persist("navigation_overlay",
+	function() return draw_navigation end,
+	function(d) draw_navigation = d end
+);
 
 AISystem.draw_debug = function(self)
 	if draw_navigation then

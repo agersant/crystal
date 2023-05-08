@@ -15,6 +15,10 @@ Toolkit.init = function(self)
 	self.tools = {};
 	self.visible_tools = {};
 	self.keybinds = {};
+	crystal.hot_reload.persist("visible_tools",
+		function() return self.visible_tools end,
+		function(v) self.visible_tools = v end
+	);
 end
 
 ---@class ToolOptions
@@ -100,30 +104,6 @@ Toolkit.consumes_inputs = function(self)
 		end
 	end
 	return false;
-end
-
----@return { visible_tools: { [string]: bool }, [string]: any }
-Toolkit.save = function(self)
-	local savestate = {};
-	for tool_name, tool in pairs(self.tools) do
-		savestate[tool_name] = tool:save();
-	end
-	savestate.visible_tools = table.copy(self.visible_tools);
-	return savestate;
-end
-
----@param savestate { visible_tools: { [string]: bool }, [string]: any }
-Toolkit.load = function(self, savestate)
-	assert(savestate);
-	for tool_name, tool_state in pairs(savestate) do
-		local tool = self.tools[tool_name];
-		if tool then
-			if savestate.visible_tools[tool_name] then
-				self:show(tool_name);
-			end
-			tool:load(tool_state);
-		end
-	end
 end
 
 Toolkit.quit = function(self)

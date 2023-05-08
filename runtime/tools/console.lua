@@ -270,15 +270,6 @@ Console.draw_autocomplete = function(self, x, y)
 	end
 end
 
-Console.save = function(self)
-	return { history = self.history };
-end
-
-Console.load = function(self, savestate)
-	assert(savestate.history);
-	self.history = savestate.history;
-end
-
 --#region Tests
 
 crystal.test.add("Can draw console", function()
@@ -411,5 +402,9 @@ end);
 return function(terminal)
 	assert(terminal);
 	local console = Console:new(terminal);
+	crystal.hot_reload.persist("console_history",
+		function() return console.history end,
+		function(h) console.history = h end
+	);
 	crystal.tool.add(console, { keybind = "`" });
 end

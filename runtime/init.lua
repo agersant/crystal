@@ -58,12 +58,12 @@ local start_engine = function()
 		add_module("test");
 		add_module("cmd");
 		add_module("ecs");
+		add_module("hot_reload");
 
 		add_module("ai");
 		add_module("assets");
 		add_module("const");
 		add_module("graphics");
-		add_module("hot_reload");
 		add_module("input");
 		add_module("log");
 		add_module("physics");
@@ -168,21 +168,12 @@ local stop_game = function()
 end
 
 hot_reload = function()
-	local savestate = {};
-	for module_name, module in pairs(modules) do
-		if module.before_hot_reload then
-			savestate[module_name] = module.before_hot_reload();
-		end
-	end
+	local savestate = modules.hot_reload.before_hot_reload();
 	stop_game();
 	stop_engine();
 	start_engine();
 	start_game();
-	for module_name, module in pairs(modules) do
-		if module.after_hot_reload then
-			module.after_hot_reload(savestate[module_name]);
-		end
-	end
+	modules.hot_reload.after_hot_reload(savestate);
 end
 
 crystal.load = start_game;

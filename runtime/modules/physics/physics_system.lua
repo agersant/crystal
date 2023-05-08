@@ -101,6 +101,10 @@ end
 local draw_physics_debug = false;
 crystal.cmd.add("showPhysicsOverlay", function() draw_physics_debug = true; end);
 crystal.cmd.add("hidePhysicsOverlay", function() draw_physics_debug = false; end);
+crystal.hot_reload.persist("physics_overlay",
+	function() return draw_physics_debug end,
+	function(d) draw_physics_debug = d end
+);
 
 PhysicsSystem.draw_debug = function(self)
 	if draw_physics_debug then
