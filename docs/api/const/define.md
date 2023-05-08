@@ -8,7 +8,7 @@ nav_order: 1
 
 Defines a new constant. This function also registers a [console command](/crystal/api/cmd) with the same name to adjust the constant value from the console.
 
-Constant values must be of type `number`, `string` or `boolean`. Constant names are not case sensitive not whitespace sensitive.
+Constant values must be of type `number`, `string` or `boolean`. Constant names are not case sensitive not whitespace sensitive. Built-in constants have `CamelCase` names.
 
 Attempting to redefine an existing constant simply returns its current value.
 
@@ -54,9 +54,9 @@ crystal.const.define(name, initial_value, bounds)
 ## Examples
 
 ```lua
-crystal.const.define("transparent_background", true);
+crystal.const.define("TransparentBackground", true);
 ```
 
 ```lua
-crystal.const.define("walk_speed", 10, { min = 1, max = 100 });
+crystal.const.define("WalkSpeed", 10, { min = 1, max = 100 });
 ```

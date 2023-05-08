@@ -13,7 +13,7 @@ Commands can be executed programmatically via [crystal.cmd.run](run), or using t
 The following example defines and immediately calls a command to print a number:
 
 ```lua
-crystal.cmd.add("greet name:string", function(name)
+crystal.cmd.add("Greet name:string", function(name)
   print("Hello " .. name);
 end);
 

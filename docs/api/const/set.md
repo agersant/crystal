@@ -27,6 +27,6 @@ crystal.const.set(name, value)
 ## Examples
 
 ```lua
-crystal.const.define("enemy_hp", 100, { min = 1, max = 1000 });
-crystal.const.set("enemy_hp", 80);
+crystal.const.define("EnemyHP", 100, { min = 1, max = 1000 });
+crystal.const.set("EnemyHP", 80);
 ```

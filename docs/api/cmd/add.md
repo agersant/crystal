@@ -8,6 +8,8 @@ nav_order: 1
 
 Defines a new console command.
 
+Command names are not case sensitive. Built-in commands have `CamelCase` names.
+
 ## Usage
 
 ```lua
@@ -24,14 +26,14 @@ crystal.cmd.add(signature, implementation)
 ## Examples
 
 ```lua
-crystal.cmd.add("skip_level", function()
+crystal.cmd.add("SkipLevel", function()
   -- Logic to skip level here
 end);
 ```
 
 ```lua
-crystal.cmd.add("add a:number b:number", function(a, b)
+crystal.cmd.add("Add a:number b:number", function(a, b)
   print(a + b);
 end);
-crystal.cmd.run("add 6 3"); -- prints 9
+crystal.cmd.run("Add 6 3"); -- prints 9
 ```

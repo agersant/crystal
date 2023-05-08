@@ -48,7 +48,7 @@ Constants.define = function(self, name, initial_value, options)
 	end
 
 	if value_type == "number" or value_type == "string" or value_type == "boolean" then
-		crystal.cmd.add(name .. " value:" .. value_type, function(value)
+		crystal.cmd.add(display_name:strip_whitespace() .. " value:" .. value_type, function(value)
 			self:set(name, value);
 		end)
 	end

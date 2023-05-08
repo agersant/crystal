@@ -23,9 +23,9 @@ crystal.cmd.run(command)
 ## Examples
 
 ```lua
-crystal.cmd.add("add a:number b:number", function(a, b)
+crystal.cmd.add("Add a:number b:number", function(a, b)
   print(a + b);
 end);
 
-crystal.cmd.run("add 6 3"); -- prints 9
+crystal.cmd.run("Add 6 3"); -- prints 9
 ```

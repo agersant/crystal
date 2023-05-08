@@ -9,7 +9,7 @@
 ---@field private draw_previous_scene fun()
 local SceneManager = Class("SceneManager");
 
-crystal.const.define("Time Scale", 1.0, { min = 0.0, max = 100.0 });
+crystal.const.define("TimeScale", 1.0, { min = 0.0, max = 100.0 });
 
 SceneManager.init = function(self)
 	self.previous_scene = nil;

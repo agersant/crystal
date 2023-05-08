@@ -6,8 +6,8 @@ local channel = love.thread.getChannel(channel_name);
 local persistence = {};
 
 local enabled = true;
-crystal.cmd.add("enableHotReload", function() enabled = true end);
-crystal.cmd.add("disableHotReload", function() enabled = false end);
+crystal.cmd.add("EnableHotReload", function() enabled = true end);
+crystal.cmd.add("DisableHotReload", function() enabled = false end);
 
 return {
 	module_api = {
