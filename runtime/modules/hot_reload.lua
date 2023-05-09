@@ -40,10 +40,10 @@ return {
 			end
 		end
 	end,
-	begin_file_watch = function(crystal_root)
+	begin_file_watch = function()
 		if features.hot_reload then
 			local thread = love.thread.newThread(CRYSTAL_RUNTIME .. "/modules/hot_reload/file_watch.lua");
-			thread:start(channel_name, crystal_root);
+			thread:start(channel_name);
 		end
 	end,
 	consume_hot_reload = function()

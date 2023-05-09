@@ -1,6 +1,6 @@
 require("love.timer");
 
-local channel_name, crystal_root = ...;
+local channel_name = ...;
 local save_directory = love.filesystem.getSaveDirectory();
 local mod_times = {};
 
@@ -10,9 +10,8 @@ local scan = function()
 		local directory = table.remove(directories);
 		for _, item in ipairs(love.filesystem.getDirectoryItems(directory)) do
 			local path = (directory == "") and item or (directory .. "/" .. item);
-			local is_crystal = path:match("^" .. crystal_root);
 			local is_save_data = love.filesystem.getRealDirectory(path) == save_directory;
-			if not is_crystal and not is_save_data then
+			if not is_save_data then
 				local info = love.filesystem.getInfo(path);
 				if info then
 					local previous_mod_time = mod_times[path];

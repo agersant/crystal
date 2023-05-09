@@ -7,9 +7,9 @@ if tail == "init" or tail == "init.lua" then
 end
 
 CRYSTAL_RUNTIME = table.concat(path_chunks, "/");
-table.remove(path_chunks);
-local crystal_root = table.concat(path_chunks, "/");
-CRYSTAL_NO_GAME = crystal_root == "";
+if CRYSTAL_RUNTIME == "" then
+	CRYSTAL_NO_GAME = true;
+end
 
 local features = require(CRYSTAL_RUNTIME .. "/features");
 
@@ -108,6 +108,7 @@ local game_packages = {};
 local require_game_source = function()
 	-- TODO may or may not work in fused build
 	local assets_directories = table.map(modules.assets.directories(), function(d)
+		-- TODO trim trailing slashes
 		return d:gsub("%-", "%%-");
 	end);
 	local directories = { "" };
@@ -115,7 +116,8 @@ local require_game_source = function()
 		local directory = table.pop(directories);
 		for _, item in ipairs(love.filesystem.getDirectoryItems(directory)) do
 			local path = (directory == "") and item or (directory .. "/" .. item);
-			local is_crystal = path:match("^" .. crystal_root);
+			local is_crystal = path:match("^" .. CRYSTAL_RUNTIME);
+			-- TODO skip save directory
 			if not is_crystal then
 				local is_asset = false;
 				for _, asset_directory in ipairs(assets_directories) do
@@ -254,5 +256,5 @@ love.keyboard.setTextInput(false);
 start_engine();
 
 if features.hot_reload and not CRYSTAL_NO_GAME then
-	modules.hot_reload.begin_file_watch(crystal_root);
+	modules.hot_reload.begin_file_watch();
 end
