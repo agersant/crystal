@@ -20,7 +20,6 @@ return {
 			assert(type(key) == "string");
 			assert(type(save) == "function");
 			assert(type(load) == "function");
-			assert(not persistence[key]);
 			persistence[key] = {
 				save = save,
 				load = load,

@@ -10,7 +10,7 @@ Makes a piece of data persist through hot reloads.
 
 How this works:
 
-1. When the game is about to hot reload, all the `save` functions registered with `crystal.hot_reload.persist` are executed. The results are stored in a table, alongside their unique keys.
+1. When the game is about to hot reload, all the `save` functions registered with `crystal.hot_reload.persist` are executed. The results are stored in a table, alongside their keys.
 2. All engine and game files are unloaded and reloaded.
 3. For every piece of data that was saved, we check that a `load` function with the same key was registered by the **reloaded** code. If there is one, it is called with the saved data as its argument.
 
@@ -25,11 +25,11 @@ crystal.hot_reload.persist(key, save, load)
 
 ### Arguments
 
-| Name   | Type       | Description                                                    |
-| :----- | :--------- | :------------------------------------------------------------- |
-| `key`  | `string`   | A unique key identifying the saved data across the hot reload. |
-| `save` | `function` | Returns the data to save.                                      |
-| `load` | `function` | Makes used of the saved data to restore state.                 |
+| Name   | Type       | Description                                                                                                              |
+| :----- | :--------- | :----------------------------------------------------------------------------------------------------------------------- |
+| `key`  | `string`   | A key identifying the saved data across the hot reload. Re-using a keys overwrites the previous `save`/`load` functions. |
+| `save` | `function` | Returns the data to save.                                                                                                |
+| `load` | `function` | Makes used of the saved data to restore state.                                                                           |
 
 ## Examples
 
