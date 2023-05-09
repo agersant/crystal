@@ -1,0 +1,36 @@
+on:
+  workflow_dispatch:
+    inputs:
+      versionNumber:
+        description: "User-facing version number (eg: 0.3.0)"
+        required: true
+
+name: Make Release
+
+jobs:
+  make-release:
+    name: Make Release
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - name: Build binaries
+        run: .\build.ps1
+      - name: Package release
+        run: .\release.ps1
+      - name: Add <version number> git tag
+        run: |
+          git config --global user.name ${{ github.actor }}
+          git config --global user.email "<>"
+          git tag -f -a ${{ github.event.inputs.versionNumber }} -m "Release ${{ github.event.inputs.versionNumber }}"
+          git push -f --tags
+      - name: Create Github release
+        id: create-release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Crystal ${{ github.event.inputs.versionNumber }}
+          tag_name: ${{ github.event.inputs.versionNumber }}
+          files: release/crystal.zip
+          draft: true
