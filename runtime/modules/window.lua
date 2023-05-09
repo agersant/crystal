@@ -19,7 +19,7 @@ local lg; -- # Original love.graphics functions
 local Window = Class("Window");
 
 Window.init = function(self)
-	self.native_height = 240;
+	self.native_height = 600;
 	self.min_aspect_ratio = 4 / 3;
 	self.max_aspect_ratio = 21 / 9;
 	self.scaling_mode = "crop_or_squish";

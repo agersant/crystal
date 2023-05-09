@@ -10,7 +10,7 @@ Sets the game's native-height (in pixels) from which it can be upscaled. This is
 
 Note that there is no `set_native_width` function. The viewport width is determined according to the window aspect ratio and the [aspect ratio limits](set_aspect_ratio_limits).
 
-The default native height is 240 pixels.
+The default native height is 600 pixels.
 
 ## Usage
 

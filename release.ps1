@@ -1,7 +1,6 @@
 $crystal = (Get-Location).Path
 
 # Reset release directory
-Set-Location $crystal
 if (Test-Path release) {
 	Remove-Item -Path release -Recurse
 }
@@ -18,7 +17,10 @@ Copy-Item -Path runtime -Destination release/game/crystal -Recurse
 Remove-Item -Path release/game/crystal/conf.lua
 Remove-Item -Path release/game/crystal/main.lua
 Remove-Item -Path release/game/crystal/test-data -Recurse
-Remove-Item -Path release/game/crystal/test-output -Recurse
+$test_output_dir = "release/game/crystal/test-output"
+if (Test-Path $test_output_dir) {
+	Remove-Item -Path $test_output_dir -Recurse
+}
 
 # Copy sample project setup
 Copy-Item -Path dist/starter_game/* -Destination release/game -Recurse
