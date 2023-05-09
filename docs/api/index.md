@@ -10,6 +10,7 @@ nav_order: 1
 
 | Name                             | Description                                                                            |
 | :------------------------------- | :------------------------------------------------------------------------------------- |
+| [crystal](crystal)               | Functionality related to the entire game.                                              |
 | [crystal.ai](ai)                 | Components facilitating creation of autonomous entities.                               |
 | [crystal.assets](assets)         | Loads and unloads game assets (images, spritesheets, maps, etc.).                      |
 | [crystal.cmd](cmd)               | Allows you to define and run console commands.                                         |
@@ -26,11 +27,3 @@ nav_order: 1
 | [crystal.tool](tool)             | Allows you to define visual development tools.                                         |
 | [crystal.ui](ui)                 | Building blocks to create interactive menus and HUDs.                                  |
 | [crystal.window](window)         | Handles scaling and letterboxing to support arbitrary window sizes.                    |
-
-## Callbacks
-
-| Name                    | Description |
-| :---------------------- | :---------- |
-| crystal.developer_start |             |
-| crystal.player_start    |             |
-| crystal.prelude         |             |
