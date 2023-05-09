@@ -114,7 +114,6 @@ end
 
 local game_packages = {};
 local require_game_source = function()
-	-- TODO may or may not work in fused build
 	local assets_directories = table.map(modules.assets.directories(), function(d)
 		-- TODO trim trailing slashes
 		return d:gsub("%-", "%%-");
