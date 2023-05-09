@@ -13,11 +13,11 @@ Hot reload is not available in [fused builds](https://love2d.org/wiki/love.files
 
 ## Functions
 
-| Name               | Description                                        |
-| :----------------- | :------------------------------------------------- |
-| [disable](disable) | Disables hot reloading.                            |
-| [enable](enable)   | Enables hot reloading.                             |
-| [persist](persist) | Makes a piece of data persist through hot reloads. |
+| Name                                  | Description                                        |
+| :------------------------------------ | :------------------------------------------------- |
+| [crystal.hot_reload.disable](disable) | Disables hot reloading.                            |
+| [crystal.hot_reload.enable](enable)   | Enables hot reloading.                             |
+| [crystal.hot_reload.persist](persist) | Makes a piece of data persist through hot reloads. |
 
 ## Console Commands
 
