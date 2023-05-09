@@ -1,3 +1,10 @@
+# Making a release
+
+- Update CHANGELOG.md, commit and push
+- On Github, navigate to the Make Release workflow: https://github.com/agersant/crystal/actions/workflows/release.yml
+- Click on Run Workflow and type in the user-facing version number. Click `Run workflow`.
+- After the workflow completes, promote the release from draft to published.
+
 # Updating LÖVE version
 
 - Update `build.ps1` to download the desired LÖVE version
