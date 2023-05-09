@@ -1,4 +1,4 @@
-local Sprite = require(CRYSTAL_RUNTIME .. "/modules/graphics/sprite");
+local Sprite = require(CRYSTAL_RUNTIME .. "modules/graphics/sprite");
 
 ---@class AnimatedSprite : Sprite
 ---@field private script Script

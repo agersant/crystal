@@ -1,5 +1,5 @@
-local BasicJoint = require(CRYSTAL_RUNTIME .. "/modules/ui/basic_joint");
-local Wrapper = require(CRYSTAL_RUNTIME .. "/modules/ui/wrapper");
+local BasicJoint = require(CRYSTAL_RUNTIME .. "modules/ui/basic_joint");
+local Wrapper = require(CRYSTAL_RUNTIME .. "modules/ui/wrapper");
 
 ---@class Painter : Wrapper
 ---@field private _shader love.Shader

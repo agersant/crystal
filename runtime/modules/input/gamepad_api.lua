@@ -1,4 +1,4 @@
-local features = require(CRYSTAL_RUNTIME .. "/features");
+local features = require(CRYSTAL_RUNTIME .. "features");
 
 local GamepadAPI = Class("GamepadAPI");
 

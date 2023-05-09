@@ -1,4 +1,4 @@
-local Constants = require(CRYSTAL_RUNTIME .. "/modules/const/constants");
+local Constants = require(CRYSTAL_RUNTIME .. "modules/const/constants");
 
 --#region Tests
 

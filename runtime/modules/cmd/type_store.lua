@@ -1,4 +1,4 @@
-local features = require(CRYSTAL_RUNTIME .. "/features");
+local features = require(CRYSTAL_RUNTIME .. "features");
 
 ---@class TypeStore
 local TypeStore = Class("TypeStore");

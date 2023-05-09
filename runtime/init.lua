@@ -9,9 +9,11 @@ end
 CRYSTAL_RUNTIME = table.concat(path_chunks, "/");
 if CRYSTAL_RUNTIME == "" then
 	CRYSTAL_NO_GAME = true;
+else
+	CRYSTAL_RUNTIME = CRYSTAL_RUNTIME .. "/";
 end
 
-local features = require(CRYSTAL_RUNTIME .. "/features");
+local features = require(CRYSTAL_RUNTIME .. "features");
 
 local luacov;
 if features.test_coverage then
@@ -39,7 +41,7 @@ end
 local modules = {};
 local add_module = function(name)
 	assert(not modules[name]);
-	local module = require(CRYSTAL_RUNTIME .. "/modules/" .. name);
+	local module = require(CRYSTAL_RUNTIME .. "modules/" .. name);
 	modules[name] = module;
 	crystal[name] = module.module_api;
 	if features.tests and module.test_api then
@@ -86,8 +88,8 @@ local start_engine = function()
 			end
 		end
 
-		require(CRYSTAL_RUNTIME .. "/tools/console")(modules.cmd.terminal);
-		require(CRYSTAL_RUNTIME .. "/tools/fps_counter");
+		require(CRYSTAL_RUNTIME .. "tools/console")(modules.cmd.terminal);
+		require(CRYSTAL_RUNTIME .. "tools/fps_counter");
 	end);
 end
 

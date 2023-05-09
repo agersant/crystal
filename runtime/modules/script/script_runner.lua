@@ -1,4 +1,4 @@
-local Script = require(CRYSTAL_RUNTIME .. "/modules/script/script");
+local Script = require(CRYSTAL_RUNTIME .. "modules/script/script");
 
 ---@class ScriptRunner : Component
 local ScriptRunner = Class("ScriptRunner", crystal.Component);

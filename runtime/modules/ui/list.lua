@@ -1,6 +1,6 @@
-local Container = require(CRYSTAL_RUNTIME .. "/modules/ui/container");
-local Joint = require(CRYSTAL_RUNTIME .. "/modules/ui/joint");
-local Padding = require(CRYSTAL_RUNTIME .. "/modules/ui/padding");
+local Container = require(CRYSTAL_RUNTIME .. "modules/ui/container");
+local Joint = require(CRYSTAL_RUNTIME .. "modules/ui/joint");
+local Padding = require(CRYSTAL_RUNTIME .. "modules/ui/padding");
 
 ---@class List : Container
 ---@field private axis Axis

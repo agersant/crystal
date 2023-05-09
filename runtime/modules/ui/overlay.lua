@@ -1,5 +1,5 @@
-local Container = require(CRYSTAL_RUNTIME .. "/modules/ui/container");
-local BasicJoint = require(CRYSTAL_RUNTIME .. "/modules/ui/basic_joint");
+local Container = require(CRYSTAL_RUNTIME .. "modules/ui/container");
+local BasicJoint = require(CRYSTAL_RUNTIME .. "modules/ui/basic_joint");
 
 ---@class OverlayJoint : BasicJoint
 local OverlayJoint = Class("OverlayJoint", BasicJoint);
@@ -48,7 +48,7 @@ end
 
 --#region Tests
 
-local UIElement = require(CRYSTAL_RUNTIME .. "/modules/ui/ui_element");
+local UIElement = require(CRYSTAL_RUNTIME .. "modules/ui/ui_element");
 
 crystal.test.add("Respects alignment", function()
 	local test_cases = {

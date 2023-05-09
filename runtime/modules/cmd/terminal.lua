@@ -1,6 +1,6 @@
-local features = require(CRYSTAL_RUNTIME .. "/features");
-local CommandStore = require(CRYSTAL_RUNTIME .. "/modules/cmd/command_store");
-local TypeStore = require(CRYSTAL_RUNTIME .. "/modules/cmd/type_store");
+local features = require(CRYSTAL_RUNTIME .. "features");
+local CommandStore = require(CRYSTAL_RUNTIME .. "modules/cmd/command_store");
+local TypeStore = require(CRYSTAL_RUNTIME .. "modules/cmd/type_store");
 ---@class ParsedInput
 ---@field full_text string
 ---@field command string

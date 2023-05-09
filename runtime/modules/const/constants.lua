@@ -1,5 +1,5 @@
-local features = require(CRYSTAL_RUNTIME .. "/features");
-local Terminal = require(CRYSTAL_RUNTIME .. "/modules/cmd/terminal")
+local features = require(CRYSTAL_RUNTIME .. "features");
+local Terminal = require(CRYSTAL_RUNTIME .. "modules/cmd/terminal")
 
 ---@class Constant
 ---@field value any

@@ -1,8 +1,8 @@
-local Component = require(CRYSTAL_RUNTIME .. "/modules/ecs/component");
-local Entity = require(CRYSTAL_RUNTIME .. "/modules/ecs/entity");
-local Event = require(CRYSTAL_RUNTIME .. "/modules/ecs/event");
-local System = require(CRYSTAL_RUNTIME .. "/modules/ecs/system");
-local Query = require(CRYSTAL_RUNTIME .. "/modules/ecs/query");
+local Component = require(CRYSTAL_RUNTIME .. "modules/ecs/component");
+local Entity = require(CRYSTAL_RUNTIME .. "modules/ecs/entity");
+local Event = require(CRYSTAL_RUNTIME .. "modules/ecs/event");
+local System = require(CRYSTAL_RUNTIME .. "modules/ecs/system");
+local Query = require(CRYSTAL_RUNTIME .. "modules/ecs/query");
 
 ---@class ECS
 ---@field private _entities { [Entity]: boolean }

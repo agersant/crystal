@@ -1,4 +1,4 @@
-local Goal = require(CRYSTAL_RUNTIME .. "/modules/ai/goal");
+local Goal = require(CRYSTAL_RUNTIME .. "modules/ai/goal");
 
 ---@class AlignGoal : Goal
 ---@field private moving_entity

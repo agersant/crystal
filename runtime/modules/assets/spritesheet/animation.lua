@@ -1,4 +1,4 @@
-local Sequence = require(CRYSTAL_RUNTIME .. "/modules/assets/spritesheet/sequence");
+local Sequence = require(CRYSTAL_RUNTIME .. "modules/assets/spritesheet/sequence");
 
 ---@class Animation
 ---@field private loop boolean

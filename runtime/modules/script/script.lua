@@ -1,4 +1,4 @@
-local Thread = require(CRYSTAL_RUNTIME .. "/modules/script/thread");
+local Thread = require(CRYSTAL_RUNTIME .. "modules/script/thread");
 
 ---@class Script
 ---@field private _time number

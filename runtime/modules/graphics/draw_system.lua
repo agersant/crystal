@@ -1,7 +1,7 @@
-local AnimatedSprite = require(CRYSTAL_RUNTIME .. "/modules/graphics/animated_sprite");
-local Drawable = require(CRYSTAL_RUNTIME .. "/modules/graphics/drawable");
-local DrawEffect = require(CRYSTAL_RUNTIME .. "/modules/graphics/draw_effect")
-local WorldWidget = require(CRYSTAL_RUNTIME .. "/modules/graphics/world_widget")
+local AnimatedSprite = require(CRYSTAL_RUNTIME .. "modules/graphics/animated_sprite");
+local Drawable = require(CRYSTAL_RUNTIME .. "modules/graphics/drawable");
+local DrawEffect = require(CRYSTAL_RUNTIME .. "modules/graphics/draw_effect")
+local WorldWidget = require(CRYSTAL_RUNTIME .. "modules/graphics/world_widget")
 
 ---@class DrawSystem : System
 ---@field private drawables Query

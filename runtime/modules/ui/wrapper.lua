@@ -1,4 +1,4 @@
-local UIElement = require(CRYSTAL_RUNTIME .. "/modules/ui/ui_element");
+local UIElement = require(CRYSTAL_RUNTIME .. "modules/ui/ui_element");
 
 ---@class Wrapper : UIElement
 ---@field protected _child UIElement

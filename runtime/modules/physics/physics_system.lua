@@ -1,4 +1,4 @@
-local Fixture = require(CRYSTAL_RUNTIME .. "/modules/physics/fixture");
+local Fixture = require(CRYSTAL_RUNTIME .. "modules/physics/fixture");
 
 ---@class PhysicsSystem : System
 ---@field private _world love.World

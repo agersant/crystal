@@ -1,4 +1,4 @@
-local Animation = require(CRYSTAL_RUNTIME .. "/modules/assets/spritesheet/animation");
+local Animation = require(CRYSTAL_RUNTIME .. "modules/assets/spritesheet/animation");
 
 ---@class Spritesheet
 ---@field private _image love.Image

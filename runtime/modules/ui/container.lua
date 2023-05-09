@@ -1,4 +1,4 @@
-local UIElement = require(CRYSTAL_RUNTIME .. "/modules/ui/ui_element");
+local UIElement = require(CRYSTAL_RUNTIME .. "modules/ui/ui_element");
 
 ---@class Container : UIElement
 ---@field protected _children UIElement[]

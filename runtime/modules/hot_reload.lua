@@ -1,4 +1,4 @@
-local features = require(CRYSTAL_RUNTIME .. "/features");
+local features = require(CRYSTAL_RUNTIME .. "features");
 
 local channel_name = "hot_reload_channel";
 local channel = love.thread.getChannel(channel_name);

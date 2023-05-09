@@ -1,19 +1,19 @@
-local BasicJoint = require(CRYSTAL_RUNTIME .. "/modules/ui/basic_joint");
-local Border = require(CRYSTAL_RUNTIME .. "/modules/ui/border");
-local Container = require(CRYSTAL_RUNTIME .. "/modules/ui/container");
-local Image = require(CRYSTAL_RUNTIME .. "/modules/ui/image");
-local Joint = require(CRYSTAL_RUNTIME .. "/modules/ui/joint");
-local List = require(CRYSTAL_RUNTIME .. "/modules/ui/list");
-local Overlay = require(CRYSTAL_RUNTIME .. "/modules/ui/overlay");
-local Padding = require(CRYSTAL_RUNTIME .. "/modules/ui/padding");
-local RoundedCorners = require(CRYSTAL_RUNTIME .. "/modules/ui/rounded_corners");
-local Painter = require(CRYSTAL_RUNTIME .. "/modules/ui/painter");
-local Router = require(CRYSTAL_RUNTIME .. "/modules/ui/router");
-local Switcher = require(CRYSTAL_RUNTIME .. "/modules/ui/switcher");
-local Text = require(CRYSTAL_RUNTIME .. "/modules/ui/text");
-local UIElement = require(CRYSTAL_RUNTIME .. "/modules/ui/ui_element");
-local Widget = require(CRYSTAL_RUNTIME .. "/modules/ui/widget");
-local Wrapper = require(CRYSTAL_RUNTIME .. "/modules/ui/wrapper");
+local BasicJoint = require(CRYSTAL_RUNTIME .. "modules/ui/basic_joint");
+local Border = require(CRYSTAL_RUNTIME .. "modules/ui/border");
+local Container = require(CRYSTAL_RUNTIME .. "modules/ui/container");
+local Image = require(CRYSTAL_RUNTIME .. "modules/ui/image");
+local Joint = require(CRYSTAL_RUNTIME .. "modules/ui/joint");
+local List = require(CRYSTAL_RUNTIME .. "modules/ui/list");
+local Overlay = require(CRYSTAL_RUNTIME .. "modules/ui/overlay");
+local Padding = require(CRYSTAL_RUNTIME .. "modules/ui/padding");
+local RoundedCorners = require(CRYSTAL_RUNTIME .. "modules/ui/rounded_corners");
+local Painter = require(CRYSTAL_RUNTIME .. "modules/ui/painter");
+local Router = require(CRYSTAL_RUNTIME .. "modules/ui/router");
+local Switcher = require(CRYSTAL_RUNTIME .. "modules/ui/switcher");
+local Text = require(CRYSTAL_RUNTIME .. "modules/ui/text");
+local UIElement = require(CRYSTAL_RUNTIME .. "modules/ui/ui_element");
+local Widget = require(CRYSTAL_RUNTIME .. "modules/ui/widget");
+local Wrapper = require(CRYSTAL_RUNTIME .. "modules/ui/wrapper");
 
 ---@alias Axis "horizontal" | "vertical"
 ---@alias Direction "up" | "down" | "left" | "right"

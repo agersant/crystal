@@ -1,9 +1,9 @@
-local Registry = require(CRYSTAL_RUNTIME .. "/modules/assets/registry");
-local Map = require(CRYSTAL_RUNTIME .. "/modules/assets/map/map");
-local Tileset = require(CRYSTAL_RUNTIME .. "/modules/assets/map/tileset");
-local Animation = require(CRYSTAL_RUNTIME .. "/modules/assets/spritesheet/animation");
-local Sequence = require(CRYSTAL_RUNTIME .. "/modules/assets/spritesheet/sequence");
-local Spritesheet = require(CRYSTAL_RUNTIME .. "/modules/assets/spritesheet/spritesheet");
+local Registry = require(CRYSTAL_RUNTIME .. "modules/assets/registry");
+local Map = require(CRYSTAL_RUNTIME .. "modules/assets/map/map");
+local Tileset = require(CRYSTAL_RUNTIME .. "modules/assets/map/tileset");
+local Animation = require(CRYSTAL_RUNTIME .. "modules/assets/spritesheet/animation");
+local Sequence = require(CRYSTAL_RUNTIME .. "modules/assets/spritesheet/sequence");
+local Spritesheet = require(CRYSTAL_RUNTIME .. "modules/assets/spritesheet/spritesheet");
 
 local asset_directories = {};
 local registry = Registry:new();
@@ -42,12 +42,12 @@ return {
 		return table.copy(asset_directories);
 	end,
 	start = function()
-		require(CRYSTAL_RUNTIME .. "/modules/assets/directory");
-		require(CRYSTAL_RUNTIME .. "/modules/assets/image");
-		require(CRYSTAL_RUNTIME .. "/modules/assets/map/tiled");
-		require(CRYSTAL_RUNTIME .. "/modules/assets/package");
-		require(CRYSTAL_RUNTIME .. "/modules/assets/shader");
-		require(CRYSTAL_RUNTIME .. "/modules/assets/spritesheet/tiger");
+		require(CRYSTAL_RUNTIME .. "modules/assets/directory");
+		require(CRYSTAL_RUNTIME .. "modules/assets/image");
+		require(CRYSTAL_RUNTIME .. "modules/assets/map/tiled");
+		require(CRYSTAL_RUNTIME .. "modules/assets/package");
+		require(CRYSTAL_RUNTIME .. "modules/assets/shader");
+		require(CRYSTAL_RUNTIME .. "modules/assets/spritesheet/tiger");
 	end,
 	test_harness = function()
 		registry:unload_all();
