@@ -101,9 +101,9 @@
     "export_settings": {
       "Template": {
         "template_file": "../../docs/api/assets/crystal.template",
-        "atlas_image_file": "../../runtime/test-data/blankey.png",
-        "metadata_file": "../../runtime/test-data/blankey.lua",
-        "metadata_paths_root": "../../runtime"
+        "atlas_image_file": "blankey.png",
+        "metadata_file": "blankey.lua",
+        "metadata_paths_root": ".."
       }
     }
   }
