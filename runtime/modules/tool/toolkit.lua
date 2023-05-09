@@ -106,12 +106,6 @@ Toolkit.consumes_inputs = function(self)
 	return false;
 end
 
-Toolkit.quit = function(self)
-	for _, tool in pairs(self.tools) do
-		tool:quit();
-	end
-end
-
 ---@param key love.KeyConstant
 ---@param scan_code love.Scancode
 ---@param is_repeat boolean

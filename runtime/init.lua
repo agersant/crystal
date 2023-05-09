@@ -223,10 +223,6 @@ crystal.textinput = function(text)
 	modules.tool.text_input(text);
 end
 
-crystal.quit = function()
-	modules.tool.quit();
-end
-
 crystal.run = love.run;
 if features.tests then
 	crystal.run = function()
@@ -239,7 +235,6 @@ if features.tests then
 					end
 				end
 			end);
-			love.quit();
 			return success and 0 or 1;
 		end
 	end
@@ -254,7 +249,6 @@ love.keyreleased = crystal.keyreleased;
 love.gamepadpressed = crystal.gamepadpressed;
 love.gamepadreleased = crystal.gamepadreleased;
 love.textinput = crystal.textinput;
-love.quit = crystal.quit;
 
 love.keyboard.setTextInput(false);
 start_engine();

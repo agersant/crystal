@@ -33,9 +33,6 @@ return {
 	text_input = function(text)
 		toolkit:text_input(text);
 	end,
-	quit = function()
-		toolkit:quit();
-	end,
 	consumes_inputs = function()
 		return toolkit:consumes_inputs();
 	end,

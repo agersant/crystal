@@ -22,9 +22,6 @@ Tool.is_visible = function(self)
 	return false;
 end
 
-Tool.quit = function(self)
-end
-
 ---@param key love.KeyConstant
 ---@param scan_code love.Scancode
 ---@param is_repeat boolean
