@@ -2,6 +2,7 @@ luacov.report.out
 luacov.stats.out
 *.tiled-session
 
-bin
-lib/target
+bin/
+release/
+lib/target/
 test-output/
