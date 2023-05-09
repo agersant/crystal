@@ -1,5 +1,3 @@
-$crystal = (Get-Location).Path
-
 # Reset release directory
 if (Test-Path release) {
 	Remove-Item -Path release -Recurse
@@ -22,6 +20,12 @@ if (Test-Path $test_output_dir) {
 	Remove-Item -Path $test_output_dir -Recurse
 }
 
+# Copy changelog
+Copy-Item -Path CHANGELOG.md -Destination release/game/crystal
+
 # Copy sample project setup
 Copy-Item -Path dist/starter_game/* -Destination release/game -Recurse
 Copy-Item -Path dist/package.ps1 -Destination release
+
+# Zip release
+Compress-Archive -Path release/* -DestinationPath release/crystal.zip
