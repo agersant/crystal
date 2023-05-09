@@ -93,12 +93,6 @@ end
 ---@param setup_test_harness fun()
 ---@return boolean success
 TestRunner.run_all = function(self, setup_test_harness)
-	local luacov;
-	if features.test_coverage then
-		luacov = require("external/luacov/runner");
-		luacov.init({ runreport = true, exclude = { "assets/.*$", "^main$", "Test", "test" } });
-	end
-
 	self.busy = true;
 	self:create_output_directories();
 
@@ -171,10 +165,6 @@ TestRunner.run_all = function(self, setup_test_harness)
 	print();
 	print(report);
 	print();
-
-	if luacov then
-		luacov.shutdown();
-	end
 
 	self.busy = false;
 

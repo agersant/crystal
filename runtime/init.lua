@@ -13,6 +13,12 @@ end
 
 local features = require(CRYSTAL_RUNTIME .. "/features");
 
+local luacov;
+if features.test_coverage then
+	luacov = require("external/luacov/runner");
+	luacov.init({ runreport = true, exclude = { "^assets", "^test" } });
+end
+
 ---@diagnostic disable-next-line: lowercase-global
 crystal = {};
 
@@ -237,6 +243,9 @@ if features.tests then
 					end
 				end
 			end);
+			if luacov then
+				luacov.shutdown();
+			end
 			return success and 0 or 1;
 		end
 	end
