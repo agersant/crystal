@@ -20,10 +20,8 @@ local scan = function()
 						mod_times = {};
 						love.thread.getChannel(channel_name):supply(true);
 						return;
-					else
-						if info.type == "directory" then
-							table.insert(directories, path);
-						end
+					elseif info.type == "directory" then
+						table.insert(directories, path);
 					end
 				end
 			end
