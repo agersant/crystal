@@ -1,4 +1,5 @@
 {
+  "archive_name": "game.zip",
   "executable_name": "game.exe",
-  "executable_icon": "game_icon.png"
+  "executable_icon": "icon.png"
 }

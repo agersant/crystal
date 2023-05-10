@@ -2,6 +2,11 @@
 # Read crystal.json
 $config = Get-Content -Raw -Path crystal.json | ConvertFrom-Json
 
+$archive = $config.archive_name
+if (!$archive) {
+	throw "Missing archive_name from crystal.json"
+}
+
 $executable = $config.executable_name
 if (!$executable) {
 	throw "Missing executable_name from crystal.json"
@@ -31,3 +36,5 @@ Remove-Item -Path release/love.exe
 # Add dependencies
 Copy-Item bin/*.dll, bin/license.txt release
 
+# Zip everything together
+Compress-Archive -Path release/* -DestinationPath release/$archive
