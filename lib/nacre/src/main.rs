@@ -22,8 +22,8 @@ fn main() -> anyhow::Result<()> {
         .open()
         .context("Unable to open resources within executable")?;
 
-    let image = ImageReader::open(cli.icon)
-        .context("Could not open icon file")?
+    let image = ImageReader::open(&cli.icon)
+        .with_context(|| format!("Could not open icon file {:?}", cli.icon))?
         .decode()
         .context("Could not decode icon file")?;
 
