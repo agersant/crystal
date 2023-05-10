@@ -1,0 +1,12 @@
+[package]
+name = "nacre"
+version = "0.1.0"
+authors = ["Antoine Gersant <antoine.gersant@lesforges.org>"]
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.71"
+clap = { version = "4.2.7", features = ["derive"] }
+ico = "0.3.0"
+image = { version = "0.24.6", default-features = false, features = ["png"] }
+winres-edit = "0.2.0"
