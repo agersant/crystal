@@ -26,10 +26,11 @@ $VSWhere = [System.Environment]::ExpandEnvironmentVariables("%ProgramFiles(x86)%
 $installationPath = & "$VSWhere" -products * -prerelease -latest -property installationPath
 cmd.exe -/c "`"$installationPath\Common7\Tools\vsdevcmd.bat`" -arch=amd64 && .\msvcbuild.bat"
 
-# Build Lua modules implemented in Rust
+# Build Rust dependencies
 Set-Location $lib
 cargo build --release
 
-# Copy Lua modules to game directory
+# Copy Rust dependencies to bin directory
 Set-Location $crystal
 Copy-Item lib\target\release\diamond.dll bin\diamond.dll
+Copy-Item lib\target\release\nacre.exe bin\nacre.exe
