@@ -39,7 +39,8 @@ jobs:
           name: packaged-engine
           path: release\crystal.zip
       - name: Run game packaging script
-        run: .\release\package.ps1
+        run: .\package.ps1
+        working-directory: release
       - uses: actions/upload-artifact@v2
         with:
           name: packaged-game
