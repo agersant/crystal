@@ -32,6 +32,18 @@ jobs:
       - name: Run Lua tests
         run: ..\bin\lovec.exe . /test
         working-directory: runtime
+      - name: Run engine packaging script
+        run: .\release.ps1
+      - uses: actions/upload-artifact@v2
+        with:
+          name: packaged-engine
+          path: release\crystal.zip
+      - name: Run game packaging script
+        run: .\release\package.ps1
+      - uses: actions/upload-artifact@v2
+        with:
+          name: packaged-game
+          path: release/release/game.zip
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
