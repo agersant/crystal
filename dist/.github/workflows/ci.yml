@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  tests:
+    name: Make Build
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Mesa
+        run: |
+          curl.exe -L --output mesa.7z --url https://github.com/pal1000/mesa-dist-win/releases/download/22.3.4/mesa3d-22.3.4-release-msvc.7z
+          & "C:\Program Files\7-Zip\7z.exe" x mesa.7z
+          $setup_script = Get-Content -Path systemwidedeploy.cmd
+          $setup_script = $setup_script -replace '^.*deployment choice.*$', '@GOTO desktopgl'
+          $setup_script = $setup_script -replace '^.*deploy complete.*$', '@exit'
+          $setup_script | Set-Content -Path systemwidedeploy.cmd
+          cmd /c systemwidedeploy.cmd
+      - name: Run Lua tests
+        run: bin\lovec.exe . /test
+      - name: Run game packaging script
+        run: .\package.ps1
+      - uses: actions/upload-artifact@v2
+        with:
+          name: packaged-game
+          path: release
