@@ -1,9 +1,9 @@
 # Crystal 0.1.0
 
 - [x] Extract `arpg` into a new repository
-- [ ] Engine release process
-- [ ] Sample game release process
-- [ ] Game packaging
+- [x] Engine release process
+- [x] Sample game release process
+- [x] Game packaging
 - [x] snake_case all variables and file names 🐍
 - [x] Gamepad support
 - [x] Input auto-repeats
