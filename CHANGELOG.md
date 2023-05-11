@@ -1,3 +1,38 @@
 # Crystal 0.1.0
 
-- Initial release
+- [x] Initial release
+- [x] Extract `arpg` into a new repository
+- [x] Engine release process
+- [x] Sample game release process
+- [x] Game packaging
+- [x] snake_case all variables and file names 🐍
+- [x] Gamepad support
+- [x] Input auto-repeats
+- [x] Docs website in readme
+- [x] Document built-in commands
+- [x] Window/viewport/scene/camera system rework
+- [x] Getting Started instructions in readme and docs
+- [x] Continuous hot reload for game files
+- [x] Mouse hover support in UI
+- [x] Better color-scheme for code examples in docs (https://github.com/just-the-docs/just-the-docs/issues/679)
+- [x] API revamp: `crystal.*` globals + docs + private functions as ---@package or ---@private
+  - [x] ai
+  - [x] assets
+  - [x] cmd
+  - [x] const
+  - [x] ecs
+  - [x] graphics
+  - [x] input
+  - [x] log
+  - [x] persistence
+  - [x] physics
+  - [x] scene
+  - [x] script
+  - [x] test
+  - [x] tool
+  - [x] ui
+  - [x] oop
+  - [x] mathutils
+  - [x] stringutils
+  - [x] tableutils
+  - [x] window
