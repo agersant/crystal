@@ -23,7 +23,7 @@ jobs:
           $setup_script | Set-Content -Path systemwidedeploy.cmd
           cmd /c systemwidedeploy.cmd
       - name: Run Lua tests
-        run: bin\lovec.exe . /test
+        run: bin\lovec.exe game /test
       - name: Run game packaging script
         run: .\package.ps1
       - uses: actions/upload-artifact@v2
