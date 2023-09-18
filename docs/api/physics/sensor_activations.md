@@ -16,9 +16,9 @@ sensor:activations()
 
 ### Returns
 
-| Name          | Type    | Description                                                                                                                             |
-| :------------ | :------ | :-------------------------------------------------------------------------------------------------------------------------------------- |
-| `activations` | `table` | A table where every key is a [Sensor](sensor) or [Sensor](sensor), and the values are their owning [entities](/crystal/api/ecs/entity). |
+| Name          | Type    | Description                                                                                                                               |
+| :------------ | :------ | :---------------------------------------------------------------------------------------------------------------------------------------- |
+| `activations` | `table` | A table where every key is a [Fixture](fixture) or [Sensor](sensor), and the values are their owning [entities](/crystal/api/ecs/entity). |
 
 ## Examples
 

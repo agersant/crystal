@@ -21,17 +21,17 @@ entity:add_component(crystal.Sensor, love.physics.newCircleShape(4));
 
 ## Methods
 
-| Name                                                                      | Description                                                                               |
-| :------------------------------------------------------------------------ | :---------------------------------------------------------------------------------------- |
-| [activations](sensor_activations)                                         | Returns all components currently overlapping this sensor.                                 |
-| [disable_activation_by](sensor_disable_activation_by)                     | Prevents this sensor from being activated by colliders or sensors of specific categories. |
-| [disable_activation_by](sensor_disable_activation_by_everything)          | Prevents this sensor from being activated by colliders or sensors of any category.        |
-| [disable_sensor](sensor_disable_sensor)                                   | Prevents this sensor from being activated.                                                |
-| [enable_activation_by](sensor_enable_activation_by)                       | Allows this sensor to be activated by colliders or sensors of specific categories.        |
-| [enable_activation_by_everything](sensor_enable_activation_by_everything) | Allows this sensor to be activated by colliders or sensors of any category.               |
-| [enable_sensor](sensor_enable_sensor)                                     | Allows this sensor to be activated.                                                       |
-| [set_categories](sensor_set_categories)                                   | Sets which physics categories describe this sensor.                                       |
-| [shape](sensor_shape)                                                     | Returns the shape of this sensor.                                                         |
+| Name                                                                        | Description                                                                               |
+| :-------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------- |
+| [activations](sensor_activations)                                           | Returns all components currently overlapping this sensor.                                 |
+| [disable_activation_by](sensor_disable_activation_by)                       | Prevents this sensor from being activated by colliders or sensors of specific categories. |
+| [disable_activation_by_everything](sensor_disable_activation_by_everything) | Prevents this sensor from being activated by colliders or sensors of any category.        |
+| [disable_sensor](sensor_disable_sensor)                                     | Prevents this sensor from being activated.                                                |
+| [enable_activation_by](sensor_enable_activation_by)                         | Allows this sensor to be activated by colliders or sensors of specific categories.        |
+| [enable_activation_by_everything](sensor_enable_activation_by_everything)   | Allows this sensor to be activated by colliders or sensors of any category.               |
+| [enable_sensor](sensor_enable_sensor)                                       | Allows this sensor to be activated.                                                       |
+| [set_categories](sensor_set_categories)                                     | Sets which physics categories describe this sensor.                                       |
+| [shape](sensor_shape)                                                       | Returns the shape of this sensor.                                                         |
 
 ## Callbacks
 

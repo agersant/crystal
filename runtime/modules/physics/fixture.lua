@@ -114,13 +114,25 @@ Fixture.active_contacts = function(self)
 end
 
 Fixture.begin_contact = function(self, other_fixture, contact)
-	self.contact_fixtures[other_fixture] = other_fixture:entity();
-	self:on_begin_contact(other_fixture, other_fixture:entity(), contact);
+	if not self.enabled or not other_fixture.enabled then
+		return;
+	end
+	local this_entity = self:entity();
+	local other_entity = other_fixture:entity();
+	if this_entity and this_entity:is_valid() and other_entity and other_entity:is_valid() then
+		self.contact_fixtures[other_fixture] = other_entity;
+		self:on_begin_contact(other_fixture, other_entity, contact);
+	end
 end
 
 Fixture.end_contact = function(self, other_fixture, contact)
-	self.contact_fixtures[other_fixture] = nil;
-	self:on_end_contact(other_fixture, other_fixture:entity(), contact);
+	local this_entity = self:entity();
+	if this_entity and this_entity:is_valid() then
+		if self.contact_fixtures[other_fixture] then
+			self.contact_fixtures[other_fixture] = nil;
+			self:on_end_contact(other_fixture, other_fixture:entity(), contact);
+		end
+	end
 end
 
 return Fixture;
