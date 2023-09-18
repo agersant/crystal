@@ -94,10 +94,9 @@ local start_engine = function()
 end
 
 local stop_engine = function()
-	local restart_data = {};
 	for module_name, module in pairs(modules) do
 		if module.stop then
-			restart_data[module_name] = module.stop();
+			module.stop();
 		end
 	end
 
@@ -108,8 +107,6 @@ local stop_engine = function()
 		package.loaded[package_name] = nil;
 	end
 	table.clear(engine_packages);
-
-	return restart_data;
 end
 
 local game_packages = {};
