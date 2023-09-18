@@ -35,7 +35,7 @@ jobs:
       - name: Install Rust toolchain with coverage tooling
         uses: dtolnay/rust-toolchain@master
         with:
-          toolchain: nightly
+          toolchain: stable
           components: llvm-tools-preview
       - name: Install grcov
         run: cargo install grcov
