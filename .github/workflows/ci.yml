@@ -38,6 +38,7 @@ jobs:
         with:
           name: packaged-engine
           path: release\crystal.zip
+          if-no-files-found: error
       - name: Run game packaging script
         run: .\package.ps1
         working-directory: release
@@ -45,6 +46,7 @@ jobs:
         with:
           name: packaged-game
           path: release/release/game.zip
+          if-no-files-found: error
       - uses: actions/upload-artifact@v2
         if: failure()
         with:
