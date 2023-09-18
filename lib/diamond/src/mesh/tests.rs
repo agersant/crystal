@@ -1,7 +1,6 @@
 use crate::mesh::Mesh;
 use geo_types::*;
-use plotters::drawing::backend::DrawingBackend;
-use plotters::drawing::BitMapBackend;
+use plotters::prelude::*;
 use plotters::style::RGBColor;
 use serde::Deserialize;
 use std::path::Path;
