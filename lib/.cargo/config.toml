@@ -1,5 +1,0 @@
-[env]
-LUA_INC = { value = "luajit/src", relative = true }
-LUA_LIB = { value = "luajit/src", relative = true }
-LUA_LIB_NAME = "lua51"
-LUA_LINK = "dylib"

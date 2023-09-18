@@ -19,13 +19,6 @@ Remove-Item $zip
 Get-ChildItem -Path "bin" -Recurse -File | Move-Item -Destination "bin"
 Get-ChildItem -Path "bin" -Recurse -Directory | Remove-Item
 
-# Build LuaJIT so we can link against it when compiling Lua modules
-Set-Location $lib
-Set-Location luajit\src
-$VSWhere = [System.Environment]::ExpandEnvironmentVariables("%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe")
-$installationPath = & "$VSWhere" -products * -prerelease -latest -property installationPath
-cmd.exe -/c "`"$installationPath\Common7\Tools\vsdevcmd.bat`" -arch=amd64 && .\msvcbuild.bat"
-
 # Build Rust dependencies
 Set-Location $lib
 cargo build --release
