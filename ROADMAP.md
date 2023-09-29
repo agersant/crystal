@@ -1,5 +1,6 @@
 # Crystal 0.2.0
 
+- [x] Bumped LOVE version from 11.3 to 11.4
 - [ ] Error handling/recovery
 - [ ] Curves & timelines
 - [ ] Finite state machines
