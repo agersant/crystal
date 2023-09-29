@@ -553,6 +553,7 @@ end
 
 --#region Mouse
 
+---@protected
 UIElement.update_mouse = function(self)
 	-- Not simple ancestor traversals because elements can be reparented
 	-- arbitrarily while mouse is inside them.
