@@ -13,7 +13,7 @@ New-Item -Type dir -Force "bin" | Out-Null
 Set-Location $crystal
 $zip = New-TemporaryFile
 $ProgressPreference = 'SilentlyContinue'
-Invoke-WebRequest -Uri "https://github.com/love2d/love/releases/download/11.3/love-11.3-win64.zip" -OutFile $zip
+Invoke-WebRequest -Uri "https://github.com/love2d/love/releases/download/11.4/love-11.4-win64.zip" -OutFile $zip
 Expand-Archive $zip -DestinationPath "bin" -Force
 Remove-Item $zip
 Get-ChildItem -Path "bin" -Recurse -File | Move-Item -Destination "bin"
