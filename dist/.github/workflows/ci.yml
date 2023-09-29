@@ -26,7 +26,7 @@ jobs:
         run: bin\lovec.exe game /test
       - name: Run game packaging script
         run: .\package.ps1
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: packaged-game
           path: release

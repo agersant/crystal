@@ -40,8 +40,8 @@ local draw_navigation = false;
 crystal.cmd.add("ShowNavigationOverlay", function() draw_navigation = true; end);
 crystal.cmd.add("HideNavigationOverlay", function() draw_navigation = false; end);
 crystal.hot_reload.persist("navigation_overlay",
-	function() return draw_navigation end,
-	function(d) draw_navigation = d end
+  function() return draw_navigation end,
+  function(d) draw_navigation = d end
 );
 ```
 

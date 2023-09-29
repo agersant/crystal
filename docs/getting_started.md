@@ -52,7 +52,7 @@ love.update = function(dt)
   crystal.update(dt);
 end
 
-love.daw = function()
+love.draw = function()
   crystal.draw();
   -- Your draw code here
 end

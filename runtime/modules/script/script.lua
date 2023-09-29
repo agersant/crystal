@@ -745,7 +745,7 @@ end);
 crystal.test.add("End child threads after thread ends", function()
 	local a = 0;
 	local script = Script:new(function(self)
-		self:thread(function()
+		self:thread(function(self)
 			self:wait_frame();
 			a = 1;
 		end);
@@ -759,8 +759,8 @@ end);
 crystal.test.add("End grand-child threads after thread ends", function()
 	local a = 0;
 	local script = Script:new(function(self)
-		self:thread(function()
-			self:thread(function()
+		self:thread(function(self)
+			self:thread(function(self)
 				self:wait_frame();
 				a = 1;
 			end);
