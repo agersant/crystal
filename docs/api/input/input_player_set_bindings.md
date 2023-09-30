@@ -42,7 +42,10 @@ player:set_bindings({
   space = { "jump", "talk" },
   x = { "attack" },
   -- Gamepad
-  dpad_a = { "jump", "talk" },
-  dpad_x = { "attack" },
+  btna = { "jump", "talk" },
+  btnx = { "attack" },
+  -- Mouse
+  mouseleft = { "jump", "talk" },
+  mouseright = { "attack" },
 });
 ```
