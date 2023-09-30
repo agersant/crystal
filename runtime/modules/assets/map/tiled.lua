@@ -84,7 +84,13 @@ crystal.assets.add_loader("lua", {
 				for _, object in ipairs(layer.objects) do
 					assert(object.type);
 					local class = Class:by_name(object.type);
-					assert(class);
+					if not class then
+						local error_message = "Tried to spawn an entity of type `" ..
+							tostring(object.type) .. "` but there is no Lua class with this name.";
+						error_message = error_message .. "\nMap path: " .. path;
+						error_message = error_message .. "\nLocation: x=" .. object.x .. ", y=" .. object.y;
+						error(error_message);
+					end
 					local options = table.copy(object.properties);
 					local x, y = object.x, object.y;
 					if object.shape == "rectangle" then

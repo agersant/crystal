@@ -6,9 +6,9 @@ local Transition = require(CRYSTAL_RUNTIME .. "modules/scene/transition");
 
 local scene_manager = SceneManager:new();
 
-crystal.cmd.add("LoadScene scene_class:string", function(scene_class)
-	local scene_class = Class:by_name(scene_class);
-	assert(scene_class);
+crystal.cmd.add("LoadScene scene_class:string", function(class_name)
+	local scene_class = Class:by_name(class_name);
+	assert(scene_class, "Scene class `" .. tostring(class_name) .. "` does not exist.");
 	assert(scene_class:inherits_from(Scene));
 	local new_scene = scene_class:new();
 	crystal.scene.replace(new_scene);
