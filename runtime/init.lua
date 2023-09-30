@@ -56,7 +56,6 @@ local add_module = function(name)
 	end
 end
 
-local hot_reload;
 local start_engine = function()
 	track_engine_packages(function()
 		add_module("math");
@@ -173,7 +172,7 @@ local stop_game = function()
 	table.clear(game_packages);
 end
 
-hot_reload = function()
+local hot_reload = function()
 	local savestate = modules.hot_reload.before_hot_reload();
 	stop_game();
 	stop_engine();
