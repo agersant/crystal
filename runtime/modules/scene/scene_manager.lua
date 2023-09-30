@@ -177,6 +177,8 @@ crystal.test.add("Forwards callbacks to current scene", function()
 	scene.key_released = function() callbacks.key_released = true; end;
 	scene.gamepad_pressed = function() callbacks.gamepad_pressed = true; end;
 	scene.gamepad_released = function() callbacks.gamepad_released = true; end;
+	scene.mouse_pressed = function() callbacks.mouse_pressed = true; end;
+	scene.mouse_released = function() callbacks.mouse_released = true; end;
 
 	local manager = SceneManager:new();
 	manager:replace(scene);
@@ -193,6 +195,10 @@ crystal.test.add("Forwards callbacks to current scene", function()
 	assert(callbacks.gamepad_pressed);
 	manager:gamepad_released("a");
 	assert(callbacks.gamepad_released);
+	manager:mouse_pressed(0, 0);
+	assert(callbacks.mouse_pressed);
+	manager:mouse_released(0, 0);
+	assert(callbacks.mouse_released);
 end);
 
 crystal.test.add("Can draw scene transition", function(context)
