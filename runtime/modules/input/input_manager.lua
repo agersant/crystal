@@ -240,7 +240,7 @@ crystal.test.add("Assigning gamepad updates input method", function()
 	assert(player:input_method() == nil);
 	manager:assign_gamepad(1, 1);
 	assert(player:input_method() == "gamepad");
-	manager:key_pressed("z");
+	manager:key_pressed("z", "z");
 	assert(player:input_method() == "keyboard");
 	manager:assign_gamepad(1, 1);
 	assert(player:input_method() == "gamepad");
@@ -304,7 +304,7 @@ crystal.test.add("Can autorepeat events", function()
 	manager:configure_autorepeat({
 		attack = { initial_delay = 0.5, period = 0.1 },
 	});
-	manager:key_pressed("z");
+	manager:key_pressed("z", "z");
 	assert(table.equals(player:events(), { "+attack" }));
 
 	manager:flush_events();
@@ -324,7 +324,7 @@ crystal.test.add("Can autorepeat events", function()
 	assert(table.equals(player:events(), { "+attack" }));
 
 	manager:flush_events();
-	manager:key_released("z");
+	manager:key_released("z", "z");
 	assert(table.equals(player:events(), { "-attack" }));
 
 	manager:flush_events();

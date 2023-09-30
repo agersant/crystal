@@ -22,7 +22,7 @@ input_player:set_bindings(bindings)
 
 Keys in the `bindings` table can be:
 
-- Any [love.KeyConstant](https://love2d.org/wiki/KeyConstant).
+- Any [love.Scancode](https://love2d.org/wiki/Scancode).
 - Any [love.GamepadAxis](https://love2d.org/wiki/GamepadAxis).
 - Any [love.GamepadButton](https://love2d.org/wiki/GamepadButton), except `a`, `b`, `x` and `y`, which should be replaced by `btna`, `btnb`, `btnx`, `btny`.
 - A string describing a mouse button:

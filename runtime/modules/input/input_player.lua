@@ -128,16 +128,16 @@ InputPlayer.key_pressed = function(self, key, scan_code, is_repeat)
 	if is_repeat then
 		return;
 	end
-	if self.inputs[key] then
+	if self.inputs[scan_code] then
 		self:set_input_method("keyboard");
 	end
-	self:input_down(key);
+	self:input_down(scan_code);
 end
 
 ---@param key love.KeyConstant
 ---@param scan_code love.Scancode
 InputPlayer.key_released = function(self, key, scan_code)
-	self:input_up(key);
+	self:input_up(scan_code);
 end
 
 ---@param button love.GamepadButton
@@ -307,9 +307,9 @@ crystal.test.add("Single-key binding keeps track of activation", function()
 	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
 	player:set_bindings({ z = { "attack" } });
 	assert(not player:is_action_active("attack"));
-	player:key_pressed("z");
+	player:key_pressed("z", "z");
 	assert(player:is_action_active("attack"));
-	player:key_released("z");
+	player:key_released("z", "z");
 	assert(not player:is_action_active("attack"));
 end);
 
@@ -327,12 +327,12 @@ crystal.test.add("Multi-key binding keeps track of activation", function()
 	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
 	player:set_bindings({ z = { "attack" }, x = { "attack" } });
 	assert(not player:is_action_active("attack"));
-	player:key_pressed("z");
+	player:key_pressed("z", "z");
 	assert(player:is_action_active("attack"));
-	player:key_pressed("x");
-	player:key_released("z");
+	player:key_pressed("x", "x");
+	player:key_released("z", "z");
 	assert(player:is_action_active("attack"));
-	player:key_released("x");
+	player:key_released("x", "x");
 	assert(not player:is_action_active("attack"));
 end);
 
@@ -341,7 +341,7 @@ crystal.test.add("Multi-action key emits +/- events", function()
 	player:set_bindings({ z = { "attack", "talk" } });
 	assert(not player:is_action_active("attack"));
 	assert(not player:is_action_active("talk"));
-	player:key_pressed("z");
+	player:key_pressed("z", "z");
 	assert(player:is_action_active("attack"));
 	assert(player:is_action_active("talk"));
 	for i, action in ipairs(player:events()) do
@@ -349,7 +349,7 @@ crystal.test.add("Multi-action key emits +/- events", function()
 		assert(i ~= 2 or action == "+talk");
 	end
 	player:flush_events();
-	player:key_released("z");
+	player:key_released("z", "z");
 	assert(not player:is_action_active("attack"));
 	assert(not player:is_action_active("talk"));
 	for i, action in ipairs(player:events()) do
@@ -364,7 +364,7 @@ crystal.test.add("Updates input method based on latest input", function()
 	assert(player:input_method() == nil);
 	player:gamepad_pressed("dpad_a");
 	assert(player:input_method() == "gamepad");
-	player:key_pressed("z");
+	player:key_pressed("z", "z");
 	assert(player:input_method() == "keyboard");
 end);
 
@@ -372,7 +372,7 @@ crystal.test.add("Changing input method releases all inputs", function()
 	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
 	player:set_bindings({ dpad_a = { "attack" }, z = { "block" } });
 	player:gamepad_pressed("dpad_a");
-	player:key_pressed("z");
+	player:key_pressed("z", "z");
 	assert(not player:is_action_active("attack"));
 end);
 
