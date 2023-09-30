@@ -19,7 +19,7 @@ scene:gamepad_pressed(joystick, button)
 | Name       | Type                                                        | Description                          |
 | :--------- | :---------------------------------------------------------- | :----------------------------------- |
 | `joystick` | [love.Joystick](https://love2d.org/wiki/Joystick)           | Joystick where a button was pressed. |
-| `button`   | [love.GamepadButton](https://love2d.org/wiki/GamepadButton) | Button that was pressed              |
+| `button`   | [love.GamepadButton](https://love2d.org/wiki/GamepadButton) | Button that was pressed.             |
 
 ## Examples
 
