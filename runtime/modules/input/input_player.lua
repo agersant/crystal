@@ -151,6 +151,14 @@ InputPlayer.gamepad_released = function(self, button)
 	self:input_up(button);
 end
 
+InputPlayer.mouse_pressed = function(self, button)
+	self:input_down(button);
+end
+
+InputPlayer.mouse_released = function(self, button)
+	self:input_up(button);
+end
+
 ---@private
 ---@param input string
 InputPlayer.input_down = function(self, input)

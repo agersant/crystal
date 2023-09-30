@@ -5,9 +5,10 @@
 - [ ] Curves & timelines
 - [ ] Finite state machines
 - [ ] ECS component for mouse input
-- [ ] Can bind actions to mouse buttons
+- [x] Can bind actions to mouse buttons
 - [ ] Leaf UI elements can draw with a custom shader. Implement rounded corners in default shader instead of Painter subclass.
 - [ ] UI element visibility
+- [ ] UI ScrollArea
 - [ ] UI Button
 - [ ] UI MenuStack
 - [ ] UI pixel snapping (to viewport pixel / to native-pixel)

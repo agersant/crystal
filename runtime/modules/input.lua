@@ -19,6 +19,24 @@ local gamepad_button_map = {
 	y = "btny",
 };
 
+local mouse_button_map = {
+	"mouseleft",
+	"mouseright",
+	"mousemiddle",
+	"mouseextra1",
+	"mouseextra2",
+	"mouseextra3",
+	"mouseextra4",
+	"mouseextra5",
+	"mouseextra6",
+	"mouseextra7",
+	"mouseextra8",
+	"mouseextra9",
+	"mouseextra10",
+	"mouseextra11",
+	"mouseextra12",
+};
+
 return {
 	module_api = {
 		player = function(player_index)
@@ -81,10 +99,17 @@ return {
 		local button = gamepad_button_map[button] or button;
 		input_manager:gamepad_released(gamepad_id, button);
 	end,
-	-- TODO mouse pressed/released to support click bindings
 	mouse_pressed = function(x, y, button, is_touch, presses)
+		local button = mouse_button_map[button];
+		if button then
+			input_manager:mouse_pressed(button);
+		end
 	end,
 	mouse_released = function(x, y, button, is_touch, presses)
+		local button = mouse_button_map[button];
+		if button then
+			input_manager:mouse_released(button);
+		end
 	end,
 	update = function(dt)
 		input_manager:update(dt);

@@ -155,6 +155,14 @@ InputManager.gamepad_released = function(self, gamepad_id, button)
 	end
 end
 
+InputManager.mouse_pressed = function(self, button)
+	self._mouse_player:mouse_pressed(button);
+end
+
+InputManager.mouse_released = function(self, button)
+	self._mouse_player:mouse_released(button);
+end
+
 InputManager.flush_events = function(self)
 	for _, player in pairs(self.players) do
 		player:flush_events();
@@ -248,6 +256,17 @@ crystal.test.add("Unassigned gamepad does not generate events", function()
 	assert(not manager:player(1):is_action_active("attack"));
 	manager:gamepad_pressed(2, "btna");
 	assert(not manager:player(1):is_action_active("attack"));
+end);
+
+crystal.test.add("Mouse events are sent to the mouse player", function()
+	local manager = InputManager:new(GamepadAPI.Mock:new());
+	manager:assign_mouse(2);
+	manager:player(1):set_bindings({ mouseleft = { "attack" }, mouseright = { "guard" } });
+	manager:player(2):set_bindings({ mouseleft = { "attack" }, mouseright = { "guard" } });
+	manager:mouse_pressed("mouseright");
+	assert(not manager:player(1):is_action_active("guard"));
+	assert(manager:player(2):is_action_active("guard"));
+	manager:mouse_released("mouseright");
 end);
 
 crystal.test.add("Can map gamepad axis to a binary action", function()
