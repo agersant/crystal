@@ -29,4 +29,20 @@ end
 Scene.gamepad_released = function(self, joystick, button)
 end
 
+---@param x number
+---@param y number
+---@param button number
+---@param is_touch boolean
+---@param preses number
+Scene.mouse_pressed = function(self, x, y, button, is_touch, presses)
+end
+
+---@param x number
+---@param y number
+---@param button number
+---@param is_touch boolean
+---@param preses number
+Scene.mouse_released = function(self, x, y, button, is_touch, presses)
+end
+
 return Scene;

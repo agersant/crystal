@@ -71,7 +71,6 @@ return {
 	key_released = function(key, scan_code)
 		input_manager:key_released(key, scan_code);
 	end,
-	-- TODO mouse pressed/released to support click bindings
 	gamepad_pressed = function(joystick, button)
 		local gamepad_id = joystick:getID();
 		local button = gamepad_button_map[button] or button;
@@ -81,6 +80,11 @@ return {
 		local gamepad_id = joystick:getID();
 		local button = gamepad_button_map[button] or button;
 		input_manager:gamepad_released(gamepad_id, button);
+	end,
+	-- TODO mouse pressed/released to support click bindings
+	mouse_pressed = function(x, y, button, is_touch, presses)
+	end,
+	mouse_released = function(x, y, button, is_touch, presses)
 	end,
 	update = function(dt)
 		input_manager:update(dt);

@@ -225,6 +225,16 @@ crystal.gamepadreleased = function(joystick, button)
 	modules.scene.gamepad_released(joystick, button);
 end
 
+crystal.mousepressed = function(x, y, button, is_touch, presses)
+	modules.input.mouse_pressed(x, y, button, is_touch, presses);
+	modules.scene.mouse_pressed(x, y, button, is_touch, presses);
+end
+
+crystal.mousereleased = function(x, y, button, is_touch, presses)
+	modules.input.mouse_released(x, y, button, is_touch, presses);
+	modules.scene.mouse_released(x, y, button, is_touch, presses);
+end
+
 crystal.textinput = function(text)
 	modules.tool.text_input(text);
 end
@@ -257,6 +267,8 @@ love.keypressed = crystal.keypressed;
 love.keyreleased = crystal.keyreleased;
 love.gamepadpressed = crystal.gamepadpressed;
 love.gamepadreleased = crystal.gamepadreleased;
+love.mousepressed = crystal.mousepressed;
+love.mousereleased = crystal.mousereleased;
 love.textinput = crystal.textinput;
 
 love.keyboard.setTextInput(false);

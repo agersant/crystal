@@ -21,11 +21,13 @@ crystal.Scene:new()
 
 | Name                                       | Description                                                                       |
 | :----------------------------------------- | :-------------------------------------------------------------------------------- |
-| [draw](scene_draw)                         | Called every frame from [love.update](https://love2d.org/wiki/love.draw).         |
+| [draw](scene_draw)                         | Called every frame from [love.draw](https://love2d.org/wiki/love.draw).           |
 | [gamepad_pressed](scene_gamepad_pressed)   | Called from [love.gamepadpressed](https://love2d.org/wiki/love.gamepadpressed).   |
 | [gamepad_released](scene_gamepad_released) | Called from [love.gamepadreleased](https://love2d.org/wiki/love.gamepadreleased). |
 | [key_pressed](scene_key_pressed)           | Called from [love.keypressed](https://love2d.org/wiki/love.keypressed).           |
 | [key_released](scene_key_released)         | Called from [love.keyreleased](https://love2d.org/wiki/love.keyreleased).         |
+| [mouse_pressed](scene_mouse_pressed)       | Called from [love.mousepressed](https://love2d.org/wiki/love.mousepressed).       |
+| [mouse_released](scene_mouse_released)     | Called from [love.mousereleased](https://love2d.org/wiki/love.mousereleased).     |
 | [update](scene_update)                     | Called every frame from [love.update](https://love2d.org/wiki/love.update).       |
 
 ## Examples

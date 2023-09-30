@@ -127,6 +127,28 @@ SceneManager.gamepad_released = function(self, joystick, button)
 	end
 end
 
+---@param x number
+---@param y number
+---@param button number
+---@param is_touch boolean
+---@param preses number
+SceneManager.mouse_pressed = function(self, x, y, button, is_touch, presses)
+	if self.scene then
+		self.scene:mouse_pressed(x, y, button, is_touch, presses);
+	end
+end
+
+---@param x number
+---@param y number
+---@param button number
+---@param is_touch boolean
+---@param preses number
+SceneManager.mouse_released = function(self, x, y, button, is_touch, presses)
+	if self.scene then
+		self.scene:mouse_released(x, y, button, is_touch, presses);
+	end
+end
+
 --#region Tests
 
 crystal.test.add("Can replace scene without transition", function()
