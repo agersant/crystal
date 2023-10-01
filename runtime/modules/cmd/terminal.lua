@@ -88,16 +88,7 @@ Terminal.run = function(self, command)
 		return;
 	end
 
-	xpcall(
-		function()
-			command:impl()(unpack(args))
-		end,
-		function(err)
-			err = "Error while running command '" .. parsed.full_text .. "':" .. err .. "\n";
-			err = err .. debug.traceback();
-			crystal.log.error(err);
-		end
-	);
+	command:impl()(unpack(args))
 end
 
 --#region Tests

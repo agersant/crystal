@@ -40,9 +40,8 @@ pump_thread = function(thread, resume_args)
 		table.pop(running_threads);
 		local success = results[1];
 		if not success then
-			local error_text = results[2];
-			crystal.log.error(error_text);
-			crystal.log.error(debug.traceback(thread_coroutine));
+			-- TODO Script callstack in runtime error screen
+			error(results[2]);
 		else
 			local instruction = results[2];
 			if instruction == "fork" then

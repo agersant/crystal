@@ -158,21 +158,11 @@ Map.spawn_entities = function(self, ecs)
 	end
 
 	for _, entity in ipairs(self.entities) do
-		xpcall(
-			function()
-				local spawned = ecs:spawn(entity.class, entity.options);
-				local body = spawned:component(crystal.Body);
-				if body then
-					body:set_position(entity.x, entity.y);
-				end
-			end,
-			function(err)
-				crystal.log.error(
-					"Error spawning map entity of class '" .. tostring(entity.class) .. "':\n" .. tostring(err)
-				);
-				print(debug.traceback());
-			end
-		);
+		local spawned = ecs:spawn(entity.class, entity.options);
+		local body = spawned:component(crystal.Body);
+		if body then
+			body:set_position(entity.x, entity.y);
+		end
 	end
 
 	return body;

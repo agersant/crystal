@@ -65,6 +65,7 @@ local start_engine = function()
 		add_module("test");
 		add_module("cmd");
 		add_module("ecs");
+		add_module("error");
 		add_module("hot_reload");
 
 		add_module("ai");
@@ -150,19 +151,19 @@ local start_game = function()
 		return;
 	end
 
-	require_game_source();
-
-	if crystal.prelude then
-		crystal.prelude();
-	end
-
-	if not features.tests then
-		if features.developer_start and crystal.developer_start then
-			crystal.developer_start();
-		elseif crystal.player_start then
-			crystal.player_start();
+	modules.error.catch_errors(function()
+		require_game_source();
+		if crystal.prelude then
+			crystal.prelude();
 		end
-	end
+		if not features.tests then
+			if features.developer_start and crystal.developer_start then
+				crystal.developer_start();
+			elseif crystal.player_start then
+				crystal.player_start();
+			end
+		end
+	end);
 end
 
 local stop_game = function()
@@ -187,55 +188,77 @@ crystal.update = function(dt)
 	if modules.hot_reload.consume_hot_reload() then
 		hot_reload();
 	end
-	modules.window.update();
-	modules.input.update(dt);
-	modules.scene.update(dt);
-	modules.tool.update(dt);
-	modules.input.flush_events();
+	modules.error.catch_errors(function()
+		modules.window.update();
+		modules.input.update(dt);
+		modules.scene.update(dt);
+		modules.tool.update(dt);
+		modules.input.flush_events();
+	end);
 end
 
 crystal.draw = function()
-	love.graphics.reset();
-	modules.scene.draw();
-	love.graphics.reset();
-	modules.tool.draw();
-end
-
-crystal.keypressed = function(key, scan_code, is_repeat)
-	modules.tool.key_pressed(key, scan_code, is_repeat);
-	if not modules.tool.consumes_inputs() then
-		modules.input.key_pressed(key, scan_code, is_repeat);
-		modules.scene.key_pressed(key, scan_code, is_repeat);
+	modules.error.catch_errors(function()
+		love.graphics.reset();
+		modules.scene.draw();
+		love.graphics.reset();
+		modules.tool.draw();
+	end);
+	if modules.error.current_error() then
+		love.graphics.reset();
+		modules.error.draw();
 	end
 end
 
+crystal.keypressed = function(key, scan_code, is_repeat)
+	modules.error.catch_errors(function()
+		modules.tool.key_pressed(key, scan_code, is_repeat);
+		if not modules.tool.consumes_inputs() then
+			modules.input.key_pressed(key, scan_code, is_repeat);
+			modules.scene.key_pressed(key, scan_code, is_repeat);
+		end
+	end);
+end
+
 crystal.keyreleased = function(key, scan_code)
-	modules.input.key_released(key, scan_code);
-	modules.scene.key_released(key, scan_code);
+	modules.error.catch_errors(function()
+		modules.input.key_released(key, scan_code);
+		modules.scene.key_released(key, scan_code);
+	end);
 end
 
 crystal.gamepadpressed = function(joystick, button)
-	modules.input.gamepad_pressed(joystick, button);
-	modules.scene.gamepad_pressed(joystick, button);
+	modules.error.catch_errors(function()
+		modules.input.gamepad_pressed(joystick, button);
+		modules.scene.gamepad_pressed(joystick, button);
+	end);
 end
 
 crystal.gamepadreleased = function(joystick, button)
-	modules.input.gamepad_released(joystick, button);
-	modules.scene.gamepad_released(joystick, button);
+	modules.error.catch_errors(function()
+		modules.input.gamepad_released(joystick, button);
+		modules.scene.gamepad_released(joystick, button);
+	end);
 end
 
 crystal.mousepressed = function(x, y, button, is_touch, presses)
-	modules.input.mouse_pressed(x, y, button, is_touch, presses);
-	modules.scene.mouse_pressed(x, y, button, is_touch, presses);
+	modules.error.catch_errors(function()
+		modules.input.mouse_pressed(x, y, button, is_touch, presses);
+		modules.scene.mouse_pressed(x, y, button, is_touch, presses);
+	end);
 end
 
 crystal.mousereleased = function(x, y, button, is_touch, presses)
-	modules.input.mouse_released(x, y, button, is_touch, presses);
-	modules.scene.mouse_released(x, y, button, is_touch, presses);
+	modules.error.catch_errors(function()
+		modules.input.mouse_released(x, y, button, is_touch, presses);
+		modules.scene.mouse_released(x, y, button, is_touch, presses);
+	end);
 end
 
 crystal.textinput = function(text)
-	modules.tool.text_input(text);
+	modules.error.catch_errors(function()
+		modules.tool.text_input(text);
+	end);
 end
 
 crystal.run = love.run;
