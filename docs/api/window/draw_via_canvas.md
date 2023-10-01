@@ -25,7 +25,7 @@ crystal.window.draw_via_canvas(canvas, draw_function, blit_function);
 | Name            | Type                                          | Description                                                   |
 | :-------------- | :-------------------------------------------- | :------------------------------------------------------------ |
 | `canvas`        | [love.Canvas](https://love2d.org/wiki/Canvas) | Canvas to draw onto.                                          |
-| `draw_function` | `function`                                    | Function containing logic to draw the canvas onto the screen. |
+| `draw_function` | `function`                                    | Function containing logic to draw onto the canvas.            |
 | `blit_function` | `function`                                    | Function containing logic to draw the canvas onto the screen. |
 
 ## Examples
