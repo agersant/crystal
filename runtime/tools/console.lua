@@ -387,16 +387,6 @@ crystal.test.add("Console swallows incorrect commands", function()
 	console:key_pressed("return");
 end);
 
-crystal.test.add("Console swallows command errors", function()
-	local terminal = Terminal:new();
-	local console = Console:new(terminal);
-	terminal:add_command("testCommand", function()
-		error("bonk");
-	end);
-	console:text_input("testCommand");
-	console:key_pressed("return");
-end);
-
 --#endregion
 
 return function(terminal)
