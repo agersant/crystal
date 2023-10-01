@@ -1,3 +1,5 @@
+local features = require(CRYSTAL_RUNTIME .. "features");
+
 local current_error;
 local traceback;
 
@@ -57,28 +59,44 @@ return {
 		if current_error then
 			crystal.log.error(current_error);
 			crystal.log.error(traceback);
+			if not features.recoverable_errors then
+				error(current_error);
+			end
 		end
 	end,
-	current_error = function()
-		return current_error;
-	end,
-	draw = function()
+	draw = function(screenshot)
+		if not features.recoverable_errors or not current_error then
+			return nil;
+		end
+
 		local margin = 30;
 		local x = margin;
 		local y = margin;
 		local window_width, window_height = love.window.getMode();
+		local viewport_scale = crystal.window.viewport_scale();
 
 		love.graphics.clear(crystal.Color.grey0);
 
 		-- Draws screenshot
-		-- TODO Actual screenshot
-		local viewport_width, viewport_height = crystal.window.viewport_size();
-		local screenshot_width = math.min(viewport_width, window_width / 4);
-		local screenshot_height = math.ceil(screenshot_width * viewport_height / viewport_width);
-		love.graphics.rectangle("fill", x, y, screenshot_width, screenshot_height);
+		local screenshot_width, screenshot_height = screenshot:getDimensions();
+		local image_width = math.ceil(math.min(screenshot_width / viewport_scale, window_width / 3));
+		local image_height = math.ceil(image_width * screenshot_height / screenshot_width);
+		local screenshot_font = crystal.ui.font("crystal_regular_sm");
+		love.graphics.setColor(crystal.Color.greyA);
+		love.graphics.rectangle("fill", x, y, image_width, image_height);
+		love.graphics.setColor(crystal.Color.greyD);
+		love.graphics.printf(
+			"no screenshot captured",
+			screenshot_font,
+			math.floor(x),
+			math.floor(y + (image_height - screenshot_font:getHeight()) / 2),
+			image_width,
+			"center");
+		love.graphics.setColor(crystal.Color.white);
+		love.graphics.draw(screenshot, x, y, 0, image_width / screenshot_width, image_height / screenshot_height);
 
 		-- Draw separator
-		x = x + screenshot_width + margin;
+		x = x + image_width + margin;
 		love.graphics.setColor(crystal.Color.greyC);
 		love.graphics.rectangle("fill", x, y, 2, window_height - 2 * margin);
 		x = x + margin;

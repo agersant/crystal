@@ -203,11 +203,10 @@ crystal.draw = function()
 		modules.scene.draw();
 		love.graphics.reset();
 		modules.tool.draw();
+		modules.window.present();
 	end);
-	if modules.error.current_error() then
-		love.graphics.reset();
-		modules.error.draw();
-	end
+	love.graphics.reset();
+	modules.error.draw(modules.window.captured_frame());
 end
 
 crystal.keypressed = function(key, scan_code, is_repeat)

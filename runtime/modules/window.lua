@@ -1,3 +1,5 @@
+local features = require(CRYSTAL_RUNTIME .. "features");
+
 ---@alias ScalingMode "none" | "pixel_perfect" | "crop_or_squish"
 
 local lg; -- # Original love.graphics functions
@@ -16,6 +18,9 @@ local lg; -- # Original love.graphics functions
 ---@field package viewport_height number
 ---@field package viewport_scale number
 ---@field private viewport_canvas love.Canvas[]
+---@field private frame_capture_canvas love.Canvas
+---@field private previous_frame_canvas love.Canvas
+---@field private current_frame_canvas love.Canvas
 local Window = Class("Window");
 
 Window.init = function(self)
@@ -32,6 +37,9 @@ Window.init = function(self)
 	self.viewport_height = nil;
 	self.viewport_scale = nil;
 	self.viewport_canvas = {};
+	self.frame_capture_canvas = nil;
+	self.previous_frame_canvas = nil;
+	self.current_frame_canvas = nil;
 end
 
 ---@package
@@ -74,6 +82,10 @@ end
 
 ---@package
 Window.update = function(self)
+	local old_viewport_width = self.viewport_width;
+	local old_viewport_height = self.viewport_height;
+	local old_viewport_scale = self.viewport_scale;
+
 	local window_width, window_height, _ = love.window.getMode();
 	self.window_width = window_width;
 	self.window_height = window_height;
@@ -93,7 +105,7 @@ Window.update = function(self)
 	if self.scaling_mode == "none" then
 		self.viewport_scale = 1;
 	elseif self.scaling_mode == "pixel_perfect" then
-		self.viewport_scale = math.floor(self.letterbox_height / self.viewport_height);
+		self.viewport_scale = math.max(1, math.floor(self.letterbox_height / self.viewport_height));
 	elseif self.scaling_mode == "crop_or_squish" then
 		local scale_x = (self.letterbox_width + 1) / self.viewport_width;
 		local scale_y = (self.letterbox_height + 1) / self.viewport_height;
@@ -107,10 +119,22 @@ Window.update = function(self)
 		end
 	end
 
-	for index, canvas in ipairs(self.viewport_canvas) do
-		local canvas_width, canvas_height = canvas:getDimensions();
-		if canvas_width ~= self.viewport_width or canvas_height ~= self.viewport_height then
+	local width_changed = old_viewport_width ~= self.viewport_width;
+	local height_changed = old_viewport_height ~= self.viewport_height;
+	if width_changed or height_changed then
+		for index, canvas in ipairs(self.viewport_canvas) do
 			self.viewport_canvas[index] = self:allocate_viewport_canvas();
+		end
+	end
+
+	if features.frame_capture then
+		local scale_changed = old_viewport_scale ~= self.viewport_scale;
+		if width_changed or height_changed or scale_changed then
+			local w = math.ceil(self.viewport_width * self.viewport_scale);
+			local h = math.ceil(self.viewport_height * self.viewport_scale);
+			self.frame_capture_canvas = love.graphics.newCanvas(w, h);
+			self.previous_frame_canvas = love.graphics.newCanvas(w, h);
+			self.current_frame_canvas = love.graphics.newCanvas(w, h);
 		end
 	end
 end
@@ -119,7 +143,9 @@ end
 ---@param draw fun()
 Window.draw = function(self, draw)
 	assert(type(draw) == "function");
+
 	love.graphics.push();
+
 	if self.scaling_mode == "none" then
 		local x = math.round((self.window_width - self.viewport_width) / 2);
 		local y = math.round((self.window_height - self.viewport_height) / 2);
@@ -145,9 +171,42 @@ Window.draw = function(self, draw)
 			love.graphics.translate(x, y);
 		end
 	end
-	love.graphics.scale(self.viewport_scale, self.viewport_scale);
-	draw();
+
+	if features.frame_capture then
+		-- Draw onto the screen using frame_capture_canvas as intermediate render target
+		self:draw_via_canvas(self.frame_capture_canvas,
+			function()
+				love.graphics.scale(self.viewport_scale, self.viewport_scale);
+				draw();
+			end,
+			function()
+				love.graphics.draw(self.frame_capture_canvas);
+			end
+		);
+		-- Draw frame_capture_canvas onto current frame screenshot
+		love.graphics.push("all");
+		love.graphics.reset();
+		love.graphics.setCanvas(self.current_frame_canvas);
+		love.graphics.draw(self.frame_capture_canvas);
+		love.graphics.pop();
+	else
+		love.graphics.scale(self.viewport_scale, self.viewport_scale);
+		draw();
+	end
+
 	love.graphics.pop();
+end
+
+---@private
+Window.present = function(self)
+	if features.frame_capture then
+		local swap = self.previous_frame_canvas;
+		self.previous_frame_canvas = self.current_frame_canvas;
+		self.current_frame_canvas = swap;
+		love.graphics.setCanvas(self.current_frame_canvas);
+		love.graphics.clear();
+		love.graphics.setCanvas(nil);
+	end
 end
 
 ---@private
@@ -221,8 +280,16 @@ return {
 	update = function()
 		window:update();
 	end,
+	present = function()
+		window:present();
+	end,
+	captured_frame = function()
+		return window.previous_frame_canvas;
+	end,
 	start = function()
 		lg = table.copy(love.graphics);
+
+		table.push(transform_stack, love.math.newTransform());
 
 		love.graphics.reset = function()
 			lg.reset();
