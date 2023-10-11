@@ -17,6 +17,7 @@ features.developer_start = not release;
 features.recoverable_errors = not release;
 features.hot_reload = not release and not has_flag("/test");
 features.frame_capture = not release;
+features.script_traceback = not release;
 features.slow_assertions = not release;
 features.test_coverage = has_flag("/test") and has_flag("/coverage");
 features.tests = has_flag("/test");

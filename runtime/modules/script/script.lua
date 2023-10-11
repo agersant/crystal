@@ -1,3 +1,4 @@
+local features = require(CRYSTAL_RUNTIME .. "features");
 local Thread = require(CRYSTAL_RUNTIME .. "modules/script/thread");
 
 ---@class Script
@@ -18,6 +19,8 @@ local health_check = function()
 		running_thread:abort();
 	end
 end
+
+local breadcrumbs = {};
 
 ---@param thread Thread
 ---@param resume_args any[]
@@ -40,15 +43,35 @@ pump_thread = function(thread, resume_args)
 		table.pop(running_threads);
 		local success = results[1];
 		if not success then
-			-- TODO Script callstack in runtime error screen
-			error(results[2]);
+			local script_traceback = nil;
+			if features.script_traceback then
+				script_traceback = debug.traceback(thread_coroutine);
+				for i = #running_threads, 1, -1 do
+					script_traceback = script_traceback .. "\n" .. debug.traceback(running_threads[i]:coroutine());
+				end
+				for i = #breadcrumbs, 1, -1 do
+					script_traceback = script_traceback .. "\n" .. breadcrumbs[i];
+				end
+				table.clear(breadcrumbs);
+			end
+			error({
+				message = results[2],
+				traceback = debug.traceback(),
+				script_traceback = script_traceback,
+			});
 		else
 			local instruction = results[2];
 			if instruction == "fork" then
 				local new_thread = results[3];
 				assert(new_thread:inherits_from(Thread));
 				self.threads[new_thread] = true;
+				if features.script_traceback then
+					table.push(breadcrumbs, debug.traceback(thread_coroutine));
+				end
 				pump_thread(new_thread);
+				if features.script_traceback then
+					table.pop(breadcrumbs);
+				end
 				if not thread:ended() then
 					pump_thread(thread, new_thread);
 				end
