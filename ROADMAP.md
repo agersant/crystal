@@ -26,5 +26,6 @@
 - [ ] UI layout caching
 - [ ] Drawable to manage particle system
 - [ ] LDTk maps support
+- [ ] Asesprite sheet support
 - [ ] Inspector tool
 - [ ] create-crystal-app starter script
