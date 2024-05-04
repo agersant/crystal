@@ -33,6 +33,14 @@ table.pop = function(t)
 	return table.remove(t);
 end
 
+table.append = function(t1, t2)
+	local t1_length = #t1;
+	local t2_length = #t2;
+	for i = 1, t2_length do
+		t1[t1_length + i] = t2[i];
+	end
+end
+
 table.map = function(t, f)
 	local out = {};
 	for k, v in pairs(t) do
@@ -45,6 +53,18 @@ table.copy = function(t)
 	local out = {};
 	for k, v in pairs(t) do
 		out[k] = v;
+	end
+	return out;
+end
+
+table.deep_copy = function(t)
+	local out = {};
+	for k, v in pairs(t) do
+		if type(v) == "table" then
+			out[k] = table.deep_copy(v);
+		else
+			out[k] = v;
+		end
 	end
 	return out;
 end
@@ -184,6 +204,18 @@ return {
 			assert(t[2] == nil);
 		end);
 
+		crystal.test.add("Can append a table onto another", function()
+			local t = { 1, 2, 3 };
+			table.append(t, { 4, 5, 6 });
+			assert(table.equals(t, { 1, 2, 3, 4, 5, 6 }));
+		end);
+
+		crystal.test.add("Can append a table to itself", function()
+			local t = { 1, 2, 3 };
+			table.append(t, t);
+			assert(table.equals(t, { 1, 2, 3, 1, 2, 3 }));
+		end);
+
 		crystal.test.add("Can map table values", function()
 			local t = { a = 1, b = 4 };
 			local m = table.map(t, function(n) return n * n; end);
@@ -219,6 +251,15 @@ return {
 			local copy = table.copy(original);
 			assert(copy ~= original);
 			assert(copy.a == original.a);
+		end);
+
+		crystal.test.add("Can deep copy table", function()
+			local original = { a = { 1, 2, 3 }, b = true };
+			local copy = table.deep_copy(original);
+			assert(copy.b == true);
+			assert(original.b == true);
+			assert(copy.a ~= original.a);
+			assert(table.equals(copy.a, original.a));
 		end);
 
 		crystal.test.add("Can serialize empty table", function()
