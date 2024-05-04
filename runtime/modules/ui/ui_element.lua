@@ -401,12 +401,21 @@ end
 --#region Input
 
 ---@param player_index number
----@param input string
+---@param action string
 ---@return boolean
-UIElement.handle_input = function(self, player_index, input)
+UIElement.action_pressed = function(self, player_index, action)
 	assert(self:is_root());
 	assert(type(player_index) == "number");
-	return self.router:route_input(self, player_index, input);
+	return self.router:action_pressed(self, player_index, action);
+end
+
+---@param player_index number
+---@param action string
+---@return boolean
+UIElement.action_released = function(self, player_index, action)
+	assert(self:is_root());
+	assert(type(player_index) == "number");
+	return self.router:action_released(self, player_index, action);
 end
 
 ---@param input string
@@ -558,7 +567,7 @@ UIElement.update_mouse = function(self)
 	-- Not simple ancestor traversals because elements can be reparented
 	-- arbitrarily while mouse is inside them.
 
-	local player_index = crystal.input.mouse_player():index();
+	local player_index = crystal.input.mouse_player();
 	assert(player_index);
 
 	local target = crystal.input.current_mouse_target();
@@ -663,14 +672,14 @@ end
 crystal.test.add("Can bind/unbind input", function()
 	local sentinel = false;
 	local a = crystal.UIElement:new();
-	a:bind_input("ui_ok", "always", nil, function()
+	a:bind_input("+ui_ok", "always", nil, function()
 		sentinel = true;
 	end);
-	a:handle_input(1, "ui_ok");
+	a:action_pressed(1, "ui_ok");
 	assert(sentinel);
 	sentinel = false;
-	a:unbind_input("ui_ok");
-	a:handle_input(1, "ui_ok");
+	a:unbind_input("+ui_ok");
+	a:action_pressed(1, "ui_ok");
 	assert(not sentinel);
 end);
 
@@ -678,13 +687,13 @@ crystal.test.add("Can require focus on bindings", function()
 	local sentinel = false;
 	local a = crystal.UIElement:new();
 	a:set_focusable(true);
-	a:bind_input("ui_ok", "when_focused", nil, function()
+	a:bind_input("+ui_ok", "when_focused", nil, function()
 		sentinel = true;
 	end);
-	a:handle_input(1, "ui_ok");
+	a:action_pressed(1, "ui_ok");
 	assert(not sentinel);
 	a:focus(1);
-	a:handle_input(1, "ui_ok");
+	a:action_pressed(1, "ui_ok");
 	assert(sentinel);
 end);
 
@@ -693,46 +702,46 @@ crystal.test.add("Calls bindings on focus path", function()
 	local a = crystal.Overlay:new();
 	local b = a:add_child(crystal.Overlay:new());
 	local c = b:add_child(crystal.UIElement:new());
-	b:bind_input("ui_ok", "when_focused", nil, function()
+	b:bind_input("+ui_ok", "when_focused", nil, function()
 		sentinel = true;
 	end);
 	c:set_focusable(true);
-	a:handle_input(1, "ui_ok");
+	a:action_pressed(1, "ui_ok");
 	assert(not sentinel);
 	c:focus(1);
-	a:handle_input(1, "ui_ok");
+	a:action_pressed(1, "ui_ok");
 	assert(sentinel);
 end);
 
 crystal.test.add("Can restrict inputs by player index", function()
 	local sentinel = false;
 	local a = crystal.UIElement:new();
-	a:bind_input("ui_ok", "always", nil, function()
+	a:bind_input("+ui_ok", "always", nil, function()
 		sentinel = true;
 	end);
 
 	a:set_player_index(2);
-	a:handle_input(1, "ui_ok");
+	a:action_pressed(1, "ui_ok");
 	assert(not sentinel);
 
 	a:set_player_index(1);
-	a:handle_input(1, "ui_ok");
+	a:action_pressed(1, "ui_ok");
 	assert(sentinel);
 end);
 
 crystal.test.add("Can restrict inputs by deactivating", function()
 	local sentinel = false;
 	local a = crystal.UIElement:new();
-	a:bind_input("ui_ok", "always", nil, function()
+	a:bind_input("+ui_ok", "always", nil, function()
 		sentinel = true;
 	end);
 
 	a:set_active(false);
-	a:handle_input(1, "ui_ok");
+	a:action_pressed(1, "ui_ok");
 	assert(not sentinel);
 
 	a:set_active(true);
-	a:handle_input(1, "ui_ok");
+	a:action_pressed(1, "ui_ok");
 	assert(sentinel);
 end);
 

@@ -69,13 +69,14 @@ crystal.UIElement:new()
 
 | Name                                              | Description                                                                                          |
 | :------------------------------------------------ | :--------------------------------------------------------------------------------------------------- |
+| [action_pressed](ui_element_action_pressed)       | Executes callbacks [bound](ui_element_bind_input) to an action being pressed.                        |
+| [action_released](ui_element_action_pressed)      | Executes callbacks [bound](ui_element_bind_input) to an action being released.                       |
 | [active_bindings](ui_element_active_bindings)     | Returns a table of active input bindings within this element.                                        |
 | [bind_input](ui_element_bind_input)               | Binds an input action to a callback function.                                                        |
 | [can_receive_input](ui_element_can_receive_input) | Returns whether this element can currently receive input actions.                                    |
 | [focus_tree](ui_element_focus_tree)               | Gives focus to the first focusable element within this one (including itself).                       |
 | [focus](ui_element_focus)                         | Gives focus to this element.                                                                         |
 | [focused_element](ui_element_focused_element)     | Returns a focused element within this one.                                                           |
-| [handle_input](ui_element_handle_input)           | Executes callbacks [bound](ui_element_add_binding) to an input action.                               |
 | [is_active](ui_element_is_active)                 | Returns whether this element is active.                                                              |
 | [is_focusable](ui_element_is_focusable)           | Returns whether this element is focusable.                                                           |
 | [is_focused](ui_element_is_focused)               | Returns whether this element is currently focused by a specific player.                              |

@@ -42,5 +42,5 @@ sword.on_unfocus = function()
 end
 
 buy_menu:focus_tree(1); -- Prints "Focused sword"
-buy_menu:handle_input(1, "+ui_down"); -- Prints "Unfocused sword"
+buy_menu:action_pressed(1, "ui_down"); -- Prints "Unfocused sword"
 ```

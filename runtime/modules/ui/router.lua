@@ -23,6 +23,23 @@ end
 
 ---@param context UIElement
 ---@param player_index number
+---@param action string
+---@return boolean
+Router.action_pressed = function(self, context, player_index, action)
+	return self:route_input(context, player_index, "+" .. action);
+end
+
+---@param context UIElement
+---@param player_index number
+---@param action string
+---@return boolean
+Router.action_released = function(self, context, player_index, action)
+	return self:route_input(context, player_index, "-" .. action);
+end
+
+---@private
+---@param context UIElement
+---@param player_index number
 ---@param input string
 ---@return boolean
 Router.route_input = function(self, context, player_index, input)

@@ -28,5 +28,5 @@ menu:bind_input("+ui_ok", "always", nil, function()
   print("Binding Executed");
 end);
 menu:unbind_input("+ui_ok");
-menu:handle_input(1, "+ui_ok"); -- Nothing is printed
+menu:action_pressed(1, "ui_ok"); -- Nothing is printed
 ```

@@ -18,10 +18,10 @@ scene:action_released(player_index, action)
 
 ### Arguments
 
-| Name           | Type     | Description                                                |
-| :------------- | :------- | :--------------------------------------------------------- |
-| `player_index` | `number` | Identifier for which player initiated the action.          |
-| `action`       | `string` | Action that was released (eg. `"jump"`, `"attack"`, etc.). |
+| Name           | Type     | Description                                                                       |
+| :------------- | :------- | :-------------------------------------------------------------------------------- |
+| `player_index` | `number` | Number identifying the [player](/crystal/api/input/player) who emitted the input. |
+| `action`       | `string` | Action that was released (eg. `"jump"`, `"attack"`, etc.).                        |
 
 ## Examples
 

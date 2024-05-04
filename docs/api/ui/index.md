@@ -27,12 +27,16 @@ MyScene.init = function(self)
 end
 
 MyScene.update = function(self, dt)
-  local player_index = 1;
-  for _, input in ipairs(crystal.input.player(player_index):events()) do
-    self.pause_menu:handle_input(player_index, input);
-  end
   self.hud:update_tree(dt);
   self.pause_menu:update_tree(dt);
+end
+
+MyScene.action_pressed = function(self, player_index, action)
+  self.pause_menu:action_pressed(player_index, action);
+end
+
+MyScene.action_released = function(self, player_index, action)
+  self.pause_menu:action_released(player_index, action);
 end
 
 MyScene.draw = function(self)
@@ -66,7 +70,7 @@ equipped_checkmark:set_alignment("right", "bottom");
 
 UI elements can respond to the mouse pointer being on or away from them with a number of [callbacks](ui_element.html#callbacks).
 
-UI elements can also have action inputs [bound](ui_element_bind_input) to them, to be executed either any time the corresponding key is pressed or only while they are [focused](/crystal/api/ui/ui_element_is_focused). These input bindings are processed whenever you ask a tree of UI element to [handle an input](ui_element_handle_input).
+UI elements can also have action inputs [bound](ui_element_bind_input) to them, to be executed either any time the corresponding key is pressed or only while they are [focused](/crystal/api/ui/ui_element_is_focused). These input bindings are processed whenever you ask a tree of UI element to handle an input via [action_pressed](ui_element_action_pressed) or [action_released](ui_element_action_released).
 
 ### Animation
 
