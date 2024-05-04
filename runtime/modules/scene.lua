@@ -47,6 +47,12 @@ return {
 	gamepad_released = function(joystick, button)
 		scene_manager:gamepad_released(joystick, button);
 	end,
+	action_pressed = function(player_index, action)
+		scene_manager:action_pressed(player_index, action);
+	end,
+	action_released = function(player_index, action)
+		scene_manager:action_released(player_index, action);
+	end,
 	mouse_pressed = function(x, y, button, is_touch, presses)
 		scene_manager:mouse_pressed(x, y, button, is_touch, presses);
 	end,

@@ -127,11 +127,27 @@ SceneManager.gamepad_released = function(self, joystick, button)
 	end
 end
 
+---@param player_index number
+---@param action string
+SceneManager.action_pressed = function(self, player_index, action)
+	if self.scene then
+		self.scene:action_pressed(player_index, action);
+	end
+end
+
+---@param player_index number
+---@param action string
+SceneManager.action_released = function(self, player_index, action)
+	if self.scene then
+		self.scene:action_released(player_index, action);
+	end
+end
+
 ---@param x number
 ---@param y number
 ---@param button number
 ---@param is_touch boolean
----@param preses number
+---@param presses number
 SceneManager.mouse_pressed = function(self, x, y, button, is_touch, presses)
 	if self.scene then
 		self.scene:mouse_pressed(x, y, button, is_touch, presses);
@@ -142,7 +158,7 @@ end
 ---@param y number
 ---@param button number
 ---@param is_touch boolean
----@param preses number
+---@param presses number
 SceneManager.mouse_released = function(self, x, y, button, is_touch, presses)
 	if self.scene then
 		self.scene:mouse_released(x, y, button, is_touch, presses);
@@ -177,6 +193,8 @@ crystal.test.add("Forwards callbacks to current scene", function()
 	scene.key_released = function() callbacks.key_released = true; end;
 	scene.gamepad_pressed = function() callbacks.gamepad_pressed = true; end;
 	scene.gamepad_released = function() callbacks.gamepad_released = true; end;
+	scene.action_pressed = function() callbacks.action_pressed = true; end;
+	scene.action_released = function() callbacks.action_released = true; end;
 	scene.mouse_pressed = function() callbacks.mouse_pressed = true; end;
 	scene.mouse_released = function() callbacks.mouse_released = true; end;
 
@@ -195,6 +213,10 @@ crystal.test.add("Forwards callbacks to current scene", function()
 	assert(callbacks.gamepad_pressed);
 	manager:gamepad_released("a");
 	assert(callbacks.gamepad_released);
+	manager:action_pressed(1, "jump");
+	assert(callbacks.action_pressed);
+	manager:action_released(1, "jump");
+	assert(callbacks.action_released);
 	manager:mouse_pressed(0, 0);
 	assert(callbacks.mouse_pressed);
 	manager:mouse_released(0, 0);

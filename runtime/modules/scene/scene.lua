@@ -33,7 +33,7 @@ end
 ---@param y number
 ---@param button number
 ---@param is_touch boolean
----@param preses number
+---@param presses number
 Scene.mouse_pressed = function(self, x, y, button, is_touch, presses)
 end
 
@@ -41,8 +41,18 @@ end
 ---@param y number
 ---@param button number
 ---@param is_touch boolean
----@param preses number
+---@param presses number
 Scene.mouse_released = function(self, x, y, button, is_touch, presses)
+end
+
+---@param player_index number
+---@param action string
+Scene.action_pressed = function(self, player_index, action)
+end
+
+---@param player_index number
+---@param action string
+Scene.action_released = function(self, player_index, action)
 end
 
 return Scene;
