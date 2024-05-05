@@ -29,7 +29,7 @@ Each key in the `configuration` table is an action, like `jump` or `attack`. Eac
 
 ```lua
 -- Map each arrow key to two actions: move_* to move the player character, and ui_* to navigate in a menu
-crystal.input.player(1):set_bindings({
+crystal.input.set_bindings(1, {
   up = { "move_up", "ui_up" },
   down = { "move_down", "ui_down" },
   left = { "move_left", "ui_left" },

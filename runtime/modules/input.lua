@@ -6,6 +6,7 @@ local InputManager = require(CRYSTAL_RUNTIME .. "modules/input/input_manager");
 local InputPlayer = require(CRYSTAL_RUNTIME .. "modules/input/input_player");
 local InputSystem = require(CRYSTAL_RUNTIME .. "modules/input/input_system");
 local MouseAPI = require(CRYSTAL_RUNTIME .. "modules/input/mouse_api");
+local MouseArea = require(CRYSTAL_RUNTIME .. "modules/input/mouse_area");
 local MouseRouter = require(CRYSTAL_RUNTIME .. "modules/input/mouse_router");
 
 local mouse_api = features.tests ~= true and MouseAPI:new() or MouseAPI.Mock:new();
@@ -39,17 +40,32 @@ local mouse_button_map = {
 
 return {
 	module_api = {
-		player = function(player_index)
-			return input_manager:player(player_index);
-		end,
 		assign_gamepad = function(player_index, gamepad_id)
 			input_manager:assign_gamepad(player_index, gamepad_id);
 		end,
 		unassign_gamepad = function(player_index)
 			input_manager:unassign_gamepad(player_index);
 		end,
+		gamepad_id = function(player_index)
+			input_manager:player(player_index):gamepad_id();
+		end,
+		input_method = function(player_index)
+			input_manager:player(player_index):input_method();
+		end,
 		set_unassigned_gamepad_handler = function(handler)
 			input_manager:set_unassigned_gamepad_handler(handler);
+		end,
+		bindings = function(player_index)
+			input_manager:player(player_index):bindings();
+		end,
+		set_bindings = function(player_index, bindings)
+			input_manager:player(player_index):set_bindings(bindings);
+		end,
+		is_action_down = function(player_index, action)
+			return input_manager:player(player_index):is_action_down(action);
+		end,
+		axis_action_value = function(player_index, axis_action)
+			return input_manager:player(player_index):axis_action_value(axis_action);
 		end,
 		map_axis_to_actions = function(map)
 			input_manager:map_axis_to_actions(map);
@@ -61,7 +77,7 @@ return {
 			input_manager:assign_mouse(player_index);
 		end,
 		mouse_player = function()
-			return input_manager:mouse_player();
+			return input_manager:mouse_player():index();
 		end,
 		add_mouse_target = function(recipient, left, right, top, bottom)
 			mouse_router:add_target(recipient, left, right, top, bottom);
@@ -70,49 +86,52 @@ return {
 			return mouse_router:recipient();
 		end,
 	},
-	test_api = {
-		set_mouse_position = function(x, y)
-			mouse_api:set_position(x, y);
-		end
-	},
 	global_api = {
 		InputListener = InputListener,
-		InputPlayer = InputPlayer,
 		InputSystem = InputSystem,
+		MouseArea = MouseArea,
 	},
-	flush_events = function()
-		input_manager:flush_events();
-	end,
 	key_pressed = function(key, scan_code, is_repeat)
-		input_manager:key_pressed(key, scan_code, is_repeat);
+		return input_manager:key_pressed(key, scan_code, is_repeat);
 	end,
 	key_released = function(key, scan_code)
-		input_manager:key_released(key, scan_code);
+		return input_manager:key_released(key, scan_code);
 	end,
 	gamepad_pressed = function(joystick, button)
 		local gamepad_id = joystick:getID();
 		local button = gamepad_button_map[button] or button;
-		input_manager:gamepad_pressed(gamepad_id, button);
+		return input_manager:gamepad_pressed(gamepad_id, button);
 	end,
 	gamepad_released = function(joystick, button)
 		local gamepad_id = joystick:getID();
 		local button = gamepad_button_map[button] or button;
-		input_manager:gamepad_released(gamepad_id, button);
+		return input_manager:gamepad_released(gamepad_id, button);
+	end,
+	mouse_moved = function(x, y, dx, dy, is_touch)
+		if features.tests then
+			mouse_api:set_position(x, y);
+		end
+		mouse_router:update_current_target(input_manager:mouse_player():index());
 	end,
 	mouse_pressed = function(x, y, button, is_touch, presses)
 		local button = mouse_button_map[button];
-		if button then
-			input_manager:mouse_pressed(button);
+		if not button then
+			return {};
 		end
+		return input_manager:mouse_pressed(x, y, button, is_touch, presses);
 	end,
 	mouse_released = function(x, y, button, is_touch, presses)
 		local button = mouse_button_map[button];
-		if button then
-			input_manager:mouse_released(button);
+		if not button then
+			return {};
 		end
+		return input_manager:mouse_released(x, y, button, is_touch, presses);
+	end,
+	post_draw = function()
+		mouse_router:commit_targets();
 	end,
 	update = function(dt)
-		input_manager:update(dt);
-		mouse_router:update(input_manager:mouse_player():index());
+		mouse_router:update_current_target(input_manager:mouse_player():index());
+		return input_manager:update(dt);
 	end,
 };

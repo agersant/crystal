@@ -28,5 +28,5 @@ crystal.input.assign_mouse(player_index)
 
 ```lua
 crystal.input.assign_mouse(2);
-assert(crystal.input.mouse_player() == crystal.input.player(2));
+assert(crystal.input.mouse_player() == 2);
 ```

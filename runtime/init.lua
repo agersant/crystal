@@ -182,6 +182,13 @@ local hot_reload = function()
 	modules.hot_reload.after_hot_reload(savestate);
 end
 
+local dispatch_actions = function(callbacks)
+	for _, callback in ipairs(callbacks) do
+		assert(callback.name == "action_pressed" or callback.name == "action_released");
+		modules.scene[callback.name](unpack(callback.params));
+	end
+end
+
 crystal.load = start_game;
 
 crystal.update = function(dt)
@@ -190,10 +197,9 @@ crystal.update = function(dt)
 	end
 	modules.error.catch_errors(function()
 		modules.window.update();
-		modules.input.update(dt);
+		dispatch_actions(modules.input.update(dt));
 		modules.scene.update(dt);
 		modules.tool.update(dt);
-		modules.input.flush_events();
 	end);
 end
 
@@ -204,6 +210,7 @@ crystal.draw = function()
 		love.graphics.reset();
 		modules.tool.draw();
 		modules.window.present();
+		modules.input.post_draw();
 	end);
 	love.graphics.reset();
 	modules.error.draw(modules.window.captured_frame());
@@ -213,44 +220,51 @@ crystal.keypressed = function(key, scan_code, is_repeat)
 	modules.error.catch_errors(function()
 		modules.tool.key_pressed(key, scan_code, is_repeat);
 		if not modules.tool.consumes_inputs() then
-			modules.input.key_pressed(key, scan_code, is_repeat);
 			modules.scene.key_pressed(key, scan_code, is_repeat);
+			dispatch_actions(modules.input.key_pressed(key, scan_code, is_repeat));
 		end
 	end);
 end
 
 crystal.keyreleased = function(key, scan_code)
 	modules.error.catch_errors(function()
-		modules.input.key_released(key, scan_code);
 		modules.scene.key_released(key, scan_code);
+		dispatch_actions(modules.input.key_released(key, scan_code));
 	end);
 end
 
 crystal.gamepadpressed = function(joystick, button)
 	modules.error.catch_errors(function()
-		modules.input.gamepad_pressed(joystick, button);
 		modules.scene.gamepad_pressed(joystick, button);
+		dispatch_actions(modules.input.gamepad_pressed(joystick, button));
 	end);
 end
 
 crystal.gamepadreleased = function(joystick, button)
 	modules.error.catch_errors(function()
-		modules.input.gamepad_released(joystick, button);
 		modules.scene.gamepad_released(joystick, button);
+		dispatch_actions(modules.input.gamepad_released(joystick, button));
+	end);
+end
+
+crystal.mousemoved = function(x, y, dx, dy, is_touch)
+	modules.error.catch_errors(function()
+		modules.input.mouse_moved(x, y, dx, dy, is_touch);
+		modules.scene.mouse_moved(x, y, dx, dy, is_touch);
 	end);
 end
 
 crystal.mousepressed = function(x, y, button, is_touch, presses)
 	modules.error.catch_errors(function()
-		modules.input.mouse_pressed(x, y, button, is_touch, presses);
 		modules.scene.mouse_pressed(x, y, button, is_touch, presses);
+		dispatch_actions(modules.input.mouse_pressed(x, y, button, is_touch, presses));
 	end);
 end
 
 crystal.mousereleased = function(x, y, button, is_touch, presses)
 	modules.error.catch_errors(function()
-		modules.input.mouse_released(x, y, button, is_touch, presses);
 		modules.scene.mouse_released(x, y, button, is_touch, presses);
+		dispatch_actions(modules.input.mouse_released(x, y, button, is_touch, presses));
 	end);
 end
 
@@ -288,6 +302,7 @@ love.keypressed = crystal.keypressed;
 love.keyreleased = crystal.keyreleased;
 love.gamepadpressed = crystal.gamepadpressed;
 love.gamepadreleased = crystal.gamepadreleased;
+love.mousemoved = crystal.mousemoved;
 love.mousepressed = crystal.mousepressed;
 love.mousereleased = crystal.mousereleased;
 love.textinput = crystal.textinput;

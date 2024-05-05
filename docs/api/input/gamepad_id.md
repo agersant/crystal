@@ -4,15 +4,21 @@ grand_parent: API Reference
 nav_exclude: true
 ---
 
-# InputPlayer:gamepad_id
+# crystal.input.gamepad_id
 
-Returns the gamepad assigned to this player, if any.
+Returns the gamepad assigned to the specified player, if any.
 
 ## Usage
 
 ```lua
-input_player:gamepad_id()
+crystal.input.gamepad_id(player_index)
 ```
+
+### Arguments
+
+| Name           | Type     | Description                  |
+| :------------- | :------- | :--------------------------- |
+| `player_index` | `number` | Number identifying a player. |
 
 ### Returns
 
@@ -24,6 +30,5 @@ input_player:gamepad_id()
 
 ```lua
 crystal.input.assign_gamepad(1, 5);
-local player = crystal.input.player(1);
-print(player:gamepad_id()); -- Prints "5"
+print(crystal.input.gamepad_id(1)); -- Prints "5"
 ```

@@ -3,6 +3,7 @@
 
 ---@class MouseRouter
 ---@field private targets MouseTarget[]
+---@field private new_targets MouseTarget[]
 ---@field private _recipient MouseRecipient
 ---@field private mouse_api MouseAPI
 local MouseRouter = Class("MouseRouter");
@@ -10,6 +11,7 @@ local MouseRouter = Class("MouseRouter");
 MouseRouter.init = function(self, mouse_api)
 	assert(mouse_api);
 	self.targets = {};
+	self.new_targets = {};
 	self._recipient = nil;
 	self.mouse_api = mouse_api;
 end
@@ -29,7 +31,7 @@ MouseRouter.add_target = function(self, recipient, left, right, top, bottom)
 	assert(right >= left);
 	assert(bottom >= top);
 	-- TODO Consider using a quadtree for this
-	table.push(self.targets, {
+	table.push(self.new_targets, {
 		left = left,
 		right = right,
 		top = top,
@@ -38,8 +40,13 @@ MouseRouter.add_target = function(self, recipient, left, right, top, bottom)
 	});
 end
 
+MouseRouter.commit_targets = function(self)
+	self.targets = self.new_targets;
+	self.new_targets = {};
+end
+
 ---@param player_index number
-MouseRouter.update = function(self, player_index)
+MouseRouter.update_current_target = function(self, player_index)
 	assert(type(player_index) == "number");
 	local mx, my = self.mouse_api:position();
 	self._recipient = nil;
@@ -55,7 +62,6 @@ MouseRouter.update = function(self, player_index)
 			end
 		end
 	end
-	self.targets = {};
 end
 
 return MouseRouter;

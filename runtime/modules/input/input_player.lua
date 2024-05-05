@@ -9,8 +9,8 @@
 ---@field private actions_pressed_via_axis { [string]: { [string]: boolean} }
 ---@field private input_method InputMethod
 ---@field private has_mouse boolean
+---@field private pending_reset boolean
 ---@field private _gamepad_id number
----@field private _events string[]
 local InputPlayer = Class("InputPlayer");
 
 InputPlayer.init = function(self, index, gamepad_api)
@@ -18,9 +18,9 @@ InputPlayer.init = function(self, index, gamepad_api)
 	assert(gamepad_api:inherits_from("GamepadAPI"));
 	self._index = index;
 	self.gamepad_api = gamepad_api;
-	self._events = {};
 	self._input_method = nil;
 	self.has_mouse = false;
+	self.pending_reset = false;
 	self._gamepad_id = nil;
 	self.actions_pressed_via_axis = {};
 	self:build_binding_tables({});
@@ -38,8 +38,11 @@ InputPlayer.set_input_method = function(self, input_method)
 	if self._input_method == input_method then
 		return;
 	end
+	local previous_input_method = self._input_method;
 	self._input_method = input_method;
-	self:release_all_inputs();
+	if previous_input_method then
+		self:schedule_reset();
+	end
 end
 
 ---@return InputMethod
@@ -52,7 +55,7 @@ InputPlayer.set_gamepad_id = function(self, id)
 	if id == self._gamepad_id then
 		return;
 	end
-	self:release_all_inputs();
+	self:schedule_reset();
 	self._gamepad_id = id;
 	if id then
 		self._input_method = "gamepad";
@@ -68,29 +71,22 @@ end
 
 InputPlayer.give_mouse = function(self)
 	self.has_mouse = true;
-	self:release_all_inputs();
+	self:schedule_reset();
 end
 
 InputPlayer.take_mouse = function(self)
 	self.has_mouse = false;
-	self:release_all_inputs();
+	self:schedule_reset();
 end
 
----@return { action: string, inputs: string[] }[]
+---@return { [string]: string[] }
 InputPlayer.bindings = function(self)
-	local bindings = {};
-	for input, actions in pairs(self.inputs) do
-		bindings[input] = {};
-		for _, action in ipairs(actions) do
-			table.push(bindings[input], action);
-		end
-	end
-	return bindings;
+	return table.deep_copy(self.inputs);
 end
 
 ---@param action string
 ---@return boolean
-InputPlayer.is_action_active = function(self, action)
+InputPlayer.is_action_down = function(self, action)
 	if not self.actions[action] then
 		return false;
 	end
@@ -119,107 +115,163 @@ end
 ---@param bindings { [string]: string[] } # List of actions mapped to each input
 InputPlayer.set_bindings = function(self, bindings)
 	self:build_binding_tables(bindings);
+	self:schedule_reset();
 end
 
 ---@param key love.KeyConstant
 ---@param scan_code love.Scancode
 ---@param is_repeat boolean
+---@return ActionCallback[]
 InputPlayer.key_pressed = function(self, key, scan_code, is_repeat)
 	if is_repeat then
-		return;
+		return {};
 	end
 	if self.inputs[scan_code] then
 		self:set_input_method("keyboard");
 	end
-	self:input_down(scan_code);
+	return self:input_down(scan_code);
 end
 
 ---@param key love.KeyConstant
 ---@param scan_code love.Scancode
+---@return ActionCallback[]
 InputPlayer.key_released = function(self, key, scan_code)
-	self:input_up(scan_code);
+	return self:input_up(scan_code);
 end
 
----@param button love.GamepadButton
+---@param button string
+---@return ActionCallback[]
 InputPlayer.gamepad_pressed = function(self, button)
 	self:set_input_method("gamepad");
-	self:input_down(button);
+	return self:input_down(button);
 end
 
----@param button love.GamepadButton
+---@param button string
+---@return ActionCallback[]
 InputPlayer.gamepad_released = function(self, button)
-	self:input_up(button);
+	return self:input_up(button);
 end
 
+---@param button string
+---@return ActionCallback[]
 InputPlayer.mouse_pressed = function(self, button)
-	self:input_down(button);
+	return self:input_down(button);
 end
 
+---@param button string
+---@return ActionCallback[]
 InputPlayer.mouse_released = function(self, button)
-	self:input_up(button);
+	return self:input_up(button);
 end
 
 ---@private
 ---@param input string
+---@return ActionCallback[]
 InputPlayer.input_down = function(self, input)
 	if not self.inputs[input] then
-		return;
+		return {};
 	end
+	local callbacks = {};
 	for _, action in ipairs(self.inputs[input]) do
-		self:action_down(action);
+		local callback = self:action_down(action);
+		if callback then
+			table.push(callbacks, callback);
+		end
 	end
+	return callbacks;
 end
 
 ---@private
 ---@param input string
+---@return ActionCallback[]
 InputPlayer.input_up = function(self, input)
 	if not self.inputs[input] then
-		return;
+		return {};
 	end
+	local callbacks = {};
 	for _, action in ipairs(self.inputs[input]) do
-		self:action_up(action);
+		local callback = self:action_up(action);
+		if callback then
+			table.push(callbacks, callback);
+		end
 	end
+	return callbacks;
 end
 
 ---@private
----@param input string
+---@param action string
+---@return ActionCallback?
 InputPlayer.action_down = function(self, action)
+	if self.pending_reset then
+		return nil;
+	end
 	assert(self.actions[action]);
 	self.actions[action].num_inputs_down = self.actions[action].num_inputs_down + 1;
 	if self.actions[action].num_inputs_down == 1 then
-		table.push(self._events, "+" .. action);
 		self.actions[action].held_for = 0;
+		return {
+			name = "action_pressed",
+			params = { self._index, action }
+		};
 	end
 end
 
 ---@private
----@param input string
+---@param action string
+---@return ActionCallback?
 InputPlayer.action_up = function(self, action)
+	if self.pending_reset then
+		return nil;
+	end
 	assert(self.actions[action]);
 	if self.actions[action].num_inputs_down > 0 then
 		self.actions[action].num_inputs_down = self.actions[action].num_inputs_down - 1;
 	end
 	assert(self.actions[action].num_inputs_down >= 0);
 	if self.actions[action].num_inputs_down == 0 then
-		table.push(self._events, "-" .. action);
 		self.actions[action].held_for = nil;
+		return {
+			name = "action_released",
+			params = { self._index, action }
+		};
 	end
+end
+
+InputPlayer.schedule_reset = function(self)
+	self.pending_reset = true;
+end
+
+---@return boolean
+InputPlayer.is_pending_reset = function(self)
+	return self.pending_reset;
 end
 
 ---@private
-InputPlayer.release_all_inputs = function(self)
+---@return ActionCallback[]
+InputPlayer.reset = function(self)
+	local callbacks = {};
 	for action, state in pairs(self.actions) do
-		for i = 1, state.num_inputs_down do
-			table.push(self._events, "-" .. action);
+		if state.num_inputs_down > 0 then
+			table.push(callbacks, {
+				name = "action_released",
+				params = { self._index, action }
+			});
+			state.num_inputs_down = 0;
+			state.held_for = nil;
 		end
-		state.num_inputs_down = 0;
-		state.held_for = nil;
 	end
 	self.actions_pressed_via_axis = {};
+	self.pending_reset = false;
+	return callbacks;
 end
 
 ---@param axis_to_binary_actions { [string]: { [string]: AxisToButton } }
+---@return ActionCallback[]
 InputPlayer.trigger_axis_events = function(self, axis_to_binary_actions)
+	if self.pending_reset then
+		return {};
+	end
+	local callbacks = {};
 	for axis_action, actions in pairs(axis_to_binary_actions) do
 		if not self.actions_pressed_via_axis[axis_action] then
 			self.actions_pressed_via_axis[axis_action] = {};
@@ -237,9 +289,15 @@ InputPlayer.trigger_axis_events = function(self, axis_to_binary_actions)
 			);
 			local is_released = not is_pressed and distance_to_pressed >= config.stickiness;
 			if is_pressed and not was_pressed then
-				self:action_down(action);
+				local callback = self:action_down(action);
+				if callback then
+					table.push(callbacks, callback);
+				end
 			elseif was_pressed and is_released then
-				self:action_up(action);
+				local callback = self:action_up(action);
+				if callback then
+					table.push(callbacks, callback);
+				end
 			end
 			if is_pressed then
 				self.actions_pressed_via_axis[axis_action][action] = true;
@@ -248,11 +306,17 @@ InputPlayer.trigger_axis_events = function(self, axis_to_binary_actions)
 			end
 		end
 	end
+	return callbacks;
 end
 
 ---@param dt number
 ---@param config { [string]: Autorepeat }
+---@return ActionCallback[]
 InputPlayer.trigger_autorepeat_events = function(self, dt, config)
+	if self.pending_reset then
+		return {};
+	end
+	local callbacks = {};
 	for action, autorepeat in pairs(config) do
 		if self.actions[action] and self.actions[action].held_for then
 			local held_for = self.actions[action].held_for;
@@ -262,11 +326,15 @@ InputPlayer.trigger_autorepeat_events = function(self, dt, config)
 			local p = autorepeat.period;
 			if new_held_for >= d then
 				if held_for < d or math.floor((new_held_for - d) / p) > math.floor((held_for - d) / p) then
-					table.push(self._events, "+" .. action);
+					table.push(callbacks, {
+						name = "action_pressed",
+						params = { self._index, action }
+					});
 				end
 			end
 		end
 	end
+	return callbacks;
 end
 
 ---@private
@@ -285,84 +353,83 @@ InputPlayer.build_binding_tables = function(self, bindings)
 	end
 end
 
----@return string[]
-InputPlayer.events = function(self)
-	return table.copy(self._events);
-end
-
-InputPlayer.flush_events = function(self)
-	self._events = {};
-end
-
 --#region Tests
 
 local GamepadAPI = require(CRYSTAL_RUNTIME .. "modules/input/gamepad_api");
 
 crystal.test.add("Unbound action is not active", function()
 	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
-	assert(not player:is_action_active("attack"));
+	assert(not player:is_action_down("attack"));
 end);
 
 crystal.test.add("Single-key binding keeps track of activation", function()
 	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
 	player:set_bindings({ z = { "attack" } });
-	assert(not player:is_action_active("attack"));
+	player:reset();
+
+	assert(not player:is_action_down("attack"));
 	player:key_pressed("z", "z");
-	assert(player:is_action_active("attack"));
+	assert(player:is_action_down("attack"));
 	player:key_released("z", "z");
-	assert(not player:is_action_active("attack"));
+	assert(not player:is_action_down("attack"));
 end);
 
 crystal.test.add("Single-button binding keeps track of activation", function()
 	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
-	player:set_bindings({ dpad_a = { "attack" } });
-	assert(not player:is_action_active("attack"));
-	player:gamepad_pressed("dpad_a");
-	assert(player:is_action_active("attack"));
-	player:gamepad_released("dpad_a");
-	assert(not player:is_action_active("attack"));
+	player:set_bindings({ btna = { "attack" } });
+	player:reset();
+
+	assert(not player:is_action_down("attack"));
+	player:gamepad_pressed("btna");
+	assert(player:is_action_down("attack"));
+	player:gamepad_released("btna");
+	assert(not player:is_action_down("attack"));
 end);
 
 crystal.test.add("Multi-key binding keeps track of activation", function()
 	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
 	player:set_bindings({ z = { "attack" }, x = { "attack" } });
-	assert(not player:is_action_active("attack"));
+	player:reset();
+
+	assert(not player:is_action_down("attack"));
 	player:key_pressed("z", "z");
-	assert(player:is_action_active("attack"));
+	assert(player:is_action_down("attack"));
 	player:key_pressed("x", "x");
 	player:key_released("z", "z");
-	assert(player:is_action_active("attack"));
+	assert(player:is_action_down("attack"));
 	player:key_released("x", "x");
-	assert(not player:is_action_active("attack"));
+	assert(not player:is_action_down("attack"));
 end);
 
-crystal.test.add("Multi-action key emits +/- events", function()
+crystal.test.add("Multi-action key emits action effects", function()
 	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
 	player:set_bindings({ z = { "attack", "talk" } });
-	assert(not player:is_action_active("attack"));
-	assert(not player:is_action_active("talk"));
-	player:key_pressed("z", "z");
-	assert(player:is_action_active("attack"));
-	assert(player:is_action_active("talk"));
-	for i, action in ipairs(player:events()) do
-		assert(i ~= 1 or action == "+attack");
-		assert(i ~= 2 or action == "+talk");
-	end
-	player:flush_events();
-	player:key_released("z", "z");
-	assert(not player:is_action_active("attack"));
-	assert(not player:is_action_active("talk"));
-	for i, action in ipairs(player:events()) do
-		assert(i ~= 1 or action == "-attack");
-		assert(i ~= 2 or action == "-talk");
-	end
+	player:reset();
+	assert(not player:is_action_down("attack"));
+	assert(not player:is_action_down("talk"));
+
+	local callbacks = player:key_pressed("z", "z");
+	assert(player:is_action_down("attack"));
+	assert(player:is_action_down("talk"));
+	assert(callbacks[1].name == "action_pressed");
+	assert(callbacks[1].params[2] == "attack");
+	assert(callbacks[2].name == "action_pressed");
+	assert(callbacks[2].params[2] == "talk");
+
+	local callbacks = player:key_released("z", "z");
+	assert(not player:is_action_down("attack"));
+	assert(not player:is_action_down("talk"));
+	assert(callbacks[1].name == "action_released");
+	assert(callbacks[1].params[2] == "attack");
+	assert(callbacks[2].name == "action_released");
+	assert(callbacks[2].params[2] == "talk");
 end);
 
 crystal.test.add("Updates input method based on latest input", function()
 	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
-	player:set_bindings({ dpad_a = { "attack" }, z = { "attack" } });
+	player:set_bindings({ btna = { "attack" }, z = { "attack" } });
 	assert(player:input_method() == nil);
-	player:gamepad_pressed("dpad_a");
+	player:gamepad_pressed("btna");
 	assert(player:input_method() == "gamepad");
 	player:key_pressed("z", "z");
 	assert(player:input_method() == "keyboard");
@@ -370,18 +437,18 @@ end);
 
 crystal.test.add("Changing input method releases all inputs", function()
 	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
-	player:set_bindings({ dpad_a = { "attack" }, z = { "block" } });
-	player:gamepad_pressed("dpad_a");
+	player:set_bindings({ btna = { "attack" }, z = { "block" } });
+	player:gamepad_pressed("btna");
 	player:key_pressed("z", "z");
-	assert(not player:is_action_active("attack"));
+	assert(not player:is_action_down("attack"));
 end);
 
 crystal.test.add("Swapping gamepad releases all inputs", function()
 	local player = InputPlayer:new(1, GamepadAPI.Mock:new());
-	player:set_bindings({ dpad_a = { "attack" } });
-	player:gamepad_pressed("dpad_a");
+	player:set_bindings({ btna = { "attack" } });
+	player:gamepad_pressed("btna");
 	player:set_gamepad_id(1);
-	assert(not player:is_action_active("attack"));
+	assert(not player:is_action_down("attack"));
 end);
 
 --#endregion

@@ -42,6 +42,7 @@ By default, Crystal overwrites the following LOVE callbacks:
 - `love.keyreleased`
 - `love.gamepadpressed`
 - `love.gamepadreleased`
+- `love.mousemoved`
 - `love.mousepressed`
 - `love.mousereleased`
 - `love.textinput`

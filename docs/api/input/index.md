@@ -9,40 +9,49 @@ has_toc: false
 The classes and functions in this module allow you to:
 
 - Manage which physical buttons correspond to which actions in your game.
-- Manage which devices corresponding to which player (in a multiplayer game).
+- Manage which devices correspond to which player (in a multiplayer game).
 - Route input events to specific game [entities](/crystal/api/ecs/entity) like player characters.
 
-Each real-life player in your game is represented by a persistent [InputPlayer](input_player), which is accessed by calling [crystal.input.player](player). These objects manage key bindings for the corresponding player (eg. `spacebar` means `jump` for player 1). During gameplay, they also keep track of what actions (eg. `jump`) are currently being pressed.
+Players can have bindings to both keyboard and gamepad buttons at the same time. This allows players to seemlessly switch between input methods. For singleplayer games, you do not have to do anything related to [assigning](assign_gamepad) or [unassigning](unassign_gamepad) gamepads.
 
-An [InputPlayer](input_player) can have bindings to both keyboard and gamepad buttons at the same time. This allows players to seemlessly switch between input methods. For singleplayer games, you do not have to do anything related to [assigning](assign_gamepad) or [unassigning](unassign_gamepad) gamepads.
-
-By adding an [InputListener](input_listener) component on an entity, you can make it respond to input events from a specific [InputPlayer](input_player).
+By adding an [InputListener](input_listener) component on an entity, you can make it respond to input events from a specific player.
 
 ## Functions
 
-| Name                                                                           | Description                                                                               |
-| :----------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------- |
-| [crystal.input.add_mouse_target](add_mouse_target)                             | Registers a rectangular area that supports mouse interaction.                             |
-| [crystal.input.assign_gamepad](assign_gamepad)                                 | Assigns a gamepad to a player.                                                            |
-| [crystal.input.assign_mouse](assign_mouse)                                     | Assigns the mouse to a player.                                                            |
-| [crystal.input.configure_autorepeat](configure_autorepeat)                     | Defines which actions emit events while inputs are being held, and how frequently.        |
-| [crystal.input.current_mouse_target](current_mouse_target)                     | Returns the [mouse target](add_mouse_target) the mouse pointer is currently on top of.    |
-| [crystal.input.map_axis_to_actions](map_axis_to_actions)                       | Map positions on gamepad analog axis to binary actions.                                   |
-| [crystal.input.mouse_player](mouse_player)                                     | Returns the [InputPlayer](input_player) with the mouse assigned to them.                  |
-| [crystal.input.player](player)                                                 | Returns the [InputPlayer](input_player) representing a player.                            |
-| [crystal.input.set_unassigned_gamepad_handler](set_unassigned_gamepad_handler) | Defines a callback function which runs when a button is pressed on an unassigned gamepad. |
-| [crystal.input.unassign_gamepad](unassign_gamepad)                             | Unassigns a player's current gamepad.                                                     |
+### Reading Inputs
+
+| Name                                                       | Description                                                                            |
+| :--------------------------------------------------------- | :------------------------------------------------------------------------------------- |
+| [crystal.input.axis_action_value](axis_action_value)       | Returns the current value of a gamepad axis associated with a specific action.         |
+| [crystal.input.current_mouse_target](current_mouse_target) | Returns the [mouse target](add_mouse_target) the mouse pointer is currently on top of. |
+| [crystal.input.gamepad_id](gamepad_id)                     | Returns the gamepad assigned to the specified player, if any.                          |
+| [crystal.input.input_method](input_method)                 | Returns the input method last used by the specified player.                            |
+| [crystal.input.is_action_down](is_action_down)             | Returns whether any input mapped to a specific action is currently being pressed.      |
+| [crystal.input.mouse_player](mouse_player)                 | Returns the player index of the player using the mouse.                                |
+
+### Configuration
+
+| Name                                                                           | Description                                                                                  |
+| :----------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------- |
+| [crystal.input.add_mouse_target](add_mouse_target)                             | Registers a rectangular area that supports mouse interaction.                                |
+| [crystal.input.assign_gamepad](assign_gamepad)                                 | Assigns a gamepad to a player.                                                               |
+| [crystal.input.assign_mouse](assign_mouse)                                     | Assigns the mouse to a player.                                                               |
+| [crystal.input.bindings](bindings)                                             | Returns a table describing which actions are bound to which inputs for the specified player. |
+| [crystal.input.configure_autorepeat](configure_autorepeat)                     | Defines which actions emit events while inputs are being held, and how frequently.           |
+| [crystal.input.map_axis_to_actions](map_axis_to_actions)                       | Map positions on gamepad analog axis to binary actions.                                      |
+| [crystal.input.set_bindings](set_bindings)                                     | Sets which actions are bound to which inputs for the specified player.                       |
+| [crystal.input.set_unassigned_gamepad_handler](set_unassigned_gamepad_handler) | Defines a callback function which runs when a button is pressed on an unassigned gamepad.    |
+| [crystal.input.unassign_gamepad](unassign_gamepad)                             | Unassigns a player's current gamepad.                                                        |
 
 ## Classes
 
 | Name                                    | Description                                                                               |
 | :-------------------------------------- | :---------------------------------------------------------------------------------------- |
 | [crystal.InputListener](input_listener) | A [Component](/crystal/api/ecs/component) which allows an entity to receive input events. |
-| [crystal.InputPlayer](input_player)     | Object handling keybinds and input events for a player.                                   |
 | [crystal.InputSystem](input_system)     | A [System](/crystal/api/ecs/system) which dispatches input events.                        |
 
 ## Enums
 
-| Name                        | Description                         |
-| :-------------------------- | :---------------------------------- |
-| [InputMethod](input_method) | Device being used to play the game. |
+| Name                             | Description                         |
+| :------------------------------- | :---------------------------------- |
+| [InputMethod](input_method_enum) | Device being used to play the game. |

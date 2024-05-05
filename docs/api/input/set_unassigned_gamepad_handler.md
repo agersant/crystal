@@ -36,7 +36,7 @@ crystal.input.set_unassigned_gamepad_handler(function(gamepad_id, button)
     return;
   end
   for i = 1, 4 do
-    if crystal.input.player(i):input_method() == nil then
+    if crystal.input.input_method(i) == nil then
       crystal.input.assign_gamepad(i, gamepad_id);
       break;
     end

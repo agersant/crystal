@@ -2,6 +2,7 @@ local InputPlayer = require(CRYSTAL_RUNTIME .. "modules/input/input_player");
 
 ---@alias AxisToButton { pressed_range: { [1]: number, [2]: number}, stickiness: number }
 ---@alias Autorepeat { initial_delay: number, period: number }
+---@alias ActionCallback { name: "action_pressed"|"action_released", params: any[] }
 
 ---@class InputManager
 ---@field private gamepad_api GamepadAPI
@@ -97,7 +98,7 @@ InputManager.map_axis_to_actions = function(self, map)
 		end
 	end
 	for _, player in pairs(self.players) do
-		player:release_all_inputs();
+		player:schedule_reset();
 	end
 end
 
@@ -113,60 +114,77 @@ InputManager.configure_autorepeat = function(self, config)
 	end
 end
 
+---@return ActionCallback[]
 InputManager.update = function(self, dt)
+	local callbacks = {};
 	for _, player in pairs(self.players) do
-		player:trigger_axis_events(self.axis_to_binary_actions);
-		player:trigger_autorepeat_events(dt, self.autorepeat);
+		if player:is_pending_reset() then
+			table.append(callbacks, player:reset());
+		end
+		table.append(callbacks, player:trigger_axis_events(self.axis_to_binary_actions));
+		table.append(callbacks, player:trigger_autorepeat_events(dt, self.autorepeat));
 	end
+	return callbacks;
 end
 
 ---@param key love.KeyConstant
 ---@param scan_code love.Scancode
 ---@param is_repeat boolean
 InputManager.key_pressed = function(self, key, scan_code, is_repeat)
+	local callbacks = {};
 	for _, player in pairs(self.players) do
-		player:key_pressed(key, scan_code, is_repeat);
+		table.append(callbacks, player:key_pressed(key, scan_code, is_repeat));
 	end
+	return callbacks;
 end
 
 ---@param key love.KeyConstant
 ---@param scan_code love.Scancode
 InputManager.key_released = function(self, key, scan_code)
+	local callbacks = {};
 	for _, player in pairs(self.players) do
-		player:key_released(key, scan_code);
+		table.append(callbacks, player:key_released(key, scan_code));
 	end
+	return callbacks;
 end
 
 ---@param gamepad_id number
----@param button love.GamepadButton
+---@param button string
 InputManager.gamepad_pressed = function(self, gamepad_id, button)
+	local callbacks = {};
 	if self.gamepad_to_player[gamepad_id] then
-		self.gamepad_to_player[gamepad_id]:gamepad_pressed(button);
+		callbacks = self.gamepad_to_player[gamepad_id]:gamepad_pressed(button);
 	else
 		self.unassigned_gamepad_handler(gamepad_id, button);
 	end
+	return callbacks;
 end
 
 ---@param gamepad_id number
----@param button love.GamepadButton
+---@param button string
 InputManager.gamepad_released = function(self, gamepad_id, button)
-	if self.gamepad_to_player[gamepad_id] then
-		self.gamepad_to_player[gamepad_id]:gamepad_released(button);
+	if not self.gamepad_to_player[gamepad_id] then
+		return {};
 	end
+	return self.gamepad_to_player[gamepad_id]:gamepad_released(button);
 end
 
-InputManager.mouse_pressed = function(self, button)
-	self._mouse_player:mouse_pressed(button);
+---@param x number
+---@param y number
+---@param button string
+---@param is_touch boolean
+---@param presses number
+InputManager.mouse_pressed = function(self, x, y, button, is_touch, presses)
+	return self._mouse_player:mouse_pressed(button);
 end
 
-InputManager.mouse_released = function(self, button)
-	self._mouse_player:mouse_released(button);
-end
-
-InputManager.flush_events = function(self)
-	for _, player in pairs(self.players) do
-		player:flush_events();
-	end
+---@param x number
+---@param y number
+---@param button string
+---@param is_touch boolean
+---@param presses number
+InputManager.mouse_released = function(self, x, y, button, is_touch, presses)
+	return self._mouse_player:mouse_released(button);
 end
 
 --#region Tests
@@ -187,7 +205,7 @@ end);
 crystal.test.add("Gamepad is auto-assigned to player 1", function()
 	local manager = InputManager:new(GamepadAPI.Mock:new());
 	local player = manager:player(1);
-	player:set_bindings({ btna = { "attack" } });
+	manager:player(1):set_bindings({ btna = { "attack" } });
 	manager:gamepad_pressed(2, "btna");
 	assert(player:gamepad_id() == 2);
 end);
@@ -216,12 +234,13 @@ crystal.test.add("Gamepads events are sent to the assigned player", function()
 	manager:assign_gamepad(2, 2);
 	manager:player(1):set_bindings({ btna = { "attack" } });
 	manager:player(2):set_bindings({ btna = { "attack" } });
+	manager:update(0);
 	manager:gamepad_pressed(2, "btna");
-	assert(not manager:player(1):is_action_active("attack"));
-	assert(manager:player(2):is_action_active("attack"));
+	assert(not manager:player(1):is_action_down("attack"));
+	assert(manager:player(2):is_action_down("attack"));
 	manager:gamepad_released(2, "btna");
-	assert(not manager:player(1):is_action_active("attack"));
-	assert(not manager:player(2):is_action_active("attack"));
+	assert(not manager:player(1):is_action_down("attack"));
+	assert(not manager:player(2):is_action_down("attack"));
 end);
 
 crystal.test.add("Gamepads are only assigned to one player", function()
@@ -236,7 +255,7 @@ end);
 crystal.test.add("Assigning gamepad updates input method", function()
 	local manager = InputManager:new(GamepadAPI.Mock:new());
 	local player = manager:player(1);
-	player:set_bindings({ dpad_a = { "attack" }, z = { "block" } });
+	player:set_bindings({ btna = { "attack" }, z = { "block" } });
 	assert(player:input_method() == nil);
 	manager:assign_gamepad(1, 1);
 	assert(player:input_method() == "gamepad");
@@ -248,14 +267,20 @@ end);
 
 crystal.test.add("Unassigned gamepad does not generate events", function()
 	local manager = InputManager:new(GamepadAPI.Mock:new());
-	manager:player(1):set_bindings({ btna = { "attack" } });
+	local player = manager:player(1);
+	player:set_bindings({ btna = { "attack" } });
 	manager:assign_gamepad(1, 2);
+	manager:update(0);
+
 	manager:gamepad_pressed(2, "btna");
-	assert(manager:player(1):is_action_active("attack"));
+	assert(player:is_action_down("attack"));
+
 	manager:unassign_gamepad(1);
-	assert(not manager:player(1):is_action_active("attack"));
+	manager:update(0);
+	assert(not player:is_action_down("attack"));
+
 	manager:gamepad_pressed(2, "btna");
-	assert(not manager:player(1):is_action_active("attack"));
+	assert(not player:is_action_down("attack"));
 end);
 
 crystal.test.add("Mouse events are sent to the mouse player", function()
@@ -263,10 +288,12 @@ crystal.test.add("Mouse events are sent to the mouse player", function()
 	manager:assign_mouse(2);
 	manager:player(1):set_bindings({ mouseleft = { "attack" }, mouseright = { "guard" } });
 	manager:player(2):set_bindings({ mouseleft = { "attack" }, mouseright = { "guard" } });
-	manager:mouse_pressed("mouseright");
-	assert(not manager:player(1):is_action_active("guard"));
-	assert(manager:player(2):is_action_active("guard"));
-	manager:mouse_released("mouseright");
+	manager:update(0);
+
+	manager:mouse_pressed(0, 0, "mouseright", false, 1);
+	assert(not manager:player(1):is_action_down("guard"));
+	assert(manager:player(2):is_action_down("guard"));
+	manager:mouse_released(0, 0, "mouseright", false, 1);
 end);
 
 crystal.test.add("Can map gamepad axis to a binary action", function()
@@ -282,54 +309,53 @@ crystal.test.add("Can map gamepad axis to a binary action", function()
 	manager:assign_gamepad(1, 2);
 
 	manager:update(0);
-	assert(not player:is_action_active("ui_left"));
+	assert(not player:is_action_down("ui_left"));
 
 	gamepad_api:write_axis(2, "leftx", -1);
 	manager:update(0);
-	assert(player:is_action_active("ui_left"));
+	assert(player:is_action_down("ui_left"));
 
 	gamepad_api:write_axis(2, "leftx", -0.5);
 	manager:update(0);
-	assert(player:is_action_active("ui_left"));
+	assert(player:is_action_down("ui_left"));
 
 	gamepad_api:write_axis(2, "leftx", -0.1);
 	manager:update(0);
-	assert(not player:is_action_active("ui_left"));
+	assert(not player:is_action_down("ui_left"));
 end);
 
 crystal.test.add("Can autorepeat events", function()
 	local manager = InputManager:new(GamepadAPI.Mock:new());
-	local player = manager:player(1);
-	player:set_bindings({ z = { "attack" } });
+	manager:player(1):set_bindings({ z = { "attack" } });
 	manager:configure_autorepeat({
 		attack = { initial_delay = 0.5, period = 0.1 },
 	});
+	manager:update(0);
 	manager:key_pressed("z", "z");
-	assert(table.equals(player:events(), { "+attack" }));
 
-	manager:flush_events();
-	manager:update(0.4);
-	assert(table.equals(player:events(), {}));
+	local callbacks = manager:update(0.4);
+	assert(#callbacks == 0);
 
-	manager:flush_events();
-	manager:update(0.15);
-	assert(table.equals(player:events(), { "+attack" }));
+	local callbacks = manager:update(0.15);
+	assert(#callbacks == 1);
+	assert(callbacks[1].name == "action_pressed");
+	assert(table.equals(callbacks[1].params, { 1, "attack" }));
 
-	manager:flush_events();
-	manager:update(0.01);
-	assert(table.equals(player:events(), {}));
+	local callbacks = manager:update(0.01);
+	assert(#callbacks == 0);
 
-	manager:flush_events();
-	manager:update(0.1);
-	assert(table.equals(player:events(), { "+attack" }));
+	local callbacks = manager:update(0.1);
+	assert(#callbacks == 1);
+	assert(callbacks[1].name == "action_pressed");
+	assert(table.equals(callbacks[1].params, { 1, "attack" }));
 
-	manager:flush_events();
-	manager:key_released("z", "z");
-	assert(table.equals(player:events(), { "-attack" }));
+	local callbacks = manager:key_released("z", "z");
+	assert(#callbacks == 1);
+	assert(callbacks[1].name == "action_released");
+	assert(table.equals(callbacks[1].params, { 1, "attack" }));
 
-	manager:flush_events();
-	manager:update(0.2);
-	assert(table.equals(player:events(), {}));
+	local callbacks = manager:update(0.2);
+	assert(#callbacks == 0);
 end);
 
 --#endregion

@@ -61,9 +61,6 @@ Field.update = function(self, dt)
   self.physics_system:simulate_physics(dt);
   self.camera_controller:update(dt);
   self.script_system:run_scripts(dt);
-  for _, input in ipairs(crystal.input.player(1):events()) do
-    self.input_system:handle_input(1, input);
-  end
   self.draw_system:update_drawables(dt);
 end
 
@@ -72,6 +69,26 @@ Field.draw = function(self)
     self.draw_system:draw_entities();
     self.ecs:notify_systems("draw_debug");
   end);
+end
+
+Field.mouse_moved = function(self, x, y, dx, dy, is_touch)
+	self.input_system:update_mouse_target();
+end
+
+Field.mouse_pressed = function(self, x, y, button, is_touch, presses)
+	self.input_system:mouse_pressed(x, y, button, is_touch, presses);
+end
+
+Field.mouse_released = function(self, x, y, button, is_touch, presses)
+	self.input_system:mouse_released(x, y, button, is_touch, presses);
+end
+
+Field.action_pressed = function(self, player_index, action)
+  self.input_system:action_pressed(player_index, action);
+end
+
+Field.action_released = function(self, player_index, action)
+  self.input_system:action_released(player_index, action);
 end
 ```
 

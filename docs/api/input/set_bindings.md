@@ -4,21 +4,22 @@ grand_parent: API Reference
 nav_exclude: true
 ---
 
-# InputPlayer:set_bindings
+# crystal.input.set_bindings
 
-Defines which actions are bound to which inputs for this player.
+Defines which actions are bound to which inputs for the specified player.
 
 ## Usage
 
 ```lua
-input_player:set_bindings(bindings)
+crystal.input.set_bindings(player_index, bindings)
 ```
 
-### Returns
+### Arguments
 
-| Name       | Type    | Description                           |
-| :--------- | :------ | :------------------------------------ |
-| `bindings` | `table` | Lists of actions bound to each input. |
+| Name           | Type     | Description                           |
+| :------------- | :------- | :------------------------------------ |
+| `player_index` | `number` | Number identifying a player.          |
+| `bindings`     | `table`  | Lists of actions bound to each input. |
 
 Keys in the `bindings` table can be:
 
@@ -36,8 +37,7 @@ Values associated with these keys are lists of actions as strings. Actions shoul
 ## Examples
 
 ```lua
-local player = crystal.input.player(1);
-player:set_bindings({
+crystal.input.set_bindings(1, {
   -- Keyboard
   space = { "jump", "talk" },
   x = { "attack" },

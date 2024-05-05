@@ -6,7 +6,7 @@ nav_order: 1
 
 # crystal.input.mouse_player
 
-Returns the [InputPlayer](input_player) with the mouse assigned to them. This is player 1 by default, and can be changed by calling [assign_mouse](assign_mouse).
+Returns the player index of the player using the mouse. This is player 1 by default, and can be changed by calling [assign_mouse](assign_mouse).
 
 ## Usage
 
@@ -16,13 +16,13 @@ crystal.input.mouse_player()
 
 ### Returns
 
-| Name           | Type                        | Description                             |
-| :------------- | :-------------------------- | :-------------------------------------- |
-| `input_player` | [InputPlayer](input_player) | Player with the mouse assigned to them. |
+| Name           | Type     | Description                                                        |
+| :------------- | :------- | :----------------------------------------------------------------- |
+| `player_index` | `number` | Numeric identifier representing the player who is using the mouse. |
 
 ## Examples
 
 ```lua
 crystal.input.assign_mouse(2);
-assert(crystal.input.mouse_player() == crystal.input.player(2));
+assert(crystal.input.mouse_player() == 2);
 ```
