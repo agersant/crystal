@@ -31,6 +31,14 @@ end
 
 ---@param x number
 ---@param y number
+---@param dx number
+---@param dy number
+---@param is_touch boolean
+Scene.mouse_moved = function(self, x, y, dx, dy, is_touch)
+end
+
+---@param x number
+---@param y number
 ---@param button number
 ---@param is_touch boolean
 ---@param presses number

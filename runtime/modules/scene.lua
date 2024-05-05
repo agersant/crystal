@@ -53,6 +53,9 @@ return {
 	action_released = function(player_index, action)
 		scene_manager:action_released(player_index, action);
 	end,
+	mouse_moved = function(x, y, dx, dy, is_touch)
+		scene_manager:mouse_moved(x, y, dx, dy, is_touch);
+	end,
 	mouse_pressed = function(x, y, button, is_touch, presses)
 		scene_manager:mouse_pressed(x, y, button, is_touch, presses);
 	end,

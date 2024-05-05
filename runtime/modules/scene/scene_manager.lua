@@ -145,6 +145,17 @@ end
 
 ---@param x number
 ---@param y number
+---@param dx number
+---@param dy number
+---@param is_touch boolean
+SceneManager.mouse_moved = function(self, x, y, dx, dy, is_touch)
+	if self.scene then
+		self.scene:mouse_moved(x, y, dx, dy, is_touch);
+	end
+end
+
+---@param x number
+---@param y number
 ---@param button number
 ---@param is_touch boolean
 ---@param presses number
