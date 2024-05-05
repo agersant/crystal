@@ -16,13 +16,12 @@ The constructor for InputListener expects one argument, the [player_index](playe
 
 ## Methods
 
-| Name                                                        | Description                                                                 |
-| :---------------------------------------------------------- | :-------------------------------------------------------------------------- |
-| [add_input_handler](input_listener_add_input_handler)       | Registers a function to handle input events.                                |
-| [handle_input](input_listener_handle_input)                 | Calls input handlers.                                                       |
-| [input_player](input_listener_input_player)                 | Returns the [InputPlayer](input_player) associated with this InputListener. |
-| [player_index](input_listener_player_index)                 | Returns the player index whose inputs this components responds to.          |
-| [remove_input_handler](input_listener_remove_input_handler) | Unregisters a function handling input events.                               |
+| Name                                                        | Description                                                        |
+| :---------------------------------------------------------- | :----------------------------------------------------------------- |
+| [add_input_handler](input_listener_add_input_handler)       | Registers a function to handle input events.                       |
+| [handle_input](input_listener_handle_input)                 | Calls input handlers.                                              |
+| [player_index](input_listener_player_index)                 | Returns the player index whose inputs this components responds to. |
+| [remove_input_handler](input_listener_remove_input_handler) | Unregisters a function handling input events.                      |
 
 ## Examples
 

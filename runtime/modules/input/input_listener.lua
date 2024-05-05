@@ -9,11 +9,6 @@ InputListener.init = function(self, player_index)
 	self.handlers = {};
 end
 
----@return InputPlayer
-InputListener.input_player = function(self)
-	return crystal.input.player(self._player_index);
-end
-
 ---@return number
 InputListener.player_index = function(self)
 	return self._player_index;
