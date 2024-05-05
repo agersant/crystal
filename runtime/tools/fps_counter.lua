@@ -22,7 +22,10 @@ end
 
 ---@param dt number
 FPSCounter.update = function(self, dt)
-	assert(dt > 0);
+	assert(dt >= 0);
+	if dt == 0 then
+		return;
+	end
 	table.push(self.frame_durations, dt);
 	while #self.frame_durations > num_frames_recorded do
 		table.remove(self.frame_durations, 1);
