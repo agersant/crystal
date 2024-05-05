@@ -57,7 +57,6 @@ end
 UIElement.update_tree = function(self, dt, width, height)
 	assert(not self:parent());
 	assert(dt);
-	self:update_mouse();
 	self:update(dt);
 	self:update_desired_size();
 	self:set_relative_position(0, width or self.desired_width, 0, height or self.desired_height);
@@ -562,10 +561,8 @@ end
 
 --#region Mouse
 
----@protected
-UIElement.update_mouse = function(self)
-	-- Not simple ancestor traversals because elements can be reparented
-	-- arbitrarily while mouse is inside them.
+UIElement.update_mouse_target = function(self)
+	assert(not self:parent());
 
 	local player_index = crystal.input.mouse_player();
 	assert(player_index);
@@ -574,6 +571,9 @@ UIElement.update_mouse = function(self)
 	if target == nil or target.inherits_from == nil or not target:inherits_from(UIElement) then
 		target = nil;
 	end
+
+	-- Not simple ancestor traversals because elements can be reparented
+	-- arbitrarily while mouse is inside them.
 
 	local over_elements = self.router:mouse_over_elements();
 	for element in pairs(over_elements) do
@@ -826,11 +826,16 @@ crystal.test.add("Can receive mouse events", function()
 	overlay.on_mouse_over = called("on_mouse_over");
 	overlay.on_mouse_out = called("on_mouse_out");
 
-	crystal.input.set_mouse_position(10, 10);
-	overlay:update_tree(1 / 60, 100, 100);
-	overlay:draw_tree();
-	crystal.update(1 / 60);
-	overlay:update_tree(1 / 60, 100, 100);
+	local scene = crystal.Scene:new();
+	scene.update = function(dt) overlay:update_tree(dt, 100, 100) end;
+	scene.draw = function() overlay:draw_tree() end;
+	scene.mouse_moved = function() overlay:update_mouse_target() end;
+	crystal.scene.replace(scene);
+
+	crystal.update(0);
+	crystal.draw();
+
+	crystal.mousemoved(10, 10);
 	assert(overlay.called_on_mouse_enter);
 	assert(not overlay.called_on_mouse_leave);
 	assert(not overlay.called_on_mouse_over);
@@ -840,11 +845,7 @@ crystal.test.add("Can receive mouse events", function()
 	assert(image.called_on_mouse_over);
 	assert(not image.called_on_mouse_out);
 
-	crystal.input.set_mouse_position(-10, -10);
-	overlay:update_tree(1 / 60, 100, 100);
-	overlay:draw_tree();
-	crystal.update(1 / 60);
-	overlay:update_tree(1 / 60, 100, 100);
+	crystal.mousemoved(-10, -10);
 	assert(overlay.called_on_mouse_enter);
 	assert(overlay.called_on_mouse_leave);
 	assert(not overlay.called_on_mouse_over);

@@ -50,4 +50,8 @@ end
 MyScene.draw = function(self)
   self.list:draw_tree();
 end
+
+MyScene.mouse_moved = function(self, x, y, dx, dy, is_touch)
+  self.list:update_mouse_target();
+end
 ```

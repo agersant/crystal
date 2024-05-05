@@ -10,10 +10,9 @@ Computes layout and runs update logic for this element and all its descendants. 
 
 The outline of everything happening within this call is:
 
-1. Mouse callbacks ([on_mouse_over](ui_element_on_mouse_over), [on_mouse_out](ui_element_on_mouse_out), etc.) are executed on applicable elements within this tree.
-2. [UIElement:update](ui_element_update) is called on every element inside this tree. Notably, this ticks all [scripts](/crystal/api/script/script) owned by [Widget](widget) elements.
-3. The element tree is traversed again so every element can compute its desired size ([compute_desired_size](ui_element_compute_desired_size) is called on every element).
-4. The element tree is traversed one last time to assign each element its actual size ([set_relative_position](ui_element_set_relative_position) is called on every element).
+1. [UIElement:update](ui_element_update) is called on every element inside this tree. Notably, this ticks all [scripts](/crystal/api/script/script) owned by [Widget](widget) elements.
+2. The element tree is traversed again so every element can compute its desired size ([compute_desired_size](ui_element_compute_desired_size) is called on every element).
+3. The element tree is traversed one last time to assign each element its actual size ([set_relative_position](ui_element_set_relative_position) is called on every element).
 
 {: .warning}
 This method can only be called on elements that have no parent.
