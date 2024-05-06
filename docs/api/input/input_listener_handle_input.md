@@ -9,7 +9,7 @@ nav_exclude: true
 Calls input handlers. Handlers are called in reverse-order from how they were registered. If any handler function returns `true`, additional handlers are not called.
 
 {: .warning}
-Instead of calling this function yourself, you can add an [InputSystem](input_system) to your [ECS](ecs) and call its `handle_input` method.
+Instead of calling this function yourself, you can add an [InputSystem](input_system) to your [ECS](ecs) and call its [action_pressed](input_system_action_pressed)/[action_released](input_system_action_released) methods.
 
 ## Usage
 

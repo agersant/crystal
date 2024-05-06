@@ -58,5 +58,5 @@ entity:add_input_handler(function(input)
 end);
 
 ecs:update();
-input_system:handle_input(1, "+jump"); -- Prints "+jump"
+input_system:action_pressed(1, "jump"); -- Prints "+jump"
 ```

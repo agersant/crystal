@@ -9,12 +9,13 @@ has_toc: false
 The classes and functions in this module allow you to:
 
 - Manage which physical buttons correspond to which actions in your game.
-- Manage which devices correspond to which player (in a multiplayer game).
+- Manage which input devices are assigned to which player (in a multiplayer game).
 - Route input events to specific game [entities](/crystal/api/ecs/entity) like player characters.
+- Implement [areas](mouse_area) that react to mouse inputs.
 
-Players can have bindings to both keyboard and gamepad buttons at the same time. This allows players to seemlessly switch between input methods. For singleplayer games, you do not have to do anything related to [assigning](assign_gamepad) or [unassigning](unassign_gamepad) gamepads.
+A player can have bindings to both keyboard and gamepad buttons at the same time. This allows them to seemlessly switch between input methods. For singleplayer games, you do not have to do anything related to [assigning](assign_gamepad) or [unassigning](unassign_gamepad) gamepads.
 
-By adding an [InputListener](input_listener) component on an entity, you can make it respond to input events from a specific player.
+After configuring bindings, player inputs can be handled via [Scene:action_pressed](/crystal/api/scene/scene_action_pressed)/[Scene:action_released](/crystal/api/scene/scene_action_released). More conveniently, you can use these callbacks to forward the inputs to an [InputSystem](input_system) and rely on [InputListener](input_listener) components to implement actual responses.
 
 ## Functions
 
@@ -45,10 +46,11 @@ By adding an [InputListener](input_listener) component on an entity, you can mak
 
 ## Classes
 
-| Name                                    | Description                                                                               |
-| :-------------------------------------- | :---------------------------------------------------------------------------------------- |
-| [crystal.InputListener](input_listener) | A [Component](/crystal/api/ecs/component) which allows an entity to receive input events. |
-| [crystal.InputSystem](input_system)     | A [System](/crystal/api/ecs/system) which dispatches input events.                        |
+| Name                                    | Description                                                                                               |
+| :-------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
+| [crystal.InputListener](input_listener) | A [Component](/crystal/api/ecs/component) which allows an entity to receive input events.                 |
+| [crystal.InputSystem](input_system)     | A [System](/crystal/api/ecs/system) which dispatches input events.                                        |
+| [crystal.InputSystem](mouse_area)       | A [Component](/crystal/api/ecs/component) which allows an entity to receive mouse hover and click events. |
 
 ## Enums
 

@@ -10,23 +10,45 @@ This ECS [System](system) powers [InputListener](input_listener) components.
 
 ## Methods
 
-| Name                                      | Description                                                                         |
-| :---------------------------------------- | :---------------------------------------------------------------------------------- |
-| [handle_input](input_system_handle_input) | Routes an input to the relevant [input handlers](input_listener_add_input_handler). |
+| Name                                                    | Description                                                                                         |
+| :------------------------------------------------------ | :-------------------------------------------------------------------------------------------------- |
+| [action_pressed](input_system_action_pressed)           | Routes an action input starting to the relevant [input handlers](input_listener_add_input_handler). |
+| [action_released](input_system_action_released)         | Routes an action input stopping to the relevant [input handlers](input_listener_add_input_handler). |
+| [mouse_pressed](input_system_mouse_pressed)             | Routes a mouse press event to the relevant [mouse areas](mouse_area).                               |
+| [mouse_released](input_system_mouse_released)           | Routes a mouse release event to the relevant [mouse areas](mouse_area).                             |
+| [update_mouse_target](input_system_update_mouse_target) | Execute hover-related callbacks on [mouse areas](mouse_area) according to current cursor position.  |
 
 ## Examples
 
 ```lua
-local ecs = crystal.ECS:new();
-local input_system = ecs:add_system(crystal.InputSystem);
+local MyScene = Class("MyScene", crystal.Scene);
 
-local entity = ecs:spawn(crystal.Entity);
-entity:add_component(crystal.InputListener, 1);
-entity:add_input_handler(function(input)
-  print(input);
-  return false;
-end);
+MyScene.init = function(self)
+  self.ecs = crystal.ECS:new();
+  self.input_system = self.ecs:add_system(crystal.InputSystem);
+end
 
-ecs:update();
-input_system:handle_input(1, "+jump"); -- Prints "+jump"
+MyScene.update = function(self, dt)
+  self.input_system:update_mouse_target();
+end
+
+MyScene.action_pressed = function(self, player_index, action)
+  self.input_system:action_pressed(player_index, action);
+end
+
+MyScene.action_released = function(self, player_index, action)
+  self.input_system:action_released(player_index, action);
+end
+
+MyScene.mouse_moved = function(self, x, y, dx, dy, is_touch)
+  self.input_system:update_mouse_target();
+end
+
+MyScene.mouse_pressed = function(self, x, y, button, is_touch, presses)
+  self.input_system:mouse_pressed(x, y, button, is_touch, presses);
+end
+
+MyScene.mouse_released = function(self, x, y, button, is_touch, presses)
+  self.input_system:mouse_released(x, y, button, is_touch, presses);
+end
 ```
