@@ -1,7 +1,7 @@
 ---
 parent: crystal.input
 grand_parent: API Reference
-nav_exclude: true
+nav_order: 1
 ---
 
 # crystal.input.gamepad_id

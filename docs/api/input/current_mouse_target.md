@@ -12,7 +12,7 @@ Advanced
 Returns the [mouse target](add_mouse_target) the mouse pointer is currently on top of.
 
 {: .note}
-This function should rarely be needed, as Crystal [UI elements](/crystal/api/ui) offer a higher level API to implement mouse interactions.
+This function should rarely be needed, as Crystal [UI elements](/crystal/api/ui) and [mouse areas](mouse_area) offer higher level constructs to implement mouse interactions.
 
 ## Usage
 

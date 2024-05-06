@@ -11,7 +11,7 @@ Unassigns a player's current gamepad. Gamepad button presses will no longer be t
 In addition:
 
 - This method puts all inputs for the affected player in a released state.
-- If the player's [input method](input_player_input_method) was `gamepad`, it is set to `nil`.
+- If the player's [input method](input_method) was `gamepad`, it is set to `nil`.
 
 This method has no effect if the player had no assigned gamepad.
 

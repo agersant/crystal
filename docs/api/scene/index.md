@@ -72,15 +72,15 @@ Field.draw = function(self)
 end
 
 Field.mouse_moved = function(self, x, y, dx, dy, is_touch)
-	self.input_system:update_mouse_target();
+  self.input_system:update_mouse_target();
 end
 
 Field.mouse_pressed = function(self, x, y, button, is_touch, presses)
-	self.input_system:mouse_pressed(x, y, button, is_touch, presses);
+  self.input_system:mouse_pressed(x, y, button, is_touch, presses);
 end
 
 Field.mouse_released = function(self, x, y, button, is_touch, presses)
-	self.input_system:mouse_released(x, y, button, is_touch, presses);
+  self.input_system:mouse_released(x, y, button, is_touch, presses);
 end
 
 Field.action_pressed = function(self, player_index, action)

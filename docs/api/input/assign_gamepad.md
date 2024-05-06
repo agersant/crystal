@@ -13,7 +13,7 @@ If the gamepad was already assigned to a different player, this method unassigns
 In addition:
 
 - This method puts all inputs for the affected player in a released state.
-- The player's [input method](input_player_input_method) is set to `gamepad`.
+- The player's [input method](input_method) is set to `gamepad`.
 
 ## Usage
 

@@ -8,7 +8,7 @@ nav_order: 1
 
 Returns the value of a gamepad axis associated with a specific action.
 
-If the player's [input method](input_player_input_method) is not `gamepad`, this function returns 0.
+If the player's [input method](input_method) is not `gamepad`, this function returns 0.
 
 If no axis is mapped to the requested action, this function returns 0.
 
