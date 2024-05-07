@@ -1,11 +1,17 @@
+local features = require(CRYSTAL_RUNTIME .. "features");
+
 ---@class InputSystem
----@field private query Query
+---@field private with_input_listener Query
+---@field private with_mouse_area Query
 ---@field private last_mouse_target MouseArea
 ---@field private last_mouse_player number
 local InputSystem = Class("InputSystem", crystal.System);
 
 InputSystem.init = function(self)
-	self.query = self:add_query({ "InputListener" });
+	self.with_input_listener = self:add_query({ "InputListener" });
+	if features.debug_draw then
+		self.with_mouse_area = self:add_query({ "MouseArea" });
+	end
 	self.last_mouse_target = nil;
 	self.last_mouse_player = nil;
 end
@@ -16,7 +22,7 @@ InputSystem.action_pressed = function(self, player_index, action)
 	assert(player_index > 0);
 	assert(type(action) == "string");
 	local input = "+" .. action;
-	for input_listener in pairs(self.query:components()) do
+	for input_listener in pairs(self.with_input_listener:components()) do
 		if input_listener:player_index() == player_index then
 			input_listener:handle_input(input);
 		end
@@ -29,7 +35,7 @@ InputSystem.action_released = function(self, player_index, action)
 	assert(player_index > 0);
 	assert(type(action) == "string");
 	local input = "-" .. action;
-	for input_listener in pairs(self.query:components()) do
+	for input_listener in pairs(self.with_input_listener:components()) do
 		if input_listener:player_index() == player_index then
 			input_listener:handle_input(input);
 		end
@@ -82,6 +88,22 @@ InputSystem.update_mouse_target = function(self)
 		target:begin_mouse_over(player_index);
 		self.last_mouse_target = target;
 		self.last_mouse_player = player_index;
+	end
+end
+
+local draw_mouse_area = false;
+crystal.cmd.add("ShowMouseAreaOverlay", function() draw_mouse_area = true; end);
+crystal.cmd.add("HideMouseAreaOverlay", function() draw_mouse_area = false; end);
+crystal.hot_reload.persist("draw_mouse_area",
+	function() return draw_mouse_area end,
+	function(d) draw_mouse_area = d end
+);
+
+InputSystem.draw_debug = function(self)
+	if draw_mouse_area then
+		for mouse_area in pairs(self.with_mouse_area:components()) do
+			mouse_area:draw_debug();
+		end
 	end
 end
 

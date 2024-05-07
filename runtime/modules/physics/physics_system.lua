@@ -108,7 +108,7 @@ crystal.hot_reload.persist("physics_overlay",
 
 PhysicsSystem.draw_debug = function(self)
 	if draw_physics_debug then
-		for body in pairs(self.with_body:components(crystal.Body)) do
+		for body in pairs(self.with_body:components()) do
 			local body = body:inner();
 			local x, y = body:getX(), body:getY();
 			x = math.round(x);

@@ -77,6 +77,40 @@ MouseArea.draw = function(self)
 	end
 end
 
+MouseArea.draw_debug = function(self)
+	love.graphics.push("all");
+	love.graphics.setLineJoin("bevel");
+	love.graphics.setLineStyle("smooth");
+	love.graphics.setLineWidth(1);
+	love.graphics.translate(self:entity():position());
+	love.graphics.translate(self:draw_offset());
+
+	local color = crystal.Color.magenta_purple;
+	if self.enabled then
+		color = self._is_mouse_over and crystal.Color.radiant_yellow or crystal.Color.puffins_bill;
+	end
+
+	local shape_type = self.shape:getType();
+
+	love.graphics.setColor(color:alpha(.6));
+	if shape_type == "circle" then
+		local x, y = self.shape:getPoint();
+		love.graphics.circle("fill", x, y, self.shape:getRadius(), 16);
+	elseif shape_type == "polygon" then
+		love.graphics.polygon("fill", self.shape:getPoints());
+	end
+
+	love.graphics.setColor(color);
+	if shape_type == "circle" then
+		local x, y = self.shape:getPoint();
+		love.graphics.circle("line", x, y, self.shape:getRadius(), 16);
+	elseif shape_type == "polygon" then
+		love.graphics.polygon("line", self.shape:getPoints());
+	end
+
+	love.graphics.pop();
+end
+
 --- @param player_index number
 MouseArea.begin_mouse_over = function(self, player_index)
 	self._is_mouse_over = true;
