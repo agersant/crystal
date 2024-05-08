@@ -169,6 +169,53 @@ crystal.test.add("Input handlers can prevent further handlers", function()
 	assert(handled == 1);
 end);
 
+crystal.test.add("Mouse area receives events", function()
+	local ecs = crystal.ECS:new();
+	local input_system = ecs:add_system(InputSystem);
+	local draw_system = ecs:add_system("DrawSystem");
+	local entity = ecs:spawn(crystal.Entity);
+
+	local callbacks = {};
+
+	local mouse_area = entity:add_component("MouseArea", love.physics.newRectangleShape(10, 10));
+	mouse_area.on_mouse_over = function() callbacks.on_mouse_over = true; end;
+	mouse_area.on_mouse_out = function() callbacks.on_mouse_out = true; end;
+	mouse_area.on_mouse_pressed = function() callbacks.on_mouse_pressed = true; end;
+	mouse_area.on_mouse_released = function() callbacks.on_mouse_released = true; end;
+	mouse_area.on_mouse_clicked = function() callbacks.on_mouse_clicked = true; end;
+	mouse_area.on_mouse_double_clicked = function() callbacks.on_mouse_double_clicked = true; end;
+	mouse_area.on_mouse_right_clicked = function() callbacks.on_mouse_right_clicked = true; end;
+
+	ecs:update();
+	draw_system:draw_entities();
+
+	crystal.mousemoved(0, 0, 0, 0, false);
+	input_system:update_mouse_target();
+	assert(callbacks.on_mouse_over);
+	assert(not callbacks.on_mouse_out);
+
+	input_system:mouse_pressed(0, 0, 1, false, 1);
+	assert(callbacks.on_mouse_pressed);
+	assert(not callbacks.on_mouse_released);
+	assert(not callbacks.on_mouse_clicked);
+
+	input_system:mouse_released(0, 0, 1, false, 1);
+	assert(callbacks.on_mouse_released);
+	assert(callbacks.on_mouse_clicked);
+
+	input_system:mouse_pressed(0, 0, 1, false, 2);
+	assert(callbacks.on_mouse_double_clicked);
+	input_system:mouse_released(0, 0, 1, false, 2);
+
+	input_system:mouse_pressed(0, 0, 2, false, 1);
+	input_system:mouse_released(0, 0, 2, false, 1);
+	assert(callbacks.on_mouse_right_clicked);
+
+	crystal.mousemoved(100, 0, 100, 0, false);
+	input_system:update_mouse_target();
+	assert(callbacks.on_mouse_out);
+end);
+
 --#endregion
 
 return InputSystem;

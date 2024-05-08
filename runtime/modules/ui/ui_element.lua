@@ -826,16 +826,11 @@ crystal.test.add("Can receive mouse events", function()
 	overlay.on_mouse_over = called("on_mouse_over");
 	overlay.on_mouse_out = called("on_mouse_out");
 
-	local scene = crystal.Scene:new();
-	scene.update = function(dt) overlay:update_tree(dt, 100, 100) end;
-	scene.draw = function() overlay:draw_tree() end;
-	scene.mouse_moved = function() overlay:update_mouse_target() end;
-	crystal.scene.replace(scene);
-
-	crystal.update(0);
-	crystal.draw();
+	overlay:update_tree(0, 100, 100);
+	overlay:draw_tree();
 
 	crystal.mousemoved(10, 10);
+	overlay:update_mouse_target();
 	assert(overlay.called_on_mouse_enter);
 	assert(not overlay.called_on_mouse_leave);
 	assert(not overlay.called_on_mouse_over);
@@ -846,6 +841,7 @@ crystal.test.add("Can receive mouse events", function()
 	assert(not image.called_on_mouse_out);
 
 	crystal.mousemoved(-10, -10);
+	overlay:update_mouse_target();
 	assert(overlay.called_on_mouse_enter);
 	assert(overlay.called_on_mouse_leave);
 	assert(not overlay.called_on_mouse_over);

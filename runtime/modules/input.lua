@@ -127,11 +127,14 @@ return {
 		end
 		return input_manager:mouse_released(x, y, button, is_touch, presses);
 	end,
-	post_draw = function()
-		mouse_router:commit_targets();
+	clear_mouse_targets = function()
+		mouse_router:clear_mouse_targets();
 	end,
 	update = function(dt)
 		mouse_router:update_current_target(input_manager:mouse_player():index());
 		return input_manager:update(dt);
+	end,
+	test_harness = function()
+		mouse_router:reset();
 	end,
 };

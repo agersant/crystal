@@ -205,12 +205,12 @@ end
 
 crystal.draw = function()
 	modules.error.catch_errors(function()
+		modules.input.clear_mouse_targets();
 		love.graphics.reset();
 		modules.scene.draw();
 		love.graphics.reset();
 		modules.tool.draw();
 		modules.window.present();
-		modules.input.post_draw();
 	end);
 	love.graphics.reset();
 	modules.error.draw(modules.window.captured_frame());
