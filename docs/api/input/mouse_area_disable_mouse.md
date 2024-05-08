@@ -8,7 +8,7 @@ nav_exclude: true
 
 Prevents this component from being the mouse target or receiving click-related events.
 
-If the component previously executed is `on_mouse_over` callnack, it will execute `on_mouse_out` on the next call to [InputSystem:update_mouse_target](input_system_update_mouse_target).
+If the component previously executed its `on_mouse_over` callback, it will execute `on_mouse_out` on the next call to [InputSystem:update_mouse_target](input_system_update_mouse_target).
 
 ## Usage
 

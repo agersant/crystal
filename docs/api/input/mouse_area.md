@@ -14,7 +14,7 @@ This component inherits from [crystal.Drawable](/crystal/api/graphics/drawable),
 
 Like all other components, MouseArea components are created by calling [Entity:add_component](/crystal/api/ecs/entity_add_component).
 
-The constructor for InputListener expects one argument, the [love.Shape](https://love2d.org/wiki/Shape) of the interactive area.
+The constructor for MouseArea expects one argument, the [love.Shape](https://love2d.org/wiki/Shape) of the interactive area.
 
 ## Methods
 
