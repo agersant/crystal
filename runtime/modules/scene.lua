@@ -62,4 +62,7 @@ return {
 	mouse_released = function(x, y, button, is_touch, presses)
 		scene_manager:mouse_released(x, y, button, is_touch, presses);
 	end,
+	test_harness = function()
+		scene_manager:reset();
+	end,
 };

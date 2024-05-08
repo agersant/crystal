@@ -66,6 +66,15 @@ SceneManager.replace = function(self, next_scene, ...)
 	end);
 end
 
+SceneManager.reset = function(self)
+	self.previous_scene = nil;
+	self.scene = nil;
+	self.next_scene = nil;
+	self.transition = nil;
+	self.transition_progress = 0;
+	self.script = crystal.Script:new();
+end
+
 ---@param dt number
 SceneManager.update = function(self, dt)
 	dt = dt * crystal.const.get("timescale");
