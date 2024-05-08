@@ -372,15 +372,15 @@ crystal.test.add("Can draw physics overlay", function(context)
 	b:add_component(crystal.Collider, love.physics.newChainShape(true, 0, 0, 20, 0, 25, 10));
 	b:set_position(150, 100);
 
-	local b = ecs:spawn(crystal.Entity);
-	b:add_component(crystal.Body);
-	b:add_component(crystal.Collider, love.physics.newCircleShape(12));
-	b:set_position(50, 100);
+	local c = ecs:spawn(crystal.Entity);
+	c:add_component(crystal.Body);
+	c:add_component(crystal.Collider, love.physics.newCircleShape(12));
+	c:set_position(50, 100);
 
 	ecs:update(0);
-	crystal.cmd.run("showPhysicsOverlay");
+	crystal.cmd.run("ShowPhysicsOverlay");
 	physics_system:draw_debug();
-	crystal.cmd.run("hidePhysicsOverlay");
+	crystal.cmd.run("HidePhysicsOverlay");
 
 	-- Cannot do screenshot comparison as love shapes draw slightly differently based on graphics drivers
 end);

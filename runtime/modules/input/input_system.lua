@@ -216,6 +216,30 @@ crystal.test.add("Mouse area receives events", function()
 	assert(callbacks.on_mouse_out);
 end);
 
+crystal.test.add("Can draw mouse areas", function(context)
+	local ecs = crystal.ECS:new();
+	local input_system = ecs:add_system(InputSystem);
+	local draw_system = ecs:add_system(crystal.DrawSystem);
+	local physics_system = ecs:add_system(crystal.PhysicsSystem);
+
+	local a = ecs:spawn(crystal.Entity);
+	a:add_component(crystal.Body);
+	a:add_component(crystal.MouseArea, love.physics.newRectangleShape(20, 20));
+	a:set_position(100, 100);
+
+	local b = ecs:spawn(crystal.Entity);
+	b:add_component(crystal.Body);
+	b:add_component(crystal.MouseArea, love.physics.newCircleShape(12));
+	b:set_position(50, 100);
+
+	ecs:update(0);
+	crystal.cmd.run("ShowMouseAreaOverlay");
+	input_system:draw_debug();
+	crystal.cmd.run("HideMouseAreaOverlay");
+
+	-- Cannot do screenshot comparison as love shapes draw slightly differently based on graphics drivers
+end);
+
 --#endregion
 
 return InputSystem;
