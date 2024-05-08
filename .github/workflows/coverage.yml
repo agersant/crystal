@@ -62,7 +62,9 @@ jobs:
           --excl-br-start "mod tests \{"
         working-directory: lib
       - name: Upload Results
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
         with:
           fail_ci_if_error: true
           verbose: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
