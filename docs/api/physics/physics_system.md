@@ -8,7 +8,7 @@ nav_order: 2
 
 This ECS [System](system) manages a [love.World](https://love2d.org/wiki/World). It also powers [Body](body), [Movement](movement), [Collider](collider) and [Sensor](sensor) components.
 
-When it receives the `draw_debug` [notification](/crystal/api/ecs/ecs_notify_systems), this system draws colored shapes representing all [Collider](collider) and [Sensor](sensor) components. The colors are determined by the categories of the corresponding component.
+When using the `ShowPhysicsOverlay` command and sending this system a `draw_debug` [notification](/crystal/api/ecs/ecs_notify_systems), it draws colored shapes representing all [Collider](collider) and [Sensor](sensor) components. The colors are determined by the categories of the corresponding component.
 
 ## Methods
 

@@ -46,11 +46,11 @@ After configuring bindings, player inputs can be handled via [Scene:action_press
 
 ## Classes
 
-| Name                                    | Description                                                                                               |
-| :-------------------------------------- | :-------------------------------------------------------------------------------------------------------- |
-| [crystal.InputListener](input_listener) | A [Component](/crystal/api/ecs/component) which allows an entity to receive input events.                 |
-| [crystal.InputSystem](input_system)     | A [System](/crystal/api/ecs/system) which dispatches input events.                                        |
-| [crystal.InputSystem](mouse_area)       | A [Component](/crystal/api/ecs/component) which allows an entity to receive mouse hover and click events. |
+| Name                                    | Description                                                                                                       |
+| :-------------------------------------- | :---------------------------------------------------------------------------------------------------------------- |
+| [crystal.InputListener](input_listener) | A [Component](/crystal/api/ecs/component) which allows an entity to receive input events.                         |
+| [crystal.InputSystem](input_system)     | A [System](/crystal/api/ecs/system) which dispatches input events.                                                |
+| [crystal.InputSystem](mouse_area)       | A [Component](/crystal/api/ecs/component) which allows an entity to receive mouse hover and click-related events. |
 
 ## Enums
 

@@ -7,6 +7,8 @@ grand_parent: API Reference
 
 A [System](/crystal/api/ecs/system) that updates [Navigation](navigation) components.
 
+When using the `ShowNavigationOverlay` command and sending this system a `draw_debug` [notification](/crystal/api/ecs/ecs_notify_systems), it draws the navigation mesh and all active paths using it.
+
 ## Methods
 
 | Name                             | Description       |

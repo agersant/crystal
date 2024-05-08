@@ -8,6 +8,8 @@ nav_order: 2
 
 This ECS [System](system) powers [InputListener](input_listener) components.
 
+When using the `ShowMouseAreaOverlay` command and sending this system a `draw_debug` [notification](/crystal/api/ecs/ecs_notify_systems), it draws the shape of all `MouseArea` components.
+
 ## Methods
 
 | Name                                                    | Description                                                                                         |
@@ -17,6 +19,13 @@ This ECS [System](system) powers [InputListener](input_listener) components.
 | [mouse_pressed](input_system_mouse_pressed)             | Routes a mouse press event to the relevant [mouse areas](mouse_area).                               |
 | [mouse_released](input_system_mouse_released)           | Routes a mouse release event to the relevant [mouse areas](mouse_area).                             |
 | [update_mouse_target](input_system_update_mouse_target) | Execute hover-related callbacks on [mouse areas](mouse_area) according to current cursor position.  |
+
+## Console Commands
+
+| Name                   | Description                                  |
+| :--------------------- | :------------------------------------------- |
+| `HideMouseAreaOverlay` | Stops drawing the shape of all mouse areas.  |
+| `ShowMouseAreaOverlay` | Starts drawing the shape of all mouse areas. |
 
 ## Examples
 

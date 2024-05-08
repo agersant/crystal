@@ -14,7 +14,7 @@ Returns the player index whose inputs this components responds to.
 input_listener:player_index()
 ```
 
-### Arguments
+### Returns
 
 | Name    | Type     | Description                                            |
 | :------ | :------- | :----------------------------------------------------- |
