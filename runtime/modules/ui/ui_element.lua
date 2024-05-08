@@ -670,17 +670,31 @@ end
 --#region Tests
 
 crystal.test.add("Can bind/unbind input", function()
-	local sentinel = false;
+	local pressed = false;
+	local released = false;
 	local a = crystal.UIElement:new();
 	a:bind_input("+ui_ok", "always", nil, function()
-		sentinel = true;
+		pressed = true;
 	end);
+	a:bind_input("-ui_ok", "always", nil, function()
+		released = true;
+	end);
+
 	a:action_pressed(1, "ui_ok");
-	assert(sentinel);
-	sentinel = false;
+	assert(pressed);
+	assert(not released);
+	a:action_released(1, "ui_ok");
+	assert(pressed);
+	assert(released);
+
+	pressed = false;
+	released = false;
 	a:unbind_input("+ui_ok");
+	a:unbind_input("-ui_ok");
 	a:action_pressed(1, "ui_ok");
-	assert(not sentinel);
+	a:action_released(1, "ui_ok");
+	assert(not pressed);
+	assert(not released);
 end);
 
 crystal.test.add("Can require focus on bindings", function()
