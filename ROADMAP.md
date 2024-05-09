@@ -3,7 +3,7 @@
 - [x] Bumped LOVE version from 11.3 to 11.4
 - [x] Error handling/recovery
 - [x] Can bind actions to mouse buttons
-- [ ] ECS component for mouse input
+- [x] ECS component for mouse input
 - [ ] UI mouse support (press/release/click/double click)
 - [ ] Curves & timelines
 - [ ] Finite state machines
