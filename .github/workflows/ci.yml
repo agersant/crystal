@@ -12,7 +12,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
       - name: Install Mesa
@@ -34,7 +34,7 @@ jobs:
         working-directory: runtime
       - name: Run engine packaging script
         run: .\release.ps1
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: packaged-engine
           path: release\crystal.zip
@@ -42,12 +42,12 @@ jobs:
       - name: Run game packaging script
         run: .\package.ps1
         working-directory: release
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: packaged-game
           path: release/release
           if-no-files-found: error
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: failure()
         with:
           name: test-output
