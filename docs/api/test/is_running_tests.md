@@ -23,10 +23,8 @@ crystal.test.is_running_tests()
 ## Examples
 
 ```lua
--- in conf.lua
-
-love.conf = {
-  -- Disable the audio module of LÖVE when running tests
-  options.modules.audio = not crystal.test.is_running_tests();
-}
+crystal.test.add("Can do basic math", function(context)
+  print(crystal.test.is_running_tests()); -- Prints "true"
+  assert(1 + 1 == 2);
+end);
 ```
