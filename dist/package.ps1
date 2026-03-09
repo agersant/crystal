@@ -20,7 +20,6 @@ New-Item -Type dir -Force "release" | Out-Null
 
 # Replace love.exe icon with game icon
 Copy-Item  bin/love.exe release/love.exe
-bin/nacre.exe --executable release/love.exe --icon $icon
 
 # Combine love.exe with game content (https://love2d.org/wiki/Game_Distribution)
 Compress-Archive -Path game/* -DestinationPath release/game.love

@@ -26,4 +26,3 @@ cargo build --release
 # Copy Rust dependencies to bin directory
 Set-Location $crystal
 Copy-Item lib\target\release\diamond.dll bin\diamond.dll
-Copy-Item lib\target\release\nacre.exe bin\nacre.exe
