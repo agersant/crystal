@@ -2,7 +2,6 @@ name: CI
 
 on:
   push:
-  pull_request:
     branches:
       - master
 
@@ -24,29 +23,24 @@ jobs:
           cmd /c systemwidedeploy.cmd
       - name: Build binaries
         run: .\build.ps1
-      - name: Run Rust tests
-        run: cargo test --release
-        working-directory: lib
-      - name: Run Lua tests
-        run: ..\bin\lovec.exe . /test
+      - name: Run Lua Tests
+        run: ..\bin\lovec.exe . /test /coverage
         working-directory: runtime
-      - name: Run engine packaging script
-        run: .\release.ps1
-      - uses: actions/upload-artifact@v4
+      - name: Fix line endings in Lua coverage report
+        run: (Get-Content -raw luacov.report.out) -replace "`r`n","`n" | Set-Content -nonewline luacov.report.out
+        working-directory: runtime
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          name: packaged-engine
-          path: release\crystal.zip
-          if-no-files-found: error
-      - name: Run game packaging script
-        run: .\package.ps1
-        working-directory: release
-      - uses: actions/upload-artifact@v4
+          components: llvm-tools-preview
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
+      - name: Gather coverage results
+        run: cargo llvm-cov --codecov --output-path codecov.json
+        working-directory: lib
+      - name: Upload Results
+        uses: codecov/codecov-action@v5
         with:
-          name: packaged-game
-          path: release/release
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: test-output
-          path: runtime/test-output
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: lib/codecov.json, runtime/luacov.report.out
+          fail_ci_if_error: true
+          verbose: true
