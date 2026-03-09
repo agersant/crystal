@@ -40,7 +40,7 @@ MyScene.action_released = function(self, player_index, action)
 end
 
 MyScene.draw = function(self)
-  self.hud:draw_tree();
+  self.hud:draw_tree(dt);
   self.pause_menu:draw_tree(dt);
 end
 ```
@@ -93,7 +93,7 @@ end
 
 ### Adding Custom Elements
 
-Most of the time, you will be building HUD widgets and menus by combining existing element types. However, it is possible your game needs to draw or layout content in a way that is not achievable with built-in element types. In this situation, you can implement you own element types by inheriting from [UIElement](ui_element), [Wrapper](wrapper), or [Container](container).
+Most of the time, you will be building HUD widgets and menus by combining existing element types. However, it is possible your game needs to draw or layout content in a way that is not achievable with built-in element types. In this situation, you can implement your own element types by inheriting from [UIElement](ui_element), [Wrapper](wrapper), or [Container](container).
 
 If you do, make sure to consult the [advanced UI Element methods](/crystal/api/ui/ui_element.html#implementing-custom-elements) you are likely to need in the process.
 
