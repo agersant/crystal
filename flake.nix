@@ -38,13 +38,10 @@
       devShells = forEachSupportedSystem ({ pkgs }: {
         default = pkgs.mkShell {
           packages = with pkgs; [
+            fontconfig
             love
             rustToolchain
-            openssl
             pkg-config
-            cargo-deny
-            cargo-edit
-            cargo-watch
             rust-analyzer
             samply
           ];
