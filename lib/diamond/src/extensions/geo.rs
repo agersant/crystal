@@ -90,8 +90,7 @@ impl LineStringExt for LineString<f32> {
     fn offset(&self, amount: f32) -> LineString<f32> {
         let amount = if self.is_clockwise() { amount } else { -amount };
 
-        let mut vertices: Vec<Point<f32>> = Vec::new();
-        vertices.reserve(self.num_coords());
+        let mut vertices: Vec<Point<f32>> = Vec::with_capacity(self.num_coords());
 
         let source_vertices = self.clone().into_points();
         let vertex_triplets = source_vertices

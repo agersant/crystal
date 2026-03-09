@@ -75,7 +75,7 @@ impl NavigationMesh {
             .unwrap()
     }
 
-    fn project_point_to_playable_space(&self, point: &Point<f32>) -> Option<ProjectionResult> {
+    fn project_point_to_playable_space(&self, point: &Point<f32>) -> Option<ProjectionResult<'_>> {
         let locate = self.triangulation.locate(&[point.x(), point.y()]);
         let projection = match locate {
             PositionInTriangulation::NoTriangulationPresent => return None,

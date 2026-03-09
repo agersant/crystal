@@ -69,7 +69,7 @@ impl LuaUserData for Mesh {
 }
 
 #[mlua::lua_module]
-fn diamond(lua: &Lua) -> LuaResult<LuaTable> {
+fn diamond(lua: &Lua) -> LuaResult<LuaTable<'_>> {
     let exports = lua.create_table()?;
 
     exports.set(

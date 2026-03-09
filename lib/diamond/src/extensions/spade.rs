@@ -7,6 +7,7 @@ use spade::delaunay::*;
 pub type Vertex = [f32; 2];
 
 pub trait VertexHandleExt<'a> {
+    #[allow(unused)]
     fn to_point(self) -> Point<f32>;
     fn adjacent_faces(self) -> Vec<FaceHandle<'a, Vertex, CdtEdge>>;
 }
