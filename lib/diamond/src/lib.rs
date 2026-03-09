@@ -7,7 +7,7 @@ mod extensions;
 mod mesh;
 
 impl LuaUserData for MeshBuilder {
-    fn add_methods<'lua, M: LuaUserDataMethods<'lua, Self>>(methods: &mut M) {
+    fn add_methods<M: LuaUserDataMethods<Self>>(methods: &mut M) {
         methods.add_method_mut(
             "add_polygon",
             |_, builder, (tile_x, tile_y, vertices): (i32, i32, Vec<[f32; 2]>)| {
@@ -26,7 +26,7 @@ impl LuaUserData for MeshBuilder {
 }
 
 impl LuaUserData for Mesh {
-    fn add_methods<'lua, M: LuaUserDataMethods<'lua, Self>>(methods: &mut M) {
+    fn add_methods<M: LuaUserDataMethods<Self>>(methods: &mut M) {
         methods.add_method("nearest_navigable_point", |_, mesh, (x, y)| {
             let mut results = mlua::MultiValue::new();
             if let Some(p) = mesh.navigation.nearest_navigable_point(&Point::new(x, y)) {
@@ -69,7 +69,7 @@ impl LuaUserData for Mesh {
 }
 
 #[mlua::lua_module]
-fn diamond(lua: &Lua) -> LuaResult<LuaTable<'_>> {
+fn diamond(lua: &Lua) -> LuaResult<LuaTable> {
     let exports = lua.create_table()?;
 
     exports.set(
