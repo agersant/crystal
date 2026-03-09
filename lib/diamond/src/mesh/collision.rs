@@ -64,7 +64,6 @@ mod tests {
     use crate::mesh::tests::*;
     use crate::mesh::Mesh;
     use plotters::style::colors::*;
-    use serde::Deserialize;
     use std::fs::File;
     use std::io::BufReader;
 
@@ -73,15 +72,6 @@ mod tests {
         mesh_painter.clear(&WHITE);
         for contour in mesh.collision.get_contours() {
             mesh_painter.draw_line_string(&contour, &RED);
-        }
-    }
-
-    #[derive(Debug, Deserialize)]
-    struct InputMesh(Vec<Vec<InputVertex>>);
-
-    impl From<&InputVertex> for Point<f32> {
-        fn from(input: &InputVertex) -> Point<f32> {
-            Point::new(input.x, input.y)
         }
     }
 

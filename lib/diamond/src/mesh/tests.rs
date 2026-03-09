@@ -11,6 +11,12 @@ pub struct InputVertex {
     pub y: f32,
 }
 
+impl From<&InputVertex> for Point<f32> {
+    fn from(input: &InputVertex) -> Point<f32> {
+        Point::new(input.x, input.y)
+    }
+}
+
 #[derive(Debug, Deserialize)]
 pub struct InputPolygon {
     #[serde(rename(serialize = "tileX", deserialize = "tileX"))]
