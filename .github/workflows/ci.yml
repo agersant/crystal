@@ -21,6 +21,8 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - uses: cachix/install-nix-action@v31
       - uses: nicknovitski/nix-develop@v1
+      - name: Install Openbox
+        run: sudo apt-get install --assume-yes openbox
       - name: Start xvfb and openbox
         run: |
           Xvfb :99 -screen 0, 360x240x24 &
@@ -43,6 +45,11 @@ jobs:
       - name: Gather coverage results
         working-directory: lib
         run: cargo llvm-cov --codecov --output-path codecov.json
+      - name: Stop xvfb and openbox
+        if: always()
+        run: |
+          kill $XVFBPID
+          kill $OPENBOXPID
       - name: Upload Results
         uses: codecov/codecov-action@v5
         with:
