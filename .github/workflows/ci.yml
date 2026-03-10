@@ -9,6 +9,8 @@ jobs:
   linux:
     name: Linux
     runs-on: ubuntu-latest
+    env:
+      DISPLAY: :99
     steps:
       - uses: actions/checkout@v4
       - name: Cache
@@ -25,7 +27,7 @@ jobs:
         run: sudo apt-get install --assume-yes openbox
       - name: Start xvfb and openbox
         run: |
-          Xvfb :99 -screen 0, 360x240x24 &
+          Xvfb $DISPLAY -screen 0, 360x240x24 &
           echo "XVFBPID=$!" >> $GITHUB_ENV
           # wait for xvfb to startup
           sleep 3
