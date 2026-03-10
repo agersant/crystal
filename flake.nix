@@ -51,19 +51,6 @@
             RUST_SRC_PATH = "${pkgs.rustToolchain}/lib/rustlib/src/rust/library";
           };
         };
-
-        ci = pkgs.mkShell {
-          packages = with pkgs; [
-            fontconfig
-            libGL
-            love
-            mesa
-            openbox
-            pkg-config            
-            rustToolchain
-            xvfb
-          ];          
-        };
       });
     };
 }
