@@ -23,8 +23,8 @@ jobs:
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - uses: cachix/install-nix-action@v31
       - uses: nicknovitski/nix-develop@v1
-      - name: Install Openbox
-        run: sudo apt-get install --assume-yes openbox
+        with:
+          arguments: ".#ci"
       - name: Start xvfb and openbox
         run: |
           Xvfb $DISPLAY -screen 0, 360x240x24 &
