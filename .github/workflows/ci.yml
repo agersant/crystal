@@ -19,15 +19,16 @@ jobs:
             ~/.cargo/git
             lib/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - uses: pyvista/setup-headless-display-action@v3
       - uses: cachix/install-nix-action@v31
       - uses: nicknovitski/nix-develop@v1
       - run: cargo build --release
         working-directory: lib
       - run: cp lib/target/release/libdiamond.so runtime/diamond.so
       - name: Run Lua Tests
-        working-directory: runtime
-        run: love . /test /coverage
+        uses: GabrielBB/xvfb-action@v1
+        with:
+          working-directory: runtime
+          run: love . /test /coverage
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           components: llvm-tools-preview
@@ -58,6 +59,8 @@ jobs:
             lib/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       - uses: pyvista/setup-headless-display-action@v3
+        with:
+          pyvista: false
       - name: Download Love
         run: |
           $zip = New-TemporaryFile
