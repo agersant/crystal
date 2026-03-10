@@ -6,10 +6,9 @@ on:
       - main
 
 jobs:
-  tests:
-    name: Run Tests
-    runs-on: windows-latest
-
+  linux:
+    name: Linux
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Cache
@@ -20,31 +19,22 @@ jobs:
             ~/.cargo/git
             lib/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - name: Install Mesa
-        run: |
-          curl.exe -L --output mesa.7z --url https://github.com/pal1000/mesa-dist-win/releases/download/22.3.4/mesa3d-22.3.4-release-msvc.7z
-          & "C:\Program Files\7-Zip\7z.exe" x mesa.7z
-          $setup_script = Get-Content -Path systemwidedeploy.cmd
-          $setup_script = $setup_script -replace '^.*deployment choice.*$', '@GOTO desktopgl'
-          $setup_script = $setup_script -replace '^.*deploy complete.*$', '@exit'
-          $setup_script | Set-Content -Path systemwidedeploy.cmd
-          cmd /c systemwidedeploy.cmd
-      - name: Build binaries
-        run: .\build.ps1
+      - uses: cachix/install-nix-action@v31
+      - uses: nicknovitski/nix-develop@v1
+      - run: cargo build --release
+        working-directory: lib
+      - run: cp lib/target/release/libdiamond.so runtime/diamond.so
       - name: Run Lua Tests
-        run: ..\bin\lovec.exe . /test /coverage
         working-directory: runtime
-      - name: Fix line endings in Lua coverage report
-        run: (Get-Content -raw luacov.report.out) -replace "`r`n","`n" | Set-Content -nonewline luacov.report.out
-        working-directory: runtime
+        run: love . /test /coverage
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           components: llvm-tools-preview
       - name: Install cargo-llvm-cov
         uses: taiki-e/install-action@cargo-llvm-cov
       - name: Gather coverage results
-        run: cargo llvm-cov --codecov --output-path codecov.json
         working-directory: lib
+        run: cargo llvm-cov --codecov --output-path codecov.json
       - name: Upload Results
         uses: codecov/codecov-action@v5
         with:
@@ -52,3 +42,34 @@ jobs:
           files: lib/codecov.json, runtime/luacov.report.out
           fail_ci_if_error: true
           verbose: true
+
+  windows:
+    name: Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            lib/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Download Love
+        run: |
+          $zip = New-TemporaryFile
+          $ProgressPreference = 'SilentlyContinue'
+          Invoke-WebRequest -Uri "https://github.com/love2d/love/releases/download/11.4/love-11.4-win64.zip" -OutFile $zip
+          Expand-Archive $zip -DestinationPath "bin" -Force
+          Remove-Item $zip
+          Get-ChildItem -Path "bin" -Recurse -File | Move-Item -Destination "bin"
+          Get-ChildItem -Path "bin" -Recurse -Directory | Remove-Item
+      - run: cargo build --release
+        working-directory: lib
+      - run: cp lib\target\release\diamond.dll bin\diamond.dll
+      - name: Run Lua Tests
+        working-directory: runtime
+        run: ..\bin\lovec.exe . /test /coverage
+      - run: cargo test
+        working-directory: lib
