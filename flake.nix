@@ -60,6 +60,7 @@
             openbox
             pkg-config            
             rustToolchain
+            wmctrl
             xvfb
           ];          
         };
