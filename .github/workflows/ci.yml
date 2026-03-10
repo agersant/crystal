@@ -19,6 +19,7 @@ jobs:
             ~/.cargo/git
             lib/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - uses: pyvista/setup-headless-display-action@v3
       - uses: cachix/install-nix-action@v31
       - uses: nicknovitski/nix-develop@v1
       - run: cargo build --release
@@ -56,15 +57,7 @@ jobs:
             ~/.cargo/git
             lib/target
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - name: Install Mesa
-        run: |
-          curl.exe -L --output mesa.7z --url https://github.com/pal1000/mesa-dist-win/releases/download/22.3.4/mesa3d-22.3.4-release-msvc.7z
-          & "C:\Program Files\7-Zip\7z.exe" x mesa.7z
-          $setup_script = Get-Content -Path systemwidedeploy.cmd
-          $setup_script = $setup_script -replace '^.*deployment choice.*$', '@GOTO desktopgl'
-          $setup_script = $setup_script -replace '^.*deploy complete.*$', '@exit'
-          $setup_script | Set-Content -Path systemwidedeploy.cmd
-          cmd /c systemwidedeploy.cmd
+      - uses: pyvista/setup-headless-display-action@v3
       - name: Download Love
         run: |
           $zip = New-TemporaryFile
