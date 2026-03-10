@@ -27,7 +27,7 @@ jobs:
           arguments: ".#ci"
       - name: Start xvfb and openbox
         run: |
-          Xvfb $DISPLAY -screen 0, 360x240x24 &
+          Xvfb $DISPLAY -screen 0, 1024x768x24 &
           echo "XVFBPID=$!" >> $GITHUB_ENV
           # wait for xvfb to startup
           sleep 3
