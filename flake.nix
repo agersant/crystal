@@ -40,9 +40,9 @@
           packages = with pkgs; [
             fontconfig
             love
-            rustToolchain
             pkg-config
             rust-analyzer
+            rustToolchain
             samply
           ];
 
@@ -56,10 +56,11 @@
           packages = with pkgs; [
             fontconfig
             love
-            rustToolchain
-            pkg-config
-            xvfb
+            mesa
             openbox
+            pkg-config            
+            rustToolchain
+            xvfb
           ];          
         };
       });
