@@ -55,12 +55,12 @@
         ci = pkgs.mkShell {
           packages = with pkgs; [
             fontconfig
+            libGL
             love
             mesa
             openbox
             pkg-config            
             rustToolchain
-            wmctrl
             xvfb
           ];          
         };
