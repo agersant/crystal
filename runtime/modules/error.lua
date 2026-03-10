@@ -135,8 +135,9 @@ return {
 		love.graphics.setColor(crystal.Color.white);
 		love.graphics.printf("Runtime Error", crystal.ui.font("crystal_bold_xl"), x + 10, y + 7, math.huge);
 		y = y + 50;
-		love.graphics.printf(error_text, crystal.ui.font("crystal_bold_md"), x, y, math.huge);
-		y = y + 50;
+		local error_layout = love.graphics.newText(crystal.ui.font("crystal_bold_md"), error_text);
+		love.graphics.draw(error_layout, x, y);
+		y = y + error_layout:getHeight() + margin;
 
 		-- Draw script callstack
 		if script_traceback then
