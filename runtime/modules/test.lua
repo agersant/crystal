@@ -1,4 +1,5 @@
 local features = require(CRYSTAL_RUNTIME .. "features");
+local dir_sep = package.config:sub(1, 1);
 
 ---@class Test
 ---@field name string
@@ -31,7 +32,8 @@ TestRunner.init = function(self)
 	self.busy = false;
 	self.context = TestContext:new(self);
 	self.tests = {};
-	self.screenshot_directory = "test-output\\screenshots";
+	self.output_directory = "test-output";
+	self.screenshot_directory = self.output_directory .. dir_sep .."screenshots";
 end
 
 ---@param name string
@@ -173,7 +175,11 @@ end
 
 ---@package
 TestRunner.create_output_directories = function(self)
-	io.popen("mkdir " .. self.screenshot_directory .. ">nul 2>nul"):close();
+	local windows = dir_sep == "\\"; 
+	local command = windows and "mkdir" or "mkdir -p";
+	local out = windows and ">nul 2>nul" or ">/dev/null 2>/dev/null";
+	io.popen(command .. " " .. self.output_directory .. out, "r"):close();
+	io.popen(command .. " " .. self.screenshot_directory .. out, "r"):close();
 	love.timer.sleep(0.1); -- Give the `mkdir` process some time to complete
 end
 
