@@ -115,7 +115,7 @@ PhysicsSystem.draw_debug = function(self)
 			y = math.round(y);
 			for _, fixture in ipairs(body:getFixtures()) do
 				local color = self:fixture_color(fixture);
-				self:draw_shape(x, y, fixture:getShape(), color);
+				self:draw_shape(x, y, body:getAngle(), fixture:getShape(), color);
 			end
 		end
 	end
@@ -162,9 +162,10 @@ end
 ---@param y number
 ---@param shape love.Shape
 ---@param color { [1]: number, [2]: number, [3]: number }
-PhysicsSystem.draw_shape = function(self, x, y, shape, color)
+PhysicsSystem.draw_shape = function(self, x, y, angle, shape, color)
 	love.graphics.push("all");
 	love.graphics.translate(x, y);
+	love.graphics.rotate(angle);
 	love.graphics.setLineJoin("bevel");
 	love.graphics.setLineStyle("smooth");
 
