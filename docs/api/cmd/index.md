@@ -10,7 +10,7 @@ Commands are a convenient way to access debug functionality in your game. For ex
 
 Commands can be executed programmatically via [crystal.cmd.run](run), or using the on-screen [console](/crystal/tools/console) available by pressing **`** (backtick key) while the game is running.
 
-The following example defines and immediately calls a command to print a number:
+The following example defines and immediately calls a command to print a greeting:
 
 ```lua
 crystal.cmd.add("Greet name:string", function(name)
