@@ -20,7 +20,8 @@ local scan = function()
 						mod_times = {};
 						love.thread.getChannel(channel_name):supply(true);
 						return;
-					elseif info.type == "directory" then
+					elseif info.type == "directory" or info.type == "symlink" then
+						-- Currently broken due to https://github.com/love2d/love/issues/1938
 						table.insert(directories, path);
 					end
 				end
