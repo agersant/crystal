@@ -8,7 +8,7 @@ nav_order: 2
 
 [Component](/crystal/api/ecs/component) allowing an entity to move of its own volition. Entities should have at most one Movement component.
 
-Expected usage of this component is to call [set_heading](movement_set_heading) every frame in response to player inputs or AI logic. Every frame, the [PhysicsSystem]:
+Expected usage of this component is to call [set_heading](movement_set_heading) every frame in response to player inputs or AI logic. Every frame, the [PhysicsSystem](physics_system):
 
 - Sets the entity's linear velocity to match the [heading](movement_set_heading) and [speed](movement_set_speed) of its movement component.
 - Sets the rotation of the entity's [Body](body) to match the [heading](movement_set_heading) of its movement component.
