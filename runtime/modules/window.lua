@@ -276,6 +276,8 @@ return {
 		transform = function()
 			return transform_stack[#transform_stack]:clone();
 		end,
+
+		window:update();
 	},
 	update = function()
 		window:update();
