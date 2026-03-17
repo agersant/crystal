@@ -39,7 +39,7 @@ end
 ---@returns number
 Fixture.category = function(self, name)
 	assert(type(name) == "string");
-	assert(self.all_categories[name]);
+	assert(self.all_categories[name], "'" .. tostring(name) .. "' is not a valid category for sensors/colliders.");
 	return self.all_categories[name];
 end
 

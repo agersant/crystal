@@ -10,7 +10,7 @@ local Body = Class("Body", crystal.Component);
 Body.init = function(self, body_type)
 	local ecs = self:entity():ecs();
 	local physics_system = ecs:system(crystal.PhysicsSystem);
-	assert(physics_system);
+	assert(physics_system, "ECS needs a physics system to spawn bodies.");
 	local world = physics_system:world();
 	assert(world);
 	self._inner = love.physics.newBody(world, 0, 0, body_type or "dynamic");
