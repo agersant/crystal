@@ -111,6 +111,9 @@ end
 
 local game_packages = {};
 local require_game_source = function()
+	if not CRYSTAL_NO_GAME then
+		game_packages["main"] = true;
+	end
 	local assets_directories = table.map(modules.assets.directories(), function(d)
 		-- TODO trim trailing slashes
 		return d:gsub("%-", "%%-");
