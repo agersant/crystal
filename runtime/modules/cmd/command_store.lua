@@ -30,7 +30,8 @@ CommandStore.search = function(self, name)
 	local query = name:lower():trim();
 
 	for ref, command in pairs(self.commands) do
-		local match_start, match_end = ref:find(query);
+		local plain = true;
+		local match_start, match_end = ref:find(query, 1, plain);
 		if match_start then
 			has_strong_match = has_strong_match or match_start == 1;
 			local match = { command = command, match_start = match_start, match_end = match_end };
