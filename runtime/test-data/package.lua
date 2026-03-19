@@ -1,4 +1,4 @@
 return {
 	crystal_package = true,
-	files = { "test-data/blankey.lua" }
+	files = { "test-data/blankey.json" }
 };

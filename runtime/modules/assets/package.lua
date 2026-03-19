@@ -14,7 +14,7 @@ crystal.assets.add_loader("lua", {
 
 crystal.test.add("Can load a package", function()
 	local package = "test-data/package.lua";
-	local sheet = "test-data/blankey.lua";
+	local sheet = "test-data/blankey.json";
 	assert(not crystal.assets.is_loaded(package));
 	assert(not crystal.assets.is_loaded(sheet));
 	crystal.assets.load(package);
@@ -28,7 +28,7 @@ end);
 crystal.test.add("Can load nested packages", function()
 	local wrapper = "test-data/wrapper_package.lua";
 	local package = "test-data/package.lua";
-	local sheet = "test-data/blankey.lua";
+	local sheet = "test-data/blankey.json";
 	assert(not crystal.assets.is_loaded(wrapper));
 	assert(not crystal.assets.is_loaded(package));
 	assert(not crystal.assets.is_loaded(sheet));
@@ -45,7 +45,7 @@ end);
 crystal.test.add("A single asset reference keeps assets loaded", function()
 	local wrapper = "test-data/wrapper_package.lua";
 	local package = "test-data/package.lua";
-	local sheet = "test-data/blankey.lua";
+	local sheet = "test-data/blankey.json";
 	assert(not crystal.assets.is_loaded(wrapper));
 	assert(not crystal.assets.is_loaded(package));
 	assert(not crystal.assets.is_loaded(sheet));
@@ -64,7 +64,7 @@ crystal.test.add("A single asset reference keeps assets loaded", function()
 end);
 
 crystal.test.add("A single context keeps assets loaded", function()
-	local sheet = "test-data/blankey.lua";
+	local sheet = "test-data/blankey.json";
 	assert(not crystal.assets.is_loaded(sheet));
 
 	crystal.assets.load(sheet, "a");
