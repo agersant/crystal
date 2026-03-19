@@ -11,7 +11,7 @@ Animation.init = function(self, num_repeat, ping_pong, reverse)
 	assert(type(num_repeat) == "number" or num_repeat == nil);
 	assert(type(ping_pong) == "boolean");
 	assert(type(reverse) == "boolean");
-	self.num_repeat = num_repeat;
+	self._num_repeat = num_repeat;
 	self.ping_pong = ping_pong;
 	self.reverse = reverse;
 	self.sequences = {};
