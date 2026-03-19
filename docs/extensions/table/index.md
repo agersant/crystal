@@ -21,7 +21,7 @@ This module contains utility functions for table operations. All functions are r
 | [table.deep_copy](table_deep_copy)     | Returns a deep copy of a table.                                            |
 | [table.equals](table_equals)           | Returns whether two tables contain the same `(key, value)` pairs.          |
 | [table.index_of](table_index_of)       | Returns the index of a value within a list.                                |
-| [table.is_empty](table_is_array)       | Returns whether a table is an array.                                       |
+| [table.is_array](table_is_array)       | Returns whether a table is an array.                                       |
 | [table.is_empty](table_is_empty)       | Returns whether a table contains any key.                                  |
 | [table.map](table_map)                 | Creates a new table by applying a transformation to all values in a table. |
 | [table.merge](table_merge)             | Creates a new table containing all `(key, value)` pairs from two tables.   |
