@@ -1,13 +1,19 @@
 local Sequence = require(CRYSTAL_RUNTIME .. "modules/assets/spritesheet/sequence");
 
 ---@class Animation
----@field private loop boolean
+---@field private _num_repeat number?
+---@field private ping_pong boolean
+---@field private reverse boolean
 ---@field private sequences { [number]: Sequence }
 local Animation = Class("Animation");
 
-Animation.init = function(self, loop)
-	assert(type(loop) == "boolean");
-	self.loop = loop;
+Animation.init = function(self, num_repeat, ping_pong, reverse)
+	assert(type(num_repeat) == "number" or num_repeat == nil);
+	assert(type(ping_pong) == "boolean");
+	assert(type(reverse) == "boolean");
+	self.num_repeat = num_repeat;
+	self.ping_pong = ping_pong;
+	self.reverse = reverse;
 	self.sequences = {};
 end
 
@@ -40,9 +46,19 @@ Animation.sequence = function(self, rotation)
 	return sequence;
 end
 
+---@return number
+Animation.num_repeat = function(self)
+	return self._num_repeat;
+end
+
 ---@return boolean
-Animation.is_looping = function(self)
-	return self.loop;
+Animation.is_ping_pong = function(self)
+	return self.ping_pong;
+end
+
+---@return boolean
+Animation.is_reversed = function(self)
+	return self.reverse;
 end
 
 return Animation;
