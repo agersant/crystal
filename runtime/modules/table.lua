@@ -2,6 +2,17 @@ table.is_empty = function(t)
 	return next(t) == nil;
 end
 
+table.is_array = function(t)
+	local i = 0;
+  	for _, _ in pairs(t) do
+		i = i + 1;
+		if t[i] == nil then
+			return false;
+		end
+  	end
+  	return true
+end
+
 table.clear = function(t)
 	for k in pairs(t) do
 		t[k] = nil;
@@ -174,6 +185,13 @@ return {
 		crystal.test.add("Can check if table is empty", function()
 			assert(table.is_empty({}));
 			assert(not table.is_empty({ a = false }));
+		end);
+
+		crystal.test.add("Can check if table is an array", function()
+			assert(table.is_array({}));
+			assert(table.is_array({"a", 12, function() end}));
+			assert(not table.is_array({ a = true }));
+			assert(not table.is_array({1, 2, nil, 3}));
 		end);
 
 		crystal.test.add("Can clear a table", function()
