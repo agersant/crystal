@@ -191,7 +191,7 @@ TestRunner.save_screenshot = function(self, image_data, name)
 	assert(image_data);
 	assert(name);
 	assert(self.screenshot_directory);
-	local path = string.format("%s\\%s.png", self.screenshot_directory, name);
+	local path = string.format("%s" .. dir_sep .. "%s.png", self.screenshot_directory, name);
 	local file = io.open(path, "w+b");
 	assert(file);
 	file:write(image_data:encode("png"):getString());
