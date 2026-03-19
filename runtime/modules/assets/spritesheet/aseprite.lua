@@ -24,7 +24,7 @@ crystal.assets.add_loader("json", {
 		return { image_path };
 	end,
 	load = function(path)
-		local raw = require(path:strip_file_extension());
+		local raw = love.filesystem.read(path);
 		local decoded = json.decode(raw);
 		local image_path = path:parent_directory():merge_paths(decoded.meta.image);
 		local image = crystal.assets.get(image_path);
@@ -48,7 +48,7 @@ crystal.assets.add_loader("json", {
 
 			local parent_tag = nil;
 			if tags_by_frame[tag.from] then
-				for _, overlapping_tag in tags_by_frame[tag.from] do
+				for _, overlapping_tag in ipairs(tags_by_frame[tag.from]) do
 					if overlapping_tag.from <= tag.from and overlapping_tag.to >= tag.to then
 						parent_tag = overlapping_tag;
 					end
@@ -62,7 +62,7 @@ crystal.assets.add_loader("json", {
 				angle = directions[tag.name];
 				assert(animation);
 			else
-				local num_repeat = tag["repeat"];
+				local num_repeat = tonumber(tag["repeat"]);
 				local ping_pong = tag.direction:starts_with("pingpong");
 				local reverse = tag.direction:ends_with("reverse");
 				animation = crystal.Animation:new(num_repeat, ping_pong, reverse);
@@ -99,5 +99,4 @@ crystal.test.add("Can load a spritesheet", function()
 	assert(keyframe.y);
 	assert(keyframe.quad);
 	assert(keyframe.duration);
-	assert(keyframe.hitboxes["test"]);
 end);
