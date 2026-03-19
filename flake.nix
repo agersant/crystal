@@ -39,6 +39,7 @@
         default = pkgs.mkShell {
           packages = with pkgs; [
             fontconfig
+            just
             love
             pkg-config
             rust-analyzer
