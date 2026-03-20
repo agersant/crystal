@@ -6,7 +6,7 @@ nav_order: 2
 
 # crystal.Animation
 
-Animation within a [Spritesheet](spritesheet).
+Animation within a [Spritesheet](spritesheet). An animation contains one or more [Sequence](sequence).
 
 ## Constructor
 
@@ -16,14 +16,14 @@ You cannot construct animations manually. Use [crystal.assets.get](get) to load 
 
 | Name                               | Description                                                        |
 | :--------------------------------- | :----------------------------------------------------------------- |
-| [is_looping](animation_is_looping) | Returns whether this animation loops when it finishes.             |
-| [sequence](animation_sequence)     | Retrieves the [sequence](sequence) closest to a specific rotation. |
+| [num_repeat](animation_num_repeat) | Returns how many times this animation plays before stopping.       |
+| [sequence](animation_sequence)     | Retrieves a [sequence](sequence) by name.                          |
 
 ## Examples
 
 ```lua
-local spritesheet = crystal.assets.get("assets/sprites/hero.lua");
+local spritesheet = crystal.assets.get("assets/sprites/hero.json");
 local walk = spritesheet:animation("walk");
-local sequence = walk:sequence(0);
+local sequence = walk:sequence("W");
 print(sequence:duration());
 ```

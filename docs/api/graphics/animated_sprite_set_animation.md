@@ -6,20 +6,20 @@ nav_exclude: true
 
 # AnimatedSprite:set_animation
 
-Plays an animation, not restarting if it's already playing.
+Plays an animation sequence, *not* restarting if the same sequence is already playing.
 
 ## Usage
 
 ```lua
-animated_sprite:set_animation(animation, rotation)
+animated_sprite:set_animation(animation, sequence)
 ```
 
 ### Arguments
 
 | Name        | Type     | Description                                                                                                                                              |
 | :---------- | :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `animation` | `string` | Name of the animation to play.                                                                                                                           |
-| `rotation`  | `number` | Direction the character is facing (in radians), used to select the most applicable [Sequence](/crystal/api/assets/sequence). Defaults to 0 when omitted. |
+| `animation` | `string` | Name of the [Animation](animation) to play.                                                                                                              |
+| `sequence`  | `string` | Name of the [Sequence](sequence) (within the animation) to play. This parameter may be omitted if the sequences contains a single sequence.              |
 
 ## Examples
 
@@ -29,13 +29,13 @@ local hero = ecs:spawn(crystal.Entity);
 hero:add_component(crystal.Body);
 hero:add_component(crystal.Movement);
 hero:add_component(crystal.ScriptRunner);
-hero:add_component(crystal.AnimatedSprite, crystal.assets.get("assets/hero.lua"));
+hero:add_component(crystal.AnimatedSprite, crystal.assets.get("assets/hero.json"));
 hero:add_script(function(self)
   while true do
     if self:heading() then
-      self:set_animation("walk", self:rotation());
+      self:set_animation("walk");
     else
-      self:set_animation("idle", self:rotation());
+      self:set_animation("idle");
     end
   self:wait_frame();
   end

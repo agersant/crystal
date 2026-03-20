@@ -6,7 +6,7 @@ nav_order: 2
 
 # crystal.Sequence
 
-Sequence within an [Animation](animation).
+Sequence within an [Animation](animation). A sequence contains keyframes.
 
 ## Constructor
 
@@ -22,8 +22,8 @@ You cannot construct sequences manually. Use [crystal.assets.get](get) to load a
 ## Examples
 
 ```lua
-local spritesheet = crystal.assets.get("assets/sprites/hero.lua");
+local spritesheet = crystal.assets.get("assets/sprites/hero.json");
 local walk = spritesheet:animation("walk");
-local sequence = walk:sequence(0);
+local sequence = walk:sequence("N");
 print(sequence:duration());
 ```

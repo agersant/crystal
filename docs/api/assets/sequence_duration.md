@@ -23,8 +23,8 @@ sequence:duration()
 ## Examples
 
 ```lua
-local spritesheet = crystal.assets.get("assets/sprites/hero.lua");
+local spritesheet = crystal.assets.get("assets/sprites/hero.json");
 local walk = spritesheet:animation("walk");
-local sequence = walk:sequence(0);
+local sequence = walk:sequence("N");
 print(sequence:duration());
 ```
