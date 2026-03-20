@@ -1,16 +1,5 @@
 local json = require(CRYSTAL_RUNTIME .. "external/json")
 
-local directions = {
-	E = math.rad(0),
-	NE = math.rad(-45),
-	N = math.rad(-90),
-	NW = math.rad(-135),
-	W = math.rad(180),
-	SW = math.rad(135),
-	S = math.rad(90),
-	SE = math.rad(45),
-};
-
 crystal.assets.add_loader("json", {
 	can_load = function(path)
 		local raw = love.filesystem.read(path);
@@ -49,28 +38,29 @@ crystal.assets.add_loader("json", {
 			local parent_tag = nil;
 			if tags_by_frame[tag.from] then
 				for _, overlapping_tag in ipairs(tags_by_frame[tag.from]) do
-					if overlapping_tag.from <= tag.from and overlapping_tag.to >= tag.to then
+					if overlapping_tag ~= tag and overlapping_tag.from <= tag.from and overlapping_tag.to >= tag.to then
 						parent_tag = overlapping_tag;
 					end
 				end
 			end
 
 			local animation;
-			local angle = 0;
-			if directions[tag.name] ~= nil and parent_tag ~= nil then
+			local sequence_name;
+			if parent_tag ~= nil then
 				animation = spritesheet:animation(parent_tag.name);
-				angle = directions[tag.name];
 				assert(animation);
+				sequence_name = tag.name;
 			else
 				local num_repeat = tonumber(tag["repeat"]);
 				local ping_pong = tag.direction:starts_with("pingpong");
 				local reverse = tag.direction:ends_with("reverse");
 				animation = crystal.Animation:new(num_repeat, ping_pong, reverse);
+				sequence_name = "default";
 				spritesheet:add_animation(tag.name, animation);
 			end
 
 			local sequence = crystal.Sequence:new();
-			animation:add_sequence(angle, sequence);
+			animation:add_sequence(sequence_name, sequence);
 			for frame_index = tag.from, tag.to do
 				local frame = decoded.frames[frame_index + 1];
 				local pivot_x, pivot_y = math.round(frame.sourceSize.w / 2), math.round(frame.sourceSize.h / 2);
@@ -93,7 +83,7 @@ crystal.test.add("Can load a spritesheet", function()
 	assert(spritesheet);
 	assert(spritesheet:inherits_from(crystal.Spritesheet));
 	local animation = spritesheet:animation("hurt");
-	local sequence = animation:sequence(0);
+	local sequence = animation:sequence();
 	local keyframe = sequence:keyframe_at(0);
 	assert(keyframe.x);
 	assert(keyframe.y);
@@ -110,3 +100,27 @@ crystal.test.add("Errors on spritesheets using json-hash frames", function()
 	assert(message:lower():find("hash"));
 	assert(message:lower():find("array"));
 end);
+
+crystal.test.add("Inner tags named after directions turn into sequences", function()
+	local spritesheet = crystal.assets.get("test-data/eris-esra-chara.json");
+	
+	local idle = spritesheet:animation("idle");
+	assert(idle);
+	assert(idle:sequence("S"));
+	assert(idle:sequence("SE"));
+	assert(idle:sequence("E"));
+	assert(idle:sequence("NE"));
+	assert(idle:sequence("N"));
+
+	local walk = spritesheet:animation("walk");
+	assert(walk);
+	assert(walk:sequence("S"));
+	assert(walk:sequence("SE"));
+	assert(walk:sequence("E"));
+	assert(walk:sequence("NE"));
+	assert(walk:sequence("N"));
+	
+	assert(not spritesheet:animation("S"));
+	assert(idle:sequence("N") ~= walk:sequence("N"));
+end);
+

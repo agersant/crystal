@@ -20,28 +20,20 @@ AnimatedSprite.update_sprite_animation = function(self, dt)
 	self.script:update(dt);
 end
 
----@param name string
----@return love.Shape
-AnimatedSprite.hitbox = function(self, name)
-	if self.keyframe then
-		return self.keyframe.hitboxes[name];
-	end
+AnimatedSprite.set_animation = function(self, animation_name, sequence_name)
+	self:play_animation_internal(animation_name, sequence_name, false);
 end
 
-AnimatedSprite.set_animation = function(self, animation_name, rotation)
-	self:play_animation_internal(animation_name, rotation, false);
-end
-
-AnimatedSprite.play_animation = function(self, animation_name, rotation)
-	local thread = self:play_animation_internal(animation_name, rotation, true);
+AnimatedSprite.play_animation = function(self, animation_name, sequence_name)
+	local thread = self:play_animation_internal(animation_name, sequence_name, true);
 	assert(thread);
 	return thread;
 end
 
-AnimatedSprite.play_animation_internal = function(self, animation_name, rotation, force_restart)
+AnimatedSprite.play_animation_internal = function(self, animation_name, sequence_name, force_restart)
 	local animation = self.spritesheet:animation(animation_name);
 	assert(animation);
-	local sequence = animation:sequence(rotation or 0);
+	local sequence = animation:sequence(sequence_name);
 	assert(sequence);
 	if sequence == self.sequence and not force_restart then
 		return;
@@ -124,7 +116,7 @@ crystal.test.add("Cycles through animation frames", function()
 
 	sprite:play_animation("floating");
 	local animation = sheet:animation("floating");
-	local sequence = animation:sequence(0);
+	local sequence = animation:sequence();
 	assert(sequence:keyframe_at(0) ~= sequence:keyframe_at(0.2));
 
 	local t = 0;
