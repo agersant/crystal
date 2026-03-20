@@ -56,26 +56,57 @@ AnimatedSprite.playback = function(self, animation, sequence)
 		local ping_pong = animation:is_ping_pong();
 		local reverse = animation:is_reversed();
 		local duration = sequence:duration();
-		local loops_played = 0;
 		while true do
-			local loop = num_repeat == nil or (loops_played + 1) < num_repeat;
-			local t = self:time() - start_time;
-			t = loop and (t % duration) or math.min(t, duration);
-			if ping_pong and loops_played % 2 == 1 then
-				t = duration - t;
+			local clock = self:time() - start_time;
+			local loops_played;
+			local t;
+
+			if not ping_pong then
+				loops_played = math.floor(clock / duration);
+				if num_repeat == nil or loops_played < num_repeat then
+					t = clock % duration;
+				else
+					t = duration;
+				end
+				if reverse then
+					t = duration - t;
+				end
+			else
+				local first_duration = sequence:keyframe_at(0).duration;
+				local last_duration = sequence:keyframe_at(math.huge).duration;
+				local cycle_duration = 2 * duration - first_duration - last_duration;
+				
+				if reverse then
+					loops_played = 2 * math.floor(clock / (2 * duration - first_duration)) + math.floor((clock % cycle_duration) / duration);
+				else
+					loops_played = 2 * math.floor(clock / (2 * duration - last_duration)) + math.floor((clock % cycle_duration) / duration);
+				end
+
+				if num_repeat == nil or loops_played < num_repeat then
+					t = clock % cycle_duration;
+				else
+					t = num_repeat % 2 == 1 and duration or 0;
+				end
+
+				if reverse then					
+					if t >= duration then
+						t = (duration - first_duration) - (t - duration);
+					end
+					t = duration - t;
+				else
+					if t >= duration then
+						t = (duration - last_duration) - (t - duration);
+					end
+				end
 			end
-			if reverse then
-				t = duration - t;
-			end
+
 			sprite.keyframe = sequence:keyframe_at(t);
 			sprite:set_texture(sprite.spritesheet:image());
 			sprite:set_quad(sprite.keyframe.quad);
 			sprite:set_draw_offset(sprite.keyframe.x, sprite.keyframe.y);
-			if t >= duration then
-				loops_played = loops_played + 1;
-				if num_repeat and loops_played >= num_repeat then
-					break;
-				end
+
+			if num_repeat and loops_played >= num_repeat then
+				break;
 			else
 				self:wait_frame();
 			end
@@ -126,6 +157,122 @@ crystal.test.add("Cycles through animation frames", function()
 		world:update(dt);
 		t = t + dt;
 	end
+end);
+
+crystal.test.add("Animation repeats the right number of times", function()
+	local world = TestWorld:new();
+	local sheet = crystal.assets.get("test-data/playback-options.json");
+	local sequence = sheet:animation("repeat"):sequence();
+
+	local entity = world.ecs:spawn(crystal.Entity);
+	local sprite = entity:add_component(AnimatedSprite, sheet);
+	entity:play_animation("repeat");
+
+	assert(sprite.keyframe == sequence:keyframe_at(0));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.1));
+	world:update(0.5);
+	assert(sprite.keyframe == sequence:keyframe_at(0.4));
+end);
+
+crystal.test.add("Animation can play in reverse", function()
+	local world = TestWorld:new();
+	local sheet = crystal.assets.get("test-data/playback-options.json");
+	local sequence = sheet:animation("reverse"):sequence();
+
+	local entity = world.ecs:spawn(crystal.Entity);
+	local sprite = entity:add_component(AnimatedSprite, sheet);
+	entity:play_animation("reverse");
+
+	assert(sprite.keyframe == sequence:keyframe_at(0.31));
+	world:update(0.11);
+	assert(sprite.keyframe == sequence:keyframe_at(0.21));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.11));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.01));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.31));
+end);
+
+crystal.test.add("Animation can ping-pong", function()
+	local world = TestWorld:new();
+	local sheet = crystal.assets.get("test-data/playback-options.json");
+	local sequence = sheet:animation("pingpong"):sequence();
+
+	local entity = world.ecs:spawn(crystal.Entity);
+	local sprite = entity:add_component(AnimatedSprite, sheet);
+	entity:play_animation("pingpong");
+
+	assert(sprite.keyframe == sequence:keyframe_at(0));
+	world:update(0.11);
+	assert(sprite.keyframe == sequence:keyframe_at(0.11));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.21));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.31));
+	world:update(0.11);
+	assert(sprite.keyframe == sequence:keyframe_at(0.21));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.11));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.01));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.11));
+end);
+
+crystal.test.add("Animation can ping-pong reverse", function()
+	local world = TestWorld:new();
+	local sheet = crystal.assets.get("test-data/playback-options.json");
+	local sequence = sheet:animation("pingpong-reverse"):sequence();
+
+	local entity = world.ecs:spawn(crystal.Entity);
+	local sprite = entity:add_component(AnimatedSprite, sheet);
+	entity:play_animation("pingpong-reverse");
+
+	assert(sprite.keyframe == sequence:keyframe_at(0.31));
+	world:update(0.11);
+	assert(sprite.keyframe == sequence:keyframe_at(0.21));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.11));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.01));
+	world:update(0.11);
+	assert(sprite.keyframe == sequence:keyframe_at(0.11));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.21));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.31));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.21));
+end);
+
+crystal.test.add("Animation can ping-pong reverse repeat", function()
+	local world = TestWorld:new();
+	local sheet = crystal.assets.get("test-data/playback-options.json");
+	local sequence = sheet:animation("pingpong-reverse-repeat"):sequence();
+
+	local entity = world.ecs:spawn(crystal.Entity);
+	local sprite = entity:add_component(AnimatedSprite, sheet);
+	entity:play_animation("pingpong-reverse-repeat");
+
+	assert(sprite.keyframe == sequence:keyframe_at(0.31));
+	world:update(0.11);
+	assert(sprite.keyframe == sequence:keyframe_at(0.21));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.11));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.01));
+	world:update(0.11);
+	assert(sprite.keyframe == sequence:keyframe_at(0.11));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.21));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.31));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.31));
+	world:update(0.1);
+	assert(sprite.keyframe == sequence:keyframe_at(0.31));
 end);
 
 crystal.test.add("Animation blocks script", function()
