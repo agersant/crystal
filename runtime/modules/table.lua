@@ -36,6 +36,13 @@ table.index_of = function(t, v)
 	return nil;
 end
 
+table.any_key = function(t)
+	for k, _ in pairs(t) do
+		return k;
+	end
+	return nil;
+end
+
 table.push = function(t, v)
 	table.insert(t, v);
 end
@@ -212,6 +219,12 @@ return {
 			assert(table.index_of({ "a", "b", "c" }, "b") == 2);
 			assert(table.index_of({ "a", "b", "c" }, "d") == nil);
 			assert(table.index_of({ a = "b" }, "b") == nil);
+		end);
+
+		crystal.test.add("Can get any key from a table", function()
+			assert(table.any_key({}) == nil);
+			assert(table.any_key({"a"}) == 1);
+			assert(table.any_key({ foo = "bar"}) == "foo");
 		end);
 
 		crystal.test.add("Can push/pop table values", function()
