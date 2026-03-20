@@ -15,11 +15,13 @@ When exporting, make sure to:
 
 ![Aseprite Export Dialog](aseprite-export-dialog.png)
 
-When loading the resulting `.json` file in Crystal, each Aseprite Tag is imported as an [Animation](animation). If the timeline has nested tags, the inner tags will become [Sequence](sequence) instead. For example, consider this timeline setup in Aseprite:
+When loading the resulting `.json` file in Crystal, each Aseprite Tag is imported as an [animation](animation). If the timeline has nested tags, the inner tags will become [sequences](sequence) instead.
+
+For example, consider this timeline setup in Aseprite:
 
 ![Aseprite Timeline](aseprite-timeline.png)
 
-In Crystal this becomes:
+Once loaded, this spritesheet contains:
 
 - One `idle` animation containing 4 sequences (`S`, `E`, `N`, `W`).
 - One `walk` animation containing 4 sequences (`S`, `E`, `N`, `W`).
