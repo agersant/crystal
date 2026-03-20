@@ -4,7 +4,7 @@ grand_parent: Lua Extensions
 nav_order: 1
 ---
 
-# table.append
+# table.any_key
 
 Returns a single unspecified key from the table.
 
