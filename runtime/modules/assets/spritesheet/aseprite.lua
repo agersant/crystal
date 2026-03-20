@@ -101,7 +101,7 @@ crystal.test.add("Errors on spritesheets using json-hash frames", function()
 	assert(message:lower():find("array"));
 end);
 
-crystal.test.add("Inner tags named after directions turn into sequences", function()
+crystal.test.add("Nested tags are imported as sequences", function()
 	local spritesheet = crystal.assets.get("test-data/eris-esra-chara.json");
 	
 	local idle = spritesheet:animation("idle");
