@@ -100,3 +100,13 @@ crystal.test.add("Can load a spritesheet", function()
 	assert(keyframe.quad);
 	assert(keyframe.duration);
 end);
+
+crystal.test.add("Errors on spritesheets using json-hash frames", function()
+	local success, message = pcall(function()
+		local spritesheet = crystal.assets.get("test-data/blankey-hash.json");
+	end);
+	assert(not success);
+	assert(type(message) == "string");
+	assert(message:lower():find("hash"));
+	assert(message:lower():find("array"));
+end);
