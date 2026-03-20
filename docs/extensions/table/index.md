@@ -12,6 +12,7 @@ This module contains utility functions for table operations. All functions are r
 
 | Name                                   | Description                                                                |
 | :------------------------------------- | :------------------------------------------------------------------------- |
+| [table.any_key](table_any_key)         | Returns a single unspecified key from the table.                           |
 | [table.append](table_append)           | Adds a list of values at the end of another.                               |
 | [table.clear](table_clear)             | Removes all values in a table.                                             |
 | [table.contains](table_contains)       | Returns whether a table contains a specific value.                         |
