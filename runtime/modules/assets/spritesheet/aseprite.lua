@@ -67,8 +67,8 @@ crystal.assets.add_loader("json", {
 				local keyframe = {
 					quad = love.graphics.newQuad(frame.frame.x, frame.frame.y, frame.frame.w, frame.frame.h, image_width, image_height),
 					duration = frame.duration / 1000,
-					x = -pivot_x,
-					y = -pivot_y,
+					x = -pivot_x + frame.spriteSourceSize.x,
+					y = -pivot_y + frame.spriteSourceSize.y,
 				};
 				sequence:add_keyframe(keyframe);
 			end
