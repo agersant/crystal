@@ -122,7 +122,7 @@ local blur = crystal.assets.get("assets/blur.glsl");
 Loads a spritesheet containing sprite-based animations. See the [Spritesheet](spritesheet) documentation for details on the expected file format and usage examples.
 
 ```lua
-local hero = crystal.assets.get("assets/hero.lua");
+local hero = crystal.assets.get("assets/hero.json");
 assert(hero:inherits_from(crystal.Spritesheet));
 ```
 

@@ -22,13 +22,13 @@ spritesheet:animation(name)
 
 ### Returns
 
-| Name        | Type                   | Description      |
-| :---------- | :--------------------- | :--------------- |
-| `animation` | [Animation](animation) | Width in pixels. |
+| Name        | Type                   | Description                                 |
+| :---------- | :--------------------- | :------------------------------------------ |
+| `animation` | [Animation](animation) | Animation with the specified name (or nil). |
 
 ## Examples
 
 ```lua
-local spritesheet = crystal.assets.get("assets/sprites/hero.lua");
+local spritesheet = crystal.assets.get("assets/sprites/hero.json");
 local walk = spritesheet:animation("walk");
 ```

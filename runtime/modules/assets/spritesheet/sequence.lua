@@ -1,4 +1,4 @@
----@alias Keyframe { quad: love.Quad, duration: number, x : number, y : number, hitboxes: { [name]: love.Shape } }
+---@alias Keyframe { quad: love.Quad, duration: number, x : number, y : number }
 
 ---@class Sequence
 ---@field private keyframes Keyframe[]

@@ -6,32 +6,30 @@ nav_exclude: true
 
 # Animation:sequence
 
-Each animation contains multiple sequence, corresponding to the same action being performed in various directions. This function retrieves the [sequence](sequence) closest to a specific rotation.
-
-A rotation of 0 radians corresponds to a character facing right. Positive values indicate clockwise rotation.
+Retrieves a [Sequence](sequence) by name.
 
 ## Usage
 
 ```lua
-animation:sequence(rotation)
+animation:sequence(name)
 ```
 
 ### Arguments
 
-| Name       | Type     | Description                  |
-| :--------- | :------- | :--------------------------- |
-| `rotation` | `number` | Desired rotation in radians. |
+| Name   | Type     | Description                                                                                                   |
+| :------| :------- | :------------------------------------------------------------------------------------------------------------ |
+| `name` | `string` | Name of the sequence to look for. If the animation contains a single sequence, this parameter may be omitted. |
 
 ### Returns
 
-| Name       | Type                 | Description                                                             |
-| :--------- | :------------------- | :---------------------------------------------------------------------- |
-| `sequence` | [Sequence](sequence) | Closest available sequence, or `nil` if the animation has no sequences. |
+| Name       | Type                 | Description                    |
+| :--------- | :------------------- | :----------------------------- |
+| `sequence` | [Sequence](sequence) | Sequence with a matching name. |
 
 ## Examples
 
 ```lua
-local spritesheet = crystal.assets.get("assets/sprites/hero.lua");
+local spritesheet = crystal.assets.get("assets/sprites/hero.json");
 local walk = spritesheet:animation("walk");
-local sequence = walk:sequence(math.pi / 2);
+local sequence = walk:sequence("N");
 ```

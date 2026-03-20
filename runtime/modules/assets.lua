@@ -47,7 +47,7 @@ return {
 		require(CRYSTAL_RUNTIME .. "modules/assets/map/tiled");
 		require(CRYSTAL_RUNTIME .. "modules/assets/package");
 		require(CRYSTAL_RUNTIME .. "modules/assets/shader");
-		require(CRYSTAL_RUNTIME .. "modules/assets/spritesheet/tiger");
+		require(CRYSTAL_RUNTIME .. "modules/assets/spritesheet/aseprite");
 	end,
 	test_harness = function()
 		registry:unload_all();

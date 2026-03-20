@@ -4,6 +4,8 @@
 - [x] Error handling/recovery
 - [x] Can bind actions to mouse buttons
 - [x] ECS component for mouse input
+- [x] Removed Tiger sheet support
+- [x] Asesprite sheet support
 - [ ] UI mouse support (press/release/click/double click)
 - [ ] Curves & timelines
 - [ ] Finite state machines
@@ -27,6 +29,5 @@
 - [ ] UI layout caching
 - [ ] Drawable to manage particle system
 - [ ] LDTk maps support
-- [ ] Asesprite sheet support
 - [ ] Inspector tool
 - [ ] create-crystal-app starter script

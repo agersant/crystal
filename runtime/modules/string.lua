@@ -2,6 +2,10 @@ string.starts_with = function(s, prefix)
 	return s:sub(1, #prefix) == prefix;
 end
 
+string.ends_with = function(s, suffix)
+	return suffix == "" or s:sub(-#suffix) == suffix;
+end
+
 string.trim = function(s)
 	return s:match("^%s*(.-)%s*$");
 end
@@ -84,6 +88,12 @@ return {
 			assert(("oink"):starts_with("oi"));
 			assert(("oink"):starts_with(""));
 			assert(not ("oink"):starts_with("in"));
+		end);
+
+		crystal.test.add("Can check string suffix", function()
+			assert(("oink"):ends_with("nk"));
+			assert(("oink"):ends_with(""));
+			assert(not ("oink"):ends_with("in"));
 		end);
 
 		crystal.test.add("Can trim string", function()

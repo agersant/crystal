@@ -2,6 +2,17 @@ table.is_empty = function(t)
 	return next(t) == nil;
 end
 
+table.is_array = function(t)
+	local i = 0;
+  	for _, _ in pairs(t) do
+		i = i + 1;
+		if t[i] == nil then
+			return false;
+		end
+  	end
+  	return true
+end
+
 table.clear = function(t)
 	for k in pairs(t) do
 		t[k] = nil;
@@ -21,6 +32,13 @@ table.index_of = function(t, v)
 		if tv == v then
 			return i;
 		end
+	end
+	return nil;
+end
+
+table.any_key = function(t)
+	for k, _ in pairs(t) do
+		return k;
 	end
 	return nil;
 end
@@ -176,6 +194,13 @@ return {
 			assert(not table.is_empty({ a = false }));
 		end);
 
+		crystal.test.add("Can check if table is an array", function()
+			assert(table.is_array({}));
+			assert(table.is_array({"a", 12, function() end}));
+			assert(not table.is_array({ a = true }));
+			assert(not table.is_array({1, 2, nil, 3}));
+		end);
+
 		crystal.test.add("Can clear a table", function()
 			local t = { 1, 2, "oink" };
 			assert(not table.is_empty(t));
@@ -194,6 +219,12 @@ return {
 			assert(table.index_of({ "a", "b", "c" }, "b") == 2);
 			assert(table.index_of({ "a", "b", "c" }, "d") == nil);
 			assert(table.index_of({ a = "b" }, "b") == nil);
+		end);
+
+		crystal.test.add("Can get any key from a table", function()
+			assert(table.any_key({}) == nil);
+			assert(table.any_key({"a"}) == 1);
+			assert(table.any_key({ foo = "bar"}) == "foo");
 		end);
 
 		crystal.test.add("Can push/pop table values", function()

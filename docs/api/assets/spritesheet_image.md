@@ -23,6 +23,6 @@ spritesheet:image()
 ## Examples
 
 ```lua
-local spritesheet = crystal.assets.get("assets/sprites/hero.lua");
+local spritesheet = crystal.assets.get("assets/sprites/hero.json");
 print(spritesheet:image():getDimensions());
 ```

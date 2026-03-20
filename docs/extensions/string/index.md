@@ -14,6 +14,7 @@ For all functions operating on filesystem paths, `"\"` and `"/"` are treated as 
 
 | Name                                                       | Description                                                             |
 | :--------------------------------------------------------- | :---------------------------------------------------------------------- |
+| [string.ends_with](string_ends_with)                       | Returns whether a string ends with a specific substring.                |
 | [string.file_extension](string_file_extension)             | Returns the file extension from a filesystem path.                      |
 | [string.merge_paths](string_merge_paths)                   | Merges two filesystem paths.                                            |
 | [string.parent_directory](string_parent_directory)         | Returns a copy of a filesystem path without its final component.        |

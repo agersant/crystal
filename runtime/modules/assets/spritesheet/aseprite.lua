@@ -1,0 +1,126 @@
+local json = require(CRYSTAL_RUNTIME .. "external/json")
+
+crystal.assets.add_loader("json", {
+	can_load = function(path)
+		local raw = love.filesystem.read(path);
+		local decoded = json.decode(raw);
+		return decoded.meta and decoded.meta.app == "http://www.aseprite.org/";
+	end,
+	dependencies = function(path)
+		local raw = love.filesystem.read(path);
+		local decoded = json.decode(raw);
+		local image_path = path:parent_directory():merge_paths(decoded.meta.image);
+		return { image_path };
+	end,
+	load = function(path)
+		local raw = love.filesystem.read(path);
+		local decoded = json.decode(raw);
+		local image_path = path:parent_directory():merge_paths(decoded.meta.image);
+		local image = crystal.assets.get(image_path);
+		local image_width, image_height = image:getDimensions();
+		local spritesheet = crystal.Spritesheet:new(image);
+
+		if not table.is_array(decoded.frames) then
+			error("Spritesheet '" .. path .. "' was exported from Aseprite with JSON data as Hash but should use Array instead.");
+		end
+
+		local tags_by_frame = {};
+
+		for _, tag in pairs(decoded.meta.frameTags) do
+
+			for frame = tag.from, tag.to do
+				if not tags_by_frame[frame] then
+					tags_by_frame[frame] = {};
+				end
+				table.insert(tags_by_frame[frame], tag);
+			end
+
+			local parent_tag = nil;
+			if tags_by_frame[tag.from] then
+				for _, overlapping_tag in ipairs(tags_by_frame[tag.from]) do
+					if overlapping_tag ~= tag and overlapping_tag.from <= tag.from and overlapping_tag.to >= tag.to then
+						parent_tag = overlapping_tag;
+					end
+				end
+			end
+
+			local animation;
+			local sequence_name;
+			if parent_tag ~= nil then
+				animation = spritesheet:animation(parent_tag.name);
+				assert(animation);
+				sequence_name = tag.name;
+			else
+				local num_repeat = tonumber(tag["repeat"]);
+				local ping_pong = tag.direction:starts_with("pingpong");
+				local reverse = tag.direction:ends_with("reverse");
+				animation = crystal.Animation:new(num_repeat, ping_pong, reverse);
+				sequence_name = "default";
+				spritesheet:add_animation(tag.name, animation);
+			end
+
+			local sequence = crystal.Sequence:new();
+			animation:add_sequence(sequence_name, sequence);
+			for frame_index = tag.from, tag.to do
+				local frame = decoded.frames[frame_index + 1];
+				local pivot_x, pivot_y = math.round(frame.sourceSize.w / 2), math.round(frame.sourceSize.h / 2);
+				local keyframe = {
+					quad = love.graphics.newQuad(frame.frame.x, frame.frame.y, frame.frame.w, frame.frame.h, image_width, image_height),
+					duration = frame.duration / 1000,
+					x = -pivot_x,
+					y = -pivot_y,
+				};
+				sequence:add_keyframe(keyframe);
+			end
+		end
+
+		return spritesheet;
+	end,
+});
+
+crystal.test.add("Can load a spritesheet", function()
+	local spritesheet = crystal.assets.get("test-data/blankey.json");
+	assert(spritesheet);
+	assert(spritesheet:inherits_from(crystal.Spritesheet));
+	local animation = spritesheet:animation("hurt");
+	local sequence = animation:sequence();
+	local keyframe = sequence:keyframe_at(0);
+	assert(keyframe.x);
+	assert(keyframe.y);
+	assert(keyframe.quad);
+	assert(keyframe.duration);
+end);
+
+crystal.test.add("Errors on spritesheets using json-hash frames", function()
+	local success, message = pcall(function()
+		local spritesheet = crystal.assets.get("test-data/blankey-hash.json");
+	end);
+	assert(not success);
+	assert(type(message) == "string");
+	assert(message:lower():find("hash"));
+	assert(message:lower():find("array"));
+end);
+
+crystal.test.add("Nested tags are imported as sequences", function()
+	local spritesheet = crystal.assets.get("test-data/eris-esra-chara.json");
+	
+	local idle = spritesheet:animation("idle");
+	assert(idle);
+	assert(idle:sequence("S"));
+	assert(idle:sequence("SE"));
+	assert(idle:sequence("E"));
+	assert(idle:sequence("NE"));
+	assert(idle:sequence("N"));
+
+	local walk = spritesheet:animation("walk");
+	assert(walk);
+	assert(walk:sequence("S"));
+	assert(walk:sequence("SE"));
+	assert(walk:sequence("E"));
+	assert(walk:sequence("NE"));
+	assert(walk:sequence("N"));
+	
+	assert(not spritesheet:animation("S"));
+	assert(idle:sequence("N") ~= walk:sequence("N"));
+end);
+
