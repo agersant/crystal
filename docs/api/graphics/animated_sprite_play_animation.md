@@ -6,23 +6,23 @@ nav_exclude: true
 
 # AnimatedSprite:play_animation
 
-Plays an animation from its beginning.
+Plays an animation sequence from its beginning.
 
 {: .note}
-Even though this function returns a [Thread](/crystal/api/script/thread), you can call on entities that do not have a [ScriptRunner](/crystal/api/script/script_runner) component. The AnimatedSprite component manages its own Script, and updates it via [update_sprite_animation()](animated_sprite_update_sprite_animation).
+Even though this function returns a [Thread](/crystal/api/script/thread), you can call it on entities that do not have a [ScriptRunner](/crystal/api/script/script_runner) component. The AnimatedSprite component manages its own Script, and updates it during [update_sprite_animation()](animated_sprite_update_sprite_animation).
 
 ## Usage
 
 ```lua
-animated_sprite:play_animation(animation, rotation)
+animated_sprite:play_animation(animation, sequence)
 ```
 
 ### Arguments
 
 | Name        | Type     | Description                                                                                                                                              |
 | :---------- | :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `animation` | `string` | Name of the animation to play.                                                                                                                           |
-| `rotation`  | `number` | Direction the character is facing (in radians), used to select the most applicable [Sequence](/crystal/api/assets/sequence). Defaults to 0 when omitted. |
+| `animation` | `string` | Name of the [Animation](animation) to play.                                                                                                              |
+| `sequence`  | `string` | Name of the [Sequence](sequence) (within the animation) to play. This parameter may be omitted if the sequences contains a single sequence.              |
 
 ### Returns
 
@@ -36,12 +36,12 @@ animated_sprite:play_animation(animation, rotation)
 local ecs = crystal.ECS:new();
 local entity = ecs:spawn(crystal.Entity);
 entity:add_component(crystal.ScriptRunner);
-entity:add_component(crystal.AnimatedSprite, crystal.assets.get("assets/hero.lua"));
+entity:add_component(crystal.AnimatedSprite, crystal.assets.get("assets/hero.json"));
 entity:add_script(function(self)
-  if self:join(self:play_animation("dance")) then
+  if self:play_animation("dance"):block() then
     print("Dance animation finished");
   else
-    print("Dance animation did not complete");
+    print("Dance animation was interrupted");
   end
 end);
 ```

@@ -36,5 +36,5 @@ local sword_image = crystal.assets.get("sword_image.png");
 ```
 
 ```lua
-local hero_spritesheet = crystal.assets.get("hero.lua");
+local hero_spritesheet = crystal.assets.get("hero.json");
 ```
