@@ -18,8 +18,8 @@ animated_sprite:set_animation(animation, sequence)
 
 | Name        | Type     | Description                                                                                                                                              |
 | :---------- | :------- | :------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `animation` | `string` | Name of the [Animation](animation) to play.                                                                                                              |
-| `sequence`  | `string` | Name of the [Sequence](sequence) (within the animation) to play. This parameter may be omitted if the sequences contains a single sequence.              |
+| `animation` | `string` | Name of the [Animation](/crystal/api/assets/animation) to play.                                                                                                              |
+| `sequence`  | `string` | Name of the [Sequence](/crystal/api/assets/sequence) (within the animation) to play. This parameter may be omitted if the sequences contains a single sequence.              |
 
 ## Examples
 
