@@ -103,7 +103,6 @@ AnimatedSprite.playback = function(self, animation, sequence)
 			sprite.keyframe = sequence:keyframe_at(t);
 			sprite:set_texture(sprite.spritesheet:image());
 			sprite:set_quad(sprite.keyframe.quad);
-			sprite:set_draw_offset(sprite.keyframe.x, sprite.keyframe.y);
 
 			if num_repeat and loops_played >= num_repeat then
 				break;
@@ -112,6 +111,16 @@ AnimatedSprite.playback = function(self, animation, sequence)
 			end
 		end
 	end;
+end
+
+AnimatedSprite.draw = function(self)
+	if not self.keyframe then
+		return;
+	end
+	love.graphics.push();
+	love.graphics.translate(self.keyframe.x, self.keyframe.y);
+	AnimatedSprite.super.draw(self);
+	love.graphics.pop();
 end
 
 --#region Tests
